@@ -13,6 +13,7 @@ namespace Tinke.Imagen.Tile
     {
         Imagen.Paleta.Estructuras.NCLR paleta;
         Imagen.Tile.Estructuras.NCGR tile;
+        int startTile;
 
         public iNCGR()
         {
@@ -34,8 +35,15 @@ namespace Tinke.Imagen.Tile
                 this.numericHeight.Value = 0x100;
             this.numericWidth.ValueChanged += new EventHandler(numericSize_ValueChanged);
             this.numericHeight.ValueChanged += new EventHandler(numericSize_ValueChanged);
-            pic.Image = Imagen.Tile.NCGR.Crear_Imagen(tile, paleta);
+            this.numericStart.ValueChanged += new EventHandler(numericStart_ValueChanged);
+            pic.Image = Imagen.Tile.NCGR.Crear_Imagen(tile, paleta, 0);
             Info();
+        }
+
+        void numericStart_ValueChanged(object sender, EventArgs e)
+        {
+            startTile = (int)numericStart.Value;
+            pic.Image = Imagen.Tile.NCGR.Crear_Imagen(tile, paleta, startTile);
         }
 
         private void iNCGR_SizeChanged(object sender, EventArgs e)
@@ -43,11 +51,13 @@ namespace Tinke.Imagen.Tile
             pic.Location = new Point(0, 0);
             groupProp.Location = new Point(this.Width - groupProp.Width, 0);
             groupProp.Height = this.Height - btnSave.Height - 10;
-            listInfo.Height = groupProp.Height - 52;
-            label1.Location = new Point(label1.Location.X, listInfo.Height + 28);
-            label2.Location = new Point(label2.Location.X, listInfo.Height + 28);
-            numericHeight.Location = new Point(numericHeight.Location.X, listInfo.Height + 26);
-            numericWidth.Location = new Point(numericWidth.Location.X, listInfo.Height + 26);
+            listInfo.Height = groupProp.Height - 78;
+            label1.Location = new Point(label1.Location.X, listInfo.Height + 54);
+            label2.Location = new Point(label2.Location.X, listInfo.Height + 54);
+            label3.Location = new Point(label3.Location.X, listInfo.Height + 28);
+            numericStart.Location = new Point(numericStart.Location.X, listInfo.Height + 26);
+            numericHeight.Location = new Point(numericHeight.Location.X, listInfo.Height + 52);
+            numericWidth.Location = new Point(numericWidth.Location.X, listInfo.Height + 52);
             btnSave.Location = new Point(this.Width - btnSave.Width, groupProp.Height + 5);
         }
 
@@ -59,7 +69,7 @@ namespace Tinke.Imagen.Tile
         {
             tile.rahc.nTilesX = (ushort)(numericWidth.Value / 8);
             tile.rahc.nTilesY = (ushort)(numericHeight.Value / 8);
-            pic.Image = Imagen.Tile.NCGR.Crear_Imagen(tile, paleta);
+            pic.Image = Imagen.Tile.NCGR.Crear_Imagen(tile, paleta, startTile);
         }
         private void Info()
         {

@@ -54,7 +54,7 @@ namespace Tinke
             for (int i = 0; ; )
             {
                 string ascii = "";
-                for (int j = 0; j < 0xF; j++)
+                for (int j = 0; j < 0x10; j++)
                 {
                     if (i >= value.Length) break;
                     text += Tools.Helper.DecToHex(value[i]) + ' ';

@@ -72,10 +72,13 @@
             this.columnValor = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.btnSave = new System.Windows.Forms.Button();
             this.pic = new System.Windows.Forms.PictureBox();
+            this.numericStart = new System.Windows.Forms.NumericUpDown();
+            this.label3 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.numericWidth)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericHeight)).BeginInit();
             this.groupProp.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pic)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericStart)).BeginInit();
             this.SuspendLayout();
             // 
             // numericWidth
@@ -85,7 +88,7 @@
             0,
             0,
             0});
-            this.numericWidth.Location = new System.Drawing.Point(55, 171);
+            this.numericWidth.Location = new System.Drawing.Point(49, 219);
             this.numericWidth.Maximum = new decimal(new int[] {
             65536,
             0,
@@ -108,7 +111,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(8, 173);
+            this.label1.Location = new System.Drawing.Point(6, 221);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(41, 13);
             this.label1.TabIndex = 2;
@@ -117,7 +120,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(147, 173);
+            this.label2.Location = new System.Drawing.Point(147, 221);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(28, 13);
             this.label2.TabIndex = 3;
@@ -130,7 +133,7 @@
             0,
             0,
             0});
-            this.numericHeight.Location = new System.Drawing.Point(181, 171);
+            this.numericHeight.Location = new System.Drawing.Point(181, 219);
             this.numericHeight.Maximum = new decimal(new int[] {
             65536,
             0,
@@ -152,14 +155,16 @@
             // 
             // groupProp
             // 
+            this.groupProp.Controls.Add(this.label3);
+            this.groupProp.Controls.Add(this.numericStart);
             this.groupProp.Controls.Add(this.listInfo);
             this.groupProp.Controls.Add(this.numericHeight);
             this.groupProp.Controls.Add(this.numericWidth);
             this.groupProp.Controls.Add(this.label2);
             this.groupProp.Controls.Add(this.label1);
-            this.groupProp.Location = new System.Drawing.Point(106, 3);
+            this.groupProp.Location = new System.Drawing.Point(196, 3);
             this.groupProp.Name = "groupProp";
-            this.groupProp.Size = new System.Drawing.Size(243, 197);
+            this.groupProp.Size = new System.Drawing.Size(243, 245);
             this.groupProp.TabIndex = 5;
             this.groupProp.TabStop = false;
             this.groupProp.Text = "Propiedades";
@@ -185,7 +190,7 @@
             listViewItem11});
             this.listInfo.Location = new System.Drawing.Point(7, 20);
             this.listInfo.Name = "listInfo";
-            this.listInfo.Size = new System.Drawing.Size(229, 145);
+            this.listInfo.Size = new System.Drawing.Size(229, 167);
             this.listInfo.TabIndex = 5;
             this.listInfo.UseCompatibleStateImageBehavior = false;
             this.listInfo.View = System.Windows.Forms.View.Details;
@@ -206,7 +211,7 @@
             // btnSave
             // 
             this.btnSave.Image = global::Tinke.Properties.Resources.picture_save;
-            this.btnSave.Location = new System.Drawing.Point(263, 206);
+            this.btnSave.Location = new System.Drawing.Point(360, 254);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(79, 32);
             this.btnSave.TabIndex = 6;
@@ -226,6 +231,27 @@
             this.pic.TabIndex = 0;
             this.pic.TabStop = false;
             // 
+            // numericStart
+            // 
+            this.numericStart.Location = new System.Drawing.Point(49, 193);
+            this.numericStart.Maximum = new decimal(new int[] {
+            1024,
+            0,
+            0,
+            0});
+            this.numericStart.Name = "numericStart";
+            this.numericStart.Size = new System.Drawing.Size(55, 20);
+            this.numericStart.TabIndex = 6;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(6, 195);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(35, 13);
+            this.label3.TabIndex = 7;
+            this.label3.Text = "Inicio:";
+            // 
             // iNCGR
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -236,13 +262,14 @@
             this.Controls.Add(this.btnSave);
             this.Controls.Add(this.groupProp);
             this.Name = "iNCGR";
-            this.Size = new System.Drawing.Size(352, 241);
+            this.Size = new System.Drawing.Size(439, 289);
             this.SizeChanged += new System.EventHandler(this.iNCGR_SizeChanged);
             ((System.ComponentModel.ISupportInitialize)(this.numericWidth)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericHeight)).EndInit();
             this.groupProp.ResumeLayout(false);
             this.groupProp.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pic)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericStart)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -261,5 +288,7 @@
         private System.Windows.Forms.ColumnHeader columnPos;
         private System.Windows.Forms.ColumnHeader columnCampo;
         private System.Windows.Forms.ColumnHeader columnValor;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.NumericUpDown numericStart;
     }
 }

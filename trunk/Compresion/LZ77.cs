@@ -150,14 +150,14 @@ namespace Compresion
                 while (File.Exists(outflr + outfname + ext))
                     outfname += "_";
 
-                BinaryWriter bw = new BinaryWriter(new FileStream(outflr + outfname + ext, FileMode.CreateNew));
+                BinaryWriter bw = new BinaryWriter(new FileStream(outflr + outfname + ext, FileMode.Create));
                 bw.Write(outdata);
                 bw.Flush();
                 bw.Close();
             }
             else
             {
-                BinaryWriter bw = new BinaryWriter(new FileStream(outflr, FileMode.CreateNew));
+                BinaryWriter bw = new BinaryWriter(new FileStream(outflr, FileMode.Create));
                 bw.Write(outdata);
                 bw.Flush();
                 bw.Close();

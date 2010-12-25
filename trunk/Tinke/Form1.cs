@@ -17,13 +17,13 @@ namespace Tinke
         string file;
         string[] titles;
         DatosHex hexadecimal;
-        List<String> FoldersToDelete;
+        string tempFolder;
 
 
         public Form1()
         {      
             InitializeComponent();
-            this.Text = "Tinke V " + Application.ProductVersion + " - NDScene" + new string(' ', 150) +"by pleoNeX";
+            this.Text = "Tinke V " + Application.ProductVersion + " - NDScene";
             listInfo.Enabled = false;
 
             sb = new StringBuilder();
@@ -33,12 +33,24 @@ namespace Tinke
             hexadecimal = new DatosHex();
             hexadecimal.Dock = DockStyle.Fill;
             tabControl1.TabPages[3].Controls.Add(hexadecimal);
-            FoldersToDelete = new List<string>();
+
+            // Se crea una carpeta temporal donde almacenar los archivos de salida.
+            string[] subFolders = Directory.GetDirectories(Application.StartupPath);
+            for (int n = 0; ; n++)
+            {
+                if (!subFolders.Contains<string>(Application.StartupPath + "\\Temp" + n))
+                {
+                    tempFolder = Application.StartupPath + "\\Temp" + n;
+                    Directory.CreateDirectory(tempFolder);
+                    break;
+                }
+            }
+
         }
         public Form1(string file, int id)
         {
             InitializeComponent();
-            this.Text = "Tinke V " + Application.ProductVersion + " - NDScene" + new string(' ', 150) + "by pleoNeX";
+            this.Text = "Tinke V " + Application.ProductVersion + " - NDScene";
             listInfo.Enabled = false;
 
             sb = new StringBuilder();
@@ -48,7 +60,18 @@ namespace Tinke
             hexadecimal = new DatosHex();
             hexadecimal.Dock = DockStyle.Fill;
             tabControl1.TabPages[3].Controls.Add(hexadecimal);
-            FoldersToDelete = new List<string>();
+            
+            // Se crea una carpeta temporal donde almacenar los archivos de salida.
+            string[] subFolders = Directory.GetDirectories(Application.StartupPath);
+            for (int n = 0; ; n++)
+            {
+                if (!subFolders.Contains<string>(Application.StartupPath + "\\Temp" + n))
+                {
+                    tempFolder = Application.StartupPath + "\\Temp" + n;
+                    Directory.CreateDirectory(tempFolder);
+                    break;
+                }
+            }
             
             //DEBUG:
             this.file = file;
@@ -286,21 +309,21 @@ namespace Tinke
             btnOpen.Location = new Point(this.Width - 103, 5);
             listInfo.Height = this.Height - 190;
             listInfo.Width = this.Width - 304;
-            treeSystem.Height = this.Height - 190;
-            treeSystem.Width = this.Width - 304;
-            listFile.Location = new Point(this.Width - 240, 0);
+            treeSystem.Height = this.Height - 152;
+            treeSystem.Width = this.Width - 236;
+            listFile.Location = new Point(this.Width - 233, 0);
             groupBanner.Location = new Point(this.Width - 295, 42);
             groupBanner.Height = this.Height - 190;
 
-            if (this.Width < 1089)
-                this.Text = "Tinke V " + Application.ProductVersion + " - NDScene" + new string(' ', (int)((this.Width - 842) / (3.5)) + 150) + "by pleoNeX";
-            else
-                this.Text = "Tinke V " + Application.ProductVersion + " - NDScene" + new string(' ', 220) + "by pleoNeX";
+            btnDeleteChain.Location = new Point(this.Width - 226, this.Height - 261);
+            btnUncompress.Location = new Point(this.Width - 226, this.Height - 223);
+            btnExtraer.Location = new Point(this.Width - 122, this.Height - 223);
+            btnSee.Location = new Point(this.Width - 226, this.Height - 184);
+            btnHex.Location = new Point(this.Width - 122, this.Height - 184);
         }
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
         {
-            foreach (string folder in FoldersToDelete)
-                Directory.Delete(folder, true);
+            Directory.Delete(tempFolder, true);
         }
 
         private void treeSystem_AfterSelect(object sender, TreeViewEventArgs e)
@@ -390,57 +413,7 @@ namespace Tinke
         }
         private void btnUncompress_Click(object sender, EventArgs e)
         {
-            // Se crea una carpeta temporal donde almacenar los archivos de salida.
-            int n = 0;
-            string[] subFolders = Directory.GetDirectories(Application.StartupPath);
-            for (; ; n++)
-                if (!subFolders.Contains<string>(Application.StartupPath + "\\Temp" + n))
-                    break;
-
-            Directory.CreateDirectory(Application.StartupPath + "\\Temp" + n);
-            FoldersToDelete.Add(Application.StartupPath + "\\Temp" + n);
-
-            // Guardamos el archivo para descomprimir fuera del sistema de ROM
-            string tempFile = Application.StartupPath + "\\temp.dat";               
-            Nitro.Estructuras.File selectFile = accion.Select_File();
-            BinaryReader br;
-            if (selectFile.offset != 0x0)
-            {
-                br = new BinaryReader(File.OpenRead(file));
-                br.BaseStream.Position = selectFile.offset;
-            }
-            else
-                br = new BinaryReader(File.OpenRead(selectFile.path));
-            
-            BinaryWriter bw = new BinaryWriter(new FileStream(tempFile, FileMode.Create));
-            bw.Write(br.ReadBytes((int)selectFile.size));
-            bw.Flush();
-            bw.Close();
-            bw.Dispose();
-            br.Close();
-            br.Dispose();
-
-            // Determinado el tipo de compresión y descomprimimos
-            Tipos.Role tipo = accion.Formato();
-
-            if (tipo == Tipos.Role.Comprimido_NARC)
-                Compresion.NARC.Descomprimir(tempFile, Application.StartupPath + "\\Temp" + n);
-            else if (tipo == Tipos.Role.Comprimido_LZ77 || tipo == Tipos.Role.Comprimido_Huffman)
-                Compresion.Basico.Decompress(tempFile, Application.StartupPath + "\\Temp" + n);
-            List<Nitro.Estructuras.File> files = new List<Nitro.Estructuras.File>();
-
-            // Se añaden los archivos descomprimidos al árbol de archivos.
-            foreach (string file in Directory.GetFiles(Application.StartupPath + "\\Temp" + n))
-            {
-                Nitro.Estructuras.File currFile = new Nitro.Estructuras.File();
-                currFile.name = new FileInfo(file).Name;
-                currFile.path = file;
-                currFile.size = (uint)new FileInfo(file).Length;
-                files.Add(currFile);
-            }
-
-            accion.Add_Files(files);
-        
+            accion.Extract(tempFolder);
             treeSystem.Nodes.Clear();
             treeSystem.Nodes.Add(Jerarquizar_Nodos(accion.Root, accion.Root));
         }

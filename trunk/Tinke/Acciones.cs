@@ -392,6 +392,67 @@ namespace Tinke
             }
         }
 
+        public void Extract(string tempFolder)
+        {
+            // Guardamos el archivo para descomprimir fuera del sistema de ROM
+            string tempFile = tempFolder + "\\temp.dat";
+            Nitro.Estructuras.File selectFile = Select_File();
+            BinaryReader br;
+            if (selectFile.offset != 0x0)
+            {
+                br = new BinaryReader(File.OpenRead(file));
+                br.BaseStream.Position = selectFile.offset;
+            }
+            else
+                br = new BinaryReader(File.OpenRead(selectFile.path));
+
+            BinaryWriter bw = new BinaryWriter(new FileStream(tempFile, FileMode.Create));
+            bw.Write(br.ReadBytes((int)selectFile.size));
+            bw.Flush();
+            bw.Close();
+            bw.Dispose();
+            br.Close();
+            br.Dispose();
+
+            // Determinamos la subcarpeta donde guardar los archivos descomprimidos.
+            string[] subFolders = Directory.GetDirectories(tempFolder);
+            for (int n = 0; ; n++)
+            {
+                if (!subFolders.Contains<string>(tempFolder + "\\Temp" + n))
+                {
+                    tempFolder = tempFolder + "\\Temp" + n;
+                    Directory.CreateDirectory(tempFolder);
+                    break;
+                }
+            }
+
+
+            // Determinado el tipo de compresión y descomprimimos
+            Tipos.Role tipo = Formato();
+
+            if (tipo == Tipos.Role.Comprimido_NARC)
+                Compresion.NARC.Descomprimir(tempFile, tempFolder);
+            else if (tipo == Tipos.Role.Comprimido_PCM)
+                Compresion.PCM.Descomprimir(tempFile, tempFolder);
+            else if (tipo == Tipos.Role.Comprimido_LZ77 || tipo == Tipos.Role.Comprimido_Huffman)
+                Compresion.Basico.Decompress(tempFile, tempFolder, true);
+            
+            List<Nitro.Estructuras.File> files = new List<Nitro.Estructuras.File>();
+            // Se añaden los archivos descomprimidos al árbol de archivos.
+            foreach (string file in Directory.GetFiles(tempFolder))
+            {
+                Nitro.Estructuras.File currFile = new Nitro.Estructuras.File();
+                currFile.name = new FileInfo(file).Name;
+                currFile.path = file;
+                currFile.size = (uint)new FileInfo(file).Length;
+                files.Add(currFile);
+            }
+
+            Add_Files(files);
+
+            File.Delete(tempFile);
+        }
+
         public Control See_File()
         {
             Tipos.Role tipo = Formato();

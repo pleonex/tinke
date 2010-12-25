@@ -408,11 +408,6 @@ namespace Tinke.Juegos
                 public Imagen.Tile.Estructuras.NCGR  tile;
                 public Imagen.Screen.Estructuras.NSCR screen;
             }
-            public struct Tile //TODO: cambiar por NCGR
-            {
-                public UInt32 size;         // Tamaño de tiles (8x8 pixels)
-                public Imagen.NTFT ntft;     // Formato NTFT
-            }
             #endregion
         }
 
