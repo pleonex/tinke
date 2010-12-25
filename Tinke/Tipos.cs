@@ -13,8 +13,9 @@ namespace Tinke
         // Al añadir nuevo juego modificar funcion FormatFileGame y DoActionGame
         // Al añadir nuevo formato a un juego modificar funcion DoActionGame
         // Al modificar cualquiera comprobar método See_File en la clase Acciones y modificar según convenga.
+        // Si el formato nuevo es comprimido, añadir a la función EstaComprimido
         public static string[] soportados = new string[] 
-        { "RLCN", "NCLR", "TXT", "NARC", "ARC", "NCGR", "RGCN", "NSCR", "RCSN" };
+        { "RLCN", "NCLR", "TXT", "NARC", "ARC", "NCGR", "RGCN", "NSCR", "RCSN", "PCM" };
         public static string[] juegos = new string[] { "A5FP", "A5FE", "YLTS" };
         public enum Role
         {
@@ -30,6 +31,7 @@ namespace Tinke
             Comprimido_NARC,
             Comprimido_LZ77,
             Comprimido_Huffman,
+            Comprimido_PCM,
             Desconocido
         }
         public enum Pais
@@ -61,6 +63,7 @@ namespace Tinke
                 case Role.Comprimido_Huffman:
                 case Role.Comprimido_LZ77:
                     return 5;
+                case Role.Comprimido_PCM :
                 case Role.Comprimido_NARC:
                     return 6;
                 case Role.Imagen:
@@ -72,9 +75,10 @@ namespace Tinke
             }
         }
 
-        public static bool EstaComprimido(Tipos.Role rol)
+        public static bool EstaComprimido(Role rol)
         {
-            if (rol != Tipos.Role.Comprimido_LZ77 && rol != Tipos.Role.Comprimido_NARC && rol != Tipos.Role.Comprimido_Huffman)
+            if (rol != Role.Comprimido_LZ77 && rol != Role.Comprimido_NARC && rol != Role.Comprimido_Huffman
+                && rol != Role.Comprimido_PCM)
                 return false;
             else
                 return true;
@@ -112,6 +116,8 @@ namespace Tinke
                     return Role.Imagen;
                 case "TXT":
                     return Role.Texto;
+                case "PCM":
+                    return Role.Comprimido_PCM;
                 case "ARC":
                 case "NARC":
                     return Role.Comprimido_NARC;

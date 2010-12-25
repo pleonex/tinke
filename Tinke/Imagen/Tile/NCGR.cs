@@ -157,6 +157,45 @@ namespace Tinke.Imagen.Tile
             return imagen;
 
         }
+        public static Bitmap Crear_Imagen(Estructuras.NCGR tile, Imagen.Paleta.Estructuras.NCLR paleta, int startTile)
+        {
+            if (tile.rahc.nTilesX == 0xFFFF)        // En caso de que no venga la información hacemos la imagen de 256x256
+                tile.rahc.nTilesX = 0x20;
+            if (tile.rahc.nTilesY == 0xFFFF)
+                tile.rahc.nTilesY = 0x20;
+
+            Bitmap imagen = new Bitmap(tile.rahc.nTilesX * 8, tile.rahc.nTilesY * 8);
+
+
+            for (int ht = 0; ht < tile.rahc.nTilesY; ht++)
+            {
+                for (int wt = 0; wt < tile.rahc.nTilesX; wt++)
+                {
+                    for (int h = 0; h < 8; h++)
+                    {
+                        for (int w = 0; w < 8; w++)
+                        {
+                            try
+                            {
+                                if (tile.rahc.tileData.tiles[startTile].Length == 0)
+                                    goto Fin;
+                                imagen.SetPixel(
+                                    w + wt * 8,
+                                    h + ht * 8,
+                                    paleta.pltt.paletas[0].colores[
+                                        tile.rahc.tileData.tiles[startTile][w + h * 8]
+                                        ]);
+                            }
+                            catch { goto Fin; }
+                        }
+                    }
+                    startTile++;
+                }
+            }
+        Fin:
+            return imagen;
+
+        }
 
     }
 }
