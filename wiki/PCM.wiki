@@ -1,0 +1,23 @@
+#summary Especificaciones sobre archivos PCM (Pack CoMpress)
+#labels Featured
+
+Archivos encontrados en el juego "El profesor Layton y la Villa Misteriosa" versión EUR. Son archivos de paquete es decir, contiene varios archivos.
+En el juego están comprimidos con compresión LZ77 (primer byte = 0x10)
+
+= Detalles =
+
+|| Offset || Longitud || Descripción ||
+|| 0x00   || 4        || Longitud de la cabecera de cada archivo, debería ser 0x10 ||
+|| 0x04   || 4        || Longitud del archivo ||
+|| 0x08   || 4        || Número de archivos contenidos ||
+|| 0x0C   || 4        || Magic ID (LPCK = List PaCK) ||
+
+Comienzo de los archivos.
+
+|| Offset || Longitud || Descripción ||
+|| 0x00   || 4        || Localizador del comienzo de las características del archivo ||
+|| 0x04   || 4        || Tamaño total del archivo, incluye cabecera ||
+|| 0x08   || 4        || Desconocido, siempre 0x0 ¿padding? ||
+|| 0x0C   || 4        || Tamaño de los datos del archivo. ||
+|| 0x10   || 16 (0x10)|| Nombre del archivo ||
+|| 0x20   || ...      || Datos del archivo ||
