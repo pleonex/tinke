@@ -30,125 +30,125 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            System.Windows.Forms.ListViewItem listViewItem49 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem(new string[] {
             "0x0",
             "Game Title"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem50 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem(new string[] {
             "0xC",
             "Game Code"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem51 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem(new string[] {
             "0x10",
             "Maker Code"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem52 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem4 = new System.Windows.Forms.ListViewItem(new string[] {
             "0x12",
             "Unit Code"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem53 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem5 = new System.Windows.Forms.ListViewItem(new string[] {
             "0x13",
             "Encryption seed select"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem54 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem6 = new System.Windows.Forms.ListViewItem(new string[] {
             "0x14",
             "Tamaño del archivo"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem55 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem7 = new System.Windows.Forms.ListViewItem(new string[] {
             "0x15",
             "Reserved"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem56 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem8 = new System.Windows.Forms.ListViewItem(new string[] {
             "0x1E",
             "ROM Version"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem57 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem9 = new System.Windows.Forms.ListViewItem(new string[] {
             "0x1F",
             "Internal flags"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem58 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem10 = new System.Windows.Forms.ListViewItem(new string[] {
             "0x20",
             "ARM9 rom offset"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem59 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem11 = new System.Windows.Forms.ListViewItem(new string[] {
             "0x24",
             "ARM9 entry address"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem60 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem12 = new System.Windows.Forms.ListViewItem(new string[] {
             "0x28",
             "ARM9 load address"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem61 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem13 = new System.Windows.Forms.ListViewItem(new string[] {
             "0x2C",
             "ARM9 size"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem62 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem14 = new System.Windows.Forms.ListViewItem(new string[] {
             "0x30",
             "ARM7 rom offset"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem63 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem15 = new System.Windows.Forms.ListViewItem(new string[] {
             "0x34",
             "ARM7 entry address"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem64 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem16 = new System.Windows.Forms.ListViewItem(new string[] {
             "0x38",
             "ARM7 load address"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem65 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem17 = new System.Windows.Forms.ListViewItem(new string[] {
             "0x3C",
             "ARM7 size"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem66 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem18 = new System.Windows.Forms.ListViewItem(new string[] {
             "0x40",
             "File Name Table (FNT) offset"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem67 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem19 = new System.Windows.Forms.ListViewItem(new string[] {
             "0x44",
             "File Name Table (FNT) length"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem68 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem20 = new System.Windows.Forms.ListViewItem(new string[] {
             "0x48",
             "File Allocation Table (FAT) offset"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem69 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem21 = new System.Windows.Forms.ListViewItem(new string[] {
             "0x4C",
             "File Allocation Table (FAT) length"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem70 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem22 = new System.Windows.Forms.ListViewItem(new string[] {
             "0x50",
             "ARM9 overlay offset"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem71 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem23 = new System.Windows.Forms.ListViewItem(new string[] {
             "0x54",
             "ARM9 overlay length"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem72 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem24 = new System.Windows.Forms.ListViewItem(new string[] {
             "0x58",
             "ARM7 overlay offset"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem73 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem25 = new System.Windows.Forms.ListViewItem(new string[] {
             "0x5C",
             "ARM7 overlay length"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem74 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem26 = new System.Windows.Forms.ListViewItem(new string[] {
             "0x60",
             "Normal card control register settings"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem75 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem27 = new System.Windows.Forms.ListViewItem(new string[] {
             "0x64",
             "Secure card control register settings"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem76 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem28 = new System.Windows.Forms.ListViewItem(new string[] {
             "0x68",
             "Icon Banner  offset"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem77 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem29 = new System.Windows.Forms.ListViewItem(new string[] {
             "0x6C",
             "Secure area CRC"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem78 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem30 = new System.Windows.Forms.ListViewItem(new string[] {
             "0x6E",
             "Secure transfer timeout"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem79 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem31 = new System.Windows.Forms.ListViewItem(new string[] {
             "0x70",
             "ARM9 autoload"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem80 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem32 = new System.Windows.Forms.ListViewItem(new string[] {
             "0x74",
             "ARM7 autoload"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem81 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem33 = new System.Windows.Forms.ListViewItem(new string[] {
             "0x78",
             "Secure disable"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem82 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem34 = new System.Windows.Forms.ListViewItem(new string[] {
             "0x80",
             "ROM size"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem83 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem35 = new System.Windows.Forms.ListViewItem(new string[] {
             "0x84",
             "Header size"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem84 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem36 = new System.Windows.Forms.ListViewItem(new string[] {
             "0x88",
             "Reserved"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem85 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem37 = new System.Windows.Forms.ListViewItem(new string[] {
             "0x15C",
             "Nintendo logo CRC"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem86 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem38 = new System.Windows.Forms.ListViewItem(new string[] {
             "0x15E",
             "Header CRC"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem44 = new System.Windows.Forms.ListViewItem("Nombre");
-            System.Windows.Forms.ListViewItem listViewItem45 = new System.Windows.Forms.ListViewItem("ID");
-            System.Windows.Forms.ListViewItem listViewItem46 = new System.Windows.Forms.ListViewItem("Offset");
-            System.Windows.Forms.ListViewItem listViewItem47 = new System.Windows.Forms.ListViewItem("Tamaño");
-            System.Windows.Forms.ListViewItem listViewItem48 = new System.Windows.Forms.ListViewItem("Tipo");
+            System.Windows.Forms.ListViewItem listViewItem39 = new System.Windows.Forms.ListViewItem("Nombre");
+            System.Windows.Forms.ListViewItem listViewItem40 = new System.Windows.Forms.ListViewItem("ID");
+            System.Windows.Forms.ListViewItem listViewItem41 = new System.Windows.Forms.ListViewItem("Offset");
+            System.Windows.Forms.ListViewItem listViewItem42 = new System.Windows.Forms.ListViewItem("Tamaño");
+            System.Windows.Forms.ListViewItem listViewItem43 = new System.Windows.Forms.ListViewItem("Tipo");
             this.output = new System.Windows.Forms.ListBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
@@ -196,7 +196,7 @@
             this.output.FormattingEnabled = true;
             this.output.Location = new System.Drawing.Point(0, 419);
             this.output.Name = "output";
-            this.output.Size = new System.Drawing.Size(826, 82);
+            this.output.Size = new System.Drawing.Size(850, 82);
             this.output.TabIndex = 1;
             // 
             // tabControl1
@@ -209,7 +209,7 @@
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(826, 419);
+            this.tabControl1.Size = new System.Drawing.Size(850, 419);
             this.tabControl1.TabIndex = 2;
             // 
             // tabPage1
@@ -221,7 +221,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(818, 393);
+            this.tabPage1.Size = new System.Drawing.Size(842, 393);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Info ROM";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -239,7 +239,7 @@
             this.groupBanner.Controls.Add(this.txtBannerTitle);
             this.groupBanner.Controls.Add(this.label1);
             this.groupBanner.Controls.Add(this.picIcon);
-            this.groupBanner.Location = new System.Drawing.Point(547, 44);
+            this.groupBanner.Location = new System.Drawing.Point(571, 44);
             this.groupBanner.Name = "groupBanner";
             this.groupBanner.Size = new System.Drawing.Size(263, 343);
             this.groupBanner.TabIndex = 3;
@@ -385,48 +385,48 @@
             this.columnValor});
             this.listInfo.HoverSelection = true;
             this.listInfo.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem49,
-            listViewItem50,
-            listViewItem51,
-            listViewItem52,
-            listViewItem53,
-            listViewItem54,
-            listViewItem55,
-            listViewItem56,
-            listViewItem57,
-            listViewItem58,
-            listViewItem59,
-            listViewItem60,
-            listViewItem61,
-            listViewItem62,
-            listViewItem63,
-            listViewItem64,
-            listViewItem65,
-            listViewItem66,
-            listViewItem67,
-            listViewItem68,
-            listViewItem69,
-            listViewItem70,
-            listViewItem71,
-            listViewItem72,
-            listViewItem73,
-            listViewItem74,
-            listViewItem75,
-            listViewItem76,
-            listViewItem77,
-            listViewItem78,
-            listViewItem79,
-            listViewItem80,
-            listViewItem81,
-            listViewItem82,
-            listViewItem83,
-            listViewItem84,
-            listViewItem85,
-            listViewItem86});
+            listViewItem1,
+            listViewItem2,
+            listViewItem3,
+            listViewItem4,
+            listViewItem5,
+            listViewItem6,
+            listViewItem7,
+            listViewItem8,
+            listViewItem9,
+            listViewItem10,
+            listViewItem11,
+            listViewItem12,
+            listViewItem13,
+            listViewItem14,
+            listViewItem15,
+            listViewItem16,
+            listViewItem17,
+            listViewItem18,
+            listViewItem19,
+            listViewItem20,
+            listViewItem21,
+            listViewItem22,
+            listViewItem23,
+            listViewItem24,
+            listViewItem25,
+            listViewItem26,
+            listViewItem27,
+            listViewItem28,
+            listViewItem29,
+            listViewItem30,
+            listViewItem31,
+            listViewItem32,
+            listViewItem33,
+            listViewItem34,
+            listViewItem35,
+            listViewItem36,
+            listViewItem37,
+            listViewItem38});
             this.listInfo.LabelEdit = true;
             this.listInfo.Location = new System.Drawing.Point(3, 44);
             this.listInfo.Name = "listInfo";
-            this.listInfo.Size = new System.Drawing.Size(538, 346);
+            this.listInfo.Size = new System.Drawing.Size(562, 346);
             this.listInfo.TabIndex = 2;
             this.listInfo.UseCompatibleStateImageBehavior = false;
             this.listInfo.View = System.Windows.Forms.View.Details;
@@ -450,12 +450,12 @@
             this.textURL.Location = new System.Drawing.Point(7, 8);
             this.textURL.Name = "textURL";
             this.textURL.ReadOnly = true;
-            this.textURL.Size = new System.Drawing.Size(724, 20);
+            this.textURL.Size = new System.Drawing.Size(746, 20);
             this.textURL.TabIndex = 1;
             // 
             // btnOpen
             // 
-            this.btnOpen.Location = new System.Drawing.Point(737, 6);
+            this.btnOpen.Location = new System.Drawing.Point(759, 6);
             this.btnOpen.Name = "btnOpen";
             this.btnOpen.Size = new System.Drawing.Size(75, 23);
             this.btnOpen.TabIndex = 0;
@@ -475,7 +475,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(818, 393);
+            this.tabPage2.Size = new System.Drawing.Size(842, 393);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Archivos";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -484,7 +484,7 @@
             // 
             this.btnDeleteChain.ImageKey = "picture_delete.png";
             this.btnDeleteChain.ImageList = this.iconos;
-            this.btnDeleteChain.Location = new System.Drawing.Point(616, 278);
+            this.btnDeleteChain.Location = new System.Drawing.Point(638, 278);
             this.btnDeleteChain.Name = "btnDeleteChain";
             this.btnDeleteChain.Size = new System.Drawing.Size(98, 32);
             this.btnDeleteChain.TabIndex = 5;
@@ -497,7 +497,7 @@
             // 
             this.btnExtraer.ImageKey = "package_go.png";
             this.btnExtraer.ImageList = this.iconos;
-            this.btnExtraer.Location = new System.Drawing.Point(720, 316);
+            this.btnExtraer.Location = new System.Drawing.Point(742, 316);
             this.btnExtraer.Name = "btnExtraer";
             this.btnExtraer.Size = new System.Drawing.Size(92, 32);
             this.btnExtraer.TabIndex = 4;
@@ -511,7 +511,7 @@
             this.btnUncompress.Enabled = false;
             this.btnUncompress.ImageKey = "compress.png";
             this.btnUncompress.ImageList = this.iconos;
-            this.btnUncompress.Location = new System.Drawing.Point(616, 316);
+            this.btnUncompress.Location = new System.Drawing.Point(638, 316);
             this.btnUncompress.Name = "btnUncompress";
             this.btnUncompress.Size = new System.Drawing.Size(98, 32);
             this.btnUncompress.TabIndex = 3;
@@ -524,7 +524,7 @@
             // 
             this.btnSee.Enabled = false;
             this.btnSee.Image = global::Tinke.Properties.Resources.zoom;
-            this.btnSee.Location = new System.Drawing.Point(616, 355);
+            this.btnSee.Location = new System.Drawing.Point(638, 355);
             this.btnSee.Name = "btnSee";
             this.btnSee.Size = new System.Drawing.Size(98, 32);
             this.btnSee.TabIndex = 2;
@@ -538,7 +538,7 @@
             this.btnHex.Enabled = false;
             this.btnHex.Image = global::Tinke.Properties.Resources.calculator;
             this.btnHex.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnHex.Location = new System.Drawing.Point(720, 355);
+            this.btnHex.Location = new System.Drawing.Point(742, 355);
             this.btnHex.Name = "btnHex";
             this.btnHex.Size = new System.Drawing.Size(92, 32);
             this.btnHex.TabIndex = 1;
@@ -553,12 +553,12 @@
             this.columnHeader1,
             this.columnHeader2});
             this.listFile.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem44,
-            listViewItem45,
-            listViewItem46,
-            listViewItem47,
-            listViewItem48});
-            this.listFile.Location = new System.Drawing.Point(609, 3);
+            listViewItem39,
+            listViewItem40,
+            listViewItem41,
+            listViewItem42,
+            listViewItem43});
+            this.listFile.Location = new System.Drawing.Point(628, 3);
             this.listFile.Name = "listFile";
             this.listFile.Size = new System.Drawing.Size(206, 161);
             this.listFile.TabIndex = 0;
@@ -582,7 +582,7 @@
             this.treeSystem.Location = new System.Drawing.Point(3, 3);
             this.treeSystem.Name = "treeSystem";
             this.treeSystem.SelectedImageIndex = 0;
-            this.treeSystem.Size = new System.Drawing.Size(606, 387);
+            this.treeSystem.Size = new System.Drawing.Size(619, 387);
             this.treeSystem.TabIndex = 0;
             this.treeSystem.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeSystem_AfterSelect);
             this.treeSystem.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.treeSystem_MouseDoubleClick);
@@ -592,7 +592,7 @@
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(818, 393);
+            this.tabPage3.Size = new System.Drawing.Size(842, 393);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Info Archivo";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -602,7 +602,7 @@
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(818, 393);
+            this.tabPage4.Size = new System.Drawing.Size(842, 393);
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "Hexadecimal";
             this.tabPage4.UseVisualStyleBackColor = true;
@@ -612,7 +612,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
-            this.ClientSize = new System.Drawing.Size(826, 501);
+            this.ClientSize = new System.Drawing.Size(850, 501);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.output);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));

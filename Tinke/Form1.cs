@@ -419,10 +419,12 @@ namespace Tinke
         }
         private void btnExtraer_Click(object sender, EventArgs e)
         {
+            Nitro.Estructuras.File fileSelect = accion.Select_File();
+
             SaveFileDialog o = new SaveFileDialog();
+            o.FileName = fileSelect.name;
             if (o.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                Nitro.Estructuras.File fileSelect = accion.Select_File();
                 if (fileSelect.offset != 0x0)
                 {
                     BinaryReader br = new BinaryReader(File.OpenRead(file));

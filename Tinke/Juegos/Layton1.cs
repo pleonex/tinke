@@ -389,7 +389,7 @@ namespace Tinke.Juegos
                 offset += imagen.tile.rahc.size_tiledata * 64 + 4;
 
                 imagen.screen = Imagen.Screen.NSCR.Leer_NoCabecera(file, offset);
-                imagen.tile.rahc.tileData.tiles = Imagen.Screen.NSCR.Modificar_Tile(imagen.screen, imagen.tile.rahc.tileData.tiles);
+                imagen.tile.rahc.tileData = Imagen.Screen.NSCR.Modificar_Tile(imagen.screen, imagen.tile.rahc.tileData);
                 imagen.tile.rahc.nTilesX = imagen.screen.section.width;
                 imagen.tile.rahc.nTilesY = imagen.screen.section.height;
 

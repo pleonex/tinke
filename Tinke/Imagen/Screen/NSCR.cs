@@ -40,9 +40,9 @@ namespace Tinke.Imagen.Screen
                 string bits = Tools.Helper.BytesToBits(br.ReadBytes(2));
 
                 nscr.section.screenData[i] = new Imagen.NTFS();
-                nscr.section.screenData[i].nPalette = Convert.ToByte(bits.Substring(0, 4));
-                nscr.section.screenData[i].yFlip = Convert.ToByte(bits.Substring(4, 1));
-                nscr.section.screenData[i].xFlip = Convert.ToByte(bits.Substring(5, 1));
+                nscr.section.screenData[i].nPalette = Convert.ToByte(bits.Substring(0, 4), 2);
+                nscr.section.screenData[i].yFlip = Convert.ToByte(bits.Substring(4, 1), 2);
+                nscr.section.screenData[i].xFlip = Convert.ToByte(bits.Substring(5, 1), 2);
                 nscr.section.screenData[i].nTile = Convert.ToUInt16(bits.Substring(6, 10), 2);
             }
 
@@ -77,9 +77,9 @@ namespace Tinke.Imagen.Screen
                 string bits = Tools.Helper.BytesToBits(br.ReadBytes(2));
 
                 nscr.section.screenData[i] = new Imagen.NTFS();
-                nscr.section.screenData[i].nPalette = Convert.ToByte(bits.Substring(0, 4));
-                nscr.section.screenData[i].xFlip = Convert.ToByte(bits.Substring(4, 1));
-                nscr.section.screenData[i].yFlip = Convert.ToByte(bits.Substring(5, 1));
+                nscr.section.screenData[i].nPalette = Convert.ToByte(bits.Substring(0, 4), 2);
+                nscr.section.screenData[i].yFlip = Convert.ToByte(bits.Substring(4, 1), 2);
+                nscr.section.screenData[i].xFlip = Convert.ToByte(bits.Substring(5, 1), 2);
                 nscr.section.screenData[i].nTile = Convert.ToUInt16(bits.Substring(6, 10), 2);
             }
 
@@ -90,9 +90,11 @@ namespace Tinke.Imagen.Screen
         }
 
 
-        public static Byte[][] Modificar_Tile(Estructuras.NSCR nscr, byte[][] tileData)
+        public static NTFT Modificar_Tile(Estructuras.NSCR nscr, NTFT tiles)
         {
+            NTFT ntft = new NTFT();
             List<Byte[]> bytes = new List<byte[]>();
+            List<Byte> nPltt = new List<Byte>();
             int j = 0;
             
             for (int i = 0; i < nscr.section.screenData.Length; i++)
@@ -100,48 +102,50 @@ namespace Tinke.Imagen.Screen
                 byte[] currTile;
                 if (nscr.section.screenData[i].nTile == j)
                 {
-                    currTile = tileData[j];
+                    currTile = tiles.tiles[j];
                     j++;
                 }
                 else
-                    currTile = tileData[nscr.section.screenData[i].nTile];
+                    currTile = tiles.tiles[nscr.section.screenData[i].nTile];
 
-                // TODO: no funciona bien los xFlip e yFlip
                 if (nscr.section.screenData[i].xFlip == 1)
                     currTile = XFlip(currTile);
                 if (nscr.section.screenData[i].yFlip == 1)
                     currTile = YFlip(currTile);
-
                 bytes.Add(currTile);
+                nPltt.Add(nscr.section.screenData[i].nPalette);
             }
-
-            return bytes.ToArray();
+            ntft.nPaleta = nPltt.ToArray();
+            ntft.tiles = bytes.ToArray();
+            return ntft;
         }
         public static Byte[] XFlip(Byte[] tile)
         {
+            byte[] newTile = new byte[tile.Length];
+
             for (int h = 0; h < 8; h++)
             {
                 for (int w = 0; w < 4; w++)
                 {
-                    byte color = tile[w + h * 8];
-                    tile[w + h * 8] = tile[(7 - w) + h * 8];
-                    tile[(7 - w) + h * 8] = color;
+                    newTile[w + h * 8] = tile[(7 - w) + h * 8];
+                    newTile[(7 - w) + h * 8] = tile[w + h * 8];
                 }
             }
-            return tile;
+            return newTile;
         }
         public static Byte[] YFlip(Byte[] tile)
         {
+            byte[] newTile = new byte[tile.Length];
+
             for (int h = 0; h < 4; h++)
             {
                 for (int w = 0; w < 8; w++)
                 {
-                    Byte color = tile[w + h * 8];
-                    tile[w + h * 8] = tile[w + (7 - h) * 8];
-                    tile[w + (7 - h) * 8] = color;
+                    newTile[w + h * 8] = tile[w + (7 - h) * 8];
+                    newTile[w + (7 - h) * 8] = tile[w + h * 8];
                 }
             }
-            return tile;
+            return newTile;
         }
 
     }

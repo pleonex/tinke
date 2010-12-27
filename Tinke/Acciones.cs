@@ -430,12 +430,21 @@ namespace Tinke
             // Determinado el tipo de compresión y descomprimimos
             Tipos.Role tipo = Formato();
 
-            if (tipo == Tipos.Role.Comprimido_NARC)
-                Compresion.NARC.Descomprimir(tempFile, tempFolder);
-            else if (tipo == Tipos.Role.Comprimido_PCM)
-                Compresion.PCM.Descomprimir(tempFile, tempFolder);
-            else if (tipo == Tipos.Role.Comprimido_LZ77 || tipo == Tipos.Role.Comprimido_Huffman)
-                Compresion.Basico.Decompress(tempFile, tempFolder, true);
+            try
+            {
+                if (tipo == Tipos.Role.Comprimido_NARC)
+                    Compresion.NARC.Descomprimir(tempFile, tempFolder);
+                else if (tipo == Tipos.Role.Comprimido_PCM)
+                    Compresion.PCM.Descomprimir(tempFile, tempFolder);
+                else if (tipo == Tipos.Role.Comprimido_LZ77 || tipo == Tipos.Role.Comprimido_Huffman)
+                    Compresion.Basico.Decompress(tempFile, tempFolder, true);
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+                Console.WriteLine(e.Message);
+                return;
+            }
             
             List<Nitro.Estructuras.File> files = new List<Nitro.Estructuras.File>();
             // Se añaden los archivos descomprimidos al árbol de archivos.
@@ -506,7 +515,6 @@ namespace Tinke
             else if (obtenido is Imagen.Screen.Estructuras.NSCR)
             {
                 screen = (Imagen.Screen.Estructuras.NSCR)obtenido;
-                tile.rahc.tileData.tiles = Imagen.Screen.NSCR.Modificar_Tile(screen, tile.rahc.tileData.tiles);
                 return Obtenido_Tile();
             }
             else if (obtenido is String)
@@ -557,13 +565,17 @@ namespace Tinke
         {
             if (paleta.constante == 0x0100) // Comprobación de que hay guardada una paleta
             {
+                Imagen.Tile.iNCGR ventana;
                 if (new String(screen.id) == "RCSN") // Comprobación de que hay una información de imagen guardada
                 {
-                    tile.rahc.tileData.tiles = Imagen.Screen.NSCR.Modificar_Tile(screen, tile.rahc.tileData.tiles);
-                    tile.rahc.nTilesX = (ushort)(screen.section.width / 8);
-                    tile.rahc.nTilesY = (ushort)(screen.section.height / 8);
+                    Imagen.Tile.Estructuras.NCGR newTile = tile;
+                    newTile.rahc.tileData = Imagen.Screen.NSCR.Modificar_Tile(screen, tile.rahc.tileData);
+                    newTile.rahc.nTilesX = (ushort)(screen.section.width / 8);
+                    newTile.rahc.nTilesY = (ushort)(screen.section.height / 8);
+                    ventana = new Imagen.Tile.iNCGR(newTile, paleta);
                 }
-                Imagen.Tile.iNCGR ventana = new Imagen.Tile.iNCGR(tile, paleta);
+                else
+                    ventana = new Imagen.Tile.iNCGR(tile, paleta);
                 ventana.Dock = DockStyle.Fill;
                 return ventana;
             }
