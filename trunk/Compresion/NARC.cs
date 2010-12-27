@@ -16,6 +16,8 @@ namespace Compresion
 
             // Lee cabecera genérica e inicial:
             arc.id = br.ReadChars(4);
+            if (new String(arc.id) != "NARC")
+                throw new Exception("Archivo no reconocido");
             arc.id_endian = br.ReadUInt16();
             if (arc.id_endian == 0xFFFE)
                 arc.id.Reverse<Char>();
@@ -115,6 +117,8 @@ namespace Compresion
                 System.IO.File.Delete(file + ".un");
                 goto Inicio;
             }
+            if (new String(arc.id) != "NARC")
+                throw new Exception("Archivo no reconocido");
             arc.id_endian = br.ReadUInt16();
             if (arc.id_endian == 0xFFFE)
                 arc.id.Reverse<Char>();

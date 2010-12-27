@@ -37,6 +37,7 @@ namespace Tinke.Imagen.Tile
 
             ncgr.rahc.nTiles = (ushort)(ncgr.rahc.size_tiledata / 64);
             ncgr.rahc.tileData.tiles = new byte[ncgr.rahc.nTiles][];
+            ncgr.rahc.tileData.nPaleta = new byte[ncgr.rahc.nTiles];
 
             for (int i = 0; i < ncgr.rahc.nTiles; i++)
             {
@@ -44,6 +45,7 @@ namespace Tinke.Imagen.Tile
                     ncgr.rahc.tileData.tiles[i] = Tools.Helper.BytesTo4BitsRev(br.ReadBytes(32));
                 else
                     ncgr.rahc.tileData.tiles[i] = br.ReadBytes(64);
+                ncgr.rahc.tileData.nPaleta[i] = 0;
             }
 
             if (ncgr.nSections == 1)   // En caso de que no haya más secciones
@@ -110,7 +112,7 @@ namespace Tinke.Imagen.Tile
                                 imagen.SetPixel(
                                     w + wt * 8,
                                     h + ht * 8,
-                                    paleta.pltt.paletas[0].colores[
+                                    paleta.pltt.paletas[tile.rahc.tileData.nPaleta[wt + ht * tile.rahc.nTilesX]].colores[
                                         tile.rahc.tileData.tiles[wt + ht * tile.rahc.nTilesX][w + h * 8]
                                         ]);
                             }
@@ -145,7 +147,7 @@ namespace Tinke.Imagen.Tile
                             imagen.SetPixel(
                                 w + wt * 8,
                                 h + ht * 8,
-                                paleta.pltt.paletas[0].colores[
+                                paleta.pltt.paletas[tile.rahc.tileData.nPaleta[wt + ht * tilesX]].colores[
                                     tile.rahc.tileData.tiles[wt + ht * tilesX][w + h * 8]
                                     ]);
 
@@ -159,10 +161,9 @@ namespace Tinke.Imagen.Tile
         }
         public static Bitmap Crear_Imagen(Estructuras.NCGR tile, Imagen.Paleta.Estructuras.NCLR paleta, int startTile)
         {
-            if (tile.rahc.nTilesX == 0xFFFF)        // En caso de que no venga la información hacemos la imagen de 256x256
-                tile.rahc.nTilesX = 0x20;
-            if (tile.rahc.nTilesY == 0xFFFF)
-                tile.rahc.nTilesY = 0x20;
+            if (tile.rahc.nTilesX == 0xFFFF || tile.rahc.nTilesY == 0xFFFF)
+                return Crear_Imagen(tile, paleta, startTile, tile.rahc.unknown1, tile.rahc.unknown2);
+
 
             Bitmap imagen = new Bitmap(tile.rahc.nTilesX * 8, tile.rahc.nTilesY * 8);
 
@@ -182,7 +183,7 @@ namespace Tinke.Imagen.Tile
                                 imagen.SetPixel(
                                     w + wt * 8,
                                     h + ht * 8,
-                                    paleta.pltt.paletas[0].colores[
+                                    paleta.pltt.paletas[tile.rahc.tileData.nPaleta[startTile]].colores[
                                         tile.rahc.tileData.tiles[startTile][w + h * 8]
                                         ]);
                             }
@@ -196,6 +197,46 @@ namespace Tinke.Imagen.Tile
             return imagen;
 
         }
+        public static Bitmap Crear_Imagen(Estructuras.NCGR tile, Imagen.Paleta.Estructuras.NCLR paleta, int startTile, uint gridX, uint gridY)
+        {
+            
+            
+            
+            
+            
+            
+            
+            Bitmap imagen = new Bitmap((int)gridX * 4, (int)(tile.rahc.nTiles * 64 / (gridX * 4)));
 
+
+            for (int ht = 0; ht < (tile.rahc.nTiles / (gridX / 2)); ht++)
+            {
+                for (int wt = 0; wt < (gridX / 2); wt++)
+                {
+                    for (int h = 0; h < 8; h++)
+                    {
+                        for (int w = 0; w < 8; w++)
+                        {
+                            try
+                            {
+                                if (tile.rahc.tileData.tiles[startTile].Length == 0)
+                                    goto Fin;
+                                imagen.SetPixel(
+                                    w + wt * 8,
+                                    h + ht * 8,
+                                    paleta.pltt.paletas[tile.rahc.tileData.nPaleta[startTile]].colores[
+                                        tile.rahc.tileData.tiles[startTile][w + h * 8]
+                                        ]);
+                            }
+                            catch { goto Fin; }
+                        }
+                    }
+                    startTile++;
+                }
+            }
+        Fin:
+            return imagen;
+
+        }
     }
 }

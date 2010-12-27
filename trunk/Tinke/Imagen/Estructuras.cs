@@ -11,6 +11,7 @@ namespace Tinke.Imagen
     public struct NTFT              // Nintendo Tile Format Tile
     {
         public byte[][] tiles;
+        public byte[] nPaleta;
     }
     public struct NTFS              // Nintedo Tile Format Screen
     {

@@ -147,6 +147,7 @@
       <DependentUpon>iNCGR.cs</DependentUpon>
     </Compile>
     <Compile Include="Imagen\Tile\NCGR.cs" />
+    <Compile Include="Juegos\Kirby dro.cs" />
     <Compile Include="Juegos\Layton1.cs" />
     <Compile Include="Juegos\LaytonTalks.cs">
       <SubType>UserControl</SubType>

@@ -14,9 +14,9 @@ namespace Tinke
         // Al añadir nuevo formato a un juego modificar funcion DoActionGame
         // Al modificar cualquiera comprobar método See_File en la clase Acciones y modificar según convenga.
         // Si el formato nuevo es comprimido, añadir a la función EstaComprimido
-        public static string[] soportados = new string[] 
+        public static string[] soportados = new string[]
         { "RLCN", "NCLR", "TXT", "NARC", "ARC", "NCGR", "RGCN", "NSCR", "RCSN", "PCM" };
-        public static string[] juegos = new string[] { "A5FP", "A5FE", "YLTS" };
+        public static string[] juegos = new string[] { "A5FP", "A5FE", "YLTS", "AKWE" };
         public enum Role
         {
             Paleta,
@@ -212,6 +212,8 @@ namespace Tinke
                 case "A5FP":
                 case "YLTS":    // LAYTON2 parece tener el mismo tipo de archivos.
                     return Juegos.Layton1.FormatoArchivos(id, GameCountry(gameCode), name, gameCode);
+                case "AKWE":
+                    return Juegos.Kirby_dro.FormatoArchivo(name);
                 default:
                     return Role.Desconocido;
             }
@@ -322,6 +324,14 @@ namespace Tinke
 
                     break;
                     #endregion //LAYTON1 USA
+                case "AKWE":
+                #region KIRBY DRO
+                    if (name.Contains(".BIN"))
+                    {
+                        return Juegos.Kirby_dro.Imagen_Bin(file);
+                    }
+                #endregion
+                    break;
             }
             return new String('\0', 1); // Para que se distinga bien de lo demás xD
         }
