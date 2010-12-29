@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using PluginInterface;
 
 namespace Tinke.Nitro
 {
@@ -49,7 +50,11 @@ namespace Tinke.Nitro
             public bool secureCRC;
             public bool logoCRC;
             public bool headerCRC;
-            // TODO: completar datos de Nitro system desde gbatek
+            public UInt32 debug_romOffset;      // only if debug
+            public UInt32 debug_size;           // version with
+            public UInt32 debug_ramAddress;     // 0 = none, SIO and 8 MB
+            public UInt32 reserved3;            // Zero filled transfered and stored but not used
+            //public byte[] reserved4;          // 0x90 bytes => Zero filled transfered but not stored in RAM
  
         }
         public struct Banner

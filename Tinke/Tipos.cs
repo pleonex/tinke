@@ -4,86 +4,47 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.IO;
+using PluginInterface;
 
 namespace Tinke
 {
     public static class Tipos
     {
-        // Al añadir nuevo formato modificar funciones FormatFile y DoAction
-        // Al añadir nuevo juego modificar funcion FormatFileGame y DoActionGame
-        // Al añadir nuevo formato a un juego modificar funcion DoActionGame
-        // Al modificar cualquiera comprobar método See_File en la clase Acciones y modificar según convenga.
-        // Si el formato nuevo es comprimido, añadir a la función EstaComprimido
-        public static string[] soportados = new string[]
-        { "RLCN", "NCLR", "TXT", "NARC", "ARC", "NCGR", "RGCN", "NSCR", "RCSN", "PCM" };
-        public static string[] juegos = new string[] { "A5FP", "A5FE", "YLTS", "AKWE" };
-        public enum Role
-        {
-            Paleta,
-            Imagen,
-            Screen,
-            ImagenPaleta,
-            ImagenCompleta,
-            ImagenAnimada,
-            Texto,
-            Video,
-            Sonido,
-            Comprimido_NARC,
-            Comprimido_LZ77,
-            Comprimido_Huffman,
-            Comprimido_PCM,
-            Desconocido
-        }
-        public enum Pais
-        {
-            EUR,
-            USA,
-            JPN,
-            NOE,
-            ITA,
-            SPA,
-            HOL,
-            KOR,
-            EUU,
-            Unknown,
-        }
+        /*public static string[] soportados = new string[]
+        { "RLCN", "NCLR", "TXT", "NARC", "ARC", "NCGR", "RGCN", "NSCR", "RCSN", "PCM", "NCER", "RECN" };
+        public static string[] juegos = new string[] { "A5FP", "A5FE", "YLTS", "AKWE" };*/
 
-        public static int ImageFormatFile(Role name)
+        public static int ImageFormatFile(Formato name)
         {
             switch (name)
             {
-                case Role.Paleta:
+                case Formato.Paleta:
                     return 2;
-                case Role.ImagenCompleta:
-                    return 10;
-                case Role.ImagenAnimada:
-                    return 8;
-                case Role.Texto:
-                    return 4;
-                case Role.Comprimido_Huffman:
-                case Role.Comprimido_LZ77:
-                    return 5;
-                case Role.Comprimido_PCM :
-                case Role.Comprimido_NARC:
-                    return 6;
-                case Role.Imagen:
+                case Formato.Imagen:
                     return 3;
-                case Role.Screen:
+                case Formato.Screen:
                     return 9;
+                case Formato.Celdas:
+                    return 8;
+                case Formato.Animación:
+                    return 8;
+                case Formato.ImagenCompleta:
+                    return 10;
+                case Formato.Texto:
+                    return 4;
+                case Formato.Comprimido:
+                    return 6;
+                case Formato.Sonido:
+                    return 14;
+                case Formato.Video :
+                    return 13;
+                case Formato.Desconocido:
                 default:
                     return 1;
             }
         }
 
-        public static bool EstaComprimido(Role rol)
-        {
-            if (rol != Role.Comprimido_LZ77 && rol != Role.Comprimido_NARC && rol != Role.Comprimido_Huffman
-                && rol != Role.Comprimido_PCM)
-                return false;
-            else
-                return true;
-        }
-        public static bool IsSupportedFile(string name)
+        /*public static bool IsSupportedFile(string name)
         {
             if (FormatFile(name) == Role.Desconocido)
                 return false;
@@ -124,6 +85,9 @@ namespace Tinke
                 case "RCSN":
                 case "NSCR":
                     return Role.Screen;
+                case "NCER":
+                case "RECN":
+                    return Role.Celdas;
                 default:
                     return Role.Desconocido;
             }
@@ -162,6 +126,14 @@ namespace Tinke
                         case "NSCR":
                             return Imagen.Screen.NSCR.Leer(file);
                     }
+                    break;
+                case Role.Celdas:
+                    switch (extension)
+	                {
+                        case "NCER":
+                        case "RECN":
+                            return Imagen.NCER.Leer(file);
+	                }
                     break;
             }
             throw new Exception("Excepción en DoAction: Formato no reconocido"); // Nunca puede darse el caso
@@ -334,7 +306,7 @@ namespace Tinke
                     break;
             }
             return new String('\0', 1); // Para que se distinga bien de lo demás xD
-        }
+        }*/
 
     }
 }

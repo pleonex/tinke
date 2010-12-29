@@ -115,11 +115,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Acciones.cs" />
-    <Compile Include="DatosHex.cs">
-      <SubType>UserControl</SubType>
+    <Compile Include="Debug.cs">
+      <SubType>Form</SubType>
     </Compile>
-    <Compile Include="DatosHex.Designer.cs">
-      <DependentUpon>DatosHex.cs</DependentUpon>
+    <Compile Include="Debug.Designer.cs">
+      <DependentUpon>Debug.cs</DependentUpon>
     </Compile>
     <Compile Include="Espera.cs">
       <SubType>Form</SubType>
@@ -127,13 +127,21 @@
     <Compile Include="Espera.Designer.cs">
       <DependentUpon>Espera.cs</DependentUpon>
     </Compile>
-    <Compile Include="Form1.cs">
+    <Compile Include="RomInfo.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="RomInfo.Designer.cs">
+      <DependentUpon>RomInfo.cs</DependentUpon>
     </Compile>
+    <Compile Include="Sistema.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Sistema.Designer.cs">
+      <DependentUpon>Sistema.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PluginHost.cs" />
     <Compile Include="Imagen\Estructuras.cs" />
+    <Compile Include="Imagen\NCER.cs" />
     <Compile Include="Imagen\Paleta\Convertidor.cs" />
     <Compile Include="Imagen\Paleta\NCLR.cs" />
     <Compile Include="Imagen\Paleta\Estructuras.cs" />
@@ -166,14 +174,29 @@
     <Compile Include="Tipos.cs" />
     <Compile Include="Tools\CRC16.cs" />
     <Compile Include="Tools\Helper.cs" />
-    <EmbeddedResource Include="DatosHex.resx">
-      <DependentUpon>DatosHex.cs</DependentUpon>
+    <Compile Include="Visor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Visor.Designer.cs">
+      <DependentUpon>Visor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="VisorHex.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="VisorHex.Designer.cs">
+      <DependentUpon>VisorHex.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="Debug.resx">
+      <DependentUpon>Debug.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Espera.resx">
       <DependentUpon>Espera.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <EmbeddedResource Include="RomInfo.resx">
+      <DependentUpon>RomInfo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sistema.resx">
+      <DependentUpon>Sistema.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Imagen\Tile\iNCGR.resx">
       <DependentUpon>iNCGR.cs</DependentUpon>
@@ -191,6 +214,12 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="Visor.resx">
+      <DependentUpon>Visor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="VisorHex.resx">
+      <DependentUpon>VisorHex.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -202,9 +231,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Compresion\Compresion.csproj">
-      <Project>{13E418CF-056B-4A42-A31A-58DE8C7D8BEF}</Project>
-      <Name>Compresion</Name>
+    <ProjectReference Include="..\PluginInterface\PluginInterface.csproj">
+      <Project>{736010D3-F72F-4C56-B8D2-2EDD1B8F3A87}</Project>
+      <Name>PluginInterface</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

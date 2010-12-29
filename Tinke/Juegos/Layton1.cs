@@ -372,7 +372,6 @@ namespace Tinke.Juegos
                 BinaryReader br = new BinaryReader(File.OpenRead(file));
 
                 // Paleta, NCLR sin cabecera
-                // TODO: Crear la función en la clase de NCLR
                 imagen.paleta.pltt.nColores = br.ReadUInt32();
                 imagen.paleta.pltt.paletas = new Imagen.NTFP[1];
                 imagen.paleta.pltt.paletas[0].colores =
@@ -507,7 +506,7 @@ namespace Tinke.Juegos
             }
         }
 
-        public static Tipos.Role FormatoArchivos(int id, Tipos.Pais version, string name, String gameCode)
+        /*public static Tipos.Role FormatoArchivos(int id, Tipos.Pais version, string name, String gameCode)
         {
                 name = name.ToUpper();
 
@@ -551,7 +550,7 @@ namespace Tinke.Juegos
                 }
                 default:
                 return Tipos.Role.Desconocido;
-            }
-        }
+            }*/
+        //}
     }
 }

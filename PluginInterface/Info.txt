@@ -1,0 +1,32 @@
+﻿Los plugins que tratan imágenes deberán convertir la información de los archivos
+ a los cinco formatos predeterminados de Nintendo. Estos son:
+
+ - NCLR ( paletas )
+ - NCGR ( tile )
+ - NSCR ( información de tiles )
+ - NCER ( celdas )
+ - NANR ( animación )
+
+ Los plugins también podrán tener acceso a cada uno de estos datos que estén guardados ya mediante el HostPlugin.
+
+ Los plugins tendrán que tener dos funciones y un método:
+	* La primera devolverá el tipo de archivo encontrado entre los siguientes:
+
++ Paleta
++ Tile
++ Información de tiles
++ Celdas
++ Animación
++ ImagenCompleta (se puede visualizar)
++ Texto
++ Vídeo
++ Sonido
++ Comprimido
+
+	* El segundo deberá devolver la información:
+
++ En caso de ser imágenes en los cinco tipos anteriormente comentados.
++ En caso de estar comprimidos en formato Nitro.File
+
+	* El método deberá mostrar una ventana con la información sobre el archivo y en caso de que se pueda el resultado final
+	(texto, imagen, vídeo, audio...)

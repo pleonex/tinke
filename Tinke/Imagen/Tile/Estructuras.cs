@@ -25,8 +25,9 @@ namespace Tinke.Imagen.Tile
             public UInt16 nTilesY;
             public UInt16 nTilesX;
             public Imagen.Tiles_Form depth;
-            public UInt32 unknown1;
-            public UInt32 unknown2;
+            public UInt16 unknown1;
+            public UInt16 unknown2;
+            public UInt32 padding;
             public UInt32 size_tiledata;
             public UInt32 unknown3;         // Constante siempre 0x18 (24)
             public Imagen.NTFT tileData;
