@@ -30,8 +30,9 @@ namespace Tinke.Imagen.Tile
             ncgr.rahc.nTilesY = br.ReadUInt16();
             ncgr.rahc.nTilesX = br.ReadUInt16();
             ncgr.rahc.depth = (br.ReadUInt32() == 0x3 ? Tiles_Form.bpp4 : Tiles_Form.bpp8);
-            ncgr.rahc.unknown1 = br.ReadUInt32();
-            ncgr.rahc.unknown2 = br.ReadUInt32();
+            ncgr.rahc.unknown1 = br.ReadUInt16();
+            ncgr.rahc.unknown2 = br.ReadUInt16();
+            ncgr.rahc.padding = br.ReadUInt32();
             ncgr.rahc.size_tiledata = (ncgr.rahc.depth == Tiles_Form.bpp8 ? br.ReadUInt32() : br.ReadUInt32() * 2);
             ncgr.rahc.unknown3 = br.ReadUInt32();
 
@@ -161,9 +162,12 @@ namespace Tinke.Imagen.Tile
         }
         public static Bitmap Crear_Imagen(Estructuras.NCGR tile, Imagen.Paleta.Estructuras.NCLR paleta, int startTile)
         {
-            if (tile.rahc.nTilesX == 0xFFFF || tile.rahc.nTilesY == 0xFFFF)
-                return Crear_Imagen(tile, paleta, startTile, tile.rahc.unknown1, tile.rahc.unknown2);
-
+            //if (tile.rahc.nTilesX == 0xFFFF || tile.rahc.nTilesY == 0xFFFF && tile.rahc.unknown1 != 0)
+            //    return Crear_Imagen(tile, paleta, startTile, tile.rahc.unknown1, tile.rahc.unknown2);
+            if (tile.rahc.nTilesX == 0xFFFF)        // En caso de que no venga la información hacemos la imagen de 256x256
+                tile.rahc.nTilesX = 0x20;
+            if (tile.rahc.nTilesY == 0xFFFF)
+                tile.rahc.nTilesY = 0x20; 
 
             Bitmap imagen = new Bitmap(tile.rahc.nTilesX * 8, tile.rahc.nTilesY * 8);
 
@@ -199,13 +203,6 @@ namespace Tinke.Imagen.Tile
         }
         public static Bitmap Crear_Imagen(Estructuras.NCGR tile, Imagen.Paleta.Estructuras.NCLR paleta, int startTile, uint gridX, uint gridY)
         {
-            
-            
-            
-            
-            
-            
-            
             Bitmap imagen = new Bitmap((int)gridX * 4, (int)(tile.rahc.nTiles * 64 / (gridX * 4)));
 
 
@@ -238,5 +235,45 @@ namespace Tinke.Imagen.Tile
             return imagen;
 
         }
+        public static Bitmap Crear_Imagen(Estructuras.NCGR tile, Imagen.Paleta.Estructuras.NCLR paleta, int startTile, int tilesX, int tilesY)
+        {
+            if (tile.rahc.nTilesX == 0xFFFF)        // En caso de que no venga la información hacemos la imagen de 256x256
+                tile.rahc.nTilesX = 0x20;
+            if (tile.rahc.nTilesY == 0xFFFF)
+                tile.rahc.nTilesY = 0x20;
+
+            Bitmap imagen = new Bitmap(tilesX * 8, tilesY * 8);
+
+            for (int ht = 0; ht < tilesY; ht++)
+            {
+                for (int wt = 0; wt < tilesX; wt++)
+                {
+                    for (int h = 0; h < 8; h++)
+                    {
+                        for (int w = 0; w < 8; w++)
+                        {
+                            try
+                            {
+                                if (tile.rahc.tileData.tiles[wt + ht * tilesX].Length == 0)
+                                    goto Fin;
+                                imagen.SetPixel(
+                                    w + wt * 8,
+                                    h + ht * 8,
+                                    paleta.pltt.paletas[tile.rahc.tileData.nPaleta[startTile]].colores[
+                                        tile.rahc.tileData.tiles[startTile][w + h * 8]
+                                        ]);
+                            }
+                            catch { goto Fin; }
+
+                        }
+                    }
+                    startTile++;
+                }
+            }
+        Fin:
+            return imagen;
+
+        }
+
     }
 }

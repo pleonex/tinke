@@ -15,7 +15,7 @@ namespace Tinke.Imagen.Paleta
             Estructuras.NCLR nclr = new Estructuras.NCLR();
             FileStream fs = File.OpenRead(file);
             BinaryReader br = new BinaryReader(fs);
-            Console.WriteLine("Analizando paleta NCLR: " + new FileInfo(file).Name);
+            Console.WriteLine("Analizando paleta NCLR:");
 
             nclr.ID = br.ReadChars(4);
             nclr.endianness = br.ReadUInt16();
@@ -24,8 +24,6 @@ namespace Tinke.Imagen.Paleta
             nclr.constante = br.ReadUInt16();
             nclr.tamaño = br.ReadUInt32();
             nclr.tamañoCabecera = br.ReadUInt16();
-            if (nclr.tamañoCabecera != 0x10)
-                Console.WriteLine("\tEl tamaño de la cabecera No es 0x10: " + nclr.tamañoCabecera.ToString());
             nclr.nSecciones = br.ReadUInt16();
             if (nclr.nSecciones < 1 || nclr.nSecciones > 2)
                 Console.WriteLine("\tNo hay secciones o hay de más ¿?: " + nclr.nSecciones.ToString());
@@ -47,8 +45,7 @@ namespace Tinke.Imagen.Paleta
             pltt.ID = "PLTT".ToCharArray();
             pltt.tamaño = br.ReadUInt32();
             pltt.profundidad = (br.ReadUInt32() == 0x00000003) ? Depth.bits4 : Depth.bits8;
-            pltt.constante = br.ReadUInt32();
-                if (pltt.constante != 0x0) Console.WriteLine("\tLa constante PLTT errónea: " + pltt.constante.ToString());
+            pltt.unknown1 = br.ReadUInt32();
             pltt.tamañoPaletas = br.ReadUInt32();
             pltt.nColores = br.ReadUInt32();
             pltt.paletas = new NTFP[(pltt.tamaño - 0x18) / (pltt.nColores * 2)];

@@ -25,18 +25,13 @@ namespace Tinke.Imagen.Tile
 
             this.paleta = paleta;
             this.tile = tile;
-            if (tile.rahc.nTilesX != 0xFFFF)
-                this.numericWidth.Value = tile.rahc.nTilesX * 8;
-            else
-                this.numericWidth.Value = 0x100;
-            if (tile.rahc.nTilesY != 0xFFFF)
-                this.numericHeight.Value = tile.rahc.nTilesY * 8;
-            else
-                this.numericHeight.Value = 0x100;
+            pic.Image = Imagen.Tile.NCGR.Crear_Imagen(tile, paleta, 0);
+            this.numericWidth.Value = pic.Image.Width;
+            this.numericHeight.Value = pic.Image.Height;
             this.numericWidth.ValueChanged += new EventHandler(numericSize_ValueChanged);
             this.numericHeight.ValueChanged += new EventHandler(numericSize_ValueChanged);
             this.numericStart.ValueChanged += new EventHandler(numericStart_ValueChanged);
-            pic.Image = Imagen.Tile.NCGR.Crear_Imagen(tile, paleta, 0);
+
             Info();
         }
 
@@ -81,7 +76,7 @@ namespace Tinke.Imagen.Tile
             listInfo.Items[5].SubItems.Add(tile.rahc.nTilesX.ToString() + " (0x" + String.Format("{0:X}", tile.rahc.nTilesX) + ')');
             listInfo.Items[6].SubItems.Add(Enum.GetName(tile.rahc.depth.GetType(), tile.rahc.depth));
             listInfo.Items[7].SubItems.Add("0x" + String.Format("{0:X}", tile.rahc.unknown1));
-            listInfo.Items[8].SubItems.Add("0x" + String.Format("{0:X}", tile.rahc.unknown2));
+            listInfo.Items[8].SubItems.Add("0x" + String.Format("{0:X}", tile.rahc.padding));
             listInfo.Items[9].SubItems.Add("0x" + String.Format("{0:X}", tile.rahc.size_tiledata));
             listInfo.Items[10].SubItems.Add("0x" + String.Format("{0:X}", tile.rahc.unknown3));
         }

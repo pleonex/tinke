@@ -55,6 +55,10 @@ namespace Tinke.Nitro
             br.BaseStream.Seek(156, SeekOrigin.Current); //nds.logo = br.ReadBytes(156); Logo de Nintendo utilizado para comprobaciones
             nds.logoCRC16 = br.ReadUInt16();
             nds.headerCRC16 = br.ReadUInt16();
+            nds.debug_romOffset = br.ReadUInt32();
+            nds.debug_size = br.ReadUInt32();
+            nds.debug_ramAddress = br.ReadUInt32();
+            nds.reserved3 = br.ReadUInt32();
 
             br.BaseStream.Position = 0x4000;
             nds.secureCRC = (Tools.CRC16.Calcular(br.ReadBytes(0x4000)) == nds.secureCRC16) ? true : false;

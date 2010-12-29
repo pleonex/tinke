@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
+using System.Reflection;
+using System.IO;
 
 namespace Tinke
 {
@@ -15,12 +17,8 @@ namespace Tinke
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            
-            if (args.Length != 2)
-                Application.Run(new Form1());
-            else if (args.Length == 2)      // Primer argumento archivo ROM, segundo id del archivo.
-                Application.Run(new Form1(args[0], Convert.ToInt32(args[1])));
-            
+            Application.Run(new Sistema());
         }
     }
+
 }

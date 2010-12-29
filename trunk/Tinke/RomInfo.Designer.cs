@@ -1,0 +1,417 @@
+﻿namespace Tinke
+{
+    partial class RomInfo
+    {
+        /// <summary>
+        /// Required designer variable.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
+
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
+        #region Windows Form Designer generated code
+
+        /// <summary>
+        /// Required method for Designer support - do not modify
+        /// the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent()
+        {
+            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem(new string[] {
+            "0x0",
+            "Game Title"}, -1);
+            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem(new string[] {
+            "0xC",
+            "Game Code"}, -1);
+            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem(new string[] {
+            "0x10",
+            "Maker Code"}, -1);
+            System.Windows.Forms.ListViewItem listViewItem4 = new System.Windows.Forms.ListViewItem(new string[] {
+            "0x12",
+            "Unit Code"}, -1);
+            System.Windows.Forms.ListViewItem listViewItem5 = new System.Windows.Forms.ListViewItem(new string[] {
+            "0x13",
+            "Encryption seed select"}, -1);
+            System.Windows.Forms.ListViewItem listViewItem6 = new System.Windows.Forms.ListViewItem(new string[] {
+            "0x14",
+            "Tamaño del archivo"}, -1);
+            System.Windows.Forms.ListViewItem listViewItem7 = new System.Windows.Forms.ListViewItem(new string[] {
+            "0x15",
+            "Reserved"}, -1);
+            System.Windows.Forms.ListViewItem listViewItem8 = new System.Windows.Forms.ListViewItem(new string[] {
+            "0x1E",
+            "ROM Version"}, -1);
+            System.Windows.Forms.ListViewItem listViewItem9 = new System.Windows.Forms.ListViewItem(new string[] {
+            "0x1F",
+            "Internal flags"}, -1);
+            System.Windows.Forms.ListViewItem listViewItem10 = new System.Windows.Forms.ListViewItem(new string[] {
+            "0x20",
+            "ARM9 rom offset"}, -1);
+            System.Windows.Forms.ListViewItem listViewItem11 = new System.Windows.Forms.ListViewItem(new string[] {
+            "0x24",
+            "ARM9 entry address"}, -1);
+            System.Windows.Forms.ListViewItem listViewItem12 = new System.Windows.Forms.ListViewItem(new string[] {
+            "0x28",
+            "ARM9 load address"}, -1);
+            System.Windows.Forms.ListViewItem listViewItem13 = new System.Windows.Forms.ListViewItem(new string[] {
+            "0x2C",
+            "ARM9 size"}, -1);
+            System.Windows.Forms.ListViewItem listViewItem14 = new System.Windows.Forms.ListViewItem(new string[] {
+            "0x30",
+            "ARM7 rom offset"}, -1);
+            System.Windows.Forms.ListViewItem listViewItem15 = new System.Windows.Forms.ListViewItem(new string[] {
+            "0x34",
+            "ARM7 entry address"}, -1);
+            System.Windows.Forms.ListViewItem listViewItem16 = new System.Windows.Forms.ListViewItem(new string[] {
+            "0x38",
+            "ARM7 load address"}, -1);
+            System.Windows.Forms.ListViewItem listViewItem17 = new System.Windows.Forms.ListViewItem(new string[] {
+            "0x3C",
+            "ARM7 size"}, -1);
+            System.Windows.Forms.ListViewItem listViewItem18 = new System.Windows.Forms.ListViewItem(new string[] {
+            "0x40",
+            "File Name Table (FNT) offset"}, -1);
+            System.Windows.Forms.ListViewItem listViewItem19 = new System.Windows.Forms.ListViewItem(new string[] {
+            "0x44",
+            "File Name Table (FNT) length"}, -1);
+            System.Windows.Forms.ListViewItem listViewItem20 = new System.Windows.Forms.ListViewItem(new string[] {
+            "0x48",
+            "File Allocation Table (FAT) offset"}, -1);
+            System.Windows.Forms.ListViewItem listViewItem21 = new System.Windows.Forms.ListViewItem(new string[] {
+            "0x4C",
+            "File Allocation Table (FAT) length"}, -1);
+            System.Windows.Forms.ListViewItem listViewItem22 = new System.Windows.Forms.ListViewItem(new string[] {
+            "0x50",
+            "ARM9 overlay offset"}, -1);
+            System.Windows.Forms.ListViewItem listViewItem23 = new System.Windows.Forms.ListViewItem(new string[] {
+            "0x54",
+            "ARM9 overlay length"}, -1);
+            System.Windows.Forms.ListViewItem listViewItem24 = new System.Windows.Forms.ListViewItem(new string[] {
+            "0x58",
+            "ARM7 overlay offset"}, -1);
+            System.Windows.Forms.ListViewItem listViewItem25 = new System.Windows.Forms.ListViewItem(new string[] {
+            "0x5C",
+            "ARM7 overlay length"}, -1);
+            System.Windows.Forms.ListViewItem listViewItem26 = new System.Windows.Forms.ListViewItem(new string[] {
+            "0x60",
+            "Normal card control register settings"}, -1);
+            System.Windows.Forms.ListViewItem listViewItem27 = new System.Windows.Forms.ListViewItem(new string[] {
+            "0x64",
+            "Secure card control register settings"}, -1);
+            System.Windows.Forms.ListViewItem listViewItem28 = new System.Windows.Forms.ListViewItem(new string[] {
+            "0x68",
+            "Icon Banner  offset"}, -1);
+            System.Windows.Forms.ListViewItem listViewItem29 = new System.Windows.Forms.ListViewItem(new string[] {
+            "0x6C",
+            "Secure area CRC"}, -1);
+            System.Windows.Forms.ListViewItem listViewItem30 = new System.Windows.Forms.ListViewItem(new string[] {
+            "0x6E",
+            "Secure transfer timeout"}, -1);
+            System.Windows.Forms.ListViewItem listViewItem31 = new System.Windows.Forms.ListViewItem(new string[] {
+            "0x70",
+            "ARM9 autoload"}, -1);
+            System.Windows.Forms.ListViewItem listViewItem32 = new System.Windows.Forms.ListViewItem(new string[] {
+            "0x74",
+            "ARM7 autoload"}, -1);
+            System.Windows.Forms.ListViewItem listViewItem33 = new System.Windows.Forms.ListViewItem(new string[] {
+            "0x78",
+            "Secure disable"}, -1);
+            System.Windows.Forms.ListViewItem listViewItem34 = new System.Windows.Forms.ListViewItem(new string[] {
+            "0x80",
+            "ROM size"}, -1);
+            System.Windows.Forms.ListViewItem listViewItem35 = new System.Windows.Forms.ListViewItem(new string[] {
+            "0x84",
+            "Header size"}, -1);
+            System.Windows.Forms.ListViewItem listViewItem36 = new System.Windows.Forms.ListViewItem(new string[] {
+            "0x88",
+            "Reserved"}, -1);
+            System.Windows.Forms.ListViewItem listViewItem37 = new System.Windows.Forms.ListViewItem(new string[] {
+            "0x15C",
+            "Nintendo logo CRC"}, -1);
+            System.Windows.Forms.ListViewItem listViewItem38 = new System.Windows.Forms.ListViewItem(new string[] {
+            "0x15E",
+            "Header CRC"}, -1);
+            System.Windows.Forms.ListViewItem listViewItem39 = new System.Windows.Forms.ListViewItem(new string[] {
+            "0x160",
+            "Debug ROM offset"}, -1);
+            System.Windows.Forms.ListViewItem listViewItem40 = new System.Windows.Forms.ListViewItem(new string[] {
+            "0x164",
+            "Debug size"}, -1);
+            System.Windows.Forms.ListViewItem listViewItem41 = new System.Windows.Forms.ListViewItem(new string[] {
+            "0x168",
+            "Debug RAM offset"}, -1);
+            System.Windows.Forms.ListViewItem listViewItem42 = new System.Windows.Forms.ListViewItem(new string[] {
+            "0x16C",
+            "Reserved"}, -1);
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(RomInfo));
+            this.groupBanner = new System.Windows.Forms.GroupBox();
+            this.btnBannerGuardar = new System.Windows.Forms.Button();
+            this.txtBannerReserved = new System.Windows.Forms.TextBox();
+            this.txtBannerCRC = new System.Windows.Forms.TextBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.txtBannerVer = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.comboBannerLang = new System.Windows.Forms.ComboBox();
+            this.txtBannerTitle = new System.Windows.Forms.TextBox();
+            this.picIcon = new System.Windows.Forms.PictureBox();
+            this.listInfo = new System.Windows.Forms.ListView();
+            this.columnPosicion = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnCampo = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnValor = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.groupBanner.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picIcon)).BeginInit();
+            this.SuspendLayout();
+            // 
+            // groupBanner
+            // 
+            this.groupBanner.BackColor = System.Drawing.Color.Transparent;
+            this.groupBanner.Controls.Add(this.btnBannerGuardar);
+            this.groupBanner.Controls.Add(this.txtBannerReserved);
+            this.groupBanner.Controls.Add(this.txtBannerCRC);
+            this.groupBanner.Controls.Add(this.label4);
+            this.groupBanner.Controls.Add(this.label3);
+            this.groupBanner.Controls.Add(this.txtBannerVer);
+            this.groupBanner.Controls.Add(this.label2);
+            this.groupBanner.Controls.Add(this.comboBannerLang);
+            this.groupBanner.Controls.Add(this.txtBannerTitle);
+            this.groupBanner.Controls.Add(this.picIcon);
+            this.groupBanner.Dock = System.Windows.Forms.DockStyle.Top;
+            this.groupBanner.Location = new System.Drawing.Point(494, 0);
+            this.groupBanner.Name = "groupBanner";
+            this.groupBanner.Size = new System.Drawing.Size(200, 274);
+            this.groupBanner.TabIndex = 7;
+            this.groupBanner.TabStop = false;
+            this.groupBanner.Text = "Banner";
+            // 
+            // btnBannerGuardar
+            // 
+            this.btnBannerGuardar.ImageKey = "(none)";
+            this.btnBannerGuardar.Location = new System.Drawing.Point(65, 19);
+            this.btnBannerGuardar.Name = "btnBannerGuardar";
+            this.btnBannerGuardar.Size = new System.Drawing.Size(127, 32);
+            this.btnBannerGuardar.TabIndex = 11;
+            this.btnBannerGuardar.Text = "Guardar como...";
+            this.btnBannerGuardar.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnBannerGuardar.UseVisualStyleBackColor = true;
+            // 
+            // txtBannerReserved
+            // 
+            this.txtBannerReserved.Location = new System.Drawing.Point(66, 118);
+            this.txtBannerReserved.Name = "txtBannerReserved";
+            this.txtBannerReserved.ReadOnly = true;
+            this.txtBannerReserved.Size = new System.Drawing.Size(126, 20);
+            this.txtBannerReserved.TabIndex = 10;
+            // 
+            // txtBannerCRC
+            // 
+            this.txtBannerCRC.Location = new System.Drawing.Point(65, 92);
+            this.txtBannerCRC.Name = "txtBannerCRC";
+            this.txtBannerCRC.ReadOnly = true;
+            this.txtBannerCRC.Size = new System.Drawing.Size(126, 20);
+            this.txtBannerCRC.TabIndex = 9;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(6, 121);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(53, 13);
+            this.label4.TabIndex = 8;
+            this.label4.Text = "Reserved";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(7, 99);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(44, 13);
+            this.label3.TabIndex = 7;
+            this.label3.Text = "CRC16:";
+            // 
+            // txtBannerVer
+            // 
+            this.txtBannerVer.Location = new System.Drawing.Point(66, 66);
+            this.txtBannerVer.Name = "txtBannerVer";
+            this.txtBannerVer.ReadOnly = true;
+            this.txtBannerVer.Size = new System.Drawing.Size(126, 20);
+            this.txtBannerVer.TabIndex = 6;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(6, 69);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(45, 13);
+            this.label2.TabIndex = 5;
+            this.label2.Text = "Version:";
+            // 
+            // comboBannerLang
+            // 
+            this.comboBannerLang.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Append;
+            this.comboBannerLang.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.comboBannerLang.BackColor = System.Drawing.Color.White;
+            this.comboBannerLang.FormattingEnabled = true;
+            this.comboBannerLang.Items.AddRange(new object[] {
+            "Japonés",
+            "Inglés",
+            "Francés",
+            "Alemán",
+            "Italiano",
+            "Español"});
+            this.comboBannerLang.Location = new System.Drawing.Point(10, 156);
+            this.comboBannerLang.Name = "comboBannerLang";
+            this.comboBannerLang.Size = new System.Drawing.Size(181, 21);
+            this.comboBannerLang.TabIndex = 4;
+            this.comboBannerLang.Text = "Japonés";
+            // 
+            // txtBannerTitle
+            // 
+            this.txtBannerTitle.BackColor = System.Drawing.SystemColors.Control;
+            this.txtBannerTitle.Location = new System.Drawing.Point(10, 183);
+            this.txtBannerTitle.Multiline = true;
+            this.txtBannerTitle.Name = "txtBannerTitle";
+            this.txtBannerTitle.ReadOnly = true;
+            this.txtBannerTitle.Size = new System.Drawing.Size(182, 85);
+            this.txtBannerTitle.TabIndex = 3;
+            // 
+            // picIcon
+            // 
+            this.picIcon.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.picIcon.Location = new System.Drawing.Point(9, 19);
+            this.picIcon.Name = "picIcon";
+            this.picIcon.Size = new System.Drawing.Size(32, 32);
+            this.picIcon.TabIndex = 0;
+            this.picIcon.TabStop = false;
+            // 
+            // listInfo
+            // 
+            this.listInfo.Activation = System.Windows.Forms.ItemActivation.OneClick;
+            this.listInfo.Alignment = System.Windows.Forms.ListViewAlignment.Default;
+            this.listInfo.BackColor = System.Drawing.SystemColors.Control;
+            this.listInfo.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.listInfo.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnPosicion,
+            this.columnCampo,
+            this.columnValor});
+            this.listInfo.Dock = System.Windows.Forms.DockStyle.Left;
+            this.listInfo.HoverSelection = true;
+            this.listInfo.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
+            listViewItem1,
+            listViewItem2,
+            listViewItem3,
+            listViewItem4,
+            listViewItem5,
+            listViewItem6,
+            listViewItem7,
+            listViewItem8,
+            listViewItem9,
+            listViewItem10,
+            listViewItem11,
+            listViewItem12,
+            listViewItem13,
+            listViewItem14,
+            listViewItem15,
+            listViewItem16,
+            listViewItem17,
+            listViewItem18,
+            listViewItem19,
+            listViewItem20,
+            listViewItem21,
+            listViewItem22,
+            listViewItem23,
+            listViewItem24,
+            listViewItem25,
+            listViewItem26,
+            listViewItem27,
+            listViewItem28,
+            listViewItem29,
+            listViewItem30,
+            listViewItem31,
+            listViewItem32,
+            listViewItem33,
+            listViewItem34,
+            listViewItem35,
+            listViewItem36,
+            listViewItem37,
+            listViewItem38,
+            listViewItem39,
+            listViewItem40,
+            listViewItem41,
+            listViewItem42});
+            this.listInfo.LabelEdit = true;
+            this.listInfo.Location = new System.Drawing.Point(0, 0);
+            this.listInfo.Name = "listInfo";
+            this.listInfo.Size = new System.Drawing.Size(494, 472);
+            this.listInfo.TabIndex = 6;
+            this.listInfo.UseCompatibleStateImageBehavior = false;
+            this.listInfo.View = System.Windows.Forms.View.Details;
+            // 
+            // columnPosicion
+            // 
+            this.columnPosicion.Text = "Posición";
+            // 
+            // columnCampo
+            // 
+            this.columnCampo.Text = "Campo";
+            this.columnCampo.Width = 198;
+            // 
+            // columnValor
+            // 
+            this.columnValor.Text = "Valor";
+            this.columnValor.Width = 214;
+            // 
+            // RomInfo
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
+            this.ClientSize = new System.Drawing.Size(694, 472);
+            this.ControlBox = false;
+            this.Controls.Add(this.groupBanner);
+            this.Controls.Add(this.listInfo);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
+            this.Name = "RomInfo";
+            this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
+            this.Text = "Información de la ROM";
+            this.groupBanner.ResumeLayout(false);
+            this.groupBanner.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picIcon)).EndInit();
+            this.ResumeLayout(false);
+
+        }
+
+        #endregion
+
+        private System.Windows.Forms.GroupBox groupBanner;
+        private System.Windows.Forms.Button btnBannerGuardar;
+        private System.Windows.Forms.TextBox txtBannerReserved;
+        private System.Windows.Forms.TextBox txtBannerCRC;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.TextBox txtBannerVer;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.ComboBox comboBannerLang;
+        private System.Windows.Forms.TextBox txtBannerTitle;
+        private System.Windows.Forms.PictureBox picIcon;
+        private System.Windows.Forms.ListView listInfo;
+        private System.Windows.Forms.ColumnHeader columnPosicion;
+        private System.Windows.Forms.ColumnHeader columnCampo;
+        private System.Windows.Forms.ColumnHeader columnValor;
+    }
+}

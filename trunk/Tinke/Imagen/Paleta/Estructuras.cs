@@ -20,7 +20,7 @@ namespace Tinke.Imagen.Paleta
             public char[] ID;
             public UInt32 tamaño;       // Incluye cabecera
             public Depth profundidad;
-            public UInt32 constante;    // Siempre 0x00000000
+            public UInt32 unknown1;    // ¿¿padding??
             public UInt32 tamañoPaletas;
             public UInt32 nColores;     // Suele ser 0x10
             public NTFP[] paletas;
