@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -12,6 +13,14 @@ namespace PluginInterface
             public UInt16 id;               // ID único de cada archivo.
             public string path;             // En caso de haber sido descomprimido y estar fuera del sistema de archivos.
         }
+    public struct Carpeta
+    {
+        public List<Archivo> files;        // Lista de archivos que contiene el directorio
+        public List<Carpeta> folders;      // Lista de carpetas que contiene el directorio
+        public string name;                // Nombre de la carpeta
+        public UInt16 id;                  // ID de la carpeta. Comienza en 0xF000 que es root
+    }
+
     public struct Header    // Generic Header
     {
         public char[] id;                   // RCSN = 0x5243534E

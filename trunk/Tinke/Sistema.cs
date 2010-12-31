@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.IO;
 using System.Threading;
+using PluginInterface;
 
 namespace Tinke
 {
@@ -52,7 +53,7 @@ namespace Tinke
             romInfo = new RomInfo(o.FileName);
             accion = new Acciones(o.FileName, new String(romInfo.Cabecera.gameCode));
             // Obtenemos el sistema de archivos
-            Nitro.Estructuras.Folder root = FNT(o.FileName, romInfo.Cabecera.fileNameTableOffset, romInfo.Cabecera.fileNameTableSize);
+            Carpeta root = FNT(o.FileName, romInfo.Cabecera.fileNameTableOffset, romInfo.Cabecera.fileNameTableSize);
             // Añadimos los Overlays
             root.folders[root.folders.Count - 1].files.AddRange(
                 ARMOverlay(o.FileName, romInfo.Cabecera.ARM9overlayOffset, romInfo.Cabecera.ARM9overlaySize, true)
@@ -77,12 +78,12 @@ namespace Tinke
         }
 
 
-        private Nitro.Estructuras.Folder FNT(string file, UInt32 offset, UInt32 size)
+        private Carpeta FNT(string file, UInt32 offset, UInt32 size)
         {
-            Nitro.Estructuras.Folder root = Nitro.FNT.LeerFNT(file, offset);
+            Carpeta root = Nitro.FNT.LeerFNT(file, offset);
             accion.Root = root;
 
-            Nitro.Estructuras.File fnt = new Nitro.Estructuras.File();
+            Archivo fnt = new Archivo();
             fnt.name = "fnt.bin";
             fnt.offset = offset;
             fnt.size = size;
@@ -90,27 +91,27 @@ namespace Tinke
             fnt.id = (ushort)accion.LastFileID;
             accion.LastFileID++;
 
-            if (!(root.folders is List<Nitro.Estructuras.Folder>))
-                root.folders = new List<Nitro.Estructuras.Folder>();
-            Nitro.Estructuras.Folder ftc = new Nitro.Estructuras.Folder();
+            if (!(root.folders is List<Carpeta>))
+                root.folders = new List<Carpeta>();
+            Carpeta ftc = new Carpeta();
             ftc.name = "ftc";
             ftc.id = (ushort)accion.LastFolderID;
             accion.LastFolderID++;
-            ftc.files = new List<Nitro.Estructuras.File>();
+            ftc.files = new List<Archivo>();
             ftc.files.Add(fnt);
             root.folders.Add(ftc);
 
             return root;
         }
-        private Nitro.Estructuras.File[] ARMOverlay(string file, UInt32 offset, UInt32 size, bool ARM9)
+        private Archivo[] ARMOverlay(string file, UInt32 offset, UInt32 size, bool ARM9)
         {
             return Nitro.Overlay.LeerOverlaysBasico(file, offset, size, ARM9);
         }
-        private Nitro.Estructuras.Folder FAT(string file, UInt32 offset, UInt32 size, Nitro.Estructuras.Folder root)
+        private Carpeta FAT(string file, UInt32 offset, UInt32 size, Carpeta root)
         {
             return Nitro.FAT.LeerFAT(file, offset, size, root);
         }
-        private TreeNode Jerarquizar_Nodos(Nitro.Estructuras.Folder root, Nitro.Estructuras.Folder currFolder)
+        private TreeNode Jerarquizar_Nodos(Carpeta root, Carpeta currFolder)
         {
             TreeNode currNode = new TreeNode();
 
@@ -119,14 +120,14 @@ namespace Tinke
             currNode.Name = currFolder.name;
 
 
-            if (currFolder.folders is List<Nitro.Estructuras.Folder>)
-                foreach (Nitro.Estructuras.Folder subFolder in currFolder.folders)
+            if (currFolder.folders is List<Carpeta>)
+                foreach (Carpeta subFolder in currFolder.folders)
                     currNode.Nodes.Add(Jerarquizar_Nodos(root, subFolder));
 
 
-            if (currFolder.files is List<Nitro.Estructuras.File>)
+            if (currFolder.files is List<Archivo>)
             {
-                foreach (Nitro.Estructuras.File archivo in currFolder.files)
+                foreach (Archivo archivo in currFolder.files)
                 {
                     int nImage = accion.ImageFormatFile(accion.Get_Formato(archivo.id));
                     TreeNode fileNode = new TreeNode(archivo.name, nImage, nImage);
@@ -169,7 +170,7 @@ namespace Tinke
             }
             else if (Convert.ToUInt16(e.Node.Tag) < 0xF000)
             {
-                Nitro.Estructuras.File selectFile = accion.Select_File();
+                Archivo selectFile = accion.Select_File();
 
                 listFile.Items[0].SubItems.Add(selectFile.name);
                 listFile.Items[1].SubItems.Add(selectFile.id.ToString());
@@ -197,7 +198,7 @@ namespace Tinke
             }
             else
             {
-                Nitro.Estructuras.Folder selectFolder = accion.Select_Folder();
+                Carpeta selectFolder = accion.Select_Folder();
 
                 listFile.Items[0].SubItems.Add(selectFolder.name);
                 listFile.Items[1].SubItems.Add("0x" + String.Format("{0:X}", selectFolder.id));
@@ -214,13 +215,13 @@ namespace Tinke
         }
         private void btnHex_Click(object sender, EventArgs e)
         {
-            Nitro.Estructuras.File fileSelect = accion.Select_File();
+            Archivo fileSelect = accion.Select_File();
             Thread hex = new Thread(ThreadHexadecimal);
             hex.Start(fileSelect);
         }
         private void ThreadHexadecimal(Object archivo)
         {
-            Nitro.Estructuras.File file = (Nitro.Estructuras.File)archivo;
+            Archivo file = (Archivo)archivo;
             VisorHex hex;
 
             if (file.offset != 0x0)
@@ -255,6 +256,7 @@ namespace Tinke
             treeSystem.Nodes.Clear();
             treeSystem.Nodes.Add(Jerarquizar_Nodos(accion.Root, accion.Root));
             treeSystem.SelectedNode = null;
+            accion.IDSelect = 0xF000;
 
             debug.Añadir_Texto(sb.ToString());
             sb.Clear();
@@ -262,7 +264,7 @@ namespace Tinke
         private void btnExtraer_Click(object sender, EventArgs e)
         {
             // TODO: Extraer todocheck
-            Nitro.Estructuras.File fileSelect = accion.Select_File();
+            Archivo fileSelect = accion.Select_File();
 
             SaveFileDialog o = new SaveFileDialog();
             o.FileName = fileSelect.name;

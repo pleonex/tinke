@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using PluginInterface;
 
 namespace Tinke.Nitro
 {
@@ -31,15 +32,15 @@ namespace Tinke.Nitro
             return overlays;
         }
 
-        public static Estructuras.File[] LeerOverlaysBasico(string file, UInt32 offset, UInt32 size, bool arm9)
+        public static Archivo[] LeerOverlaysBasico(string file, UInt32 offset, UInt32 size, bool arm9)
         {
-            Estructuras.File[] overlays = new Estructuras.File[size / 0x20];
+            Archivo[] overlays = new Archivo[size / 0x20];
             BinaryReader br = new BinaryReader(File.OpenRead(file));
             br.BaseStream.Position = offset;
 
             for (int i = 0; i < overlays.Length; i++)
             {
-                overlays[i] = new Estructuras.File();
+                overlays[i] = new Archivo();
                 overlays[i].name = "overlay" + (arm9 ? '9' : '7') + '_' + br.ReadUInt32();
                 br.ReadBytes(20);
                 overlays[i].id = (ushort)br.ReadUInt32();

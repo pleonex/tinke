@@ -66,19 +66,19 @@
             this.label2 = new System.Windows.Forms.Label();
             this.numericHeight = new System.Windows.Forms.NumericUpDown();
             this.groupProp = new System.Windows.Forms.GroupBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.numericStart = new System.Windows.Forms.NumericUpDown();
             this.listInfo = new System.Windows.Forms.ListView();
             this.columnPos = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnCampo = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnValor = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.btnSave = new System.Windows.Forms.Button();
             this.pic = new System.Windows.Forms.PictureBox();
-            this.numericStart = new System.Windows.Forms.NumericUpDown();
-            this.label3 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.numericWidth)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericHeight)).BeginInit();
             this.groupProp.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pic)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericStart)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pic)).BeginInit();
             this.SuspendLayout();
             // 
             // numericWidth
@@ -162,12 +162,33 @@
             this.groupProp.Controls.Add(this.numericWidth);
             this.groupProp.Controls.Add(this.label2);
             this.groupProp.Controls.Add(this.label1);
-            this.groupProp.Location = new System.Drawing.Point(196, 3);
+            this.groupProp.Location = new System.Drawing.Point(196, 0);
             this.groupProp.Name = "groupProp";
             this.groupProp.Size = new System.Drawing.Size(243, 245);
             this.groupProp.TabIndex = 5;
             this.groupProp.TabStop = false;
             this.groupProp.Text = "Propiedades";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(6, 195);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(35, 13);
+            this.label3.TabIndex = 7;
+            this.label3.Text = "Inicio:";
+            // 
+            // numericStart
+            // 
+            this.numericStart.Location = new System.Drawing.Point(49, 193);
+            this.numericStart.Maximum = new decimal(new int[] {
+            1024,
+            0,
+            0,
+            0});
+            this.numericStart.Name = "numericStart";
+            this.numericStart.Size = new System.Drawing.Size(55, 20);
+            this.numericStart.TabIndex = 6;
             // 
             // listInfo
             // 
@@ -231,27 +252,6 @@
             this.pic.TabIndex = 0;
             this.pic.TabStop = false;
             // 
-            // numericStart
-            // 
-            this.numericStart.Location = new System.Drawing.Point(49, 193);
-            this.numericStart.Maximum = new decimal(new int[] {
-            1024,
-            0,
-            0,
-            0});
-            this.numericStart.Name = "numericStart";
-            this.numericStart.Size = new System.Drawing.Size(55, 20);
-            this.numericStart.TabIndex = 6;
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(6, 195);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(35, 13);
-            this.label3.TabIndex = 7;
-            this.label3.Text = "Inicio:";
-            // 
             // iNCGR
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -268,8 +268,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericHeight)).EndInit();
             this.groupProp.ResumeLayout(false);
             this.groupProp.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pic)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericStart)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pic)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 

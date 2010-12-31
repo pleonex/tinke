@@ -1,5 +1,5 @@
 ﻿// Ir añadiendo y eliminando de la lista. Añadir en la clase estática Estructuras en Nitro.Estructuras.MakerCodes.
-// Poner como valor en la enumeración la conversación a UTF32 de los caracteres hexadecimal. Ej: 01= 0x4849
+// Poner como valor en la enumeración la conversación a ASCII de los caracteres hexadecimal. Ej: 01= 0x4849
 
 	{ "02", "Rocket Games, Ajinomoto" },
 	{ "03", "Imagineer-Zoom" },

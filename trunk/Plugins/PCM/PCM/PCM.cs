@@ -27,7 +27,6 @@ namespace PCM
             return Formato.Desconocido;
         }
 
-
         public void Leer(string archivo)
         {
             string folder = pluginHost.Get_TempFolder();
@@ -81,9 +80,11 @@ namespace PCM
             br.Close();
             br.Dispose();
 
-            pluginHost.Set_Files(files);
+            Carpeta carpeta = new Carpeta();
+            carpeta.files = new List<Archivo>();
+            carpeta.files.AddRange(files);
+            pluginHost.Set_Files(carpeta);
         }
-
         public Control Show_Info(string archivo)
         {
             throw new NotImplementedException();

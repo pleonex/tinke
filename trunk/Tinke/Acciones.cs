@@ -19,7 +19,7 @@ namespace Tinke
 
         string file;
         string gameCode;
-        Nitro.Estructuras.Folder root;
+        Carpeta root;
         int idSelect;
         int lastFileId;
         int lastFolderId;
@@ -91,7 +91,7 @@ namespace Tinke
 
         }
 
-        public Nitro.Estructuras.Folder Root
+        public Carpeta Root
         {
             get { return root; }
             set { root = value; Set_LastFileID(root); lastFileId++; Set_LastFolderID(root); lastFolderId++; }
@@ -149,7 +149,7 @@ namespace Tinke
         public void Set_Data()
         {
             // Guardamos el archivo fuera del sistema de ROM
-            Nitro.Estructuras.File selectFile = Select_File();
+            Archivo selectFile = Select_File();
             string tempFile;
             BinaryReader br;
 
@@ -169,7 +169,9 @@ namespace Tinke
             }
             else
             {
-                tempFile = selectFile.path;
+                FileInfo info = new FileInfo(selectFile.path);
+                File.Copy(selectFile.path, info.DirectoryName + "\\temp_" + info.Name, true);
+                tempFile = info.DirectoryName + "\\temp_" + info.Name;
                 br = new BinaryReader(File.OpenRead(tempFile));
             }
 
@@ -212,27 +214,76 @@ namespace Tinke
             }
             #endregion
 
-            File.Delete(tempFile);
+            #region Formatos comunes
+            try
+            {
+                selectFile.name = selectFile.name.ToUpper();
+                if (selectFile.name.EndsWith(".NCLR") || new String(Encoding.ASCII.GetChars(ext)) == "NCLR" || new String(Encoding.ASCII.GetChars(ext)) == "RLCN")
+                {
+                    pluginHost.Set_NCLR(Imagen_NCLR.Leer(tempFile));
+                    File.Delete(tempFile);
+                }
+                if (selectFile.name.EndsWith(".NCGR") || new String(Encoding.ASCII.GetChars(ext)) == "NCGR" || new String(Encoding.ASCII.GetChars(ext)) == "RGCN")
+                {
+                    pluginHost.Set_NCGR(Imagen_NCGR.Leer(tempFile));
+                    File.Delete(tempFile);
+
+                    if (pluginHost.Get_NSCR().cabecera.file_size != 0x00)
+                    {
+                        NCGR tile = pluginHost.Get_NCGR();
+                        tile.rahc.tileData = Imagen_NSCR.Modificar_Tile(pluginHost.Get_NSCR(), tile.rahc.tileData);
+                        tile.rahc.nTilesX = (ushort)(pluginHost.Get_NSCR().section.width / 8);
+                        tile.rahc.nTilesY = (ushort)(pluginHost.Get_NSCR().section.height / 8);
+                        pluginHost.Set_NCGR(tile);
+                    }
+                }
+                else if (selectFile.name.EndsWith(".NSCR") || new String(Encoding.ASCII.GetChars(ext)) == "NSCR" || new String(Encoding.ASCII.GetChars(ext)) == "RCSN")
+                {
+                    pluginHost.Set_NSCR(Imagen_NSCR.Leer(tempFile));
+                    if (pluginHost.Get_NCGR().cabecera.file_size != 0x00)
+                    {
+                        NCGR tile = pluginHost.Get_NCGR();
+                        tile.rahc.tileData = Imagen_NSCR.Modificar_Tile(pluginHost.Get_NSCR(), tile.rahc.tileData);
+                        tile.rahc.nTilesX = (ushort)(pluginHost.Get_NSCR().section.width / 8);
+                        tile.rahc.nTilesY = (ushort)(pluginHost.Get_NSCR().section.height / 8);
+                        pluginHost.Set_NCGR(tile);
+                    }
+                }
+                else if (selectFile.name.EndsWith(".NCER") || new String(Encoding.ASCII.GetChars(ext)) == "NCER" || new String(Encoding.ASCII.GetChars(ext)) == "RECN")
+                {
+                    pluginHost.Set_NCER(Imagen_NCER.Leer(tempFile));
+                    File.Delete(tempFile);
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+                Console.WriteLine(e.Message);
+            }
+            #endregion
+
+            try { File.Delete(tempFile); }
+            catch { }
         }
-        public void Set_LastFileID(Nitro.Estructuras.Folder currFolder)
+        public void Set_LastFileID(Carpeta currFolder)
         {
-            if (currFolder.files is List<Nitro.Estructuras.File>)
-                foreach (Nitro.Estructuras.File archivo in currFolder.files)
+            if (currFolder.files is List<Archivo>)
+                foreach (Archivo archivo in currFolder.files)
                     if (archivo.id > lastFileId)
                         lastFileId = archivo.id;
 
-            if (currFolder.folders is List<Nitro.Estructuras.Folder>)
-                foreach (Nitro.Estructuras.Folder subFolder in currFolder.folders)
+            if (currFolder.folders is List<Carpeta>)
+                foreach (Carpeta subFolder in currFolder.folders)
                     Set_LastFileID(subFolder);
 
         }
-        public void Set_LastFolderID(Nitro.Estructuras.Folder currFolder)
+        public void Set_LastFolderID(Carpeta currFolder)
         {
             if (currFolder.id > lastFolderId)
                 lastFolderId = currFolder.id;
 
-            if (currFolder.folders is List<Nitro.Estructuras.Folder>)
-                foreach (Nitro.Estructuras.Folder subFolder in currFolder.folders)
+            if (currFolder.folders is List<Carpeta>)
+                foreach (Carpeta subFolder in currFolder.folders)
                     Set_LastFolderID(subFolder);
         }
         public void Delete_PicturesSaved()
@@ -244,11 +295,11 @@ namespace Tinke
             pluginHost.Set_NANR(new NANR());
         }
 
-        public void Add_Files(List<Nitro.Estructuras.File> files)
+        public void Add_Files(List<Archivo> files)
         {
             for (int i = 0; i < files.Count; i++)
             {
-                Nitro.Estructuras.File currFile = files[i];
+                Archivo currFile = files[i];
                 currFile.id = (ushort)lastFileId;
                 files.RemoveAt(i);
                 files.Insert(i, currFile);
@@ -260,45 +311,45 @@ namespace Tinke
             Add_Files(files, (ushort)(lastFolderId - 1), root);
            
         }
-        public Nitro.Estructuras.Folder Add_Files(List<Nitro.Estructuras.File> files, ushort idFolder, Nitro.Estructuras.Folder currFolder)
+        public Carpeta Add_Files(List<Archivo> files, ushort idFolder, Carpeta currFolder)
         {
-            if (currFolder.folders is List<Nitro.Estructuras.Folder>)   // Si tiene subdirectorios, buscamos en cada uno de ellos
+            if (currFolder.folders is List<Carpeta>)   // Si tiene subdirectorios, buscamos en cada uno de ellos
             {
                 for (int i = 0; i < currFolder.folders.Count; i++)
                 {
                     if (currFolder.folders[i].id == idFolder)
                     {
-                        Nitro.Estructuras.Folder newFolder = currFolder.folders[i];
-                        if (!(newFolder.files is List<Nitro.Estructuras.File>))
-                            newFolder.files = new List<Nitro.Estructuras.File>();
+                        Carpeta newFolder = currFolder.folders[i];
+                        if (!(newFolder.files is List<Archivo>))
+                            newFolder.files = new List<Archivo>();
                         newFolder.files.AddRange(files);
                         currFolder.folders[i] = newFolder;
                         return currFolder.folders[i];
                     }
 
-                    Nitro.Estructuras.Folder folder = Add_Files(files, idFolder, currFolder.folders[i]);
+                    Carpeta folder = Add_Files(files, idFolder, currFolder.folders[i]);
                     if (folder.name is string)  // Comprobamos que se haya devuelto un directorio, en cuyo caso es el buscado que lo devolvemos
                         return folder;
                 }
             }
 
-            return new Nitro.Estructuras.Folder();
+            return new Carpeta();
         }
-        public Nitro.Estructuras.Folder FileToFolder(int id, Nitro.Estructuras.Folder currFolder)
+        public Carpeta FileToFolder(int id, Carpeta currFolder)
         {
-            if (currFolder.files is List<Nitro.Estructuras.File>)
+            if (currFolder.files is List<Archivo>)
             {
                 for (int i = 0; i < currFolder.files.Count; i++)
                 {
                     if (currFolder.files[i].id == id)
                     {
-                        Nitro.Estructuras.Folder newFolder = new Nitro.Estructuras.Folder();
+                        Carpeta newFolder = new Carpeta();
                         newFolder.name = currFolder.files[i].name;
                         newFolder.id = (ushort)lastFolderId;
                         lastFolderId++;
                         currFolder.files.RemoveAt(i);
-                        if (!(currFolder.folders is List<Nitro.Estructuras.Folder>))
-                            currFolder.folders = new List<Nitro.Estructuras.Folder>();
+                        if (!(currFolder.folders is List<Carpeta>))
+                            currFolder.folders = new List<Carpeta>();
                         currFolder.folders.Add(newFolder);
                         return currFolder;
                     }
@@ -306,11 +357,11 @@ namespace Tinke
             }
 
 
-            if (currFolder.folders is List<Nitro.Estructuras.Folder>)
+            if (currFolder.folders is List<Carpeta>)
             {
-                foreach (Nitro.Estructuras.Folder subFolder in currFolder.folders)
+                foreach (Carpeta subFolder in currFolder.folders)
                 {
-                    Nitro.Estructuras.Folder folder = FileToFolder(id, subFolder);
+                    Carpeta folder = FileToFolder(id, subFolder);
                     if (folder.name is string)
                     {
                         currFolder.folders.Remove(subFolder);
@@ -321,129 +372,83 @@ namespace Tinke
                 }
             }
 
-            return new Nitro.Estructuras.Folder();
+            return new Carpeta();
         }
-        private static int Comparacion_Directorios(Nitro.Estructuras.Folder f1, Nitro.Estructuras.Folder f2)
+        private static int Comparacion_Directorios(Carpeta f1, Carpeta f2)
         {
             return String.Compare(f1.name, f2.name);
         }
-        public void Change_File(int id, Nitro.Estructuras.File fileChanged, Nitro.Estructuras.Folder currFolder)
+        public void Change_File(int id, Archivo fileChanged, Carpeta currFolder)
         {            
-            if (currFolder.files is List<Nitro.Estructuras.File>)
+            if (currFolder.files is List<Archivo>)
                 for (int i = 0; i < currFolder.files.Count; i++)
                     if (currFolder.files[i].id == id)
                         currFolder.files[i] = fileChanged;
 
 
-            if (currFolder.folders is List<Nitro.Estructuras.Folder>)
-                foreach (Nitro.Estructuras.Folder subFolder in currFolder.folders)
+            if (currFolder.folders is List<Carpeta>)
+                foreach (Carpeta subFolder in currFolder.folders)
                     Change_File(id, fileChanged, subFolder);
         }
     
-        public Nitro.Estructuras.File Select_File()
+        public Archivo Select_File()
         {
             return Recursivo_Archivo(idSelect, root);
         }
-        public Nitro.Estructuras.File Search_File(int id)
+        public Archivo Search_File(int id)
         {
             return Recursivo_Archivo(id, root);
         }
-        public Nitro.Estructuras.Folder Select_Folder()
+        public Carpeta Select_Folder()
         {
             return Recursivo_Carpeta(idSelect, root);
         }
-        private Nitro.Estructuras.File Recursivo_Archivo(int id, Nitro.Estructuras.Folder currFolder)
+        private Archivo Recursivo_Archivo(int id, Carpeta currFolder)
         {
-            if (currFolder.files is List<Nitro.Estructuras.File>)
-                foreach (Nitro.Estructuras.File archivo in currFolder.files)
+            if (currFolder.files is List<Archivo>)
+                foreach (Archivo archivo in currFolder.files)
                     if (archivo.id == id)
                         return archivo;
 
 
-            if (currFolder.folders is List<Nitro.Estructuras.Folder>)
+            if (currFolder.folders is List<Carpeta>)
             {
-                foreach (Nitro.Estructuras.Folder subFolder in currFolder.folders)
+                foreach (Carpeta subFolder in currFolder.folders)
                 {
-                    Nitro.Estructuras.File currFile = Recursivo_Archivo(id, subFolder);
+                    Archivo currFile = Recursivo_Archivo(id, subFolder);
                     if (currFile.name is string)
                         return currFile;
                 }
             }
 
-            return new Nitro.Estructuras.File();
+            return new Archivo();
         }
-        private Nitro.Estructuras.Folder Recursivo_Carpeta(int id, Nitro.Estructuras.Folder currFolder)
+        private Carpeta Recursivo_Carpeta(int id, Carpeta currFolder)
         {
-            if (currFolder.folders is List<Nitro.Estructuras.Folder>)   // Si tiene subdirectorios, buscamos en cada uno de ellos
+            if (currFolder.folders is List<Carpeta>)   // Si tiene subdirectorios, buscamos en cada uno de ellos
             {
-                foreach (Nitro.Estructuras.Folder subFolder in currFolder.folders)
+                foreach (Carpeta subFolder in currFolder.folders)
                 {
                     if (subFolder.id == id)     // Si lo hemos encontrado lo devolvemos, en caso contrario, seguimos buscando
                         return subFolder;
 
-                    Nitro.Estructuras.Folder folder = Recursivo_Carpeta(id, subFolder);
+                    Carpeta folder = Recursivo_Carpeta(id, subFolder);
                     if (folder.name is string)  // Comprobamos que se haya devuelto un directorio, en cuyo caso es el buscado que lo devolvemos
                         return folder;
                 }
             }
 
-            return new Nitro.Estructuras.Folder();
+            return new Carpeta();
         }
 
         public Formato Get_Formato()
         {
-            Formato tipo = Formato.Desconocido;
-            Nitro.Estructuras.File currFile = Select_File();
-
-            BinaryReader br;
-            if (currFile.offset != 0x0)
-            {
-                br = new BinaryReader(File.OpenRead(file));
-                br.BaseStream.Position = currFile.offset;
-            }
-            else    // En caso de que el archivo haya sido extraído y no esté en la ROM
-                br = new BinaryReader(File.OpenRead(currFile.path));
-
-            byte[] ext;
-            try { ext = br.ReadBytes(4); }
-            catch
-            {
-                Console.WriteLine("Error al intentar obtener el formato del archivo");
-                return Formato.Desconocido;
-            }
-
-            br.Close();
-            br.Dispose();
-
-            try
-            {
-                if (gamePlugin is IGamePlugin)
-                    tipo = gamePlugin.Get_Formato(currFile.name, ext, idSelect);
-                if (tipo != Formato.Desconocido)
-                    return tipo;
-
-                foreach (IPlugin formato in formatList)
-                {
-                    tipo = formato.Get_Formato(currFile.name, ext);
-                    if (tipo != Formato.Desconocido)
-                        return tipo;
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-                return Formato.Desconocido;
-            }
-
-            if (ext[0] == LZ77_TAG || ext[0] == LZSS_TAG || ext[0] == RLE_TAG || ext[0] == HUFF_TAG)
-                return Formato.Comprimido;
-
-            return Formato.Desconocido;
+            return Get_Formato(idSelect);
         }
         public Formato Get_Formato(int id)
         {
             Formato tipo = Formato.Desconocido;
-            Nitro.Estructuras.File currFile = Search_File(id);
+            Archivo currFile = Search_File(id);
             BinaryReader br;
             if (currFile.offset != 0x0)
             {
@@ -460,6 +465,7 @@ namespace Tinke
             br.Close();
             br.Dispose();
 
+            #region Búsqueda y llamada de plugin
             try
             {
                 if (gamePlugin is IGamePlugin)
@@ -479,6 +485,20 @@ namespace Tinke
                 Console.WriteLine(e.Message);
                 return Formato.Desconocido;
             }
+            #endregion
+
+            currFile.name = currFile.name.ToUpper();
+            if (currFile.name.EndsWith(".NCLR") || new String(Encoding.ASCII.GetChars(ext)) == "NCLR" || new String(Encoding.ASCII.GetChars(ext)) == "RLCN")
+                return Formato.Paleta;
+            else if (currFile.name.EndsWith(".NCGR") || new String(Encoding.ASCII.GetChars(ext)) == "NCGR" || new String(Encoding.ASCII.GetChars(ext)) == "RGCN")
+                return Formato.Imagen;
+            else if (currFile.name.EndsWith(".NSCR") || new String(Encoding.ASCII.GetChars(ext)) == "NSCR" || new String(Encoding.ASCII.GetChars(ext)) == "RCSN")
+                return Formato.Screen;
+            else if (currFile.name.EndsWith(".NCER") || new String(Encoding.ASCII.GetChars(ext)) == "NCER" || new String(Encoding.ASCII.GetChars(ext)) == "RECN")
+                return Formato.Celdas;
+            // TODO: Compatibilidad NANR
+            /*else if (currFile.name.EndsWith(".NANR") || new String(Encoding.ASCII.GetChars(ext)) == "NANR" || new String(Encoding.ASCII.GetChars(ext)) == "RNAN")
+                return Formato.Animación;*/
 
             if (ext[0] == LZ77_TAG || ext[0] == LZSS_TAG || ext[0] == RLE_TAG || ext[0] == HUFF_TAG)
                 return Formato.Comprimido;
@@ -489,7 +509,7 @@ namespace Tinke
         public void Extract()
         {
             // Guardamos el archivo para descomprimir fuera del sistema de ROM
-            Nitro.Estructuras.File selectFile = Select_File();
+            Archivo selectFile = Select_File();
             string tempFile; 
             BinaryReader br;
             byte[] ext;
@@ -510,7 +530,9 @@ namespace Tinke
             }
             else
             {
-                tempFile = selectFile.path;
+                FileInfo info = new FileInfo(selectFile.path);
+                File.Copy(selectFile.path, info.DirectoryName + "\\temp_" + info.Name, true);
+                tempFile = info.DirectoryName + "\\temp_" + info.Name;
                 br = new BinaryReader(File.OpenRead(tempFile));             
             }
 
@@ -543,11 +565,14 @@ namespace Tinke
                 {
                     FileInfo info = new FileInfo(tempFile);
                     Compresion.Basico.Decompress(tempFile, info.DirectoryName + "\\un_" + info.Name);
+                    Carpeta carpeta = new Carpeta();
                     Archivo file = new Archivo();
                     file.name = selectFile.name;
                     file.path = info.DirectoryName + "\\un_" + info.Name;
                     file.size = (uint)new FileInfo(info.DirectoryName + "\\un_" + info.Name).Length;
-                    pluginHost.Set_Files(new Archivo[1] { file });
+                    carpeta.files = new List<Archivo>();
+                    carpeta.files.Add(file);
+                    pluginHost.Set_Files(carpeta);
                 }
             }
             catch (Exception e)
@@ -559,17 +584,8 @@ namespace Tinke
             #endregion
         Continuar:
 
-            List<Nitro.Estructuras.File> files = new List<Nitro.Estructuras.File>();
-            foreach (Archivo archivo in pluginHost.Get_Files())
-            {
-                Nitro.Estructuras.File newFile = new Nitro.Estructuras.File();
-                newFile.name = archivo.name;
-                newFile.path = archivo.path;
-                newFile.size = archivo.size;
-                files.Add(newFile);
-            }
             // Se añaden los archivos descomprimidos al árbol de archivos.
-            Add_Files(files);
+            Add_Files(pluginHost.Get_Files().files);
 
             File.Delete(tempFile);
         }
@@ -603,8 +619,10 @@ namespace Tinke
                 file.name = new FileInfo(arg).Name;
                 file.path = info.DirectoryName + "\\un\\" + info.Name;
                 file.size = (uint)new FileInfo(info.DirectoryName + "\\un\\" + info.Name).Length;
-                pluginHost.Set_Files(new Archivo[1] { file });
-
+                Carpeta carpeta = new Carpeta();
+                carpeta.files = new List<Archivo>();
+                carpeta.files.Add(file);
+                pluginHost.Set_Files(carpeta);
             }
             catch (Exception e)
             {
@@ -613,13 +631,13 @@ namespace Tinke
                 return "";
             }
         Continuar:
-            return new FileInfo(pluginHost.Get_Files()[0].path).DirectoryName;
+            return new FileInfo(pluginHost.Get_Files().files[0].path).DirectoryName;
         }
 
         public Control See_File()
         {
             // Guardamos el archivo fuera del sistema de ROM
-            Nitro.Estructuras.File selectFile = Select_File();
+            Archivo selectFile = Select_File();
             string tempFile;
             BinaryReader br;
 
@@ -639,7 +657,9 @@ namespace Tinke
             }
             else
             {
-                tempFile = selectFile.path;
+                FileInfo info = new FileInfo(selectFile.path);
+                File.Copy(selectFile.path, info.DirectoryName + "\\temp_" + info.Name, true);
+                tempFile = info.DirectoryName + "\\temp_" + info.Name;
                 br = new BinaryReader(File.OpenRead(tempFile));
             }
 
@@ -687,7 +707,92 @@ namespace Tinke
             }
             #endregion
 
-            File.Delete(tempFile);
+            #region Formatos comunes
+            try
+            {
+                selectFile.name = selectFile.name.ToUpper();
+                if (selectFile.name.EndsWith(".NCLR") || new String(Encoding.ASCII.GetChars(ext)) == "NCLR" || new String(Encoding.ASCII.GetChars(ext)) == "RLCN")
+                {
+                    pluginHost.Set_NCLR(Imagen_NCLR.Leer(tempFile));
+                    File.Delete(tempFile);
+                    return new Control();
+                }
+                if (selectFile.name.EndsWith(".NCGR") || new String(Encoding.ASCII.GetChars(ext)) == "NCGR" || new String(Encoding.ASCII.GetChars(ext)) == "RGCN")
+                {
+                    pluginHost.Set_NCGR(Imagen_NCGR.Leer(tempFile));
+                    File.Delete(tempFile);
+
+                    if (pluginHost.Get_NSCR().cabecera.file_size != 0x00)
+                    {
+                        NCGR tile = pluginHost.Get_NCGR();
+                        tile.rahc.tileData = Imagen_NSCR.Modificar_Tile(pluginHost.Get_NSCR(), tile.rahc.tileData);
+                        tile.rahc.nTilesX = (ushort)(pluginHost.Get_NSCR().section.width / 8);
+                        tile.rahc.nTilesY = (ushort)(pluginHost.Get_NSCR().section.height / 8);
+                        pluginHost.Set_NCGR(tile);
+                    }
+
+                    if (pluginHost.Get_NCLR().cabecera.file_size != 0x00)
+                    {
+                        iNCGR control = new iNCGR(pluginHost.Get_NCGR(), pluginHost.Get_NCLR());
+                        control.Dock = DockStyle.Fill;
+                        return control;
+                    }
+                    else
+                        return new Control();
+                }
+                else if (selectFile.name.EndsWith(".NSCR") || new String(Encoding.ASCII.GetChars(ext)) == "NSCR" || new String(Encoding.ASCII.GetChars(ext)) == "RCSN")
+                {
+                    pluginHost.Set_NSCR(Imagen_NSCR.Leer(tempFile));
+                    if (pluginHost.Get_NCGR().cabecera.file_size != 0x00)
+                    {
+                        NCGR tile = pluginHost.Get_NCGR();
+                        tile.rahc.tileData = Imagen_NSCR.Modificar_Tile(pluginHost.Get_NSCR(), tile.rahc.tileData);
+                        tile.rahc.nTilesX = (ushort)(pluginHost.Get_NSCR().section.width / 8);
+                        tile.rahc.nTilesY = (ushort)(pluginHost.Get_NSCR().section.height / 8);
+                        pluginHost.Set_NCGR(tile);
+
+                        if (pluginHost.Get_NCLR().cabecera.file_size != 0x00)
+                        {
+                            iNCGR control = new iNCGR(pluginHost.Get_NCGR(), pluginHost.Get_NCLR());
+                            control.Dock = DockStyle.Fill;
+                            return control;
+                        }
+                    }
+                    return new Control();
+                }
+                else if (selectFile.name.EndsWith(".NCER") || new String(Encoding.ASCII.GetChars(ext)) == "NCER" || new String(Encoding.ASCII.GetChars(ext)) == "RECN")
+                {
+                    pluginHost.Set_NCER(Imagen_NCER.Leer(tempFile));
+                    File.Delete(tempFile);
+
+                    if (pluginHost.Get_NCGR().cabecera.file_size != 0x00 && pluginHost.Get_NCLR().cabecera.file_size != 0x00)
+                    {
+                        TabControl control = new TabControl();
+                        NCER ncer = pluginHost.Get_NCER();
+                        for (int i = 0; i < ncer.cebk.nBanks; i++)
+                        {
+                            TabPage page = new TabPage("Imagen " + i.ToString());
+                            PictureBox pics = new PictureBox();
+                            pics.Image = Imagen_NCER.Obtener_Imagen(ncer.cebk.banks[i], pluginHost.Get_NCGR(), pluginHost.Get_NCLR());
+                            pics.Dock = DockStyle.Fill;
+                            page.Controls.Add(pics);
+                            control.TabPages.Add(page);
+                        }
+                        return control;
+                    }
+
+                    return new Control();
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+                Console.WriteLine(e.Message);
+            }
+            #endregion
+
+            try { File.Delete(tempFile); }
+            catch { }
             return new Control();
         }
 
