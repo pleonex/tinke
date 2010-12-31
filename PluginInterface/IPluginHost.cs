@@ -23,6 +23,7 @@ namespace PluginInterface
         
         Color[] BGR555(byte[] datos);
         Byte[] BytesTo4BitsRev(byte[] datos);
+        String BytesToBits(byte[] datos);
         Bitmap Bitmap_NCGR(NCGR ncgr, NCLR nclr);
         Bitmap Bitmap_NCGR(NCGR ncgr, NCLR nclr, int tilesX, int tilesY);
         Bitmap Bitmap_NCGR(NCGR ncgr, NCLR nclr, int startTile);

@@ -329,7 +329,10 @@ namespace Tinke
                 }
             }
             else
+            {
                 this.Width = 650;
+                btnDesplazar.Text = ">>>>>";
+            }
 
         }
 

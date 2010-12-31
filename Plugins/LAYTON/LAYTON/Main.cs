@@ -34,10 +34,14 @@ namespace LAYTON
                 case 'E':
                     if (id >= 0x0001 && id <= 0x02CA)
                         return new Ani(pluginHost, gameCode, "").Get_Formato(nombre);
+                    else if (id >= 0x02CD && id <= 0x0765)
+                        return new Bg(pluginHost, gameCode, "").Get_Formato(nombre);
                     break;
                 case 'P':
                     if (id >= 0x0001 && id <= 0x04E7)
                         return new Ani(pluginHost, gameCode, "").Get_Formato(nombre);
+                    else if (id >= 0x04E8 && id <= 0x0B72)
+                        return new Bg(pluginHost, gameCode, "").Get_Formato(nombre);
                     break;
             }
             
@@ -56,10 +60,14 @@ namespace LAYTON
                 case 'E':
                     if (id >= 0x0001 && id <= 0x02CA)
                         return new Ani(pluginHost, gameCode, archivo).Show_Info();
+                    else if (id >= 0x02CD && id <= 0x0765)
+                        return new Bg(pluginHost, gameCode, archivo).Show_Info();
                     break;
                 case 'P':
                     if (id >= 0x0001 && id <= 0x04E7)
                         return new Ani(pluginHost, gameCode, archivo).Show_Info();
+                    else if (id >= 0x04E8 && id <= 0x0B72)
+                        return new Bg(pluginHost, gameCode, archivo).Show_Info();
                     break;
             }
             return new Control();
