@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using PluginInterface;
 
 namespace Tinke.Nitro
 {
@@ -17,9 +18,9 @@ namespace Tinke.Nitro
         /// <param name="file">Archivo ROM</param>
         /// <param name="offset">Offset donde comienza la FNT</param>
         /// <returns></returns>
-        public static Estructuras.Folder LeerFNT(string file, UInt32 offset)
+        public static Carpeta LeerFNT(string file, UInt32 offset)
         {
-            Estructuras.Folder root = new Estructuras.Folder();
+            Carpeta root = new Carpeta();
             List<Estructuras.MainFNT> mains = new List<Estructuras.MainFNT>();
 
             BinaryReader br = new BinaryReader(File.OpenRead(file)); 
@@ -46,10 +47,10 @@ namespace Tinke.Nitro
                 {
                     if (id < 0x80)  // Archivo
                     {
-                        Estructuras.File currFile = new Estructuras.File();
+                        Archivo currFile = new Archivo();
 
-                        if (!(main.subTable.files is List<Estructuras.File>))
-                            main.subTable.files = new List<Estructuras.File>();
+                        if (!(main.subTable.files is List<Archivo>))
+                            main.subTable.files = new List<Archivo>();
 
                         int lengthName = id;
                         currFile.name = new String(br.ReadChars(lengthName));
@@ -59,10 +60,10 @@ namespace Tinke.Nitro
                     }
                     if (id > 0x80)  // Directorio
                     {
-                        Estructuras.Folder currFolder = new Estructuras.Folder();
+                        Carpeta currFolder = new Carpeta();
 
-                        if (!(main.subTable.folders is List<Estructuras.Folder>))
-                           main.subTable.folders = new List<Estructuras.Folder>();
+                        if (!(main.subTable.folders is List<Carpeta>))
+                           main.subTable.folders = new List<Carpeta>();
 
                         int lengthName = id - 0x80;
                         currFolder.name = new String(br.ReadChars(lengthName));
@@ -87,19 +88,19 @@ namespace Tinke.Nitro
             return root;
         }
 
-        public static Estructuras.Folder Jerarquizar_Carpetas(List<Estructuras.MainFNT> tables, int idFolder, string nameFolder)
+        public static Carpeta Jerarquizar_Carpetas(List<Estructuras.MainFNT> tables, int idFolder, string nameFolder)
         {
-            Estructuras.Folder currFolder = new Estructuras.Folder();
+            Carpeta currFolder = new Carpeta();
             
             currFolder.name = nameFolder;
             currFolder.id = (ushort)idFolder;
             currFolder.files = tables[idFolder & 0xFFF].subTable.files;
 
-           if (tables[idFolder & 0xFFF].subTable.folders is List<Estructuras.Folder>) // Si tiene carpetas dentro.
+           if (tables[idFolder & 0xFFF].subTable.folders is List<Carpeta>) // Si tiene carpetas dentro.
            {
-                currFolder.folders = new List<Estructuras.Folder>();
+                currFolder.folders = new List<Carpeta>();
 
-                foreach (Estructuras.Folder subFolder in tables[idFolder & 0xFFF].subTable.folders)
+                foreach (Carpeta subFolder in tables[idFolder & 0xFFF].subTable.folders)
                     currFolder.folders.Add(Jerarquizar_Carpetas(tables, subFolder.id, subFolder.name));
            }
 

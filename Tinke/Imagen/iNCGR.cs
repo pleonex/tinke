@@ -44,8 +44,8 @@ namespace Tinke
 
         private void iNCGR_SizeChanged(object sender, EventArgs e)
         {
-            pic.Location = new Point(0, 0);
-            groupProp.Location = new Point(this.Width - groupProp.Width, 0);
+            pic.Location = new Point(0, 5);
+            groupProp.Location = new Point(this.Width - groupProp.Width, 5);
             groupProp.Height = this.Height - btnSave.Height - 10;
             listInfo.Height = groupProp.Height - 78;
             label1.Location = new Point(label1.Location.X, listInfo.Height + 54);

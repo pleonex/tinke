@@ -16,7 +16,7 @@ namespace Tinke
         NCER celda;
         NANR animacion;
 
-        Archivo[] extraidos;
+        Carpeta extraidos;
         string tempFolder;
 
         public PluginHost()
@@ -61,14 +61,14 @@ namespace Tinke
         public Size Tamaño_NCER(byte byte1, byte byte2) { return Imagen_NCER.Obtener_Tamaño(byte1, byte2); }
         public Bitmap Bitmap_NCER(Bank celda, NCGR ncgr, NCLR nclr) { return Imagen_NCER.Obtener_Imagen(celda, ncgr, nclr); }
 
-        public void Set_Files(Archivo[] archivos)
+        public void Set_Files(Carpeta archivos)
         {
             extraidos = archivos;
         }
-        public Archivo[] Get_Files()
+        public Carpeta Get_Files()
         {
-            Archivo[] devuelta = extraidos;
-            extraidos = null;
+            Carpeta devuelta = extraidos;
+            extraidos = new Carpeta();
             return devuelta;
         }
         public string Get_TempFolder()

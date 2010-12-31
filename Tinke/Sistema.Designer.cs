@@ -265,7 +265,7 @@
             // panelObj
             // 
             this.panelObj.BackColor = System.Drawing.Color.Transparent;
-            this.panelObj.Location = new System.Drawing.Point(649, 22);
+            this.panelObj.Location = new System.Drawing.Point(649, 25);
             this.panelObj.Name = "panelObj";
             this.panelObj.Size = new System.Drawing.Size(512, 512);
             this.panelObj.TabIndex = 10;

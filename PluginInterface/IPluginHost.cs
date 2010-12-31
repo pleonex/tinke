@@ -32,8 +32,8 @@ namespace PluginInterface
         Bitmap Bitmap_NCER(Bank celda, NCGR ncgr, NCLR nclr);
 
         // Para descomprimir archivos
-        void Set_Files(Archivo[] archivos);
-        Archivo[] Get_Files();
+        void Set_Files(Carpeta archivos);
+        Carpeta Get_Files();
 
         string Get_TempFolder();
 

@@ -82,22 +82,7 @@ namespace Tinke.Nitro
             public UInt32 offset;           // OffSet de la SubTable relativa al archivo FNT
             public UInt16 idFirstFile;      // ID del primer archivo que contiene. Puede corresponder a uno que contenga un directorio interno
             public UInt16 idParentFolder;   // ID del directorio padre de éste
-            public Folder subTable;         // SubTable que contiene los nombres de archivos y carpetas que contiene el directorio
-        }
-        public struct File
-        {
-            public UInt32 offset;           // Offset dentro de la ROM 
-            public UInt32 size;             // Tamaño definido por la resta del offset inicial y el offset final
-            public string name;             // Nombre dado en la FNT
-            public UInt16 id;               // ID único de cada archivo.
-            public string path;             // En caso de haber sido descomprimido y estar fuera del sistema de archivos.
-        }
-        public struct Folder
-        {
-            public List<File> files;        // Lista de archivos que contiene el directorio
-            public List<Folder> folders;    // Lista de carpetas que contiene el directorio
-            public string name;             // Nombre de la carpeta
-            public UInt16 id;               // ID de la carpeta. Comienza en 0xF000 que es root
+            public Carpeta subTable;         // SubTable que contiene los nombres de archivos y carpetas que contiene el directorio
         }
 
         public struct ARMOverlay
