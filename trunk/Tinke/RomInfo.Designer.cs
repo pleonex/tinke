@@ -197,6 +197,7 @@
             // 
             // btnBannerGuardar
             // 
+            this.btnBannerGuardar.Image = global::Tinke.Properties.Resources.picture_save;
             this.btnBannerGuardar.ImageKey = "(none)";
             this.btnBannerGuardar.Location = new System.Drawing.Point(65, 19);
             this.btnBannerGuardar.Name = "btnBannerGuardar";

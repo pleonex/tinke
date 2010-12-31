@@ -1,0 +1,112 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.IO;
+using System.Drawing;
+using PluginInterface;
+
+namespace Tinke
+{
+    public static class Imagen_NSCR
+    {
+        public static NSCR Leer(string file)
+        {
+            BinaryReader br = new BinaryReader(File.OpenRead(file));
+            NSCR nscr = new NSCR();
+
+            // Lee cabecera genérica
+            nscr.cabecera.id = br.ReadChars(4);
+            nscr.cabecera.endianess = br.ReadUInt16();
+            if (nscr.cabecera.endianess == 0xFFFE)
+                nscr.cabecera.id.Reverse<char>();
+            nscr.cabecera.constant = br.ReadUInt16();
+            nscr.cabecera.file_size = br.ReadUInt32();
+            nscr.cabecera.header_size = br.ReadUInt16();
+            nscr.cabecera.nSection = br.ReadUInt16();
+
+            // Lee primera y única sección:
+            nscr.section.id = br.ReadChars(4);
+            nscr.section.section_size = br.ReadUInt32();
+            nscr.section.width = br.ReadUInt16();
+            nscr.section.height = br.ReadUInt16();
+            nscr.section.padding = br.ReadUInt32();
+            nscr.section.data_size = br.ReadUInt32();
+            nscr.section.screenData = new NTFS[nscr.section.data_size / 2];
+
+            for (int i = 0; br.BaseStream.Position < nscr.cabecera.file_size; i++)
+            {
+                string bits = Tools.Helper.BytesToBits(br.ReadBytes(2));
+
+                nscr.section.screenData[i] = new NTFS();
+                nscr.section.screenData[i].nPalette = Convert.ToByte(bits.Substring(0, 4), 2);
+                nscr.section.screenData[i].yFlip = Convert.ToByte(bits.Substring(4, 1), 2);
+                nscr.section.screenData[i].xFlip = Convert.ToByte(bits.Substring(5, 1), 2);
+                nscr.section.screenData[i].nTile = Convert.ToUInt16(bits.Substring(6, 10), 2);
+            }
+
+            br.Dispose();
+            br.Close();
+            return nscr;
+        }
+
+        public static NTFT Modificar_Tile(NSCR nscr, NTFT tiles)
+        {
+            NTFT ntft = new NTFT();
+            List<Byte[]> bytes = new List<byte[]>();
+            List<Byte> nPltt = new List<Byte>();
+            int j = 0;
+            
+            for (int i = 0; i < nscr.section.screenData.Length; i++)
+            {
+                byte[] currTile;
+                if (nscr.section.screenData[i].nTile == j)
+                {
+                    currTile = tiles.tiles[j];
+                    j++;
+                }
+                else
+                    currTile = tiles.tiles[nscr.section.screenData[i].nTile];
+
+                if (nscr.section.screenData[i].xFlip == 1)
+                    currTile = XFlip(currTile);
+                if (nscr.section.screenData[i].yFlip == 1)
+                    currTile = YFlip(currTile);
+                bytes.Add(currTile);
+                nPltt.Add(nscr.section.screenData[i].nPalette);
+            }
+            ntft.nPaleta = nPltt.ToArray();
+            ntft.tiles = bytes.ToArray();
+            return ntft;
+        }
+        public static Byte[] XFlip(Byte[] tile)
+        {
+            byte[] newTile = new byte[tile.Length];
+
+            for (int h = 0; h < 8; h++)
+            {
+                for (int w = 0; w < 4; w++)
+                {
+                    newTile[w + h * 8] = tile[(7 - w) + h * 8];
+                    newTile[(7 - w) + h * 8] = tile[w + h * 8];
+                }
+            }
+            return newTile;
+        }
+        public static Byte[] YFlip(Byte[] tile)
+        {
+            byte[] newTile = new byte[tile.Length];
+
+            for (int h = 0; h < 4; h++)
+            {
+                for (int w = 0; w < 8; w++)
+                {
+                    newTile[w + h * 8] = tile[w + (7 - h) * 8];
+                    newTile[w + (7 - h) * 8] = tile[w + h * 8];
+                }
+            }
+            return newTile;
+        }
+
+    }
+}

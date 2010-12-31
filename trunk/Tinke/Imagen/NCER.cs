@@ -4,25 +4,26 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Drawing;
+using PluginInterface;
 
-namespace Tinke.Imagen
+namespace Tinke
 {
-    public static class NCER
+    public static class Imagen_NCER
     {
-        public static CER Leer(string file)
+        public static NCER Leer(string file)
         {
             BinaryReader br = new BinaryReader(File.OpenRead(file));
-            CER ncer = new CER();
+            NCER ncer = new NCER();
 
             // Lee la cabecera genérica
             ncer.header.id = br.ReadChars(4);
-            ncer.header.endian = br.ReadUInt16();
-            if (ncer.header.endian == 0xFFFE)
+            ncer.header.endianess = br.ReadUInt16();
+            if (ncer.header.endianess == 0xFFFE)
                 ncer.header.id.Reverse<char>();
             ncer.header.constant = br.ReadUInt16();
             ncer.header.file_size = br.ReadUInt32();
             ncer.header.header_size = br.ReadUInt16();
-            ncer.header.nSections = br.ReadUInt16();
+            ncer.header.nSection = br.ReadUInt16();
 
             // Lee la sección básica CEBK (CEll BanK)
             ncer.cebk.id = br.ReadChars(4);
@@ -161,7 +162,7 @@ namespace Tinke.Imagen
             return tamaño;
         }
 
-        public static Bitmap Obtener_Imagen(Bank banco, Tile.Estructuras.NCGR tile, Paleta.Estructuras.NCLR paleta)
+        public static Bitmap Obtener_Imagen(Bank banco, NCGR tile, NCLR paleta)
         {
             if (banco.cells.Length == 0)
                 return new Bitmap(1, 1);
@@ -180,8 +181,9 @@ namespace Tinke.Imagen
             Bitmap[] celdas = new Bitmap[banco.nCells];
             for (int i = 0; i < banco.nCells; i++)
             {
-                celdas[i] = Tile.NCGR.Crear_Imagen(tile, paleta, (int)banco.cells[i].tileOffset, banco.cells[i].width / 8, banco.cells[i].height / 8);
+                celdas[i] = Imagen_NCGR.Crear_Imagen(tile, paleta, (int)banco.cells[i].tileOffset, banco.cells[i].width / 8, banco.cells[i].height / 8);
                 grafico.DrawImageUnscaled(celdas[i], tamaño.Width / 2 + banco.cells[i].xOffset, tamaño.Height / 2 + banco.cells[i].yOffset);
+                // DEBUG, dibuja los bordes de las celdas
                 //grafico.DrawRectangle(Pens.Black, tamaño.Width / 2 + banco.cells[i].xOffset, tamaño.Height / 2 + banco.cells[i].yOffset, 
                 //    banco.cells[i].width, banco.cells[i].height);
             }

@@ -140,29 +140,17 @@
       <DependentUpon>Sistema.cs</DependentUpon>
     </Compile>
     <Compile Include="PluginHost.cs" />
-    <Compile Include="Imagen\Estructuras.cs" />
     <Compile Include="Imagen\NCER.cs" />
-    <Compile Include="Imagen\Paleta\Convertidor.cs" />
-    <Compile Include="Imagen\Paleta\NCLR.cs" />
-    <Compile Include="Imagen\Paleta\Estructuras.cs" />
-    <Compile Include="Imagen\Screen\Estructuras.cs" />
-    <Compile Include="Imagen\Screen\NSCR.cs" />
-    <Compile Include="Imagen\Tile\Estructuras.cs" />
-    <Compile Include="Imagen\Tile\iNCGR.cs">
+    <Compile Include="Imagen\Convertir.cs" />
+    <Compile Include="Imagen\NCLR.cs" />
+    <Compile Include="Imagen\NSCR.cs" />
+    <Compile Include="Imagen\iNCGR.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Imagen\Tile\iNCGR.Designer.cs">
+    <Compile Include="Imagen\iNCGR.Designer.cs">
       <DependentUpon>iNCGR.cs</DependentUpon>
     </Compile>
-    <Compile Include="Imagen\Tile\NCGR.cs" />
-    <Compile Include="Juegos\Kirby dro.cs" />
-    <Compile Include="Juegos\Layton1.cs" />
-    <Compile Include="Juegos\LaytonTalks.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Juegos\LaytonTalks.Designer.cs">
-      <DependentUpon>LaytonTalks.cs</DependentUpon>
-    </Compile>
+    <Compile Include="Imagen\NCGR.cs" />
     <Compile Include="Nitro\Estructuras.cs" />
     <Compile Include="Nitro\FAT.cs" />
     <Compile Include="Nitro\FNT.cs" />
@@ -170,8 +158,6 @@
     <Compile Include="Nitro\Overlay.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Texto\TXT.cs" />
-    <Compile Include="Tipos.cs" />
     <Compile Include="Tools\CRC16.cs" />
     <Compile Include="Tools\Helper.cs" />
     <Compile Include="Visor.cs">
@@ -198,11 +184,8 @@
     <EmbeddedResource Include="Sistema.resx">
       <DependentUpon>Sistema.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Imagen\Tile\iNCGR.resx">
+    <EmbeddedResource Include="Imagen\iNCGR.resx">
       <DependentUpon>iNCGR.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Juegos\LaytonTalks.resx">
-      <DependentUpon>LaytonTalks.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -235,6 +218,10 @@
       <Project>{736010D3-F72F-4C56-B8D2-2EDD1B8F3A87}</Project>
       <Name>PluginInterface</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Plugins\Compresiones\Compresiones\Compresiones.csproj">
+      <Project>{9E3890FC-D750-454D-800A-A911E7D7D71C}</Project>
+      <Name>Compresiones</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0">
@@ -259,7 +246,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Imagen\Paleta\Notas.txt" />
+    <Content Include="Imagen\Notas.txt" />
     <Content Include="nintendo-ds.ico" />
     <Content Include="Nitro\MakerCodes.txt" />
     <None Include="Resources\picture_save.png" />

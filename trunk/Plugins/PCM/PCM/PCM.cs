@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using System.Windows.Forms;
 using PluginInterface;
 
 namespace PCM
@@ -15,11 +16,12 @@ namespace PCM
             this.pluginHost = pluginHost;
         }
 
-        public Formato Get_Formato(string nombre, char[] magic)
+        public Formato Get_Formato(string nombre, byte[] magic)
         {
             nombre = nombre.ToUpper();
 
-            if (nombre.EndsWith(".PCM"))
+            if (nombre.EndsWith(".PCM") && 
+                (magic[0] == 0x10 && magic[1] == 0x00 && magic[2] == 0x00 && magic[3] == 0x00 ))
                 return Formato.Comprimido;
 
             return Formato.Desconocido;
@@ -28,14 +30,14 @@ namespace PCM
 
         public void Leer(string archivo)
         {
-            string folder;
+            string folder = pluginHost.Get_TempFolder();
             // Determinamos la subcarpeta donde guardar los archivos descomprimidos.
-            string[] subFolders = Directory.GetDirectories(pluginHost.Get_TempFolder());
+            string[] subFolders = Directory.GetDirectories(folder);
             for (int n = 0; ; n++)
             {
-                if (!subFolders.Contains<string>(pluginHost.Get_TempFolder() + "\\Temp" + n))
+                if (!subFolders.Contains<string>(folder + "\\Temp" + n))
                 {
-                    folder = pluginHost.Get_TempFolder() + "\\Temp" + n;
+                    folder += "\\Temp" + n;
                     Directory.CreateDirectory(folder);
                     break;
                 }
@@ -76,11 +78,13 @@ namespace PCM
                 files[i].path = folder + '\\' + pcm.files[i].name;
                 files[i].size = (uint)new FileInfo(files[i].path).Length;
             }
+            br.Close();
+            br.Dispose();
 
             pluginHost.Set_Files(files);
         }
 
-        public void Show_Info(string archivo)
+        public Control Show_Info(string archivo)
         {
             throw new NotImplementedException();
         }

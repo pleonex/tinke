@@ -14,13 +14,13 @@ namespace Tinke
         public Debug()
         {
             InitializeComponent();
-            this.Location = new Point(10, 400);
+            this.Location = new Point(10, 585);
         }
 
         public void Añadir_Texto(string mensaje)
         {
             if (mensaje != "")
-                txtInfo.Text += "\r\n" + mensaje;
+                txtInfo.Text += mensaje + "\r\n";
         }
     }
 }

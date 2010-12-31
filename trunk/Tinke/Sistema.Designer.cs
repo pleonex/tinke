@@ -49,7 +49,11 @@
             this.toolStripOpen = new System.Windows.Forms.ToolStripButton();
             this.toolStripInfoRom = new System.Windows.Forms.ToolStripButton();
             this.toolStripDebug = new System.Windows.Forms.ToolStripButton();
+            this.toolStripVentana = new System.Windows.Forms.ToolStripButton();
             this.btnDescomprimir = new System.Windows.Forms.Button();
+            this.checkTodo = new System.Windows.Forms.CheckBox();
+            this.btnDesplazar = new System.Windows.Forms.Button();
+            this.panelObj = new System.Windows.Forms.Panel();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -57,7 +61,7 @@
             // 
             this.btnDeleteChain.ImageKey = "picture_delete.png";
             this.btnDeleteChain.ImageList = this.iconos;
-            this.btnDeleteChain.Location = new System.Drawing.Point(409, 275);
+            this.btnDeleteChain.Location = new System.Drawing.Point(410, 455);
             this.btnDeleteChain.Name = "btnDeleteChain";
             this.btnDeleteChain.Size = new System.Drawing.Size(98, 32);
             this.btnDeleteChain.TabIndex = 5;
@@ -90,7 +94,7 @@
             // 
             this.btnExtraer.ImageKey = "package_go.png";
             this.btnExtraer.ImageList = this.iconos;
-            this.btnExtraer.Location = new System.Drawing.Point(514, 275);
+            this.btnExtraer.Location = new System.Drawing.Point(515, 455);
             this.btnExtraer.Name = "btnExtraer";
             this.btnExtraer.Size = new System.Drawing.Size(92, 32);
             this.btnExtraer.TabIndex = 4;
@@ -103,7 +107,7 @@
             // 
             this.btnSee.Enabled = false;
             this.btnSee.Image = ((System.Drawing.Image)(resources.GetObject("btnSee.Image")));
-            this.btnSee.Location = new System.Drawing.Point(409, 313);
+            this.btnSee.Location = new System.Drawing.Point(409, 493);
             this.btnSee.Name = "btnSee";
             this.btnSee.Size = new System.Drawing.Size(98, 32);
             this.btnSee.TabIndex = 2;
@@ -117,7 +121,7 @@
             this.btnHex.Enabled = false;
             this.btnHex.Image = global::Tinke.Properties.Resources.calculator;
             this.btnHex.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnHex.Location = new System.Drawing.Point(514, 313);
+            this.btnHex.Location = new System.Drawing.Point(514, 493);
             this.btnHex.Name = "btnHex";
             this.btnHex.Size = new System.Drawing.Size(92, 32);
             this.btnHex.TabIndex = 1;
@@ -162,7 +166,7 @@
             this.treeSystem.Location = new System.Drawing.Point(0, 28);
             this.treeSystem.Name = "treeSystem";
             this.treeSystem.SelectedImageIndex = 0;
-            this.treeSystem.Size = new System.Drawing.Size(403, 319);
+            this.treeSystem.Size = new System.Drawing.Size(403, 508);
             this.treeSystem.TabIndex = 0;
             this.treeSystem.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeSystem_AfterSelect);
             this.treeSystem.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.treeSystem_MouseDoubleClick);
@@ -173,10 +177,12 @@
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripOpen,
             this.toolStripInfoRom,
-            this.toolStripDebug});
+            this.toolStripDebug,
+            this.toolStripVentana});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(614, 25);
+            this.toolStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
+            this.toolStrip1.Size = new System.Drawing.Size(644, 25);
             this.toolStrip1.TabIndex = 6;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -191,7 +197,9 @@
             // 
             // toolStripInfoRom
             // 
+            this.toolStripInfoRom.Checked = true;
             this.toolStripInfoRom.CheckOnClick = true;
+            this.toolStripInfoRom.CheckState = System.Windows.Forms.CheckState.Checked;
             this.toolStripInfoRom.Image = ((System.Drawing.Image)(resources.GetObject("toolStripInfoRom.Image")));
             this.toolStripInfoRom.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripInfoRom.Name = "toolStripInfoRom";
@@ -209,11 +217,21 @@
             this.toolStripDebug.Text = "Mensajes debug";
             this.toolStripDebug.Click += new System.EventHandler(this.toolStripDebug_Click);
             // 
+            // toolStripVentana
+            // 
+            this.toolStripVentana.CheckOnClick = true;
+            this.toolStripVentana.Image = ((System.Drawing.Image)(resources.GetObject("toolStripVentana.Image")));
+            this.toolStripVentana.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripVentana.Name = "toolStripVentana";
+            this.toolStripVentana.Size = new System.Drawing.Size(104, 22);
+            this.toolStripVentana.Text = "Modo ventana";
+            this.toolStripVentana.Click += new System.EventHandler(this.toolStripVentana_Click);
+            // 
             // btnDescomprimir
             // 
             this.btnDescomprimir.ImageKey = "compress.png";
             this.btnDescomprimir.ImageList = this.iconos;
-            this.btnDescomprimir.Location = new System.Drawing.Point(410, 237);
+            this.btnDescomprimir.Location = new System.Drawing.Point(409, 417);
             this.btnDescomprimir.Name = "btnDescomprimir";
             this.btnDescomprimir.Size = new System.Drawing.Size(97, 32);
             this.btnDescomprimir.TabIndex = 7;
@@ -222,12 +240,45 @@
             this.btnDescomprimir.UseVisualStyleBackColor = true;
             this.btnDescomprimir.Click += new System.EventHandler(this.btnUncompress_Click);
             // 
+            // checkTodo
+            // 
+            this.checkTodo.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.checkTodo.Location = new System.Drawing.Point(512, 417);
+            this.checkTodo.Name = "checkTodo";
+            this.checkTodo.Size = new System.Drawing.Size(120, 32);
+            this.checkTodo.TabIndex = 8;
+            this.checkTodo.Text = "Todos los archivos";
+            this.checkTodo.UseVisualStyleBackColor = true;
+            // 
+            // btnDesplazar
+            // 
+            this.btnDesplazar.BackColor = System.Drawing.SystemColors.ButtonFace;
+            this.btnDesplazar.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnDesplazar.Location = new System.Drawing.Point(612, 80);
+            this.btnDesplazar.Name = "btnDesplazar";
+            this.btnDesplazar.Size = new System.Drawing.Size(30, 150);
+            this.btnDesplazar.TabIndex = 9;
+            this.btnDesplazar.Text = ">>>>>";
+            this.btnDesplazar.UseVisualStyleBackColor = false;
+            this.btnDesplazar.Click += new System.EventHandler(this.btnDesplazar_Click);
+            // 
+            // panelObj
+            // 
+            this.panelObj.BackColor = System.Drawing.Color.Transparent;
+            this.panelObj.Location = new System.Drawing.Point(649, 22);
+            this.panelObj.Name = "panelObj";
+            this.panelObj.Size = new System.Drawing.Size(512, 512);
+            this.panelObj.TabIndex = 10;
+            // 
             // Sistema
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
-            this.ClientSize = new System.Drawing.Size(614, 352);
+            this.ClientSize = new System.Drawing.Size(644, 537);
+            this.Controls.Add(this.panelObj);
+            this.Controls.Add(this.btnDesplazar);
+            this.Controls.Add(this.checkTodo);
             this.Controls.Add(this.btnDescomprimir);
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.btnDeleteChain);
@@ -266,6 +317,10 @@
         private System.Windows.Forms.ToolStripButton toolStripDebug;
         private System.Windows.Forms.ToolStripButton toolStripOpen;
         private System.Windows.Forms.Button btnDescomprimir;
+        private System.Windows.Forms.CheckBox checkTodo;
+        private System.Windows.Forms.ToolStripButton toolStripVentana;
+        private System.Windows.Forms.Button btnDesplazar;
+        private System.Windows.Forms.Panel panelObj;
 
     }
 }

@@ -41,14 +41,14 @@
             this.txtInfo.Name = "txtInfo";
             this.txtInfo.ReadOnly = true;
             this.txtInfo.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.txtInfo.Size = new System.Drawing.Size(614, 172);
+            this.txtInfo.Size = new System.Drawing.Size(644, 152);
             this.txtInfo.TabIndex = 0;
             // 
             // Debug
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(614, 172);
+            this.ClientSize = new System.Drawing.Size(644, 152);
             this.ControlBox = false;
             this.Controls.Add(this.txtInfo);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;

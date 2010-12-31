@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using System.Drawing;
 using PluginInterface;
 
 namespace Tinke
@@ -14,7 +15,6 @@ namespace Tinke
         NSCR screen;
         NCER celda;
         NANR animacion;
-        int lastID;
 
         Archivo[] extraidos;
         string tempFolder;
@@ -51,6 +51,16 @@ namespace Tinke
         public void Set_NCER(NCER ncer) { celda = ncer; }
         public void Set_NANR(NANR nanr) { animacion = nanr; }
 
+        public Color[] BGR555(byte[] datos) { return Convertir.BGR555(datos); }
+        public Byte[] BytesTo4BitsRev(byte[] datos) { return Tools.Helper.BytesTo4BitsRev(datos); }
+        public NTFT Transformar_NSCR(NSCR nscr, NTFT ntft) { return Imagen_NSCR.Modificar_Tile(nscr, ntft); }
+        public Bitmap Bitmap_NCGR(NCGR ncgr, NCLR nclr) { return Imagen_NCGR.Crear_Imagen(ncgr, nclr); }
+        public Bitmap Bitmap_NCGR(NCGR ncgr, NCLR nclr, int tilesX, int tilesY) { return Imagen_NCGR.Crear_Imagen(ncgr, nclr, tilesX, tilesY); }
+        public Bitmap Bitmap_NCGR(NCGR ncgr, NCLR nclr, int startTile) { return Imagen_NCGR.Crear_Imagen(ncgr, nclr, startTile); }
+        public Bitmap Bitmap_NCGR(NCGR ncgr, NCLR nclr, int startTile, int tilesX, int tilesY) { return Imagen_NCGR.Crear_Imagen(ncgr, nclr, startTile, tilesX, tilesY); }
+        public Size Tamaño_NCER(byte byte1, byte byte2) { return Imagen_NCER.Obtener_Tamaño(byte1, byte2); }
+        public Bitmap Bitmap_NCER(Bank celda, NCGR ncgr, NCLR nclr) { return Imagen_NCER.Obtener_Imagen(celda, ncgr, nclr); }
+
         public void Set_Files(Archivo[] archivos)
         {
             extraidos = archivos;
@@ -64,6 +74,12 @@ namespace Tinke
         public string Get_TempFolder()
         {
             return tempFolder;
+        }
+
+        public event Func<String, String> DescomprimirEvent;
+        public string Descomprimir(string archivo)
+        {
+            return DescomprimirEvent(archivo);
         }
     }
 }
