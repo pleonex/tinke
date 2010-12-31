@@ -30,7 +30,11 @@ namespace Tinke
             sb = new StringBuilder();
             TextWriter tw = new StringWriter(sb);
             Console.SetOut(tw);
-            
+
+            this.Load += new EventHandler(Sistema_Load);
+        }
+        void Sistema_Load(object sender, EventArgs e)
+        {
             // Iniciamos la lectura del archivo.
             OpenFileDialog o = new OpenFileDialog();
             o.AutoUpgradeEnabled = true;
@@ -38,14 +42,14 @@ namespace Tinke
             o.DefaultExt = ".nds";
             if (o.ShowDialog() != System.Windows.Forms.DialogResult.OK)
             {
-                this.Close();
+                Application.Exit();
                 return;
             }
 
             Thread espera = new System.Threading.Thread(ThreadEspera);
             espera.Start();
             #region Lectura del archivo
-             romInfo = new RomInfo(o.FileName);
+            romInfo = new RomInfo(o.FileName);
             accion = new Acciones(o.FileName, new String(romInfo.Cabecera.gameCode));
             // Obtenemos el sistema de archivos
             Nitro.Estructuras.Folder root = FNT(o.FileName, romInfo.Cabecera.fileNameTableOffset, romInfo.Cabecera.fileNameTableSize);
@@ -61,12 +65,11 @@ namespace Tinke
 
             accion.Root = root;
             treeSystem.Nodes.Add(Jerarquizar_Nodos(root, root)); // Mostramos el árbol
-             #endregion
+            #endregion
             espera.Abort();
 
             debug = new Debug();
             debug.Show();
-            romInfo.Show();
 
             o.Dispose();
             debug.Añadir_Texto(sb.ToString());
@@ -83,6 +86,7 @@ namespace Tinke
             fnt.name = "fnt.bin";
             fnt.offset = offset;
             fnt.size = size;
+            accion.LastFileID++;
             fnt.id = (ushort)accion.LastFileID;
             accion.LastFileID++;
 
@@ -124,7 +128,7 @@ namespace Tinke
             {
                 foreach (Nitro.Estructuras.File archivo in currFolder.files)
                 {
-                    int nImage = Tipos.ImageFormatFile(accion.Get_Formato(archivo.id));
+                    int nImage = accion.ImageFormatFile(accion.Get_Formato(archivo.id));
                     TreeNode fileNode = new TreeNode(archivo.name, nImage, nImage);
                     fileNode.Name = archivo.name;
                     fileNode.Tag = archivo.id;
@@ -211,36 +215,42 @@ namespace Tinke
         private void btnHex_Click(object sender, EventArgs e)
         {
             Nitro.Estructuras.File fileSelect = accion.Select_File();
+            Thread hex = new Thread(ThreadHexadecimal);
+            hex.Start(fileSelect);
+        }
+        private void ThreadHexadecimal(Object archivo)
+        {
+            Nitro.Estructuras.File file = (Nitro.Estructuras.File)archivo;
             VisorHex hex;
 
-            if (fileSelect.offset != 0x0)
-                hex = new VisorHex(accion.ROMFile, fileSelect.offset, fileSelect.size);
+            if (file.offset != 0x0)
+                hex = new VisorHex(accion.ROMFile, file.offset, file.size);
             else
-                hex = new VisorHex(fileSelect.path, 0, fileSelect.size);
+                hex = new VisorHex(file.path, 0, file.size);
 
-            hex.Show();
+            hex.ShowDialog();
         }
         private void BtnSee(object sender, EventArgs e)
         {
-            try
+            if (toolStripVentana.Checked)
             {
                 Visor visor = new Visor();
                 visor.Controls.Add(accion.See_File());
                 visor.Show();
             }
-            catch (Exception ex)
+            else
             {
-                MessageBox.Show(ex.Message);
-                Console.WriteLine("Error de lectura de archivo:\r\n\t-" + ex.Message);
+                panelObj.Controls.Clear();
+                panelObj.Controls.Add(accion.See_File());
+                if (btnDesplazar.Text == ">>>>>")
+                    btnDesplazar.PerformClick();
             }
-            finally
-            {
                 debug.Añadir_Texto(sb.ToString());
                 sb.Clear();
-            }
         }
         private void btnUncompress_Click(object sender, EventArgs e)
         {
+            // TODO: Descomprimir todocheck
             accion.Extract();
             treeSystem.Nodes.Clear();
             treeSystem.Nodes.Add(Jerarquizar_Nodos(accion.Root, accion.Root));
@@ -251,6 +261,7 @@ namespace Tinke
         }
         private void btnExtraer_Click(object sender, EventArgs e)
         {
+            // TODO: Extraer todocheck
             Nitro.Estructuras.File fileSelect = accion.Select_File();
 
             SaveFileDialog o = new SaveFileDialog();
@@ -278,7 +289,7 @@ namespace Tinke
 
             if (accion.IDSelect < 0xF000)   // Comprobación de que la selección no sea un directorio
             {
-                accion.Set_Data(accion.Select_File());
+                accion.Set_Data();
                 debug.Añadir_Texto(sb.ToString());
                 sb.Clear();
             }
@@ -302,6 +313,36 @@ namespace Tinke
         private void toolStripOpen_Click(object sender, EventArgs e)
         {
             Application.Restart();
+        }
+        private void toolStripVentana_Click(object sender, EventArgs e)
+        {
+            if (toolStripVentana.Checked)
+            {
+                this.Width = 615;
+                if (panelObj.Controls.Count > 0)
+                {
+                    Visor visor = new Visor();
+                    visor.Controls.Add(panelObj.Controls[0]);
+                    visor.Show();
+                }
+            }
+            else
+                this.Width = 650;
+
+        }
+
+        private void btnDesplazar_Click(object sender, EventArgs e)
+        {
+            if (btnDesplazar.Text == ">>>>>")
+            {
+                this.Width = 1167;
+                btnDesplazar.Text = "<<<<<";
+            }
+            else
+            {
+                this.Width = 650;
+                btnDesplazar.Text = ">>>>>";
+            }
         }
     }
 }

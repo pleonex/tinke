@@ -21,12 +21,13 @@
 + Texto
 + Vídeo
 + Sonido
++ Fuente
 + Comprimido
 
-	* El segundo deberá devolver la información:
+	* El segundo deberá guardar la información en el HostPlugin:
 
 + En caso de ser imágenes en los cinco tipos anteriormente comentados.
-+ En caso de estar comprimidos en formato Nitro.File
++ En caso de estar comprimidos en formato Archivo[]
 
-	* El método deberá mostrar una ventana con la información sobre el archivo y en caso de que se pueda el resultado final
-	(texto, imagen, vídeo, audio...)
+	* El método deberá devolver un Control con la información sobre el archivo y en caso de que se pueda el resultado final
+	(texto, imagen, vídeo, audio...). El control tendrá como tamaño máximo 512x512

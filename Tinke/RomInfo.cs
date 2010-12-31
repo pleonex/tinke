@@ -17,7 +17,7 @@ namespace Tinke
         public RomInfo(string archivo)
         {
             InitializeComponent();
-            this.Location = new Point(640, 10);
+            this.Location = new Point(670, 10);
 
             try 
             {

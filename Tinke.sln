@@ -5,6 +5,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tinke", "Tinke\Tinke.csproj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PluginInterface", "PluginInterface\PluginInterface.csproj", "{736010D3-F72F-4C56-B8D2-2EDD1B8F3A87}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Compresiones", "Plugins\Compresiones\Compresiones\Compresiones.csproj", "{9E3890FC-D750-454D-800A-A911E7D7D71C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,6 +37,14 @@ Global
 		{736010D3-F72F-4C56-B8D2-2EDD1B8F3A87}.Release|Any CPU.Build.0 = Release|Any CPU
 		{736010D3-F72F-4C56-B8D2-2EDD1B8F3A87}.Release|x64.ActiveCfg = Release|Any CPU
 		{736010D3-F72F-4C56-B8D2-2EDD1B8F3A87}.Release|x86.ActiveCfg = Release|Any CPU
+		{9E3890FC-D750-454D-800A-A911E7D7D71C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9E3890FC-D750-454D-800A-A911E7D7D71C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9E3890FC-D750-454D-800A-A911E7D7D71C}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{9E3890FC-D750-454D-800A-A911E7D7D71C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{9E3890FC-D750-454D-800A-A911E7D7D71C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9E3890FC-D750-454D-800A-A911E7D7D71C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9E3890FC-D750-454D-800A-A911E7D7D71C}.Release|x64.ActiveCfg = Release|Any CPU
+		{9E3890FC-D750-454D-800A-A911E7D7D71C}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

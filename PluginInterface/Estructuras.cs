@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Windows.Forms;
 
 namespace PluginInterface
 {
@@ -30,7 +31,7 @@ namespace PluginInterface
     {
         public char[] ID;
         public UInt32 tamaño;       // Incluye cabecera
-        public Depth profundidad;
+        public ColorDepth profundidad;
         public UInt32 unknown1;    // ¿¿padding??
         public UInt32 tamañoPaletas;
         public UInt32 nColores;     // Suele ser 0x10
@@ -40,12 +41,6 @@ namespace PluginInterface
     public struct NTFP              // Nintendo Tile Format Palette
     {
         public Color[] colores;
-    }
-    public enum Depth
-    {
-        bits4,
-        bits8
-
     }
     #endregion
     #region NCGR
@@ -61,7 +56,7 @@ namespace PluginInterface
         public UInt32 size_section;
         public UInt16 nTilesY;
         public UInt16 nTilesX;
-        public Tiles_Form depth;
+        public ColorDepth depth;
         public UInt16 unknown1;
         public UInt16 unknown2;
         public UInt32 padding;
@@ -84,11 +79,6 @@ namespace PluginInterface
     {
         public byte[][] tiles;
         public byte[] nPaleta;
-    }
-    public enum Tiles_Form
-    {
-        bpp8 = 0,
-        bpp4 = 1
     }
     #endregion
     #region NSCR
@@ -182,6 +172,7 @@ namespace PluginInterface
         Texto,
         Video,
         Sonido,
+        Fuentes,
         Comprimido,
         Desconocido
     }

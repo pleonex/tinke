@@ -15,6 +15,7 @@ namespace Tinke
     /// </summary>
     public class Acciones
     {
+        int LZ77_TAG = 0x10, LZSS_TAG = 0x11, RLE_TAG = 0x30, HUFF_TAG = 0x20;
 
         string file;
         string gameCode;
@@ -34,7 +35,60 @@ namespace Tinke
 
             formatList = new List<IPlugin>();
             pluginHost = new PluginHost();
+            pluginHost.DescomprimirEvent += new Func<string, string>(pluginHost_DescomprimirEvent);
             Cargar_Plugins();
+        }
+        private void Cargar_Plugins()
+        {
+
+            foreach (string fileName in Directory.GetFiles("Plugins", "*.dll"))
+            {
+                try
+                {
+
+                    if (fileName.EndsWith("PluginInterface.dll"))
+                        continue;
+
+                    Assembly assembly = Assembly.LoadFile(Application.StartupPath + '\\' + fileName);
+                    foreach (Type pluginType in assembly.GetTypes())
+                    {
+                        if (!pluginType.IsPublic || pluginType.IsAbstract || pluginType.IsInterface)
+                            continue;
+
+                        Type concreteType = pluginType.GetInterface(typeof(IPlugin).FullName, true);
+                        if (concreteType != null)
+                        {
+                            IPlugin plugin = (IPlugin)Activator.CreateInstance(assembly.GetType(pluginType.ToString()));
+                            plugin.Inicializar(pluginHost);
+                            formatList.Add(plugin);
+
+                            break;
+                        } // end if
+                        else
+                        {
+                            concreteType = pluginType.GetInterface(typeof(IGamePlugin).FullName, true);
+                            if (concreteType != null)
+                            {
+                                IGamePlugin plugin = (IGamePlugin)Activator.CreateInstance(assembly.GetType(pluginType.ToString()));
+                                plugin.Inicializar(pluginHost, gameCode);
+                                if (plugin.EsCompatible())
+                                    gamePlugin = plugin;
+
+                                break;
+                            } // end if
+                        } //end else
+                    } //end foreach
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show("Fallo al cargar el plugin: " + fileName + "\nEstá obsoleto.");
+                    Console.WriteLine("Fallo al cargar el plugin: " + fileName);
+                    Console.WriteLine(e.Message);
+                    continue;
+                }
+
+            } // end foreach
+
         }
 
         public Nitro.Estructuras.Folder Root
@@ -61,45 +115,104 @@ namespace Tinke
             get { return lastFolderId; }
             set { lastFolderId = value; }
         }
-
-        public void Set_Data(Nitro.Estructuras.File fileData)
+        public int ImageFormatFile(Formato name)
         {
-            /*Formato tipo = Get_Formato(fileData.id);
-
-            string tempFile = "";
-
-            if (fileData.offset != 0x0)
+            switch (name)
             {
-                tempFile = Application.StartupPath + "\\temp.dat";
-                BinaryReader br = new BinaryReader(File.OpenRead(file));
-                br.BaseStream.Position = fileData.offset;
-                BinaryWriter bw = new BinaryWriter(new FileStream(Application.StartupPath + "\\temp.dat", FileMode.Create));
-                bw.Write(br.ReadBytes((int)fileData.size));
+                case Formato.Paleta:
+                    return 2;
+                case Formato.Imagen:
+                    return 3;
+                case Formato.Screen:
+                    return 9;
+                case Formato.Celdas:
+                    return 8;
+                case Formato.Animación:
+                    return 8;
+                case Formato.ImagenCompleta:
+                    return 10;
+                case Formato.Texto:
+                    return 4;
+                case Formato.Comprimido:
+                    return 6;
+                case Formato.Sonido:
+                    return 14;
+                case Formato.Video:
+                    return 13;
+                case Formato.Desconocido:
+                default:
+                    return 1;
+            }
+        }
+
+
+        public void Set_Data()
+        {
+            // Guardamos el archivo fuera del sistema de ROM
+            Nitro.Estructuras.File selectFile = Select_File();
+            string tempFile;
+            BinaryReader br;
+
+            if (selectFile.offset != 0x0)
+            {
+                tempFile = pluginHost.Get_TempFolder() + '\\' + selectFile.name;
+                br = new BinaryReader(File.OpenRead(file));
+                br.BaseStream.Position = selectFile.offset;
+
+                BinaryWriter bw = new BinaryWriter(new FileStream(tempFile, FileMode.Create));
+                bw.Write(br.ReadBytes((int)selectFile.size));
                 bw.Flush();
                 bw.Close();
                 bw.Dispose();
-                br.Close();
-                br.Dispose();
+
+                br.BaseStream.Position = selectFile.offset;
             }
             else
-                tempFile = fileData.path;
-
-            Object obtenido;
-            if (Tipos.IsSupportedGame(gameCode))
             {
-                obtenido = Tipos.DoActionGame(gameCode, tempFile, tipo, idSelect, fileData.name, this);
-                if (obtenido is String)
-                    obtenido = Tipos.DoAction(tempFile, tipo, Extension());
+                tempFile = selectFile.path;
+                br = new BinaryReader(File.OpenRead(tempFile));
             }
-            else
-                obtenido = Tipos.DoAction(tempFile, tipo, Extension());
 
-            if (obtenido is Imagen.Paleta.Estructuras.NCLR)
-                paleta = (Imagen.Paleta.Estructuras.NCLR)obtenido;
-            else if (obtenido is Imagen.Tile.Estructuras.NCGR)
-                tile = (Imagen.Tile.Estructuras.NCGR)obtenido;
-            else if (obtenido is Imagen.Screen.Estructuras.NSCR)
-                screen = (Imagen.Screen.Estructuras.NSCR)obtenido;*/
+            byte[] ext = br.ReadBytes(4);
+
+            br.Close();
+            br.Dispose();
+
+            #region Búsqueda y llamada a plugin
+            try
+            {
+                if (gamePlugin is IGamePlugin)
+                {
+                    if (gamePlugin.Get_Formato(selectFile.name, ext, idSelect) != Formato.Desconocido)
+                    {
+                        gamePlugin.Leer(tempFile, idSelect);
+                        File.Delete(tempFile);
+                        return;
+                    }
+                }
+
+                foreach (IPlugin plugin in formatList)
+                {
+                    if (plugin.Get_Formato(selectFile.name, ext) != Formato.Desconocido)
+                    {
+                        plugin.Leer(tempFile);
+                        File.Delete(tempFile);
+                        return;
+                    }
+                }
+
+                if (ext[0] == LZ77_TAG || ext[0] == LZSS_TAG || ext[0] == RLE_TAG || ext[0] == HUFF_TAG)
+                    MessageBox.Show("Archivo comprimido", "Datos del archivo",  MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+                Console.WriteLine(e.Message);
+            }
+            #endregion
+
+            File.Delete(tempFile);
         }
         public void Set_LastFileID(Nitro.Estructuras.Folder currFolder)
         {
@@ -291,8 +404,8 @@ namespace Tinke
             else    // En caso de que el archivo haya sido extraído y no esté en la ROM
                 br = new BinaryReader(File.OpenRead(currFile.path));
 
-            char[] ext;
-            try { ext = br.ReadChars(4); }
+            byte[] ext;
+            try { ext = br.ReadBytes(4); }
             catch
             {
                 Console.WriteLine("Error al intentar obtener el formato del archivo");
@@ -302,24 +415,35 @@ namespace Tinke
             br.Close();
             br.Dispose();
 
-            if (gamePlugin is IGamePlugin)
-                tipo = gamePlugin.Get_Formato(currFile.name, ext, idSelect);
-            if (tipo != Formato.Desconocido)
-                return tipo;
-
-            foreach (IPlugin formato in formatList)
+            try
             {
-                tipo = formato.Get_Formato(currFile.name, ext);
+                if (gamePlugin is IGamePlugin)
+                    tipo = gamePlugin.Get_Formato(currFile.name, ext, idSelect);
                 if (tipo != Formato.Desconocido)
                     return tipo;
+
+                foreach (IPlugin formato in formatList)
+                {
+                    tipo = formato.Get_Formato(currFile.name, ext);
+                    if (tipo != Formato.Desconocido)
+                        return tipo;
+                }
             }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return Formato.Desconocido;
+            }
+
+            if (ext[0] == LZ77_TAG || ext[0] == LZSS_TAG || ext[0] == RLE_TAG || ext[0] == HUFF_TAG)
+                return Formato.Comprimido;
+
             return Formato.Desconocido;
         }
         public Formato Get_Formato(int id)
         {
             Formato tipo = Formato.Desconocido;
             Nitro.Estructuras.File currFile = Search_File(id);
-
             BinaryReader br;
             if (currFile.offset != 0x0)
             {
@@ -329,56 +453,102 @@ namespace Tinke
             else    // En caso de que el archivo haya sido extraído y no esté en la ROM
                 br = new BinaryReader(File.OpenRead(currFile.path));
 
-            char[] ext = null;
-            try { ext = br.ReadChars(4); }
+            byte[] ext = null;
+            try { ext = br.ReadBytes(4); }
             catch { } 
 
             br.Close();
             br.Dispose();
 
-            if (gamePlugin is IGamePlugin)
-                tipo = gamePlugin.Get_Formato(currFile.name, ext, id);
-            if (tipo != Formato.Desconocido)
-                return tipo;
-
-            foreach (IPlugin formato in formatList)
+            try
             {
-                tipo = formato.Get_Formato(currFile.name, ext);
+                if (gamePlugin is IGamePlugin)
+                    tipo = gamePlugin.Get_Formato(currFile.name, ext, id);
                 if (tipo != Formato.Desconocido)
                     return tipo;
+
+                foreach (IPlugin formato in formatList)
+                {
+                    tipo = formato.Get_Formato(currFile.name, ext);
+                    if (tipo != Formato.Desconocido)
+                        return tipo;
+                }
             }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return Formato.Desconocido;
+            }
+
+            if (ext[0] == LZ77_TAG || ext[0] == LZSS_TAG || ext[0] == RLE_TAG || ext[0] == HUFF_TAG)
+                return Formato.Comprimido;
+
             return Formato.Desconocido;
         }
 
         public void Extract()
         {
             // Guardamos el archivo para descomprimir fuera del sistema de ROM
-            string tempFile = pluginHost.Get_TempFolder() + "\\temp.dat";
             Nitro.Estructuras.File selectFile = Select_File();
+            string tempFile; 
             BinaryReader br;
+            byte[] ext;
+
             if (selectFile.offset != 0x0)
             {
+                tempFile = pluginHost.Get_TempFolder() + '\\' + selectFile.name;
                 br = new BinaryReader(File.OpenRead(file));
+                br.BaseStream.Position = selectFile.offset;
+
+                BinaryWriter bw = new BinaryWriter(new FileStream(tempFile, FileMode.Create));
+                bw.Write(br.ReadBytes((int)selectFile.size));
+                bw.Flush();
+                bw.Close();
+                bw.Dispose();
+
                 br.BaseStream.Position = selectFile.offset;
             }
             else
-                br = new BinaryReader(File.OpenRead(selectFile.path));
+            {
+                tempFile = selectFile.path;
+                br = new BinaryReader(File.OpenRead(tempFile));             
+            }
 
-            BinaryWriter bw = new BinaryWriter(new FileStream(tempFile, FileMode.Create));
-            bw.Write(br.ReadBytes((int)selectFile.size));
-            bw.Flush();
-            bw.Close();
-            bw.Dispose();
+            ext = br.ReadBytes(4);
+
             br.Close();
             br.Dispose();
 
-            // Determinado el tipo de compresión y descomprimimos
-            Formato tipo = Get_Formato();
-
+            #region Búsqueda y llamada a plugin
             try
             {
-                // TODO: Buscar el plugin correspondiente y llamarlo para que descomprima.
-                // los archivos se quedan en pluginHost.Get_Files();
+                if (gamePlugin is IGamePlugin)
+                {
+                    if (gamePlugin.Get_Formato(selectFile.name, ext, idSelect) != Formato.Desconocido)
+                    {
+                        gamePlugin.Leer(tempFile, idSelect);
+                        goto Continuar;
+                    }
+                }
+                foreach (IPlugin plugin in formatList)
+                {
+                    if (plugin.Get_Formato(selectFile.name, ext) != Formato.Desconocido)
+                    {
+                        plugin.Leer(tempFile);
+                        goto Continuar;
+                    }
+                }
+
+                if (ext[0] == LZ77_TAG || ext[0] == LZSS_TAG || ext[0] == RLE_TAG || ext[0] == HUFF_TAG)
+                {
+                    FileInfo info = new FileInfo(tempFile);
+                    Compresion.Basico.Decompress(tempFile, info.DirectoryName + "\\un_" + info.Name);
+                    Archivo file = new Archivo();
+                    file.name = selectFile.name;
+                    file.path = info.DirectoryName + "\\un_" + info.Name;
+                    file.size = (uint)new FileInfo(info.DirectoryName + "\\un_" + info.Name).Length;
+                    pluginHost.Set_Files(new Archivo[1] { file });
+                }
             }
             catch (Exception e)
             {
@@ -386,207 +556,139 @@ namespace Tinke
                 Console.WriteLine(e.Message);
                 return;
             }
-             List<Nitro.Estructuras.File> files = new List<Nitro.Estructuras.File>(); // Todavia no implementado
-            // TODO: Convertir mediante un foreach del tipo PluginInterface.Archivo[] a Nitro.Estructuras.File[]
+            #endregion
+        Continuar:
+
+            List<Nitro.Estructuras.File> files = new List<Nitro.Estructuras.File>();
+            foreach (Archivo archivo in pluginHost.Get_Files())
+            {
+                Nitro.Estructuras.File newFile = new Nitro.Estructuras.File();
+                newFile.name = archivo.name;
+                newFile.path = archivo.path;
+                newFile.size = archivo.size;
+                files.Add(newFile);
+            }
             // Se añaden los archivos descomprimidos al árbol de archivos.
             Add_Files(files);
 
             File.Delete(tempFile);
         }
+        /// <summary>
+        /// Evento llamado desde los plugins en el cual se descomprime un archivo a través de otros plugins.
+        /// </summary>
+        /// <param name="archivo">Archivo a descomprimir</param>
+        /// <returns>Ruta de la carpeta donde se encuentran los archivos descomprimidos</returns>
+        string pluginHost_DescomprimirEvent(string arg)
+        {
+            BinaryReader br = new BinaryReader(File.OpenRead(arg));
+            byte[] ext = br.ReadBytes(4);
+            br.Close();
+            br.Dispose();
+
+            try
+            {
+                foreach (IPlugin plugin in formatList)
+                {
+                    if (plugin.Get_Formato(new FileInfo(arg).Name, ext) != Formato.Desconocido)
+                    {
+                        plugin.Leer(arg);
+                        goto Continuar;
+                    }
+                }
+                // Si no hay plugins disponibles, se descomprime con el método normal
+                FileInfo info = new FileInfo(arg);
+                Directory.CreateDirectory(info.DirectoryName + "\\un");
+                Compresion.Basico.Decompress(arg, info.DirectoryName + "\\un\\" + info.Name);
+                Archivo file = new Archivo();
+                file.name = new FileInfo(arg).Name;
+                file.path = info.DirectoryName + "\\un\\" + info.Name;
+                file.size = (uint)new FileInfo(info.DirectoryName + "\\un\\" + info.Name).Length;
+                pluginHost.Set_Files(new Archivo[1] { file });
+
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+                Console.WriteLine(e.Message);
+                return "";
+            }
+        Continuar:
+            return new FileInfo(pluginHost.Get_Files()[0].path).DirectoryName;
+        }
 
         public Control See_File()
         {
-            return new Control();
-            /*Tipos.Role tipo = Get_Formato();
+            // Guardamos el archivo fuera del sistema de ROM
+            Nitro.Estructuras.File selectFile = Select_File();
+            string tempFile;
+            BinaryReader br;
 
-            Nitro.Estructuras.File fileSelect = Select_File();
-            string tempFile = "";
-
-            if (fileSelect.offset != 0x0)
+            if (selectFile.offset != 0x0)
             {
-                tempFile = Application.StartupPath + "\\temp.dat";
-                BinaryReader br = new BinaryReader(File.OpenRead(file));
-                br.BaseStream.Position = fileSelect.offset;
-                BinaryWriter bw = new BinaryWriter(new FileStream(Application.StartupPath + "\\temp.dat", FileMode.Create));
-                bw.Write(br.ReadBytes((int)fileSelect.size));
+                tempFile = pluginHost.Get_TempFolder() + '\\' + selectFile.name;
+                br = new BinaryReader(File.OpenRead(file));
+                br.BaseStream.Position = selectFile.offset;
+
+                BinaryWriter bw = new BinaryWriter(new FileStream(tempFile, FileMode.Create));
+                bw.Write(br.ReadBytes((int)selectFile.size));
                 bw.Flush();
                 bw.Close();
                 bw.Dispose();
-                br.Close();
-                br.Dispose();
-            }
-            else
-                tempFile = fileSelect.path;
 
-            Object obtenido;
-
-            if (Tipos.IsSupportedGame(gameCode))
-            {
-                obtenido = Tipos.DoActionGame(gameCode, tempFile, tipo, idSelect, fileSelect.name, this);
-                if (obtenido is String)
-                    obtenido = Tipos.DoAction(tempFile, tipo, Extension());
+                br.BaseStream.Position = selectFile.offset;
             }
             else
             {
-                obtenido = Tipos.DoAction(tempFile, tipo, Extension());
+                tempFile = selectFile.path;
+                br = new BinaryReader(File.OpenRead(tempFile));
             }
 
-            if (obtenido is Bitmap[])
-                return Obtenido_Imagenes((Bitmap[])obtenido);
-            else if (obtenido is Bitmap)
-                return Obtenido_Imagen((Bitmap)obtenido);
-            else if (obtenido is Imagen.Paleta.Estructuras.NCLR)
+            byte[] ext = br.ReadBytes(4);
+
+            br.Close();
+            br.Dispose();
+
+            #region Búsqueda y llamada a plugin
+            try
             {
-                paleta = (Imagen.Paleta.Estructuras.NCLR)obtenido;
-                return Obtenido_Paleta();
-            }
-            else if (obtenido is Imagen.Tile.Estructuras.NCGR)
-            {
-                tile = (Imagen.Tile.Estructuras.NCGR)obtenido;
-                return Obtenido_Tile();
-            }
-            else if (obtenido is Imagen.Screen.Estructuras.NSCR)
-            {
-                screen = (Imagen.Screen.Estructuras.NSCR)obtenido;
-                return Obtenido_Tile();
-            }
-            else if (obtenido is Imagen.CER)
-            {
-                cell = (Imagen.CER)obtenido;
-                if (new String(tile.id) == "RGCN" && new String(paleta.ID) == "RLCN")
+                if (gamePlugin is IGamePlugin)
                 {
-                    Bitmap[] imagenes = new Bitmap[cell.cebk.nBanks];
-                    for (int i = 0; i < cell.cebk.nBanks; i++)
-                        imagenes[i] = Imagen.NCER.Obtener_Imagen(cell.cebk.banks[i], tile, paleta);
-                    return Obtenido_Imagenes(imagenes);
+                    if (gamePlugin.Get_Formato(selectFile.name, ext, idSelect) != Formato.Desconocido)
+                    {
+                        Control resultado = gamePlugin.Show_Info(tempFile, idSelect);
+                        File.Delete(tempFile);
+                        return resultado;
+                    }
+                }
+
+                foreach (IPlugin plugin in formatList)
+                {
+                    if (plugin.Get_Formato(selectFile.name, ext) != Formato.Desconocido)
+                    {
+                        Control resultado = plugin.Show_Info(tempFile);
+                        File.Delete(tempFile);
+                        return resultado;
+                    }
+                }
+
+                if (ext[0] == LZ77_TAG || ext[0] == LZSS_TAG || ext[0] == RLE_TAG || ext[0] == HUFF_TAG)
+                {
+                    File.Delete(tempFile);
+                    MessageBox.Show("Por el momento compresiones normales no devuelven información.");
+                    return new Control();
                 }
             }
-            else if (obtenido is String)
-                return Obtenido_Texto((String)obtenido);
-            else if (obtenido is Panel)
-                return (Panel)obtenido;
-
-            return new Control();   // Nunca debería darse este caso*/
-        }
-
-        /*#region Devolver GUI del archivo
-        private TabControl Obtenido_Imagenes(Bitmap[] imagenes)
-        {
-            TabControl tab = new TabControl();
-            TabPage[] pages = new TabPage[imagenes.Length];
-
-            for (int i = 0; i < pages.Length; i++)
+            catch (Exception e)
             {
-                pages[i] = new TabPage("Imagen " + i.ToString());
-
-                PictureBox pic = new PictureBox();
-                pic.Image = imagenes[i];
-                pic.SizeMode = PictureBoxSizeMode.AutoSize;
-                pages[i].Controls.Add(pic);
-                pic.MouseDoubleClick += new MouseEventHandler(pic_MouseDoubleClick);
+                MessageBox.Show(e.Message);
+                Console.WriteLine(e.Message);
+                File.Delete(tempFile);
+                return new Control();
             }
+            #endregion
 
-            tab.TabPages.AddRange(pages);
-            tab.Dock = DockStyle.Fill;
-            return tab;
-        }
-        private PictureBox Obtenido_Imagen(Bitmap imagen)
-        {
-            PictureBox pic = new PictureBox();
-            pic.Image = imagen;
-            pic.SizeMode = PictureBoxSizeMode.AutoSize;
-            pic.MouseDoubleClick += new MouseEventHandler(pic_MouseDoubleClick);
-
-            return pic;
-        }
-        void pic_MouseDoubleClick(object sender, MouseEventArgs e)
-        {
-            SaveFileDialog o = new SaveFileDialog();
-            if (o.ShowDialog() == DialogResult.OK)
-                ((PictureBox)sender).Image.Save(o.FileName);
-        }
-        private PictureBox Obtenido_Paleta()
-        {
-            PictureBox pic = new PictureBox();
-            pic.Image = Imagen.Paleta.NCLR.Mostrar(paleta);
-            pic.SizeMode = PictureBoxSizeMode.AutoSize;
-            pic.MouseDoubleClick += new MouseEventHandler(pic_MouseDoubleClick);
-
-            return pic;
-        }
-        private Control Obtenido_Tile()
-        {
-            if (paleta.constante == 0x0100) // Comprobación de que hay guardada una paleta
-            {
-                Imagen.Tile.iNCGR ventana;
-                if (new String(screen.id) == "RCSN") // Comprobación de que hay una información de imagen guardada
-                {
-                    Imagen.Tile.Estructuras.NCGR newTile = tile;
-                    newTile.rahc.tileData = Imagen.Screen.NSCR.Modificar_Tile(screen, tile.rahc.tileData);
-                    newTile.rahc.nTilesX = (ushort)(screen.section.width / 8);
-                    newTile.rahc.nTilesY = (ushort)(screen.section.height / 8);
-                    ventana = new Imagen.Tile.iNCGR(newTile, paleta);
-                }
-                else
-                    ventana = new Imagen.Tile.iNCGR(tile, paleta);
-                ventana.Dock = DockStyle.Fill;
-                return ventana;
-            }
-            else
-                return new PictureBox();
-        }
-        private TextBox Obtenido_Texto(string texto)
-        {
-            TextBox txt = new TextBox();
-            txt.Multiline = true;
-            txt.Width = 300;
-            txt.Dock = DockStyle.Fill;
-            txt.ScrollBars = ScrollBars.Both;
-            txt.Text = texto;
-            txt.Select(0, 0);
-            txt.ReadOnly = true;
-
-            return txt;
-        }
-        #endregion // Devolver GUI del archivo*/
-
-        private void Cargar_Plugins()
-        {
-            foreach (string fileName in Directory.GetFiles("Plugins", "*.dll"))
-            {
-                if (fileName.EndsWith("PluginInterface.dll"))
-                    continue;
-
-                Assembly assembly = Assembly.LoadFile(Application.StartupPath + '\\' + fileName);
-                foreach (Type pluginType in assembly.GetTypes())
-                {
-                    if (!pluginType.IsPublic || pluginType.IsAbstract || pluginType.IsInterface)
-                        continue;
-
-                    Type concreteType = pluginType.GetInterface(typeof(IPlugin).FullName, true);
-                    if (concreteType != null)
-                    {
-                        IPlugin plugin = (IPlugin)Activator.CreateInstance(assembly.GetType(pluginType.ToString()));
-                        plugin.Inicializar(pluginHost);
-                        formatList.Add(plugin);
-
-                        break;
-                    } // end if
-                    else
-                    {
-                        concreteType = pluginType.GetInterface(typeof(IGamePlugin).FullName, true);
-                        if (concreteType != null)
-                        {
-                            IGamePlugin plugin = (IGamePlugin)Activator.CreateInstance(assembly.GetType(pluginType.ToString()));
-                            plugin.Inicializar(pluginHost, gameCode);
-                            if (plugin.EsCompatible())
-                                gamePlugin = plugin;
-
-                            break;
-                        } // end if
-                    } //end else
-                } //end foreach
-            } // end foreach
+            File.Delete(tempFile);
+            return new Control();
         }
 
     }

@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{7CA40F78-8BCF-4906-A686-1B621D83D648}</ProjectGuid>
+    <ProjectGuid>{E26906F5-7357-4930-9037-0076686B73C2}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>PCM</RootNamespace>
-    <AssemblyName>PCM</AssemblyName>
+    <RootNamespace>LAYTON</RootNamespace>
+    <AssemblyName>LAYTON</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -31,11 +31,13 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="PluginInterface">
+    <Reference Include="PluginInterface, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\PluginInterface\bin\Debug\PluginInterface.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -44,8 +46,51 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="PCM.cs" />
+    <Compile Include="Ani.cs" />
+    <Compile Include="Bg.cs" />
+    <Compile Include="InfoAni.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="InfoAni.Designer.cs">
+      <DependentUpon>InfoAni.cs</DependentUpon>
+    </Compile>
+    <Compile Include="InfoImage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="InfoImage.designer.cs">
+      <DependentUpon>InfoImage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="InfoParte.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="InfoParte.designer.cs">
+      <DependentUpon>InfoParte.cs</DependentUpon>
+    </Compile>
+    <Compile Include="InfoPicture.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="InfoPicture.designer.cs">
+      <DependentUpon>InfoPicture.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Main.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Temporal.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="InfoAni.resx">
+      <DependentUpon>InfoAni.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="InfoImage.resx">
+      <DependentUpon>InfoImage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="InfoParte.resx">
+      <DependentUpon>InfoParte.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="InfoPicture.resx">
+      <DependentUpon>InfoPicture.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

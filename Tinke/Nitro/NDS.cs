@@ -127,7 +127,7 @@ namespace Tinke.Nitro
         public static Bitmap IconoToBitmap(byte[] tileData, byte[] paletteData)
         {
             Bitmap imagen = new Bitmap(32, 32);
-            Color[] paleta = Imagen.Paleta.Convertidor.BGR555(paletteData);
+            Color[] paleta = Convertir.BGR555(paletteData);
 
             tileData = Tools.Helper.BytesTo4BitsRev(tileData);
             int i = 0;
