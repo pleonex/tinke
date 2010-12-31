@@ -64,7 +64,6 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "VisorHex";
-            this.ShowInTaskbar = false;
             this.Text = "Visor Hexadecimal";
             this.ResumeLayout(false);
             this.PerformLayout();

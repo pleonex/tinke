@@ -21,7 +21,6 @@ namespace LAYTON
             this.gameCode = gameCode;
             this.archivo = archivo;
         }
-
         public Formato Get_Formato(string nombre)
         {
             if (nombre.EndsWith(".ARC"))
@@ -32,13 +31,15 @@ namespace LAYTON
 
         public void Leer()
         {
-            throw new NotImplementedException();
         }
 
         public Control Show_Info()
         {
             // Los archivos tienen compresión LZ77, descomprimimos primero.
-            archivo = Directory.GetFiles(pluginHost.Descomprimir(archivo))[0];
+            string temp = archivo + "nn"; // Para que no sea detectado como narc
+            File.Copy(archivo, temp);
+            archivo = Directory.GetFiles(pluginHost.Descomprimir(temp))[0];
+            File.Delete(temp);
 
             InfoAni control = new InfoAni(Obtener_Todo());
             File.Delete(archivo);

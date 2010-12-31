@@ -53,6 +53,8 @@ namespace Tinke
 
         public Color[] BGR555(byte[] datos) { return Convertir.BGR555(datos); }
         public Byte[] BytesTo4BitsRev(byte[] datos) { return Tools.Helper.BytesTo4BitsRev(datos); }
+        public String BytesToBits(byte[] datos) { return Tools.Helper.BytesToBits(datos); }
+
         public NTFT Transformar_NSCR(NSCR nscr, NTFT ntft) { return Imagen_NSCR.Modificar_Tile(nscr, ntft); }
         public Bitmap Bitmap_NCGR(NCGR ncgr, NCLR nclr) { return Imagen_NCGR.Crear_Imagen(ncgr, nclr); }
         public Bitmap Bitmap_NCGR(NCGR ncgr, NCLR nclr, int tilesX, int tilesY) { return Imagen_NCGR.Crear_Imagen(ncgr, nclr, tilesX, tilesY); }
