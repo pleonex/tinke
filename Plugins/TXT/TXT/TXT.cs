@@ -20,7 +20,7 @@ namespace TXT
         {
             nombre = nombre.ToUpper();
 
-            if (nombre.EndsWith(".TXT"))
+            if (nombre.EndsWith(".TXT") || nombre.EndsWith(".SADL") || nombre.EndsWith(".XML"))
                 return Formato.Texto;
 
             return Formato.Desconocido;
@@ -39,6 +39,7 @@ namespace TXT
             txtBox.HideSelection = true;
             txtBox.Dock = DockStyle.Fill;
             txtBox.Multiline = true;
+            txtBox.ScrollBars = ScrollBars.Both;
 
             string txt = "";
             BinaryReader br = new BinaryReader(File.OpenRead(archivo));

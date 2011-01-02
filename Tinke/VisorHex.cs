@@ -53,13 +53,13 @@ namespace Tinke
                 string ascii = "";
                 for (int j = 0; j < 0x10; j++)
                 {
-                    if (i >= value.Length) break;
+                    if (i >= value.Length) { text += "   " ; ascii += "  "; continue; }
                     text += Tools.Helper.DecToHex(value[i]) + ' ';
                     ascii += (value[i] > 0x1F && value[i] < 0x7F ? Char.ConvertFromUtf32(value[i]).ToString() + ' ' : ". ");
                     i++;
                     backgroundWorker1.ReportProgress(i);
                 }
-                text += new String(' ', 40 - ascii.Length) + ascii;
+                text += '\t' + ascii;
                 text += "\r\n";
                 if (i >= value.Length) break;
             }

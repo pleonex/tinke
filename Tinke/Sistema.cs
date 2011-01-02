@@ -75,6 +75,9 @@ namespace Tinke
             o.Dispose();
             debug.Añadir_Texto(sb.ToString());
             sb.Clear();
+
+            this.Activate();
+            debug.Activate();
         }
 
 
@@ -138,6 +141,38 @@ namespace Tinke
             }
 
             return currNode;
+        }
+        private void CarpetaANodo(Carpeta carpeta, ref TreeNode nodo)
+        {
+            nodo.ImageIndex = 0;
+            nodo.SelectedImageIndex = 0;
+            nodo.Tag = carpeta.id;
+
+
+            if (carpeta.folders is List<Carpeta>)
+            {
+                foreach (Carpeta subFolder in carpeta.folders)
+                {
+                    TreeNode newNodo = new TreeNode();
+                   CarpetaANodo(subFolder, ref newNodo);
+                    nodo.Nodes.Add(newNodo);
+                }
+            }
+
+
+            if (carpeta.files is List<Archivo>)
+            {
+                foreach (Archivo archivo in carpeta.files)
+                {
+                    int nImage = accion.ImageFormatFile(accion.Get_Formato(archivo.id));
+                    TreeNode fileNode = new TreeNode(archivo.name, nImage, nImage);
+                    fileNode.Name = archivo.name;
+                    fileNode.Tag = archivo.id;
+                    nodo.Nodes.Add(fileNode);
+                }
+            }
+
+
         }
 
         private void ThreadEspera()
@@ -251,12 +286,19 @@ namespace Tinke
         }
         private void btnUncompress_Click(object sender, EventArgs e)
         {
-            // TODO: Descomprimir todocheck
-            accion.Extract();
-            treeSystem.Nodes.Clear();
-            treeSystem.Nodes.Add(Jerarquizar_Nodos(accion.Root, accion.Root));
-            treeSystem.SelectedNode = null;
-            accion.IDSelect = 0xF000;
+            Carpeta descomprimidos = accion.Extract();
+            TreeNode selected = treeSystem.SelectedNode;
+            CarpetaANodo(descomprimidos, ref selected);
+
+            TreeNode[] nodos = new TreeNode[selected.Nodes.Count]; selected.Nodes.CopyTo(nodos, 0);
+            treeSystem.SelectedNode.Tag = selected.Tag;
+            selected.Nodes.Clear();
+            treeSystem.SelectedNode.Nodes.AddRange((TreeNode[])nodos);
+
+            btnDescomprimir.Enabled = false;
+            btnSee.Enabled = false;
+            btnExtraer.Enabled = false;
+            btnHex.Enabled = false;
 
             debug.Añadir_Texto(sb.ToString());
             sb.Clear();
@@ -281,10 +323,6 @@ namespace Tinke
                 else
                     File.Copy(fileSelect.path, o.FileName);
             }
-        }
-        private void btnDeleteChain_Click(object sender, EventArgs e)
-        {
-            accion.Delete_PicturesSaved();
         }
         private void treeSystem_MouseDoubleClick(object sender, MouseEventArgs e)
         {
@@ -349,5 +387,41 @@ namespace Tinke
                 btnDesplazar.Text = ">>>>>";
             }
         }
+
+        private void liberarPluginsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            accion.Liberar_Plugins();
+        }
+        private void cargarPluginsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            accion.Cargar_Plugins();
+        }
+        private void recargarPluginsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            accion.Liberar_Plugins();
+            accion.Cargar_Plugins();
+        }
+
+        private void toolStripSplitButton2_ButtonClick(object sender, EventArgs e)
+        {
+            accion.Delete_PicturesSaved();
+        }
+        private void borrarPaletaToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            accion.Delete_PicturesSaved(Formato.Paleta);
+        }
+        private void borrarTileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            accion.Delete_PicturesSaved(Formato.Imagen);
+        }
+        private void borrarScreenToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            accion.Delete_PicturesSaved(Formato.Screen);
+        }
+        private void borrarCeldasToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            accion.Delete_PicturesSaved(Formato.Celdas);
+        }
+
     }
 }

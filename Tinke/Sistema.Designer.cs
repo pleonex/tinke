@@ -30,13 +30,12 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Sistema));
-            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("Nombre");
-            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("ID");
-            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem("Offset");
-            System.Windows.Forms.ListViewItem listViewItem4 = new System.Windows.Forms.ListViewItem("Tamaño");
-            System.Windows.Forms.ListViewItem listViewItem5 = new System.Windows.Forms.ListViewItem("Tipo");
-            System.Windows.Forms.ListViewItem listViewItem6 = new System.Windows.Forms.ListViewItem("Ruta");
-            this.btnDeleteChain = new System.Windows.Forms.Button();
+            System.Windows.Forms.ListViewItem listViewItem43 = new System.Windows.Forms.ListViewItem("Nombre");
+            System.Windows.Forms.ListViewItem listViewItem44 = new System.Windows.Forms.ListViewItem("ID");
+            System.Windows.Forms.ListViewItem listViewItem45 = new System.Windows.Forms.ListViewItem("Offset");
+            System.Windows.Forms.ListViewItem listViewItem46 = new System.Windows.Forms.ListViewItem("Tamaño");
+            System.Windows.Forms.ListViewItem listViewItem47 = new System.Windows.Forms.ListViewItem("Tipo");
+            System.Windows.Forms.ListViewItem listViewItem48 = new System.Windows.Forms.ListViewItem("Ruta");
             this.iconos = new System.Windows.Forms.ImageList(this.components);
             this.btnExtraer = new System.Windows.Forms.Button();
             this.btnSee = new System.Windows.Forms.Button();
@@ -50,25 +49,22 @@
             this.toolStripInfoRom = new System.Windows.Forms.ToolStripButton();
             this.toolStripDebug = new System.Windows.Forms.ToolStripButton();
             this.toolStripVentana = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSplitButton1 = new System.Windows.Forms.ToolStripDropDownButton();
+            this.recargarPluginsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.liberarPluginsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.cargarPluginsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.btnDescomprimir = new System.Windows.Forms.Button();
-            this.checkTodo = new System.Windows.Forms.CheckBox();
             this.btnDesplazar = new System.Windows.Forms.Button();
             this.panelObj = new System.Windows.Forms.Panel();
+            this.toolStrip2 = new System.Windows.Forms.ToolStrip();
+            this.toolStripSplitButton2 = new System.Windows.Forms.ToolStripSplitButton();
+            this.borrarPaletaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.borrarTileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.borrarScreenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.borrarCeldasToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip1.SuspendLayout();
+            this.toolStrip2.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // btnDeleteChain
-            // 
-            this.btnDeleteChain.ImageKey = "picture_delete.png";
-            this.btnDeleteChain.ImageList = this.iconos;
-            this.btnDeleteChain.Location = new System.Drawing.Point(410, 455);
-            this.btnDeleteChain.Name = "btnDeleteChain";
-            this.btnDeleteChain.Size = new System.Drawing.Size(98, 32);
-            this.btnDeleteChain.TabIndex = 5;
-            this.btnDeleteChain.Text = "Borrar cadena";
-            this.btnDeleteChain.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.btnDeleteChain.UseVisualStyleBackColor = true;
-            this.btnDeleteChain.Click += new System.EventHandler(this.btnDeleteChain_Click);
             // 
             // iconos
             // 
@@ -136,12 +132,12 @@
             this.columnHeader1,
             this.columnHeader2});
             this.listFile.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem1,
-            listViewItem2,
-            listViewItem3,
-            listViewItem4,
-            listViewItem5,
-            listViewItem6});
+            listViewItem43,
+            listViewItem44,
+            listViewItem45,
+            listViewItem46,
+            listViewItem47,
+            listViewItem48});
             this.listFile.Location = new System.Drawing.Point(409, 28);
             this.listFile.Name = "listFile";
             this.listFile.Size = new System.Drawing.Size(197, 202);
@@ -178,7 +174,8 @@
             this.toolStripOpen,
             this.toolStripInfoRom,
             this.toolStripDebug,
-            this.toolStripVentana});
+            this.toolStripVentana,
+            this.toolStripSplitButton1});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
@@ -227,11 +224,47 @@
             this.toolStripVentana.Text = "Modo ventana";
             this.toolStripVentana.Click += new System.EventHandler(this.toolStripVentana_Click);
             // 
+            // toolStripSplitButton1
+            // 
+            this.toolStripSplitButton1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.recargarPluginsToolStripMenuItem,
+            this.liberarPluginsToolStripMenuItem,
+            this.cargarPluginsToolStripMenuItem});
+            this.toolStripSplitButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripSplitButton1.Image")));
+            this.toolStripSplitButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripSplitButton1.Name = "toolStripSplitButton1";
+            this.toolStripSplitButton1.Size = new System.Drawing.Size(75, 22);
+            this.toolStripSplitButton1.Text = "Plugins";
+            // 
+            // recargarPluginsToolStripMenuItem
+            // 
+            this.recargarPluginsToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("recargarPluginsToolStripMenuItem.Image")));
+            this.recargarPluginsToolStripMenuItem.Name = "recargarPluginsToolStripMenuItem";
+            this.recargarPluginsToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
+            this.recargarPluginsToolStripMenuItem.Text = "Recargar plugins";
+            this.recargarPluginsToolStripMenuItem.Click += new System.EventHandler(this.recargarPluginsToolStripMenuItem_Click);
+            // 
+            // liberarPluginsToolStripMenuItem
+            // 
+            this.liberarPluginsToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("liberarPluginsToolStripMenuItem.Image")));
+            this.liberarPluginsToolStripMenuItem.Name = "liberarPluginsToolStripMenuItem";
+            this.liberarPluginsToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
+            this.liberarPluginsToolStripMenuItem.Text = "Liberar plugins";
+            this.liberarPluginsToolStripMenuItem.Click += new System.EventHandler(this.liberarPluginsToolStripMenuItem_Click);
+            // 
+            // cargarPluginsToolStripMenuItem
+            // 
+            this.cargarPluginsToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("cargarPluginsToolStripMenuItem.Image")));
+            this.cargarPluginsToolStripMenuItem.Name = "cargarPluginsToolStripMenuItem";
+            this.cargarPluginsToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
+            this.cargarPluginsToolStripMenuItem.Text = "Cargar plugins";
+            this.cargarPluginsToolStripMenuItem.Click += new System.EventHandler(this.cargarPluginsToolStripMenuItem_Click);
+            // 
             // btnDescomprimir
             // 
             this.btnDescomprimir.ImageKey = "compress.png";
             this.btnDescomprimir.ImageList = this.iconos;
-            this.btnDescomprimir.Location = new System.Drawing.Point(409, 417);
+            this.btnDescomprimir.Location = new System.Drawing.Point(409, 455);
             this.btnDescomprimir.Name = "btnDescomprimir";
             this.btnDescomprimir.Size = new System.Drawing.Size(97, 32);
             this.btnDescomprimir.TabIndex = 7;
@@ -239,16 +272,6 @@
             this.btnDescomprimir.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnDescomprimir.UseVisualStyleBackColor = true;
             this.btnDescomprimir.Click += new System.EventHandler(this.btnUncompress_Click);
-            // 
-            // checkTodo
-            // 
-            this.checkTodo.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.checkTodo.Location = new System.Drawing.Point(512, 417);
-            this.checkTodo.Name = "checkTodo";
-            this.checkTodo.Size = new System.Drawing.Size(120, 32);
-            this.checkTodo.TabIndex = 8;
-            this.checkTodo.Text = "Todos los archivos";
-            this.checkTodo.UseVisualStyleBackColor = true;
             // 
             // btnDesplazar
             // 
@@ -270,18 +293,78 @@
             this.panelObj.Size = new System.Drawing.Size(512, 512);
             this.panelObj.TabIndex = 10;
             // 
+            // toolStrip2
+            // 
+            this.toolStrip2.BackColor = System.Drawing.SystemColors.GradientActiveCaption;
+            this.toolStrip2.Dock = System.Windows.Forms.DockStyle.None;
+            this.toolStrip2.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
+            this.toolStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripSplitButton2});
+            this.toolStrip2.Location = new System.Drawing.Point(409, 427);
+            this.toolStrip2.Name = "toolStrip2";
+            this.toolStrip2.RenderMode = System.Windows.Forms.ToolStripRenderMode.Professional;
+            this.toolStrip2.Size = new System.Drawing.Size(115, 25);
+            this.toolStrip2.TabIndex = 11;
+            this.toolStrip2.Text = "toolStrip2";
+            // 
+            // toolStripSplitButton2
+            // 
+            this.toolStripSplitButton2.BackColor = System.Drawing.SystemColors.Highlight;
+            this.toolStripSplitButton2.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.borrarPaletaToolStripMenuItem,
+            this.borrarTileToolStripMenuItem,
+            this.borrarScreenToolStripMenuItem,
+            this.borrarCeldasToolStripMenuItem});
+            this.toolStripSplitButton2.Image = ((System.Drawing.Image)(resources.GetObject("toolStripSplitButton2.Image")));
+            this.toolStripSplitButton2.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripSplitButton2.Name = "toolStripSplitButton2";
+            this.toolStripSplitButton2.Size = new System.Drawing.Size(112, 22);
+            this.toolStripSplitButton2.Text = "Borrar cadena";
+            this.toolStripSplitButton2.ButtonClick += new System.EventHandler(this.toolStripSplitButton2_ButtonClick);
+            // 
+            // borrarPaletaToolStripMenuItem
+            // 
+            this.borrarPaletaToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("borrarPaletaToolStripMenuItem.Image")));
+            this.borrarPaletaToolStripMenuItem.Name = "borrarPaletaToolStripMenuItem";
+            this.borrarPaletaToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.borrarPaletaToolStripMenuItem.Text = "Borrar paleta";
+            this.borrarPaletaToolStripMenuItem.Click += new System.EventHandler(this.borrarPaletaToolStripMenuItem_Click);
+            // 
+            // borrarTileToolStripMenuItem
+            // 
+            this.borrarTileToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("borrarTileToolStripMenuItem.Image")));
+            this.borrarTileToolStripMenuItem.Name = "borrarTileToolStripMenuItem";
+            this.borrarTileToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.borrarTileToolStripMenuItem.Text = "Borrar tile";
+            this.borrarTileToolStripMenuItem.Click += new System.EventHandler(this.borrarTileToolStripMenuItem_Click);
+            // 
+            // borrarScreenToolStripMenuItem
+            // 
+            this.borrarScreenToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("borrarScreenToolStripMenuItem.Image")));
+            this.borrarScreenToolStripMenuItem.Name = "borrarScreenToolStripMenuItem";
+            this.borrarScreenToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.borrarScreenToolStripMenuItem.Text = "Borrar screen";
+            this.borrarScreenToolStripMenuItem.Click += new System.EventHandler(this.borrarScreenToolStripMenuItem_Click);
+            // 
+            // borrarCeldasToolStripMenuItem
+            // 
+            this.borrarCeldasToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("borrarCeldasToolStripMenuItem.Image")));
+            this.borrarCeldasToolStripMenuItem.Name = "borrarCeldasToolStripMenuItem";
+            this.borrarCeldasToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.borrarCeldasToolStripMenuItem.Text = "Borrar celdas";
+            this.borrarCeldasToolStripMenuItem.Click += new System.EventHandler(this.borrarCeldasToolStripMenuItem_Click);
+            // 
             // Sistema
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
             this.ClientSize = new System.Drawing.Size(644, 537);
+            this.Controls.Add(this.toolStrip2);
             this.Controls.Add(this.panelObj);
             this.Controls.Add(this.btnDesplazar);
-            this.Controls.Add(this.checkTodo);
             this.Controls.Add(this.btnDescomprimir);
             this.Controls.Add(this.toolStrip1);
-            this.Controls.Add(this.btnDeleteChain);
             this.Controls.Add(this.btnExtraer);
             this.Controls.Add(this.treeSystem);
             this.Controls.Add(this.listFile);
@@ -290,12 +373,13 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
-            this.MinimizeBox = false;
             this.Name = "Sistema";
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "Form1";
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
+            this.toolStrip2.ResumeLayout(false);
+            this.toolStrip2.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -311,16 +395,24 @@
         private System.Windows.Forms.Button btnHex;
         private System.Windows.Forms.Button btnSee;
         private System.Windows.Forms.Button btnExtraer;
-        private System.Windows.Forms.Button btnDeleteChain;
         private System.Windows.Forms.ToolStrip toolStrip1;
         private System.Windows.Forms.ToolStripButton toolStripInfoRom;
         private System.Windows.Forms.ToolStripButton toolStripDebug;
         private System.Windows.Forms.ToolStripButton toolStripOpen;
         private System.Windows.Forms.Button btnDescomprimir;
-        private System.Windows.Forms.CheckBox checkTodo;
         private System.Windows.Forms.ToolStripButton toolStripVentana;
         private System.Windows.Forms.Button btnDesplazar;
         private System.Windows.Forms.Panel panelObj;
+        private System.Windows.Forms.ToolStripDropDownButton toolStripSplitButton1;
+        private System.Windows.Forms.ToolStripMenuItem recargarPluginsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem liberarPluginsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem cargarPluginsToolStripMenuItem;
+        private System.Windows.Forms.ToolStrip toolStrip2;
+        private System.Windows.Forms.ToolStripSplitButton toolStripSplitButton2;
+        private System.Windows.Forms.ToolStripMenuItem borrarPaletaToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem borrarTileToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem borrarScreenToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem borrarCeldasToolStripMenuItem;
 
     }
 }

@@ -41,9 +41,16 @@ namespace Tinke
                 ncer.cebk.banks[i].nCells = br.ReadUInt16();
                 ncer.cebk.banks[i].unknown1 = br.ReadUInt16();
                 ncer.cebk.banks[i].cell_offset = br.ReadUInt32();
-                long posicion = br.BaseStream.Position;
 
-                br.BaseStream.Position += (ncer.cebk.nBanks - (i + 1)) * 8 + ncer.cebk.banks[i].cell_offset;
+                if (ncer.cebk.tBank == 0x01)
+                    br.ReadBytes(8);    // No soportado aún.
+
+                long posicion = br.BaseStream.Position;
+                if (ncer.cebk.tBank == 0x00)
+                    br.BaseStream.Position += (ncer.cebk.nBanks - (i + 1)) * 8 + ncer.cebk.banks[i].cell_offset;
+                else
+                    br.BaseStream.Position += (ncer.cebk.nBanks - (i + 1)) * 0x10 + ncer.cebk.banks[i].cell_offset;
+
                 ncer.cebk.banks[i].cells = new Cell[ncer.cebk.banks[i].nCells];
                 // Lee la información de cada banco
                 for (int j = 0; j < ncer.cebk.banks[i].nCells; j++)
@@ -64,8 +71,8 @@ namespace Tinke
             }
             br.BaseStream.Position = ncer.header.header_size + ncer.cebk.section_size;
 
-            // Lee la segunda sección LABL
-            ncer.labl.id = br.ReadChars(4);
+            // TODO: NCER->Lee la segunda sección LABL
+            /*ncer.labl.id = br.ReadChars(4);
             ncer.labl.section_size = br.ReadUInt32();
             ncer.labl.offset = new uint[ncer.cebk.nBanks];
             ncer.labl.names = new string[ncer.cebk.nBanks];
@@ -87,7 +94,7 @@ namespace Tinke
                 if (br.BaseStream.Position >= ncer.header.header_size + ncer.cebk.section_size + ncer.labl.section_size)
                     break;
                 br.BaseStream.Position = posicion;
-            }
+            }*/
 
             // Lee la tercera sección UEXT
             br.BaseStream.Position = ncer.header.header_size + ncer.cebk.section_size + ncer.labl.section_size;
@@ -102,6 +109,8 @@ namespace Tinke
         }
         public static Size Obtener_Tamaño(byte byte1, byte byte2)
         {
+            byte1 = Convert.ToByte(byte1 & 0x0C);
+            byte2 = Convert.ToByte(byte2 & 0x0C);
             Size tamaño = new Size();
 
             switch (byte1)
@@ -157,6 +166,23 @@ namespace Tinke
                             break;
                     }
                     break;
+                case 0x0C:
+                    switch (byte2)
+                    {
+                        case 0x00:
+                            tamaño = new Size(64, 128);
+                            break;
+                        case 0x04:
+                            tamaño = new Size(0, 0);
+                            break;
+                        case 0x08:
+                            tamaño = new Size(0, 0);
+                            break;
+                        case 0x0C:
+                            tamaño = new Size(0, 0);
+                            break;
+                    }
+                    break;
             }
 
             return tamaño;
@@ -166,17 +192,20 @@ namespace Tinke
         {
             if (banco.cells.Length == 0)
                 return new Bitmap(1, 1);
-            Size tamaño = new Size((0 - banco.cells[0].xOffset) * 2, (0 - banco.cells[0].yOffset) * 2);
+            //Size tamaño = new Size((0 - banco.cells[0].xOffset) * 2, (0 - banco.cells[0].yOffset) * 2);
+            Size tamaño = new Size(512, 512);
             Bitmap imagen = new Bitmap(tamaño.Width, tamaño.Height);
             Graphics grafico = Graphics.FromImage(imagen);
 
-            /* DEBUG
+             //DEBUG
             // Dibuja el entorno
             for (int i = -256; i < 256; i += 8)
             {
                 grafico.DrawLine(Pens.LightBlue, i + tamaño.Width / 2, 0, i + tamaño.Width / 2, tamaño.Height);
                 grafico.DrawLine(Pens.LightBlue, 0, i + tamaño.Height / 2, tamaño.Width, i + tamaño.Height / 2);
-            }*/
+            }
+            grafico.DrawLine(Pens.Blue, 256, 0, 256, 512);
+            grafico.DrawLine(Pens.Blue, 0, 256, 512, 256);
 
             Bitmap[] celdas = new Bitmap[banco.nCells];
             for (int i = 0; i < banco.nCells; i++)
@@ -184,8 +213,8 @@ namespace Tinke
                 celdas[i] = Imagen_NCGR.Crear_Imagen(tile, paleta, (int)banco.cells[i].tileOffset, banco.cells[i].width / 8, banco.cells[i].height / 8);
                 grafico.DrawImageUnscaled(celdas[i], tamaño.Width / 2 + banco.cells[i].xOffset, tamaño.Height / 2 + banco.cells[i].yOffset);
                 // DEBUG, dibuja los bordes de las celdas
-                //grafico.DrawRectangle(Pens.Black, tamaño.Width / 2 + banco.cells[i].xOffset, tamaño.Height / 2 + banco.cells[i].yOffset, 
-                //    banco.cells[i].width, banco.cells[i].height);
+                grafico.DrawRectangle(Pens.Black, tamaño.Width / 2 + banco.cells[i].xOffset, tamaño.Height / 2 + banco.cells[i].yOffset, 
+                    banco.cells[i].width, banco.cells[i].height);
             }
 
             return imagen;

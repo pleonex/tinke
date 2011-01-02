@@ -38,7 +38,10 @@ namespace Tinke
             ncgr.rahc.size_tiledata = (ncgr.rahc.depth == ColorDepth.Depth8Bit ? br.ReadUInt32() : br.ReadUInt32() * 2);
             ncgr.rahc.unknown3 = br.ReadUInt32();
 
-            ncgr.rahc.nTiles = (ushort)(ncgr.rahc.size_tiledata / 64);
+            if (ncgr.rahc.size_tiledata != 0)
+                ncgr.rahc.nTiles = (ushort)(ncgr.rahc.size_tiledata / 64);
+            else
+                ncgr.rahc.nTiles = (ushort)(ncgr.rahc.nTilesX * ncgr.rahc.nTilesY);
             ncgr.rahc.tileData.tiles = new byte[ncgr.rahc.nTiles][];
             ncgr.rahc.tileData.nPaleta = new byte[ncgr.rahc.nTiles];
 
@@ -51,7 +54,7 @@ namespace Tinke
                 ncgr.rahc.tileData.nPaleta[i] = 0;
             }
 
-            if (ncgr.cabecera.nSection == 1)   // En caso de que no haya más secciones
+            if (ncgr.cabecera.nSection == 1 || br.BaseStream.Position == br.BaseStream.Length)   // En caso de que no haya más secciones
             {
                 br.Close();
                 br.Dispose();

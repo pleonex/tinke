@@ -76,9 +76,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Temporal.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="InfoAni.resx">
       <DependentUpon>InfoAni.cs</DependentUpon>
     </EmbeddedResource>

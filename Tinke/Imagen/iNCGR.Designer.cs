@@ -74,6 +74,8 @@
             this.columnValor = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.btnSave = new System.Windows.Forms.Button();
             this.pic = new System.Windows.Forms.PictureBox();
+            this.comboDepth = new System.Windows.Forms.ComboBox();
+            this.label4 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.numericWidth)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericHeight)).BeginInit();
             this.groupProp.SuspendLayout();
@@ -155,6 +157,8 @@
             // 
             // groupProp
             // 
+            this.groupProp.Controls.Add(this.label4);
+            this.groupProp.Controls.Add(this.comboDepth);
             this.groupProp.Controls.Add(this.label3);
             this.groupProp.Controls.Add(this.numericStart);
             this.groupProp.Controls.Add(this.listInfo);
@@ -252,6 +256,29 @@
             this.pic.TabIndex = 0;
             this.pic.TabStop = false;
             // 
+            // comboDepth
+            // 
+            this.comboDepth.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+            this.comboDepth.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.comboDepth.FormattingEnabled = true;
+            this.comboDepth.Items.AddRange(new object[] {
+            "4 bpp",
+            "8 bpp"});
+            this.comboDepth.Location = new System.Drawing.Point(181, 192);
+            this.comboDepth.Name = "comboDepth";
+            this.comboDepth.Size = new System.Drawing.Size(54, 21);
+            this.comboDepth.TabIndex = 8;
+            this.comboDepth.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(147, 195);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(28, 13);
+            this.label4.TabIndex = 9;
+            this.label4.Text = "bpp:";
+            // 
             // iNCGR
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -290,5 +317,7 @@
         private System.Windows.Forms.ColumnHeader columnValor;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.NumericUpDown numericStart;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.ComboBox comboDepth;
     }
 }
