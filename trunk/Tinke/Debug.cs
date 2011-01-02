@@ -20,7 +20,8 @@ namespace Tinke
         public void Añadir_Texto(string mensaje)
         {
             if (mensaje != "")
-                txtInfo.Text += mensaje + "\r\n";
+                txtInfo.AppendText(mensaje + "\r\n");
+
         }
     }
 }

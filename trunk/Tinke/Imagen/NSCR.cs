@@ -31,6 +31,12 @@ namespace Tinke
             nscr.section.width = br.ReadUInt16();
             nscr.section.height = br.ReadUInt16();
             nscr.section.padding = br.ReadUInt32();
+            if (nscr.section.padding == 0x01)
+            {
+                ushort height = nscr.section.height;
+                nscr.section.height = nscr.section.width;
+                nscr.section.width = height;
+            }
             nscr.section.data_size = br.ReadUInt32();
             nscr.section.screenData = new NTFS[nscr.section.data_size / 2];
 

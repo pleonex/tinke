@@ -46,6 +46,8 @@ namespace Tinke
             pltt.unknown1 = br.ReadUInt32();
             pltt.tamañoPaletas = br.ReadUInt32();
             pltt.nColores = br.ReadUInt32();
+            if (pltt.profundidad == ColorDepth.Depth8Bit)
+                pltt.nColores = 0x100;
             pltt.paletas = new NTFP[(pltt.tamaño - 0x18) / (pltt.nColores * 2)];
             Console.WriteLine("\t" + pltt.paletas.Length + " paletas encontradas de " + pltt.nColores + " colores.");
 

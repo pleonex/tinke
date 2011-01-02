@@ -29,6 +29,7 @@ namespace Tinke
             pic.Image = Imagen_NCGR.Crear_Imagen(tile, paleta, 0);
             this.numericWidth.Value = pic.Image.Width;
             this.numericHeight.Value = pic.Image.Height;
+            this.comboDepth.Text = (tile.rahc.depth == ColorDepth.Depth4Bit ? "4 bpp" : "8 bpp");
             this.numericWidth.ValueChanged += new EventHandler(numericSize_ValueChanged);
             this.numericHeight.ValueChanged += new EventHandler(numericSize_ValueChanged);
             this.numericStart.ValueChanged += new EventHandler(numericStart_ValueChanged);
@@ -51,6 +52,8 @@ namespace Tinke
             label1.Location = new Point(label1.Location.X, listInfo.Height + 54);
             label2.Location = new Point(label2.Location.X, listInfo.Height + 54);
             label3.Location = new Point(label3.Location.X, listInfo.Height + 28);
+            label4.Location = new Point(label4.Location.X, listInfo.Height + 28);
+            comboDepth.Location = new Point(comboDepth.Location.X, listInfo.Height + 26);
             numericStart.Location = new Point(numericStart.Location.X, listInfo.Height + 26);
             numericHeight.Location = new Point(numericHeight.Location.X, listInfo.Height + 52);
             numericWidth.Location = new Point(numericWidth.Location.X, listInfo.Height + 52);
@@ -65,6 +68,7 @@ namespace Tinke
         {
             tile.rahc.nTilesX = (ushort)(numericWidth.Value / 8);
             tile.rahc.nTilesY = (ushort)(numericHeight.Value / 8);
+            tile.rahc.depth = (comboDepth.Text == "4 bpp" ? ColorDepth.Depth4Bit : ColorDepth.Depth8Bit);
             pic.Image = Imagen_NCGR.Crear_Imagen(tile, paleta, startTile);
         }
         private void Info()
@@ -92,6 +96,13 @@ namespace Tinke
             if (o.ShowDialog() == DialogResult.OK)
                 pic.Image.Save(o.FileName);
             o.Dispose();
+        }
+
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            tile.rahc.depth = (comboDepth.Text == "4 bpp" ? ColorDepth.Depth4Bit : ColorDepth.Depth8Bit);
+            // TODO: arreglar, obviamente no funciona así.
+            Actualizar_Imagen();
         }
     }
 }

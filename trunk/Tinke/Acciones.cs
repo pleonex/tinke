@@ -38,7 +38,7 @@ namespace Tinke
             pluginHost.DescomprimirEvent += new Func<string, string>(pluginHost_DescomprimirEvent);
             Cargar_Plugins();
         }
-        private void Cargar_Plugins()
+        public void Cargar_Plugins()
         {
 
             foreach (string fileName in Directory.GetFiles("Plugins", "*.dll"))
@@ -89,6 +89,11 @@ namespace Tinke
 
             } // end foreach
 
+        }
+        public void Liberar_Plugins()
+        {
+            formatList.Clear();
+            gamePlugin = null;
         }
 
         public Carpeta Root
@@ -294,24 +299,64 @@ namespace Tinke
             pluginHost.Set_NCER(new NCER());
             pluginHost.Set_NANR(new NANR());
         }
-
-        public void Add_Files(List<Archivo> files)
+        public void Delete_PicturesSaved(Formato formato)
         {
-            for (int i = 0; i < files.Count; i++)
+            switch (formato)
             {
-                Archivo currFile = files[i];
-                currFile.id = (ushort)lastFileId;
-                files.RemoveAt(i);
-                files.Insert(i, currFile);
-                lastFileId++;
+                case Formato.Paleta:
+                    pluginHost.Set_NCLR(new NCLR());
+                    break;
+                case Formato.Imagen:
+                    pluginHost.Set_NCGR(new NCGR());
+                    break;
+                case Formato.Screen:
+                    pluginHost.Set_NSCR(new NSCR());
+                    break;
+                case Formato.Celdas:
+                    pluginHost.Set_NCER(new NCER());
+                    break;
+                case Formato.Animación:
+                    break;
+            }
+        }
+
+        private Carpeta Add_ID(Carpeta currFolder)
+        {
+            if (currFolder.files is List<Archivo>)
+            {
+                for (int i = 0; i < currFolder.files.Count; i++)
+                {
+                    Archivo currFile = currFolder.files[i];
+                    currFile.id = (ushort)lastFileId;
+                    currFolder.files.RemoveAt(i);
+                    currFolder.files.Insert(i, currFile);
+                    lastFileId++;
+                }
             }
 
-            int idNewFolder = Select_File().id;
-            root = FileToFolder(idNewFolder, root);
-            Add_Files(files, (ushort)(lastFolderId - 1), root);
-           
+            if (currFolder.folders is List<Carpeta>)
+            {
+                for (int i = 0; i < currFolder.folders.Count; i++)
+                {
+                    Carpeta newFolder = Add_ID(currFolder.folders[i]);
+                    newFolder.name = currFolder.folders[i].name;
+                    newFolder.id = (ushort)lastFolderId;
+                    lastFolderId++;
+                    currFolder.folders.RemoveAt(i);
+                    currFolder.folders.Insert(i, newFolder);
+                }
+            }
+
+            return currFolder;
         }
-        public Carpeta Add_Files(List<Archivo> files, ushort idFolder, Carpeta currFolder)
+        public void Add_Files(Carpeta files)
+        {
+            files.name = Select_File().name;
+            root = FileToFolder(Select_File().id, root);
+            files = Add_ID(files); 
+            Add_Files(files, (ushort)(lastFolderId - 1), root);
+        }
+        public Carpeta Add_Files(Carpeta files, ushort idFolder, Carpeta currFolder)
         {
             if (currFolder.folders is List<Carpeta>)   // Si tiene subdirectorios, buscamos en cada uno de ellos
             {
@@ -319,11 +364,7 @@ namespace Tinke
                 {
                     if (currFolder.folders[i].id == idFolder)
                     {
-                        Carpeta newFolder = currFolder.folders[i];
-                        if (!(newFolder.files is List<Archivo>))
-                            newFolder.files = new List<Archivo>();
-                        newFolder.files.AddRange(files);
-                        currFolder.folders[i] = newFolder;
+                        currFolder.folders[i] = files;
                         return currFolder.folders[i];
                     }
 
@@ -458,6 +499,9 @@ namespace Tinke
             else    // En caso de que el archivo haya sido extraído y no esté en la ROM
                 br = new BinaryReader(File.OpenRead(currFile.path));
 
+            if (br.BaseStream.Length == 0x00)
+                return Formato.Desconocido;
+
             byte[] ext = null;
             try { ext = br.ReadBytes(4); }
             catch { } 
@@ -506,7 +550,7 @@ namespace Tinke
             return Formato.Desconocido;
         }
 
-        public void Extract()
+        public Carpeta Extract()
         {
             // Guardamos el archivo para descomprimir fuera del sistema de ROM
             Archivo selectFile = Select_File();
@@ -579,15 +623,16 @@ namespace Tinke
             {
                 MessageBox.Show(e.Message);
                 Console.WriteLine(e.Message);
-                return;
+                return new Carpeta();
             }
             #endregion
         Continuar:
 
             // Se añaden los archivos descomprimidos al árbol de archivos.
-            Add_Files(pluginHost.Get_Files().files);
-
             File.Delete(tempFile);
+            Carpeta desc = pluginHost.Get_Files();
+            Add_Files(desc);
+            return desc;
         }
         /// <summary>
         /// Evento llamado desde los plugins en el cual se descomprime un archivo a través de otros plugins.
@@ -719,21 +764,20 @@ namespace Tinke
                 }
                 if (selectFile.name.EndsWith(".NCGR") || new String(Encoding.ASCII.GetChars(ext)) == "NCGR" || new String(Encoding.ASCII.GetChars(ext)) == "RGCN")
                 {
-                    pluginHost.Set_NCGR(Imagen_NCGR.Leer(tempFile));
+                    NCGR tile = Imagen_NCGR.Leer(tempFile);
+                    pluginHost.Set_NCGR(tile);
                     File.Delete(tempFile);
 
                     if (pluginHost.Get_NSCR().cabecera.file_size != 0x00)
                     {
-                        NCGR tile = pluginHost.Get_NCGR();
                         tile.rahc.tileData = Imagen_NSCR.Modificar_Tile(pluginHost.Get_NSCR(), tile.rahc.tileData);
                         tile.rahc.nTilesX = (ushort)(pluginHost.Get_NSCR().section.width / 8);
                         tile.rahc.nTilesY = (ushort)(pluginHost.Get_NSCR().section.height / 8);
-                        pluginHost.Set_NCGR(tile);
                     }
 
                     if (pluginHost.Get_NCLR().cabecera.file_size != 0x00)
                     {
-                        iNCGR control = new iNCGR(pluginHost.Get_NCGR(), pluginHost.Get_NCLR());
+                        iNCGR control = new iNCGR(tile, pluginHost.Get_NCLR());
                         control.Dock = DockStyle.Fill;
                         return control;
                     }
@@ -743,20 +787,16 @@ namespace Tinke
                 else if (selectFile.name.EndsWith(".NSCR") || new String(Encoding.ASCII.GetChars(ext)) == "NSCR" || new String(Encoding.ASCII.GetChars(ext)) == "RCSN")
                 {
                     pluginHost.Set_NSCR(Imagen_NSCR.Leer(tempFile));
-                    if (pluginHost.Get_NCGR().cabecera.file_size != 0x00)
+                    if (pluginHost.Get_NCGR().cabecera.file_size != 0x00 || pluginHost.Get_NCLR().cabecera.file_size != 0x00)
                     {
                         NCGR tile = pluginHost.Get_NCGR();
                         tile.rahc.tileData = Imagen_NSCR.Modificar_Tile(pluginHost.Get_NSCR(), tile.rahc.tileData);
                         tile.rahc.nTilesX = (ushort)(pluginHost.Get_NSCR().section.width / 8);
                         tile.rahc.nTilesY = (ushort)(pluginHost.Get_NSCR().section.height / 8);
-                        pluginHost.Set_NCGR(tile);
 
-                        if (pluginHost.Get_NCLR().cabecera.file_size != 0x00)
-                        {
-                            iNCGR control = new iNCGR(pluginHost.Get_NCGR(), pluginHost.Get_NCLR());
-                            control.Dock = DockStyle.Fill;
-                            return control;
-                        }
+                        iNCGR control = new iNCGR(tile, pluginHost.Get_NCLR());
+                        control.Dock = DockStyle.Fill;
+                        return control;
                     }
                     return new Control();
                 }
@@ -768,6 +808,7 @@ namespace Tinke
                     if (pluginHost.Get_NCGR().cabecera.file_size != 0x00 && pluginHost.Get_NCLR().cabecera.file_size != 0x00)
                     {
                         TabControl control = new TabControl();
+                        control.Dock = DockStyle.Fill;
                         NCER ncer = pluginHost.Get_NCER();
                         for (int i = 0; i < ncer.cebk.nBanks; i++)
                         {

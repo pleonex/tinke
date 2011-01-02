@@ -263,7 +263,17 @@ namespace LAYTON
 
             for (int i = 0; i < imagenes.Length; i++)
             {
-                imagenes[i].bitmap = Transformar_Imagen(imagenes[i], paleta);
+                try { imagenes[i].bitmap = Transformar_Imagen(imagenes[i], paleta); }
+                catch // En caso de error puede deberse a que la imagen tenga mal las posiciones x e y, intentamos arreglarlo
+                {
+                    Console.WriteLine("Error al intentar crear la animación. Intentando arreglarla.");
+                    for (int j = 0; j < imagenes[i].imgs; j++)
+                        if (j > 0)
+                            if (imagenes[i].segmentos[j].posX > imagenes[i].segmentos[j - 1].posX)
+                                imagenes[i].segmentos[j].posY = imagenes[i].segmentos[j - 1].posY;
+                    
+                    imagenes[i].bitmap = Transformar_Imagen(imagenes[i], paleta);
+                }
                 imagenes[i].bitmap = imagenes[i].bitmap.Clone(new Rectangle(0, 0, imagenes[i].width, imagenes[i].height),
                      System.Drawing.Imaging.PixelFormat.DontCare);
                 if (imagenes[i].name == "" | imagenes[i].name == null)
