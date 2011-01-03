@@ -305,7 +305,6 @@ namespace Tinke
         }
         private void btnExtraer_Click(object sender, EventArgs e)
         {
-            // TODO: Extraer todocheck
             Archivo fileSelect = accion.Select_File();
 
             SaveFileDialog o = new SaveFileDialog();

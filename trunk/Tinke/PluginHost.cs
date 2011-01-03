@@ -78,10 +78,10 @@ namespace Tinke
             return tempFolder;
         }
 
-        public event Func<String, String> DescomprimirEvent;
-        public string Descomprimir(string archivo)
+        public event Action<String> DescomprimirEvent;
+        public void Descomprimir(string archivo)
         {
-            return DescomprimirEvent(archivo);
+            DescomprimirEvent(archivo);
         }
     }
 }

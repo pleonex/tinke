@@ -13,6 +13,10 @@ namespace LAYTON
     {
         Bitmap[] imagenes;
 
+        public InfoAni()
+        {
+            InitializeComponent();
+        }
         public InfoAni(Ani.Todo info)
         {
             InitializeComponent();
