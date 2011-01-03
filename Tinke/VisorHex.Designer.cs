@@ -29,42 +29,43 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(VisorHex));
-            this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.txtHex = new System.Windows.Forms.TextBox();
+            this.vScrollBar1 = new System.Windows.Forms.VScrollBar();
             this.SuspendLayout();
-            // 
-            // backgroundWorker1
-            // 
-            this.backgroundWorker1.WorkerReportsProgress = true;
-            this.backgroundWorker1.WorkerSupportsCancellation = true;
-            this.backgroundWorker1.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker1_DoWork);
-            this.backgroundWorker1.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backgroundWorker1_ProgressChanged);
-            this.backgroundWorker1.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker1_RunWorkerCompleted);
             // 
             // txtHex
             // 
-            this.txtHex.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtHex.Font = new System.Drawing.Font("Consolas", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtHex.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.txtHex.Dock = System.Windows.Forms.DockStyle.Left;
+            this.txtHex.Font = new System.Drawing.Font("Consolas", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtHex.Location = new System.Drawing.Point(0, 0);
             this.txtHex.Multiline = true;
             this.txtHex.Name = "txtHex";
-            this.txtHex.ReadOnly = true;
-            this.txtHex.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.txtHex.Size = new System.Drawing.Size(844, 272);
-            this.txtHex.TabIndex = 1;
+            this.txtHex.Size = new System.Drawing.Size(795, 272);
+            this.txtHex.TabIndex = 2;
+            // 
+            // vScrollBar1
+            // 
+            this.vScrollBar1.Dock = System.Windows.Forms.DockStyle.Right;
+            this.vScrollBar1.Location = new System.Drawing.Point(790, 0);
+            this.vScrollBar1.Name = "vScrollBar1";
+            this.vScrollBar1.Size = new System.Drawing.Size(19, 272);
+            this.vScrollBar1.TabIndex = 3;
+            this.vScrollBar1.Scroll += new System.Windows.Forms.ScrollEventHandler(this.vScrollBar1_Scroll);
             // 
             // VisorHex
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(844, 272);
+            this.ClientSize = new System.Drawing.Size(809, 272);
+            this.Controls.Add(this.vScrollBar1);
             this.Controls.Add(this.txtHex);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MaximizeBox = false;
             this.MinimizeBox = false;
+            this.MinimumSize = new System.Drawing.Size(825, 0);
             this.Name = "VisorHex";
             this.Text = "Visor Hexadecimal";
+            this.Resize += new System.EventHandler(this.VisorHex_Resize);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -72,7 +73,9 @@
 
         #endregion
 
-        private System.ComponentModel.BackgroundWorker backgroundWorker1;
         private System.Windows.Forms.TextBox txtHex;
+        private System.Windows.Forms.VScrollBar vScrollBar1;
+
+
     }
 }

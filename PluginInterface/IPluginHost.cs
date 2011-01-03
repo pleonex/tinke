@@ -38,7 +38,7 @@ namespace PluginInterface
 
         string Get_TempFolder();
 
-        event Func<String, String> DescomprimirEvent;
-        string Descomprimir(string archivo);
+        event Action<String>  DescomprimirEvent;
+        void Descomprimir(string archivo);
     }
 }

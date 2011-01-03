@@ -35,7 +35,7 @@ namespace Tinke
 
             formatList = new List<IPlugin>();
             pluginHost = new PluginHost();
-            pluginHost.DescomprimirEvent += new Func<string, string>(pluginHost_DescomprimirEvent);
+            pluginHost.DescomprimirEvent += new Action<String>(pluginHost_DescomprimirEvent);
             Cargar_Plugins();
         }
         public void Cargar_Plugins()
@@ -639,7 +639,7 @@ namespace Tinke
         /// </summary>
         /// <param name="archivo">Archivo a descomprimir</param>
         /// <returns>Ruta de la carpeta donde se encuentran los archivos descomprimidos</returns>
-        string pluginHost_DescomprimirEvent(string arg)
+        void pluginHost_DescomprimirEvent(string arg)
         {
             BinaryReader br = new BinaryReader(File.OpenRead(arg));
             byte[] ext = br.ReadBytes(4);
@@ -673,10 +673,9 @@ namespace Tinke
             {
                 MessageBox.Show(e.Message);
                 Console.WriteLine(e.Message);
-                return "";
             }
         Continuar:
-            return new FileInfo(pluginHost.Get_Files().files[0].path).DirectoryName;
+            return;
         }
 
         public Control See_File()

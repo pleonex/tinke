@@ -38,7 +38,8 @@ namespace LAYTON
             // Los archivos tienen compresión LZ77, descomprimimos primero.
             string temp = archivo + "nn"; // Para que no sea detectado como narc
             File.Copy(archivo, temp);
-            archivo = Directory.GetFiles(pluginHost.Descomprimir(temp))[0];
+            pluginHost.Descomprimir(temp);
+            archivo = pluginHost.Get_Files().files[0].path;
             File.Delete(temp);
 
             PictureBox pic = new PictureBox();

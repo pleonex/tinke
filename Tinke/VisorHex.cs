@@ -12,26 +12,24 @@ namespace Tinke
 {
     public partial class VisorHex : Form
     {
-        Espera espera;
-        int nByte;
+        string file;
+        UInt32 offset;
+        UInt32 size;
 
         public VisorHex(string file, UInt32 offset, UInt32 size)
         {
             InitializeComponent();
 
-            // TODO: Mejorar el rendimiento del visor Hexadecimal leyendo exclusivamente lo visible
-            espera = new Espera("Leyendo datos...", true);
-            nByte = (int)size;
+            this.file = file;
+            this.offset = offset;
+            this.size = size;
 
-            BinaryReader br = new BinaryReader(File.OpenRead(file));
-            br.BaseStream.Position = offset;
+            vScrollBar1.Maximum = (int)size / 0x10;
+            Show_Hex(0);
 
-            byte[] bytesFile = br.ReadBytes((int)size);
-            br.Close();
-            br.Dispose();
+            txtHex.Select(0, 0);
+            txtHex.HideSelection = false;
 
-            backgroundWorker1.RunWorkerAsync(bytesFile);
-            espera.ShowDialog();
         }
 
         public void Clear()
@@ -39,39 +37,45 @@ namespace Tinke
             txtHex.Text = "";
         }
 
-        private void backgroundWorker1_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        private void vScrollBar1_Scroll(object sender, ScrollEventArgs e)
         {
-            espera.Set_ProgressValue((e.ProgressPercentage * 100) / nByte);
+            Show_Hex(e.NewValue);
         }
-        private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
-        {
-            byte[] value = (byte[])e.Argument;
-            string text = "";
 
-            for (int i = 0; ; )
+        private void Show_Hex(int pos)
+        {
+            BinaryReader br = new BinaryReader(File.OpenRead(file));
+            br.BaseStream.Position = offset + pos * 16;
+
+            txtHex.Text = "Offset         00 01 02 03 04 05 06 07 08 09 0A 0B 0C 0D 0E 0F\r\n\r\n";
+
+            for (int i = 0; i < txtHex.Height / 17; i++)
             {
-                string ascii = "";
-                for (int j = 0; j < 0x10; j++)
+                if (br.BaseStream.Length == br.BaseStream.Position)
+                    break;
+
+                byte[] value = br.ReadBytes(0x10);
+                string text, ascii; text = ascii = "";
+
+                for (int j = 0; j < value.Length; j++)
                 {
-                    if (i >= value.Length) { text += "   " ; ascii += "  "; continue; }
-                    text += Tools.Helper.DecToHex(value[i]) + ' ';
-                    ascii += (value[i] > 0x1F && value[i] < 0x7F ? Char.ConvertFromUtf32(value[i]).ToString() + ' ' : ". ");
-                    i++;
-                    backgroundWorker1.ReportProgress(i);
+                    string c = String.Format("{0:X}", value[j]);
+                    text += (c.Length == 2 ? c : '0' + c) + ' ';
+                    ascii += (value[j] > 0x1F && value[j] < 0x7F ? Char.ConvertFromUtf32(value[j]).ToString() + ' ' : ". ");
                 }
-                text += '\t' + ascii;
-                text += "\r\n";
-                if (i >= value.Length) break;
+                txtHex.Text += "0x" + String.Format("{0:X}", (i + pos) * 16).PadLeft(8, '0') + "     " + text.PadRight(52, ' ') + ascii + "\r\n";
+                text = "";
+                ascii = "";
             }
 
-            e.Result = text;
-        }
-        private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            espera.Close();
-            txtHex.Text = (string)e.Result;
-            txtHex.Select(0, 0);
+            br.Close();
+            br.Dispose();
         }
 
+        private void VisorHex_Resize(object sender, EventArgs e)
+        {
+            txtHex.Width = this.Width - 30;
+            Show_Hex(vScrollBar1.Value);
+        }
     }
 }
