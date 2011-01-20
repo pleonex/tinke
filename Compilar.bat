@@ -9,7 +9,7 @@ IF errorlevel 2 set conf=Debug
 CHOICE /C 123 /M "Elija la plataforma: presione 1 para x86, 2 para x64 o 3 para Any CPU."
 IF errorlevel 1 set plat=x86
 IF errorlevel 2 set plat=x64
-IF errorlevel 3 set plat="Any CPU"
+IF errorlevel 3 set plat=Any CPU
 
 CHOICE /C SN /M "Ha elejido la configuraci¢n  %conf% y la plataforma %plat%, ¨es correcto?"
 IF errorlevel 2 goto inicio

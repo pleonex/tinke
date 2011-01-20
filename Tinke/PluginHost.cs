@@ -36,7 +36,8 @@ namespace Tinke
         }
         ~PluginHost()
         {
-            System.IO.Directory.Delete(tempFolder, true);
+            try { System.IO.Directory.Delete(tempFolder, true); }
+            catch { MessageBox.Show("No se pudo eliminar la carpeta temporal."); }
         }
 
         public NCLR Get_NCLR() { return paleta; }
@@ -57,7 +58,6 @@ namespace Tinke
 
         public NTFT Transformar_NSCR(NSCR nscr, NTFT ntft) { return Imagen_NSCR.Modificar_Tile(nscr, ntft); }
         public Bitmap Bitmap_NCGR(NCGR ncgr, NCLR nclr) { return Imagen_NCGR.Crear_Imagen(ncgr, nclr); }
-        public Bitmap Bitmap_NCGR(NCGR ncgr, NCLR nclr, int tilesX, int tilesY) { return Imagen_NCGR.Crear_Imagen(ncgr, nclr, tilesX, tilesY); }
         public Bitmap Bitmap_NCGR(NCGR ncgr, NCLR nclr, int startTile) { return Imagen_NCGR.Crear_Imagen(ncgr, nclr, startTile); }
         public Bitmap Bitmap_NCGR(NCGR ncgr, NCLR nclr, int startTile, int tilesX, int tilesY) { return Imagen_NCGR.Crear_Imagen(ncgr, nclr, startTile, tilesX, tilesY); }
         public Size Tamaño_NCER(byte byte1, byte byte2) { return Imagen_NCER.Obtener_Tamaño(byte1, byte2); }

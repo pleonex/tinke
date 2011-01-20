@@ -67,7 +67,7 @@ namespace LAYTON
             tile.rahc.tileData.tiles = new byte[tile.rahc.nTiles][];
             for (int i = 0; i < tile.rahc.nTiles; i++)
                 tile.rahc.tileData.tiles[i] = br.ReadBytes(64);
-
+            tile.orden = Orden_Tiles.Horizontal;
 
             // Tile Screen Info
             NSCR screen = new NSCR();

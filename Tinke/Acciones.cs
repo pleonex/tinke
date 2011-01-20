@@ -41,7 +41,7 @@ namespace Tinke
         public void Cargar_Plugins()
         {
 
-            foreach (string fileName in Directory.GetFiles("Plugins", "*.dll"))
+            foreach (string fileName in Directory.GetFiles(Application.StartupPath + "\\Plugins", "*.dll"))
             {
                 try
                 {
@@ -49,7 +49,7 @@ namespace Tinke
                     if (fileName.EndsWith("PluginInterface.dll"))
                         continue;
 
-                    Assembly assembly = Assembly.LoadFile(Application.StartupPath + '\\' + fileName);
+                    Assembly assembly = Assembly.LoadFile(fileName);
                     foreach (Type pluginType in assembly.GetTypes())
                     {
                         if (!pluginType.IsPublic || pluginType.IsAbstract || pluginType.IsInterface)
@@ -746,7 +746,8 @@ namespace Tinke
             {
                 MessageBox.Show(e.Message);
                 Console.WriteLine(e.Message);
-                File.Delete(tempFile);
+                try { File.Delete(tempFile); }
+                catch { }
                 return new Control();
             }
             #endregion
