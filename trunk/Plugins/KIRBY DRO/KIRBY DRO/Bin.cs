@@ -41,6 +41,7 @@ namespace KIRBY_DRO
             paleta.pltt.tamaño = br.ReadUInt32();
             tile.rahc.size_tiledata = br.ReadUInt32();
             screen.section.data_size = br.ReadUInt32();
+            tile.orden = Orden_Tiles.Horizontal;
 
             // Si el tamaño de la cabecera es 0x18 entonces hay información de ancho y largo, sino la imagen es imcompatible por el momento
             if (header == 0x18)

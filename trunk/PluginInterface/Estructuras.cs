@@ -58,6 +58,7 @@ namespace PluginInterface
         public Header cabecera;
         public RAHC rahc;
         public SOPC sopc;
+        public Orden_Tiles orden;
     }
     public struct RAHC
     {
@@ -185,5 +186,10 @@ namespace PluginInterface
         Comprimido,
         Desconocido
     }
-
+    public enum Orden_Tiles
+    {
+        No_Tiles,
+        Horizontal,
+        Vertical
+    }
 }
