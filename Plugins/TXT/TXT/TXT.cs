@@ -44,11 +44,14 @@ namespace TXT
             txtBox.ScrollBars = ScrollBars.Both;
 
             string txt = "";
+            
             BinaryReader br = new BinaryReader(File.OpenRead(archivo));
-
-            txt = new String(br.ReadChars((int)br.BaseStream.Length));
-
+            
+            for (int i = 0; i < br.BaseStream.Length; i++)
+            	txt += (char)br.ReadByte();
+            
             #region Convierte caracteres especiales
+            #region Encontrados en los juegos LAYTON
             txt = txt.Replace("\x0A", "\r\n");
             txt = txt.Replace("<`a>", "à");
             txt = txt.Replace("<'a>", "á");
@@ -101,6 +104,7 @@ namespace TXT
             txt = txt.Replace("<^?>", "¿");
             //txt = txt.Replace("<a>", ""); Desconocida la equivalencia
             //txt = txt.Replace("<0>", ""); Desconocida la equivalencia
+            #endregion
             #endregion
 
             br.Close();

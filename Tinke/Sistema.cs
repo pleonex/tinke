@@ -422,5 +422,15 @@ namespace Tinke
             accion.Delete_PicturesSaved(Formato.Celdas);
         }
 
+        
+        void ToolStripMenuItem1Click(object sender, EventArgs e)
+        {
+        	accion.Set_PicturesSaved(Formato.Paleta);
+        }
+        
+        void ToolStripMenuItem2Click(object sender, EventArgs e)
+        {
+        	accion.Set_PicturesSaved(Formato.Imagen);
+        }
     }
 }

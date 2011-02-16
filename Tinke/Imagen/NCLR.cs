@@ -64,6 +64,16 @@ namespace Tinke
             
             return ntfp;
         }
+        public static NTFP Paleta_NTFP(string archivo)
+        {
+        	BinaryReader br = new BinaryReader(File.OpenRead(archivo));
+            
+        	NTFP ntfp = new NTFP();
+            ntfp.colores = Convertir.BGR555(br.ReadBytes((int)br.BaseStream.Length));
+            br.Close();
+            br.Dispose();
+            return ntfp;
+        }
 
         public static Bitmap Mostrar(string file)
         {

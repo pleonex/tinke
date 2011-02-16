@@ -73,7 +73,39 @@ namespace Tinke
             br.Dispose();
             return ncgr;
         }
+        public static NCGR Leer_Char(string file)
+        {
+        	BinaryReader br = new BinaryReader(File.OpenRead(file));
+        	
+        	NCGR ncgr = new NCGR();
+        	
+        	ncgr.rahc.id = "CHAR".ToCharArray();
+        	ncgr.rahc.size_section = (uint)br.BaseStream.Length;
+            ncgr.rahc.nTilesY = 0x10;
+            ncgr.rahc.nTilesX = 0x10;
+            ncgr.rahc.depth = ColorDepth.Depth8Bit;
+            ncgr.rahc.unknown1 = 0x00;
+            ncgr.rahc.unknown2 = 0x00;
+            ncgr.rahc.padding = 0x00;
+            ncgr.rahc.size_tiledata = (uint)br.BaseStream.Length;
+            ncgr.rahc.unknown3 = 0x00;
 
+            ncgr.rahc.nTiles = (ushort)(ncgr.rahc.size_tiledata / 64);
+            ncgr.rahc.tileData.nPaleta = new byte[ncgr.rahc.nTiles];
+            ncgr.rahc.tileData.tiles = new byte[ncgr.rahc.nTiles][];
+
+            for (int i = 0; br.BaseStream.Position < br.BaseStream.Length; i++)
+            {
+                ncgr.rahc.tileData.tiles[i] = br.ReadBytes(64);
+                ncgr.rahc.tileData.nPaleta[i] = 0;
+            }
+
+            br.Close();
+            br.Dispose();
+            return ncgr;
+   
+        }
+        
         public static Bitmap Crear_Imagen(NCGR tile, NCLR paleta)
         {
             if (tile.rahc.nTilesX == 0xFFFF)        // En caso de que no venga la información hacemos la imagen de 256x256
