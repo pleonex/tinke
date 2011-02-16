@@ -37,7 +37,9 @@ namespace PluginInterface
 
         string Get_TempFolder();
 
-        event Action<String>  DescomprimirEvent;
+        event Action<string, byte>  DescomprimirEvent;
         void Descomprimir(string archivo);
+        void Descomprimir(byte[] datos);
+        void Descomprimir(byte[] datos, byte tag);
     }
 }

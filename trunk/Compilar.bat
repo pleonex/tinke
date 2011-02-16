@@ -24,5 +24,7 @@ REM Compilación de los plugins de formatos
 %windir%\microsoft.net\framework\v4.0.30319\msbuild Plugins\NARC\NARC.sln /v:minimal /p:Configuration=%conf% "/p:Platform=Any CPU" "/p:OutputPath=%CD%\build\Plugins\"
 %windir%\microsoft.net\framework\v4.0.30319\msbuild Plugins\PCM\PCM.sln /v:minimal /p:Configuration=%conf% "/p:Platform=Any CPU" "/p:OutputPath=%CD%\build\Plugins\"
 %windir%\microsoft.net\framework\v4.0.30319\msbuild Plugins\TXT\TXT.sln /v:minimal /p:Configuration=%conf% "/p:Platform=Any CPU" "/p:OutputPath=%CD%\build\Plugins\"
+%windir%\microsoft.net\framework\v4.0.30319\msbuild Plugins\Comun\Comun.sln /v:minimal /p:Configuration=%conf% "/p:Platform=x86" "/p:OutputPath=%CD%\build\Plugins\"
+%windir%\microsoft.net\framework\v4.0.30319\msbuild Plugins\Nintendo\Nintendo.sln /v:minimal /p:Configuration=%conf% "/p:Platform=x86" "/p:OutputPath=%CD%\build\Plugins\"
 
 PAUSE

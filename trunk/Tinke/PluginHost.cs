@@ -78,10 +78,24 @@ namespace Tinke
             return tempFolder;
         }
 
-        public event Action<String> DescomprimirEvent;
+        public event Action<string, byte> DescomprimirEvent;
         public void Descomprimir(string archivo)
         {
-            DescomprimirEvent(archivo);
+            DescomprimirEvent(archivo, 0x00);
+        }
+        public void Descomprimir(byte[] datos)
+        {
+        	string temp = System.IO.Path.GetTempFileName();
+        	System.IO.File.WriteAllBytes(temp, datos);
+        	DescomprimirEvent(temp, 0x00);
+        	System.IO.File.Delete(temp);
+        }
+        public void Descomprimir(byte[] datos, byte tag)
+        {
+        	string temp = System.IO.Path.GetTempFileName();
+        	System.IO.File.WriteAllBytes(temp, datos);
+        	DescomprimirEvent(temp, tag);
+        	System.IO.File.Delete(temp);
         }
     }
 }

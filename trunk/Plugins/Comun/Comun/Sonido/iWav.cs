@@ -13,7 +13,6 @@ namespace Comun
     public partial class iWav : UserControl
     {
         System.Media.SoundPlayer snd;
-        long pos;
 
         public iWav(string archivo)
         {
