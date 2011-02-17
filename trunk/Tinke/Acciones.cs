@@ -232,27 +232,11 @@ namespace Tinke
                 {
                     pluginHost.Set_NCGR(Imagen_NCGR.Leer(tempFile));
                     File.Delete(tempFile);
-
-                    if (pluginHost.Get_NSCR().cabecera.file_size != 0x00)
-                    {
-                        NCGR tile = pluginHost.Get_NCGR();
-                        tile.rahc.tileData = Imagen_NSCR.Modificar_Tile(pluginHost.Get_NSCR(), tile.rahc.tileData);
-                        tile.rahc.nTilesX = (ushort)(pluginHost.Get_NSCR().section.width / 8);
-                        tile.rahc.nTilesY = (ushort)(pluginHost.Get_NSCR().section.height / 8);
-                        pluginHost.Set_NCGR(tile);
-                    }
                 }
                 else if (selectFile.name.EndsWith(".NSCR") || new String(Encoding.ASCII.GetChars(ext)) == "NSCR" || new String(Encoding.ASCII.GetChars(ext)) == "RCSN")
                 {
                     pluginHost.Set_NSCR(Imagen_NSCR.Leer(tempFile));
-                    if (pluginHost.Get_NCGR().cabecera.file_size != 0x00)
-                    {
-                        NCGR tile = pluginHost.Get_NCGR();
-                        tile.rahc.tileData = Imagen_NSCR.Modificar_Tile(pluginHost.Get_NSCR(), tile.rahc.tileData);
-                        tile.rahc.nTilesX = (ushort)(pluginHost.Get_NSCR().section.width / 8);
-                        tile.rahc.nTilesY = (ushort)(pluginHost.Get_NSCR().section.height / 8);
-                        pluginHost.Set_NCGR(tile);
-                    }
+                    File.Delete(tempFile);
                 }
                 else if (selectFile.name.EndsWith(".NCER") || new String(Encoding.ASCII.GetChars(ext)) == "NCER" || new String(Encoding.ASCII.GetChars(ext)) == "RECN")
                 {
@@ -927,6 +911,7 @@ namespace Tinke
                 else if (selectFile.name.EndsWith(".NSCR") || new String(Encoding.ASCII.GetChars(ext)) == "NSCR" || new String(Encoding.ASCII.GetChars(ext)) == "RCSN")
                 {
                     pluginHost.Set_NSCR(Imagen_NSCR.Leer(tempFile));
+                    File.Delete(tempFile);
                     if (pluginHost.Get_NCGR().cabecera.file_size != 0x00 || pluginHost.Get_NCLR().cabecera.file_size != 0x00)
                     {
                         NCGR tile = pluginHost.Get_NCGR();

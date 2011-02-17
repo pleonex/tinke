@@ -149,6 +149,8 @@ namespace PluginInterface
         public Int32 xOffset;
         public Int32 yOffset;
         public UInt32 tileOffset;
+        public bool xFlip;
+        public bool yFlip;
     }
     #endregion // CER
     #region NANR

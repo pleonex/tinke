@@ -31,7 +31,7 @@ namespace Tinke
             ncer.cebk.nBanks = br.ReadUInt16();
             ncer.cebk.tBank = br.ReadUInt16();
             ncer.cebk.constant = br.ReadUInt32();
-            ncer.cebk.unknown1 = br.ReadUInt32();               // Si es 1 (activo) el tileoffset hay que multiplicarlo por dos
+            ncer.cebk.unknown1 = br.ReadUInt32() * 2;              
             ncer.cebk.unknown2 = br.ReadUInt32();
             ncer.cebk.unknown3 = br.ReadUInt64();
             ncer.cebk.banks = new Bank[ncer.cebk.nBanks];
@@ -64,8 +64,10 @@ namespace Tinke
                     Size tamaño = Obtener_Tamaño(Tools.Helper.ByteTo4Bits(byte1)[0], Tools.Helper.ByteTo4Bits(byte2)[0]);
                     ncer.cebk.banks[i].cells[j].height = (ushort)tamaño.Height;
                     ncer.cebk.banks[i].cells[j].width = (ushort)tamaño.Width;
-                    ncer.cebk.banks[i].cells[j].tileOffset = (uint)(br.ReadUInt16());
-                    ncer.cebk.banks[i].cells[j].tileOffset = (uint)(ncer.cebk.banks[i].cells[j].tileOffset * (ncer.cebk.unknown1 == 0x01 ? 2 : 1));
+                    ncer.cebk.banks[i].cells[j].tileOffset = (uint)((br.ReadUInt16() | 0xF000) - 0xF000);
+                    ncer.cebk.banks[i].cells[j].tileOffset = (uint)(ncer.cebk.banks[i].cells[j].tileOffset * (ncer.cebk.unknown1 != 0 ? ncer.cebk.unknown1 : 1));
+                    ncer.cebk.banks[i].cells[j].yFlip = (Tools.Helper.ByteTo4Bits(byte2)[0] & 2) == 2 ? true : false;
+                    ncer.cebk.banks[i].cells[j].xFlip = (Tools.Helper.ByteTo4Bits(byte2)[0] & 1) == 1 ? true : false;
                 }
                 br.BaseStream.Position = posicion;
             }
@@ -96,11 +98,11 @@ namespace Tinke
                 br.BaseStream.Position = posicion;
             }*/
 
-            // Lee la tercera sección UEXT
+            /*// Lee la tercera sección UEXT
             br.BaseStream.Position = ncer.header.header_size + ncer.cebk.section_size + ncer.labl.section_size;
             ncer.uext.id = br.ReadChars(4);
             ncer.uext.section_size = br.ReadUInt32();
-            ncer.uext.unknown = br.ReadUInt32();
+            ncer.uext.unknown = br.ReadUInt32();*/
 
             br.Close();
             br.Dispose();
@@ -197,7 +199,6 @@ namespace Tinke
             Bitmap imagen = new Bitmap(tamaño.Width, tamaño.Height);
             Graphics grafico = Graphics.FromImage(imagen);
 
-             //DEBUG
             // Dibuja el entorno
             for (int i = -256; i < 256; i += 8)
             {
@@ -207,14 +208,25 @@ namespace Tinke
             grafico.DrawLine(Pens.Blue, 256, 0, 256, 512);
             grafico.DrawLine(Pens.Blue, 0, 256, 512, 256);
 
-            Bitmap[] celdas = new Bitmap[banco.nCells];
+            Image[] celdas = new Image[banco.nCells];
             for (int i = 0; i < banco.nCells; i++)
             {
                 celdas[i] = Imagen_NCGR.Crear_Imagen(tile, paleta, (int)banco.cells[i].tileOffset, banco.cells[i].width / 8, banco.cells[i].height / 8);
+                #region Rotaciones
+                if (banco.cells[i].xFlip && banco.cells[i].yFlip)
+                    celdas[i].RotateFlip(RotateFlipType.RotateNoneFlipXY);
+                else if (banco.cells[i].xFlip)
+                    celdas[i].RotateFlip(RotateFlipType.RotateNoneFlipX);
+                else if (banco.cells[i].yFlip)
+                    celdas[i].RotateFlip(RotateFlipType.RotateNoneFlipY);
+                #endregion
                 grafico.DrawImageUnscaled(celdas[i], tamaño.Width / 2 + banco.cells[i].xOffset, tamaño.Height / 2 + banco.cells[i].yOffset);
+                
                 // DEBUG, dibuja los bordes de las celdas
                 grafico.DrawRectangle(Pens.Black, tamaño.Width / 2 + banco.cells[i].xOffset, tamaño.Height / 2 + banco.cells[i].yOffset, 
                     banco.cells[i].width, banco.cells[i].height);
+                grafico.DrawString(i.ToString(), SystemFonts.CaptionFont, Brushes.Black, tamaño.Width / 2 + banco.cells[i].xOffset,
+                    tamaño.Height / 2 + banco.cells[i].yOffset);
             }
 
             return imagen;

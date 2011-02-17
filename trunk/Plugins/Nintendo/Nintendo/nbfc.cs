@@ -54,8 +54,8 @@ namespace Nintendo
 			ncgr.orden = Orden_Tiles.Horizontal;
 			ncgr.rahc.nTiles = (ushort)(file_size / 64);
 			ncgr.rahc.depth = System.Windows.Forms.ColorDepth.Depth8Bit;
-			ncgr.rahc.nTilesX = 0x0100;
-			ncgr.rahc.nTilesY = 0x00C0;
+			ncgr.rahc.nTilesX = 0x0020;
+			ncgr.rahc.nTilesY = 0x0018;
 			ncgr.rahc.padding = 0x00000000;
 			ncgr.rahc.size_section = file_size;
 			ncgr.rahc.tileData = new NTFT();
