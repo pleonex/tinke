@@ -58,8 +58,8 @@ namespace Nintendo
             // Lee primera y única sección:
             nscr.section.id = "NSCR".ToCharArray();
             nscr.section.section_size = file_size;
-            nscr.section.width = 0x0100;
-            nscr.section.height = 0x00C0;
+            nscr.section.width = 0x0020;
+            nscr.section.height = 0x0018;
             nscr.section.padding = 0x00000000;
             nscr.section.data_size = file_size;
             nscr.section.screenData = new NTFS[file_size / 2];

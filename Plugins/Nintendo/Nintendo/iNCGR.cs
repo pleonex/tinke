@@ -21,13 +21,13 @@ namespace Nintendo
         {
             InitializeComponent();
         }
-        public iNCGR(IPluginHost pluginHost)
+        public iNCGR(IPluginHost pluginHost, NCGR tile, NCLR paleta)
         {
             InitializeComponent();
 			this.pluginHost = pluginHost;
-			
-            this.paleta = pluginHost.Get_NCLR();
-            this.tile = pluginHost.Get_NCGR();
+            this.tile = tile;
+            this.paleta = paleta;
+
             pic.Image = pluginHost.Bitmap_NCGR(tile, paleta, 0);
             this.numericWidth.Value = pic.Image.Width;
             this.numericHeight.Value = pic.Image.Height;
