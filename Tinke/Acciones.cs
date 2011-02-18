@@ -343,27 +343,15 @@ namespace Tinke
             {
                 if (formato == Formato.Paleta)
                 {
-                	NCLR act = new NCLR();
-                	act.pltt.paletas = new NTFP[0];
-                	act.pltt.paletas[0] = Imagen_NCLR.Paleta_NTFP(tempFile);
-                	act.pltt.nColores = (uint)act.pltt.paletas[0].colores.Length;
-                	
-                    pluginHost.Set_NCLR(act);
+                    pluginHost.Set_NCLR(Imagen_NCLR.Leer_Basico(tempFile));
                     File.Delete(tempFile);
                     return new Control();
                 }               
                 else if (formato == Formato.Imagen)
                 {
-                    NCGR tile = Imagen_NCGR.Leer(tempFile);
+                    NCGR tile = Imagen_NCGR.Leer_Basico(tempFile);
                     pluginHost.Set_NCGR(tile);
                     File.Delete(tempFile);
-
-                    if (pluginHost.Get_NSCR().cabecera.file_size != 0x00)
-                    {
-                        tile.rahc.tileData = Imagen_NSCR.Modificar_Tile(pluginHost.Get_NSCR(), tile.rahc.tileData);
-                        tile.rahc.nTilesX = (ushort)(pluginHost.Get_NSCR().section.width / 8);
-                        tile.rahc.nTilesY = (ushort)(pluginHost.Get_NSCR().section.height / 8);
-                    }
 
                     if (pluginHost.Get_NCLR().cabecera.file_size != 0x00)
                     {
@@ -376,7 +364,10 @@ namespace Tinke
                 }
                 else if (formato == Formato.Screen)
                 {
-                    pluginHost.Set_NSCR(Imagen_NSCR.Leer(tempFile));
+                    NSCR nscr = Imagen_NSCR.Leer_Basico(tempFile);
+                    pluginHost.Set_NSCR(nscr);
+                    File.Delete(tempFile);
+                    
                     if (pluginHost.Get_NCGR().cabecera.file_size != 0x00 || pluginHost.Get_NCLR().cabecera.file_size != 0x00)
                     {
                         NCGR tile = pluginHost.Get_NCGR();
@@ -390,30 +381,7 @@ namespace Tinke
                     }
                     return new Control();
                 }
-                else if (formato == Formato.Celdas)
-                {
-                    pluginHost.Set_NCER(Imagen_NCER.Leer(tempFile));
-                    File.Delete(tempFile);
 
-                    if (pluginHost.Get_NCGR().cabecera.file_size != 0x00 && pluginHost.Get_NCLR().cabecera.file_size != 0x00)
-                    {
-                        TabControl control = new TabControl();
-                        control.Dock = DockStyle.Fill;
-                        NCER ncer = pluginHost.Get_NCER();
-                        for (int i = 0; i < ncer.cebk.nBanks; i++)
-                        {
-                            TabPage page = new TabPage("Imagen " + i.ToString());
-                            PictureBox pics = new PictureBox();
-                            pics.Image = Imagen_NCER.Obtener_Imagen(ncer.cebk.banks[i], pluginHost.Get_NCGR(), pluginHost.Get_NCLR());
-                            pics.Dock = DockStyle.Fill;
-                            page.Controls.Add(pics);
-                            control.TabPages.Add(page);
-                        }
-                        return control;
-                    }
-
-                    return new Control();
-                }
             }
             catch (Exception e)
             {
@@ -882,22 +850,19 @@ namespace Tinke
                 selectFile.name = selectFile.name.ToUpper();
                 if (selectFile.name.EndsWith(".NCLR") || new String(Encoding.ASCII.GetChars(ext)) == "NCLR" || new String(Encoding.ASCII.GetChars(ext)) == "RLCN")
                 {
-                    pluginHost.Set_NCLR(Imagen_NCLR.Leer(tempFile));
+                    NCLR nclr = Imagen_NCLR.Leer(tempFile);
+                    pluginHost.Set_NCLR(nclr);
                     File.Delete(tempFile);
-                    return new Control();
+
+                    iNCLR control = new iNCLR(nclr);
+                    control.Dock = DockStyle.Fill;
+                    return control; ;
                 }
                 if (selectFile.name.EndsWith(".NCGR") || new String(Encoding.ASCII.GetChars(ext)) == "NCGR" || new String(Encoding.ASCII.GetChars(ext)) == "RGCN")
                 {
                     NCGR tile = Imagen_NCGR.Leer(tempFile);
                     pluginHost.Set_NCGR(tile);
                     File.Delete(tempFile);
-
-                    if (pluginHost.Get_NSCR().cabecera.file_size != 0x00)
-                    {
-                        tile.rahc.tileData = Imagen_NSCR.Modificar_Tile(pluginHost.Get_NSCR(), tile.rahc.tileData);
-                        tile.rahc.nTilesX = (ushort)(pluginHost.Get_NSCR().section.width / 8);
-                        tile.rahc.nTilesY = (ushort)(pluginHost.Get_NSCR().section.height / 8);
-                    }
 
                     if (pluginHost.Get_NCLR().cabecera.file_size != 0x00)
                     {
@@ -932,18 +897,9 @@ namespace Tinke
 
                     if (pluginHost.Get_NCGR().cabecera.file_size != 0x00 && pluginHost.Get_NCLR().cabecera.file_size != 0x00)
                     {
-                        TabControl control = new TabControl();
+                        iNCER control = new iNCER(pluginHost.Get_NCER(), pluginHost.Get_NCGR(), pluginHost.Get_NCLR());
                         control.Dock = DockStyle.Fill;
-                        NCER ncer = pluginHost.Get_NCER();
-                        for (int i = 0; i < ncer.cebk.nBanks; i++)
-                        {
-                            TabPage page = new TabPage("Imagen " + i.ToString());
-                            PictureBox pics = new PictureBox();
-                            pics.Image = Imagen_NCER.Obtener_Imagen(ncer.cebk.banks[i], pluginHost.Get_NCGR(), pluginHost.Get_NCLR());
-                            pics.Dock = DockStyle.Fill;
-                            page.Controls.Add(pics);
-                            control.TabPages.Add(page);
-                        }
+
                         return control;
                     }
 

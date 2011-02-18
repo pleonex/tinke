@@ -157,6 +157,18 @@
     <Compile Include="Espera.Designer.cs">
       <DependentUpon>Espera.cs</DependentUpon>
     </Compile>
+    <Compile Include="Imagen\iNCER.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Imagen\iNCER.Designer.cs">
+      <DependentUpon>iNCER.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Imagen\iNCLR.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Imagen\iNCLR.Designer.cs">
+      <DependentUpon>iNCLR.cs</DependentUpon>
+    </Compile>
     <Compile Include="RomInfo.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -207,6 +219,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Espera.resx">
       <DependentUpon>Espera.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Imagen\iNCER.resx">
+      <DependentUpon>iNCER.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Imagen\iNCLR.resx">
+      <DependentUpon>iNCLR.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="RomInfo.resx">
       <DependentUpon>RomInfo.cs</DependentUpon>

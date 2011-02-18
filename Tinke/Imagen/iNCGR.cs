@@ -101,7 +101,7 @@ namespace Tinke
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             tile.rahc.depth = (comboDepth.Text == "4 bpp" ? ColorDepth.Depth4Bit : ColorDepth.Depth8Bit);
-            // TODO: arreglar, obviamente no funciona así.
+            // TODO: Crear método en clase Convertir para convertir de 4bpp a 8bpp y viceversa
             Actualizar_Imagen();
         }
     }

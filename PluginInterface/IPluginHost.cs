@@ -29,7 +29,7 @@ namespace PluginInterface
         Bitmap Bitmap_NCGR(NCGR ncgr, NCLR nclr, int startTile, int tilesX, int tilesY);
         NTFT Transformar_NSCR(NSCR nscr, NTFT ntft);
         Size Tamaño_NCER(byte byte1, byte byte2);
-        Bitmap Bitmap_NCER(Bank celda, NCGR ncgr, NCLR nclr);
+        Bitmap Bitmap_NCER(Bank banco, NCGR ncgr, NCLR nclr, bool entorno, bool celda, bool numero, bool transparencia);
 
         // Para descomprimir archivos
         void Set_Files(Carpeta archivos);

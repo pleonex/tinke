@@ -60,13 +60,23 @@ namespace Nintendo
 
 				if (pluginHost.Get_NCLR().cabecera.file_size != 0x00)
 				{
-                    NCGR tile = pluginHost.Get_NCGR();
-                    if (pluginHost.Get_NSCR().cabecera.file_size != 0x00)
-                        tile.rahc.tileData = pluginHost.Transformar_NSCR(pluginHost.Get_NSCR(), tile.rahc.tileData);
-
-                    iNCGR control = new iNCGR(pluginHost, tile, pluginHost.Get_NCLR());
+                    iNCGR control = new iNCGR(pluginHost, pluginHost.Get_NCGR(), pluginHost.Get_NCLR());
                     control.Dock = DockStyle.Fill;
                     return control;
+				}
+			}
+			if (archivo.ToUpper().EndsWith(".NBFS"))
+			{
+				new nbfs(pluginHost, archivo).Leer();
+				
+				if (pluginHost.Get_NCLR().cabecera.file_size != 0x00 && pluginHost.Get_NCGR().cabecera.file_size != 0x00)
+				{
+					NCGR tile = pluginHost.Get_NCGR();
+					tile.rahc.tileData = pluginHost.Transformar_NSCR(pluginHost.Get_NSCR(), tile.rahc.tileData);
+					
+					iNCGR control = new iNCGR(pluginHost, tile, pluginHost.Get_NCLR());
+					control.Dock = DockStyle.Fill;
+					return control;
 				}
 			}
 			

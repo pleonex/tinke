@@ -40,7 +40,47 @@ namespace Tinke
             nscr.section.data_size = br.ReadUInt32();
             nscr.section.screenData = new NTFS[nscr.section.data_size / 2];
 
-            for (int i = 0; br.BaseStream.Position < nscr.cabecera.file_size; i++)
+            for (int i = 0; i < (nscr.section.data_size / 2); i++)
+            {
+                string bits = Tools.Helper.BytesToBits(br.ReadBytes(2));
+
+                nscr.section.screenData[i] = new NTFS();
+                nscr.section.screenData[i].nPalette = Convert.ToByte(bits.Substring(0, 4), 2);
+                nscr.section.screenData[i].yFlip = Convert.ToByte(bits.Substring(4, 1), 2);
+                nscr.section.screenData[i].xFlip = Convert.ToByte(bits.Substring(5, 1), 2);
+                nscr.section.screenData[i].nTile = Convert.ToUInt16(bits.Substring(6, 10), 2);
+            }
+
+            br.Dispose();
+            br.Close();
+            return nscr;
+        }
+        public static NSCR Leer_Basico(string archivo)
+        {
+            BinaryReader br = new BinaryReader(File.OpenRead(archivo));
+            uint file_size = (uint)new FileInfo(archivo).Length;
+
+            // Su formato es NTFS raw, sin información, nos la inventamos por tanto
+            NSCR nscr = new NSCR();
+
+            // Lee cabecera genérica
+            nscr.cabecera.id = "NSCR".ToCharArray();
+            nscr.cabecera.endianess = 0xFEFF;
+            nscr.cabecera.constant = 0x0100;
+            nscr.cabecera.file_size = file_size;
+            nscr.cabecera.header_size = 0x10;
+            nscr.cabecera.nSection = 1;
+
+            // Lee primera y única sección:
+            nscr.section.id = "NSCR".ToCharArray();
+            nscr.section.section_size = file_size;
+            nscr.section.width = 0x0100;
+            nscr.section.height = 0x00C0;
+            nscr.section.padding = 0x00000000;
+            nscr.section.data_size = file_size;
+            nscr.section.screenData = new NTFS[file_size / 2];
+
+            for (int i = 0; i < (file_size / 2); i++)
             {
                 string bits = Tools.Helper.BytesToBits(br.ReadBytes(2));
 

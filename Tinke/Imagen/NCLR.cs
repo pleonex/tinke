@@ -64,46 +64,71 @@ namespace Tinke
             
             return ntfp;
         }
-        public static NTFP Paleta_NTFP(string archivo)
+        
+        /// <summary>
+        /// Lee un archivo que incluye una paleta raw, es deicr, sólo contiene colores.
+        /// La información adicional es inventada.
+        /// </summary>
+        /// <param name="archivo">Archivo para leer</param>
+        /// <returns></returns>
+        public static NCLR Leer_Basico(string archivo)
         {
-        	BinaryReader br = new BinaryReader(File.OpenRead(archivo));
-            
-        	NTFP ntfp = new NTFP();
-            ntfp.colores = Convertir.BGR555(br.ReadBytes((int)br.BaseStream.Length));
+            uint file_size = (uint)new FileInfo(archivo).Length;
+            BinaryReader br = new BinaryReader(File.OpenRead(archivo));
+
+            NCLR nclr = new NCLR();
+            // Ponemos una cabecera genérica
+            nclr.cabecera.id = "NCLR".ToCharArray();
+            nclr.cabecera.endianess = 0xFEFF;
+            nclr.cabecera.constant = 0x0100;
+            nclr.cabecera.file_size = file_size;
+            nclr.cabecera.header_size = 0x10;
+            // El archivo es PLTT raw, es decir, exclusivamente colores
+            nclr.pltt.ID = "PLTT".ToCharArray();
+            nclr.pltt.tamaño = file_size;
+            nclr.pltt.profundidad = (file_size > 0x20) ? ColorDepth.Depth8Bit : ColorDepth.Depth4Bit;
+            nclr.pltt.unknown1 = 0x00000000;
+            nclr.pltt.tamañoPaletas = file_size;
+            nclr.pltt.paletas = new NTFP[1];
+            // Rellenamos los colores en formato BGR555
+            nclr.pltt.paletas[0].colores = Convertir.BGR555(br.ReadBytes((int)file_size));
+
             br.Close();
             br.Dispose();
-            return ntfp;
+            return nclr;
         }
 
-        public static Bitmap Mostrar(string file)
+        public static Bitmap[] Mostrar(string file)
         {
-            NCLR nclr = Leer(file);
-
-            Bitmap imagen = new Bitmap((int)nclr.pltt.nColores * 10, nclr.pltt.paletas.Length * 10);
-            for (int b = 0; b < nclr.pltt.paletas.Length; b++)
-            {
-                Color[] colores = new Color[nclr.pltt.paletas.Length * nclr.pltt.nColores];
-                for (int j = 0; j < nclr.pltt.paletas.Length; j++)
-                    for (int i = 0; i < nclr.pltt.nColores; i++)
-                        colores[i + j * nclr.pltt.nColores] = nclr.pltt.paletas[j].colores[i];
-
-                // TODO: Imagen_NCLR.Mostrar    
-            }
-            return imagen;
+            return Mostrar(Leer(file));
         }
-        public static Bitmap Mostrar(NCLR nclr)
+        public static Bitmap[] Mostrar(NCLR nclr)
         {
-            Bitmap imagen = new Bitmap((int)nclr.pltt.nColores * 10, nclr.pltt.paletas.Length * 10);
-            for (int b = 0; b < nclr.pltt.paletas.Length; b++)
-            {
-                Color[] colores = new Color[nclr.pltt.paletas.Length * nclr.pltt.nColores];
-                for (int j = 0; j < nclr.pltt.paletas.Length; j++)
-                    for (int i = 0; i < nclr.pltt.nColores; i++)
-                        colores[i + j * nclr.pltt.nColores] = nclr.pltt.paletas[j].colores[i];
+            Bitmap[] paletas = new Bitmap[nclr.pltt.paletas.Length];
 
-                // TODO: Imagen_NCLR.Mostrar
+            for (int p = 0; p < paletas.Length; p++)
+            {
+                paletas[p] = new Bitmap(160, 160);
+                bool fin = false;
+
+                for (int i = 0; i < 16 & !fin; i++)
+                {
+                    for (int j = 0; j < 16; j++)
+                    {
+                        if (nclr.pltt.nColores == j + 16 * i)
+                        {
+                            fin = true;
+                            break;
+                        }
+
+                        for (int k = 0; k < 10; k++)
+                            for (int q = 0; q < 10; q++)
+                                paletas[p].SetPixel(j * 10 + q, i * 10 + k,
+                                    nclr.pltt.paletas[p].colores[j + 16 * i]);
+                    }
+                }
             }
-            return imagen;
+            return paletas;
         }
     }
 }

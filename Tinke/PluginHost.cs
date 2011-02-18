@@ -61,7 +61,8 @@ namespace Tinke
         public Bitmap Bitmap_NCGR(NCGR ncgr, NCLR nclr, int startTile) { return Imagen_NCGR.Crear_Imagen(ncgr, nclr, startTile); }
         public Bitmap Bitmap_NCGR(NCGR ncgr, NCLR nclr, int startTile, int tilesX, int tilesY) { return Imagen_NCGR.Crear_Imagen(ncgr, nclr, startTile, tilesX, tilesY); }
         public Size Tamaño_NCER(byte byte1, byte byte2) { return Imagen_NCER.Obtener_Tamaño(byte1, byte2); }
-        public Bitmap Bitmap_NCER(Bank celda, NCGR ncgr, NCLR nclr) { return Imagen_NCER.Obtener_Imagen(celda, ncgr, nclr); }
+        public Bitmap Bitmap_NCER(Bank banco, NCGR ncgr, NCLR nclr, bool entorno, bool celda, bool numero, bool transparencia) 
+            { return Imagen_NCER.Obtener_Imagen(banco, ncgr, nclr, entorno, celda, numero, transparencia); }
 
         public void Set_Files(Carpeta archivos)
         {
