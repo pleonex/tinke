@@ -1,4 +1,25 @@
-﻿namespace Tinke
+﻿/*
+ * Copyright (C) 2011  pleoNeX
+ *
+ *   This program is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+ *
+ * Programador: pleoNeX
+ * Programa utilizado: Microsoft Visual C# 2010 Express
+ * Fecha: 18/02/2011
+ * 
+ */
+namespace Tinke
 {
     partial class iNCGR
     {
@@ -76,6 +97,7 @@
             this.columnCampo = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnValor = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.pic = new System.Windows.Forms.PictureBox();
+            this.label5 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.numericWidth)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericHeight)).BeginInit();
             this.groupProp.SuspendLayout();
@@ -199,7 +221,6 @@
             // 
             this.comboDepth.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
             this.comboDepth.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
-            this.comboDepth.Enabled = false;
             this.comboDepth.FormattingEnabled = true;
             this.comboDepth.Items.AddRange(new object[] {
             "4 bpp",
@@ -208,7 +229,6 @@
             this.comboDepth.Name = "comboDepth";
             this.comboDepth.Size = new System.Drawing.Size(54, 21);
             this.comboDepth.TabIndex = 8;
-            this.comboDepth.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
             // 
             // label3
             // 
@@ -275,11 +295,22 @@
             this.pic.BackColor = System.Drawing.Color.Transparent;
             this.pic.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pic.Location = new System.Drawing.Point(0, 0);
+            this.pic.MaximumSize = new System.Drawing.Size(260, 480);
             this.pic.Name = "pic";
             this.pic.Size = new System.Drawing.Size(100, 50);
             this.pic.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.pic.TabIndex = 0;
             this.pic.TabStop = false;
+            this.pic.DoubleClick += new System.EventHandler(this.pic_DoubleClick);
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(3, 480);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(209, 26);
+            this.label5.TabIndex = 6;
+            this.label5.Text = "Haga doble click en la imagen para verla a\r\ntamaño real.";
             // 
             // iNCGR
             // 
@@ -287,11 +318,11 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
             this.BackColor = System.Drawing.Color.Transparent;
+            this.Controls.Add(this.label5);
             this.Controls.Add(this.pic);
             this.Controls.Add(this.groupProp);
             this.Name = "iNCGR";
             this.Size = new System.Drawing.Size(512, 512);
-            this.SizeChanged += new System.EventHandler(this.iNCGR_SizeChanged);
             ((System.ComponentModel.ISupportInitialize)(this.numericWidth)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericHeight)).EndInit();
             this.groupProp.ResumeLayout(false);
@@ -320,5 +351,6 @@
         private System.Windows.Forms.NumericUpDown numericStart;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.ComboBox comboDepth;
+        private System.Windows.Forms.Label label5;
     }
 }

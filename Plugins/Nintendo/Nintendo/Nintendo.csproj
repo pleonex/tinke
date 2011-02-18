@@ -110,16 +110,37 @@
     <Compile Include="iNCGR.Designer.cs">
       <DependentUpon>iNCGR.cs</DependentUpon>
     </Compile>
+    <Compile Include="iNCLR.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="iNCLR.Designer.cs">
+      <DependentUpon>iNCLR.cs</DependentUpon>
+    </Compile>
     <Compile Include="nbfc.cs" />
     <Compile Include="nbfp.cs" />
     <Compile Include="nbfs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Main.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="iNCGR.resx">
       <DependentUpon>iNCGR.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="iNCLR.resx">
+      <DependentUpon>iNCLR.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\picture_save.png" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.Targets" />
 </Project>
