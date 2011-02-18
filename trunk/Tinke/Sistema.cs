@@ -422,15 +422,35 @@ namespace Tinke
             accion.Delete_PicturesSaved(Formato.Celdas);
         }
 
-        
-        void ToolStripMenuItem1Click(object sender, EventArgs e)
+        private void AbrirComo(Formato formato)
         {
-        	accion.Set_PicturesSaved(Formato.Paleta);
+            if (toolStripVentana.Checked)
+            {
+                Visor visor = new Visor();
+                visor.Controls.Add(accion.Set_PicturesSaved(formato));
+                visor.Show();
+            }
+            else
+            {
+                panelObj.Controls.Clear();
+                panelObj.Controls.Add(accion.Set_PicturesSaved(formato));
+                if (btnDesplazar.Text == ">>>>>")
+                    btnDesplazar.PerformClick();
+            }
+            debug.Añadir_Texto(sb.ToString());
+            sb.Clear();
         }
-        
-        void ToolStripMenuItem2Click(object sender, EventArgs e)
+        private void toolAbrirComoItemPaleta_Click(object sender, EventArgs e)
         {
-        	accion.Set_PicturesSaved(Formato.Imagen);
+        	AbrirComo(Formato.Paleta);
+        }   
+        private void toolAbrirComoItemTile_Click(object sender, EventArgs e)
+        {
+        	AbrirComo(Formato.Imagen);
+        }
+        private void toolAbrirComoItemScreen_Click(object sender, EventArgs e)
+        {
+            AbrirComo(Formato.Screen);
         }
     }
 }

@@ -66,16 +66,16 @@
             this.label2 = new System.Windows.Forms.Label();
             this.numericHeight = new System.Windows.Forms.NumericUpDown();
             this.groupProp = new System.Windows.Forms.GroupBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.btnSave = new System.Windows.Forms.Button();
+            this.comboDepth = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
             this.numericStart = new System.Windows.Forms.NumericUpDown();
             this.listInfo = new System.Windows.Forms.ListView();
             this.columnPos = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnCampo = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnValor = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.btnSave = new System.Windows.Forms.Button();
             this.pic = new System.Windows.Forms.PictureBox();
-            this.comboDepth = new System.Windows.Forms.ComboBox();
-            this.label4 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.numericWidth)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericHeight)).BeginInit();
             this.groupProp.SuspendLayout();
@@ -158,6 +158,7 @@
             // groupProp
             // 
             this.groupProp.Controls.Add(this.label4);
+            this.groupProp.Controls.Add(this.btnSave);
             this.groupProp.Controls.Add(this.comboDepth);
             this.groupProp.Controls.Add(this.label3);
             this.groupProp.Controls.Add(this.numericStart);
@@ -166,12 +167,48 @@
             this.groupProp.Controls.Add(this.numericWidth);
             this.groupProp.Controls.Add(this.label2);
             this.groupProp.Controls.Add(this.label1);
-            this.groupProp.Location = new System.Drawing.Point(196, 0);
+            this.groupProp.Location = new System.Drawing.Point(269, 0);
             this.groupProp.Name = "groupProp";
-            this.groupProp.Size = new System.Drawing.Size(243, 245);
+            this.groupProp.Size = new System.Drawing.Size(243, 512);
             this.groupProp.TabIndex = 5;
             this.groupProp.TabStop = false;
             this.groupProp.Text = "Propiedades";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(147, 195);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(28, 13);
+            this.label4.TabIndex = 9;
+            this.label4.Text = "bpp:";
+            // 
+            // btnSave
+            // 
+            this.btnSave.Image = global::Tinke.Properties.Resources.picture_save;
+            this.btnSave.Location = new System.Drawing.Point(9, 474);
+            this.btnSave.Name = "btnSave";
+            this.btnSave.Size = new System.Drawing.Size(79, 32);
+            this.btnSave.TabIndex = 6;
+            this.btnSave.Text = "Guardar";
+            this.btnSave.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnSave.UseVisualStyleBackColor = true;
+            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
+            // 
+            // comboDepth
+            // 
+            this.comboDepth.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+            this.comboDepth.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.comboDepth.Enabled = false;
+            this.comboDepth.FormattingEnabled = true;
+            this.comboDepth.Items.AddRange(new object[] {
+            "4 bpp",
+            "8 bpp"});
+            this.comboDepth.Location = new System.Drawing.Point(181, 192);
+            this.comboDepth.Name = "comboDepth";
+            this.comboDepth.Size = new System.Drawing.Size(54, 21);
+            this.comboDepth.TabIndex = 8;
+            this.comboDepth.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
             // 
             // label3
             // 
@@ -233,18 +270,6 @@
             this.columnValor.Text = "Valor";
             this.columnValor.Width = 81;
             // 
-            // btnSave
-            // 
-            this.btnSave.Image = global::Tinke.Properties.Resources.picture_save;
-            this.btnSave.Location = new System.Drawing.Point(360, 254);
-            this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(79, 32);
-            this.btnSave.TabIndex = 6;
-            this.btnSave.Text = "Guardar";
-            this.btnSave.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.btnSave.UseVisualStyleBackColor = true;
-            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
-            // 
             // pic
             // 
             this.pic.BackColor = System.Drawing.Color.Transparent;
@@ -256,29 +281,6 @@
             this.pic.TabIndex = 0;
             this.pic.TabStop = false;
             // 
-            // comboDepth
-            // 
-            this.comboDepth.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
-            this.comboDepth.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
-            this.comboDepth.FormattingEnabled = true;
-            this.comboDepth.Items.AddRange(new object[] {
-            "4 bpp",
-            "8 bpp"});
-            this.comboDepth.Location = new System.Drawing.Point(181, 192);
-            this.comboDepth.Name = "comboDepth";
-            this.comboDepth.Size = new System.Drawing.Size(54, 21);
-            this.comboDepth.TabIndex = 8;
-            this.comboDepth.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(147, 195);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(28, 13);
-            this.label4.TabIndex = 9;
-            this.label4.Text = "bpp:";
-            // 
             // iNCGR
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -286,10 +288,9 @@
             this.AutoScroll = true;
             this.BackColor = System.Drawing.Color.Transparent;
             this.Controls.Add(this.pic);
-            this.Controls.Add(this.btnSave);
             this.Controls.Add(this.groupProp);
             this.Name = "iNCGR";
-            this.Size = new System.Drawing.Size(439, 289);
+            this.Size = new System.Drawing.Size(512, 512);
             this.SizeChanged += new System.EventHandler(this.iNCGR_SizeChanged);
             ((System.ComponentModel.ISupportInitialize)(this.numericWidth)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericHeight)).EndInit();

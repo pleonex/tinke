@@ -35,6 +35,7 @@ namespace PluginInterface
     {
         public Header cabecera;
         public TTLP pltt;
+        public Object other;
     }
     public struct TTLP
     {
@@ -59,6 +60,7 @@ namespace PluginInterface
         public RAHC rahc;
         public SOPC sopc;
         public Orden_Tiles orden;
+        public Object other;
     }
     public struct RAHC
     {
@@ -96,6 +98,7 @@ namespace PluginInterface
     {
         public Header cabecera;
         public NSCR_Section section;        // Sección NSCR
+        public Object other;
     }
     public struct NSCR_Section
     {
@@ -122,6 +125,7 @@ namespace PluginInterface
         public CEBK cebk;
         public LABL labl;
         public UEXT uext;
+        public Object other;
     }
     public struct CEBK
     {
@@ -130,9 +134,9 @@ namespace PluginInterface
         public UInt16 nBanks;
         public UInt16 tBank;            // Formato de bank, 0 ó 1
         public UInt32 constant;
+        public UInt32 block_size;
         public UInt32 unknown1;
-        public UInt32 unknown2;
-        public UInt64 unknown3;         // ¿¿ padding ??
+        public UInt64 unknown2;         // ¿¿ padding ??
         public Bank[] banks;
     }
     public struct Bank

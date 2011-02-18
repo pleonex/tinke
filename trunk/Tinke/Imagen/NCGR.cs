@@ -73,28 +73,31 @@ namespace Tinke
             br.Dispose();
             return ncgr;
         }
-        public static NCGR Leer_Char(string file)
+        public static NCGR Leer_Basico(string file)
         {
-        	BinaryReader br = new BinaryReader(File.OpenRead(file));
-        	
-        	NCGR ncgr = new NCGR();
-        	
-        	ncgr.rahc.id = "CHAR".ToCharArray();
-        	ncgr.rahc.size_section = (uint)br.BaseStream.Length;
-            ncgr.rahc.nTilesY = 0x10;
-            ncgr.rahc.nTilesX = 0x10;
-            ncgr.rahc.depth = ColorDepth.Depth8Bit;
-            ncgr.rahc.unknown1 = 0x00;
-            ncgr.rahc.unknown2 = 0x00;
-            ncgr.rahc.padding = 0x00;
-            ncgr.rahc.size_tiledata = (uint)br.BaseStream.Length;
-            ncgr.rahc.unknown3 = 0x00;
+            BinaryReader br = new BinaryReader(File.OpenRead(file));
+            uint file_size = (uint)new FileInfo(file).Length;
 
-            ncgr.rahc.nTiles = (ushort)(ncgr.rahc.size_tiledata / 64);
+            // Creamos un archivo NCGR genérico.
+            NCGR ncgr = new NCGR();
+            ncgr.cabecera.endianess = 0xFEFF;
+            ncgr.cabecera.id = "NCGR".ToCharArray();
+            ncgr.cabecera.nSection = 1;
+            ncgr.cabecera.constant = 0x0100;
+            ncgr.cabecera.file_size = file_size;
+            // El archivo es NTFT raw, sin ninguna información.
+            ncgr.orden = Orden_Tiles.Horizontal;
+            ncgr.rahc.nTiles = (ushort)(file_size / 64);
+            ncgr.rahc.depth = System.Windows.Forms.ColorDepth.Depth8Bit;
+            ncgr.rahc.nTilesX = 0x0020;
+            ncgr.rahc.nTilesY = 0x0018;
+            ncgr.rahc.padding = 0x00000000;
+            ncgr.rahc.size_section = file_size;
+            ncgr.rahc.tileData = new NTFT();
             ncgr.rahc.tileData.nPaleta = new byte[ncgr.rahc.nTiles];
             ncgr.rahc.tileData.tiles = new byte[ncgr.rahc.nTiles][];
 
-            for (int i = 0; br.BaseStream.Position < br.BaseStream.Length; i++)
+            for (int i = 0; i < ncgr.rahc.nTiles; i++)
             {
                 ncgr.rahc.tileData.tiles[i] = br.ReadBytes(64);
                 ncgr.rahc.tileData.nPaleta[i] = 0;
@@ -103,7 +106,6 @@ namespace Tinke
             br.Close();
             br.Dispose();
             return ncgr;
-   
         }
         
         public static Bitmap Crear_Imagen(NCGR tile, NCLR paleta)

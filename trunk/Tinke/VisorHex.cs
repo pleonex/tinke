@@ -51,17 +51,21 @@ namespace Tinke
 
             for (int i = 0; i < txtHex.Height / 17; i++)
             {
-                if (br.BaseStream.Length == br.BaseStream.Position)
+                if (br.BaseStream.Length == br.BaseStream.Position ||
+                    br.BaseStream.Position >= offset + size)
                     break;
 
-                byte[] value = br.ReadBytes(0x10);
                 string text, ascii; text = ascii = "";
 
-                for (int j = 0; j < value.Length; j++)
+                for (int j = 0; j < 0x10; j++)
                 {
-                    string c = String.Format("{0:X}", value[j]);
+                    if (br.BaseStream.Position == offset + size)
+                        break;
+
+                    byte value = br.ReadByte();
+                    string c = String.Format("{0:X}", value);
                     text += (c.Length == 2 ? c : '0' + c) + ' ';
-                    ascii += (value[j] > 0x1F && value[j] < 0x7F ? Char.ConvertFromUtf32(value[j]).ToString() + ' ' : ". ");
+                    ascii += (value > 0x1F && value < 0x7F ? Char.ConvertFromUtf32(value).ToString() + ' ' : ". ");
                 }
                 txtHex.Text += "0x" + String.Format("{0:X}", (i + pos) * 16).PadLeft(8, '0') + "     " + text.PadRight(52, ' ') + ascii + "\r\n";
                 text = "";

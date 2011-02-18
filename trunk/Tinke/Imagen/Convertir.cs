@@ -40,28 +40,6 @@ namespace Tinke
 
             return System.Drawing.Color.FromArgb(r, (int)g, b);
         }
-
-        public static Bitmap Mostrar_Paleta(Color[] colores)
-        {
-            Bitmap imagen = new Bitmap(160, (int)(colores.Length / 16));
-            bool fin = false;
-
-            for (int i = 0; i < 16 & !fin; i++)
-            {
-                for (int j = 0; j < 16 & !fin; j++)
-                {
-                    for (int k = 0; k < 10 & !fin; k++)
-                    {
-                        for (int q = 0; q < 10; q++)
-                        {
-                            try { imagen.SetPixel(j * 10 + q, i * 10 + k, colores[j + 16 * i]); }
-                            catch { fin = true; }
-                        }
-                    }
-                }
-            }
-            return imagen;
-        }
         #endregion
     }
 }
