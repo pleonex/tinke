@@ -1,4 +1,25 @@
-﻿using System;
+﻿/*
+ * Copyright (C) 2011  pleoNeX
+ *
+ *   This program is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+ *
+ * Programador: pleoNeX
+ * Programa utilizado: Microsoft Visual C# 2010 Express
+ * Fecha: 18/02/2011
+ * 
+ */
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -73,36 +94,52 @@ namespace Tinke
             }
             br.BaseStream.Position = ncer.header.header_size + ncer.cebk.section_size;
 
-            // UNDONE: Leer la segunda y tercera sección LABL y UTEXT
-            /*ncer.labl.id = br.ReadChars(4);
+            // Lee la segunda LABL
+            ncer.labl.id = br.ReadChars(4);
+            if (new String(ncer.labl.id) != "LBAL")
+                goto Tercera;
             ncer.labl.section_size = br.ReadUInt32();
-            ncer.labl.offset = new uint[ncer.cebk.nBanks];
+
+            List<uint> offsets = new List<uint>();
+            List<String> names = new List<string>();
             ncer.labl.names = new string[ncer.cebk.nBanks];
+            // Primero se encuentran los offset a los nombres.
             for (int i = 0; i < ncer.cebk.nBanks; i++)
             {
-                ncer.labl.offset[i] = br.ReadUInt32();
-                ncer.labl.names[i] = "";
-                if (br.BaseStream.Position >= ncer.header.header_size + ncer.cebk.section_size + ncer.labl.section_size)
-                    break;
-                long posicion = br.BaseStream.Position;
-                br.BaseStream.Position += (ncer.cebk.nBanks - (i + 1)) * 4 + ncer.labl.offset[i];
-                for (; ; )
+                uint offset = br.ReadUInt32();
+                if (offset >= ncer.labl.section_size - 8)
                 {
-                    char c = br.ReadChar();
-                    if (c == '\x0')
-                        break;
-                    ncer.labl.names[i] += c;
-                }
-                if (br.BaseStream.Position >= ncer.header.header_size + ncer.cebk.section_size + ncer.labl.section_size)
+                    br.BaseStream.Position -= 4;
                     break;
-                br.BaseStream.Position = posicion;
-            }*/
+                }
 
-            /*// Lee la tercera sección UEXT
-            br.BaseStream.Position = ncer.header.header_size + ncer.cebk.section_size + ncer.labl.section_size;
+                offsets.Add(offset);
+            }
+            ncer.labl.offset = offsets.ToArray();
+            // Ahora leemos los nombres
+            for (int i = 0; i < ncer.labl.offset.Length; i++)
+            {
+                names.Add("");
+                byte c = br.ReadByte();
+                while (c != 0x00)
+                {
+                    names[i] += (char)c;
+                    c = br.ReadByte();
+                }
+            }
+            for (int i = 0; i < ncer.cebk.nBanks; i++)
+                if (names.Count > i)
+                    ncer.labl.names[i] = names[i];
+                else
+                    ncer.labl.names[i] = i.ToString();
+
+            // Lee la tercera sección UEXT
+            Tercera:
             ncer.uext.id = br.ReadChars(4);
+            if (new String(ncer.uext.id) != "TXEU")
+                return ncer;
             ncer.uext.section_size = br.ReadUInt32();
-            ncer.uext.unknown = br.ReadUInt32();*/
+            ncer.uext.unknown = br.ReadUInt32();
 
             br.Close();
             br.Dispose();

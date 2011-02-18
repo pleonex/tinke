@@ -1,4 +1,25 @@
-﻿using System;
+﻿/*
+ * Copyright (C) 2011  pleoNeX
+ *
+ *   This program is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+ *
+ * Programador: pleoNeX
+ * Programa utilizado: Microsoft Visual C# 2010 Express
+ * Fecha: 18/02/2011
+ * 
+ */
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -24,6 +45,13 @@ namespace PluginInterface
         Color[] BGR555(byte[] datos);
         Byte[] BytesTo4BitsRev(byte[] datos);
         String BytesToBits(byte[] datos);
+        Byte[] Bit4ToBit8(byte[] bits4);
+        Byte[] Bit8ToBit4(byte[] bits8);
+        Byte[] TilesToBytes(byte[][] tiles);
+        Byte[][] BytesToTiles(byte[] bytes);
+
+        Bitmap[] Bitmaps_NCLR(string archivo);
+        Bitmap[] Bitmaps_NCLR(NCLR nclr);
         Bitmap Bitmap_NCGR(NCGR ncgr, NCLR nclr);
         Bitmap Bitmap_NCGR(NCGR ncgr, NCLR nclr, int startTile);
         Bitmap Bitmap_NCGR(NCGR ncgr, NCLR nclr, int startTile, int tilesX, int tilesY);

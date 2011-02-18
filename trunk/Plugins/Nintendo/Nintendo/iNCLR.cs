@@ -15,7 +15,7 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  *
  * Programador: pleoNeX
- * Programa utilizado: Microsoft Visual C# 2010 Express
+ * Programa utilizado: SharpDevelop
  * Fecha: 18/02/2011
  * 
  */
@@ -29,25 +29,27 @@ using System.Text;
 using System.Windows.Forms;
 using PluginInterface;
 
-namespace Tinke
+namespace Nintendo
 {
     public partial class iNCLR : UserControl
     {
         NCLR paleta;
         Bitmap[] paletas;
+        IPluginHost pluginHost;
 
         public iNCLR()
         {
             InitializeComponent();
         }
-        public iNCLR(NCLR paleta)
+        public iNCLR(IPluginHost pluginHost, NCLR paleta)
         {
             InitializeComponent();
 
+            this.pluginHost = pluginHost;
             this.paleta = paleta;
             ShowInfo();
 
-            paletas = Imagen_NCLR.Mostrar(paleta);
+            paletas = pluginHost.Bitmaps_NCLR(paleta);
             paletaBox.Image = paletas[0];
             nPaleta.Maximum = paletas.Length;
             nPaleta.Minimum = 1;

@@ -1,4 +1,25 @@
-﻿using System;
+﻿/*
+ * Copyright (C) 2011  pleoNeX
+ *
+ *   This program is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+ *
+ * Programador: pleoNeX
+ * Programa utilizado: Microsoft Visual C# 2010 Express
+ * Fecha: 18/02/2011
+ * 
+ */
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
@@ -29,9 +50,8 @@ namespace Tinke
 
             ShowInfo();
 
-            // UNDONE: Añadir nombres al control de cada celda
             for (ushort i = 0; i < ncer.cebk.nBanks; i++)
-                comboCelda.Items.Add(i.ToString());
+                comboCelda.Items.Add(ncer.labl.names[i]);
             comboCelda.SelectedIndex = 0;
 
             imgBox.Image = Imagen_NCER.Obtener_Imagen(ncer.cebk.banks[0],
@@ -107,6 +127,7 @@ namespace Tinke
             }
 
             ven.Text = "Imagenes";
+            ven.BackColor = SystemColors.GradientInactiveCaption;
             ven.AutoScroll = true;
             ven.MaximumSize = new Size(1024, 750);
             ven.ShowIcon = false;

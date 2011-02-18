@@ -163,6 +163,12 @@
     <Compile Include="Imagen\iNCER.Designer.cs">
       <DependentUpon>iNCER.cs</DependentUpon>
     </Compile>
+    <Compile Include="Imagen\iNCGR.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Imagen\iNCGR.Designer.cs">
+      <DependentUpon>iNCGR.cs</DependentUpon>
+    </Compile>
     <Compile Include="Imagen\iNCLR.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -186,12 +192,6 @@
     <Compile Include="Imagen\Convertir.cs" />
     <Compile Include="Imagen\NCLR.cs" />
     <Compile Include="Imagen\NSCR.cs" />
-    <Compile Include="Imagen\iNCGR.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Imagen\iNCGR.Designer.cs">
-      <DependentUpon>iNCGR.cs</DependentUpon>
-    </Compile>
     <Compile Include="Imagen\NCGR.cs" />
     <Compile Include="Nitro\Estructuras.cs" />
     <Compile Include="Nitro\FAT.cs" />
@@ -223,6 +223,9 @@
     <EmbeddedResource Include="Imagen\iNCER.resx">
       <DependentUpon>iNCER.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Imagen\iNCGR.resx">
+      <DependentUpon>iNCGR.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Imagen\iNCLR.resx">
       <DependentUpon>iNCLR.cs</DependentUpon>
     </EmbeddedResource>
@@ -231,9 +234,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Sistema.resx">
       <DependentUpon>Sistema.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Imagen\iNCGR.resx">
-      <DependentUpon>iNCGR.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -294,7 +294,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Imagen\Notas.txt" />
     <Content Include="nintendo-ds.ico" />
     <Content Include="Nitro\MakerCodes.txt" />
     <None Include="Resources\picture_save.png" />

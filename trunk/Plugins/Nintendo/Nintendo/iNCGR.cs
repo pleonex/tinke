@@ -1,4 +1,25 @@
-﻿using System;
+﻿/*
+ * Copyright (C) 2011  pleoNeX
+ *
+ *   This program is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+ *
+ * Programador: pleoNeX
+ * Programa utilizado: SharpDevelop
+ * Fecha: 18/02/2011
+ * 
+ */
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
@@ -17,6 +38,8 @@ namespace Nintendo
         int startTile;
         IPluginHost pluginHost;
 
+        string oldDepth;
+
         public iNCGR()
         {
             InitializeComponent();
@@ -24,14 +47,16 @@ namespace Nintendo
         public iNCGR(IPluginHost pluginHost, NCGR tile, NCLR paleta)
         {
             InitializeComponent();
-			this.pluginHost = pluginHost;
-            this.tile = tile;
-            this.paleta = paleta;
 
+            this.pluginHost = pluginHost;
+            this.paleta = paleta;
+            this.tile = tile;
             pic.Image = pluginHost.Bitmap_NCGR(tile, paleta, 0);
             this.numericWidth.Value = pic.Image.Width;
             this.numericHeight.Value = pic.Image.Height;
             this.comboDepth.Text = (tile.rahc.depth == ColorDepth.Depth4Bit ? "4 bpp" : "8 bpp");
+            oldDepth = comboDepth.Text;
+            this.comboDepth.SelectedIndexChanged += new EventHandler(comboDepth_SelectedIndexChanged);
             this.numericWidth.ValueChanged += new EventHandler(numericSize_ValueChanged);
             this.numericHeight.ValueChanged += new EventHandler(numericSize_ValueChanged);
             this.numericStart.ValueChanged += new EventHandler(numericStart_ValueChanged);
@@ -45,32 +70,35 @@ namespace Nintendo
             pic.Image = pluginHost.Bitmap_NCGR(tile, paleta, startTile);
         }
 
-        private void iNCGR_SizeChanged(object sender, EventArgs e)
-        {
-            pic.Location = new Point(0, 5);
-            groupProp.Location = new Point(this.Width - groupProp.Width, 5);
-            groupProp.Height = this.Height - btnSave.Height - 10;
-            listInfo.Height = groupProp.Height - 78;
-            label1.Location = new Point(label1.Location.X, listInfo.Height + 54);
-            label2.Location = new Point(label2.Location.X, listInfo.Height + 54);
-            label3.Location = new Point(label3.Location.X, listInfo.Height + 28);
-            label4.Location = new Point(label4.Location.X, listInfo.Height + 28);
-            comboDepth.Location = new Point(comboDepth.Location.X, listInfo.Height + 26);
-            numericStart.Location = new Point(numericStart.Location.X, listInfo.Height + 26);
-            numericHeight.Location = new Point(numericHeight.Location.X, listInfo.Height + 52);
-            numericWidth.Location = new Point(numericWidth.Location.X, listInfo.Height + 52);
-            btnSave.Location = new Point(this.Width - btnSave.Width, groupProp.Height + 5);
-        }
-
         private void numericSize_ValueChanged(object sender, EventArgs e)
         {
+            Actualizar_Imagen();
+        }
+        private void comboDepth_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (comboDepth.Text == oldDepth)
+                return;
+
+            oldDepth = comboDepth.Text;
+            tile.rahc.depth = (comboDepth.Text == "4 bpp" ? ColorDepth.Depth4Bit : ColorDepth.Depth8Bit);
+
+            if (comboDepth.Text == "4 bpp")
+            {
+                byte[] temp = pluginHost.Bit8ToBit4(pluginHost.TilesToBytes(tile.rahc.tileData.tiles));
+                tile.rahc.tileData.tiles = pluginHost.BytesToTiles(temp);
+            }
+            else
+            {
+                byte[] temp = pluginHost.Bit4ToBit8(pluginHost.TilesToBytes(tile.rahc.tileData.tiles));
+                tile.rahc.tileData.tiles = pluginHost.BytesToTiles(temp);
+            }
+
             Actualizar_Imagen();
         }
         private void Actualizar_Imagen()
         {
             tile.rahc.nTilesX = (ushort)(numericWidth.Value / 8);
             tile.rahc.nTilesY = (ushort)(numericHeight.Value / 8);
-            tile.rahc.depth = (comboDepth.Text == "4 bpp" ? ColorDepth.Depth4Bit : ColorDepth.Depth8Bit);
             pic.Image = pluginHost.Bitmap_NCGR(tile, paleta, startTile);
         }
         private void Info()
@@ -99,12 +127,23 @@ namespace Nintendo
                 pic.Image.Save(o.FileName);
             o.Dispose();
         }
-
-        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        private void pic_DoubleClick(object sender, EventArgs e)
         {
-            tile.rahc.depth = (comboDepth.Text == "4 bpp" ? ColorDepth.Depth4Bit : ColorDepth.Depth8Bit);
-            // TODO: arreglar, obviamente no funciona así.
-            Actualizar_Imagen();
+            Form ven = new Form();
+            PictureBox pcBox = new PictureBox();
+            pcBox.Image = pic.Image;
+            pcBox.SizeMode = PictureBoxSizeMode.AutoSize;
+
+            ven.Controls.Add(pcBox);
+            ven.BackColor = SystemColors.GradientInactiveCaption;
+            ven.Text = "Imagen a tamaño real";
+            ven.AutoScroll = true;
+            ven.MaximumSize = new Size(1024, 768);
+            ven.ShowIcon = false;
+            ven.AutoSize = true;
+            ven.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            ven.MaximizeBox = false;
+            ven.Show();
         }
     }
 }

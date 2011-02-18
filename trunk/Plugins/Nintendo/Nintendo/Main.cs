@@ -54,6 +54,14 @@ namespace Nintendo
 		
 		public Control Show_Info(string archivo)
 		{
+            if (archivo.ToUpper().EndsWith(".NBFP"))
+            {
+                new nbfp(pluginHost, archivo).Leer();
+                
+                iNCLR control = new iNCLR(pluginHost, pluginHost.Get_NCLR());
+                control.Dock = DockStyle.Fill;
+                return control;
+            }
 			if (archivo.ToUpper().EndsWith(".NBFC"))
 			{
 				new nbfc(pluginHost, archivo).Leer();
