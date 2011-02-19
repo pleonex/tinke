@@ -78,8 +78,8 @@ namespace Tinke
         public String BytesToBits(byte[] datos) { return Tools.Helper.BytesToBits(datos); }
         public Byte[] Bit4ToBit8(byte[] bits4) { return Convertir.Bit4ToBit8(bits4); }
         public Byte[] Bit8ToBit4(byte[] bits8) { return Convertir.Bit8ToBit4(bits8); }
-        public Byte[] TilesToByte(byte[][] tiles) { return Convertir.TilesToBytes(tiles); }
-        public Byte[][] BytesToTile(byte[] bytes) { return Convertir.BytesToTiles(bytes); }
+        public Byte[] TilesToBytes(byte[][] tiles) { return Convertir.TilesToBytes(tiles); }
+        public Byte[][] BytesToTiles(byte[] bytes) { return Convertir.BytesToTiles(bytes); }
 
         public Bitmap[] Bitmaps_NCLR(string archivo) { return Imagen_NCLR.Mostrar(archivo); }
         public Bitmap[] Bitmaps_NCLR(NCLR nclr) { return Imagen_NCLR.Mostrar(nclr); }
@@ -88,8 +88,8 @@ namespace Tinke
         public Bitmap Bitmap_NCGR(NCGR ncgr, NCLR nclr, int startTile) { return Imagen_NCGR.Crear_Imagen(ncgr, nclr, startTile); }
         public Bitmap Bitmap_NCGR(NCGR ncgr, NCLR nclr, int startTile, int tilesX, int tilesY) { return Imagen_NCGR.Crear_Imagen(ncgr, nclr, startTile, tilesX, tilesY); }
         public Size Tamaño_NCER(byte byte1, byte byte2) { return Imagen_NCER.Obtener_Tamaño(byte1, byte2); }
-        public Bitmap Bitmap_NCER(Bank banco, NCGR ncgr, NCLR nclr, bool entorno, bool celda, bool numero, bool transparencia) 
-            { return Imagen_NCER.Obtener_Imagen(banco, ncgr, nclr, entorno, celda, numero, transparencia); }
+        public Bitmap Bitmap_NCER(Bank banco, NCGR ncgr, NCLR nclr, bool entorno, bool celda, bool numero, bool transparencia, bool imagen) 
+            { return Imagen_NCER.Obtener_Imagen(banco, ncgr, nclr, entorno, celda, numero, transparencia, imagen); }
 
         public void Set_Files(Carpeta archivos)
         {

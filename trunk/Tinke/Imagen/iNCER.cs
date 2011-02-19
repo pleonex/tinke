@@ -55,7 +55,8 @@ namespace Tinke
             comboCelda.SelectedIndex = 0;
 
             imgBox.Image = Imagen_NCER.Obtener_Imagen(ncer.cebk.banks[0],
-                tile, paleta, checkEntorno.Checked, checkCelda.Checked, checkNumber.Checked, checkTransparencia.Checked);
+                tile, paleta, checkEntorno.Checked, checkCelda.Checked, checkNumber.Checked, 
+                checkTransparencia.Checked, checkImagen.Checked);
 
         }
 
@@ -74,12 +75,14 @@ namespace Tinke
         private void comboCelda_SelectedIndexChanged(object sender, EventArgs e)
         {
             imgBox.Image = Imagen_NCER.Obtener_Imagen(ncer.cebk.banks[comboCelda.SelectedIndex],
-                tile, paleta, checkEntorno.Checked, checkCelda.Checked, checkNumber.Checked, checkTransparencia.Checked);
+                tile, paleta, checkEntorno.Checked, checkCelda.Checked, checkNumber.Checked, checkTransparencia.Checked,
+                checkImagen.Checked);
         }
         private void check_CheckedChanged(object sender, EventArgs e)
         {
             imgBox.Image = Imagen_NCER.Obtener_Imagen(ncer.cebk.banks[comboCelda.SelectedIndex],
-               tile, paleta, checkEntorno.Checked, checkCelda.Checked, checkNumber.Checked, checkTransparencia.Checked);
+               tile, paleta, checkEntorno.Checked, checkCelda.Checked, checkNumber.Checked, checkTransparencia.Checked,
+               checkImagen.Checked);
         }
 
         private void btnSave_Click(object sender, EventArgs e)
@@ -110,9 +113,10 @@ namespace Tinke
                 pic.Location = new Point(x, y);
                 pic.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
                 pic.Image = Imagen_NCER.Obtener_Imagen(ncer.cebk.banks[i], tile, paleta, 
-                    checkEntorno.Checked, checkCelda.Checked, checkNumber.Checked, checkTransparencia.Checked);
+                    checkEntorno.Checked, checkCelda.Checked, checkNumber.Checked,
+                    checkTransparencia.Checked, checkImagen.Checked);
                 Label lbl = new Label();
-                lbl.Text = "Imagen " + (i + 1).ToString();
+                lbl.Text = ncer.labl.names[i];
                 lbl.Location = new Point(x, y - 15);
 
                 ven.Controls.Add(pic);
@@ -129,11 +133,9 @@ namespace Tinke
             ven.Text = "Imagenes";
             ven.BackColor = SystemColors.GradientInactiveCaption;
             ven.AutoScroll = true;
-            ven.MaximumSize = new Size(1024, 750);
-            ven.ShowIcon = false;
             ven.AutoSize = true;
             ven.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            ven.MaximizeBox = false;
+            ven.ShowIcon = false;
             ven.Show();
         }
 
