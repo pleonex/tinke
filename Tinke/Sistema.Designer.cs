@@ -79,18 +79,19 @@
             this.iconos.Images.SetKeyName(0, "folder.png");
             this.iconos.Images.SetKeyName(1, "page_white.png");
             this.iconos.Images.SetKeyName(2, "palette.png");
-            this.iconos.Images.SetKeyName(3, "image.png");
+            this.iconos.Images.SetKeyName(3, "picture.png");
             this.iconos.Images.SetKeyName(4, "page_white_text.png");
             this.iconos.Images.SetKeyName(5, "compress.png");
             this.iconos.Images.SetKeyName(6, "package.png");
             this.iconos.Images.SetKeyName(7, "package_go.png");
-            this.iconos.Images.SetKeyName(8, "images.png");
-            this.iconos.Images.SetKeyName(9, "image_link.png");
+            this.iconos.Images.SetKeyName(8, "pictures.png");
+            this.iconos.Images.SetKeyName(9, "picture_link.png");
             this.iconos.Images.SetKeyName(10, "photo.png");
             this.iconos.Images.SetKeyName(11, "picture_save.png");
             this.iconos.Images.SetKeyName(12, "picture_delete.png");
             this.iconos.Images.SetKeyName(13, "film.png");
             this.iconos.Images.SetKeyName(14, "music.png");
+            this.iconos.Images.SetKeyName(15, "picture_go.png");
             // 
             // btnExtraer
             // 
@@ -370,7 +371,7 @@
             this.toolStrip3.Location = new System.Drawing.Point(531, 427);
             this.toolStrip3.Name = "toolStrip3";
             this.toolStrip3.RenderMode = System.Windows.Forms.ToolStripRenderMode.Professional;
-            this.toolStrip3.Size = new System.Drawing.Size(142, 25);
+            this.toolStrip3.Size = new System.Drawing.Size(111, 25);
             this.toolStrip3.TabIndex = 12;
             this.toolStrip3.Text = "toolStrip3";
             // 
@@ -391,7 +392,7 @@
             // 
             this.toolAbrirComoItemPaleta.Image = ((System.Drawing.Image)(resources.GetObject("toolAbrirComoItemPaleta.Image")));
             this.toolAbrirComoItemPaleta.Name = "toolAbrirComoItemPaleta";
-            this.toolAbrirComoItemPaleta.Size = new System.Drawing.Size(152, 22);
+            this.toolAbrirComoItemPaleta.Size = new System.Drawing.Size(109, 22);
             this.toolAbrirComoItemPaleta.Text = "Paleta";
             this.toolAbrirComoItemPaleta.Click += new System.EventHandler(this.toolAbrirComoItemPaleta_Click);
             // 
@@ -399,7 +400,7 @@
             // 
             this.toolAbrirComoItemTile.Image = ((System.Drawing.Image)(resources.GetObject("toolAbrirComoItemTile.Image")));
             this.toolAbrirComoItemTile.Name = "toolAbrirComoItemTile";
-            this.toolAbrirComoItemTile.Size = new System.Drawing.Size(152, 22);
+            this.toolAbrirComoItemTile.Size = new System.Drawing.Size(109, 22);
             this.toolAbrirComoItemTile.Text = "Tile";
             this.toolAbrirComoItemTile.Click += new System.EventHandler(this.toolAbrirComoItemTile_Click);
             // 
@@ -407,7 +408,7 @@
             // 
             this.toolAbrirComoItemScreen.Image = ((System.Drawing.Image)(resources.GetObject("toolAbrirComoItemScreen.Image")));
             this.toolAbrirComoItemScreen.Name = "toolAbrirComoItemScreen";
-            this.toolAbrirComoItemScreen.Size = new System.Drawing.Size(152, 22);
+            this.toolAbrirComoItemScreen.Size = new System.Drawing.Size(109, 22);
             this.toolAbrirComoItemScreen.Text = "Screen";
             this.toolAbrirComoItemScreen.Click += new System.EventHandler(this.toolAbrirComoItemScreen_Click);
             // 

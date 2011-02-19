@@ -1,4 +1,25 @@
-﻿using System;
+﻿/*
+ * Copyright (C) 2011  pleoNeX
+ *
+ *   This program is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+ *
+ * Programador: pleoNeX
+ * Programa utilizado: Microsoft Visual C# 2010 Express
+ * Fecha: 18/02/2011
+ * 
+ */
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -264,6 +285,7 @@ namespace Tinke
             else
                 hex = new VisorHex(file.path, 0, file.size);
 
+            hex.Text += " - " + file.name;
             hex.ShowDialog();
         }
         private void BtnSee(object sender, EventArgs e)
@@ -272,6 +294,7 @@ namespace Tinke
             {
                 Visor visor = new Visor();
                 visor.Controls.Add(accion.See_File());
+                visor.Text += " - " + accion.Select_File().name;
                 visor.Show();
             }
             else
@@ -357,7 +380,7 @@ namespace Tinke
         {
             if (toolStripVentana.Checked)
             {
-                this.Width = 615;
+                btnDesplazar.Enabled = false;
                 if (panelObj.Controls.Count > 0)
                 {
                     Visor visor = new Visor();
@@ -367,7 +390,7 @@ namespace Tinke
             }
             else
             {
-                this.Width = 650;
+                btnDesplazar.Enabled = true;
                 btnDesplazar.Text = ">>>>>";
             }
 

@@ -1,0 +1,162 @@
+﻿/*
+ * Copyright (C) 2011  pleoNeX
+ *
+ *   This program is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+ *
+ * Programador: pleoNeX
+ * Programa utilizado: Microsoft Visual C# 2010 Express
+ * Fecha: 18/02/2011
+ * 
+ */
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Drawing;
+using System.Data;
+using System.Linq;
+using System.Text;
+using System.Windows.Forms;
+using PluginInterface;
+
+namespace Tinke
+{
+    public partial class iNANR : UserControl
+    {
+        NCLR paleta;
+        NCGR tiles;
+        NCER celdas;
+        NANR ani;
+        Bitmap[] bitAni;
+        int imgShow;
+
+        public iNANR()
+        {
+            InitializeComponent();
+        }
+        public iNANR(NCLR paleta, NCGR tiles, NCER celdas, NANR ani)
+        {
+            InitializeComponent();
+
+            this.paleta = paleta;
+            this.tiles = tiles;
+            this.celdas = celdas;
+            this.ani = ani;
+
+            for (int i = 0; i < ani.abnk.nBanks; i++)
+                comboAni.Items.Add(ani.labl.names[i]);
+            comboAni.SelectedIndex = 0;
+
+            ShowInfo();
+            Get_Ani();
+
+            tempo.Stop();
+            tempo.Interval = Convert.ToInt32(txtTime.Text);
+            aniBox.Image = bitAni[0];
+        }
+
+        private void ShowInfo()
+        {
+            listProp.Items[1].SubItems.Add(ani.abnk.nBanks.ToString());
+            listProp.Items[2].SubItems.Add(ani.abnk.tFrames.ToString());
+            listProp.Items[3].SubItems.Add("0x" + String.Format("{0:X}", ani.abnk.constant));
+            listProp.Items[4].SubItems.Add("0x" + String.Format("{0:X}", ani.abnk.padding));
+            ShowInfo(0);
+        }
+        private void ShowInfo(int bnk)
+        {
+            listProp.Items[6].SubItems[1].Text = bnk.ToString();
+            listProp.Items[7].SubItems[1].Text = ani.abnk.anis[bnk].nFrames.ToString();
+            listProp.Items[8].SubItems[1].Text = ani.abnk.anis[bnk].dataType.ToString();
+            listProp.Items[9].SubItems[1].Text = "0x" + String.Format("{0:X}", ani.abnk.anis[bnk].unknown1);
+            listProp.Items[10].SubItems[1].Text = "0x" + String.Format("{0:X}", ani.abnk.anis[bnk].unknown2);
+            listProp.Items[11].SubItems[1].Text = "0x" + String.Format("{0:X}", ani.abnk.anis[bnk].unknown3);
+            ShowInfo(0, 0);
+        }
+        private void ShowInfo(int bnk, int frame)
+        {
+            listProp.Items[13].SubItems[1].Text = frame.ToString();
+            listProp.Items[14].SubItems[1].Text = ani.abnk.anis[bnk].frames[frame].unknown1.ToString();
+            listProp.Items[15].SubItems[1].Text = "0x" + String.Format("{0:X}", ani.abnk.anis[bnk].frames[frame].constant);
+            listProp.Items[17].SubItems[1].Text = ani.abnk.anis[bnk].frames[frame].data.nCell.ToString();
+        }
+
+        private void Get_Ani()
+        {
+            int id = comboAni.SelectedIndex;
+            imgShow = 0;
+            bitAni = new Bitmap[ani.abnk.anis[id].nFrames];
+            for (int i = 0; i < ani.abnk.anis[id].nFrames; i++)
+            {
+                bitAni[i] = Imagen_NCER.Obtener_Imagen(celdas.cebk.banks[ani.abnk.anis[id].frames[i].data.nCell],
+                    tiles, paleta, checkEntorno.Checked, checkCeldas.Checked, checkNumeros.Checked, checkTransparencia.Checked,
+                    checkImage.Checked);
+            }
+        }
+
+        private void check_CheckedChanged(object sender, EventArgs e)
+        {
+            Get_Ani();
+            aniBox.Image = bitAni[imgShow];
+        }
+        private void comboAni_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            Get_Ani();
+
+            aniBox.Image = bitAni[imgShow];
+            ShowInfo(comboAni.SelectedIndex);
+        }
+        private void btnStop_Click(object sender, EventArgs e)
+        {
+            tempo.Stop();
+            btnPlay.Enabled = true;
+            btnStop.Enabled = false;
+        }
+        private void btnPlay_Click(object sender, EventArgs e)
+        {
+            tempo.Start();
+            btnPlay.Enabled = false;
+            btnStop.Enabled = true;
+        }
+        private void tempo_Tick(object sender, EventArgs e)
+        {
+            imgShow += 1;
+            if (imgShow >= bitAni.Length)
+                imgShow = 0;
+            aniBox.Image = bitAni[imgShow];
+        }
+        private void btnNext_Click(object sender, EventArgs e)
+        {
+            imgShow += 1;
+            if (imgShow >= bitAni.Length)
+                imgShow = 0;
+            aniBox.Image = bitAni[imgShow];
+
+            ShowInfo(comboAni.SelectedIndex, imgShow);
+        }
+        private void btnPrevious_Click(object sender, EventArgs e)
+        {
+            imgShow -= 1;
+            if (imgShow < 0)
+                imgShow = bitAni.Length - 1;
+            aniBox.Image = bitAni[imgShow];
+
+            ShowInfo(comboAni.SelectedIndex, imgShow);
+        }
+        private void txtTime_TextChanged(object sender, EventArgs e)
+        {
+            if (Convert.ToInt32(txtTime.Text) != 0)
+                tempo.Interval = Convert.ToInt32(txtTime.Text);
+        }
+    }
+}

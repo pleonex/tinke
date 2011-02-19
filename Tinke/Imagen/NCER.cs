@@ -92,16 +92,18 @@ namespace Tinke
                 }
                 br.BaseStream.Position = posicion;
             }
-            br.BaseStream.Position = ncer.header.header_size + ncer.cebk.section_size;
 
+            #region Sección LABL
             // Lee la segunda LABL
+            br.BaseStream.Position = ncer.header.header_size + ncer.cebk.section_size;
+            List<uint> offsets = new List<uint>();
+            List<String> names = new List<string>();
+
             ncer.labl.id = br.ReadChars(4);
             if (new String(ncer.labl.id) != "LBAL")
                 goto Tercera;
             ncer.labl.section_size = br.ReadUInt32();
 
-            List<uint> offsets = new List<uint>();
-            List<String> names = new List<string>();
             ncer.labl.names = new string[ncer.cebk.nBanks];
             // Primero se encuentran los offset a los nombres.
             for (int i = 0; i < ncer.cebk.nBanks; i++)
@@ -127,20 +129,24 @@ namespace Tinke
                     c = br.ReadByte();
                 }
             }
+        Tercera:
             for (int i = 0; i < ncer.cebk.nBanks; i++)
                 if (names.Count > i)
                     ncer.labl.names[i] = names[i];
                 else
                     ncer.labl.names[i] = i.ToString();
-
+            #endregion
+            #region Sección UEXT
             // Lee la tercera sección UEXT
-            Tercera:
             ncer.uext.id = br.ReadChars(4);
             if (new String(ncer.uext.id) != "TXEU")
-                return ncer;
+                goto Fin;
+
             ncer.uext.section_size = br.ReadUInt32();
             ncer.uext.unknown = br.ReadUInt32();
+            #endregion
 
+            Fin:
             br.Close();
             br.Dispose();
             return ncer;
@@ -227,7 +233,7 @@ namespace Tinke
         }
 
         public static Bitmap Obtener_Imagen(Bank banco, NCGR tile, NCLR paleta,
-            bool entorno, bool celda, bool numero, bool transparencia)
+            bool entorno, bool celda, bool numero, bool transparencia, bool image)
         {
             if (banco.cells.Length == 0)
                 return new Bitmap(1, 1);
@@ -251,19 +257,22 @@ namespace Tinke
             Image[] celdas = new Image[banco.nCells];
             for (int i = 0; i < banco.nCells; i++)
             {
-                celdas[i] = Imagen_NCGR.Crear_Imagen(tile, paleta, (int)banco.cells[i].tileOffset, banco.cells[i].width / 8, banco.cells[i].height / 8);
-                #region Rotaciones
-                if (banco.cells[i].xFlip && banco.cells[i].yFlip)
-                    celdas[i].RotateFlip(RotateFlipType.RotateNoneFlipXY);
-                else if (banco.cells[i].xFlip)
-                    celdas[i].RotateFlip(RotateFlipType.RotateNoneFlipX);
-                else if (banco.cells[i].yFlip)
-                    celdas[i].RotateFlip(RotateFlipType.RotateNoneFlipY);
-                #endregion
-                if (transparencia)
-                    ((Bitmap)celdas[i]).MakeTransparent(paleta.pltt.paletas[tile.rahc.tileData.nPaleta[0]].colores[0]);
-                
-                grafico.DrawImageUnscaled(celdas[i], tamaño.Width / 2 + banco.cells[i].xOffset, tamaño.Height / 2 + banco.cells[i].yOffset);
+                if (image)
+                {
+                    celdas[i] = Imagen_NCGR.Crear_Imagen(tile, paleta, (int)banco.cells[i].tileOffset, banco.cells[i].width / 8, banco.cells[i].height / 8);
+                    #region Rotaciones
+                    if (banco.cells[i].xFlip && banco.cells[i].yFlip)
+                        celdas[i].RotateFlip(RotateFlipType.RotateNoneFlipXY);
+                    else if (banco.cells[i].xFlip)
+                        celdas[i].RotateFlip(RotateFlipType.RotateNoneFlipX);
+                    else if (banco.cells[i].yFlip)
+                        celdas[i].RotateFlip(RotateFlipType.RotateNoneFlipY);
+                    #endregion
+                    if (transparencia)
+                        ((Bitmap)celdas[i]).MakeTransparent(paleta.pltt.paletas[tile.rahc.tileData.nPaleta[0]].colores[0]);
+
+                    grafico.DrawImageUnscaled(celdas[i], tamaño.Width / 2 + banco.cells[i].xOffset, tamaño.Height / 2 + banco.cells[i].yOffset);
+                }
 
                 if (celda)
                     grafico.DrawRectangle(Pens.Black, tamaño.Width / 2 + banco.cells[i].xOffset, tamaño.Height / 2 + banco.cells[i].yOffset,

@@ -1,4 +1,25 @@
-﻿using System;
+﻿/*
+ * Copyright (C) 2011  pleoNeX
+ *
+ *   This program is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+ *
+ * Programador: pleoNeX
+ * Programa utilizado: Microsoft Visual C# 2010 Express
+ * Fecha: 18/02/2011
+ * 
+ */
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -133,7 +154,7 @@ namespace Tinke
                 case Formato.Celdas:
                     return 8;
                 case Formato.Animación:
-                    return 8;
+                    return 15;
                 case Formato.ImagenCompleta:
                     return 10;
                 case Formato.Texto:
@@ -241,6 +262,11 @@ namespace Tinke
                 else if (selectFile.name.EndsWith(".NCER") || new String(Encoding.ASCII.GetChars(ext)) == "NCER" || new String(Encoding.ASCII.GetChars(ext)) == "RECN")
                 {
                     pluginHost.Set_NCER(Imagen_NCER.Leer(tempFile));
+                    File.Delete(tempFile);
+                }
+                else if (selectFile.name.EndsWith(".NANR") || new String(Encoding.ASCII.GetChars(ext)) == "NANR" || new String(Encoding.ASCII.GetChars(ext)) == "RNAN")
+                {
+                    pluginHost.Set_NANR(Imagen_NANR.Leer(tempFile));
                     File.Delete(tempFile);
                 }
             }
@@ -616,9 +642,8 @@ namespace Tinke
                 return Formato.Screen;
             else if (currFile.name.EndsWith(".NCER") || new String(Encoding.ASCII.GetChars(ext)) == "NCER" || new String(Encoding.ASCII.GetChars(ext)) == "RECN")
                 return Formato.Celdas;
-            // TODO: Compatibilidad NANR
-            /*else if (currFile.name.EndsWith(".NANR") || new String(Encoding.ASCII.GetChars(ext)) == "NANR" || new String(Encoding.ASCII.GetChars(ext)) == "RNAN")
-                return Formato.Animación;*/
+            else if (currFile.name.EndsWith(".NANR") || new String(Encoding.ASCII.GetChars(ext)) == "NANR" || new String(Encoding.ASCII.GetChars(ext)) == "RNAN")
+                return Formato.Animación;
 
             if (ext[0] == LZ77_TAG || ext[0] == LZSS_TAG || ext[0] == RLE_TAG || ext[0] == HUFF_TAG)
                 return Formato.Comprimido;
@@ -903,6 +928,21 @@ namespace Tinke
                         return control;
                     }
 
+                    return new Control();
+                }
+                else if (selectFile.name.EndsWith(".NANR") || new String(Encoding.ASCII.GetChars(ext)) == "NANR" || new String(Encoding.ASCII.GetChars(ext)) == "RNAN")
+                {
+                    pluginHost.Set_NANR(Imagen_NANR.Leer(tempFile));
+                    File.Delete(tempFile);
+
+                    if (pluginHost.Get_NCER().header.file_size != 0x00 && pluginHost.Get_NCGR().cabecera.file_size != 0x00 &&
+                        pluginHost.Get_NCLR().cabecera.file_size != 0x00)
+                    {
+                        iNANR control = new iNANR(pluginHost.Get_NCLR(), pluginHost.Get_NCGR(), pluginHost.Get_NCER(), pluginHost.Get_NANR());
+                        control.Dock = DockStyle.Fill;
+
+                        return control;
+                    }
                     return new Control();
                 }
             }

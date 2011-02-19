@@ -160,7 +160,43 @@ namespace PluginInterface
     #region NANR
     public struct NANR
     {
-
+        public Header cabecera;
+        public ABNK abnk;
+        public LABL labl;
+        public UEXT uext;
+    }
+    public struct ABNK
+    {
+        public char[] id;
+        public uint length;
+        public ushort nBanks;
+        public ushort tFrames;
+        public uint constant;
+        public uint offset1;
+        public uint offset2;
+        public ulong padding;
+        public Animation[] anis;
+    }
+    public struct Animation
+    {
+        public uint nFrames;
+        public ushort dataType;
+        public ushort unknown1;
+        public ushort unknown2;
+        public ushort unknown3;
+        public uint offset_frame;
+        public Frame[] frames;
+    }
+    public struct Frame
+    {
+        public uint offset_data;
+        public ushort unknown1;
+        public ushort constant;
+        public Frame_Data data;
+    }
+    public struct Frame_Data
+    {
+        public ushort nCell;
     }
     #endregion
     public struct LABL

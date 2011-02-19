@@ -28,7 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("Sección");
+            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem(new string[] {
+            "Sección"}, -1, System.Drawing.Color.Empty, System.Drawing.Color.Empty, new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0))));
             System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("Número de celdas");
             System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem("Tipo de celdas");
             System.Windows.Forms.ListViewItem listViewItem4 = new System.Windows.Forms.ListViewItem("Constante");
@@ -49,6 +50,7 @@
             this.checkNumber = new System.Windows.Forms.CheckBox();
             this.checkCelda = new System.Windows.Forms.CheckBox();
             this.checkTransparencia = new System.Windows.Forms.CheckBox();
+            this.checkImagen = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.imgBox)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -192,12 +194,26 @@
             this.checkTransparencia.UseVisualStyleBackColor = true;
             this.checkTransparencia.CheckedChanged += new System.EventHandler(this.check_CheckedChanged);
             // 
+            // checkImagen
+            // 
+            this.checkImagen.AutoSize = true;
+            this.checkImagen.Checked = true;
+            this.checkImagen.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkImagen.Location = new System.Drawing.Point(265, 306);
+            this.checkImagen.Name = "checkImagen";
+            this.checkImagen.Size = new System.Drawing.Size(98, 17);
+            this.checkImagen.TabIndex = 10;
+            this.checkImagen.Text = "Mostrar imagen";
+            this.checkImagen.UseVisualStyleBackColor = true;
+            this.checkImagen.CheckedChanged += new System.EventHandler(this.check_CheckedChanged);
+            // 
             // iNCER
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Transparent;
             this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.Controls.Add(this.checkImagen);
             this.Controls.Add(this.checkTransparencia);
             this.Controls.Add(this.checkCelda);
             this.Controls.Add(this.checkNumber);
@@ -232,5 +248,6 @@
         private System.Windows.Forms.CheckBox checkNumber;
         private System.Windows.Forms.CheckBox checkCelda;
         private System.Windows.Forms.CheckBox checkTransparencia;
+        private System.Windows.Forms.CheckBox checkImagen;
     }
 }
