@@ -46,7 +46,7 @@ namespace Tinke
         {
             InitializeComponent();
             this.Location = new Point(10, 10);
-            this.Text = "Tinke V " + Application.ProductVersion + " - NDScene";
+            this.Text = "Tinke V " + Application.ProductVersion + " - NDScene by pleoNeX";
 
             // Modo debug donde se muestran los mensajes en otra ventana
             sb = new StringBuilder();
@@ -54,6 +54,7 @@ namespace Tinke
             Console.SetOut(tw);
 
             this.Load += new EventHandler(Sistema_Load);
+
         }
         void Sistema_Load(object sender, EventArgs e)
         {
@@ -100,7 +101,6 @@ namespace Tinke
             this.Activate();
             debug.Activate();
         }
-
 
         private Carpeta FNT(string file, UInt32 offset, UInt32 size)
         {
@@ -410,14 +410,6 @@ namespace Tinke
             }
         }
 
-        private void liberarPluginsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            accion.Liberar_Plugins();
-        }
-        private void cargarPluginsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            accion.Cargar_Plugins();
-        }
         private void recargarPluginsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             accion.Liberar_Plugins();
@@ -474,6 +466,13 @@ namespace Tinke
         private void toolAbrirComoItemScreen_Click(object sender, EventArgs e)
         {
             AbrirComo(Formato.Screen);
+        }
+
+        private void linkAboutBox_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            linkAboutBox.LinkVisited = false;
+            Autores ven = new Autores();
+            ven.ShowDialog();
         }
     }
 }

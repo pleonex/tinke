@@ -22,7 +22,7 @@ namespace NARC
             nombre = nombre.ToUpper();
             string id = new String(Encoding.ASCII.GetChars(magic));
 
-            if (nombre.EndsWith(".NARC") || nombre.EndsWith(".ARC") || id == "NARC" || id == "CRAN")
+            if (id == "NARC" || id == "CRAN")
                 return Formato.Comprimido;
 
             return Formato.Desconocido;

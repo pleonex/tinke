@@ -90,6 +90,7 @@ namespace Tinke
         public Size Tamaño_NCER(byte byte1, byte byte2) { return Imagen_NCER.Obtener_Tamaño(byte1, byte2); }
         public Bitmap Bitmap_NCER(Bank banco, NCGR ncgr, NCLR nclr, bool entorno, bool celda, bool numero, bool transparencia, bool imagen) 
             { return Imagen_NCER.Obtener_Imagen(banco, ncgr, nclr, entorno, celda, numero, transparencia, imagen); }
+        public void Crear_Gif(string salida, Bitmap[] frames, int delay, int loops) { Convertir.CrearGif(salida, frames, delay, loops); }
 
         public void Set_Files(Carpeta archivos)
         {

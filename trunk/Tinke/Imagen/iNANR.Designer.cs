@@ -331,13 +331,13 @@ namespace Tinke
             // 
             // btnSave
             // 
-            this.btnSave.Enabled = false;
             this.btnSave.Location = new System.Drawing.Point(4, 473);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(75, 23);
             this.btnSave.TabIndex = 8;
             this.btnSave.Text = "Guardar";
             this.btnSave.UseVisualStyleBackColor = true;
+            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
             // 
             // txtTime
             // 
