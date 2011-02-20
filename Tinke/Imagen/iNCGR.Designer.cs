@@ -112,7 +112,7 @@ namespace Tinke
             0,
             0,
             0});
-            this.numericWidth.Location = new System.Drawing.Point(49, 219);
+            this.numericWidth.Location = new System.Drawing.Point(50, 269);
             this.numericWidth.Maximum = new decimal(new int[] {
             65536,
             0,
@@ -135,7 +135,7 @@ namespace Tinke
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(6, 221);
+            this.label1.Location = new System.Drawing.Point(7, 271);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(41, 13);
             this.label1.TabIndex = 2;
@@ -144,7 +144,7 @@ namespace Tinke
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(147, 221);
+            this.label2.Location = new System.Drawing.Point(148, 271);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(28, 13);
             this.label2.TabIndex = 3;
@@ -157,7 +157,7 @@ namespace Tinke
             0,
             0,
             0});
-            this.numericHeight.Location = new System.Drawing.Point(181, 219);
+            this.numericHeight.Location = new System.Drawing.Point(182, 269);
             this.numericHeight.Maximum = new decimal(new int[] {
             65536,
             0,
@@ -199,7 +199,7 @@ namespace Tinke
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(147, 195);
+            this.label4.Location = new System.Drawing.Point(148, 245);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(28, 13);
             this.label4.TabIndex = 9;
@@ -225,7 +225,7 @@ namespace Tinke
             this.comboDepth.Items.AddRange(new object[] {
             "4 bpp",
             "8 bpp"});
-            this.comboDepth.Location = new System.Drawing.Point(181, 192);
+            this.comboDepth.Location = new System.Drawing.Point(182, 242);
             this.comboDepth.Name = "comboDepth";
             this.comboDepth.Size = new System.Drawing.Size(54, 21);
             this.comboDepth.TabIndex = 8;
@@ -233,7 +233,7 @@ namespace Tinke
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(6, 195);
+            this.label3.Location = new System.Drawing.Point(7, 245);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(35, 13);
             this.label3.TabIndex = 7;
@@ -241,7 +241,7 @@ namespace Tinke
             // 
             // numericStart
             // 
-            this.numericStart.Location = new System.Drawing.Point(49, 193);
+            this.numericStart.Location = new System.Drawing.Point(50, 243);
             this.numericStart.Maximum = new decimal(new int[] {
             1024,
             0,
@@ -272,7 +272,7 @@ namespace Tinke
             listViewItem11});
             this.listInfo.Location = new System.Drawing.Point(7, 20);
             this.listInfo.Name = "listInfo";
-            this.listInfo.Size = new System.Drawing.Size(229, 167);
+            this.listInfo.Size = new System.Drawing.Size(229, 216);
             this.listInfo.TabIndex = 5;
             this.listInfo.UseCompatibleStateImageBehavior = false;
             this.listInfo.View = System.Windows.Forms.View.Details;
@@ -280,10 +280,12 @@ namespace Tinke
             // columnPos
             // 
             this.columnPos.Text = "Posición";
+            this.columnPos.Width = 54;
             // 
             // columnCampo
             // 
             this.columnCampo.Text = "Campo";
+            this.columnCampo.Width = 88;
             // 
             // columnValor
             // 

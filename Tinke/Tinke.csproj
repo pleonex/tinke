@@ -127,10 +127,12 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="PresentationCore" />
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -142,9 +144,16 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Acciones.cs" />
+    <Compile Include="Autores.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Autores.Designer.cs">
+      <DependentUpon>Autores.cs</DependentUpon>
+    </Compile>
     <Compile Include="Debug.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -221,6 +230,9 @@
     <Compile Include="VisorHex.Designer.cs">
       <DependentUpon>VisorHex.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="Autores.resx">
+      <DependentUpon>Autores.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Debug.resx">
       <DependentUpon>Debug.cs</DependentUpon>
     </EmbeddedResource>

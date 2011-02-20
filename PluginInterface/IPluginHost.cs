@@ -59,6 +59,7 @@ namespace PluginInterface
         Size Tamaño_NCER(byte byte1, byte byte2);
         Bitmap Bitmap_NCER(Bank banco, NCGR ncgr, NCLR nclr, bool entorno, bool celda,
             bool numero, bool transparencia, bool imagen);
+        void Crear_Gif(string salida, Bitmap[] frames, int delay, int loops);
 
         // Para descomprimir archivos
         void Set_Files(Carpeta archivos);

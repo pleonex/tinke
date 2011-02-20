@@ -24,7 +24,7 @@ namespace LAYTON
         public Formato Get_Formato(string nombre)
         {
             if (nombre.EndsWith(".ARC") || nombre.EndsWith(".ARJ"))
-                return Formato.Animación;
+                return Formato.ImagenCompleta;
             else
                 return Formato.Desconocido;
         }
@@ -45,9 +45,9 @@ namespace LAYTON
             
             InfoAni control = new InfoAni();
             if (archivo.EndsWith(".arcnn"))
-                control = new InfoAni(Obtener_Todo());
+                control = new InfoAni(Obtener_Todo(), pluginHost);
             else if (archivo.EndsWith(".arjnn"))
-                control = new InfoAni(Obtener_ARJ());
+                control = new InfoAni(Obtener_ARJ(), pluginHost);
             File.Delete(archivo);
             return control;
         }

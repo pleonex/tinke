@@ -30,12 +30,12 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Sistema));
-            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("Nombre");
-            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("ID");
-            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem("Offset");
-            System.Windows.Forms.ListViewItem listViewItem4 = new System.Windows.Forms.ListViewItem("Tamaño");
-            System.Windows.Forms.ListViewItem listViewItem5 = new System.Windows.Forms.ListViewItem("Tipo");
-            System.Windows.Forms.ListViewItem listViewItem6 = new System.Windows.Forms.ListViewItem("Ruta");
+            System.Windows.Forms.ListViewItem listViewItem7 = new System.Windows.Forms.ListViewItem("Nombre");
+            System.Windows.Forms.ListViewItem listViewItem8 = new System.Windows.Forms.ListViewItem("ID");
+            System.Windows.Forms.ListViewItem listViewItem9 = new System.Windows.Forms.ListViewItem("Offset");
+            System.Windows.Forms.ListViewItem listViewItem10 = new System.Windows.Forms.ListViewItem("Tamaño");
+            System.Windows.Forms.ListViewItem listViewItem11 = new System.Windows.Forms.ListViewItem("Tipo");
+            System.Windows.Forms.ListViewItem listViewItem12 = new System.Windows.Forms.ListViewItem("Ruta");
             this.iconos = new System.Windows.Forms.ImageList(this.components);
             this.btnExtraer = new System.Windows.Forms.Button();
             this.btnSee = new System.Windows.Forms.Button();
@@ -51,8 +51,6 @@
             this.toolStripVentana = new System.Windows.Forms.ToolStripButton();
             this.toolStripSplitButton1 = new System.Windows.Forms.ToolStripDropDownButton();
             this.recargarPluginsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.liberarPluginsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.cargarPluginsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.btnDescomprimir = new System.Windows.Forms.Button();
             this.btnDesplazar = new System.Windows.Forms.Button();
             this.panelObj = new System.Windows.Forms.Panel();
@@ -67,6 +65,8 @@
             this.toolAbrirComoItemPaleta = new System.Windows.Forms.ToolStripMenuItem();
             this.toolAbrirComoItemTile = new System.Windows.Forms.ToolStripMenuItem();
             this.toolAbrirComoItemScreen = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripLanguage = new System.Windows.Forms.ToolStripSplitButton();
+            this.linkAboutBox = new System.Windows.Forms.LinkLabel();
             this.toolStrip1.SuspendLayout();
             this.toolStrip2.SuspendLayout();
             this.toolStrip3.SuspendLayout();
@@ -139,12 +139,12 @@
             this.columnHeader1,
             this.columnHeader2});
             this.listFile.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem1,
-            listViewItem2,
-            listViewItem3,
-            listViewItem4,
-            listViewItem5,
-            listViewItem6});
+            listViewItem7,
+            listViewItem8,
+            listViewItem9,
+            listViewItem10,
+            listViewItem11,
+            listViewItem12});
             this.listFile.Location = new System.Drawing.Point(409, 28);
             this.listFile.Name = "listFile";
             this.listFile.Size = new System.Drawing.Size(197, 202);
@@ -182,7 +182,8 @@
             this.toolStripInfoRom,
             this.toolStripDebug,
             this.toolStripVentana,
-            this.toolStripSplitButton1});
+            this.toolStripSplitButton1,
+            this.toolStripLanguage});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
@@ -207,8 +208,8 @@
             this.toolStripInfoRom.Image = ((System.Drawing.Image)(resources.GetObject("toolStripInfoRom.Image")));
             this.toolStripInfoRom.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripInfoRom.Name = "toolStripInfoRom";
-            this.toolStripInfoRom.Size = new System.Drawing.Size(144, 22);
-            this.toolStripInfoRom.Text = "Información del juego";
+            this.toolStripInfoRom.Size = new System.Drawing.Size(136, 22);
+            this.toolStripInfoRom.Text = "Información del rom";
             this.toolStripInfoRom.Click += new System.EventHandler(this.toolStripInfoRom_Click);
             // 
             // toolStripDebug
@@ -234,9 +235,7 @@
             // toolStripSplitButton1
             // 
             this.toolStripSplitButton1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.recargarPluginsToolStripMenuItem,
-            this.liberarPluginsToolStripMenuItem,
-            this.cargarPluginsToolStripMenuItem});
+            this.recargarPluginsToolStripMenuItem});
             this.toolStripSplitButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripSplitButton1.Image")));
             this.toolStripSplitButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripSplitButton1.Name = "toolStripSplitButton1";
@@ -250,22 +249,6 @@
             this.recargarPluginsToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
             this.recargarPluginsToolStripMenuItem.Text = "Recargar plugins";
             this.recargarPluginsToolStripMenuItem.Click += new System.EventHandler(this.recargarPluginsToolStripMenuItem_Click);
-            // 
-            // liberarPluginsToolStripMenuItem
-            // 
-            this.liberarPluginsToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("liberarPluginsToolStripMenuItem.Image")));
-            this.liberarPluginsToolStripMenuItem.Name = "liberarPluginsToolStripMenuItem";
-            this.liberarPluginsToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
-            this.liberarPluginsToolStripMenuItem.Text = "Liberar plugins";
-            this.liberarPluginsToolStripMenuItem.Click += new System.EventHandler(this.liberarPluginsToolStripMenuItem_Click);
-            // 
-            // cargarPluginsToolStripMenuItem
-            // 
-            this.cargarPluginsToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("cargarPluginsToolStripMenuItem.Image")));
-            this.cargarPluginsToolStripMenuItem.Name = "cargarPluginsToolStripMenuItem";
-            this.cargarPluginsToolStripMenuItem.Size = new System.Drawing.Size(162, 22);
-            this.cargarPluginsToolStripMenuItem.Text = "Cargar plugins";
-            this.cargarPluginsToolStripMenuItem.Click += new System.EventHandler(this.cargarPluginsToolStripMenuItem_Click);
             // 
             // btnDescomprimir
             // 
@@ -412,12 +395,35 @@
             this.toolAbrirComoItemScreen.Text = "Screen";
             this.toolAbrirComoItemScreen.Click += new System.EventHandler(this.toolAbrirComoItemScreen_Click);
             // 
+            // toolStripLanguage
+            // 
+            this.toolStripLanguage.Enabled = false;
+            this.toolStripLanguage.Image = ((System.Drawing.Image)(resources.GetObject("toolStripLanguage.Image")));
+            this.toolStripLanguage.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripLanguage.Name = "toolStripLanguage";
+            this.toolStripLanguage.Size = new System.Drawing.Size(96, 22);
+            this.toolStripLanguage.Text = "Languages";
+            // 
+            // linkAboutBox
+            // 
+            this.linkAboutBox.AutoSize = true;
+            this.linkAboutBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.linkAboutBox.LinkColor = System.Drawing.SystemColors.HotTrack;
+            this.linkAboutBox.Location = new System.Drawing.Point(409, 237);
+            this.linkAboutBox.Name = "linkAboutBox";
+            this.linkAboutBox.Size = new System.Drawing.Size(77, 13);
+            this.linkAboutBox.TabIndex = 13;
+            this.linkAboutBox.TabStop = true;
+            this.linkAboutBox.Text = "Acerca de...";
+            this.linkAboutBox.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkAboutBox_LinkClicked);
+            // 
             // Sistema
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
             this.ClientSize = new System.Drawing.Size(644, 537);
+            this.Controls.Add(this.linkAboutBox);
             this.Controls.Add(this.toolStrip3);
             this.Controls.Add(this.toolStrip2);
             this.Controls.Add(this.panelObj);
@@ -471,14 +477,14 @@
         private System.Windows.Forms.Panel panelObj;
         private System.Windows.Forms.ToolStripDropDownButton toolStripSplitButton1;
         private System.Windows.Forms.ToolStripMenuItem recargarPluginsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem liberarPluginsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem cargarPluginsToolStripMenuItem;
         private System.Windows.Forms.ToolStrip toolStrip2;
         private System.Windows.Forms.ToolStripSplitButton toolStripSplitButton2;
         private System.Windows.Forms.ToolStripMenuItem borrarPaletaToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem borrarTileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem borrarScreenToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem borrarCeldasToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSplitButton toolStripLanguage;
+        private System.Windows.Forms.LinkLabel linkAboutBox;
 
     }
 }

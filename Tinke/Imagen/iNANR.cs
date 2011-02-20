@@ -158,5 +158,18 @@ namespace Tinke
             if (Convert.ToInt32(txtTime.Text) != 0)
                 tempo.Interval = Convert.ToInt32(txtTime.Text);
         }
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog o = new SaveFileDialog();
+            o.AddExtension = true;
+            o.AutoUpgradeEnabled = true;
+            o.CheckPathExists = true;
+            o.DefaultExt = ".gif";
+            o.Filter = "Imagen animada gif (*.gif)|*.gif";
+            o.OverwritePrompt = true;
+
+            if (o.ShowDialog() == DialogResult.OK)
+                Convertir.CrearGif(o.FileName, bitAni, Convert.ToInt32(txtTime.Text) / 10, 0x00);            
+        }
     }
 }

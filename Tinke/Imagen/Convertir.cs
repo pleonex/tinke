@@ -24,6 +24,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Drawing;
+using System.IO;
+using System.Windows.Media.Imaging;
 
 namespace Tinke
 {
@@ -142,5 +144,100 @@ namespace Tinke
             return bits4.ToArray();
         }
 
+        /// <summary>
+        /// Modifica algunas propiedades de un archivo gif
+        /// </summary>
+        /// <param name="gif">Ruta donde se encuentra el archivo a modificar</param>
+        /// <param name="delay">1/100 segundos entre frames</param>
+        /// <param name="loops">Número de repeticiones. 0 para infinito, -1 para ninguna</param>
+        public static void ModificarGif(string gif, int delay, int loops)
+        {
+            BinaryReader br = new BinaryReader(File.OpenRead(gif));
+            MemoryStream ms = new MemoryStream();
+            BinaryWriter bw = new BinaryWriter(ms);
+
+            // Cabecera por defecto
+            bw.Write(br.ReadBytes(0xD));
+            // Añadimos campo de animación
+            if (loops >= 0)
+            {
+                List<byte> bAni = new List<byte>();
+                byte[] rawData = new Byte[] {
+	                0x21, 0xFF, 0x0B, 0x4E, 0x45, 0x54, 0x53, 0x43, 0x41, 0x50, 0x45, 0x32,
+	                0x2E, 0x30, 0x03, 0x01 };
+                bAni.AddRange(rawData);
+                bAni.Add(Convert.ToByte(loops & 0xff));
+                bAni.Add(Convert.ToByte((loops >> 8) & 0xff));
+                bAni.Add(0x00); // Terminator
+                bw.Write(bAni.ToArray());
+            }
+            // Buscamos cada campo de cada frame y le cambiamos el delay
+            byte first, second;
+            first = br.ReadByte();
+            bw.Write(first);
+
+            while (br.BaseStream.Position + 1 != br.BaseStream.Length)
+            {
+                if (first == 0x21)
+                {
+                    second = br.ReadByte();
+                    bw.Write(second);
+                    if (second == 0xF9)
+                    {
+                        bw.Write(br.ReadBytes(2));
+                        bw.Write(Convert.ToByte(delay & 0xff));
+                        bw.Write(Convert.ToByte((delay >> 8) & 0xff));
+                        br.ReadBytes(2); // Cambiamos esos dos bytes que son el valor del delay
+                    }
+                    else
+                    {
+                        first = second;
+                        continue;
+                    }
+                }
+
+                first = br.ReadByte();
+                bw.Write(first);
+            }
+
+            br.Close();
+            br.Dispose();
+            File.Delete(gif);
+            FileStream fs = new FileStream(gif, FileMode.Create);
+            fs.Write(ms.ToArray(), 0, (int)ms.Length);
+            fs.Flush();
+            fs.Close();
+            fs.Dispose();
+            ms.Close();
+            ms.Dispose();
+            bw.Close();
+            bw.Dispose();
+        }
+        /// <summary>
+        /// Crea un archivos animado gif apartir de varios archivos bitmap
+        /// </summary>
+        /// <param name="fout">Ruta de salida del archivo</param>
+        /// <param name="frames">Cada uno de los frames</param>
+        /// <param name="delay">1/100 seg entre frame</param>
+        /// <param name="loops">Número de repeticiones. 0 para infinito, -1 para ninguna</param>
+        public static void CrearGif(string fout, Bitmap[] frames, int delay, int loops)
+        {
+            GifBitmapEncoder encoder = new GifBitmapEncoder();
+
+            for (int i = 0; i < frames.Length; i++)
+            {
+                MemoryStream ms = new MemoryStream();
+                frames[i].Save(ms, System.Drawing.Imaging.ImageFormat.Gif);
+
+                BitmapFrame bf = BitmapFrame.Create(ms);
+                encoder.Frames.Add(bf);
+            }
+            FileStream fs = new FileStream(fout, FileMode.Create);
+            encoder.Save(fs);
+            fs.Close();
+            fs.Dispose();
+
+            ModificarGif(fout, delay, loops);
+        }
     }
 }
