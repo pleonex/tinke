@@ -1,0 +1,9 @@
+#summary Preguntas freguentes
+#labels Featured
+
+== Alerta "El plugin x.dll está obsoleto" ==
+
+Esta alerta puede aparecer por dos motivos:
+
+ # La DLL del plugin puede haber sido compilada para otra plataforma distinta a *"Any CPU"* como x86 o x64. NET Framework, detecta esto y devuelve un error, en ese caso habrá que volver a compilar el plugin con la plataforma correcta.
+ # El sistema de plugins (interfaces iPlugin e iPluginGame) puede haber cambiado al tratarse de una *nueva versión* y por tanto habría que modificar y compilar los plugins antiguos.
