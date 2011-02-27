@@ -1,0 +1,116 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Language name="Español">
+  <Sistema>
+      <S01>Abrir ROM</S01>
+      <S02>Información del juego</S02>
+      <S03>Mensajes debug</S03>
+      <S04>Modo ventana</S04>
+      <S05>Plugins</S05>
+      <S06>Recargar plugins</S06>
+      <S07>Campo</S07>
+      <S08>Valor</S08>
+      <S09>Nombre</S09>
+      <S0A>ID</S0A>
+      <S0B>Offset</S0B>
+      <S0C>Tamaño</S0C>
+      <S0D>Tipo</S0D>
+      <S0E>Ruta</S0E>
+      <S0F>Acerca de...</S0F>
+      <S10>Borrar cadena</S10>
+      <S11>Borrar paleta</S11>
+      <S12>Borrar tile</S12>
+      <S13>Borrar screen</S13>
+      <S14>Borrar celdas</S14>
+      <S15>Borrar animación</S15>
+      <S16>Abrir como...</S16>
+      <S17>Paleta</S17>
+      <S18>Tile</S18>
+      <S19>Screen</S19>
+      <S1A>Descomprimir</S1A>
+      <S1B>Extraer</S1B>
+      <S1C>Ver</S1C>
+      <S1D>Hexadecimal</S1D>
+      <S1E>Languages</S1E>
+    </Sistema>
+  <RomInfo>
+      <S01>Información de la ROM</S01>
+      <S02>Banner</S02>
+      <S03>Guardar como...</S03>
+      <S04>Versión:</S04>
+      <S05>Reservado:</S05>
+      <S06>Japonés</S06>
+      <S07>Inglés</S07>
+      <S08>Francés</S08>
+      <S09>Alemán</S09>
+      <S0A>Italiano</S0A>
+      <S0B>Español</S0B>
+      <S0C>Posición</S0C>
+      <S0D>Campo</S0D>
+      <S0E>Valor</S0E>
+      <S0F>Título del juego</S0F>
+      <S10>Código del juego</S10>
+      <S11>Código del creador</S11>
+      <S12>Código de consola</S12>
+      <S13>Semillas de encriptación</S13>
+      <S14>Tamaño del archivo</S14>
+      <S15>Reservado</S15>
+      <S16>Versión de la ROM</S16>
+      <S17>Indicadores internos</S17>
+      <S18>ARM9 rom offset</S18>
+      <S19>ARM9 entry address</S19>
+      <S1A>ARM9 load address</S1A>
+      <S1B>ARM9 tamaño</S1B>
+      <S1C>ARM7 rom offset</S1C>
+      <S1D>ARM7 entry address</S1D>
+      <S1E>ARM7 load address</S1E>
+      <S1F>ARM7 tamaño</S1F>
+      <S20>File Name Table (FNT) offset</S20>
+      <S21>File Name Table (FNT) tamaño</S21>
+      <S22>File Allocation Table (FAT) offset</S22>
+      <S23>File Allocation Table (FAT) tamaño</S23>
+      <S24>ARM9 overlay offset</S24>
+      <S25>ARM9 overlay tamaño</S25>
+      <S26>ARM7 overlay offset</S26>
+      <S27>ARM7 overlay tamaño</S27>
+      <S28>Ajuste de control normales</S28>
+      <S29>Ajuste de seguridad normales</S29>
+      <S2A>Offset del icono del banner</S2A>
+      <S2B>Área segura CRC</S2B>
+      <S2C>Tiempo de espera de transferencia segura</S2C>
+      <S2D>ARM9 autoload</S2D>
+      <S2E>ARM7 autoload</S2E>
+      <S2F>Seguridad deshabilitada</S2F>
+      <S30>Tamaño ROM</S30>
+      <S31>Tamaño cabecera</S31>
+      <S32>Reservado</S32>
+      <S33>CRC del logo de Nintendo</S33>
+      <S34>CRC de la cabecera</S34>
+      <S35>Offset de debug de ROM</S35>
+      <S36>Tamaño de debug</S36>
+      <S37>Offset de la RAM de debug</S37>
+      <S38>Reservado</S38>
+	  <S39>Inválido</S39>
+    </RomInfo>
+	<Autores>
+	  <S01>Acerca de</S01>
+	  <S02>Versión</S02>
+	  <S03>Programado por:</S03>
+	  <S04>Traducción al español por</S04>
+	  <S05>Código de fuente:</S05>
+	  <S06>Este programa se encuentra bajo los términos de la
+	  licencia GPL V3.</S06>
+	  <S07>Este programa se ha realizado gracias a la información y a las herramientas de código
+	  abierto encontradas en las siguientes páginas.</S07>
+	  <S08>Librería de descompresión de formatos</S08>
+	  <S09>Información técnica sobre estructuras de las roms.</S09>
+	  <S0A>Información sobre estructura de formatos de Nintendo.</S0A>
+	  <S0B>Iconos usados en este programa.</S0B>
+	  <S0C>pleoNeX</S0C>
+	</Autores>
+	<Messages>
+	  <S01>Error</S01>
+	  <S02>No se pudo identificar el juego. ¿El archivo es un juego para NDS?</S02>
+	  <S03>Analizando el juego:</S03>
+	  <S04>Datos del juego:</S04>
+	</Messages>
+</Language>

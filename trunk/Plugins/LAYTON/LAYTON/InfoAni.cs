@@ -48,7 +48,6 @@ namespace LAYTON
         {
             SaveFileDialog o = new SaveFileDialog();
             o.AddExtension = true;
-            o.AutoUpgradeEnabled = true;
             o.CheckPathExists = true;
             o.DefaultExt = ".bmp";
             o.Filter = "Imagen BitMaP (*.bmp)|*.bmp";
@@ -61,7 +60,6 @@ namespace LAYTON
         {
             SaveFileDialog o = new SaveFileDialog();
             o.AddExtension = true;
-            o.AutoUpgradeEnabled = true;
             o.CheckPathExists = true;
             o.DefaultExt = ".gif";
             o.Filter = "Animación gif (*.gif)|*.gif";

@@ -29,6 +29,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.IO;
 using System.Threading;
+using System.Xml.Linq;
 using PluginInterface;
 
 namespace Tinke
@@ -53,6 +54,39 @@ namespace Tinke
             TextWriter tw = new StringWriter(sb);
             Console.SetOut(tw);
 
+            #region Idioma
+            if (!File.Exists(Application.StartupPath + "\\Tinke.xml"))
+            {
+                File.WriteAllText(Application.StartupPath + "\\Tinke.xml", "<?xml version=\"1.0\" encoding=\"utf-8\"?>" +
+                                 "\n<Tinke>\n  <Options>\n    <Language>Español</Language>\n  </Options>\n</Tinke>",
+                                 Encoding.UTF8);
+            }
+
+            // TODO: controlar excepción de fallo al leer xml
+            XElement xml = XElement.Load(Application.StartupPath + "\\Tinke.xml");
+
+            foreach (string langFile in Directory.GetFiles(Application.StartupPath + "\\langs"))
+            {
+                if (!langFile.EndsWith(".xml"))
+                    continue; ;
+
+                string flag = Application.StartupPath + "\\langs\\" + langFile.Substring(langFile.Length - 9, 5) + ".png";
+                Image iFlag;
+                if (File.Exists(flag))
+                    iFlag = Image.FromFile(flag);
+                else
+                    iFlag = iconos.Images[1];
+
+                XElement xLang = XElement.Load(langFile);
+
+                toolStripLanguage.DropDownItems.Add(
+                    xLang.Attribute("name").Value,
+                    iFlag,
+                    ToolStripLang_Click);
+            }
+
+            LeerIdioma();
+            #endregion
             this.Load += new EventHandler(Sistema_Load);
 
         }
@@ -60,7 +94,6 @@ namespace Tinke
         {
             // Iniciamos la lectura del archivo.
             OpenFileDialog o = new OpenFileDialog();
-            o.AutoUpgradeEnabled = true;
             o.CheckFileExists = true;
             o.DefaultExt = ".nds";
             if (o.ShowDialog() != System.Windows.Forms.DialogResult.OK)
@@ -100,6 +133,53 @@ namespace Tinke
 
             this.Activate();
             debug.Activate();
+        }
+
+        private void LeerIdioma()
+        {
+            XElement xml = Tools.Helper.ObtenerTraduccion("Sistema");
+
+            toolStripOpen.Text = xml.Element("S01").Value;
+            toolStripInfoRom.Text = xml.Element("S02").Value;
+            toolStripDebug.Text = xml.Element("S03").Value;
+            toolStripVentana.Text = xml.Element("S04").Value;
+            toolStripPlugin.Text = xml.Element("S05").Value;
+            recargarPluginsToolStripMenuItem.Text = xml.Element("S06").Value;
+            toolStripLanguage.Text = xml.Element("S1E").Value;
+            columnHeader1.Text = xml.Element("S07").Value;
+            columnHeader2.Text = xml.Element("S08").Value;
+            listFile.Items[0].Text = xml.Element("S09").Value;
+            listFile.Items[1].Text = xml.Element("S0A").Value;
+            listFile.Items[2].Text = xml.Element("S0B").Value;
+            listFile.Items[3].Text = xml.Element("S0C").Value;
+            listFile.Items[4].Text = xml.Element("S0D").Value;
+            listFile.Items[5].Text = xml.Element("S0E").Value;
+            linkAboutBox.Text = xml.Element("S0F").Value;
+            toolStripDeleteChain.Text = xml.Element("S10").Value;
+            borrarPaletaToolStripMenuItem.Text = xml.Element("S11").Value;
+            borrarTileToolStripMenuItem.Text = xml.Element("S12").Value;
+            borrarScreenToolStripMenuItem.Text = xml.Element("S13").Value;
+            borrarCeldasToolStripMenuItem.Text = xml.Element("S14").Value;
+            borrarAnimaciónToolStripMenuItem.Text = xml.Element("S15").Value;
+            s10ToolStripMenuItem.Text = xml.Element("S10").Value;
+            toolStripOpenAs.Text = xml.Element("S16").Value;
+            toolStripMenuItem1.Text = xml.Element("S17").Value;
+            toolStripMenuItem2.Text = xml.Element("S18").Value;
+            toolStripMenuItem3.Text = xml.Element("S19").Value;
+            btnDescomprimir.Text = xml.Element("S1A").Value;
+            btnExtraer.Text = xml.Element("S1B").Value;
+            btnSee.Text = xml.Element("S1C").Value;
+            btnHex.Text = xml.Element("S1D").Value;
+        }
+        private void ToolStripLang_Click(Object sender, EventArgs e)
+        {
+            string idioma = ((ToolStripMenuItem)sender).Text;
+            System.Xml.Linq.XElement xml = System.Xml.Linq.XElement.Load(Application.StartupPath + "\\Tinke.xml");
+            xml.Element("Options").Element("Language").Value = idioma;
+            xml.Save(Application.StartupPath + "\\Tinke.xml");
+            LeerIdioma();
+            romInfo.LeerIdioma();
+            // TODO: añadir resto de ventanas
         }
 
         private Carpeta FNT(string file, UInt32 offset, UInt32 size)
@@ -315,6 +395,7 @@ namespace Tinke
 
             TreeNode[] nodos = new TreeNode[selected.Nodes.Count]; selected.Nodes.CopyTo(nodos, 0);
             treeSystem.SelectedNode.Tag = selected.Tag;
+            accion.IDSelect = Convert.ToInt32(selected.Tag);
             selected.Nodes.Clear();
             treeSystem.SelectedNode.Nodes.AddRange((TreeNode[])nodos);
 
@@ -360,14 +441,14 @@ namespace Tinke
 
         private void toolStripInfoRom_Click(object sender, EventArgs e)
         {
-            if (!toolStripInfoRom.Checked)
+            if (toolStripInfoRom.Checked)
                 romInfo.Show();
             else
                 romInfo.Hide();
         }
         private void toolStripDebug_Click(object sender, EventArgs e)
         {
-            if (!toolStripDebug.Checked)
+            if (toolStripDebug.Checked)
                 debug.Show();
             else
                 debug.Hide();
@@ -380,6 +461,7 @@ namespace Tinke
         {
             if (toolStripVentana.Checked)
             {
+                this.Width = 650;
                 btnDesplazar.Enabled = false;
                 if (panelObj.Controls.Count > 0)
                 {
@@ -416,7 +498,7 @@ namespace Tinke
             accion.Cargar_Plugins();
         }
 
-        private void toolStripSplitButton2_ButtonClick(object sender, EventArgs e)
+        private void s10ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             accion.Delete_PicturesSaved();
         }
@@ -435,6 +517,10 @@ namespace Tinke
         private void borrarCeldasToolStripMenuItem_Click(object sender, EventArgs e)
         {
             accion.Delete_PicturesSaved(Formato.Celdas);
+        }
+        private void borrarAnimaciónToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            accion.Delete_PicturesSaved(Formato.Animación);
         }
 
         private void AbrirComo(Formato formato)
@@ -474,5 +560,7 @@ namespace Tinke
             Autores ven = new Autores();
             ven.ShowDialog();
         }
+
+
     }
 }

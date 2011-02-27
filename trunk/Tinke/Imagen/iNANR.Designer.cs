@@ -214,8 +214,6 @@ namespace Tinke
             // 
             // comboAni
             // 
-            this.comboAni.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
-            this.comboAni.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.comboAni.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboAni.FormattingEnabled = true;
             this.comboAni.Location = new System.Drawing.Point(359, 360);

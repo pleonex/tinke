@@ -162,7 +162,6 @@ namespace Tinke
         {
             SaveFileDialog o = new SaveFileDialog();
             o.AddExtension = true;
-            o.AutoUpgradeEnabled = true;
             o.CheckPathExists = true;
             o.DefaultExt = ".gif";
             o.Filter = "Imagen animada gif (*.gif)|*.gif";

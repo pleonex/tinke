@@ -65,6 +65,7 @@ namespace PluginInterface
         void Set_Files(Carpeta archivos);
         Carpeta Get_Files();
 
+        string Get_Language();
         string Get_TempFolder();
 
         event Action<string, byte>  DescomprimirEvent;

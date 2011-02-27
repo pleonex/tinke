@@ -53,7 +53,6 @@ namespace Tinke
                     break;
                 }
             }
-
         }
         ~PluginHost()
         {
@@ -105,6 +104,11 @@ namespace Tinke
         public string Get_TempFolder()
         {
             return tempFolder;
+        }
+        public string Get_Language()
+        {
+            System.Xml.Linq.XElement xml = System.Xml.Linq.XElement.Load(Application.StartupPath + "\\Tinke.xml");
+            return xml.Element("Options").Element("Language").Value;
         }
 
         public event Action<string, byte> DescomprimirEvent;

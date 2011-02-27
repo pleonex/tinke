@@ -14,7 +14,7 @@ namespace Tinke.Nitro
             Estructuras.ROMHeader nds = new Estructuras.ROMHeader();
 
             BinaryReader br = new BinaryReader(File.OpenRead(file));
-            Console.WriteLine("Analizando ROM: " + new FileInfo(file).Name);
+            Console.WriteLine(Tools.Helper.ObtenerTraduccion("Messages", "S03") + ' ' + new FileInfo(file).Name);
 
             nds.gameTitle = br.ReadChars(12);
             nds.gameCode = br.ReadChars(4);
@@ -70,6 +70,9 @@ namespace Tinke.Nitro
             br.Close();
             br.Dispose();
 
+            Console.WriteLine(Tools.Helper.ObtenerTraduccion("Messages", "S04") + '\n' + new String(nds.gameTitle).Replace("\0", "") + 
+                " (" + new String(nds.gameCode).Replace("\0", "") + ')');
+
             return nds;
         }
         public static string CodeToString(Type enumeracion, char[] id)
@@ -106,6 +109,8 @@ namespace Tinke.Nitro
 
             br.Close();
             br.Dispose();
+
+            Console.WriteLine(bn.englishTitle.Replace("\0", ""));
 
             return bn;
         }

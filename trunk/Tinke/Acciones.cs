@@ -369,9 +369,11 @@ namespace Tinke
             {
                 if (formato == Formato.Paleta)
                 {
-                    pluginHost.Set_NCLR(Imagen_NCLR.Leer_Basico(tempFile));
+                    NCLR paleta = Imagen_NCLR.Leer_Basico(tempFile);
+                    pluginHost.Set_NCLR(paleta);
                     File.Delete(tempFile);
-                    return new Control();
+                    
+                    return new iNCLR(paleta);
                 }               
                 else if (formato == Formato.Imagen)
                 {
