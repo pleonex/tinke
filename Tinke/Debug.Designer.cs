@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Debug));
-            this.txtInfo = new System.Windows.Forms.TextBox();
+            this.txtInfo = new System.Windows.Forms.RichTextBox();
             this.SuspendLayout();
             // 
             // txtInfo
@@ -37,12 +37,10 @@
             this.txtInfo.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
             this.txtInfo.Dock = System.Windows.Forms.DockStyle.Fill;
             this.txtInfo.Location = new System.Drawing.Point(0, 0);
-            this.txtInfo.Multiline = true;
             this.txtInfo.Name = "txtInfo";
-            this.txtInfo.ReadOnly = true;
-            this.txtInfo.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.txtInfo.Size = new System.Drawing.Size(644, 152);
-            this.txtInfo.TabIndex = 0;
+            this.txtInfo.TabIndex = 1;
+            this.txtInfo.Text = "";
             // 
             // Debug
             // 
@@ -60,12 +58,12 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "Mensajes";
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
         #endregion
 
-        private System.Windows.Forms.TextBox txtInfo;
+        private System.Windows.Forms.RichTextBox txtInfo;
+
     }
 }

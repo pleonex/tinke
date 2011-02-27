@@ -38,6 +38,7 @@ namespace Tinke
         int startTile;
 
         string oldDepth;
+        int oldTiles;
 
         public iNCGR()
         {
@@ -54,6 +55,21 @@ namespace Tinke
             this.numericHeight.Value = pic.Image.Height;
             this.comboDepth.Text = (tile.rahc.depth == ColorDepth.Depth4Bit ? "4 bpp" : "8 bpp");
             oldDepth = comboDepth.Text;
+            switch (tile.orden)
+            {
+                case Orden_Tiles.No_Tiles:
+                    oldTiles = 0;
+                    comboBox1.SelectedIndex = 0;
+                    break;
+                case Orden_Tiles.Horizontal:
+                    oldTiles = 1;
+                    comboBox1.SelectedIndex = 1;
+                    break;
+                case Orden_Tiles.Vertical:
+                    oldTiles = 2;
+                    comboBox1.SelectedIndex = 2;
+                    break;
+            }
             this.comboDepth.SelectedIndexChanged += new EventHandler(comboDepth_SelectedIndexChanged);
             this.numericWidth.ValueChanged += new EventHandler(numericSize_ValueChanged);
             this.numericHeight.ValueChanged += new EventHandler(numericSize_ValueChanged);
@@ -95,8 +111,17 @@ namespace Tinke
         }
         private void Actualizar_Imagen()
         {
-            tile.rahc.nTilesX = (ushort)(numericWidth.Value / 8);
-            tile.rahc.nTilesY = (ushort)(numericHeight.Value / 8);
+            if (tile.orden != Orden_Tiles.No_Tiles)
+            {
+                tile.rahc.nTilesX = (ushort)(numericWidth.Value / 8);
+                tile.rahc.nTilesY = (ushort)(numericHeight.Value / 8);
+            }
+            else
+            {
+                tile.rahc.nTilesX = (ushort)numericWidth.Value;
+                tile.rahc.nTilesY = (ushort)numericHeight.Value;
+            }
+
             pic.Image = Imagen_NCGR.Crear_Imagen(tile, paleta, startTile);
         }
         private void Info()
@@ -142,6 +167,30 @@ namespace Tinke
             ven.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             ven.MaximizeBox = false;
             ven.Show();
+        }
+
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (oldTiles == comboBox1.SelectedIndex)
+                return;
+
+            switch (comboBox1.SelectedIndex)
+            {
+                case 0:
+                    tile.orden = Orden_Tiles.No_Tiles;
+                    tile.rahc.tileData.tiles[0] = Convertir.TilesToBytes(tile.rahc.tileData.tiles);
+                    break;
+                case 1:
+                    tile.orden = Orden_Tiles.Horizontal;
+                    tile.rahc.tileData.tiles = Convertir.BytesToTiles(tile.rahc.tileData.tiles[0]);
+                    break;
+                case 2:
+                    tile.orden = Orden_Tiles.Vertical;
+                    break;
+            }
+            oldTiles = comboBox1.SelectedIndex;
+
+            Actualizar_Imagen();
         }
     }
 }

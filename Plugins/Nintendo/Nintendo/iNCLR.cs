@@ -114,7 +114,6 @@ namespace Nintendo
         {
             SaveFileDialog o = new SaveFileDialog();
             o.AddExtension = true;
-            o.AutoUpgradeEnabled = true;
             o.CheckPathExists = true;
             o.DefaultExt = ".png";
             o.Filter = "Imagen Portable Network Graphics (*.png)|*.png";

@@ -198,8 +198,7 @@
             // 
             // comboDepth
             // 
-            this.comboDepth.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
-            this.comboDepth.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.comboDepth.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboDepth.FormattingEnabled = true;
             this.comboDepth.Items.AddRange(new object[] {
             "4 bpp",

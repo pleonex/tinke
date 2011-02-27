@@ -173,7 +173,7 @@ namespace Tinke
                     {
                         try
                         {
-                            if (tile.rahc.tileData.tiles[w + h * width].Length == 0)
+                            if (tile.rahc.tileData.tiles[0].Length == 0)
                                 goto Fin;
                             imagen.SetPixel(
                                 w,

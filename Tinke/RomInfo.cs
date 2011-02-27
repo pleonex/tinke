@@ -1,4 +1,25 @@
-﻿using System;
+﻿/*
+ * Copyright (C) 2011  pleoNeX
+ *
+ *   This program is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+ *
+ * Programador: pleoNeX
+ * Programa utilizado: Microsoft Visual C# 2010 Express
+ * Fecha: 20/02/2011
+ * 
+ */
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -18,6 +39,7 @@ namespace Tinke
         {
             InitializeComponent();
             this.Location = new Point(670, 10);
+            this.btnBannerGuardar.Image = Properties.Resources.picture_save;
 
             try 
             {
@@ -27,12 +49,85 @@ namespace Tinke
             }
             catch
             {
-                MessageBox.Show("No se puedo leer el archivo.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                Console.WriteLine("No se pudo abrir la ROM: " + archivo);
+                MessageBox.Show(Tools.Helper.ObtenerTraduccion("Messages", "S02"),
+                    Tools.Helper.ObtenerTraduccion("Messages", "S01"),
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Console.WriteLine(Tools.Helper.ObtenerTraduccion("Messages", "S02") + ": " + archivo);
                 return;
             }
+
+            LeerIdioma();
+        }
+        private void RomInfo_VisibleChanged(object sender, EventArgs e)
+        {
+            if (this.Visible)
+                LeerIdioma();
         }
 
+        public void LeerIdioma()
+        {
+            System.Xml.Linq.XElement xml = Tools.Helper.ObtenerTraduccion("RomInfo");
+
+            this.Text = xml.Element("S01").Value;
+            groupBanner.Text = xml.Element("S02").Value;
+            btnBannerGuardar.Text = xml.Element("S03").Value;
+            label2.Text = xml.Element("S04").Value;
+            label4.Text = xml.Element("S05").Value;
+            lblGameTitle.Text = xml.Element("S0F").Value;
+            comboBannerLang.Text = xml.Element("S06").Value;
+            comboBannerLang.Items[0] = xml.Element("S06").Value;
+            comboBannerLang.Items[1] = xml.Element("S07").Value;
+            comboBannerLang.Items[2] = xml.Element("S08").Value;
+            comboBannerLang.Items[3] = xml.Element("S09").Value;
+            comboBannerLang.Items[4] = xml.Element("S0A").Value;
+            comboBannerLang.Items[5] = xml.Element("S0B").Value;
+            columnPosicion.Text = xml.Element("S0C").Value;
+            columnCampo.Text = xml.Element("S0D").Value;
+            columnValor.Text = xml.Element("S0E").Value;
+            listInfo.Items[0].SubItems[1].Text = xml.Element("S0F").Value;
+            listInfo.Items[1].SubItems[1].Text = xml.Element("S10").Value;
+            listInfo.Items[2].SubItems[1].Text = xml.Element("S11").Value;
+            listInfo.Items[3].SubItems[1].Text = xml.Element("S12").Value;
+            listInfo.Items[4].SubItems[1].Text = xml.Element("S13").Value;
+            listInfo.Items[5].SubItems[1].Text = xml.Element("S14").Value;
+            listInfo.Items[6].SubItems[1].Text = xml.Element("S15").Value;
+            listInfo.Items[7].SubItems[1].Text = xml.Element("S16").Value;
+            listInfo.Items[8].SubItems[1].Text = xml.Element("S17").Value;
+            listInfo.Items[9].SubItems[1].Text = xml.Element("S18").Value;
+            listInfo.Items[10].SubItems[1].Text = xml.Element("S19").Value;
+            listInfo.Items[11].SubItems[1].Text = xml.Element("S1A").Value;
+            listInfo.Items[12].SubItems[1].Text = xml.Element("S1B").Value;
+            listInfo.Items[13].SubItems[1].Text = xml.Element("S1C").Value;
+            listInfo.Items[14].SubItems[1].Text = xml.Element("S1D").Value;
+            listInfo.Items[15].SubItems[1].Text = xml.Element("S1E").Value;
+            listInfo.Items[16].SubItems[1].Text = xml.Element("S1F").Value;
+            listInfo.Items[17].SubItems[1].Text = xml.Element("S20").Value;
+            listInfo.Items[18].SubItems[1].Text = xml.Element("S21").Value;
+            listInfo.Items[19].SubItems[1].Text = xml.Element("S22").Value;
+            listInfo.Items[20].SubItems[1].Text = xml.Element("S23").Value;
+            listInfo.Items[21].SubItems[1].Text = xml.Element("S24").Value;
+            listInfo.Items[22].SubItems[1].Text = xml.Element("S25").Value;
+            listInfo.Items[23].SubItems[1].Text = xml.Element("S26").Value;
+            listInfo.Items[24].SubItems[1].Text = xml.Element("S27").Value;
+            listInfo.Items[25].SubItems[1].Text = xml.Element("S28").Value;
+            listInfo.Items[26].SubItems[1].Text = xml.Element("S29").Value;
+            listInfo.Items[27].SubItems[1].Text = xml.Element("S2A").Value;
+            listInfo.Items[28].SubItems[1].Text = xml.Element("S2B").Value;
+            listInfo.Items[29].SubItems[1].Text = xml.Element("S2C").Value;
+            listInfo.Items[30].SubItems[1].Text = xml.Element("S2D").Value;
+            listInfo.Items[31].SubItems[1].Text = xml.Element("S2E").Value;
+            listInfo.Items[32].SubItems[1].Text = xml.Element("S2F").Value;
+            listInfo.Items[33].SubItems[1].Text = xml.Element("S30").Value;
+            listInfo.Items[34].SubItems[1].Text = xml.Element("S31").Value;
+            listInfo.Items[35].SubItems[1].Text = xml.Element("S32").Value;
+            listInfo.Items[36].SubItems[1].Text = xml.Element("S33").Value;
+            listInfo.Items[37].SubItems[1].Text = xml.Element("S34").Value;
+            listInfo.Items[38].SubItems[1].Text = xml.Element("S35").Value;
+            listInfo.Items[39].SubItems[1].Text = xml.Element("S36").Value;
+            listInfo.Items[40].SubItems[1].Text = xml.Element("S37").Value;
+            listInfo.Items[41].SubItems[1].Text = xml.Element("S38").Value;
+
+        }
         private void Mostrar_Informacion(Nitro.Estructuras.ROMHeader cabecera, Nitro.Estructuras.Banner banner)
         {
             this.cabecera = cabecera;
@@ -86,7 +181,8 @@ namespace Tinke
             picIcon.Image = Nitro.NDS.IconoToBitmap(banner.tileData, banner.palette);
 
             txtBannerVer.Text = banner.version.ToString();
-            txtBannerCRC.Text = String.Format("{0:X}", banner.CRC16) + " (" + (banner.checkCRC ? "OK)" : "Inválido)");
+            txtBannerCRC.Text = String.Format("{0:X}", banner.CRC16) + " (" + 
+                (banner.checkCRC ? "OK)" : Tools.Helper.ObtenerTraduccion("RomInfo", "S39") + ')');
             txtBannerReserved.Text = Tools.Helper.BytesToHexString(banner.reserved);
 
             titulos = new string[] { banner.japaneseTitle, banner.englishTitle, banner.frenchTitle, banner.germanTitle, banner.italianTitle, banner.spanishTitle };
@@ -104,7 +200,6 @@ namespace Tinke
         {
             SaveFileDialog o = new SaveFileDialog();
             o.AddExtension = true;
-            o.AutoUpgradeEnabled = true;
             o.CheckPathExists = true;
             o.DefaultExt = ".bmp";
             o.OverwritePrompt = true;
@@ -136,5 +231,6 @@ namespace Tinke
                     break;
             }
         }
+
     }
 }

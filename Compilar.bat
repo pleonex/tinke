@@ -1,5 +1,4 @@
 :inicio
-RMDIR /S /Q "%cd%\build"
 ECHO off
 CLS
 
@@ -15,6 +14,8 @@ IF errorlevel 3 set plat=Any CPU
 CHOICE /C SN /M "Ha elejido la configuraci¢n  %conf% y la plataforma %plat%, ¨es correcto?"
 IF errorlevel 2 goto inicio
 
+RMDIR /S /Q "%cd%\build"
+
 %windir%\microsoft.net\framework\v4.0.30319\msbuild Tinke.sln /v:minimal /p:Configuration=%conf% "/p:Platform=%plat%" "/p:OutputPath=%CD%\build\"
 
 REM Compilación de plugins de los juegos
@@ -27,5 +28,8 @@ REM Compilación de los plugins de formatos
 %windir%\microsoft.net\framework\v4.0.30319\msbuild Plugins\TXT\TXT.sln /v:minimal /p:Configuration=%conf% "/p:Platform=Any CPU" "/p:OutputPath=%CD%\build\Plugins\"
 %windir%\microsoft.net\framework\v4.0.30319\msbuild Plugins\Comun\Comun.sln /v:minimal /p:Configuration=%conf% "/p:Platform=Any CPU" "/p:OutputPath=%CD%\build\Plugins\"
 %windir%\microsoft.net\framework\v4.0.30319\msbuild Plugins\Nintendo\Nintendo.sln /v:minimal /p:Configuration=%conf% "/p:Platform=Any CPU" "/p:OutputPath=%CD%\build\Plugins\"
+
+MKDIR "%CD%\build\langs"
+COPY "%CD%\Languages\*.*" "%CD%\build\langs"
 
 PAUSE

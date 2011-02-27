@@ -1,7 +1,30 @@
-﻿using System;
+﻿/*
+ * Copyright (C) 2011  pleoNeX
+ *
+ *   This program is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+ *
+ * Programador: pleoNeX
+ * Programa utilizado: Microsoft Visual C# 2010 Express
+ * Fecha: 18/02/2011
+ * 
+ */
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Xml.Linq;
+using System.IO;
 
 namespace Tinke.Tools
 {
@@ -202,5 +225,52 @@ namespace Tinke.Tools
             return bits;
 
         }
+
+        public static XElement ObtenerTraduccion(string arbol)
+        {
+            XElement xml = XElement.Load(System.Windows.Forms.Application.StartupPath + "\\Tinke.xml");
+            string idioma = xml.Element("Options").Element("Language").Value;
+            xml = null;
+
+            foreach (string langFile in Directory.GetFiles(System.Windows.Forms.Application.StartupPath + "\\langs"))
+            {
+                if (!langFile.EndsWith(".xml"))
+                    continue;
+
+                xml = XElement.Load(langFile);
+                if (xml.Attribute("name").Value == idioma)
+                    break;
+            }
+
+            return xml.Element(arbol);
+        }
+        public static String ObtenerTraduccion(string arbol, string codigo)
+        {
+            XElement xml = XElement.Load(System.Windows.Forms.Application.StartupPath + "\\Tinke.xml");
+            string idioma = xml.Element("Options").Element("Language").Value;
+            xml = null;
+
+            foreach (string langFile in Directory.GetFiles(System.Windows.Forms.Application.StartupPath + "\\langs"))
+            {
+                if (!langFile.EndsWith(".xml"))
+                    continue;
+
+                xml = XElement.Load(langFile);
+                if (xml.Attribute("name").Value == idioma)
+                    break;
+            }
+            xml = xml.Element(arbol);
+
+            string res;
+            try { res = xml.Element(codigo).Value; }
+            catch 
+            {
+                System.Windows.Forms.MessageBox.Show("The translate language is incomplete");
+                throw new NotImplementedException("The translate language is incomplete");
+            }
+
+            return res;
+        }
+
     }
 }

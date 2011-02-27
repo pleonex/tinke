@@ -117,8 +117,6 @@
             // 
             // comboCelda
             // 
-            this.comboCelda.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
-            this.comboCelda.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.comboCelda.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboCelda.FormattingEnabled = true;
             this.comboCelda.Location = new System.Drawing.Point(46, 263);

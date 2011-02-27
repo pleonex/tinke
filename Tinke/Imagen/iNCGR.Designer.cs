@@ -87,6 +87,8 @@ namespace Tinke
             this.label2 = new System.Windows.Forms.Label();
             this.numericHeight = new System.Windows.Forms.NumericUpDown();
             this.groupProp = new System.Windows.Forms.GroupBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.label4 = new System.Windows.Forms.Label();
             this.btnSave = new System.Windows.Forms.Button();
             this.comboDepth = new System.Windows.Forms.ComboBox();
@@ -179,6 +181,8 @@ namespace Tinke
             // 
             // groupProp
             // 
+            this.groupProp.Controls.Add(this.label6);
+            this.groupProp.Controls.Add(this.comboBox1);
             this.groupProp.Controls.Add(this.label4);
             this.groupProp.Controls.Add(this.btnSave);
             this.groupProp.Controls.Add(this.comboDepth);
@@ -195,6 +199,29 @@ namespace Tinke
             this.groupProp.TabIndex = 5;
             this.groupProp.TabStop = false;
             this.groupProp.Text = "Propiedades";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(37, 298);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(72, 13);
+            this.label6.TabIndex = 11;
+            this.label6.Text = "Orden de tiles";
+            // 
+            // comboBox1
+            // 
+            this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Items.AddRange(new object[] {
+            "Sin tiles",
+            "Horizontal",
+            "Vertical"});
+            this.comboBox1.Location = new System.Drawing.Point(115, 295);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(121, 21);
+            this.comboBox1.TabIndex = 10;
+            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
             // 
             // label4
             // 
@@ -219,8 +246,7 @@ namespace Tinke
             // 
             // comboDepth
             // 
-            this.comboDepth.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
-            this.comboDepth.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.comboDepth.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboDepth.FormattingEnabled = true;
             this.comboDepth.Items.AddRange(new object[] {
             "4 bpp",
@@ -354,5 +380,7 @@ namespace Tinke
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.ComboBox comboDepth;
         private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.ComboBox comboBox1;
     }
 }

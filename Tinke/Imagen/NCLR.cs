@@ -87,6 +87,7 @@ namespace Tinke
             nclr.pltt.profundidad = (file_size > 0x20) ? ColorDepth.Depth8Bit : ColorDepth.Depth4Bit;
             nclr.pltt.unknown1 = 0x00000000;
             nclr.pltt.tamañoPaletas = file_size;
+            nclr.pltt.nColores = file_size / 2;
             nclr.pltt.paletas = new NTFP[1];
             // Rellenamos los colores en formato BGR555
             nclr.pltt.paletas[0].colores = Convertir.BGR555(br.ReadBytes((int)file_size));
