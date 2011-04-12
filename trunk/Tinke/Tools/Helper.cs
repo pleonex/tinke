@@ -228,11 +228,11 @@ namespace Tinke.Tools
 
         public static XElement ObtenerTraduccion(string arbol)
         {
-            XElement xml = XElement.Load(System.Windows.Forms.Application.StartupPath + "\\Tinke.xml");
+            XElement xml = XElement.Load(System.Windows.Forms.Application.StartupPath + Path.DirectorySeparatorChar + "Tinke.xml");
             string idioma = xml.Element("Options").Element("Language").Value;
             xml = null;
 
-            foreach (string langFile in Directory.GetFiles(System.Windows.Forms.Application.StartupPath + "\\langs"))
+            foreach (string langFile in Directory.GetFiles(System.Windows.Forms.Application.StartupPath + Path.DirectorySeparatorChar + "langs"))
             {
                 if (!langFile.EndsWith(".xml"))
                     continue;
@@ -246,11 +246,11 @@ namespace Tinke.Tools
         }
         public static String ObtenerTraduccion(string arbol, string codigo)
         {
-            XElement xml = XElement.Load(System.Windows.Forms.Application.StartupPath + "\\Tinke.xml");
+            XElement xml = XElement.Load(System.Windows.Forms.Application.StartupPath + Path.DirectorySeparatorChar + "Tinke.xml");
             string idioma = xml.Element("Options").Element("Language").Value;
             xml = null;
 
-            foreach (string langFile in Directory.GetFiles(System.Windows.Forms.Application.StartupPath + "\\langs"))
+            foreach (string langFile in Directory.GetFiles(System.Windows.Forms.Application.StartupPath + Path.DirectorySeparatorChar + "langs"))
             {
                 if (!langFile.EndsWith(".xml"))
                     continue;
