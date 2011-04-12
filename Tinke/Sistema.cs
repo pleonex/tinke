@@ -52,25 +52,26 @@ namespace Tinke
             // Modo debug donde se muestran los mensajes en otra ventana
             sb = new StringBuilder();
             TextWriter tw = new StringWriter(sb);
+            tw.NewLine = "<br>";
             Console.SetOut(tw);
 
             #region Idioma
-            if (!File.Exists(Application.StartupPath + "\\Tinke.xml"))
+            if (!File.Exists(Application.StartupPath + Path.DirectorySeparatorChar + "Tinke.xml"))
             {
-                File.WriteAllText(Application.StartupPath + "\\Tinke.xml", "<?xml version=\"1.0\" encoding=\"utf-8\"?>" +
+                File.WriteAllText(Application.StartupPath + Path.DirectorySeparatorChar + "Tinke.xml", "<?xml version=\"1.0\" encoding=\"utf-8\"?>" +
                                  "\n<Tinke>\n  <Options>\n    <Language>Español</Language>\n  </Options>\n</Tinke>",
                                  Encoding.UTF8);
             }
 
             // TODO: controlar excepción de fallo al leer xml
-            XElement xml = XElement.Load(Application.StartupPath + "\\Tinke.xml");
+            XElement xml = XElement.Load(Application.StartupPath + Path.DirectorySeparatorChar + "Tinke.xml");
 
-            foreach (string langFile in Directory.GetFiles(Application.StartupPath + "\\langs"))
+            foreach (string langFile in Directory.GetFiles(Application.StartupPath + Path.DirectorySeparatorChar + "langs"))
             {
                 if (!langFile.EndsWith(".xml"))
                     continue; ;
 
-                string flag = Application.StartupPath + "\\langs\\" + langFile.Substring(langFile.Length - 9, 5) + ".png";
+                string flag = Application.StartupPath + Path.DirectorySeparatorChar + "langs" + Path.DirectorySeparatorChar + langFile.Substring(langFile.Length - 9, 5) + ".png";
                 Image iFlag;
                 if (File.Exists(flag))
                     iFlag = Image.FromFile(flag);
@@ -174,9 +175,9 @@ namespace Tinke
         private void ToolStripLang_Click(Object sender, EventArgs e)
         {
             string idioma = ((ToolStripMenuItem)sender).Text;
-            System.Xml.Linq.XElement xml = System.Xml.Linq.XElement.Load(Application.StartupPath + "\\Tinke.xml");
+            System.Xml.Linq.XElement xml = System.Xml.Linq.XElement.Load(Application.StartupPath + Path.DirectorySeparatorChar + "Tinke.xml");
             xml.Element("Options").Element("Language").Value = idioma;
-            xml.Save(Application.StartupPath + "\\Tinke.xml");
+            xml.Save(Application.StartupPath + Path.DirectorySeparatorChar + "Tinke.xml");
             LeerIdioma();
             romInfo.LeerIdioma();
             // TODO: añadir resto de ventanas
@@ -233,8 +234,16 @@ namespace Tinke
             {
                 foreach (Archivo archivo in currFolder.files)
                 {
-                    int nImage = accion.ImageFormatFile(accion.Get_Formato(archivo.id));
-                    TreeNode fileNode = new TreeNode(archivo.name, nImage, nImage);
+                    Formato fmt = accion.Get_Formato(archivo.id);
+                    int nImage = accion.ImageFormatFile(fmt);
+                    string ext = "";
+                    if (fmt == Formato.Desconocido)
+                    {
+                        ext = accion.Get_MagicIDS(archivo.id);
+                        if (ext != "")
+                            ext = " [" + ext + ']'; // Previene extensiones vacías
+                    }
+                    TreeNode fileNode = new TreeNode(archivo.name + ext, nImage, nImage);
                     fileNode.Name = archivo.name;
                     fileNode.Tag = archivo.id;
                     currNode.Nodes.Add(fileNode);
@@ -265,8 +274,16 @@ namespace Tinke
             {
                 foreach (Archivo archivo in carpeta.files)
                 {
-                    int nImage = accion.ImageFormatFile(accion.Get_Formato(archivo.id));
-                    TreeNode fileNode = new TreeNode(archivo.name, nImage, nImage);
+                    Formato fmt = accion.Get_Formato(archivo.id);
+                    int nImage = accion.ImageFormatFile(fmt);
+                    string ext = "";
+                    if (fmt == Formato.Desconocido)
+                    {
+                        ext = accion.Get_MagicIDS(archivo.id);
+                        if (ext != "")
+                            ext = " [" + ext + ']'; // Previene extensiones vacías
+                    }
+                    TreeNode fileNode = new TreeNode(archivo.name + ext, nImage, nImage);
                     fileNode.Name = archivo.name;
                     fileNode.Tag = archivo.id;
                     nodo.Nodes.Add(fileNode);

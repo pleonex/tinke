@@ -61,8 +61,10 @@ namespace Tinke
         }
         public void Cargar_Plugins()
         {
+            if (!Directory.Exists(Application.StartupPath + Path.DirectorySeparatorChar + "Plugins"))
+                return;
 
-            foreach (string fileName in Directory.GetFiles(Application.StartupPath + "\\Plugins", "*.dll"))
+            foreach (string fileName in Directory.GetFiles(Application.StartupPath + Path.DirectorySeparatorChar + "Plugins", "*.dll"))
             {
                 try
                 {
@@ -181,7 +183,7 @@ namespace Tinke
 
             if (selectFile.offset != 0x0)
             {
-                tempFile = pluginHost.Get_TempFolder() + '\\' + selectFile.name;
+                tempFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + selectFile.name;
                 br = new BinaryReader(File.OpenRead(file));
                 br.BaseStream.Position = selectFile.offset;
 
@@ -196,8 +198,8 @@ namespace Tinke
             else
             {
                 FileInfo info = new FileInfo(selectFile.path);
-                File.Copy(selectFile.path, info.DirectoryName + "\\temp_" + info.Name, true);
-                tempFile = info.DirectoryName + "\\temp_" + info.Name;
+                File.Copy(selectFile.path, info.DirectoryName + Path.DirectorySeparatorChar + "temp_" + info.Name, true);
+                tempFile = info.DirectoryName + Path.DirectorySeparatorChar + "temp_" + info.Name;
                 br = new BinaryReader(File.OpenRead(tempFile));
             }
 
@@ -338,7 +340,7 @@ namespace Tinke
 
             if (selectFile.offset != 0x0)
             {
-                tempFile = pluginHost.Get_TempFolder() + '\\' + selectFile.name;
+                tempFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + selectFile.name;
                 br = new BinaryReader(File.OpenRead(file));
                 br.BaseStream.Position = selectFile.offset;
 
@@ -353,8 +355,8 @@ namespace Tinke
             else
             {
                 FileInfo info = new FileInfo(selectFile.path);
-                File.Copy(selectFile.path, info.DirectoryName + "\\temp_" + info.Name, true);
-                tempFile = info.DirectoryName + "\\temp_" + info.Name;
+                File.Copy(selectFile.path, info.DirectoryName + Path.DirectorySeparatorChar + "temp_" + info.Name, true);
+                tempFile = info.DirectoryName + Path.DirectorySeparatorChar + "temp_" + info.Name;
                 br = new BinaryReader(File.OpenRead(tempFile));
             }
 
@@ -586,13 +588,8 @@ namespace Tinke
             return new Carpeta();
         }
 
-        public Formato Get_Formato()
+        public Byte[] Get_MagicID(int id)
         {
-            return Get_Formato(idSelect);
-        }
-        public Formato Get_Formato(int id)
-        {
-            Formato tipo = Formato.Desconocido;
             Archivo currFile = Search_File(id);
             BinaryReader br;
             if (currFile.offset != 0x0)
@@ -604,14 +601,55 @@ namespace Tinke
                 br = new BinaryReader(File.OpenRead(currFile.path));
 
             if (br.BaseStream.Length == 0x00)
-                return Formato.Desconocido;
+                return null;
 
             byte[] ext = null;
             try { ext = br.ReadBytes(4); }
-            catch { } 
+            catch { }
 
             br.Close();
             br.Dispose();
+
+            return ext;
+        }
+        public String Get_MagicIDS(int id)
+        {
+            Archivo currFile = Search_File(id);
+            BinaryReader br;
+            if (currFile.offset != 0x0)
+            {
+                br = new BinaryReader(File.OpenRead(file));
+                br.BaseStream.Position = currFile.offset;
+            }
+            else    // En caso de que el archivo haya sido extraído y no esté en la ROM
+                br = new BinaryReader(File.OpenRead(currFile.path));
+
+            if (br.BaseStream.Length == 0x00)
+                return "";
+
+            byte[] ext = null;
+            try { ext = br.ReadBytes(4); }
+            catch { }
+
+            br.Close();
+            br.Dispose();
+
+            string fin = new String(Encoding.ASCII.GetChars(ext));
+            for (int i = 0; i < 4; i++)             // En caso de no ser extensión
+                if (!Char.IsLetterOrDigit(fin[i]))
+                    return "";
+
+            return fin;
+        }
+        public Formato Get_Formato()
+        {
+            return Get_Formato(idSelect);
+        }
+        public Formato Get_Formato(int id)
+        {
+            Formato tipo = Formato.Desconocido;
+            Archivo currFile = Search_File(id);
+            byte[] ext = Get_MagicID(id);
 
             #region Búsqueda y llamada de plugin
             try
@@ -663,7 +701,7 @@ namespace Tinke
 
             if (selectFile.offset != 0x0)
             {
-                tempFile = pluginHost.Get_TempFolder() + '\\' + selectFile.name;
+                tempFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + selectFile.name;
                 br = new BinaryReader(File.OpenRead(file));
                 br.BaseStream.Position = selectFile.offset;
 
@@ -678,8 +716,8 @@ namespace Tinke
             else
             {
                 FileInfo info = new FileInfo(selectFile.path);
-                File.Copy(selectFile.path, info.DirectoryName + "\\temp_" + info.Name, true);
-                tempFile = info.DirectoryName + "\\temp_" + info.Name;
+                File.Copy(selectFile.path, info.DirectoryName + Path.DirectorySeparatorChar + "temp_" + info.Name, true);
+                tempFile = info.DirectoryName + Path.DirectorySeparatorChar + "temp_" + info.Name;
                 br = new BinaryReader(File.OpenRead(tempFile));             
             }
 
@@ -711,12 +749,12 @@ namespace Tinke
                 if (ext[0] == LZ77_TAG || ext[0] == LZSS_TAG || ext[0] == RLE_TAG || ext[0] == HUFF_TAG)
                 {
                     FileInfo info = new FileInfo(tempFile);
-                    Compresion.Basico.Decompress(tempFile, info.DirectoryName + "\\un_" + info.Name);
+                    Compresion.Basico.Decompress(tempFile, info.DirectoryName + Path.DirectorySeparatorChar + "un_" + info.Name);
                     Carpeta carpeta = new Carpeta();
                     Archivo file = new Archivo();
                     file.name = selectFile.name;
-                    file.path = info.DirectoryName + "\\un_" + info.Name;
-                    file.size = (uint)new FileInfo(info.DirectoryName + "\\un_" + info.Name).Length;
+                    file.path = info.DirectoryName + Path.DirectorySeparatorChar + "un_" + info.Name;
+                    file.size = (uint)new FileInfo(info.DirectoryName + Path.DirectorySeparatorChar + "un_" + info.Name).Length;
                     carpeta.files = new List<Archivo>();
                     carpeta.files.Add(file);
                     pluginHost.Set_Files(carpeta);
@@ -761,28 +799,28 @@ namespace Tinke
                 }
                 // Si no hay plugins disponibles, se descomprime con el método normal
                 FileInfo info = new FileInfo(arg);
-                Directory.CreateDirectory(info.DirectoryName + "\\un");
+                Directory.CreateDirectory(info.DirectoryName + Path.DirectorySeparatorChar + "un");
                 switch (tag) {
                 	case LZ77_TAG:
-                		Compresion.LZ77.DecompressLZ77(arg, info.DirectoryName + "\\un\\" + info.Name);
+                		Compresion.LZ77.DecompressLZ77(arg, info.DirectoryName + Path.DirectorySeparatorChar + "un" + Path.DirectorySeparatorChar + info.Name);
                 		break;
                 	case LZSS_TAG:
-                		Compresion.LZSS.Decompress11LZS(arg, info.DirectoryName + "\\un\\" + info.Name);
+                		Compresion.LZSS.Decompress11LZS(arg, info.DirectoryName + Path.DirectorySeparatorChar + "un" + Path.DirectorySeparatorChar + info.Name);
                 		break;
                 	case HUFF_TAG:
-                		Compresion.Huffman.DecompressHuffman(arg, info.DirectoryName + "\\un\\" + info.Name);
+                		Compresion.Huffman.DecompressHuffman(arg, info.DirectoryName + Path.DirectorySeparatorChar + "un" + Path.DirectorySeparatorChar + info.Name);
                 		break;
                 	case RLE_TAG :
-                		Compresion.RLE.DecompressRLE(arg, info.DirectoryName + "\\un\\" + info.Name);
+                		Compresion.RLE.DecompressRLE(arg, info.DirectoryName + Path.DirectorySeparatorChar + "un" + Path.DirectorySeparatorChar + info.Name);
                 		break;
                 	default:
-                		Compresion.Basico.Decompress(arg, info.DirectoryName + "\\un\\" + info.Name);
+                		Compresion.Basico.Decompress(arg, info.DirectoryName + Path.DirectorySeparatorChar + "un" + Path.DirectorySeparatorChar + info.Name);
                 		break;
                 }
                 Archivo file = new Archivo();
                 file.name = new FileInfo(arg).Name;
-                file.path = info.DirectoryName + "\\un\\" + info.Name;
-                file.size = (uint)new FileInfo(info.DirectoryName + "\\un\\" + info.Name).Length;
+                file.path = info.DirectoryName + Path.DirectorySeparatorChar + "un" + Path.DirectorySeparatorChar + info.Name;
+                file.size = (uint)new FileInfo(info.DirectoryName + Path.DirectorySeparatorChar + "un" + Path.DirectorySeparatorChar + info.Name).Length;
                 Carpeta carpeta = new Carpeta();
                 carpeta.files = new List<Archivo>();
                 carpeta.files.Add(file);
@@ -821,8 +859,8 @@ namespace Tinke
             else
             {
                 FileInfo info = new FileInfo(selectFile.path);
-                File.Copy(selectFile.path, info.DirectoryName + "\\temp_" + info.Name, true);
-                tempFile = info.DirectoryName + "\\temp_" + info.Name;
+                File.Copy(selectFile.path, info.DirectoryName + Path.DirectorySeparatorChar + "temp_" + info.Name, true);
+                tempFile = info.DirectoryName + Path.DirectorySeparatorChar + "temp_" + info.Name;
                 br = new BinaryReader(File.OpenRead(tempFile));
             }
 

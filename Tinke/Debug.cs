@@ -15,13 +15,17 @@ namespace Tinke
         {
             InitializeComponent();
             this.Location = new Point(10, 585);
+
+            txtInfo.DocumentText = "<html></html>";     // Creamos un documento nuevo
+            Añadir_Texto("Inicializando programa...");
+            txtInfo.Document.BackColor = SystemColors.GradientActiveCaption;
         }
 
         public void Añadir_Texto(string mensaje)
         {
             if (mensaje != "")
-                txtInfo.AppendText(mensaje + "\r\n");
-
+                txtInfo.Document.Write ("<p style=\"font-size:x-small;\">" + mensaje + "</p>");
+            txtInfo.Document.Body.ScrollTop = txtInfo.Document.Body.ScrollRectangle.Height;
         }
     }
 }

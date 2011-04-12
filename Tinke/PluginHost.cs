@@ -46,9 +46,9 @@ namespace Tinke
             string[] subFolders = System.IO.Directory.GetDirectories(Application.StartupPath);
             for (int n = 0; ; n++)
             {
-                if (!subFolders.Contains<string>(Application.StartupPath + "\\Temp" + n))
+                if (!subFolders.Contains<string>(Application.StartupPath + System.IO.Path.DirectorySeparatorChar + "Temp" + n))
                 {
-                    tempFolder = Application.StartupPath + "\\Temp" + n;
+                    tempFolder = Application.StartupPath + System.IO.Path.DirectorySeparatorChar + "Temp" + n;
                     System.IO.Directory.CreateDirectory(tempFolder);
                     break;
                 }
@@ -107,7 +107,7 @@ namespace Tinke
         }
         public string Get_Language()
         {
-            System.Xml.Linq.XElement xml = System.Xml.Linq.XElement.Load(Application.StartupPath + "\\Tinke.xml");
+            System.Xml.Linq.XElement xml = System.Xml.Linq.XElement.Load(Application.StartupPath + System.IO.Path.DirectorySeparatorChar + "Tinke.xml");
             return xml.Element("Options").Element("Language").Value;
         }
 

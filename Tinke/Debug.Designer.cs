@@ -29,18 +29,21 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Debug));
-            this.txtInfo = new System.Windows.Forms.RichTextBox();
+            this.txtInfo = new System.Windows.Forms.WebBrowser();
             this.SuspendLayout();
             // 
             // txtInfo
             // 
-            this.txtInfo.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
+            this.txtInfo.AllowWebBrowserDrop = false;
             this.txtInfo.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtInfo.IsWebBrowserContextMenuEnabled = false;
             this.txtInfo.Location = new System.Drawing.Point(0, 0);
+            this.txtInfo.MinimumSize = new System.Drawing.Size(20, 20);
             this.txtInfo.Name = "txtInfo";
+            this.txtInfo.ScriptErrorsSuppressed = true;
             this.txtInfo.Size = new System.Drawing.Size(644, 152);
-            this.txtInfo.TabIndex = 1;
-            this.txtInfo.Text = "";
+            this.txtInfo.TabIndex = 0;
+            this.txtInfo.WebBrowserShortcutsEnabled = false;
             // 
             // Debug
             // 
@@ -63,7 +66,8 @@
 
         #endregion
 
-        private System.Windows.Forms.RichTextBox txtInfo;
+        private System.Windows.Forms.WebBrowser txtInfo;
+
 
     }
 }
