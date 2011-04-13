@@ -42,12 +42,16 @@ namespace Nintendo
 		
 		public Formato Get_Formato(string nombre, byte[] magic)
 		{
-			if (nombre.EndsWith(".nbfp"))
-				return Formato.Paleta;
-			else if (nombre.EndsWith(".nbfc"))
-				return Formato.Imagen;
-			else if (nombre.EndsWith(".nbfs"))
-				return Formato.Screen;
+            string ext = new String(System.Text.Encoding.ASCII.GetChars(magic));
+
+            if (nombre.EndsWith(".nbfp"))
+                return Formato.Paleta;
+            else if (nombre.EndsWith(".nbfc"))
+                return Formato.Imagen;
+            else if (nombre.EndsWith(".nbfs"))
+                return Formato.Screen;
+            else if (ext == "MESG" && nombre.EndsWith(".bmg"))
+                return Formato.Texto;
 			
 			return Formato.Desconocido;
 		}
@@ -87,6 +91,8 @@ namespace Nintendo
 					return control;
 				}
 			}
+            if (archivo.ToUpper().EndsWith(".BMG"))
+                return new bmg(pluginHost, archivo).ShowInfo();
 			
 			return new Control();
 		}
@@ -99,6 +105,8 @@ namespace Nintendo
 				new nbfc(pluginHost, archivo).Leer();
 			if (archivo.ToUpper().EndsWith(".NBFS"))
 				new nbfs(pluginHost, archivo).Leer();
+            if (archivo.ToUpper().EndsWith(".BMG"))
+                Console.WriteLine("Este archivo no contiene información para guardar.");
 		}
 	}
 }
