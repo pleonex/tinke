@@ -104,6 +104,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="bmg.cs" />
+    <Compile Include="iBMG.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="iBMG.Designer.cs">
+      <DependentUpon>iBMG.cs</DependentUpon>
+    </Compile>
     <Compile Include="iNCGR.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -128,6 +135,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="iBMG.resx">
+      <DependentUpon>iBMG.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="iNCGR.resx">
       <DependentUpon>iNCGR.cs</DependentUpon>
     </EmbeddedResource>
