@@ -72,6 +72,7 @@ namespace Tinke
                     if (fileName.EndsWith("PluginInterface.dll"))
                         continue;
 
+
                     Assembly assembly = Assembly.LoadFile(fileName);
                     foreach (Type pluginType in assembly.GetTypes())
                     {
@@ -147,6 +148,8 @@ namespace Tinke
         {
             switch (name)
             {
+                case Formato.Fuentes:
+                    return 16;
                 case Formato.Paleta:
                     return 2;
                 case Formato.Imagen:

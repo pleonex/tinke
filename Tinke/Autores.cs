@@ -86,7 +86,7 @@ namespace Tinke
 
             this.Text = xml.Element("S01").Value + ' ' + AssemblyTitle;
 
-            label1.Text = "Tinke" + xml.Element("S02").Value + ' ' + AssemblyVersion;
+            label1.Text = "Tinke  " + xml.Element("S02").Value + ' ' + AssemblyVersion;
             label2.Text = xml.Element("S03").Value;
             label4.Text = xml.Element("S04").Value;
             lblTraductor.Text = xml.Element("S0C").Value;

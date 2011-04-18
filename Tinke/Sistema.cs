@@ -96,6 +96,7 @@ namespace Tinke
             // Iniciamos la lectura del archivo.
             OpenFileDialog o = new OpenFileDialog();
             o.CheckFileExists = true;
+            o.Filter = "Nintendo DS rom (*.nds)|*.nds";
             o.DefaultExt = ".nds";
             if (o.ShowDialog() != System.Windows.Forms.DialogResult.OK)
             {
@@ -178,9 +179,12 @@ namespace Tinke
             System.Xml.Linq.XElement xml = System.Xml.Linq.XElement.Load(Application.StartupPath + Path.DirectorySeparatorChar + "Tinke.xml");
             xml.Element("Options").Element("Language").Value = idioma;
             xml.Save(Application.StartupPath + Path.DirectorySeparatorChar + "Tinke.xml");
+            // TODO: quitar esto
             LeerIdioma();
             romInfo.LeerIdioma();
-            // TODO: añadir resto de ventanas
+            debug.LeerIdioma();
+
+            MessageBox.Show("Please restar the program.");
         }
 
         private Carpeta FNT(string file, UInt32 offset, UInt32 size)
@@ -313,7 +317,7 @@ namespace Tinke
                 listFile.Items[1].SubItems.Add("0xF000");
                 listFile.Items[2].SubItems.Add("");
                 listFile.Items[3].SubItems.Add("");
-                listFile.Items[4].SubItems.Add("Directorio");
+                listFile.Items[4].SubItems.Add(Tools.Helper.ObtenerTraduccion("Sistema", "S1F"));
                 listFile.Items[5].SubItems.Add("");
 
                 btnHex.Enabled = false;
@@ -329,7 +333,47 @@ namespace Tinke
                 listFile.Items[1].SubItems.Add(selectFile.id.ToString());
                 listFile.Items[2].SubItems.Add("0x" + String.Format("{0:X}", selectFile.offset));
                 listFile.Items[3].SubItems.Add(selectFile.size.ToString());
-                listFile.Items[4].SubItems.Add(accion.Get_Formato().ToString());
+                #region Obtener tipo de archivo traducido
+                switch (accion.Get_Formato())
+                {
+                    case Formato.Paleta:
+                        listFile.Items[4].SubItems.Add(Tools.Helper.ObtenerTraduccion("Sistema", "S20"));
+                        break;
+                    case Formato.Imagen:
+                        listFile.Items[4].SubItems.Add(Tools.Helper.ObtenerTraduccion("Sistema", "S21"));
+                        break;
+                    case Formato.Screen:
+                        listFile.Items[4].SubItems.Add(Tools.Helper.ObtenerTraduccion("Sistema", "S22"));
+                        break;
+                    case Formato.Celdas:
+                        listFile.Items[4].SubItems.Add(Tools.Helper.ObtenerTraduccion("Sistema", "SS3"));
+                        break;
+                    case Formato.Animación:
+                        listFile.Items[4].SubItems.Add(Tools.Helper.ObtenerTraduccion("Sistema", "S24"));
+                        break;
+                    case Formato.ImagenCompleta:
+                        listFile.Items[4].SubItems.Add(Tools.Helper.ObtenerTraduccion("Sistema", "S25"));
+                        break;
+                    case Formato.Texto:
+                        listFile.Items[4].SubItems.Add(Tools.Helper.ObtenerTraduccion("Sistema", "S26"));
+                        break;
+                    case Formato.Video:
+                        listFile.Items[4].SubItems.Add(Tools.Helper.ObtenerTraduccion("Sistema", "S27"));
+                        break;
+                    case Formato.Sonido:
+                        listFile.Items[4].SubItems.Add(Tools.Helper.ObtenerTraduccion("Sistema", "S28"));
+                        break;
+                    case Formato.Fuentes:
+                        listFile.Items[4].SubItems.Add(Tools.Helper.ObtenerTraduccion("Sistema", "S29"));
+                        break;
+                    case Formato.Comprimido:
+                        listFile.Items[4].SubItems.Add(Tools.Helper.ObtenerTraduccion("Sistema", "S2A"));
+                        break;
+                    case Formato.Desconocido:
+                        listFile.Items[4].SubItems.Add(Tools.Helper.ObtenerTraduccion("Sistema", "S2B"));
+                        break;
+                }
+                #endregion
                 listFile.Items[5].SubItems.Add(selectFile.path);
                 btnHex.Enabled = true;
                 btnExtraer.Enabled = true;
@@ -357,7 +401,7 @@ namespace Tinke
                 listFile.Items[1].SubItems.Add("0x" + String.Format("{0:X}", selectFolder.id));
                 listFile.Items[2].SubItems.Add("");
                 listFile.Items[3].SubItems.Add("");
-                listFile.Items[4].SubItems.Add("Directorio");
+                listFile.Items[4].SubItems.Add(Tools.Helper.ObtenerTraduccion("Sistema", "S1F"));
                 listFile.Items[5].SubItems.Add("");
 
                 btnHex.Enabled = false;

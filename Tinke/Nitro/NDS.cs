@@ -15,7 +15,7 @@ namespace Tinke.Nitro
 
             BinaryReader br = new BinaryReader(File.OpenRead(file));
             Console.WriteLine("<b>" + 
-                Tools.Helper.ObtenerTraduccion("Messages", "S03") + "</b>"
+                Tools.Helper.ObtenerTraduccion("Messages", "S03") + "</b> "
                 + new FileInfo(file).Name);
 
             nds.gameTitle = br.ReadChars(12);
