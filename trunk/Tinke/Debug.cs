@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using System.Reflection;
 
 namespace Tinke
 {
@@ -17,7 +18,7 @@ namespace Tinke
             this.Location = new Point(10, 585);
 
             txtInfo.DocumentText = "<html></html>";     // Creamos un documento nuevo
-            Añadir_Texto("Inicializando programa...");
+            Añadir_Texto("<b><h3>Tinke " + Assembly.GetExecutingAssembly().GetName().Version.ToString() + "</h3></b>");
             txtInfo.Document.BackColor = SystemColors.GradientActiveCaption;
         }
 
@@ -26,6 +27,13 @@ namespace Tinke
             if (mensaje != "")
                 txtInfo.Document.Write ("<p style=\"font-size:x-small;\">" + mensaje + "</p>");
             txtInfo.Document.Body.ScrollTop = txtInfo.Document.Body.ScrollRectangle.Height;
+        }
+
+        public void LeerIdioma()
+        {
+            System.Xml.Linq.XElement xml = Tools.Helper.ObtenerTraduccion("Sistema");
+
+            this.Text = xml.Element("S03").Value;
         }
     }
 }

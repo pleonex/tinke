@@ -114,6 +114,7 @@ namespace Tinke
             this.iconos.Images.SetKeyName(13, "film.png");
             this.iconos.Images.SetKeyName(14, "music.png");
             this.iconos.Images.SetKeyName(15, "picture_go.png");
+            this.iconos.Images.SetKeyName(16, "font.png");
             // 
             // btnExtraer
             // 
@@ -441,6 +442,7 @@ namespace Tinke
             this.linkAboutBox.Name = "linkAboutBox";
             this.linkAboutBox.Size = new System.Drawing.Size(29, 13);
             this.linkAboutBox.TabIndex = 13;
+            this.linkAboutBox.TabStop = true;
             this.linkAboutBox.Text = "S0F";
             this.linkAboutBox.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkAboutBox_LinkClicked);
             // 
