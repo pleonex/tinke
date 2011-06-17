@@ -36,6 +36,23 @@ namespace Tinke
         [STAThread]
         static void Main(string[] args)
         {
+            #region Comprobación de archivos necesarios
+            string[] archivos = new string[] { "PluginInterface.dll", "Compresion.dll" };
+            string faltan = "";
+            for (int i = 0; i < archivos.Length; i++)
+            {
+                string file = Application.StartupPath + Path.DirectorySeparatorChar + archivos[i];
+                if (!File.Exists(file))
+                    faltan += '\n' + file;
+            }
+            if (faltan != "")
+            {
+                MessageBox.Show("Los siguientes archivos faltan\n" + faltan + "\n\nPor favor descargue el programa de nuevo" +
+                    " desde: http://code.google.com/p/tinke", "Faltan archivos necesarios", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            #endregion
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Sistema());

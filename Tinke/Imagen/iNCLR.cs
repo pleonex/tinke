@@ -39,10 +39,12 @@ namespace Tinke
         public iNCLR()
         {
             InitializeComponent();
+            LeerIdioma();
         }
         public iNCLR(NCLR paleta)
         {
             InitializeComponent();
+            LeerIdioma();
 
             this.paleta = paleta;
             ShowInfo();
@@ -52,6 +54,23 @@ namespace Tinke
             nPaleta.Maximum = paletas.Length;
             nPaleta.Minimum = 1;
             nPaleta.Value = 1;
+        }
+
+        private void LeerIdioma()
+        {
+            System.Xml.Linq.XElement xml = Tools.Helper.ObtenerTraduccion("NCLR");
+
+            label1.Text = xml.Element("S01").Value;
+            groupProp.Text = xml.Element("S02").Value;
+            columnName.Text = xml.Element("S03").Value;
+            columnValor.Text = xml.Element("S04").Value;
+            listProp.Items[0].Text = xml.Element("S05").Value;
+            listProp.Items[1].Text = xml.Element("S06").Value;
+            listProp.Items[2].Text = xml.Element("S07").Value;
+            listProp.Items[3].Text = xml.Element("S08").Value;
+            listProp.Items[4].Text = xml.Element("S09").Value;
+            btnSave.Text = xml.Element("S0A").Value;
+            btnShow.Text = xml.Element("S0B").Value;     
         }
 
         private void ShowInfo()
@@ -71,6 +90,7 @@ namespace Tinke
 
         private void btnShow_Click(object sender, EventArgs e)
         {
+            string trad = Tools.Helper.ObtenerTraduccion("NCLR").Element("S0C").Value;
             Form ven = new Form();
             int xMax = 6 * 170;
             int x = 0;
@@ -84,7 +104,7 @@ namespace Tinke
                 pic.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
                 pic.Image = paletas[i];
                 Label lbl = new Label();
-                lbl.Text = "Paleta " + (i + 1).ToString();
+                lbl.Text = trad + ' ' + (i + 1).ToString();
                 lbl.Location = new Point(x, y - 15);
 
                 ven.Controls.Add(pic);
@@ -98,7 +118,7 @@ namespace Tinke
                 }
             }
 
-            ven.Text = "Paletas";
+            ven.Text = trad;
             ven.BackColor = SystemColors.GradientInactiveCaption;
             ven.MaximumSize = new Size(1024, 760);
             ven.ShowIcon = false;

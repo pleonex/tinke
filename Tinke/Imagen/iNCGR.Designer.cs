@@ -311,7 +311,7 @@ namespace Tinke
             // columnCampo
             // 
             this.columnCampo.Text = "Campo";
-            this.columnCampo.Width = 88;
+            this.columnCampo.Width = 94;
             // 
             // columnValor
             // 

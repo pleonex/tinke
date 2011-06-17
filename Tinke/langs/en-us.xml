@@ -102,6 +102,7 @@
       <S36>Debug length</S36>
       <S37>Debug RAM offset</S37>
       <S38>Reserved</S38>
+	  <S39>Invalid</S39>
     </RomInfo>
 	<Autores>
 	  <S01>About</S01>
@@ -118,6 +119,10 @@ General Public License at version 3.</S06>
 	  <S0B>Icons used by this program.</S0B>
 	  <S0C>pleoNeX</S0C>
 	</Autores>
+	<Espera>
+		<S01>Loading...</S01>
+		<S02>Loading the game...</S02>
+	</Espera>
 	<Messages>
 	  <S01>Error</S01>
 	  <S02>Error opening game. Are you sure it's a NDS game?</S02>
@@ -125,4 +130,42 @@ General Public License at version 3.</S06>
 	  <S04>Game information:</S04>
 	  <S05>Loading program...</S05>
 	</Messages>
-  </Language>
+	<NCLR>
+		<S01>Nº de paleta:</S01>
+		<S02>Propiedades</S02>
+		<S03>Campo</S03>
+		<S04>Valor</S04>
+		<S05>Número de paletas</S05>
+		<S06>Profundidad del color</S06>
+		<S07>Padding</S07>
+		<S08>Nº de colores por paleta</S08>
+		<S09>Tamaño de paleta</S09>
+		<S0A>Guardar</S0A>
+		<S0B>Mostrar todas las paletas</S0B>
+		<S0C>Paleta</S0C>
+	</NCLR>
+	<NCGR>
+		<S01>Haga doble click en la imagen para verla a
+		tamaño real.</S01>
+		<S02>Propiedades</S02>
+		<S03>Posición</S03>
+		<S04>Campo</S04>
+		<S05>Valor</S05>
+		<S06>Desconocido</S06>
+		<S07>Nº secciones</S07>
+		<S08>ID Sección 1</S08>
+		<S09>Tamaño</S09>
+		<S0A>Tiles Y</S0A>
+		<S0B>Tiles X</S0B>
+		<S0C>Formato</S0C>
+		<S0D>Desconocido</S0D>
+		<S0E>Desconocido</S0E>
+		<S0F>Tamaño píxels datos</S0F>
+		<S10>Desconocido</S10>
+		<S11>Inicio:</S11>
+		<S12>Ancho:</S12>
+		<S13>Alto:</S13>
+		<S14>Orden de tiles:</S14>
+		<S15>Guardar</S15>
+	</NCGR>
+	</Language>

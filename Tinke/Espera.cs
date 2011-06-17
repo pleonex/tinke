@@ -14,18 +14,28 @@ namespace Tinke
         public Espera()
         {
             InitializeComponent();
+            LeerIdioma();
         }
         public Espera(string label, bool step)
         {
             InitializeComponent();
-            label1.Text = label;
+
+            System.Xml.Linq.XElement xml = Tools.Helper.ObtenerTraduccion("Espera");
+            this.Text = xml.Element("S01").Value;
+            label1.Text = xml.Element(label).Value;
+            
             if (step)
                 progressBar1.Style = ProgressBarStyle.Continuous;
+
         }
         public Espera(string label, int step)
         {
             InitializeComponent();
-            label1.Text = label;
+
+            System.Xml.Linq.XElement xml = Tools.Helper.ObtenerTraduccion("Espera");
+            this.Text = xml.Element("S01").Value;
+            label1.Text = xml.Element(label).Value;
+
             progressBar1.Style = ProgressBarStyle.Continuous;
             progressBar1.Step = step;
         }
@@ -37,6 +47,14 @@ namespace Tinke
         public void Step()
         {
             progressBar1.PerformStep();
+        }
+
+        private void LeerIdioma()
+        {
+                System.Xml.Linq.XElement xml = Tools.Helper.ObtenerTraduccion("Espera");
+
+                this.Text = xml.Element("S01").Value;
+                label1.Text = xml.Element("S01").Value;
         }
     }
 }
