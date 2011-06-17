@@ -37,9 +37,9 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(12, 9);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(62, 13);
+            this.label1.Size = new System.Drawing.Size(26, 13);
             this.label1.TabIndex = 0;
-            this.label1.Text = "Cargando...";
+            this.label1.Text = "S01";
             // 
             // progressBar1
             // 
@@ -63,7 +63,7 @@
             this.Name = "Espera";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
-            this.Text = "Cargando...";
+            this.Text = "S01";
             this.ResumeLayout(false);
             this.PerformLayout();
 

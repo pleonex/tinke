@@ -1,0 +1,169 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Language name="Français">
+    <Sistema>
+      <S01>Ouvrir ROM</S01>
+      <S02>Information du jeu</S02>
+      <S03>Messages de dépuration</S03>
+      <S04>Mode fenêtre</S04>
+      <S05>Plugins</S05>
+      <S06>Recharger les plugins</S06>
+      <S07>Champ</S07>
+      <S08>Données</S08>
+      <S09>Nom</S09>
+      <S0A>ID</S0A>
+      <S0B>Offset(Déplacement)</S0B>
+      <S0C>Taille</S0C>
+      <S0D>Format</S0D>
+      <S0E>Chemin d'accès</S0E>
+      <S0F>À propos de...</S0F>
+      <S10>Efacer chaîne de caractères</S10>
+      <S11>Efacer palette</S11>
+      <S12>Efacer tile</S12>
+      <S13>Efacer screen</S13>
+      <S14>Efacer cellule</S14>
+      <S15>Efacer animation</S15>
+      <S16>Ouvrir sous...</S16>
+      <S17>Palette</S17>
+      <S18>Tile</S18>
+      <S19>Screen</S19>
+      <S1A>Décompresser</S1A>
+      <S1B>Extraire</S1B>
+      <S1C>Voir</S1C>
+      <S1D>Hexadécimal</S1D>
+      <S1E>Languages</S1E>
+		  <S1F>Répertoire</S1F>
+	    <S20>Palette</S20>
+	    <S21>Tiles</S21>
+	    <S22>Écran</S22>
+	    <S23>Cellules</S23>
+	    <S24>Animation</S24>
+	    <S25>Image</S25>
+	    <S26>Texte</S26>
+	    <S27>Video</S27>
+	    <S28>Son</S28>
+	    <S29>Police de caractères(Font)</S29>
+	    <S2A>Compressé</S2A>
+	    <S2B>Inconnu</S2B>
+    </Sistema>
+    <RomInfo>
+      <S01>Information de la ROM</S01>
+      <S02>Banner</S02>
+      <S03>Enregistrer sous...</S03>
+      <S04>Version:</S04>
+      <S05>Réservé:</S05>
+      <S06>Japonais</S06>
+      <S07>Anglais</S07>
+      <S08>Français</S08>
+      <S09>Allemand</S09>
+      <S0A>Italien</S0A>
+      <S0B>Espagnol</S0B>
+      <S0C>Position</S0C>
+      <S0D>Champ</S0D>
+      <S0E>Donées</S0E>
+      <S0F>Titre du jeu</S0F>
+      <S10>Code du jeu</S10>
+      <S11>Code du créateur</S11>
+      <S12>Code de console</S12>
+      <S13>Graines de chiffrement</S13>
+      <S14>Taille du fichier</S14>
+      <S15>Réservé</S15>
+      <S16>Version de la ROM</S16>
+      <S17>Indicateurs internes</S17>
+      <S18>ARM9 rom offset</S18>
+      <S19>ARM9 entry address</S19>
+      <S1A>ARM9 load address</S1A>
+      <S1B>ARM9 size</S1B>
+      <S1C>ARM7 rom offset</S1C>
+      <S1D>ARM7 entry address</S1D>
+      <S1E>ARM7 load address</S1E>
+      <S1F>ARM7 size</S1F>
+      <S20>File Name Table (FNT) offset</S20>
+      <S21>File Name Table (FNT) size</S21>
+      <S22>File Allocation Table (FAT) offset</S22>
+      <S23>File Allocation Table (FAT) size</S23>
+      <S24>ARM9 overlay offset</S24>
+      <S25>ARM9 overlay size</S25>
+      <S26>ARM7 overlay offset</S26>
+      <S27>ARM7 overlay size</S27>
+      <S28>Ajuste de control normales</S28>
+      <S29>Ajuste de seguridad normales</S29>
+      <S2A>Offset del icono del banner</S2A>
+      <S2B>Zone sûre CRC</S2B>
+      <S2C>Délai de transfert sécurisé</S2C>
+      <S2D>ARM9 autoload</S2D>
+      <S2E>ARM7 autoload</S2E>
+      <S2F>Sécurité désactivée</S2F>
+      <S30>Taille de la ROM</S30>
+      <S31>Taille de l'entête</S31>
+      <S32>Réservé</S32>
+      <S33>CRC du logo de Nintendo</S33>
+      <S34>CRC de l'Entête</S34>
+      <S35>Offset de debug de la ROM</S35>
+      <S36>Taille de debug</S36>
+      <S37>Offset de la RAM de debug</S37>
+      <S38>Réservé</S38>
+	    <S39>Non valide</S39>
+    </RomInfo>
+    <Autores>
+	    <S01>À propos de</S01>
+	    <S02>Version</S02>
+	    <S03>Programmé par:</S03>
+	    <S04>Traduit a l'español par</S04>
+	    <S05>Code source:</S05>
+	    <S06>Ce logiciel est sous les termes de la license GPL V3.</S06>
+	    <S07>Ce lociciel a pu être realisé grâce à l'information et les outils code ouvert trouvés sous:</S07>
+	    <S08>Bibliothèque de décompression de formats</S08>
+	    <S09>Information téchnique sour la structure des ROMs.</S09>
+	    <S0A>Information sour la structure de formats de Nintendo.</S0A>
+	    <S0B>Icônes utilisés dans ce logiciel.</S0B>
+	    <S0C>rafael1193</S0C>
+	  </Autores>
+	  <Espera>
+		  <S01>Chargeant...</S01>
+		  <S02>Chargeant le jeu...</S02>
+	  </Espera>
+	  <Messages>
+	    <S01>Erreur</S01>
+	    <S02>Le jeu n'a pas pu être identifié. ¿Est-ce que le fichier est un jeu pour NDS?</S02>
+	    <S03>Jeu en train d'être analysé:</S03>
+	    <S04>Donnés du jeu:</S04>
+	    <S05>Logiciel en train d'être chargé...</S05>
+	  </Messages>
+	  <NCLR>
+		  <S01>Nombre de la palette:</S01>
+		  <S02>Propriétés</S02>
+		  <S03>Champ</S03>
+		  <S04>Valeur</S04>
+		  <S05>Nombre de palettes</S05>
+		  <S06>Profondeur des couleurs</S06>
+		  <S07>Padding</S07>
+		  <S08>Nombre de couleurs par palette</S08>
+		  <S09>Taille de la palette</S09>
+		  <S0A>Sauvegarder</S0A>
+		  <S0B>Montrer toutes les palettes</S0B>
+		  <S0C>Palette</S0C>	
+	  </NCLR>
+	  <NCGR>
+		  <S01>Faites doble click sur l'image pour la voir en taille réelle.</S01>
+		  <S02>Propriétés</S02>
+		  <S03>Position</S03>
+		  <S04>Champ</S04>
+		  <S05>Valeur</S05>
+		  <S06>Inconnu</S06>
+		  <S07>Nombre de sections</S07>
+		  <S08>ID Section 1</S08>
+		  <S09>Taille</S09>
+		  <S0A>Tiles Y</S0A>
+		  <S0B>Tiles X</S0B>
+		  <S0C>Format</S0C>
+		  <S0D>Inconnu</S0D>
+		  <S0E>Inconnu</S0E>
+		  <S0F>Taille pixels donnés</S0F>
+		  <S10>Inconnu</S10>
+		  <S11>Début:</S11>
+		  <S12>Longueur:</S12>
+		  <S13>Hauteur:</S13>
+		  <S14>Ordre des tiles:</S14>
+		  <S15>Sauvegarder</S15>
+	  </NCGR>
+   </Language>

@@ -184,7 +184,7 @@ namespace Tinke
             romInfo.LeerIdioma();
             debug.LeerIdioma();
 
-            MessageBox.Show("Please restar the program.");
+            MessageBox.Show("Please restart the program.");
         }
 
         private Carpeta FNT(string file, UInt32 offset, UInt32 size)
@@ -299,7 +299,7 @@ namespace Tinke
 
         private void ThreadEspera()
         {
-            Espera espera = new Espera("Cargando datos del juego...", false);
+            Espera espera = new Espera("S02", false);
             espera.ShowDialog();
         }
 
@@ -346,7 +346,7 @@ namespace Tinke
                         listFile.Items[4].SubItems.Add(Tools.Helper.ObtenerTraduccion("Sistema", "S22"));
                         break;
                     case Formato.Celdas:
-                        listFile.Items[4].SubItems.Add(Tools.Helper.ObtenerTraduccion("Sistema", "SS3"));
+                        listFile.Items[4].SubItems.Add(Tools.Helper.ObtenerTraduccion("Sistema", "S23"));
                         break;
                     case Formato.Animación:
                         listFile.Items[4].SubItems.Add(Tools.Helper.ObtenerTraduccion("Sistema", "S24"));

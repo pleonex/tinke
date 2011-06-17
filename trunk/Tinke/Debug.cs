@@ -15,6 +15,7 @@ namespace Tinke
         public Debug()
         {
             InitializeComponent();
+            LeerIdioma();
             this.Location = new Point(10, 585);
 
             txtInfo.DocumentText = "<html></html>";     // Creamos un documento nuevo
