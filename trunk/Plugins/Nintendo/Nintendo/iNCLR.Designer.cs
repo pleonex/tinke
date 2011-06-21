@@ -28,11 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("Número de paletas");
-            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("Profundidad del color");
-            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem("Padding");
-            System.Windows.Forms.ListViewItem listViewItem4 = new System.Windows.Forms.ListViewItem("Nº de colores por paleta");
-            System.Windows.Forms.ListViewItem listViewItem5 = new System.Windows.Forms.ListViewItem("Tamaño de paleta");
+            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("S05");
+            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("S06");
+            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem("S07");
+            System.Windows.Forms.ListViewItem listViewItem4 = new System.Windows.Forms.ListViewItem("S08");
+            System.Windows.Forms.ListViewItem listViewItem5 = new System.Windows.Forms.ListViewItem("S09");
             this.paletaBox = new System.Windows.Forms.PictureBox();
             this.nPaleta = new System.Windows.Forms.NumericUpDown();
             this.label1 = new System.Windows.Forms.Label();
@@ -69,9 +69,9 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(3, 168);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(69, 13);
+            this.label1.Size = new System.Drawing.Size(26, 13);
             this.label1.TabIndex = 3;
-            this.label1.Text = "Nº de paleta:";
+            this.label1.Text = "S01";
             // 
             // btnShow
             // 
@@ -79,7 +79,7 @@
             this.btnShow.Name = "btnShow";
             this.btnShow.Size = new System.Drawing.Size(180, 30);
             this.btnShow.TabIndex = 4;
-            this.btnShow.Text = "Mostrar todas las paletas";
+            this.btnShow.Text = "S0B";
             this.btnShow.UseVisualStyleBackColor = true;
             this.btnShow.Click += new System.EventHandler(this.btnShow_Click);
             // 
@@ -91,7 +91,7 @@
             this.groupProp.Size = new System.Drawing.Size(267, 156);
             this.groupProp.TabIndex = 5;
             this.groupProp.TabStop = false;
-            this.groupProp.Text = "Propiedades";
+            this.groupProp.Text = "S02";
             // 
             // listProp
             // 
@@ -114,12 +114,12 @@
             // 
             // columnName
             // 
-            this.columnName.Text = "Campo";
+            this.columnName.Text = "S03";
             this.columnName.Width = 172;
             // 
             // columnValor
             // 
-            this.columnValor.Text = "Valor";
+            this.columnValor.Text = "S04";
             this.columnValor.Width = 82;
             // 
             // btnSave
@@ -129,7 +129,7 @@
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(75, 28);
             this.btnSave.TabIndex = 6;
-            this.btnSave.Text = "Guardar";
+            this.btnSave.Text = "S0A";
             this.btnSave.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnSave.UseVisualStyleBackColor = true;
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);

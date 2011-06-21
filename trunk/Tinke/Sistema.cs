@@ -184,7 +184,7 @@ namespace Tinke
             romInfo.LeerIdioma();
             debug.LeerIdioma();
 
-            MessageBox.Show("Please restart the program.");
+            MessageBox.Show(Tools.Helper.ObtenerTraduccion("Messages", "S07"));
         }
 
         private Carpeta FNT(string file, UInt32 offset, UInt32 size)

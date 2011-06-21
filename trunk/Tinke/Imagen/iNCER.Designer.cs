@@ -28,15 +28,15 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem(new string[] {
-            "Sección"}, -1, System.Drawing.Color.Empty, System.Drawing.Color.Empty, new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0))));
-            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("Número de celdas");
-            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem("Tipo de celdas");
-            System.Windows.Forms.ListViewItem listViewItem4 = new System.Windows.Forms.ListViewItem("Constante");
-            System.Windows.Forms.ListViewItem listViewItem5 = new System.Windows.Forms.ListViewItem("Tamaño bloque");
-            System.Windows.Forms.ListViewItem listViewItem6 = new System.Windows.Forms.ListViewItem("Desconocido 1");
-            System.Windows.Forms.ListViewItem listViewItem7 = new System.Windows.Forms.ListViewItem("Desconocido 2");
-            System.Windows.Forms.ListViewItem listViewItem8 = new System.Windows.Forms.ListViewItem("Desconocido (Sección UEXT)");
+            System.Windows.Forms.ListViewItem listViewItem9 = new System.Windows.Forms.ListViewItem(new string[] {
+            "S07"}, -1, System.Drawing.Color.Empty, System.Drawing.Color.Empty, new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0))));
+            System.Windows.Forms.ListViewItem listViewItem10 = new System.Windows.Forms.ListViewItem("S08");
+            System.Windows.Forms.ListViewItem listViewItem11 = new System.Windows.Forms.ListViewItem("S09");
+            System.Windows.Forms.ListViewItem listViewItem12 = new System.Windows.Forms.ListViewItem("S0A");
+            System.Windows.Forms.ListViewItem listViewItem13 = new System.Windows.Forms.ListViewItem("S0B");
+            System.Windows.Forms.ListViewItem listViewItem14 = new System.Windows.Forms.ListViewItem("S0C");
+            System.Windows.Forms.ListViewItem listViewItem15 = new System.Windows.Forms.ListViewItem("S0D");
+            System.Windows.Forms.ListViewItem listViewItem16 = new System.Windows.Forms.ListViewItem("S0E");
             this.imgBox = new System.Windows.Forms.PictureBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.listProp = new System.Windows.Forms.ListView();
@@ -72,7 +72,7 @@
             this.groupBox1.Size = new System.Drawing.Size(247, 256);
             this.groupBox1.TabIndex = 1;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Propiedades";
+            this.groupBox1.Text = "S04";
             // 
             // listProp
             // 
@@ -81,14 +81,14 @@
             this.columnValor});
             this.listProp.Dock = System.Windows.Forms.DockStyle.Fill;
             this.listProp.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem1,
-            listViewItem2,
-            listViewItem3,
-            listViewItem4,
-            listViewItem5,
-            listViewItem6,
-            listViewItem7,
-            listViewItem8});
+            listViewItem9,
+            listViewItem10,
+            listViewItem11,
+            listViewItem12,
+            listViewItem13,
+            listViewItem14,
+            listViewItem15,
+            listViewItem16});
             this.listProp.Location = new System.Drawing.Point(3, 16);
             this.listProp.Name = "listProp";
             this.listProp.Size = new System.Drawing.Size(241, 237);
@@ -98,12 +98,12 @@
             // 
             // columnCampo
             // 
-            this.columnCampo.Text = "Campo";
+            this.columnCampo.Text = "S05";
             this.columnCampo.Width = 151;
             // 
             // columnValor
             // 
-            this.columnValor.Text = "Valor";
+            this.columnValor.Text = "S06";
             this.columnValor.Width = 86;
             // 
             // label1
@@ -111,9 +111,9 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(3, 266);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(37, 13);
+            this.label1.Size = new System.Drawing.Size(26, 13);
             this.label1.TabIndex = 2;
-            this.label1.Text = "Celda:";
+            this.label1.Text = "S01";
             // 
             // comboCelda
             // 
@@ -131,7 +131,7 @@
             this.btnTodos.Name = "btnTodos";
             this.btnTodos.Size = new System.Drawing.Size(210, 23);
             this.btnTodos.TabIndex = 4;
-            this.btnTodos.Text = "Mostrar todas las celdas";
+            this.btnTodos.Text = "S02";
             this.btnTodos.UseVisualStyleBackColor = true;
             this.btnTodos.Click += new System.EventHandler(this.btnTodos_Click);
             // 
@@ -143,7 +143,7 @@
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(75, 26);
             this.btnSave.TabIndex = 5;
-            this.btnSave.Text = "Guardar";
+            this.btnSave.Text = "S03";
             this.btnSave.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnSave.UseVisualStyleBackColor = true;
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
@@ -153,9 +153,9 @@
             this.checkEntorno.AutoSize = true;
             this.checkEntorno.Location = new System.Drawing.Point(265, 259);
             this.checkEntorno.Name = "checkEntorno";
-            this.checkEntorno.Size = new System.Drawing.Size(100, 17);
+            this.checkEntorno.Size = new System.Drawing.Size(45, 17);
             this.checkEntorno.TabIndex = 6;
-            this.checkEntorno.Text = "Mostrar entorno";
+            this.checkEntorno.Text = "S0F";
             this.checkEntorno.UseVisualStyleBackColor = true;
             this.checkEntorno.CheckedChanged += new System.EventHandler(this.check_CheckedChanged);
             // 
@@ -164,9 +164,9 @@
             this.checkNumber.AutoSize = true;
             this.checkNumber.Location = new System.Drawing.Point(405, 282);
             this.checkNumber.Name = "checkNumber";
-            this.checkNumber.Size = new System.Drawing.Size(104, 17);
+            this.checkNumber.Size = new System.Drawing.Size(45, 17);
             this.checkNumber.TabIndex = 7;
-            this.checkNumber.Text = "Mostrar números";
+            this.checkNumber.Text = "S13";
             this.checkNumber.UseVisualStyleBackColor = true;
             this.checkNumber.CheckedChanged += new System.EventHandler(this.check_CheckedChanged);
             // 
@@ -175,9 +175,9 @@
             this.checkCelda.AutoSize = true;
             this.checkCelda.Location = new System.Drawing.Point(265, 282);
             this.checkCelda.Name = "checkCelda";
-            this.checkCelda.Size = new System.Drawing.Size(95, 17);
+            this.checkCelda.Size = new System.Drawing.Size(45, 17);
             this.checkCelda.TabIndex = 8;
-            this.checkCelda.Text = "Mostrar celdas";
+            this.checkCelda.Text = "S10";
             this.checkCelda.UseVisualStyleBackColor = true;
             this.checkCelda.CheckedChanged += new System.EventHandler(this.check_CheckedChanged);
             // 
@@ -186,9 +186,9 @@
             this.checkTransparencia.AutoSize = true;
             this.checkTransparencia.Location = new System.Drawing.Point(405, 259);
             this.checkTransparencia.Name = "checkTransparencia";
-            this.checkTransparencia.Size = new System.Drawing.Size(94, 17);
+            this.checkTransparencia.Size = new System.Drawing.Size(45, 17);
             this.checkTransparencia.TabIndex = 9;
-            this.checkTransparencia.Text = "Transparencia";
+            this.checkTransparencia.Text = "S12";
             this.checkTransparencia.UseVisualStyleBackColor = true;
             this.checkTransparencia.CheckedChanged += new System.EventHandler(this.check_CheckedChanged);
             // 
@@ -199,9 +199,9 @@
             this.checkImagen.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkImagen.Location = new System.Drawing.Point(265, 306);
             this.checkImagen.Name = "checkImagen";
-            this.checkImagen.Size = new System.Drawing.Size(98, 17);
+            this.checkImagen.Size = new System.Drawing.Size(45, 17);
             this.checkImagen.TabIndex = 10;
-            this.checkImagen.Text = "Mostrar imagen";
+            this.checkImagen.Text = "S11";
             this.checkImagen.UseVisualStyleBackColor = true;
             this.checkImagen.CheckedChanged += new System.EventHandler(this.check_CheckedChanged);
             // 

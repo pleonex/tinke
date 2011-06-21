@@ -111,13 +111,14 @@
 	  <S04>English translation by</S04>
 	  <S05>Source code:</S05>
 	  <S06>This program is free software under the terms of the GNU
-General Public License at version 3.</S06>
+General Public License version 3.</S06>
 	  <S07>This program is made with the help from following webs pages.</S07>
 	  <S08>Library for decompressing files</S08>
 	  <S09>Information about rom header.</S09>
 	  <S0A>Information about Nintendo files format.</S0A>
 	  <S0B>Icons used by this program.</S0B>
 	  <S0C>pleoNeX</S0C>
+	  <S0D>http://groups.google.com/group/tinke</S0D>
 	</Autores>
 	<Espera>
 		<S01>Loading...</S01>
@@ -129,43 +130,105 @@ General Public License at version 3.</S06>
 	  <S03>Analysing game:</S03>
 	  <S04>Game information:</S04>
 	  <S05>Loading program...</S05>
+	  <S06>The current .NSCR file is not compatible with the .NCGR selected file.
+	  Try another file.</S06>
+	  <S07>Please restart the program.</S07>
 	</Messages>
 	<NCLR>
-		<S01>Nº de paleta:</S01>
-		<S02>Propiedades</S02>
-		<S03>Campo</S03>
-		<S04>Valor</S04>
-		<S05>Número de paletas</S05>
-		<S06>Profundidad del color</S06>
+		<S01># palette:</S01>
+		<S02>Properties</S02>
+		<S03>Property</S03>
+		<S04>Content</S04>
+		<S05># palettes</S05>
+		<S06>Depth</S06>
 		<S07>Padding</S07>
-		<S08>Nº de colores por paleta</S08>
-		<S09>Tamaño de paleta</S09>
-		<S0A>Guardar</S0A>
-		<S0B>Mostrar todas las paletas</S0B>
-		<S0C>Paleta</S0C>
+		<S08>Colors per palette</S08>
+		<S09>Palette length</S09>
+		<S0A>Save</S0A>
+		<S0B>Show all palettes</S0B>
+		<S0C>Palette</S0C>
+		<S0D>Analyzing NCLR palette:</S0D>
+		<S0E>Strange number of sections ¿?: </S0E>
+		<S0F>palettes found</S0F>
+		<S10>colors.</S10>
 	</NCLR>
 	<NCGR>
-		<S01>Haga doble click en la imagen para verla a
-		tamaño real.</S01>
-		<S02>Propiedades</S02>
-		<S03>Posición</S03>
-		<S04>Campo</S04>
-		<S05>Valor</S05>
-		<S06>Desconocido</S06>
-		<S07>Nº secciones</S07>
-		<S08>ID Sección 1</S08>
-		<S09>Tamaño</S09>
+		<S01>Double-click to see the full image.</S01>
+		<S02>Properties</S02>
+		<S03>Offset</S03>
+		<S04>Property</S04>
+		<S05>Content</S05>
+		<S06>Unknown</S06>
+		<S07>Number of sections</S07>
+		<S08>ID Section 1</S08>
+		<S09>Lenght</S09>
 		<S0A>Tiles Y</S0A>
 		<S0B>Tiles X</S0B>
-		<S0C>Formato</S0C>
-		<S0D>Desconocido</S0D>
-		<S0E>Desconocido</S0E>
-		<S0F>Tamaño píxels datos</S0F>
-		<S10>Desconocido</S10>
-		<S11>Inicio:</S11>
-		<S12>Ancho:</S12>
-		<S13>Alto:</S13>
-		<S14>Orden de tiles:</S14>
-		<S15>Guardar</S15>
+		<S0C>Tile form</S0C>
+		<S0D>Unknown</S0D>
+		<S0E>Unknown</S0E>
+		<S0F>Length of pixels data</S0F>
+		<S10>Unknown</S10>
+		<S11>Offset:</S11>
+		<S12>Width:</S12>
+		<S13>Height:</S13>
+		<S14>Image pattern:</S14>
+		<S15>Save</S15>
+		<S16>No tiled</S16>
+		<S17>Horizontal</S17>
+		<S18>Vertical</S18>
+		<S19>Full size image</S19>
 	</NCGR>
+	<NCER>
+		<S01>Cell:</S01>
+		<S02>Show all cells</S02>
+		<S03>Save</S03>
+		<S04>Properties</S04>
+		<S05>Property</S05>
+		<S06>Content</S06>
+		<S07>Section</S07>
+		<S08>Number of cells</S08>
+		<S09>Type of cell</S09>
+		<S0A>Constant</S0A>
+		<S0B>Block size</S0B>
+		<S0C>Unknown 1</S0C>
+		<S0D>Unknown 2</S0D>
+		<S0E>Unknown (Section UEXT)</S0E>
+		<S0F>Show guides</S0F>
+		<S10>Show cells</S10>
+		<S11>Show image</S11>
+		<S12>Transparency</S12>
+		<S13>Show numbers</S13>
+		<S14>Cells</S14>
+	</NCER>
+	<NANR>
+		<S01>Interval:</S01>
+		<S02>miliseconds</S02>
+		<S03>Guides options</S03>
+		<S04>Show guides</S04>
+		<S05>Show cells</S05>
+		<S06>Show image</S06>
+		<S07>Transparency</S07>
+		<S08>Show numbers</S08>
+		<S09>Properties</S09>
+		<S0A>Property</S0A>
+		<S0B>Content</S0B>
+		<S0C>Section:</S0C>
+		<S0D>Number of animations</S0D>
+		<S0E>Number of frames</S0E>
+		<S0F>Constant</S0F>
+		<S10>Padding</S10>
+		<S11>Animation</S11>
+		<S12>Number of animation</S12>
+		<S13>Number of frames</S13>
+		<S14>Data type</S14>
+		<S15>Unknown 1</S15>
+		<S16>Unknown 2</S16>
+		<S17>Unknown 3</S17>
+		<S18>Frame</S18>
+		<S19>Number</S19>
+		<S1A>Frame data</S1A>
+		<S1B>Number of cell</S1B>
+		<S1C>Save</S1C>
+	</NANR>
 	</Language>

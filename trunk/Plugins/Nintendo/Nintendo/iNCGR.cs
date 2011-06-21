@@ -15,7 +15,7 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  *
  * Programador: pleoNeX
- * Programa utilizado: SharpDevelop
+ * Programa utilizado: Microsoft Visual C# 2010 Express
  * Fecha: 18/02/2011
  * 
  */
@@ -37,18 +37,22 @@ namespace Nintendo
         NCGR tile;
         int startTile;
         IPluginHost pluginHost;
+        string tVen;
 
         string oldDepth;
+        int oldTiles;
 
         public iNCGR()
         {
             InitializeComponent();
+            LeerIdioma();
         }
-        public iNCGR(IPluginHost pluginHost, NCGR tile, NCLR paleta)
+        public iNCGR(IPluginHost pluginHost,NCGR tile, NCLR paleta)
         {
-            InitializeComponent();
-
             this.pluginHost = pluginHost;
+            InitializeComponent();
+            LeerIdioma();
+
             this.paleta = paleta;
             this.tile = tile;
             pic.Image = pluginHost.Bitmap_NCGR(tile, paleta, 0);
@@ -56,6 +60,21 @@ namespace Nintendo
             this.numericHeight.Value = pic.Image.Height;
             this.comboDepth.Text = (tile.rahc.depth == ColorDepth.Depth4Bit ? "4 bpp" : "8 bpp");
             oldDepth = comboDepth.Text;
+            switch (tile.orden)
+            {
+                case Orden_Tiles.No_Tiles:
+                    oldTiles = 0;
+                    comboBox1.SelectedIndex = 0;
+                    break;
+                case Orden_Tiles.Horizontal:
+                    oldTiles = 1;
+                    comboBox1.SelectedIndex = 1;
+                    break;
+                case Orden_Tiles.Vertical:
+                    oldTiles = 2;
+                    comboBox1.SelectedIndex = 2;
+                    break;
+            }
             this.comboDepth.SelectedIndexChanged += new EventHandler(comboDepth_SelectedIndexChanged);
             this.numericWidth.ValueChanged += new EventHandler(numericSize_ValueChanged);
             this.numericHeight.ValueChanged += new EventHandler(numericSize_ValueChanged);
@@ -97,8 +116,17 @@ namespace Nintendo
         }
         private void Actualizar_Imagen()
         {
-            tile.rahc.nTilesX = (ushort)(numericWidth.Value / 8);
-            tile.rahc.nTilesY = (ushort)(numericHeight.Value / 8);
+            if (tile.orden != Orden_Tiles.No_Tiles)
+            {
+                tile.rahc.nTilesX = (ushort)(numericWidth.Value / 8);
+                tile.rahc.nTilesY = (ushort)(numericHeight.Value / 8);
+            }
+            else
+            {
+                tile.rahc.nTilesX = (ushort)numericWidth.Value;
+                tile.rahc.nTilesY = (ushort)numericHeight.Value;
+            }
+
             pic.Image = pluginHost.Bitmap_NCGR(tile, paleta, startTile);
         }
         private void Info()
@@ -121,7 +149,7 @@ namespace Nintendo
             SaveFileDialog o = new SaveFileDialog();
             o.AddExtension = true;
             o.DefaultExt = "bmp";
-            o.Filter = "Imagen BitMaP (*.bmp)|*.bmp";
+            o.Filter = "BitMaP (*.bmp)|*.bmp";
             o.OverwritePrompt = true;
             if (o.ShowDialog() == DialogResult.OK)
                 pic.Image.Save(o.FileName);
@@ -136,7 +164,7 @@ namespace Nintendo
 
             ven.Controls.Add(pcBox);
             ven.BackColor = SystemColors.GradientInactiveCaption;
-            ven.Text = "Imagen a tamaño real";
+            ven.Text = tVen; ;
             ven.AutoScroll = true;
             ven.MaximumSize = new Size(1024, 768);
             ven.ShowIcon = false;
@@ -144,6 +172,62 @@ namespace Nintendo
             ven.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             ven.MaximizeBox = false;
             ven.Show();
+        }
+
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (oldTiles == comboBox1.SelectedIndex)
+                return;
+
+            switch (comboBox1.SelectedIndex)
+            {
+                case 0:
+                    tile.orden = Orden_Tiles.No_Tiles;
+                    tile.rahc.tileData.tiles[0] = pluginHost.TilesToBytes(tile.rahc.tileData.tiles);
+                    break;
+                case 1:
+                    tile.orden = Orden_Tiles.Horizontal;
+                    tile.rahc.tileData.tiles = pluginHost.BytesToTiles(tile.rahc.tileData.tiles[0]);
+                    break;
+                case 2:
+                    tile.orden = Orden_Tiles.Vertical;
+                    break;
+            }
+            oldTiles = comboBox1.SelectedIndex;
+
+            Actualizar_Imagen();
+        }
+
+        private void LeerIdioma()
+        {
+            System.Xml.Linq.XElement xml = System.Xml.Linq.XElement.Load(Application.StartupPath + "\\Plugins\\NintendoLang.xml");
+            xml = xml.Element(pluginHost.Get_Language()).Element("NCGR");
+
+            label5.Text = xml.Element("S01").Value;
+            groupProp.Text = xml.Element("S02").Value;
+            columnPos.Text = xml.Element("S03").Value;
+            columnCampo.Text = xml.Element("S04").Value;
+            columnValor.Text = xml.Element("S05").Value;
+            listInfo.Items[0].SubItems[1].Text = xml.Element("S06").Value;
+            listInfo.Items[1].SubItems[1].Text = xml.Element("S07").Value;
+            listInfo.Items[2].SubItems[1].Text = xml.Element("S08").Value;
+            listInfo.Items[3].SubItems[1].Text = xml.Element("S09").Value;
+            listInfo.Items[4].SubItems[1].Text = xml.Element("S0A").Value;
+            listInfo.Items[5].SubItems[1].Text = xml.Element("S0B").Value;
+            listInfo.Items[6].SubItems[1].Text = xml.Element("S0C").Value;
+            listInfo.Items[7].SubItems[1].Text = xml.Element("S0D").Value;
+            listInfo.Items[8].SubItems[1].Text = xml.Element("S0E").Value;
+            listInfo.Items[9].SubItems[1].Text = xml.Element("S0F").Value;
+            listInfo.Items[10].SubItems[1].Text = xml.Element("S10").Value;
+            label3.Text = xml.Element("S11").Value;
+            label1.Text = xml.Element("S12").Value;
+            label2.Text = xml.Element("S13").Value;
+            label6.Text = xml.Element("S14").Value;
+            btnSave.Text = xml.Element("S15").Value;
+            comboBox1.Items[0] = xml.Element("S16").Value;
+            comboBox1.Items[1] = xml.Element("S17").Value;
+            comboBox1.Items[2] = xml.Element("S18").Value;
+            tVen = xml.Element("S19").Value;
         }
     }
 }

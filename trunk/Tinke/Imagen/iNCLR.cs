@@ -134,7 +134,7 @@ namespace Tinke
             o.AddExtension = true;
             o.CheckPathExists = true;
             o.DefaultExt = ".png";
-            o.Filter = "Imagen Portable Network Graphics (*.png)|*.png";
+            o.Filter = "Portable Network Graphics (*.png)|*.png";
             o.OverwritePrompt = true;
 
             if (o.ShowDialog() == DialogResult.OK)

@@ -1,0 +1,186 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Language>
+  <Español>
+    <NCGR>
+      <S01>
+        Haga doble click en la imagen para verla a 
+        tamaño real.
+      </S01>
+      <S02>Propiedades</S02>
+      <S03>Posición</S03>
+      <S04>Campo</S04>
+      <S05>Valor</S05>
+      <S06>Desconocido</S06>
+      <S07>Nº secciones</S07>
+      <S08>ID Sección 1</S08>
+      <S09>Tamaño</S09>
+      <S0A>Tiles Y</S0A>
+      <S0B>Tiles X</S0B>
+      <S0C>Formato</S0C>
+      <S0D>Desconocido</S0D>
+      <S0E>Desconocido</S0E>
+      <S0F>Tamaño píxels datos</S0F>
+      <S10>Desconocido</S10>
+      <S11>Inicio:</S11>
+      <S12>Ancho:</S12>
+      <S13>Alto:</S13>
+      <S14>Orden de tiles:</S14>
+      <S15>Guardar</S15>
+      <S16>Sin tiles</S16>
+      <S17>Horizontal</S17>
+      <S18>Vertical</S18>
+      <S19>Imagen a tamaño real</S19>
+    </NCGR>
+    <NCLR>
+      <S01>Nº de paleta:</S01>
+      <S02>Propiedades</S02>
+      <S03>Campo</S03>
+      <S04>Valor</S04>
+      <S05>Número de paletas</S05>
+      <S06>Profundidad del color</S06>
+      <S07>Padding</S07>
+      <S08>Nº de colores por paleta</S08>
+      <S09>Tamaño de paleta</S09>
+      <S0A>Guardar</S0A>
+      <S0B>Mostrar todas las paletas</S0B>
+      <S0C>Paleta</S0C>
+      <S0D>Analizando paleta NCLR:</S0D>
+      <S0E>No hay secciones o hay de más ¿?: </S0E>
+      <S0F>paletas encontradas</S0F>
+      <S10>colores.</S10>
+    </NCLR>
+    <BMG>
+      <S01>Campo</S01>
+      <S02>Valor</S02>
+      <S03>Codificación</S03>
+      <S04>Sección</S04>
+      <S05># mensajes</S05>
+      <S06>Tamaño offset</S06>
+      <S07>Desconocido 1</S07>
+      <S08>Desconocido 2</S08>
+      <S09>Mensaje:</S09>
+      <S0A>Sí</S0A>
+      <S0B>No</S0B>
+    </BMG>
+  </Español>
+  <English>
+    <NCLR>
+      <S01># palette:</S01>
+      <S02>Properties</S02>
+      <S03>Property</S03>
+      <S04>Content</S04>
+      <S05># palettes</S05>
+      <S06>Depth</S06>
+      <S07>Padding</S07>
+      <S08>Colors per palette</S08>
+      <S09>Palette length</S09>
+      <S0A>Save</S0A>
+      <S0B>Show all palettes</S0B>
+      <S0C>Palette</S0C>
+      <S0D>Analyzing NCLR palette:</S0D>
+      <S0E>Strange number of sections ¿?: </S0E>
+      <S0F>palettes found</S0F>
+      <S10>colors.</S10>
+    </NCLR>
+    <NCGR>
+      <S01>Double-click to see the full image.</S01>
+      <S02>Properties</S02>
+      <S03>Offset</S03>
+      <S04>Property</S04>
+      <S05>Content</S05>
+      <S06>Unknown</S06>
+      <S07>Number of sections</S07>
+      <S08>ID Section 1</S08>
+      <S09>Lenght</S09>
+      <S0A>Tiles Y</S0A>
+      <S0B>Tiles X</S0B>
+      <S0C>Tile form</S0C>
+      <S0D>Unknown</S0D>
+      <S0E>Unknown</S0E>
+      <S0F>Length of pixels data</S0F>
+      <S10>Unknown</S10>
+      <S11>Offset:</S11>
+      <S12>Width:</S12>
+      <S13>Height:</S13>
+      <S14>Image pattern:</S14>
+      <S15>Save</S15>
+      <S16>No tiled</S16>
+      <S17>Horizontal</S17>
+      <S18>Vertical</S18>
+      <S19>Full size image</S19>
+    </NCGR>
+    <BMG>
+      <S01>Property</S01>
+      <S02>Content</S02>
+      <S03>Codification</S03>
+      <S04>Section</S04>
+      <S05># messages</S05>
+      <S06>Offset length</S06>
+      <S07>Unknown 1</S07>
+      <S08>Unknown 2</S08>
+      <S09>Message:</S09>
+      <S0A>Yes</S0A>
+      <S0B>No</S0B>
+    </BMG>
+  </English>
+  <Français>
+    <NCLR>
+      <S01>Numéro de palette:</S01>
+      <S02>Propriétés</S02>
+      <S03>Champ</S03>
+      <S04>Valeur</S04>
+      <S05>Nombre de palettes</S05>
+      <S06>Profondeur des couleurs</S06>
+      <S07>Padding</S07>
+      <S08>Nombre de couleurs par palette</S08>
+      <S09>Taille de la palette</S09>
+      <S0A>Sauvegarder</S0A>
+      <S0B>Montrer toutes les palettes</S0B>
+      <S0C>Palette</S0C>
+      <S0D>Analysant palette NCLR:</S0D>
+      <S0E>Pas de sections où excès ¿?:</S0E>
+      <S0F>palettes trouvées</S0F>
+      <S10>couleurs.</S10>
+    </NCLR>
+    <NCGR>
+      <S01>Faites doble click sur l'image pour la voir en taille réelle.</S01>
+      <S02>Propriétés</S02>
+      <S03>Position</S03>
+      <S04>Champ</S04>
+      <S05>Valeur</S05>
+      <S06>Inconnu</S06>
+      <S07>Nombre de sections</S07>
+      <S08>ID Section 1</S08>
+      <S09>Taille</S09>
+      <S0A>Tiles Y</S0A>
+      <S0B>Tiles X</S0B>
+      <S0C>Format</S0C>
+      <S0D>Inconnu</S0D>
+      <S0E>Inconnu</S0E>
+      <S0F>Taille pixels donnés</S0F>
+      <S10>Inconnu</S10>
+      <S11>Début:</S11>
+      <S12>Longueur:</S12>
+      <S13>Hauteur:</S13>
+      <S14>Ordre des tiles:</S14>
+      <S15>Sauvegarder</S15>
+      <S16>No tiled</S16>
+      <S17>Horizontal</S17>
+      <S18>Vertical</S18>
+      <S19>Image en taille réelle</S19>
+    </NCGR>
+    <BMG>
+      <S01>Champ</S01>
+      <S02>Valeur</S02>
+      <S03>Codification</S03>
+      <S04>Section</S04>
+      <S05>Nombre messages</S05>
+      <S06>Taille offset</S06>
+      <S07>Inconnu 1</S07>
+      <S08>Inconnu 2</S08>
+      <S09>Message:</S09>
+      <S0A>Oui</S0A>
+      <S0B>Non</S0B>
+    </BMG>
+  </Français>
+</Language>

@@ -13,10 +13,29 @@ namespace LAYTON
         byte[][] datos;         // Array de datos de la array de partes.
         InfoParte[] infoPartes;
         TabPage[] partes;
+        string idioma;
+        string pestaña;
 
         public InfoImage()
         {
             InitializeComponent();
+        }
+        public InfoImage(string idioma)
+        {
+            InitializeComponent();
+            this.idioma = idioma;
+
+            System.Xml.Linq.XElement xml = System.Xml.Linq.XElement.Load(Application.StartupPath + "\\Plugins\\LaytonLang.xml");
+            xml = xml.Element(idioma).Element("InfoImage");
+
+            lblImgs.Text = xml.Element("S01").Value;
+            lblTamanoImg.Text = xml.Element("S02").Value;
+            lblAncho.Text = xml.Element("S03").Value;
+            lblAlto.Text = xml.Element("S04").Value;
+            lblNPartes.Text = xml.Element("S05").Value;
+            lblName.Text = xml.Element("S06").Value;
+            groupBox1.Text = xml.Element("S07").Value;
+            pestaña = xml.Element("S08").Value;
         }
 
         #region Propiedades
@@ -80,9 +99,9 @@ namespace LAYTON
 
                 for (int i = 0; i < value; i++)
                 {
-                    infoPartes[i] = new InfoParte();
+                    infoPartes[i] = new InfoParte(idioma);
                     partes[i] = new TabPage();
-                    partes[i].Text = "Parte " + i.ToString();
+                    partes[i].Text = pestaña + ' ' + i.ToString();
                     partes[i].Controls.Add(infoPartes[i]);
                 }
 

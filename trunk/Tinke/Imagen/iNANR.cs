@@ -43,10 +43,12 @@ namespace Tinke
         public iNANR()
         {
             InitializeComponent();
+            LeerIdioma();
         }
         public iNANR(NCLR paleta, NCGR tiles, NCER celdas, NANR ani)
         {
             InitializeComponent();
+            LeerIdioma();
 
             this.paleta = paleta;
             this.tiles = tiles;
@@ -63,6 +65,46 @@ namespace Tinke
             tempo.Stop();
             tempo.Interval = Convert.ToInt32(txtTime.Text);
             aniBox.Image = bitAni[0];
+        }
+
+        private void LeerIdioma()
+        {
+            System.Xml.Linq.XElement xml = Tools.Helper.ObtenerTraduccion("NANR");
+
+            label2.Text = xml.Element("S01").Value;
+            label1.Text = xml.Element("S02").Value;
+            groupBox2.Text = xml.Element("S03").Value;
+            checkEntorno.Text = xml.Element("S04").Value;
+            checkCeldas.Text = xml.Element("S05").Value;
+            checkImage.Text = xml.Element("S06").Value;
+            checkTransparencia.Text = xml.Element("S07").Value;
+            checkNumeros.Text = xml.Element("S08").Value;
+            groupBox1.Text = xml.Element("S09").Value;
+            columnCampo.Text = xml.Element("S0A").Value;
+            columnValor.Text = xml.Element("S0B").Value;
+            listProp.Items[0].Text = xml.Element("S0C").Value;
+            listProp.Items[1].Text = xml.Element("S0D").Value;
+            listProp.Items[2].Text = xml.Element("S0E").Value;
+            listProp.Items[3].Text = xml.Element("S0F").Value;
+            listProp.Items[4].Text = xml.Element("S10").Value;
+            listProp.Items[5].Text = xml.Element("S0C").Value;
+            listProp.Items[5].SubItems[1].Text = xml.Element("S11").Value;
+            listProp.Items[6].Text = xml.Element("S12").Value;
+            listProp.Items[7].Text = xml.Element("S13").Value;
+            listProp.Items[8].Text = xml.Element("S14").Value;
+            listProp.Items[9].Text = xml.Element("S15").Value;
+            listProp.Items[10].Text = xml.Element("S16").Value;
+            listProp.Items[11].Text = xml.Element("S17").Value;
+            listProp.Items[12].Text = xml.Element("S0C").Value;
+            listProp.Items[12].SubItems[1].Text = xml.Element("S18").Value;
+            listProp.Items[13].Text = xml.Element("S19").Value;
+            listProp.Items[14].Text = xml.Element("S15").Value;
+            listProp.Items[15].Text = xml.Element("S0F").Value;
+            listProp.Items[16].Text = xml.Element("S0C").Value;
+            listProp.Items[16].SubItems[1].Text = xml.Element("S1A").Value;
+            listProp.Items[17].Text = xml.Element("S1B").Value;
+            label3.Text = xml.Element("S11").Value;
+            btnSave.Text = xml.Element("S1C").Value;
         }
 
         private void ShowInfo()

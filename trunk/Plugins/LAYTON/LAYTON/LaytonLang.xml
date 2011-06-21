@@ -1,0 +1,102 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Language>
+  <Español>
+    <InfoAni>
+      <S01>Intervalo:</S01>
+      <S02>Transparencia</S02>
+      <S03>Guardar imagen</S03>
+      <S04>Guardar animación</S04>
+    </InfoAni>
+    <InfoImage>
+      <S01>Imágenes:</S01>
+      <S02>Tamaño img:</S02>
+      <S03>Ancho:</S03>
+      <S04>Alto:</S04>
+      <S05>Nº partes:</S05>
+      <S06>Nombre:</S06>
+      <S07>Información de partes:</S07>
+      <S08>Parte</S08>
+    </InfoImage>
+    <InfoParte>
+      <S01>Posición:</S01>
+      <S02>Tamaño:</S02>
+      <S03>Ancho:</S03>
+      <S04>Alto:</S04>
+      <S05>Posición X:</S05>
+      <S06>Posición Y:</S06>
+    </InfoParte>
+    <InfoPicture>
+      <S01>Información del archivo:</S01>
+      <S02>Tipo:</S02>
+      <S03># imágenes:</S03>
+      <S04>Información de las imágenes</S04>
+      <S05>Imagen</S05>
+    </InfoPicture>
+  </Español>
+  <English>
+    <InfoAni>
+      <S01>Delay:</S01>
+      <S02>Transparency</S02>
+      <S03>Save image</S03>
+      <S04>Save animation</S04>
+    </InfoAni>
+    <InfoImage>
+      <S01>Images:</S01>
+      <S02>Image length:</S02>
+      <S03>Width:</S03>
+      <S04>Height:</S04>
+      <S05># part:</S05>
+      <S06>Name:</S06>
+      <S07>Part information:</S07>
+      <S08>Part</S08>
+    </InfoImage>
+    <InfoParte>
+      <S01>Offset:</S01>
+      <S02>Size:</S02>
+      <S03>Width:</S03>
+      <S04>Height:</S04>
+      <S05>X Position:</S05>
+      <S06>Y Position:</S06>
+    </InfoParte>
+    <InfoPicture>
+      <S01>File information:</S01>
+      <S02>Type:</S02>
+      <S03># images:</S03>
+      <S04>Image information</S04>
+      <S05>Image</S05>
+    </InfoPicture>
+  </English>
+  <Français>
+    <InfoAni>
+      <S01>Intervalle:</S01>
+      <S02>Transparence</S02>
+      <S03>Sauvegarder image</S03>
+      <S04>Sauvegarder animation</S04>
+    </InfoAni>
+    <InfoImage>
+      <S01>Images:</S01>
+      <S02>Taille img:</S02>
+      <S03>Longueur:</S03>
+      <S04>Hauteur:</S04>
+      <S05>Nombre de portions:</S05>
+      <S06>Nom:</S06>
+      <S07>Information des portions:</S07>
+      <S08>Portion</S08>
+    </InfoImage>
+    <InfoParte>
+      <S01>Position:</S01>
+      <S02>Taille:</S02>
+      <S03>Longueur:</S03>
+      <S04>Hauteur:</S04>
+      <S05>Position X:</S05>
+      <S06>Position Y:</S06>
+    </InfoParte>
+    <InfoPicture>
+      <S01>Information du  fichier:</S01>
+      <S02>Type:</S02>
+      <S03>Nombre images:</S03>
+      <S04>Information des images</S04>
+      <S05>Image</S05>
+    </InfoPicture>
+  </Français>
+</Language>

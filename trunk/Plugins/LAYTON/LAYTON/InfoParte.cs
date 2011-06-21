@@ -15,6 +15,20 @@ namespace LAYTON
         {
             InitializeComponent();
         }
+        public InfoParte(string idioma)
+        {
+            InitializeComponent();
+
+            System.Xml.Linq.XElement xml = System.Xml.Linq.XElement.Load(Application.StartupPath + "\\Plugins\\LaytonLang.xml");
+            xml = xml.Element(idioma).Element("InfoParte");
+
+            lblPos.Text = xml.Element("S01").Value;
+            lblTamanoP.Text = xml.Element("S02").Value;
+            lblAnchoP.Text = xml.Element("S03").Value;
+            lblAltoP.Text = xml.Element("S04").Value;
+            lblPosX.Text = xml.Element("S05").Value;
+            lblPosY.Text = xml.Element("S06").Value;
+        }
 
         public Ani.Parte Informacion
         {
