@@ -51,37 +51,37 @@ namespace Tinke
         {
             System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem(new string[] {
             "0x06",
-            "Desconocido"}, -1);
+            "S06"}, -1);
             System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem(new string[] {
             "0x0E",
-            "Nº secciones"}, -1);
+            "S07"}, -1);
             System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem(new string[] {
             "0x10",
-            "ID Sección 1"}, -1);
+            "S08"}, -1);
             System.Windows.Forms.ListViewItem listViewItem4 = new System.Windows.Forms.ListViewItem(new string[] {
             "0x14",
-            "Tamaño"}, -1);
+            "S09"}, -1);
             System.Windows.Forms.ListViewItem listViewItem5 = new System.Windows.Forms.ListViewItem(new string[] {
             "0x18",
-            "Tiles Y"}, -1);
+            "S0A"}, -1);
             System.Windows.Forms.ListViewItem listViewItem6 = new System.Windows.Forms.ListViewItem(new string[] {
             "0x1A",
-            "Tiles X"}, -1);
+            "S0B"}, -1);
             System.Windows.Forms.ListViewItem listViewItem7 = new System.Windows.Forms.ListViewItem(new string[] {
             "0x1C",
-            "Formato"}, -1);
+            "S0C"}, -1);
             System.Windows.Forms.ListViewItem listViewItem8 = new System.Windows.Forms.ListViewItem(new string[] {
             "0x20",
-            "Desconocido"}, -1);
+            "S0D"}, -1);
             System.Windows.Forms.ListViewItem listViewItem9 = new System.Windows.Forms.ListViewItem(new string[] {
             "0x24",
-            "Desconocido"}, -1);
+            "S0E"}, -1);
             System.Windows.Forms.ListViewItem listViewItem10 = new System.Windows.Forms.ListViewItem(new string[] {
             "0x28",
-            "Tamaño píxels datos"}, -1);
+            "S0F"}, -1);
             System.Windows.Forms.ListViewItem listViewItem11 = new System.Windows.Forms.ListViewItem(new string[] {
             "0x2C",
-            "Desconocido"}, -1);
+            "S10"}, -1);
             this.numericWidth = new System.Windows.Forms.NumericUpDown();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -139,18 +139,18 @@ namespace Tinke
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(7, 271);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(41, 13);
+            this.label1.Size = new System.Drawing.Size(26, 13);
             this.label1.TabIndex = 2;
-            this.label1.Text = "Ancho:";
+            this.label1.Text = "S12";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(148, 271);
+            this.label2.Location = new System.Drawing.Point(143, 271);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(28, 13);
+            this.label2.Size = new System.Drawing.Size(26, 13);
             this.label2.TabIndex = 3;
-            this.label2.Text = "Alto:";
+            this.label2.Text = "S13";
             // 
             // numericHeight
             // 
@@ -198,25 +198,25 @@ namespace Tinke
             this.groupProp.Size = new System.Drawing.Size(243, 512);
             this.groupProp.TabIndex = 5;
             this.groupProp.TabStop = false;
-            this.groupProp.Text = "Propiedades";
+            this.groupProp.Text = "S02";
             // 
             // label6
             // 
             this.label6.AutoSize = true;
             this.label6.Location = new System.Drawing.Point(37, 298);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(72, 13);
+            this.label6.Size = new System.Drawing.Size(26, 13);
             this.label6.TabIndex = 11;
-            this.label6.Text = "Orden de tiles";
+            this.label6.Text = "S14";
             // 
             // comboBox1
             // 
             this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox1.FormattingEnabled = true;
             this.comboBox1.Items.AddRange(new object[] {
-            "Sin tiles",
-            "Horizontal",
-            "Vertical"});
+            "S16",
+            "S17",
+            "S18"});
             this.comboBox1.Location = new System.Drawing.Point(115, 295);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(121, 21);
@@ -226,11 +226,11 @@ namespace Tinke
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(148, 245);
+            this.label4.Location = new System.Drawing.Point(143, 245);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(28, 13);
+            this.label4.Size = new System.Drawing.Size(31, 13);
             this.label4.TabIndex = 9;
-            this.label4.Text = "bpp:";
+            this.label4.Text = "BPP:";
             // 
             // btnSave
             // 
@@ -239,7 +239,7 @@ namespace Tinke
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(79, 32);
             this.btnSave.TabIndex = 6;
-            this.btnSave.Text = "Guardar";
+            this.btnSave.Text = "S15";
             this.btnSave.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnSave.UseVisualStyleBackColor = true;
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
@@ -261,9 +261,9 @@ namespace Tinke
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(7, 245);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(35, 13);
+            this.label3.Size = new System.Drawing.Size(26, 13);
             this.label3.TabIndex = 7;
-            this.label3.Text = "Inicio:";
+            this.label3.Text = "S11";
             // 
             // numericStart
             // 
@@ -305,17 +305,17 @@ namespace Tinke
             // 
             // columnPos
             // 
-            this.columnPos.Text = "Posición";
+            this.columnPos.Text = "S03";
             this.columnPos.Width = 54;
             // 
             // columnCampo
             // 
-            this.columnCampo.Text = "Campo";
+            this.columnCampo.Text = "S04";
             this.columnCampo.Width = 94;
             // 
             // columnValor
             // 
-            this.columnValor.Text = "Valor";
+            this.columnValor.Text = "S05";
             this.columnValor.Width = 81;
             // 
             // pic
@@ -336,9 +336,9 @@ namespace Tinke
             this.label5.AutoSize = true;
             this.label5.Location = new System.Drawing.Point(3, 480);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(209, 26);
+            this.label5.Size = new System.Drawing.Size(26, 13);
             this.label5.TabIndex = 6;
-            this.label5.Text = "Haga doble click en la imagen para verla a\r\ntamaño real.";
+            this.label5.Text = "S01";
             // 
             // iNCGR
             // 

@@ -40,10 +40,12 @@ namespace Tinke
         public iNCER()
         {
             InitializeComponent();
+            LeerIdioma();
         }
         public iNCER(NCER ncer, NCGR tile, NCLR paleta)
         {
             InitializeComponent();
+            LeerIdioma();
             this.ncer = ncer;
             this.tile = tile;
             this.paleta = paleta;
@@ -58,6 +60,31 @@ namespace Tinke
                 tile, paleta, checkEntorno.Checked, checkCelda.Checked, checkNumber.Checked, 
                 checkTransparencia.Checked, checkImagen.Checked);
 
+        }
+
+        private void LeerIdioma()
+        {
+            System.Xml.Linq.XElement xml = Tools.Helper.ObtenerTraduccion("NCER");
+
+            label1.Text = xml.Element("S01").Value;
+            btnTodos.Text = xml.Element("S02").Value;
+            btnSave.Text = xml.Element("S03").Value;
+            groupBox1.Text = xml.Element("S04").Value;
+            columnCampo.Text = xml.Element("S05").Value;
+            columnValor.Text = xml.Element("S06").Value;
+            listProp.Items[0].Text = xml.Element("S07").Value;
+            listProp.Items[1].Text = xml.Element("S08").Value;
+            listProp.Items[2].Text = xml.Element("S09").Value;
+            listProp.Items[3].Text = xml.Element("S0A").Value;
+            listProp.Items[4].Text = xml.Element("S0B").Value;
+            listProp.Items[5].Text = xml.Element("S0C").Value;
+            listProp.Items[6].Text = xml.Element("S0D").Value;
+            listProp.Items[7].Text = xml.Element("S0E").Value;
+            checkEntorno.Text = xml.Element("S0F").Value;
+            checkCelda.Text = xml.Element("S10").Value;
+            checkImagen.Text = xml.Element("S11").Value;
+            checkTransparencia.Text = xml.Element("S12").Value;
+            checkNumber.Text = xml.Element("S13").Value;
         }
 
         private void ShowInfo()
@@ -129,7 +156,7 @@ namespace Tinke
                 }
             }
 
-            ven.Text = "Imagenes";
+            ven.Text = Tools.Helper.ObtenerTraduccion("NCER","S14");
             ven.BackColor = SystemColors.GradientInactiveCaption;
             ven.AutoScroll = true;
             ven.AutoSize = true;

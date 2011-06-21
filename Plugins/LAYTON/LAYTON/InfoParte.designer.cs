@@ -68,27 +68,27 @@
             this.lblPos.AutoSize = true;
             this.lblPos.Location = new System.Drawing.Point(3, 4);
             this.lblPos.Name = "lblPos";
-            this.lblPos.Size = new System.Drawing.Size(38, 13);
+            this.lblPos.Size = new System.Drawing.Size(26, 13);
             this.lblPos.TabIndex = 35;
-            this.lblPos.Text = "Offset:";
+            this.lblPos.Text = "S01";
             // 
             // lblAltoP
             // 
             this.lblAltoP.AutoSize = true;
             this.lblAltoP.Location = new System.Drawing.Point(182, 34);
             this.lblAltoP.Name = "lblAltoP";
-            this.lblAltoP.Size = new System.Drawing.Size(28, 13);
+            this.lblAltoP.Size = new System.Drawing.Size(26, 13);
             this.lblAltoP.TabIndex = 41;
-            this.lblAltoP.Text = "Alto:";
+            this.lblAltoP.Text = "S04";
             // 
             // lblTamanoP
             // 
             this.lblTamanoP.AutoSize = true;
             this.lblTamanoP.Location = new System.Drawing.Point(182, 4);
             this.lblTamanoP.Name = "lblTamanoP";
-            this.lblTamanoP.Size = new System.Drawing.Size(49, 13);
+            this.lblTamanoP.Size = new System.Drawing.Size(26, 13);
             this.lblTamanoP.TabIndex = 37;
-            this.lblTamanoP.Text = "Tamaño:";
+            this.lblTamanoP.Text = "S02";
             // 
             // txtTamanoP
             // 
@@ -102,9 +102,9 @@
             this.lblAnchoP.AutoSize = true;
             this.lblAnchoP.Location = new System.Drawing.Point(3, 30);
             this.lblAnchoP.Name = "lblAnchoP";
-            this.lblAnchoP.Size = new System.Drawing.Size(41, 13);
+            this.lblAnchoP.Size = new System.Drawing.Size(26, 13);
             this.lblAnchoP.TabIndex = 39;
-            this.lblAnchoP.Text = "Ancho:";
+            this.lblAnchoP.Text = "S03";
             // 
             // txtPosY
             // 
@@ -125,18 +125,18 @@
             this.lblPosY.AutoSize = true;
             this.lblPosY.Location = new System.Drawing.Point(182, 58);
             this.lblPosY.Name = "lblPosY";
-            this.lblPosY.Size = new System.Drawing.Size(60, 13);
+            this.lblPosY.Size = new System.Drawing.Size(26, 13);
             this.lblPosY.TabIndex = 46;
-            this.lblPosY.Text = "Posición Y:";
+            this.lblPosY.Text = "S06";
             // 
             // lblPosX
             // 
             this.lblPosX.AutoSize = true;
             this.lblPosX.Location = new System.Drawing.Point(3, 59);
             this.lblPosX.Name = "lblPosX";
-            this.lblPosX.Size = new System.Drawing.Size(60, 13);
+            this.lblPosX.Size = new System.Drawing.Size(26, 13);
             this.lblPosX.TabIndex = 47;
-            this.lblPosX.Text = "Posición X:";
+            this.lblPosX.Text = "S05";
             // 
             // InfoParte
             // 

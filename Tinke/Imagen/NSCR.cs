@@ -108,11 +108,19 @@ namespace Tinke
                 byte[] currTile;
                 if (nscr.section.screenData[i].nTile == j)
                 {
+                    if (j == tiles.tiles.Length)
+                        throw new Exception(Tools.Helper.ObtenerTraduccion("Messages", "S06"));
+
                     currTile = tiles.tiles[j];
                     j++;
                 }
                 else
+                {
+                    if (nscr.section.screenData[i].nTile >= tiles.tiles.Length)
+                        throw new Exception(Tools.Helper.ObtenerTraduccion("Messages", "S06"));
+
                     currTile = tiles.tiles[nscr.section.screenData[i].nTile];
+                }
 
                 if (nscr.section.screenData[i].xFlip == 1)
                     currTile = XFlip(currTile);

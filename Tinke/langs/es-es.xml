@@ -119,6 +119,7 @@
 	  <S0A>Información sobre estructura de formatos de Nintendo.</S0A>
 	  <S0B>Iconos usados en este programa.</S0B>
 	  <S0C>pleoNeX</S0C>
+	  <S0D>http://pleonet.blogspot.com/</S0D>
 	</Autores>
 	<Espera>
 		<S01>Cargando...</S01>
@@ -130,6 +131,9 @@
 	  <S03>Analizando el juego:</S03>
 	  <S04>Información del juego:</S04>
 	  <S05>Cargando el programa...</S05>
+	  <S06>Este archivo .NSCR es incompatible con el archivo .NCGR seleccionado.
+	  Inténtalo con otro.</S06>
+	  <S07>Por favor reinicie el programa.</S07>
 	</Messages>
 	<NCLR>
 		<S01>Nº de paleta:</S01>
@@ -144,6 +148,10 @@
 		<S0A>Guardar</S0A>
 		<S0B>Mostrar todas las paletas</S0B>
 		<S0C>Paleta</S0C>
+		<S0D>Analizando paleta NCLR:</S0D>
+		<S0E>No hay secciones o hay de más ¿?: </S0E>
+		<S0F>paletas encontradas</S0F>
+		<S10>colores.</S10>
 	</NCLR>
 	<NCGR>
 		<S01>Haga doble click en la imagen para verla a
@@ -168,5 +176,61 @@
 		<S13>Alto:</S13>
 		<S14>Orden de tiles:</S14>
 		<S15>Guardar</S15>
+		<S16>Sin tiles</S16>
+		<S17>Horizontal</S17>
+		<S18>Vertical</S18>
+		<S19>Imagen a tamaño real</S19>
 	</NCGR>
+	<NCER>
+		<S01>Celda:</S01>
+		<S02>Mostrar todas las celdas</S02>
+		<S03>Guardar</S03>
+		<S04>Propiedades</S04>
+		<S05>Campo</S05>
+		<S06>Valor</S06>
+		<S07>Sección</S07>
+		<S08>Número de celdas</S08>
+		<S09>Tipo de celdas</S09>
+		<S0A>Constante</S0A>
+		<S0B>Tamaño bloque</S0B>
+		<S0C>Desconocido 1</S0C>
+		<S0D>Desconocido 2</S0D>
+		<S0E>Desconocido (Sección UEXT)</S0E>
+		<S0F>Mostrar entorno</S0F>
+		<S10>Mostrar celdas</S10>
+		<S11>Mostrar imagen</S11>
+		<S12>Transparencia</S12>
+		<S13>Mostrar números</S13>
+		<S14>Celdas</S14>
+	</NCER>
+	<NANR>
+		<S01>Intervalo:</S01>
+		<S02>milisegundos</S02>
+		<S03>Opciones de entorno</S03>
+		<S04>Mostrar entorno</S04>
+		<S05>Mostrar celdas</S05>
+		<S06>Mostrar imagen</S06>
+		<S07>Transparencia</S07>
+		<S08>Mostrar números</S08>
+		<S09>Propiedades</S09>
+		<S0A>Campo</S0A>
+		<S0B>Valor</S0B>
+		<S0C>Sección:</S0C>
+		<S0D>Número de animaciones</S0D>
+		<S0E>Número total de frames</S0E>
+		<S0F>Constante</S0F>
+		<S10>Padding</S10>
+		<S11>Animación</S11>
+		<S12>Número de animación</S12>
+		<S13>Número de frames</S13>
+		<S14>Tipo de datos</S14>
+		<S15>Desconocido 1</S15>
+		<S16>Desconocido 2</S16>
+		<S17>Desconocido 3</S17>
+		<S18>Frame</S18>
+		<S19>Número</S19>
+		<S1A>Datos frame</S1A>
+		<S1B>Número de celda</S1B>
+		<S1C>Guardar</S1C>
+	</NANR>
 </Language>

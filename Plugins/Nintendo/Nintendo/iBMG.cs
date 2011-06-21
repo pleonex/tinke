@@ -6,25 +6,48 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using PluginInterface;
 
 namespace Nintendo
 {
     public partial class iBMG : UserControl
     {
+        IPluginHost pluginHost;
         sBMG bmg;
         string[] msg;
+        string[] traducciones;
 
-        public iBMG(sBMG bmg)
+        public iBMG(IPluginHost pluginHost, sBMG bmg)
         {
+            this.pluginHost = pluginHost;
             InitializeComponent();
+            LeerIdioma();
 
             this.bmg = bmg;
             Informacion();
         }
+        private void LeerIdioma()
+        {
+            System.Xml.Linq.XElement xml = System.Xml.Linq.XElement.Load(Application.StartupPath + "\\Plugins\\NintendoLang.xml");
+            xml = xml.Element(pluginHost.Get_Language()).Element("BMG");
+
+            columnHeader1.Text = xml.Element("S01").Value;
+            columnHeader2.Text = xml.Element("S02").Value;
+            listProp.Items[0].Text = xml.Element("S03").Value;
+            listProp.Items[1].Text = xml.Element("S04").Value;
+            listProp.Items[2].Text = xml.Element("S05").Value;
+            listProp.Items[3].Text = xml.Element("S06").Value;
+            listProp.Items[4].Text = xml.Element("S07").Value;
+            listProp.Items[5].Text = xml.Element("S08").Value;
+            label1.Text = xml.Element("S09").Value;
+            traducciones = new String[2];
+            traducciones[0] = xml.Element("S0A").Value;
+            traducciones[1] = xml.Element("S0B").Value;
+        }
 
         private void Informacion()
         {
-            listProp.Items[0].SubItems.Add(bmg.uft16 ? "Sí" : "No");
+            listProp.Items[0].SubItems.Add(bmg.uft16 ? traducciones[0] : traducciones[1]);
             listProp.Items[2].SubItems.Add(bmg.inf1.nMsg.ToString());
             listProp.Items[3].SubItems.Add(bmg.inf1.offsetLength.ToString());
             listProp.Items[4].SubItems.Add(bmg.inf1.unknown1.ToString());

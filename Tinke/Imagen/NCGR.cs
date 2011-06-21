@@ -143,7 +143,7 @@ namespace Tinke
                 case Orden_Tiles.Vertical:
                     throw new NotImplementedException();
                 default:
-                    return new Bitmap(0, 0);
+                    return new Bitmap(1, 1);
             }
         }
         public static Bitmap Crear_Imagen(NCGR tile, NCLR paleta, int startTile, int tilesX, int tilesY)

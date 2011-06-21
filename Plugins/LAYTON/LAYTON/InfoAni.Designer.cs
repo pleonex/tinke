@@ -70,7 +70,7 @@
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(89, 34);
             this.btnSave.TabIndex = 5;
-            this.btnSave.Text = "Guardar imagen";
+            this.btnSave.Text = "S03";
             this.btnSave.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnSave.UseVisualStyleBackColor = true;
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
@@ -82,7 +82,7 @@
             this.btnSaveAni.Name = "btnSaveAni";
             this.btnSaveAni.Size = new System.Drawing.Size(89, 34);
             this.btnSaveAni.TabIndex = 6;
-            this.btnSaveAni.Text = "Guardar animación";
+            this.btnSaveAni.Text = "S04";
             this.btnSaveAni.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnSaveAni.UseVisualStyleBackColor = true;
             this.btnSaveAni.Click += new System.EventHandler(this.btnSaveAni_Click);
@@ -103,9 +103,9 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(265, 329);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(37, 13);
+            this.label1.Size = new System.Drawing.Size(26, 13);
             this.label1.TabIndex = 8;
-            this.label1.Text = "Delay:";
+            this.label1.Text = "S01";
             // 
             // label2
             // 
@@ -166,9 +166,9 @@
             this.checkBox1.AutoSize = true;
             this.checkBox1.Location = new System.Drawing.Point(268, 393);
             this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(94, 17);
+            this.checkBox1.Size = new System.Drawing.Size(45, 17);
             this.checkBox1.TabIndex = 14;
-            this.checkBox1.Text = "Transparencia";
+            this.checkBox1.Text = "S02";
             this.checkBox1.UseVisualStyleBackColor = true;
             this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
             // 

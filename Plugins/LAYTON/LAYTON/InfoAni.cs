@@ -23,9 +23,10 @@ namespace LAYTON
         public InfoAni(Ani.Todo info, IPluginHost pluginHost)
         {
             InitializeComponent();
-
             this.pluginHost = pluginHost;
+            LeerIdioma();
 
+            infoPicture1.Idioma = pluginHost.Get_Language();
             infoPicture1.Informacion = info;
             imagenes = new Bitmap[info.imgs];
             for (int i = 0; i < info.imgs; i++)
@@ -36,6 +37,17 @@ namespace LAYTON
 
             comboBox1.SelectedIndex = 0;
             pictureBox1.Image = imagenes[0];
+        }
+        
+        private void LeerIdioma()
+        {
+            System.Xml.Linq.XElement xml = System.Xml.Linq.XElement.Load(Application.StartupPath + "\\Plugins\\LaytonLang.xml");
+            xml = xml.Element(pluginHost.Get_Language()).Element("InfoAni");
+            
+            label1.Text = xml.Element("S01").Value;
+            checkBox1.Text = xml.Element("S02").Value;
+            btnSave.Text = xml.Element("S03").Value;
+            btnSaveAni.Text = xml.Element("S04").Value;
         }
 
         private void comboBox1_SelectedIndexChanged_1(object sender, EventArgs e)
@@ -50,7 +62,7 @@ namespace LAYTON
             o.AddExtension = true;
             o.CheckPathExists = true;
             o.DefaultExt = ".bmp";
-            o.Filter = "Imagen BitMaP (*.bmp)|*.bmp";
+            o.Filter = "BitMaP (*.bmp)|*.bmp";
             o.OverwritePrompt = true;
 
             if (o.ShowDialog() == DialogResult.OK)
@@ -62,7 +74,7 @@ namespace LAYTON
             o.AddExtension = true;
             o.CheckPathExists = true;
             o.DefaultExt = ".gif";
-            o.Filter = "Animación gif (*.gif)|*.gif";
+            o.Filter = "Graphics Interchange Format (*.gif)|*.gif";
             o.OverwritePrompt = true;
 
             if (o.ShowDialog() == DialogResult.OK)
@@ -109,7 +121,8 @@ namespace LAYTON
 
         private void maskedTextBox1_TextChanged(object sender, EventArgs e)
         {
-            timer1.Interval = Convert.ToInt32(maskedTextBox1.Text);
+            if (maskedTextBox1.Text != "")
+                timer1.Interval = Convert.ToInt32(maskedTextBox1.Text);
         }
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e)

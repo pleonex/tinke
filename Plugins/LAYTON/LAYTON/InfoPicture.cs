@@ -15,19 +15,32 @@ namespace LAYTON
         #region Variables
         InfoImage[] infoImag;
         TabPage[] tabImag;
+        string idioma;
+        string pestaña;        
         #endregion
 
         // Constructor
         public InfoPicture()
         {
             InitializeComponent();
+            idioma = "Español";
         }
-        public InfoPicture(Ani.Todo info)
+        public void LeerIdioma()
         {
-            InitializeComponent();
-            Informacion = info;
+            System.Xml.Linq.XElement xml = System.Xml.Linq.XElement.Load(Application.StartupPath + "\\Plugins\\LaytonLang.xml");
+            xml = xml.Element(idioma).Element("InfoPicture");
+
+            groupImage.Text = xml.Element("S01").Value;
+            lblTipo.Text = xml.Element("S02").Value;
+            lblNImgs.Text = xml.Element("S03").Value;
+            groupBox1.Text = xml.Element("S04").Value;
+            pestaña = xml.Element("S05").Value;
         }
 
+        public string Idioma
+        {
+            set { idioma = value; LeerIdioma(); }
+        }
         public string Tipo
         {
             set { txtTipo.Text = value; }
@@ -43,9 +56,9 @@ namespace LAYTON
 
                 for (int i = 0; i < value; i++)
                 {
-                    infoImag[i] = new InfoImage();
+                    infoImag[i] = new InfoImage(idioma);
                     tabImag[i] = new TabPage();
-                    tabImag[i].Text = "Imagen " + i.ToString();
+                    tabImag[i].Text = pestaña + ' ' + i.ToString();
                     tabImag[i].Controls.Add(infoImag[i]);
                 }
 

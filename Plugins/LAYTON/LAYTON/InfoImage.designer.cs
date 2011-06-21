@@ -53,7 +53,7 @@
             this.groupBox1.Size = new System.Drawing.Size(351, 122);
             this.groupBox1.TabIndex = 45;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Información de partes:";
+            this.groupBox1.Text = "S07";
             // 
             // tabPartes
             // 
@@ -69,9 +69,9 @@
             this.lblNPartes.AutoSize = true;
             this.lblNPartes.Location = new System.Drawing.Point(4, 61);
             this.lblNPartes.Name = "lblNPartes";
-            this.lblNPartes.Size = new System.Drawing.Size(54, 13);
+            this.lblNPartes.Size = new System.Drawing.Size(26, 13);
             this.lblNPartes.TabIndex = 37;
-            this.lblNPartes.Text = "Nº partes:";
+            this.lblNPartes.Text = "S05";
             // 
             // txtNPartes
             // 
@@ -85,9 +85,9 @@
             this.lblTamanoImg.AutoSize = true;
             this.lblTamanoImg.Location = new System.Drawing.Point(166, 6);
             this.lblTamanoImg.Name = "lblTamanoImg";
-            this.lblTamanoImg.Size = new System.Drawing.Size(68, 13);
+            this.lblTamanoImg.Size = new System.Drawing.Size(26, 13);
             this.lblTamanoImg.TabIndex = 47;
-            this.lblTamanoImg.Text = "Tamaño img:";
+            this.lblTamanoImg.Text = "S02";
             // 
             // txtTamanoImg
             // 
@@ -108,18 +108,18 @@
             this.lblImgs.AutoSize = true;
             this.lblImgs.Location = new System.Drawing.Point(1, 6);
             this.lblImgs.Name = "lblImgs";
-            this.lblImgs.Size = new System.Drawing.Size(56, 13);
+            this.lblImgs.Size = new System.Drawing.Size(26, 13);
             this.lblImgs.TabIndex = 39;
-            this.lblImgs.Text = "Imágenes:";
+            this.lblImgs.Text = "S01";
             // 
             // lblAncho
             // 
             this.lblAncho.AutoSize = true;
             this.lblAncho.Location = new System.Drawing.Point(3, 36);
             this.lblAncho.Name = "lblAncho";
-            this.lblAncho.Size = new System.Drawing.Size(41, 13);
+            this.lblAncho.Size = new System.Drawing.Size(26, 13);
             this.lblAncho.TabIndex = 41;
-            this.lblAncho.Text = "Ancho:";
+            this.lblAncho.Text = "S03";
             // 
             // txtAlto
             // 
@@ -133,9 +133,9 @@
             this.lblAlto.AutoSize = true;
             this.lblAlto.Location = new System.Drawing.Point(168, 32);
             this.lblAlto.Name = "lblAlto";
-            this.lblAlto.Size = new System.Drawing.Size(28, 13);
+            this.lblAlto.Size = new System.Drawing.Size(26, 13);
             this.lblAlto.TabIndex = 44;
-            this.lblAlto.Text = "Alto:";
+            this.lblAlto.Text = "S04";
             // 
             // txtAncho
             // 
@@ -149,9 +149,9 @@
             this.lblName.AutoSize = true;
             this.lblName.Location = new System.Drawing.Point(168, 61);
             this.lblName.Name = "lblName";
-            this.lblName.Size = new System.Drawing.Size(47, 13);
+            this.lblName.Size = new System.Drawing.Size(26, 13);
             this.lblName.TabIndex = 48;
-            this.lblName.Text = "Nombre:";
+            this.lblName.Text = "S06";
             // 
             // txtName
             // 

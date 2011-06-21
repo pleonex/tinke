@@ -15,7 +15,7 @@ namespace Tinke
         {
             NCLR nclr = new NCLR();
             BinaryReader br = new BinaryReader(File.OpenRead(file));
-            Console.WriteLine("Analizando paleta NCLR:");
+            Console.WriteLine(Tools.Helper.ObtenerTraduccion("NCLR","S0D"));
 
             nclr.cabecera.id = br.ReadChars(4);
             nclr.cabecera.endianess = br.ReadUInt16();
@@ -26,7 +26,7 @@ namespace Tinke
             nclr.cabecera.header_size = br.ReadUInt16();
             nclr.cabecera.nSection = br.ReadUInt16();
             if (nclr.cabecera.nSection < 1 || nclr.cabecera.nSection > 2)
-                Console.WriteLine("\tNo hay secciones o hay de más ¿?: " + nclr.cabecera.nSection.ToString());
+                Console.WriteLine('\t' + Tools.Helper.ObtenerTraduccion("NCLR", "S0E") + nclr.cabecera.nSection.ToString());
 
             nclr.pltt = Seccion_PLTT(ref br);
 
@@ -47,7 +47,8 @@ namespace Tinke
             pltt.tamañoPaletas = br.ReadUInt32();
             pltt.nColores = br.ReadUInt32();
             pltt.paletas = new NTFP[(pltt.tamaño - 0x18) / (pltt.nColores * 2)];
-            Console.WriteLine("\t" + pltt.paletas.Length + " paletas encontradas de " + pltt.nColores + " colores.");
+            Console.WriteLine("\t" + pltt.paletas.Length + ' ' + Tools.Helper.ObtenerTraduccion("NCLR", "S0F") +
+                ' ' + pltt.nColores + ' ' + Tools.Helper.ObtenerTraduccion("NCLR", "S10"));
 
             for (int i = 0; i < pltt.paletas.Length; i++)
                 pltt.paletas[i] = Paleta_NTFP(ref br, pltt.nColores);

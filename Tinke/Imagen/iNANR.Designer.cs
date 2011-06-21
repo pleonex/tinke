@@ -51,50 +51,50 @@ namespace Tinke
         {
             this.components = new System.ComponentModel.Container();
             System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem(new string[] {
-            "Sección:",
+            "S0C",
             "ABNK"}, -1, System.Drawing.Color.Empty, System.Drawing.Color.Empty, new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0))));
-            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("Número de animaciones");
-            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem("Número total de frames");
-            System.Windows.Forms.ListViewItem listViewItem4 = new System.Windows.Forms.ListViewItem("Constante");
-            System.Windows.Forms.ListViewItem listViewItem5 = new System.Windows.Forms.ListViewItem("Padding");
+            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("S0D");
+            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem("S0E");
+            System.Windows.Forms.ListViewItem listViewItem4 = new System.Windows.Forms.ListViewItem("S0F");
+            System.Windows.Forms.ListViewItem listViewItem5 = new System.Windows.Forms.ListViewItem("S10");
             System.Windows.Forms.ListViewItem listViewItem6 = new System.Windows.Forms.ListViewItem(new string[] {
-            "Sección",
-            "Animación"}, -1, System.Drawing.Color.Empty, System.Drawing.Color.Empty, new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0))));
+            "S0C",
+            "S11"}, -1, System.Drawing.Color.Empty, System.Drawing.Color.Empty, new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0))));
             System.Windows.Forms.ListViewItem listViewItem7 = new System.Windows.Forms.ListViewItem(new string[] {
-            "Número de animación",
+            "S12",
             "00"}, -1);
             System.Windows.Forms.ListViewItem listViewItem8 = new System.Windows.Forms.ListViewItem(new string[] {
-            "Número de frames",
+            "S13",
             "00"}, -1);
             System.Windows.Forms.ListViewItem listViewItem9 = new System.Windows.Forms.ListViewItem(new string[] {
-            "Tipo de datos",
+            "S14",
             "00"}, -1);
             System.Windows.Forms.ListViewItem listViewItem10 = new System.Windows.Forms.ListViewItem(new string[] {
-            "Desconocido 1",
+            "S15",
             "00"}, -1);
             System.Windows.Forms.ListViewItem listViewItem11 = new System.Windows.Forms.ListViewItem(new string[] {
-            "Desconocido 2",
+            "S16",
             "00"}, -1);
             System.Windows.Forms.ListViewItem listViewItem12 = new System.Windows.Forms.ListViewItem(new string[] {
-            "Desconocido 3",
+            "S17",
             "00"}, -1);
             System.Windows.Forms.ListViewItem listViewItem13 = new System.Windows.Forms.ListViewItem(new string[] {
-            "Sección",
-            "Frame"}, -1, System.Drawing.Color.Empty, System.Drawing.Color.Empty, new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0))));
+            "S0C",
+            "S18"}, -1, System.Drawing.Color.Empty, System.Drawing.Color.Empty, new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0))));
             System.Windows.Forms.ListViewItem listViewItem14 = new System.Windows.Forms.ListViewItem(new string[] {
-            "Número",
+            "S19",
             "00"}, -1);
             System.Windows.Forms.ListViewItem listViewItem15 = new System.Windows.Forms.ListViewItem(new string[] {
-            "Desconocido 1",
+            "S15",
             "00"}, -1);
             System.Windows.Forms.ListViewItem listViewItem16 = new System.Windows.Forms.ListViewItem(new string[] {
-            "Constante",
+            "S0F",
             "00"}, -1);
             System.Windows.Forms.ListViewItem listViewItem17 = new System.Windows.Forms.ListViewItem(new string[] {
-            "Sección",
-            "Datos frame"}, -1, System.Drawing.Color.Empty, System.Drawing.Color.Empty, new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0))));
+            "S0C",
+            "S1A"}, -1, System.Drawing.Color.Empty, System.Drawing.Color.Empty, new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0))));
             System.Windows.Forms.ListViewItem listViewItem18 = new System.Windows.Forms.ListViewItem(new string[] {
-            "Número de celda",
+            "S1B",
             "00"}, -1);
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(iNANR));
             this.aniBox = new System.Windows.Forms.PictureBox();
@@ -142,7 +142,7 @@ namespace Tinke
             this.groupBox1.Size = new System.Drawing.Size(243, 354);
             this.groupBox1.TabIndex = 1;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Propiedades";
+            this.groupBox1.Text = "S09";
             // 
             // listProp
             // 
@@ -178,12 +178,12 @@ namespace Tinke
             // 
             // columnCampo
             // 
-            this.columnCampo.Text = "Campo";
+            this.columnCampo.Text = "S0A";
             this.columnCampo.Width = 146;
             // 
             // columnValor
             // 
-            this.columnValor.Text = "Valor";
+            this.columnValor.Text = "S0B";
             this.columnValor.Width = 83;
             // 
             // tempo
@@ -268,7 +268,7 @@ namespace Tinke
             this.groupBox2.Size = new System.Drawing.Size(258, 114);
             this.groupBox2.TabIndex = 7;
             this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Opciones de entorno";
+            this.groupBox2.Text = "S03";
             // 
             // checkImage
             // 
@@ -277,9 +277,9 @@ namespace Tinke
             this.checkImage.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkImage.Location = new System.Drawing.Point(7, 66);
             this.checkImage.Name = "checkImage";
-            this.checkImage.Size = new System.Drawing.Size(98, 17);
+            this.checkImage.Size = new System.Drawing.Size(45, 17);
             this.checkImage.TabIndex = 4;
-            this.checkImage.Text = "Mostrar imagen";
+            this.checkImage.Text = "S06";
             this.checkImage.UseVisualStyleBackColor = true;
             this.checkImage.CheckedChanged += new System.EventHandler(this.check_CheckedChanged);
             // 
@@ -288,9 +288,9 @@ namespace Tinke
             this.checkTransparencia.AutoSize = true;
             this.checkTransparencia.Location = new System.Drawing.Point(141, 20);
             this.checkTransparencia.Name = "checkTransparencia";
-            this.checkTransparencia.Size = new System.Drawing.Size(94, 17);
+            this.checkTransparencia.Size = new System.Drawing.Size(45, 17);
             this.checkTransparencia.TabIndex = 3;
-            this.checkTransparencia.Text = "Transparencia";
+            this.checkTransparencia.Text = "S07";
             this.checkTransparencia.UseVisualStyleBackColor = true;
             this.checkTransparencia.CheckedChanged += new System.EventHandler(this.check_CheckedChanged);
             // 
@@ -299,9 +299,9 @@ namespace Tinke
             this.checkNumeros.AutoSize = true;
             this.checkNumeros.Location = new System.Drawing.Point(141, 43);
             this.checkNumeros.Name = "checkNumeros";
-            this.checkNumeros.Size = new System.Drawing.Size(104, 17);
+            this.checkNumeros.Size = new System.Drawing.Size(45, 17);
             this.checkNumeros.TabIndex = 2;
-            this.checkNumeros.Text = "Mostrar números";
+            this.checkNumeros.Text = "S08";
             this.checkNumeros.UseVisualStyleBackColor = true;
             this.checkNumeros.CheckedChanged += new System.EventHandler(this.check_CheckedChanged);
             // 
@@ -310,9 +310,9 @@ namespace Tinke
             this.checkCeldas.AutoSize = true;
             this.checkCeldas.Location = new System.Drawing.Point(7, 43);
             this.checkCeldas.Name = "checkCeldas";
-            this.checkCeldas.Size = new System.Drawing.Size(95, 17);
+            this.checkCeldas.Size = new System.Drawing.Size(45, 17);
             this.checkCeldas.TabIndex = 1;
-            this.checkCeldas.Text = "Mostrar celdas";
+            this.checkCeldas.Text = "S05";
             this.checkCeldas.UseVisualStyleBackColor = true;
             this.checkCeldas.CheckedChanged += new System.EventHandler(this.check_CheckedChanged);
             // 
@@ -321,9 +321,9 @@ namespace Tinke
             this.checkEntorno.AutoSize = true;
             this.checkEntorno.Location = new System.Drawing.Point(7, 20);
             this.checkEntorno.Name = "checkEntorno";
-            this.checkEntorno.Size = new System.Drawing.Size(100, 17);
+            this.checkEntorno.Size = new System.Drawing.Size(45, 17);
             this.checkEntorno.TabIndex = 0;
-            this.checkEntorno.Text = "Mostrar entorno";
+            this.checkEntorno.Text = "S04";
             this.checkEntorno.UseVisualStyleBackColor = true;
             this.checkEntorno.CheckedChanged += new System.EventHandler(this.check_CheckedChanged);
             // 
@@ -333,7 +333,7 @@ namespace Tinke
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(75, 23);
             this.btnSave.TabIndex = 8;
-            this.btnSave.Text = "Guardar";
+            this.btnSave.Text = "S1C";
             this.btnSave.UseVisualStyleBackColor = true;
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
             // 
@@ -352,27 +352,27 @@ namespace Tinke
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(119, 307);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(67, 13);
+            this.label1.Size = new System.Drawing.Size(26, 13);
             this.label1.TabIndex = 10;
-            this.label1.Text = "milisegundos";
+            this.label1.Text = "S02";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(16, 306);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(51, 13);
+            this.label2.Size = new System.Drawing.Size(26, 13);
             this.label2.TabIndex = 11;
-            this.label2.Text = "Intervalo:";
+            this.label2.Text = "S01";
             // 
             // label3
             // 
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(297, 364);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(56, 13);
+            this.label3.Size = new System.Drawing.Size(26, 13);
             this.label3.TabIndex = 12;
-            this.label3.Text = "Animación";
+            this.label3.Text = "S11";
             // 
             // iNANR
             // 

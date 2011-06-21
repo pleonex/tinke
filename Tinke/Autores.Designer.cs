@@ -67,7 +67,7 @@ namespace Tinke
             this.lblLowLines = new System.Windows.Forms.Label();
             this.linkfamfamfam = new System.Windows.Forms.LinkLabel();
             this.lblfamfamfam = new System.Windows.Forms.Label();
-            this.lblTraductor = new System.Windows.Forms.Label();
+            this.linkTrad = new System.Windows.Forms.LinkLabel();
             ((System.ComponentModel.ISupportInitialize)(this.pictureImage)).BeginInit();
             this.SuspendLayout();
             // 
@@ -126,6 +126,7 @@ namespace Tinke
             this.linkLabel1.Name = "linkLabel1";
             this.linkLabel1.Size = new System.Drawing.Size(164, 13);
             this.linkLabel1.TabIndex = 5;
+            this.linkLabel1.TabStop = true;
             this.linkLabel1.Text = "http://code.google.com/p/tinke/";
             // 
             // label5
@@ -162,6 +163,7 @@ namespace Tinke
             this.lblDSDecmp.Name = "lblDSDecmp";
             this.lblDSDecmp.Size = new System.Drawing.Size(56, 13);
             this.lblDSDecmp.TabIndex = 9;
+            this.lblDSDecmp.TabStop = true;
             this.lblDSDecmp.Text = "DSDecmp";
             this.lblDSDecmp.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lblDSDecmp_LinkClicked);
             // 
@@ -182,6 +184,7 @@ namespace Tinke
             this.linkGBATEK.Name = "linkGBATEK";
             this.linkGBATEK.Size = new System.Drawing.Size(49, 13);
             this.linkGBATEK.TabIndex = 11;
+            this.linkGBATEK.TabStop = true;
             this.linkGBATEK.Text = "GBATeK";
             this.linkGBATEK.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkGBATEK_LinkClicked);
             // 
@@ -201,6 +204,7 @@ namespace Tinke
             this.linkLowLines.Name = "linkLowLines";
             this.linkLowLines.Size = new System.Drawing.Size(55, 13);
             this.linkLowLines.TabIndex = 13;
+            this.linkLowLines.TabStop = true;
             this.linkLowLines.Text = "Low Lines";
             this.linkLowLines.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLowLines_LinkClicked);
             // 
@@ -220,6 +224,7 @@ namespace Tinke
             this.linkfamfamfam.Name = "linkfamfamfam";
             this.linkfamfamfam.Size = new System.Drawing.Size(58, 13);
             this.linkfamfamfam.TabIndex = 15;
+            this.linkfamfamfam.TabStop = true;
             this.linkfamfamfam.Text = "famfamfam";
             this.linkfamfamfam.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkfamfamfam_LinkClicked);
             // 
@@ -232,22 +237,24 @@ namespace Tinke
             this.lblfamfamfam.TabIndex = 16;
             this.lblfamfamfam.Text = "S0B";
             // 
-            // lblTraductor
+            // linkTrad
             // 
-            this.lblTraductor.AutoSize = true;
-            this.lblTraductor.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTraductor.Location = new System.Drawing.Point(297, 60);
-            this.lblTraductor.Name = "lblTraductor";
-            this.lblTraductor.Size = new System.Drawing.Size(30, 13);
-            this.lblTraductor.TabIndex = 17;
-            this.lblTraductor.Text = "S0C";
+            this.linkTrad.AutoSize = true;
+            this.linkTrad.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.linkTrad.Location = new System.Drawing.Point(297, 60);
+            this.linkTrad.Name = "linkTrad";
+            this.linkTrad.Size = new System.Drawing.Size(30, 13);
+            this.linkTrad.TabIndex = 17;
+            this.linkTrad.TabStop = true;
+            this.linkTrad.Text = "S0C";
+            this.linkTrad.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkTrad_LinkClicked);
             // 
             // Autores
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(435, 293);
-            this.Controls.Add(this.lblTraductor);
+            this.Controls.Add(this.linkTrad);
             this.Controls.Add(this.lblfamfamfam);
             this.Controls.Add(this.linkfamfamfam);
             this.Controls.Add(this.lblLowLines);
@@ -299,7 +306,7 @@ namespace Tinke
         private System.Windows.Forms.Label lblLowLines;
         private System.Windows.Forms.LinkLabel linkfamfamfam;
         private System.Windows.Forms.Label lblfamfamfam;
-        private System.Windows.Forms.Label lblTraductor;
+        private System.Windows.Forms.LinkLabel linkTrad;
 
     }
 }
