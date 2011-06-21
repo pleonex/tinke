@@ -148,7 +148,6 @@ namespace Tinke
 
             Fin:
             br.Close();
-            br.Dispose();
             return ncer;
         }
         public static Size Obtener_Tamaño(byte byte1, byte byte2)

@@ -108,7 +108,6 @@ namespace TXT
             #endregion
 
             br.Close();
-            br.Dispose();
             txtBox.Text = txt;
 
             return txtBox;

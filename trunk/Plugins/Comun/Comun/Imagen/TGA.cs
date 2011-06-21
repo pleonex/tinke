@@ -127,7 +127,6 @@ namespace Comun
             }
             
             br.Close();
-            br.Dispose();
             return imagen;
         }
 

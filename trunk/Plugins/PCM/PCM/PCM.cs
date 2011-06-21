@@ -78,7 +78,6 @@ namespace PCM
                 files[i].size = (uint)new FileInfo(files[i].path).Length;
             }
             br.Close();
-            br.Dispose();
 
             Carpeta carpeta = new Carpeta();
             carpeta.files = new List<Archivo>();

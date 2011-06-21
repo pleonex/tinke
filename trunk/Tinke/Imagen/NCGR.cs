@@ -58,7 +58,6 @@ namespace Tinke
             if (ncgr.cabecera.nSection == 1 || br.BaseStream.Position == br.BaseStream.Length)   // En caso de que no haya más secciones
             {
                 br.Close();
-                br.Dispose();
                 return ncgr;
             }
             
@@ -70,7 +69,6 @@ namespace Tinke
             ncgr.sopc.nTilesY = br.ReadUInt16();
 
             br.Close();
-            br.Dispose();
             return ncgr;
         }
         public static NCGR Leer_Basico(string file)
@@ -104,7 +102,6 @@ namespace Tinke
             }
 
             br.Close();
-            br.Dispose();
             return ncgr;
         }
         

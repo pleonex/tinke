@@ -80,7 +80,6 @@ namespace LAYTON
             paleta.colores = pluginHost.BGR555(paleta.datos);     // Paleta en colores
 
             rdr.Close();
-            rdr.Dispose();
 
             return paleta;
         }
@@ -113,7 +112,6 @@ namespace LAYTON
             }
 
             rdr.Close();
-            rdr.Dispose();
 
             return imagen;
         }
@@ -148,7 +146,6 @@ namespace LAYTON
             }
 
             rdr.Close();
-            rdr.Dispose();
 
             return parte;
         }
@@ -223,7 +220,6 @@ namespace LAYTON
             Paleta paleta = Obtener_Paleta(rdr.BaseStream.Position);
 
             rdr.Close();
-            rdr.Dispose();
 
             for (int i = 0; i < imagenes.Length; i++)
             {
@@ -265,7 +261,6 @@ namespace LAYTON
             }
 
             rdr.Close();
-            rdr.Dispose();
 
             for (int i = 0; i < imagenes.Length; i++)
             {
@@ -368,7 +363,6 @@ namespace LAYTON
             }
 
             rdr.Close();
-            rdr.Dispose();
 
             for (int i = 0; i < imagenes.Length; i++)
             {
@@ -419,7 +413,6 @@ namespace LAYTON
             }
 
             rdr.Close();
-            rdr.Dispose();
 
             return imagen;
         }
@@ -450,7 +443,6 @@ namespace LAYTON
             }
 
             rdr.Close();
-            rdr.Dispose();
 
             return parte;
         }
@@ -474,7 +466,6 @@ namespace LAYTON
             paleta.colores = pluginHost.BGR555(paleta.datos);     // Paleta en colores
 
             rdr.Close();
-            rdr.Dispose();
 
             return paleta;
         }

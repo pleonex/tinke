@@ -51,7 +51,6 @@ namespace Tinke
                 nscr.section.screenData[i].nTile = Convert.ToUInt16(bits.Substring(6, 10), 2);
             }
 
-            br.Dispose();
             br.Close();
             return nscr;
         }
@@ -91,7 +90,6 @@ namespace Tinke
                 nscr.section.screenData[i].nTile = Convert.ToUInt16(bits.Substring(6, 10), 2);
             }
 
-            br.Dispose();
             br.Close();
             return nscr;
         }

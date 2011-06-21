@@ -131,7 +131,7 @@ namespace Tinke
 
             o.Dispose();
             debug.Añadir_Texto(sb.ToString());
-            sb.Clear();
+            sb.Remove(0, sb.Length - 1);
 
             this.Activate();
             debug.Activate();
@@ -446,7 +446,7 @@ namespace Tinke
                     btnDesplazar.PerformClick();
             }
                 debug.Añadir_Texto(sb.ToString());
-                sb.Clear();
+                            sb.Remove(0, sb.Length - 1);;
         }
         private void btnUncompress_Click(object sender, EventArgs e)
         {
@@ -466,7 +466,7 @@ namespace Tinke
             btnHex.Enabled = false;
 
             debug.Añadir_Texto(sb.ToString());
-            sb.Clear();
+                        sb.Remove(0, sb.Length - 1);;
         }
         private void btnExtraer_Click(object sender, EventArgs e)
         {
@@ -482,7 +482,6 @@ namespace Tinke
                     br.BaseStream.Position = fileSelect.offset;
                     File.WriteAllBytes(o.FileName, br.ReadBytes((int)fileSelect.size));
                     br.Close();
-                    br.Dispose();
                 }
                 else
                     File.Copy(fileSelect.path, o.FileName);
@@ -495,7 +494,7 @@ namespace Tinke
             {
                 accion.Set_Data();
                 debug.Añadir_Texto(sb.ToString());
-                sb.Clear();
+                            sb.Remove(0, sb.Length - 1);;
             }
         }
 
@@ -600,7 +599,7 @@ namespace Tinke
                     btnDesplazar.PerformClick();
             }
             debug.Añadir_Texto(sb.ToString());
-            sb.Clear();
+                        sb.Remove(0, sb.Length - 1);;
         }
         private void toolAbrirComoItemPaleta_Click(object sender, EventArgs e)
         {

@@ -88,7 +88,6 @@ namespace LAYTON
             }
 
             br.Close();
-            br.Dispose();
 
             tile.rahc.tileData = pluginHost.Transformar_NSCR(screen, tile.rahc.tileData);
             return pluginHost.Bitmap_NCGR(tile, paleta);

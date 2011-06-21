@@ -73,7 +73,6 @@ namespace Tinke
             }
 
             br.Close();
-            br.Dispose();
         }
 
         private void VisorHex_Resize(object sender, EventArgs e)

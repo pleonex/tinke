@@ -145,7 +145,6 @@ namespace NARC
                 Asignar_Archivos(ref br, root, i, arc.btaf.entries[i].end_offset - arc.btaf.entries[i].start_offset);
             }
             br.Close();
-            br.Dispose();
 
             pluginHost.Set_Files(root);
         }

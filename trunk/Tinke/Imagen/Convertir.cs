@@ -201,7 +201,6 @@ namespace Tinke
             }
 
             br.Close();
-            br.Dispose();
             File.Delete(gif);
             FileStream fs = new FileStream(gif, FileMode.Create);
             fs.Write(ms.ToArray(), 0, (int)ms.Length);
@@ -211,7 +210,6 @@ namespace Tinke
             ms.Close();
             ms.Dispose();
             bw.Close();
-            bw.Dispose();
         }
         /// <summary>
         /// Crea un archivos animado gif apartir de varios archivos bitmap
