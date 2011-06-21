@@ -69,7 +69,6 @@ namespace Nintendo
 			}
 			
 			br.Close();
-			br.Dispose();
 			pluginsHost.Set_NCGR(ncgr);
 		}
 		

@@ -114,7 +114,6 @@ namespace Nintendo
             }
 
             br.Close();
-            br.Dispose();
             return new iBMG(iPluginHost, bmg);
         }
     }

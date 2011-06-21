@@ -31,7 +31,6 @@ namespace Tinke
             nclr.pltt = Seccion_PLTT(ref br);
 
             br.Close();
-            br.Dispose();
 
             return nclr;
         }
@@ -94,7 +93,6 @@ namespace Tinke
             nclr.pltt.paletas[0].colores = Convertir.BGR555(br.ReadBytes((int)file_size));
 
             br.Close();
-            br.Dispose();
             return nclr;
         }
 

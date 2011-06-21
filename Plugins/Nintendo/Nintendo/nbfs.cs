@@ -75,7 +75,6 @@ namespace Nintendo
                 nscr.section.screenData[i].nTile = Convert.ToUInt16(bits.Substring(6, 10), 2);
             }
 
-            br.Dispose();
             br.Close();
             pluginsHost.Set_NSCR(nscr);
 		}

@@ -194,7 +194,6 @@ namespace Tinke
                 bw.Write(br.ReadBytes((int)selectFile.size));
                 bw.Flush();
                 bw.Close();
-                bw.Dispose();
 
                 br.BaseStream.Position = selectFile.offset;
             }
@@ -209,7 +208,6 @@ namespace Tinke
             byte[] ext = br.ReadBytes(4);
 
             br.Close();
-            br.Dispose();
 
             #region Búsqueda y llamada a plugin
             try
@@ -351,7 +349,6 @@ namespace Tinke
                 bw.Write(br.ReadBytes((int)selectFile.size));
                 bw.Flush();
                 bw.Close();
-                bw.Dispose();
 
                 br.BaseStream.Position = selectFile.offset;
             }
@@ -366,7 +363,6 @@ namespace Tinke
             byte[] ext = br.ReadBytes(4);
 
             br.Close();
-            br.Dispose();
 			#endregion
 			
 			#region Formatos comunes
@@ -611,7 +607,6 @@ namespace Tinke
             catch { }
 
             br.Close();
-            br.Dispose();
 
             return ext;
         }
@@ -635,7 +630,6 @@ namespace Tinke
             catch { }
 
             br.Close();
-            br.Dispose();
 
             string fin = new String(Encoding.ASCII.GetChars(ext));
             for (int i = 0; i < 4; i++)             // En caso de no ser extensión
@@ -712,7 +706,6 @@ namespace Tinke
                 bw.Write(br.ReadBytes((int)selectFile.size));
                 bw.Flush();
                 bw.Close();
-                bw.Dispose();
 
                 br.BaseStream.Position = selectFile.offset;
             }
@@ -727,7 +720,6 @@ namespace Tinke
             ext = br.ReadBytes(4);
 
             br.Close();
-            br.Dispose();
 
             #region Búsqueda y llamada a plugin
             try
@@ -788,7 +780,6 @@ namespace Tinke
             BinaryReader br = new BinaryReader(File.OpenRead(arg));
             byte[] ext = br.ReadBytes(4);
             br.Close();
-            br.Dispose();
 
             try
             {
@@ -855,7 +846,6 @@ namespace Tinke
                 bw.Write(br.ReadBytes((int)selectFile.size));
                 bw.Flush();
                 bw.Close();
-                bw.Dispose();
 
                 br.BaseStream.Position = selectFile.offset;
             }
@@ -870,7 +860,6 @@ namespace Tinke
             byte[] ext = br.ReadBytes(4);
 
             br.Close();
-            br.Dispose();
 
             #region Búsqueda y llamada a plugin
             try

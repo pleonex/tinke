@@ -70,7 +70,6 @@ namespace Tinke.Nitro
             nds.headerCRC = (Tools.CRC16.Calcular(br.ReadBytes(0x15E)) == nds.headerCRC16) ? true : false;
 
             br.Close();
-            br.Dispose();
 
             Console.WriteLine("<b>" +
                 Tools.Helper.ObtenerTraduccion("Messages", "S04")
@@ -112,7 +111,6 @@ namespace Tinke.Nitro
             bn.checkCRC = (Tools.CRC16.Calcular(br.ReadBytes(0x820)) == bn.CRC16) ? true : false;
 
             br.Close();
-            br.Dispose();
 
             Console.WriteLine(bn.englishTitle.Replace("\0", ""));
 

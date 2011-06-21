@@ -61,7 +61,6 @@ namespace Nintendo
 			nclr.pltt.paletas[0].colores = pluginHost.BGR555(br.ReadBytes((int)file_size));
 			
 			br.Close();
-			br.Dispose();
 			pluginHost.Set_NCLR(nclr);
 		}
 	}

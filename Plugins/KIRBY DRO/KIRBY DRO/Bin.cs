@@ -87,7 +87,6 @@ namespace KIRBY_DRO
                 screen.section.screenData[i].nTile = Convert.ToUInt16(bits.Substring(6, 10), 2);
             }
             br.Close();
-            br.Dispose();
 
             tile.rahc.tileData = pluginHost.Transformar_NSCR(screen, tile.rahc.tileData);
             return pluginHost.Bitmap_NCGR(tile, paleta);

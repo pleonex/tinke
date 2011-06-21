@@ -97,7 +97,6 @@ namespace Comun
 			
 			pos = br.BaseStream.Position;
 			br.Close();
-			br.Dispose();
 			return des.ToArray();
 		}
 	}

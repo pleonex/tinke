@@ -199,7 +199,6 @@ namespace Compresion
             bw.Close();
 
             br.Close();
-            br.Dispose();
             fstr.Close();
             fstr.Dispose();
 

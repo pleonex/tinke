@@ -144,7 +144,6 @@ namespace Compresion
             Console.WriteLine("Huffman decompressed {0:s}", filename);
 
             br.Close();
-            br.Dispose();
         }
         #endregion
 

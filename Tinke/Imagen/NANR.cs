@@ -148,7 +148,6 @@ namespace Tinke
 
         Fin:
             br.Close();
-            br.Dispose();
             return nanr;
         }
     }

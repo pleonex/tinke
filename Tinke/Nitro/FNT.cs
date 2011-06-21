@@ -83,7 +83,6 @@ namespace Tinke.Nitro
             root.id = 0xF000;
 
             br.Close();
-            br.Dispose();
 
             return root;
         }
