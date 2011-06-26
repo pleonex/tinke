@@ -220,7 +220,12 @@ namespace Tinke
         /// <param name="loops">Número de repeticiones. 0 para infinito, -1 para ninguna</param>
         public static void CrearGif(string fout, Bitmap[] frames, int delay, int loops)
         {
-            // ¡¡No funciona con mono!!
+            Type t = Type.GetType("Mono.Runtime");
+            if (t != null)
+            {
+                Console.WriteLine("Este método no es compatible con Mono.");
+                throw new Exception("Este método no es compatible con Mono.");
+            }
             GifBitmapEncoder encoder = new GifBitmapEncoder();
 
             for (int i = 0; i < frames.Length; i++)

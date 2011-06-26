@@ -52,7 +52,9 @@ namespace Tinke
             ncer.cebk.nBanks = br.ReadUInt16();
             ncer.cebk.tBank = br.ReadUInt16();
             ncer.cebk.constant = br.ReadUInt32();
-            ncer.cebk.block_size = br.ReadUInt32() * 2;              
+            //uint flag1 = (uint)(br.ReadByte() >> 2) << 1;
+            //br.ReadBytes(3);
+            ncer.cebk.block_size = (uint)(br.ReadUInt32() * 2);              
             ncer.cebk.unknown1 = br.ReadUInt32();
             ncer.cebk.unknown2 = br.ReadUInt64();
             ncer.cebk.banks = new Bank[ncer.cebk.nBanks];
@@ -85,7 +87,7 @@ namespace Tinke
                     Size tamaño = Obtener_Tamaño(Tools.Helper.ByteTo4Bits(byte1)[0], Tools.Helper.ByteTo4Bits(byte2)[0]);
                     ncer.cebk.banks[i].cells[j].height = (ushort)tamaño.Height;
                     ncer.cebk.banks[i].cells[j].width = (ushort)tamaño.Width;
-                    ncer.cebk.banks[i].cells[j].tileOffset = (uint)((br.ReadUInt16() | 0xF000) - 0xF000);
+                    ncer.cebk.banks[i].cells[j].tileOffset = (uint)(br.ReadUInt16() & 0x03FF);
                     ncer.cebk.banks[i].cells[j].tileOffset = (uint)(ncer.cebk.banks[i].cells[j].tileOffset * (ncer.cebk.block_size != 0 ? ncer.cebk.block_size : 1));
                     ncer.cebk.banks[i].cells[j].yFlip = (Tools.Helper.ByteTo4Bits(byte2)[0] & 2) == 2 ? true : false;
                     ncer.cebk.banks[i].cells[j].xFlip = (Tools.Helper.ByteTo4Bits(byte2)[0] & 1) == 1 ? true : false;

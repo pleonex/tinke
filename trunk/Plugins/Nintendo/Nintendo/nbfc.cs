@@ -56,7 +56,7 @@ namespace Nintendo
 			ncgr.rahc.depth = System.Windows.Forms.ColorDepth.Depth8Bit;
 			ncgr.rahc.nTilesX = 0x0020;
 			ncgr.rahc.nTilesY = 0x0018;
-			ncgr.rahc.padding = 0x00000000;
+			ncgr.rahc.tiledFlag = 0x00000000;
 			ncgr.rahc.size_section = file_size;
 			ncgr.rahc.tileData = new NTFT();
 			ncgr.rahc.tileData.nPaleta = new byte[ncgr.rahc.nTiles];
