@@ -41,11 +41,13 @@ namespace Tinke
 
             pltt.ID = br.ReadChars(4);
             pltt.tamaño = br.ReadUInt32();
-            pltt.profundidad = (br.ReadUInt32() == 0x00000003) ? ColorDepth.Depth4Bit : ColorDepth.Depth8Bit;
+            pltt.profundidad = (br.ReadUInt16() == 0x00000003) ? ColorDepth.Depth4Bit : ColorDepth.Depth8Bit;
+            br.ReadUInt16();
             pltt.unknown1 = br.ReadUInt32();
             pltt.tamañoPaletas = br.ReadUInt32();
             pltt.nColores = br.ReadUInt32();
-            pltt.paletas = new NTFP[(pltt.tamaño - 0x18) / (pltt.nColores * 2)];
+            if (pltt.profundidad == ColorDepth.Depth8Bit) pltt.nColores = 256;
+            pltt.paletas = new NTFP[pltt.tamañoPaletas / (pltt.nColores * 2)];
             Console.WriteLine("\t" + pltt.paletas.Length + ' ' + Tools.Helper.ObtenerTraduccion("NCLR", "S0F") +
                 ' ' + pltt.nColores + ' ' + Tools.Helper.ObtenerTraduccion("NCLR", "S10"));
 

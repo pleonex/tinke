@@ -25,7 +25,6 @@ namespace Tinke
             ncgr.cabecera.file_size = br.ReadUInt32();
             ncgr.cabecera.header_size = br.ReadUInt16();
             ncgr.cabecera.nSection = br.ReadUInt16();
-            ncgr.orden = Orden_Tiles.Horizontal; // Este formato es siempre tiled
 
             // Lee primera sección CHAR (CHARacter data)
             ncgr.rahc.id = br.ReadChars(4);
@@ -35,7 +34,18 @@ namespace Tinke
             ncgr.rahc.depth = (br.ReadUInt32() == 0x3 ? ColorDepth.Depth4Bit : ColorDepth.Depth8Bit);
             ncgr.rahc.unknown1 = br.ReadUInt16();
             ncgr.rahc.unknown2 = br.ReadUInt16();
-            ncgr.rahc.padding = br.ReadUInt32();
+            ncgr.rahc.tiledFlag = br.ReadUInt32();
+            if (ncgr.rahc.tiledFlag == 0x0)
+                ncgr.orden = Orden_Tiles.Horizontal;
+            else
+            {
+                ncgr.orden = Orden_Tiles.No_Tiles;
+                if (ncgr.rahc.nTilesX != 0xFFFF)
+                {
+                    ncgr.rahc.nTilesX *= 8;
+                    ncgr.rahc.nTilesY *= 8;
+                }
+            }
             ncgr.rahc.size_tiledata = (ncgr.rahc.depth == ColorDepth.Depth8Bit ? br.ReadUInt32() : br.ReadUInt32() * 2);
             ncgr.rahc.unknown3 = br.ReadUInt32();
 
@@ -43,17 +53,33 @@ namespace Tinke
                 ncgr.rahc.nTiles = (ushort)(ncgr.rahc.size_tiledata / 64);
             else
                 ncgr.rahc.nTiles = (ushort)(ncgr.rahc.nTilesX * ncgr.rahc.nTilesY);
-            ncgr.rahc.tileData.tiles = new byte[ncgr.rahc.nTiles][];
+            if (ncgr.orden == Orden_Tiles.Horizontal)
+                ncgr.rahc.tileData.tiles = new byte[ncgr.rahc.nTiles][];
+            else
+                ncgr.rahc.tileData.tiles = new byte[1][];
+            List<byte> noTile = new List<byte>();
             ncgr.rahc.tileData.nPaleta = new byte[ncgr.rahc.nTiles];
 
             for (int i = 0; i < ncgr.rahc.nTiles; i++)
             {
-                if (ncgr.rahc.depth == ColorDepth.Depth4Bit)
-                    ncgr.rahc.tileData.tiles[i] = Tools.Helper.BytesTo4BitsRev(br.ReadBytes(32));
+                if (ncgr.orden == Orden_Tiles.Horizontal)
+                {
+                    if (ncgr.rahc.depth == ColorDepth.Depth4Bit)
+                        ncgr.rahc.tileData.tiles[i] = Tools.Helper.BytesTo4BitsRev(br.ReadBytes(32));
+                    else
+                        ncgr.rahc.tileData.tiles[i] = br.ReadBytes(64);
+                }
                 else
-                    ncgr.rahc.tileData.tiles[i] = br.ReadBytes(64);
+                {
+                    if (ncgr.rahc.depth == ColorDepth.Depth4Bit)
+                        noTile.AddRange(Tools.Helper.BytesTo4BitsRev(br.ReadBytes(32)));
+                    else
+                        noTile.AddRange(br.ReadBytes(64));
+                }
                 ncgr.rahc.tileData.nPaleta[i] = 0;
             }
+            if (ncgr.orden == Orden_Tiles.No_Tiles)
+                ncgr.rahc.tileData.tiles[0] = noTile.ToArray();
 
             if (ncgr.cabecera.nSection == 1 || br.BaseStream.Position == br.BaseStream.Length)   // En caso de que no haya más secciones
             {
@@ -65,8 +91,8 @@ namespace Tinke
             ncgr.sopc.id = br.ReadChars(4);
             ncgr.sopc.size_section = br.ReadUInt32();
             ncgr.sopc.unknown1 = br.ReadUInt32();
-            ncgr.sopc.nTilesX = br.ReadUInt16();
-            ncgr.sopc.nTilesY = br.ReadUInt16();
+            ncgr.sopc.charSize = br.ReadUInt16();
+            ncgr.sopc.nChar = br.ReadUInt16();
 
             br.Close();
             return ncgr;
@@ -89,7 +115,7 @@ namespace Tinke
             ncgr.rahc.depth = System.Windows.Forms.ColorDepth.Depth8Bit;
             ncgr.rahc.nTilesX = 0x0020;
             ncgr.rahc.nTilesY = 0x0018;
-            ncgr.rahc.padding = 0x00000000;
+            ncgr.rahc.tiledFlag = 0x00000000;
             ncgr.rahc.size_section = file_size;
             ncgr.rahc.tileData = new NTFT();
             ncgr.rahc.tileData.nPaleta = new byte[ncgr.rahc.nTiles];

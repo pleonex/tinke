@@ -71,7 +71,7 @@ namespace PluginInterface
         public ColorDepth depth;
         public UInt16 unknown1;
         public UInt16 unknown2;
-        public UInt32 padding;
+        public UInt32 tiledFlag;
         public UInt32 size_tiledata;
         public UInt32 unknown3;         // Constante siempre 0x18 (24)
         public NTFT tileData;
@@ -83,8 +83,8 @@ namespace PluginInterface
         public char[] id;
         public UInt32 size_section;
         public UInt32 unknown1;
-        public UInt16 nTilesX;
-        public UInt16 nTilesY;
+        public UInt16 charSize;
+        public UInt16 nChar;
     }
 
     public struct NTFT              // Nintendo Tile Format Tile
