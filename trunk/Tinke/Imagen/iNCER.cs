@@ -56,7 +56,7 @@ namespace Tinke
                 comboCelda.Items.Add(ncer.labl.names[i]);
             comboCelda.SelectedIndex = 0;
 
-            imgBox.Image = Imagen_NCER.Obtener_Imagen(ncer.cebk.banks[0],
+            imgBox.Image = Imagen_NCER.Obtener_Imagen(ncer.cebk.banks[0], ncer.cebk.block_size,
                 tile, paleta, checkEntorno.Checked, checkCelda.Checked, checkNumber.Checked, 
                 checkTransparencia.Checked, checkImagen.Checked);
 
@@ -85,6 +85,7 @@ namespace Tinke
             checkImagen.Text = xml.Element("S11").Value;
             checkTransparencia.Text = xml.Element("S12").Value;
             checkNumber.Text = xml.Element("S13").Value;
+            label2.Text = xml.Element("S15").Value;
         }
 
         private void ShowInfo()
@@ -101,13 +102,13 @@ namespace Tinke
 
         private void comboCelda_SelectedIndexChanged(object sender, EventArgs e)
         {
-            imgBox.Image = Imagen_NCER.Obtener_Imagen(ncer.cebk.banks[comboCelda.SelectedIndex],
+            imgBox.Image = Imagen_NCER.Obtener_Imagen(ncer.cebk.banks[comboCelda.SelectedIndex], ncer.cebk.block_size,
                 tile, paleta, checkEntorno.Checked, checkCelda.Checked, checkNumber.Checked, checkTransparencia.Checked,
                 checkImagen.Checked);
         }
         private void check_CheckedChanged(object sender, EventArgs e)
         {
-            imgBox.Image = Imagen_NCER.Obtener_Imagen(ncer.cebk.banks[comboCelda.SelectedIndex],
+            imgBox.Image = Imagen_NCER.Obtener_Imagen(ncer.cebk.banks[comboCelda.SelectedIndex], ncer.cebk.block_size,
                tile, paleta, checkEntorno.Checked, checkCelda.Checked, checkNumber.Checked, checkTransparencia.Checked,
                checkImagen.Checked);
         }
@@ -122,7 +123,9 @@ namespace Tinke
             o.OverwritePrompt = true;
 
             if (o.ShowDialog() == DialogResult.OK)
-                imgBox.Image.Save(o.FileName);
+                Imagen_NCER.Obtener_Imagen(ncer.cebk.banks[comboCelda.SelectedIndex], ncer.cebk.block_size,
+                    tile, paleta, checkEntorno.Checked, checkCelda.Checked, checkNumber.Checked,
+                    checkTransparencia.Checked, checkImagen.Checked).Save(o.FileName);
         }
 
         private void btnTodos_Click(object sender, EventArgs e)
@@ -138,7 +141,7 @@ namespace Tinke
                 pic.Size = new Size(256, 256);
                 pic.Location = new Point(x, y);
                 pic.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-                pic.Image = Imagen_NCER.Obtener_Imagen(ncer.cebk.banks[i], tile, paleta, 
+                pic.Image = Imagen_NCER.Obtener_Imagen(ncer.cebk.banks[i], ncer.cebk.block_size, tile, paleta, 
                     checkEntorno.Checked, checkCelda.Checked, checkNumber.Checked,
                     checkTransparencia.Checked, checkImagen.Checked);
                 Label lbl = new Label();
@@ -162,7 +165,34 @@ namespace Tinke
             ven.AutoSize = true;
             ven.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             ven.ShowIcon = false;
+            ven.MaximizeBox = false;
+            ven.MaximumSize = new System.Drawing.Size(1024, 700);
             ven.Show();
+        }
+
+        private void imgBox_DoubleClick(object sender, EventArgs e)
+        {
+            Form ventana = new Form();
+            PictureBox pic = new PictureBox();
+
+            pic.Location = new Point(0, 0);
+            pic.SizeMode = PictureBoxSizeMode.AutoSize;
+            pic.Dock = DockStyle.Fill;
+            ventana.AutoSize = true;
+            ventana.BackColor = SystemColors.GradientInactiveCaption;
+            ventana.AutoScroll = true;
+            ventana.MaximumSize = new Size(1024, 700);
+            ventana.ShowIcon = false;
+            ventana.Text = Tools.Helper.ObtenerTraduccion("NCER", "S14");
+            ventana.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            ventana.MaximizeBox = false;
+
+            pic.Image = Imagen_NCER.Obtener_Imagen(ncer.cebk.banks[comboCelda.SelectedIndex], ncer.cebk.block_size,
+                tile, paleta, checkEntorno.Checked, checkCelda.Checked, checkNumber.Checked, checkTransparencia.Checked,
+                checkImagen.Checked, 512, 512);
+
+            ventana.Controls.Add(pic);
+            ventana.Show();
         }
 
     }

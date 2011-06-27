@@ -134,9 +134,19 @@ namespace Tinke
         public static Bitmap Crear_Imagen(NCGR tile, NCLR paleta)
         {
             if (tile.rahc.nTilesX == 0xFFFF)        // En caso de que no venga la información hacemos la imagen de 256x256
-                tile.rahc.nTilesX = 0x20;
+            {
+                if (tile.orden == Orden_Tiles.No_Tiles)
+                    tile.rahc.nTilesX = 0x40;
+                else
+                    tile.rahc.nTilesX = 0x08;
+            }
             if (tile.rahc.nTilesY == 0xFFFF)
-                tile.rahc.nTilesY = 0x20;
+            {
+                if (tile.orden == Orden_Tiles.No_Tiles)
+                    tile.rahc.nTilesY = (ushort)(tile.rahc.nTiles / 0x40);
+                else
+                    tile.rahc.nTilesY = (ushort)(tile.rahc.nTiles / 0x08);
+            }
 
             switch (tile.orden)
             {
@@ -153,9 +163,19 @@ namespace Tinke
         public static Bitmap Crear_Imagen(NCGR tile, NCLR paleta, int startTile)
         {
             if (tile.rahc.nTilesX == 0xFFFF)        // En caso de que no venga la información hacemos la imagen de 256x256
-                tile.rahc.nTilesX = 0x20;
+            {
+                if (tile.orden == Orden_Tiles.No_Tiles)
+                    tile.rahc.nTilesX = 0x40;
+                else
+                    tile.rahc.nTilesX = 0x08;
+            }
             if (tile.rahc.nTilesY == 0xFFFF)
-                tile.rahc.nTilesY = 0x20;
+            {
+                if (tile.orden == Orden_Tiles.No_Tiles)
+                    tile.rahc.nTilesY = (ushort)(tile.rahc.nTiles / 0x40);
+                else
+                    tile.rahc.nTilesY = (ushort)(tile.rahc.nTiles / 0x08);
+            }
 
             switch (tile.orden)
             {

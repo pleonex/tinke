@@ -69,7 +69,7 @@ namespace Tinke
         }
         private void linkLowLines_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            System.Diagnostics.Process.Start("http://llref.emutalk.net/nds_formats.htm");
+            System.Diagnostics.Process.Start("http://llref.emutalk.net/docs");
         }
         private void linkGBATEK_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
