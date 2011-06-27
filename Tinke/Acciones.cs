@@ -571,6 +571,9 @@ namespace Tinke
         }
         private Carpeta Recursivo_Carpeta(int id, Carpeta currFolder)
         {
+            if (currFolder.id == id)
+                return currFolder;
+
             if (currFolder.folders is List<Carpeta>)   // Si tiene subdirectorios, buscamos en cada uno de ellos
             {
                 foreach (Carpeta subFolder in currFolder.folders)

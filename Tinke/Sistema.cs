@@ -322,8 +322,8 @@ namespace Tinke
 
                 btnHex.Enabled = false;
                 btnSee.Enabled = false;
-                btnExtraer.Enabled = false;
                 btnDescomprimir.Enabled = false;
+                toolStripOpenAs.Enabled = false;
             }
             else if (Convert.ToUInt16(e.Node.Tag) < 0xF000)
             {
@@ -376,7 +376,7 @@ namespace Tinke
                 #endregion
                 listFile.Items[5].SubItems.Add(selectFile.path);
                 btnHex.Enabled = true;
-                btnExtraer.Enabled = true;
+                toolStripOpenAs.Enabled = true;
 
                 PluginInterface.Formato tipo = accion.Get_Formato();
                 if (tipo != PluginInterface.Formato.Desconocido)
@@ -406,8 +406,8 @@ namespace Tinke
 
                 btnHex.Enabled = false;
                 btnSee.Enabled = false;
-                btnExtraer.Enabled = false;
-                btnDescomprimir.Enabled = false;
+                btnDescomprimir.Enabled = true;
+                toolStripOpenAs.Enabled = false;
             }
         }
         private void btnHex_Click(object sender, EventArgs e)
@@ -470,6 +470,13 @@ namespace Tinke
         }
         private void btnExtraer_Click(object sender, EventArgs e)
         {
+            if (Convert.ToUInt16(treeSystem.SelectedNode.Tag) < 0xF000)
+                ExtractFile();
+            else
+                ExtractFolder();
+        }
+        private void ExtractFile()
+        {
             Archivo fileSelect = accion.Select_File();
 
             SaveFileDialog o = new SaveFileDialog();
@@ -485,6 +492,51 @@ namespace Tinke
                 }
                 else
                     File.Copy(fileSelect.path, o.FileName);
+            }
+        }
+        private void ExtractFolder()
+        {
+            Carpeta folderSelect = accion.Select_Folder();
+
+            FolderBrowserDialog o = new FolderBrowserDialog();
+            o.ShowNewFolderButton = true;
+            o.Description = Tools.Helper.ObtenerTraduccion("Sistema", "S2C");
+            if (o.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                Directory.CreateDirectory(o.SelectedPath + '\\' + folderSelect.name);
+
+                Thread espera = new System.Threading.Thread(ThreadEspera);
+                espera.Start();
+                RecursivoFolder(folderSelect, o.SelectedPath + '\\' + folderSelect.name);
+                espera.Abort();
+            }
+
+        }
+        private void RecursivoFolder(Carpeta currFolder, String path)
+        {
+            if (currFolder.files is List<Archivo>)
+                foreach (Archivo archivo in currFolder.files)
+                {
+                    if (archivo.offset != 0x0)
+                    {
+                        BinaryReader br = new BinaryReader(File.OpenRead(accion.ROMFile));
+                        br.BaseStream.Position = archivo.offset;
+                        File.WriteAllBytes(path + '\\' + archivo.name, br.ReadBytes((int)archivo.size));
+                        br.Close();
+                    }
+                    else
+                        File.Copy(archivo.path, path + '\\' + archivo.name);
+                }
+
+
+
+            if (currFolder.folders is List<Carpeta>)
+            {
+                foreach (Carpeta subFolder in currFolder.folders)
+                {
+                    Directory.CreateDirectory(path + '\\' + subFolder.name);
+                    RecursivoFolder(subFolder, path + '\\' + subFolder.name);
+                }
             }
         }
         private void treeSystem_MouseDoubleClick(object sender, MouseEventArgs e)

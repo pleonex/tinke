@@ -16,20 +16,17 @@ IF errorlevel 2 goto inicio
 
 RMDIR /S /Q "%cd%\build"
 
-%windir%\microsoft.net\framework\v3.5\msbuild Tinke.sln /v:minimal /p:Configuration=%conf% "/p:Platform=%plat%" "/p:OutputPath=%CD%\build\"
+%windir%\microsoft.net\framework\v4.0.30319\msbuild Tinke.sln /v:minimal /p:Configuration=%conf%;TarjetFrameworkVersion=v3.5 "/p:Platform=%plat%" "/p:OutputPath=%CD%\build\"
 
 REM Compilación de plugins de los juegos
-%windir%\microsoft.net\framework\v3.5\msbuild Plugins\LAYTON\LAYTON.sln /v:minimal /p:Configuration=%conf% "/p:Platform=Any CPU" "/p:OutputPath=%CD%\build\Plugins\"
-%windir%\microsoft.net\framework\v3.5\msbuild "Plugins\KIRBY DRO\KIRBY DRO.sln" /v:minimal /p:Configuration=%conf% "/p:Platform=Any CPU" "/p:OutputPath=%CD%\build\Plugins\"
+%windir%\microsoft.net\framework\v4.0.30319\msbuild Plugins\LAYTON\LAYTON.sln /v:minimal /p:Configuration=%conf%;TarjetFrameworkVersion=v3.5 "/p:Platform=Any CPU" "/p:OutputPath=%CD%\build\Plugins\"
+%windir%\microsoft.net\framework\v4.0.30319\msbuild "Plugins\KIRBY DRO\KIRBY DRO.sln" /v:minimal /p:Configuration=%conf%;TarjetFrameworkVersion=v3.5 "/p:Platform=Any CPU" "/p:OutputPath=%CD%\build\Plugins\"
 
 REM Compilación de los plugins de formatos
-%windir%\microsoft.net\framework\v3.5\msbuild Plugins\NARC\NARC.sln /v:minimal /p:Configuration=%conf% "/p:Platform=Any CPU" "/p:OutputPath=%CD%\build\Plugins\"
-%windir%\microsoft.net\framework\v3.5\msbuild Plugins\PCM\PCM.sln /v:minimal /p:Configuration=%conf% "/p:Platform=Any CPU" "/p:OutputPath=%CD%\build\Plugins\"
-%windir%\microsoft.net\framework\v3.5\msbuild Plugins\TXT\TXT.sln /v:minimal /p:Configuration=%conf% "/p:Platform=Any CPU" "/p:OutputPath=%CD%\build\Plugins\"
-%windir%\microsoft.net\framework\v3.5\msbuild Plugins\Comun\Comun.sln /v:minimal /p:Configuration=%conf% "/p:Platform=Any CPU" "/p:OutputPath=%CD%\build\Plugins\"
-%windir%\microsoft.net\framework\v3.5\msbuild Plugins\Nintendo\Nintendo.sln /v:minimal /p:Configuration=%conf% "/p:Platform=Any CPU" "/p:OutputPath=%CD%\build\Plugins\"
-
-MKDIR "%CD%\build\langs"
-COPY "%CD%\Languages\*.*" "%CD%\build\langs"
+%windir%\microsoft.net\framework\v4.0.30319\msbuild Plugins\NARC\NARC.sln /v:minimal /p:Configuration=%conf%;TarjetFrameworkVersion=v3.5 "/p:Platform=Any CPU" "/p:OutputPath=%CD%\build\Plugins\"
+%windir%\microsoft.net\framework\v4.0.30319\msbuild Plugins\PCM\PCM.sln /v:minimal /p:Configuration=%conf%;TarjetFrameworkVersion=v3.5 "/p:Platform=Any CPU" "/p:OutputPath=%CD%\build\Plugins\"
+%windir%\microsoft.net\framework\v4.0.30319\msbuild Plugins\TXT\TXT.sln /v:minimal /p:Configuration=%conf%;TarjetFrameworkVersion=v3.5 "/p:Platform=Any CPU" "/p:OutputPath=%CD%\build\Plugins\"
+%windir%\microsoft.net\framework\v4.0.30319\msbuild Plugins\Comun\Comun.sln /v:minimal /p:Configuration=%conf%;TarjetFrameworkVersion=v3.5 "/p:Platform=Any CPU" "/p:OutputPath=%CD%\build\Plugins\"
+%windir%\microsoft.net\framework\v4.0.30319\msbuild Plugins\Nintendo\Nintendo.sln /v:minimal /p:Configuration=%conf%;TarjetFrameworkVersion=v3.5 "/p:Platform=Any CPU" "/p:OutputPath=%CD%\build\Plugins\"
 
 PAUSE
