@@ -39,6 +39,7 @@ namespace Tinke
 
         string oldDepth;
         int oldTiles;
+        bool dividido;
 
         public iNCGR()
         {
@@ -78,6 +79,11 @@ namespace Tinke
             this.numericStart.ValueChanged += new EventHandler(numericStart_ValueChanged);
 
             Info();
+
+            if (tile.sopc.charSize != 0 && tile.sopc.nChar != 0)
+                btnDividir.Enabled = true;
+            else
+                btnDividir.Enabled = false;
         }
 
         void numericStart_ValueChanged(object sender, EventArgs e)
@@ -223,6 +229,62 @@ namespace Tinke
             comboBox1.Items[0] = xml.Element("S16").Value;
             comboBox1.Items[1] = xml.Element("S17").Value;
             comboBox1.Items[2] = xml.Element("S18").Value;
+            btnDividir.Text = xml.Element("S1A").Value;
+            btnTransparency.Text = xml.Element("S1C").Value;
+        }
+
+        private void btnDividir_Click(object sender, EventArgs e)
+        {
+            dividido = !dividido;
+
+            if (dividido)
+            {
+                btnDividir.Text = Tools.Helper.ObtenerTraduccion("NCGR", "S1D");
+                comboImages.Enabled = true;
+
+                for (int i = 0; i < tile.sopc.nChar; i++)
+                {
+                    comboImages.Items.Add(Tools.Helper.ObtenerTraduccion("NCGR", "S1B") + ' ' + (i + 1).ToString());
+                }
+                comboImages.SelectedIndex = 0;
+
+                numericHeight.Enabled = false;
+                numericStart.Enabled = false;
+                numericWidth.Enabled = false;
+            }
+            if (!dividido)
+            {
+                btnDividir.Text = Tools.Helper.ObtenerTraduccion("NCGR", "S1A");
+                comboImages.Enabled = false;
+                pic.Image = Imagen_NCGR.Crear_Imagen(tile, paleta);
+
+                numericHeight.Enabled = true;
+                numericStart.Enabled = true;
+                numericWidth.Enabled = true;
+            }
+        }
+        private void comboImages_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            int size = (int)Math.Sqrt(tile.sopc.charSize * 64);
+            int w = tile.rahc.nTilesX / size;
+            int h = tile.rahc.nTilesY / size;
+            float yPos = (float)(Math.Truncate((double)comboImages.SelectedIndex / w));
+            float xPos = (float)(comboImages.SelectedIndex - (yPos * w));
+
+            PointF location = new PointF(
+                xPos * size,
+                yPos * size);
+
+            pic.Image = Imagen_NCGR.Crear_Imagen(tile, paleta).Clone(new RectangleF(
+                location, new SizeF(size, size)),
+                System.Drawing.Imaging.PixelFormat.DontCare);
+        }
+
+        private void btnTransparency_Click(object sender, EventArgs e)
+        {
+            Bitmap imagen = (Bitmap)pic.Image;
+            imagen.MakeTransparent(paleta.pltt.paletas[tile.rahc.tileData.nPaleta[0]].colores[0]);
+            pic.Image = imagen;
         }
     }
 }
