@@ -205,7 +205,8 @@ General Public License version 3.</S06>
 		<S12>Transparency</S12>
 		<S13>Show numbers</S13>
 		<S14>Cells</S14>
-	</NCER>
+    <S15>Double-click to see the full image.</S15>
+  </NCER>
 	<NANR>
 		<S01>Interval:</S01>
 		<S02>miliseconds</S02>

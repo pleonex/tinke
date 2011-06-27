@@ -140,7 +140,7 @@ namespace Tinke
             bitAni = new Bitmap[ani.abnk.anis[id].nFrames];
             for (int i = 0; i < ani.abnk.anis[id].nFrames; i++)
             {
-                bitAni[i] = Imagen_NCER.Obtener_Imagen(celdas.cebk.banks[ani.abnk.anis[id].frames[i].data.nCell],
+                bitAni[i] = Imagen_NCER.Obtener_Imagen(celdas.cebk.banks[ani.abnk.anis[id].frames[i].data.nCell], celdas.cebk.block_size,
                     tiles, paleta, checkEntorno.Checked, checkCeldas.Checked, checkNumeros.Checked, checkTransparencia.Checked,
                     checkImage.Checked);
             }

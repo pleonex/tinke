@@ -169,7 +169,7 @@ namespace Tinke
             ven.BackColor = SystemColors.GradientInactiveCaption;
             ven.Text = Tools.Helper.ObtenerTraduccion("NCGR","S19");
             ven.AutoScroll = true;
-            ven.MaximumSize = new Size(1024, 768);
+            ven.MaximumSize = new Size(1024, 700);
             ven.ShowIcon = false;
             ven.AutoSize = true;
             ven.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;

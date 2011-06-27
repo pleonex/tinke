@@ -204,7 +204,8 @@
 		<S12>Transparencia</S12>
 		<S13>Mostrar números</S13>
 		<S14>Celdas</S14>
-	  </NCER>
+    <S15>Faites doble click sur l'image pour la voir en taille réelle.</S15>
+    </NCER>
 	  <NANR>
 		<S01>Intervalo:</S01>
 		<S02>milisegundos</S02>

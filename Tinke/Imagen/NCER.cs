@@ -52,9 +52,7 @@ namespace Tinke
             ncer.cebk.nBanks = br.ReadUInt16();
             ncer.cebk.tBank = br.ReadUInt16();
             ncer.cebk.constant = br.ReadUInt32();
-            //uint flag1 = (uint)(br.ReadByte() >> 2) << 1;
-            //br.ReadBytes(3);
-            ncer.cebk.block_size = (uint)(br.ReadUInt32() * 2);              
+            ncer.cebk.block_size = br.ReadUInt32();
             ncer.cebk.unknown1 = br.ReadUInt32();
             ncer.cebk.unknown2 = br.ReadUInt64();
             ncer.cebk.banks = new Bank[ncer.cebk.nBanks];
@@ -78,17 +76,16 @@ namespace Tinke
                 // Lee la información de cada banco
                 for (int j = 0; j < ncer.cebk.banks[i].nCells; j++)
                 {
-                    byte y = br.ReadByte();
-                    ncer.cebk.banks[i].cells[j].yOffset = (y < 0x7F) ? y : y - 0x100;
+                    ncer.cebk.banks[i].cells[j].yOffset = br.ReadSByte();
                     byte byte1 = br.ReadByte();
-                    byte x = br.ReadByte();
-                    ncer.cebk.banks[i].cells[j].xOffset = (x < 0x7F) ? x : x - 0x100;
+                    int x = br.ReadUInt16() & 0x01FF;
+                    ncer.cebk.banks[i].cells[j].xOffset = (x >= 0x100) ? x - 0x200 : x;
+                    br.BaseStream.Position -= 1;
                     byte byte2 = br.ReadByte();
                     Size tamaño = Obtener_Tamaño(Tools.Helper.ByteTo4Bits(byte1)[0], Tools.Helper.ByteTo4Bits(byte2)[0]);
                     ncer.cebk.banks[i].cells[j].height = (ushort)tamaño.Height;
                     ncer.cebk.banks[i].cells[j].width = (ushort)tamaño.Width;
                     ncer.cebk.banks[i].cells[j].tileOffset = (uint)(br.ReadUInt16() & 0x03FF);
-                    ncer.cebk.banks[i].cells[j].tileOffset = (uint)(ncer.cebk.banks[i].cells[j].tileOffset * (ncer.cebk.block_size != 0 ? ncer.cebk.block_size : 1));
                     ncer.cebk.banks[i].cells[j].yFlip = (Tools.Helper.ByteTo4Bits(byte2)[0] & 2) == 2 ? true : false;
                     ncer.cebk.banks[i].cells[j].xFlip = (Tools.Helper.ByteTo4Bits(byte2)[0] & 1) == 1 ? true : false;
                 }
@@ -233,7 +230,7 @@ namespace Tinke
             return tamaño;
         }
 
-        public static Bitmap Obtener_Imagen(Bank banco, NCGR tile, NCLR paleta,
+        public static Bitmap Obtener_Imagen(Bank banco, uint blockSize, NCGR tile, NCLR paleta,
             bool entorno, bool celda, bool numero, bool transparencia, bool image)
         {
             if (banco.cells.Length == 0)
@@ -258,9 +255,18 @@ namespace Tinke
             Image[] celdas = new Image[banco.nCells];
             for (int i = 0; i < banco.nCells; i++)
             {
+                uint tileOffset = banco.cells[i].tileOffset;
+                if (tile.rahc.depth == System.Windows.Forms.ColorDepth.Depth4Bit)
+                    tileOffset *= (uint)Math.Pow(blockSize, 2);
+                else
+                    tileOffset *= (uint)((blockSize != 0) ? blockSize : 1);
+
                 if (image)
                 {
-                    celdas[i] = Imagen_NCGR.Crear_Imagen(tile, paleta, (int)banco.cells[i].tileOffset, banco.cells[i].width / 8, banco.cells[i].height / 8);
+                    if (tile.orden == Orden_Tiles.No_Tiles)
+                        celdas[i] = Imagen_NCGR.Crear_Imagen(tile, paleta, (int)tileOffset * 64, banco.cells[i].width, banco.cells[i].height);
+                    else
+                        celdas[i] = Imagen_NCGR.Crear_Imagen(tile, paleta, (int)tileOffset, banco.cells[i].width / 8, banco.cells[i].height / 8);
                     #region Rotaciones
                     if (banco.cells[i].xFlip && banco.cells[i].yFlip)
                         celdas[i].RotateFlip(RotateFlipType.RotateNoneFlipXY);
@@ -285,5 +291,67 @@ namespace Tinke
 
             return imagen;
         }
+        public static Bitmap Obtener_Imagen(Bank banco, uint blockSize, NCGR tile, NCLR paleta,
+            bool entorno, bool celda, bool numero, bool transparencia, bool image, int maxWidth, int maxHeight)
+        {
+            if (banco.cells.Length == 0)
+                return new Bitmap(1, 1);
+            Size tamaño = new Size(maxWidth, maxHeight);
+            Bitmap imagen = new Bitmap(tamaño.Width, tamaño.Height);
+            Graphics grafico = Graphics.FromImage(imagen);
+
+            // Entorno
+            if (entorno)
+            {
+                for (int i = (0 - tamaño.Width); i < tamaño.Width; i += 8)
+                {
+                    grafico.DrawLine(Pens.LightBlue, i + tamaño.Width / 2, 0, i + tamaño.Width / 2, tamaño.Height);
+                    grafico.DrawLine(Pens.LightBlue, 0, i + tamaño.Height / 2, tamaño.Width, i + tamaño.Height / 2);
+                }
+                grafico.DrawLine(Pens.Blue, maxWidth / 2, 0, maxWidth / 2, maxHeight);
+                grafico.DrawLine(Pens.Blue, 0, maxHeight / 2, maxWidth, maxHeight / 2);
+            }
+
+
+            Image[] celdas = new Image[banco.nCells];
+            for (int i = 0; i < banco.nCells; i++)
+            {
+                uint tileOffset = banco.cells[i].tileOffset;
+                if (tile.rahc.depth == System.Windows.Forms.ColorDepth.Depth4Bit)
+                    tileOffset *= (uint)Math.Pow(blockSize, 2);
+                else
+                    tileOffset *= (uint)((blockSize != 0) ? blockSize : 1);
+
+                if (image)
+                {
+                    if (tile.orden == Orden_Tiles.No_Tiles)
+                        celdas[i] = Imagen_NCGR.Crear_Imagen(tile, paleta, (int)tileOffset * 64, banco.cells[i].width, banco.cells[i].height);
+                    else
+                        celdas[i] = Imagen_NCGR.Crear_Imagen(tile, paleta, (int)tileOffset, banco.cells[i].width / 8, banco.cells[i].height / 8);
+                    #region Rotaciones
+                    if (banco.cells[i].xFlip && banco.cells[i].yFlip)
+                        celdas[i].RotateFlip(RotateFlipType.RotateNoneFlipXY);
+                    else if (banco.cells[i].xFlip)
+                        celdas[i].RotateFlip(RotateFlipType.RotateNoneFlipX);
+                    else if (banco.cells[i].yFlip)
+                        celdas[i].RotateFlip(RotateFlipType.RotateNoneFlipY);
+                    #endregion
+                    if (transparencia)
+                        ((Bitmap)celdas[i]).MakeTransparent(paleta.pltt.paletas[tile.rahc.tileData.nPaleta[0]].colores[0]);
+
+                    grafico.DrawImageUnscaled(celdas[i], tamaño.Width / 2 + banco.cells[i].xOffset, tamaño.Height / 2 + banco.cells[i].yOffset);
+                }
+
+                if (celda)
+                    grafico.DrawRectangle(Pens.Black, tamaño.Width / 2 + banco.cells[i].xOffset, tamaño.Height / 2 + banco.cells[i].yOffset,
+                        banco.cells[i].width, banco.cells[i].height);
+                if (numero)
+                    grafico.DrawString(i.ToString(), SystemFonts.CaptionFont, Brushes.Black, tamaño.Width / 2 + banco.cells[i].xOffset,
+                        tamaño.Height / 2 + banco.cells[i].yOffset);
+            }
+
+            return imagen;
+        }
+
     }
 }
