@@ -205,12 +205,12 @@ namespace Tinke
             SaveFileDialog o = new SaveFileDialog();
             o.AddExtension = true;
             o.CheckPathExists = true;
-            o.DefaultExt = ".gif";
-            o.Filter = "Imagen animada gif (*.gif)|*.gif";
+            o.DefaultExt = ".png";
+            o.Filter = "Animation PNG (*.png)|*.png";
             o.OverwritePrompt = true;
 
             if (o.ShowDialog() == DialogResult.OK)
-                Convertir.CrearGif(o.FileName, bitAni, Convert.ToInt32(txtTime.Text) / 10, 0x00);            
+                Tools.APNG.Crear_APNG(bitAni, o.FileName, Convert.ToInt32(txtTime.Text) / 10, 0x00);            
         }
     }
 }

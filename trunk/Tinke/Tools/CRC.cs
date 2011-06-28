@@ -1,3 +1,24 @@
+/*
+ * Copyright (C) 2011  pleoNeX
+ *
+ *   This program is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+ *
+ * Programador: pleoNeX
+ * Programa utilizado: Microsoft Visual C# 2010 Express
+ * Fecha: 28/06/2011
+ * 
+ */
 using System;
 using System.Collections;
 using System.IO;
@@ -55,5 +76,67 @@ namespace Tinke.Tools
 	        0x4400, 0x84C1, 0x8581, 0x4540, 0x8701, 0x47C0, 0x4680, 0x8641,
 	        0x8201, 0x42C0, 0x4380, 0x8341, 0x4100, 0x81C1, 0x8081, 0x4040
         };
+    }
+
+    public static class CRC32
+    {
+        // Obtenido de: http://www.codeproject.com/KB/cs/PngUtil.aspx gracias a Paul Young
+
+        /// <summary>
+        /// Crea la tabla CRC para calcular el CRC de 32-bit
+        /// </summary>
+        private static void CreateCrcTable()
+        {
+            uint c;
+            int k;
+            int n;
+
+            for (n = 0; n < 256; n++)
+            {
+                c = (uint)n;
+
+                for (k = 0; k < 8; k++)
+                {
+                    if ((c & 1) == 1)
+                    {
+                        c = 0xedb88320 ^ (c >> 1);
+                    }
+                    else
+                    {
+                        c = c >> 1;
+                    }
+                }
+                CrcTable[n] = c;
+            }
+            IsTableCreated = true;
+        }
+        static uint[] CrcTable = new uint[256];
+        static bool IsTableCreated = false;
+
+        /// <summary>
+        /// Calcula el CRC del buffer
+        /// </summary>
+        /// <param name="buffer">Los datos con los que se calcula el CRC</param>
+        /// <returns>Array de 4-bytes con el resultado</returns>
+        public static byte[] Calcular(byte[] buffer)
+        {
+            uint data = 0xFFFFFFFF;
+            int n;
+
+            if (!IsTableCreated)
+                CreateCrcTable();
+
+            for (n = 0; n < buffer.Length; n++)
+                data = CrcTable[(data ^ buffer[n]) & 0xff] ^ (data >> 8);
+
+            data = data ^ 0xFFFFFFFF;
+
+            byte b1 = Convert.ToByte(data >> 24);
+            byte b2 = Convert.ToByte(b1 << 8 ^ data >> 16);
+            byte b3 = Convert.ToByte(((data >> 16 << 16) ^ (data >> 8 << 8)) >> 8);
+            byte b4 = Convert.ToByte((data >> 8 << 8) ^ data);
+
+            return new byte[] { b1, b2, b3, b4 };
+        }
     }
 }
