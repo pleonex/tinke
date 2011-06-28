@@ -12,7 +12,8 @@ namespace PluginInterface
             public string name;             // Nombre dado en la FNT
             public UInt16 id;               // ID único de cada archivo.
             public string path;             // En caso de haber sido descomprimido y estar fuera del sistema de archivos.
-        }
+            public Formato formato;         // Formato del archivo   
+    }
     public struct Carpeta
     {
         public List<Archivo> files;        // Lista de archivos que contiene el directorio

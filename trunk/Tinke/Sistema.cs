@@ -122,6 +122,7 @@ namespace Tinke
             root = FAT(o.FileName, romInfo.Cabecera.FAToffset, romInfo.Cabecera.FATsize, root);
 
             accion.Root = root;
+            Set_Formato(root);
             treeSystem.Nodes.Add(Jerarquizar_Nodos(root)); // Mostramos el árbol
             #endregion
             espera.Abort();
@@ -172,6 +173,22 @@ namespace Tinke
             btnExtraer.Text = xml.Element("S1B").Value;
             btnSee.Text = xml.Element("S1C").Value;
             btnHex.Text = xml.Element("S1D").Value;
+            checkSearch.Text = xml.Element("S2E").Value;
+            toolTipSearch.ToolTipTitle = xml.Element("S2F").Value;
+
+            toolTipSearch.SetToolTip(txtSearch,
+                "<Ani> -> " + xml.Element("S24").Value +
+                "\n<Cell> -> " + xml.Element("S23").Value +
+                "\n<Screen> -> " + xml.Element("S22").Value +
+                "\n<Image> -> " + xml.Element("S21").Value +
+                "\n<FullImage> -> " + xml.Element("S25").Value +
+                "\n<Palette> -> " + xml.Element("S20").Value +
+                "\n<Text> -> " + xml.Element("S26").Value +
+                "\n<Video> -> " + xml.Element("S27").Value +
+                "\n<Sound> -> " + xml.Element("S28").Value +
+                "\n<Font> -> " + xml.Element("S29").Value +
+                "\n<Unknown> -> " + xml.Element("S2B").Value
+                );
         }
         private void ToolStripLang_Click(Object sender, EventArgs e)
         {
@@ -238,10 +255,9 @@ namespace Tinke
             {
                 foreach (Archivo archivo in currFolder.files)
                 {
-                    Formato fmt = accion.Get_Formato(archivo.id);
-                    int nImage = accion.ImageFormatFile(fmt);
+                    int nImage = accion.ImageFormatFile(archivo.formato);
                     string ext = "";
-                    if (fmt == Formato.Desconocido)
+                    if (archivo.formato == Formato.Desconocido)
                     {
                         ext = accion.Get_MagicIDS(archivo.id);
                         if (ext != "")
@@ -261,14 +277,14 @@ namespace Tinke
             nodo.ImageIndex = 0;
             nodo.SelectedImageIndex = 0;
             nodo.Tag = carpeta.id;
-            
+            nodo.Name = carpeta.name;
 
             if (carpeta.folders is List<Carpeta>)
             {
                 foreach (Carpeta subFolder in carpeta.folders)
                 {
-                    TreeNode newNodo = new TreeNode();
-                   CarpetaANodo(subFolder, ref newNodo);
+                    TreeNode newNodo = new TreeNode(subFolder.name);
+                    CarpetaANodo(subFolder, ref newNodo);
                     nodo.Nodes.Add(newNodo);
                 }
             }
@@ -278,10 +294,9 @@ namespace Tinke
             {
                 foreach (Archivo archivo in carpeta.files)
                 {
-                    Formato fmt = accion.Get_Formato(archivo.id);
-                    int nImage = accion.ImageFormatFile(fmt);
+                    int nImage = accion.ImageFormatFile(archivo.formato);
                     string ext = "";
-                    if (fmt == Formato.Desconocido)
+                    if (archivo.formato == Formato.Desconocido)
                     {
                         ext = accion.Get_MagicIDS(archivo.id);
                         if (ext != "")
@@ -295,6 +310,23 @@ namespace Tinke
             }
 
 
+        }
+        private void Set_Formato(Carpeta carpeta)
+        {
+            if (carpeta.files is List<Archivo>)
+            {
+                for (int i = 0; i < carpeta.files.Count; i++)
+                {
+                    Archivo newFile = carpeta.files[i];
+                    newFile.formato = accion.Get_Formato(newFile.id);
+                    carpeta.files[i] = newFile;
+                }
+            }
+
+
+            if (carpeta.folders is List<Carpeta>)
+                foreach (Carpeta subFolder in carpeta.folders)
+                    Set_Formato(subFolder);
         }
 
         private void ThreadEspera()
@@ -397,8 +429,8 @@ namespace Tinke
             {
                 Carpeta selectFolder = accion.Select_Folder();
 
-                listFile.Items[0].SubItems.Add(selectFolder.name);
-                listFile.Items[1].SubItems.Add("0x" + String.Format("{0:X}", selectFolder.id));
+                listFile.Items[0].SubItems.Add(e.Node.Name);
+                listFile.Items[1].SubItems.Add("0x" + String.Format("{0:X}", e.Node.Tag));
                 listFile.Items[2].SubItems.Add("");
                 listFile.Items[3].SubItems.Add("");
                 listFile.Items[4].SubItems.Add(Tools.Helper.ObtenerTraduccion("Sistema", "S1F"));
@@ -406,7 +438,7 @@ namespace Tinke
 
                 btnHex.Enabled = false;
                 btnSee.Enabled = false;
-                btnDescomprimir.Enabled = true;
+                btnDescomprimir.Enabled = false;
                 toolStripOpenAs.Enabled = false;
             }
         }
@@ -452,6 +484,7 @@ namespace Tinke
         {
             Carpeta descomprimidos = accion.Extract();
             TreeNode selected = treeSystem.SelectedNode;
+            Set_Formato(descomprimidos);
             CarpetaANodo(descomprimidos, ref selected);
 
             TreeNode[] nodos = new TreeNode[selected.Nodes.Count]; selected.Nodes.CopyTo(nodos, 0);
@@ -497,6 +530,29 @@ namespace Tinke
         private void ExtractFolder()
         {
             Carpeta folderSelect = accion.Select_Folder();
+
+            if (!(folderSelect.name is String)) // En caso que sea el resultado de una búsqueda
+            {
+                folderSelect.files = new List<Archivo>();
+                folderSelect.folders = new List<Carpeta>();
+                folderSelect.name = treeSystem.SelectedNode.Name;
+
+                for (int i = 0; i < treeSystem.SelectedNode.Nodes.Count; i++)
+                {
+                    int id = Convert.ToInt32(treeSystem.SelectedNode.Nodes[i].Tag);
+                    if (id < 0xF000)
+                        folderSelect.files.Add(accion.Search_File(id));
+                    else
+                    {
+                        Carpeta carpeta = new Carpeta();
+                        carpeta.files = new List<Archivo>();
+                        carpeta.name = treeSystem.SelectedNode.Nodes[i].Name;
+                        for (int j = 0; j < treeSystem.SelectedNode.Nodes[i].Nodes.Count; j++)
+                            carpeta.files.Add(accion.Search_File(Convert.ToUInt16(treeSystem.SelectedNode.Nodes[i].Nodes[j].Tag)));
+                        folderSelect.folders.Add(carpeta);
+                    }
+                }
+            }
 
             FolderBrowserDialog o = new FolderBrowserDialog();
             o.ShowNewFolderButton = true;
@@ -682,6 +738,67 @@ namespace Tinke
                 treeSystem.Nodes.Add(Jerarquizar_Nodos(accion.Root));
                 return;
             }
+
+            Carpeta resul;
+
+            if (txtSearch.Text == "<Ani>")
+                resul = accion.Search_File(Formato.Animación);
+            else if (txtSearch.Text == "<Cell>")
+                resul = accion.Search_File(Formato.Celdas);
+            else if (txtSearch.Text == "<Screen>")
+                resul = accion.Search_File(Formato.Screen);
+            else if (txtSearch.Text == "<Image>")
+                resul = accion.Search_File(Formato.Imagen);
+            else if (txtSearch.Text == "<FullImage")
+                resul = accion.Search_File(Formato.ImagenCompleta);
+            else if (txtSearch.Text == "<Palette>")
+                resul = accion.Search_File(Formato.Paleta);
+            else if (txtSearch.Text == "<Text>")
+                resul = accion.Search_File(Formato.Texto);
+            else if (txtSearch.Text == "<Video>")
+                resul = accion.Search_File(Formato.Video);
+            else if (txtSearch.Text == "<Sound>")
+                resul = accion.Search_File(Formato.Sonido);
+            else if (txtSearch.Text == "<Font>")
+                resul = accion.Search_File(Formato.Fuentes);
+            else if (txtSearch.Text == "<Unknown>")
+                resul = accion.Search_File(Formato.Desconocido);
+            else
+                resul = accion.Search_File(txtSearch.Text);
+
+            if (resul.folders is List<Carpeta>)
+            {
+                for (int i = 0; i < resul.folders.Count; i++)
+                {
+                    Carpeta newFolder = resul.folders[i];
+                    newFolder.id = (ushort)accion.LastFolderID;
+                    accion.LastFolderID++;
+                    resul.folders[i] = newFolder;
+                }
+            }
+            resul.id = (ushort)accion.LastFolderID;
+            accion.LastFolderID++;
+
+            TreeNode nodo = new TreeNode(Tools.Helper.ObtenerTraduccion("Sistema", "S2D"));
+            CarpetaANodo(resul, ref nodo);
+            treeSystem.Nodes.Clear();
+            nodo.Name = Tools.Helper.ObtenerTraduccion("Sistema", "S2D");
+            treeSystem.Nodes.Add(nodo);
+            treeSystem.ExpandAll();
+        }
+        private void txtSearch_TextChanged(object sender, EventArgs e)
+        {
+            if (!checkSearch.Checked)
+                return;
+
+            if (txtSearch.Text == "")
+            {
+                treeSystem.Nodes.Clear();
+                treeSystem.Nodes.Add(Jerarquizar_Nodos(accion.Root));
+                return;
+            }
+
+            // Búsqueda normal por nombre
             treeSystem.Nodes.Clear();
             TreeNode nodo = new TreeNode(Tools.Helper.ObtenerTraduccion("Sistema", "S2D"));
             CarpetaANodo(accion.Search_File(txtSearch.Text), ref nodo);
@@ -689,21 +806,10 @@ namespace Tinke
             treeSystem.Nodes.Add(nodo);
             treeSystem.ExpandAll();
         }
-
-        private void txtSearch_TextChanged(object sender, EventArgs e)
+        private void txtSearch_KeyUp(object sender, KeyEventArgs e)
         {
-            if (txtSearch.Text == "")
-            {
-                treeSystem.Nodes.Clear();
-                treeSystem.Nodes.Add(Jerarquizar_Nodos(accion.Root));
-                return;
-            }
-            treeSystem.Nodes.Clear();
-            TreeNode nodo = new TreeNode(Tools.Helper.ObtenerTraduccion("Sistema", "S2D"));
-            CarpetaANodo(accion.Search_File(txtSearch.Text), ref nodo);
-            nodo.Name = Tools.Helper.ObtenerTraduccion("Sistema", "S2D");
-            treeSystem.Nodes.Add(nodo);
-            treeSystem.ExpandAll();
+            if (e.KeyCode == Keys.Enter)
+                btnSearch.PerformClick();
         }
 
 

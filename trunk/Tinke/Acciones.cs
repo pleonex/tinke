@@ -549,9 +549,20 @@ namespace Tinke
         {
             Carpeta carpeta = new Carpeta();
             carpeta.files = new List<Archivo>();
+            carpeta.id = (ushort)LastFolderID;
             Recursivo_Archivo(name, root, carpeta);
             return carpeta;
         }
+        public Carpeta Search_File(Formato formato)
+        {
+            Carpeta carpeta = new Carpeta();
+            carpeta.files = new List<Archivo>();
+            carpeta.id = (ushort)LastFolderID;
+            carpeta.folders = new List<Carpeta>();
+            Recursivo_Archivo(formato, root, carpeta);
+            return carpeta;
+        }
+
         public Carpeta Select_Folder()
         {
             return Recursivo_Carpeta(idSelect, root);
@@ -588,6 +599,130 @@ namespace Tinke
                 foreach (Carpeta subFolder in currFolder.folders)
                      Recursivo_Archivo(name, subFolder, carpeta);
 
+        }
+        private void Recursivo_Archivo(Formato formato, Carpeta currFolder, Carpeta carpeta)
+        {
+            if (currFolder.files is List<Archivo>)
+            {
+                foreach (Archivo archivo in currFolder.files)
+                {
+                    if (archivo.formato == formato)
+                    {
+
+                        if (formato == Formato.Imagen || formato == Formato.Celdas ||
+                            formato == Formato.Animación || formato == Formato.Screen)
+                        {
+                            #region Búsqueda de compañeros
+
+                            string name = archivo.name.Remove(archivo.name.LastIndexOf('.'));
+                            Carpeta fm = new Carpeta();
+                            fm.name = name;
+                            fm.files = new List<Archivo>();
+                            Archivo pal, til, cel;
+
+                            switch (formato)
+                            {
+                                case Formato.Animación:
+                                    pal = Recursivo_Archivo(Formato.Paleta, name, root);
+                                    if (!(pal.name is String))
+                                        goto No_Valido;
+                                    fm.files.Add(pal);
+                                    til = Recursivo_Archivo(Formato.Imagen, name, root);
+                                    if (!(til.name is String))
+                                        goto No_Valido;
+                                    fm.files.Add(til);
+                                    cel = Recursivo_Archivo(Formato.Celdas, name, root);
+                                    if (!(cel.name is String))
+                                        goto No_Valido;
+                                    fm.files.Add(cel);
+
+                                    fm.files.Add(archivo);
+                                    break;
+
+                                case Formato.Celdas:
+                                    pal = Recursivo_Archivo(Formato.Paleta, name, root);
+                                    if (!(pal.name is String))
+                                        goto No_Valido;
+                                    fm.files.Add(pal);
+                                    til = Recursivo_Archivo(Formato.Imagen, name, root);
+                                    if (!(til.name is String))
+                                        goto No_Valido;
+                                    fm.files.Add(til);
+
+                                    fm.files.Add(archivo);
+                                    break;
+
+                                case Formato.Screen:
+                                    pal = Recursivo_Archivo(Formato.Paleta, name, root);
+                                    if (!(pal.name is String))
+                                        goto No_Valido;
+                                    fm.files.Add(pal);
+                                    til = Recursivo_Archivo(Formato.Imagen, name, root);
+                                    if (!(til.name is String))
+                                        goto No_Valido;
+                                    fm.files.Add(til);
+
+                                    fm.files.Add(archivo);
+                                    break;
+
+                                case Formato.Imagen:
+                                    pal = Recursivo_Archivo(Formato.Paleta, name, root);
+                                    if (!(pal.name is String))
+                                        goto No_Valido;
+                                    fm.files.Add(pal);
+
+                                    fm.files.Add(archivo);
+                                    break;
+                            }
+
+                            if (fm.files.Count > 0)
+                            {
+                                fm.id = (ushort)LastFolderID;
+                                carpeta.folders.Add(fm);
+                            }
+
+                        No_Valido: // No se han encontrado todos los archivos necesario y no se añade
+                            continue;
+                            #endregion
+                        }
+                        else
+                            carpeta.files.Add(archivo);
+
+                    }
+                }
+            }
+
+
+            if (currFolder.folders is List<Carpeta>)
+                foreach (Carpeta subFolder in currFolder.folders)
+                    Recursivo_Archivo(formato, subFolder, carpeta);
+
+        }
+        private Archivo Recursivo_Archivo(Formato formato, string name, Carpeta currFolder)
+        {
+            if (currFolder.files is List<Archivo>)
+            {
+                foreach (Archivo archivo in currFolder.files)
+                {
+                    if (archivo.formato == formato && archivo.name.Remove(archivo.name.LastIndexOf('.')) == name)
+                    {
+                        return archivo;
+                    }
+                }
+            }
+
+
+            if (currFolder.folders is List<Carpeta>)
+            {
+                foreach (Carpeta subFolder in currFolder.folders)
+                {
+                    Archivo currFile = Recursivo_Archivo(formato, name, subFolder);
+                    if (currFile.name is string)
+                        return currFile;
+                }
+            }
+
+            return new Archivo();
         }
         private Carpeta Recursivo_Carpeta(int id, Carpeta currFolder)
         {
