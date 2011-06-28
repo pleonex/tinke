@@ -549,7 +549,6 @@ namespace Tinke
         {
             Carpeta carpeta = new Carpeta();
             carpeta.files = new List<Archivo>();
-            carpeta.id = (ushort)LastFolderID;
             Recursivo_Archivo(name, root, carpeta);
             return carpeta;
         }
@@ -557,7 +556,6 @@ namespace Tinke
         {
             Carpeta carpeta = new Carpeta();
             carpeta.files = new List<Archivo>();
-            carpeta.id = (ushort)LastFolderID;
             carpeta.folders = new List<Carpeta>();
             Recursivo_Archivo(formato, root, carpeta);
             return carpeta;
@@ -701,15 +699,10 @@ namespace Tinke
         private Archivo Recursivo_Archivo(Formato formato, string name, Carpeta currFolder)
         {
             if (currFolder.files is List<Archivo>)
-            {
                 foreach (Archivo archivo in currFolder.files)
-                {
-                    if (archivo.formato == formato && archivo.name.Remove(archivo.name.LastIndexOf('.')) == name)
-                    {
-                        return archivo;
-                    }
-                }
-            }
+                    if (archivo.formato == formato && archivo.name.Contains('.')) // Previene de archivos sin extensión (ie: file1)
+                        if (archivo.name.Remove(archivo.name.LastIndexOf('.')) == name)
+                            return archivo;
 
 
             if (currFolder.folders is List<Carpeta>)

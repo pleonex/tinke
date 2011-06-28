@@ -257,7 +257,7 @@ namespace Tinke
             {
                 uint tileOffset = banco.cells[i].tileOffset;
                 if (tile.rahc.depth == System.Windows.Forms.ColorDepth.Depth4Bit)
-                    tileOffset *= (uint)Math.Pow(blockSize, 2);
+                    tileOffset *= blockSize * 2;
                 else
                     tileOffset *= (uint)((blockSize != 0) ? blockSize : 1);
 
@@ -318,7 +318,7 @@ namespace Tinke
             {
                 uint tileOffset = banco.cells[i].tileOffset;
                 if (tile.rahc.depth == System.Windows.Forms.ColorDepth.Depth4Bit)
-                    tileOffset *= (uint)Math.Pow(blockSize, 2);
+                    tileOffset *= blockSize * 2;
                 else
                     tileOffset *= (uint)((blockSize != 0) ? blockSize : 1);
 
