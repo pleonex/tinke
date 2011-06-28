@@ -172,7 +172,7 @@ namespace Tinke
             if (tile.rahc.nTilesY == 0xFFFF)
             {
                 if (tile.orden == Orden_Tiles.No_Tiles)
-                    tile.rahc.nTilesY = (ushort)(tile.rahc.nTiles / 0x40);
+                    tile.rahc.nTilesY = (ushort)((tile.rahc.nTiles / 0x40) * 0x40);
                 else
                     tile.rahc.nTilesY = (ushort)(tile.rahc.nTiles / 0x08);
             }

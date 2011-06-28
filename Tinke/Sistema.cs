@@ -132,7 +132,7 @@ namespace Tinke
 
             o.Dispose();
             debug.Añadir_Texto(sb.ToString());
-            sb.Remove(0, sb.Length - 1);
+            sb.Length = 0;
 
             this.Activate();
             debug.Activate();
@@ -478,7 +478,7 @@ namespace Tinke
                     btnDesplazar.PerformClick();
             }
                 debug.Añadir_Texto(sb.ToString());
-                            sb.Remove(0, sb.Length - 1);;
+                sb.Length = 0;
         }
         private void btnUncompress_Click(object sender, EventArgs e)
         {
@@ -499,7 +499,7 @@ namespace Tinke
             btnHex.Enabled = false;
 
             debug.Añadir_Texto(sb.ToString());
-                        sb.Remove(0, sb.Length - 1);;
+            sb.Length = 0;
         }
         private void btnExtraer_Click(object sender, EventArgs e)
         {
@@ -602,7 +602,7 @@ namespace Tinke
             {
                 accion.Set_Data();
                 debug.Añadir_Texto(sb.ToString());
-                            sb.Remove(0, sb.Length - 1);;
+                sb.Length = 0;
             }
         }
 
@@ -707,7 +707,7 @@ namespace Tinke
                     btnDesplazar.PerformClick();
             }
             debug.Añadir_Texto(sb.ToString());
-                        sb.Remove(0, sb.Length - 1);;
+            sb.Length = 0;
         }
         private void toolAbrirComoItemPaleta_Click(object sender, EventArgs e)
         {
