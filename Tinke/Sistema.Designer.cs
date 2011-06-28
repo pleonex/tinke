@@ -52,12 +52,12 @@ namespace Tinke
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Sistema));
-            System.Windows.Forms.ListViewItem listViewItem7 = new System.Windows.Forms.ListViewItem("S09");
-            System.Windows.Forms.ListViewItem listViewItem8 = new System.Windows.Forms.ListViewItem("S0A");
-            System.Windows.Forms.ListViewItem listViewItem9 = new System.Windows.Forms.ListViewItem("S0B");
-            System.Windows.Forms.ListViewItem listViewItem10 = new System.Windows.Forms.ListViewItem("S0C");
-            System.Windows.Forms.ListViewItem listViewItem11 = new System.Windows.Forms.ListViewItem("S0D");
-            System.Windows.Forms.ListViewItem listViewItem12 = new System.Windows.Forms.ListViewItem("S0E");
+            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("S09");
+            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("S0A");
+            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem("S0B");
+            System.Windows.Forms.ListViewItem listViewItem4 = new System.Windows.Forms.ListViewItem("S0C");
+            System.Windows.Forms.ListViewItem listViewItem5 = new System.Windows.Forms.ListViewItem("S0D");
+            System.Windows.Forms.ListViewItem listViewItem6 = new System.Windows.Forms.ListViewItem("S0E");
             this.iconos = new System.Windows.Forms.ImageList(this.components);
             this.btnExtraer = new System.Windows.Forms.Button();
             this.btnSee = new System.Windows.Forms.Button();
@@ -92,7 +92,8 @@ namespace Tinke
             this.linkAboutBox = new System.Windows.Forms.LinkLabel();
             this.txtSearch = new System.Windows.Forms.TextBox();
             this.btnSearch = new System.Windows.Forms.Button();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.checkSearch = new System.Windows.Forms.CheckBox();
+            this.toolTipSearch = new System.Windows.Forms.ToolTip(this.components);
             this.toolStrip1.SuspendLayout();
             this.toolStrip2.SuspendLayout();
             this.SuspendLayout();
@@ -165,12 +166,12 @@ namespace Tinke
             this.columnHeader1,
             this.columnHeader2});
             this.listFile.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem7,
-            listViewItem8,
-            listViewItem9,
-            listViewItem10,
-            listViewItem11,
-            listViewItem12});
+            listViewItem1,
+            listViewItem2,
+            listViewItem3,
+            listViewItem4,
+            listViewItem5,
+            listViewItem6});
             this.listFile.Location = new System.Drawing.Point(409, 28);
             this.listFile.Name = "listFile";
             this.listFile.Size = new System.Drawing.Size(197, 202);
@@ -457,6 +458,7 @@ namespace Tinke
             this.txtSearch.Size = new System.Drawing.Size(183, 20);
             this.txtSearch.TabIndex = 14;
             this.txtSearch.TextChanged += new System.EventHandler(this.txtSearch_TextChanged);
+            this.txtSearch.KeyUp += new System.Windows.Forms.KeyEventHandler(this.txtSearch_KeyUp);
             // 
             // btnSearch
             // 
@@ -469,15 +471,23 @@ namespace Tinke
             this.btnSearch.UseVisualStyleBackColor = true;
             this.btnSearch.Click += new System.EventHandler(this.btnSearch_Click);
             // 
-            // checkBox1
+            // checkSearch
             // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(410, 306);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(80, 17);
-            this.checkBox1.TabIndex = 16;
-            this.checkBox1.Text = "checkBox1";
-            this.checkBox1.UseVisualStyleBackColor = true;
+            this.checkSearch.AutoSize = true;
+            this.checkSearch.Location = new System.Drawing.Point(410, 306);
+            this.checkSearch.Name = "checkSearch";
+            this.checkSearch.Size = new System.Drawing.Size(46, 17);
+            this.checkSearch.TabIndex = 16;
+            this.checkSearch.Text = "S2E";
+            this.checkSearch.UseVisualStyleBackColor = true;
+            // 
+            // toolTipSearch
+            // 
+            this.toolTipSearch.AutoPopDelay = 10000;
+            this.toolTipSearch.InitialDelay = 500;
+            this.toolTipSearch.IsBalloon = true;
+            this.toolTipSearch.ReshowDelay = 100;
+            this.toolTipSearch.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             // 
             // Sistema
             // 
@@ -485,7 +495,7 @@ namespace Tinke
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
             this.ClientSize = new System.Drawing.Size(644, 537);
-            this.Controls.Add(this.checkBox1);
+            this.Controls.Add(this.checkSearch);
             this.Controls.Add(this.btnSearch);
             this.Controls.Add(this.txtSearch);
             this.Controls.Add(this.linkAboutBox);
@@ -550,7 +560,8 @@ namespace Tinke
         private System.Windows.Forms.ToolStripMenuItem s10ToolStripMenuItem;
         private System.Windows.Forms.TextBox txtSearch;
         private System.Windows.Forms.Button btnSearch;
-        private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.CheckBox checkSearch;
+        private System.Windows.Forms.ToolTip toolTipSearch;
 
     }
 }
