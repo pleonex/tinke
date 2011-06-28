@@ -207,7 +207,8 @@
     <Compile Include="Nitro\Overlay.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Tools\CRC16.cs" />
+    <Compile Include="Tools\APNG.cs" />
+    <Compile Include="Tools\CRC.cs" />
     <Compile Include="Tools\Helper.cs" />
     <Compile Include="Visor.cs">
       <SubType>Form</SubType>

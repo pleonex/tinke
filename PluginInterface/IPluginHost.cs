@@ -59,7 +59,15 @@ namespace PluginInterface
         Size Tamaño_NCER(byte byte1, byte byte2);
         Bitmap Bitmap_NCER(Bank banco, uint blockSize, NCGR ncgr, NCLR nclr, bool entorno, bool celda,
             bool numero, bool transparencia, bool imagen);
-        void Crear_Gif(string salida, Bitmap[] frames, int delay, int loops);
+        /// <summary>
+        /// Save an animation in a APNG file (Firefox supported)
+        /// </summary>
+        /// <param name="salida">The path of the output file</param>
+        /// <param name="frames">All frames (path of files or bitmaps)</param>
+        /// <param name="delay">The delay between frames (delay/1000)</param>
+        /// <param name="loops">The number of  loops (if 0 = infinite)</param>
+        void Crear_APNG(string salida, Bitmap[] frames, int delay, int loops);
+        void Crear_APNG(string salida, String[] frames, int delay, int loops);
 
         // Para descomprimir archivos
         void Set_Files(Carpeta archivos);

@@ -45,6 +45,8 @@
 	    <S2A>Comprimido</S2A>
 	    <S2B>Desconocido</S2B>
       <S2C>Selecciona la carpeta donde se guardarán los archivos.</S2C>
+      <S2D>Búsqueda</S2D>
+      <S2E>Búsqueda instantánea</S2E>
     </Sistema>
   <RomInfo>
       <S01>Información de la ROM</S01>

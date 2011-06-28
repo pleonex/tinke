@@ -45,6 +45,8 @@
 	    <S2A>Compressé</S2A>
 	    <S2B>Inconnu</S2B>
       <S2C>Select the folder where you want to save the files</S2C>
+      <S2D>Search</S2D>
+      <S2E>Instant search</S2E>
     </Sistema>
     <RomInfo>
       <S01>Information de la ROM</S01>

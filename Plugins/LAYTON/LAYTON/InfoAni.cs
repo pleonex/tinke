@@ -73,12 +73,12 @@ namespace LAYTON
             SaveFileDialog o = new SaveFileDialog();
             o.AddExtension = true;
             o.CheckPathExists = true;
-            o.DefaultExt = ".gif";
-            o.Filter = "Graphics Interchange Format (*.gif)|*.gif";
+            o.DefaultExt = ".png";
+            o.Filter = "Animation PNG (*.png)|*.png";
             o.OverwritePrompt = true;
 
             if (o.ShowDialog() == DialogResult.OK)
-                pluginHost.Crear_Gif(o.FileName, imagenes, Convert.ToInt32(maskedTextBox1.Text), 0);
+                pluginHost.Crear_APNG(o.FileName, imagenes, Convert.ToInt32(maskedTextBox1.Text), 0);
                 
         }
 
@@ -121,7 +121,7 @@ namespace LAYTON
 
         private void maskedTextBox1_TextChanged(object sender, EventArgs e)
         {
-            if (maskedTextBox1.Text != "")
+            if (maskedTextBox1.Text != "" && maskedTextBox1.Text != "0")
                 timer1.Interval = Convert.ToInt32(maskedTextBox1.Text);
         }
 

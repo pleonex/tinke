@@ -122,7 +122,7 @@ namespace Tinke
             root = FAT(o.FileName, romInfo.Cabecera.FAToffset, romInfo.Cabecera.FATsize, root);
 
             accion.Root = root;
-            treeSystem.Nodes.Add(Jerarquizar_Nodos(root, root)); // Mostramos el árbol
+            treeSystem.Nodes.Add(Jerarquizar_Nodos(root)); // Mostramos el árbol
             #endregion
             espera.Abort();
 
@@ -220,7 +220,7 @@ namespace Tinke
         {
             return Nitro.FAT.LeerFAT(file, offset, size, root);
         }
-        private TreeNode Jerarquizar_Nodos(Carpeta root, Carpeta currFolder)
+        private TreeNode Jerarquizar_Nodos(Carpeta currFolder)
         {
             TreeNode currNode = new TreeNode();
 
@@ -231,7 +231,7 @@ namespace Tinke
 
             if (currFolder.folders is List<Carpeta>)
                 foreach (Carpeta subFolder in currFolder.folders)
-                    currNode.Nodes.Add(Jerarquizar_Nodos(root, subFolder));
+                    currNode.Nodes.Add(Jerarquizar_Nodos(subFolder));
 
 
             if (currFolder.files is List<Archivo>)
@@ -245,7 +245,7 @@ namespace Tinke
                     {
                         ext = accion.Get_MagicIDS(archivo.id);
                         if (ext != "")
-                            ext = " [" + ext + ']'; // Previene extensiones vacías
+                            ext = " [" + ext + ']';
                     }
                     TreeNode fileNode = new TreeNode(archivo.name + ext, nImage, nImage);
                     fileNode.Name = archivo.name;
@@ -261,7 +261,7 @@ namespace Tinke
             nodo.ImageIndex = 0;
             nodo.SelectedImageIndex = 0;
             nodo.Tag = carpeta.id;
-
+            
 
             if (carpeta.folders is List<Carpeta>)
             {
@@ -507,12 +507,12 @@ namespace Tinke
 
                 Thread espera = new System.Threading.Thread(ThreadEspera);
                 espera.Start();
-                RecursivoFolder(folderSelect, o.SelectedPath + '\\' + folderSelect.name);
+                RecursivoExtractFolder(folderSelect, o.SelectedPath + '\\' + folderSelect.name);
                 espera.Abort();
             }
 
         }
-        private void RecursivoFolder(Carpeta currFolder, String path)
+        private void RecursivoExtractFolder(Carpeta currFolder, String path)
         {
             if (currFolder.files is List<Archivo>)
                 foreach (Archivo archivo in currFolder.files)
@@ -535,7 +535,7 @@ namespace Tinke
                 foreach (Carpeta subFolder in currFolder.folders)
                 {
                     Directory.CreateDirectory(path + '\\' + subFolder.name);
-                    RecursivoFolder(subFolder, path + '\\' + subFolder.name);
+                    RecursivoExtractFolder(subFolder, path + '\\' + subFolder.name);
                 }
             }
         }
@@ -672,6 +672,40 @@ namespace Tinke
             Autores ven = new Autores();
             ven.ShowDialog();
         }
+
+
+        private void btnSearch_Click(object sender, EventArgs e)
+        {
+            if (txtSearch.Text == "")
+            {
+                treeSystem.Nodes.Clear();
+                treeSystem.Nodes.Add(Jerarquizar_Nodos(accion.Root));
+                return;
+            }
+            treeSystem.Nodes.Clear();
+            TreeNode nodo = new TreeNode(Tools.Helper.ObtenerTraduccion("Sistema", "S2D"));
+            CarpetaANodo(accion.Search_File(txtSearch.Text), ref nodo);
+            nodo.Name = Tools.Helper.ObtenerTraduccion("Sistema", "S2D");
+            treeSystem.Nodes.Add(nodo);
+            treeSystem.ExpandAll();
+        }
+
+        private void txtSearch_TextChanged(object sender, EventArgs e)
+        {
+            if (txtSearch.Text == "")
+            {
+                treeSystem.Nodes.Clear();
+                treeSystem.Nodes.Add(Jerarquizar_Nodos(accion.Root));
+                return;
+            }
+            treeSystem.Nodes.Clear();
+            TreeNode nodo = new TreeNode(Tools.Helper.ObtenerTraduccion("Sistema", "S2D"));
+            CarpetaANodo(accion.Search_File(txtSearch.Text), ref nodo);
+            nodo.Name = Tools.Helper.ObtenerTraduccion("Sistema", "S2D");
+            treeSystem.Nodes.Add(nodo);
+            treeSystem.ExpandAll();
+        }
+
 
 
     }
