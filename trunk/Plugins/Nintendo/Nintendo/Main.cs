@@ -42,16 +42,21 @@ namespace Nintendo
 		
 		public Formato Get_Formato(string nombre, byte[] magic)
 		{
+            nombre = nombre.ToUpper();
             string ext = new String(System.Text.Encoding.ASCII.GetChars(magic));
 
-            if (nombre.EndsWith(".nbfp"))
+            if (nombre.EndsWith(".NBFP"))
                 return Formato.Paleta;
-            else if (nombre.EndsWith(".nbfc"))
+            else if (nombre.EndsWith(".NBFC"))
                 return Formato.Imagen;
-            else if (nombre.EndsWith(".nbfs"))
+            else if (nombre.EndsWith(".NBFS"))
                 return Formato.Screen;
-            else if (ext == "MESG" && nombre.EndsWith(".bmg"))
+            else if (ext == "MESG" && nombre.EndsWith(".BMG"))
                 return Formato.Texto;
+            else if (nombre.EndsWith(".NTFT"))
+                return Formato.Imagen;
+            else if (nombre.EndsWith(".NTFP"))
+                return Formato.Paleta;
 			
 			return Formato.Desconocido;
 		}
@@ -63,7 +68,6 @@ namespace Nintendo
                 new nbfp(pluginHost, archivo).Leer();
                 
                 iNCLR control = new iNCLR(pluginHost, pluginHost.Get_NCLR());
-                control.Dock = DockStyle.Fill;
                 return control;
             }
 			if (archivo.ToUpper().EndsWith(".NBFC"))
@@ -73,10 +77,10 @@ namespace Nintendo
 				if (pluginHost.Get_NCLR().cabecera.file_size != 0x00)
 				{
                     iNCGR control = new iNCGR(pluginHost, pluginHost.Get_NCGR(), pluginHost.Get_NCLR());
-                    control.Dock = DockStyle.Fill;
                     return control;
 				}
 			}
+
 			if (archivo.ToUpper().EndsWith(".NBFS"))
 			{
 				new nbfs(pluginHost, archivo).Leer();
@@ -87,12 +91,29 @@ namespace Nintendo
 					tile.rahc.tileData = pluginHost.Transformar_NSCR(pluginHost.Get_NSCR(), tile.rahc.tileData);
 					
 					iNCGR control = new iNCGR(pluginHost, tile, pluginHost.Get_NCLR());
-					control.Dock = DockStyle.Fill;
 					return control;
 				}
 			}
             if (archivo.ToUpper().EndsWith(".BMG"))
                 return new bmg(pluginHost, archivo).ShowInfo();
+
+            if (archivo.ToUpper().EndsWith(".NTFT"))
+            {
+                new ntft(pluginHost, archivo).Leer();
+
+                if (pluginHost.Get_NCLR().cabecera.file_size != 0x00)
+                {
+                    iNCGR control = new iNCGR(pluginHost, pluginHost.Get_NCGR(), pluginHost.Get_NCLR());
+                    return control;
+                }
+            }
+            if (archivo.ToUpper().EndsWith(".NTFP"))
+            {
+                new ntfp(pluginHost, archivo).Leer();
+
+                iNCLR control = new iNCLR(pluginHost, pluginHost.Get_NCLR());
+                return control;
+            }
 			
 			return new Control();
 		}
@@ -107,6 +128,10 @@ namespace Nintendo
 				new nbfs(pluginHost, archivo).Leer();
             if (archivo.ToUpper().EndsWith(".BMG"))
                 Console.WriteLine("Este archivo no contiene información para guardar.");
+            if (archivo.ToUpper().EndsWith(".NTFP"))
+                new ntfp(pluginHost, archivo).Leer();
+            if (archivo.ToUpper().EndsWith(".NTFT"))
+                new ntft(pluginHost, archivo).Leer();
 		}
 	}
 }

@@ -127,6 +127,8 @@
     <Compile Include="nbfc.cs" />
     <Compile Include="nbfp.cs" />
     <Compile Include="nbfs.cs" />
+    <Compile Include="ntfp.cs" />
+    <Compile Include="ntft.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="Properties\Resources.Designer.cs">

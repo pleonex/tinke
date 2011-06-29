@@ -124,6 +124,7 @@ namespace Tinke
             accion.Root = root;
             Set_Formato(root);
             treeSystem.Nodes.Add(Jerarquizar_Nodos(root)); // Mostramos el árbol
+            treeSystem.Nodes[0].Expand();
             #endregion
             espera.Abort();
 
@@ -736,6 +737,7 @@ namespace Tinke
             {
                 treeSystem.Nodes.Clear();
                 treeSystem.Nodes.Add(Jerarquizar_Nodos(accion.Root));
+                treeSystem.Nodes[0].Expand();
                 return;
             }
 
@@ -790,21 +792,7 @@ namespace Tinke
         {
             if (!checkSearch.Checked)
                 return;
-
-            if (txtSearch.Text == "")
-            {
-                treeSystem.Nodes.Clear();
-                treeSystem.Nodes.Add(Jerarquizar_Nodos(accion.Root));
-                return;
-            }
-
-            // Búsqueda normal por nombre
-            treeSystem.Nodes.Clear();
-            TreeNode nodo = new TreeNode(Tools.Helper.ObtenerTraduccion("Sistema", "S2D"));
-            CarpetaANodo(accion.Search_File(txtSearch.Text), ref nodo);
-            nodo.Name = Tools.Helper.ObtenerTraduccion("Sistema", "S2D");
-            treeSystem.Nodes.Add(nodo);
-            treeSystem.ExpandAll();
+            btnSearch.PerformClick();
         }
         private void txtSearch_KeyUp(object sender, KeyEventArgs e)
         {

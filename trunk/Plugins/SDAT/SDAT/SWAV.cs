@@ -23,9 +23,9 @@ using System;
 using System.IO;
 using System.Text;
 
-namespace Wav
+namespace SDAT
 {
-    class Wav
+    public static class SWAV
     {
         public static void EscribirArchivo(ArchivoWAV wr, string path)
         {
@@ -77,7 +77,7 @@ namespace Wav
 
             archivo.wave.fmt.chunkID = new char[] { 'f', 'm', 't', ' ' };
             archivo.wave.fmt.chunkSize = 16;
-            archivo.wave.fmt.audioFormat = Wav.ArchivoWAV.WaveChunk.FmtChunk.WaveFormat.WAVE_FORMAT_PCM;
+            archivo.wave.fmt.audioFormat = ArchivoWAV.WaveChunk.FmtChunk.WaveFormat.WAVE_FORMAT_PCM;
             archivo.wave.fmt.numChannels = numChannels;
             archivo.wave.fmt.sampleRate = sampleRate;
             archivo.wave.fmt.bitsPerSample = bitsPerSample;
@@ -230,7 +230,6 @@ namespace Wav
                 }
             }
         }
-
         public struct ArchivoSWAV
         {
             public Header header;
@@ -263,7 +262,6 @@ namespace Wav
                 }
             }
         }
-
         public struct ArchivoSWAR
         {
             public struct Header

@@ -51,16 +51,20 @@ namespace SDAT
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(iSDAT));
-            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("ID");
-            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("Formato");
-            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem("Offset");
-            System.Windows.Forms.ListViewItem listViewItem4 = new System.Windows.Forms.ListViewItem("Tamaño");
+            System.Windows.Forms.ListViewItem listViewItem17 = new System.Windows.Forms.ListViewItem("ID");
+            System.Windows.Forms.ListViewItem listViewItem18 = new System.Windows.Forms.ListViewItem("Formato");
+            System.Windows.Forms.ListViewItem listViewItem19 = new System.Windows.Forms.ListViewItem("Offset");
+            System.Windows.Forms.ListViewItem listViewItem20 = new System.Windows.Forms.ListViewItem("Tamaño");
             this.treeFiles = new System.Windows.Forms.TreeView();
             this.imageList = new System.Windows.Forms.ImageList(this.components);
             this.listProp = new System.Windows.Forms.ListView();
             this.columnCampo = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnValor = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.btnExtract = new System.Windows.Forms.Button();
+            this.btnReproducir = new System.Windows.Forms.Button();
+            this.btnWav = new System.Windows.Forms.Button();
+            this.btnMidi = new System.Windows.Forms.Button();
+            this.btnStop = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // treeFiles
@@ -83,6 +87,9 @@ namespace SDAT
             this.imageList.Images.SetKeyName(1, "music.png");
             this.imageList.Images.SetKeyName(2, "sound.png");
             this.imageList.Images.SetKeyName(3, "package_go.png");
+            this.imageList.Images.SetKeyName(4, "bell.png");
+            this.imageList.Images.SetKeyName(5, "resultset_next.png");
+            this.imageList.Images.SetKeyName(6, "stop.png");
             // 
             // listProp
             // 
@@ -90,10 +97,10 @@ namespace SDAT
             this.columnCampo,
             this.columnValor});
             this.listProp.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem1,
-            listViewItem2,
-            listViewItem3,
-            listViewItem4});
+            listViewItem17,
+            listViewItem18,
+            listViewItem19,
+            listViewItem20});
             this.listProp.Location = new System.Drawing.Point(251, 3);
             this.listProp.Name = "listProp";
             this.listProp.Size = new System.Drawing.Size(256, 104);
@@ -118,12 +125,58 @@ namespace SDAT
             this.btnExtract.ImageList = this.imageList;
             this.btnExtract.Location = new System.Drawing.Point(251, 472);
             this.btnExtract.Name = "btnExtract";
-            this.btnExtract.Size = new System.Drawing.Size(82, 35);
+            this.btnExtract.Size = new System.Drawing.Size(93, 35);
             this.btnExtract.TabIndex = 2;
             this.btnExtract.Text = "Extraer";
             this.btnExtract.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnExtract.UseVisualStyleBackColor = true;
             this.btnExtract.Click += new System.EventHandler(this.btnExtract_Click);
+            // 
+            // btnReproducir
+            // 
+            this.btnReproducir.Enabled = false;
+            this.btnReproducir.ImageIndex = 5;
+            this.btnReproducir.ImageList = this.imageList;
+            this.btnReproducir.Location = new System.Drawing.Point(357, 432);
+            this.btnReproducir.Name = "btnReproducir";
+            this.btnReproducir.Size = new System.Drawing.Size(45, 34);
+            this.btnReproducir.TabIndex = 3;
+            this.btnReproducir.UseVisualStyleBackColor = true;
+            this.btnReproducir.Click += new System.EventHandler(this.btnReproducir_Click);
+            // 
+            // btnWav
+            // 
+            this.btnWav.Enabled = false;
+            this.btnWav.ImageIndex = 5;
+            this.btnWav.Location = new System.Drawing.Point(415, 432);
+            this.btnWav.Name = "btnWav";
+            this.btnWav.Size = new System.Drawing.Size(92, 34);
+            this.btnWav.TabIndex = 4;
+            this.btnWav.Text = "Guardar WAV";
+            this.btnWav.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnWav.UseVisualStyleBackColor = true;
+            this.btnWav.Click += new System.EventHandler(this.btnWav_Click);
+            // 
+            // btnMidi
+            // 
+            this.btnMidi.Enabled = false;
+            this.btnMidi.Location = new System.Drawing.Point(415, 472);
+            this.btnMidi.Name = "btnMidi";
+            this.btnMidi.Size = new System.Drawing.Size(92, 35);
+            this.btnMidi.TabIndex = 5;
+            this.btnMidi.Text = "Guardar MIDI";
+            this.btnMidi.UseVisualStyleBackColor = true;
+            // 
+            // btnStop
+            // 
+            this.btnStop.ImageIndex = 6;
+            this.btnStop.ImageList = this.imageList;
+            this.btnStop.Location = new System.Drawing.Point(357, 472);
+            this.btnStop.Name = "btnStop";
+            this.btnStop.Size = new System.Drawing.Size(45, 34);
+            this.btnStop.TabIndex = 6;
+            this.btnStop.UseVisualStyleBackColor = true;
+            this.btnStop.Click += new System.EventHandler(this.btnStop_Click);
             // 
             // iSDAT
             // 
@@ -131,6 +184,10 @@ namespace SDAT
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Transparent;
             this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.Controls.Add(this.btnStop);
+            this.Controls.Add(this.btnMidi);
+            this.Controls.Add(this.btnWav);
+            this.Controls.Add(this.btnReproducir);
             this.Controls.Add(this.btnExtract);
             this.Controls.Add(this.listProp);
             this.Controls.Add(this.treeFiles);
@@ -148,5 +205,9 @@ namespace SDAT
         private System.Windows.Forms.ColumnHeader columnCampo;
         private System.Windows.Forms.ColumnHeader columnValor;
         private System.Windows.Forms.Button btnExtract;
+        private System.Windows.Forms.Button btnReproducir;
+        private System.Windows.Forms.Button btnWav;
+        private System.Windows.Forms.Button btnMidi;
+        private System.Windows.Forms.Button btnStop;
     }
 }

@@ -28,18 +28,20 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.IO;
+using System.Media;
 
 namespace SDAT
 {
     public partial class iSDAT : UserControl
     {
         sSDAT sdat;
+        SoundPlayer soundPlayer;
+        string wavFile = "";
 
         public iSDAT()
         {
             InitializeComponent();
         }
-
         public iSDAT(sSDAT sdat)
         {
             InitializeComponent();
@@ -47,6 +49,7 @@ namespace SDAT
             this.sdat = sdat;
 
             treeFiles.Nodes.Add(CarpetaToNodo(sdat.files.root));
+            treeFiles.Nodes[0].Expand();
         }
 
         private TreeNode CarpetaToNodo(Folder carpeta)
@@ -67,7 +70,8 @@ namespace SDAT
             {
                 foreach (Sound archivo in carpeta.files)
                 {
-                    TreeNode fileNode = new TreeNode(archivo.name, 1, 1);
+                    int formato = FormatoToImage(archivo.type);
+                    TreeNode fileNode = new TreeNode(archivo.name, formato, formato);
                     fileNode.Name = archivo.name;
                     fileNode.Tag = archivo.id;
                     currNode.Nodes.Add(fileNode);
@@ -77,10 +81,33 @@ namespace SDAT
             return currNode;
 
         }
+        private int FormatoToImage(FormatSound formato)
+        {
+            switch (formato)
+            {
+                case FormatSound.SSEQ:
+                    return 2;
+                case FormatSound.SSAR:
+                    return 2;
+                case FormatSound.SBNK:
+                    return 4;
+                case FormatSound.SWAV:
+                    return 1;
+                case FormatSound.SWAR:
+                    return 1;
+                case FormatSound.STRM:
+                    return 1;
+                default:
+                    return 1;
+            }
+        }
 
         private void treeFiles_AfterSelect(object sender, TreeViewEventArgs e)
         {
              // Limpiar información anterior
+            btnReproducir.Enabled = false;
+            btnWav.Enabled = false;
+            btnMidi.Enabled = false;
             if (listProp.Items[0].SubItems.Count == 2)
                 for (int i = 0; i < listProp.Items.Count; i++)
                     listProp.Items[i].SubItems.RemoveAt(1);
@@ -90,18 +117,23 @@ namespace SDAT
             {
                 Sound fileSelect = SearchFile(id, sdat.files.root);
 
-                listProp.Items[0].SubItems.Add("0x" + String.Format("{0:X}", fileSelect.id.ToString()));
+                listProp.Items[0].SubItems.Add("0x" + String.Format("{0:X}", fileSelect.id));
                 listProp.Items[1].SubItems.Add(fileSelect.name);
                 listProp.Items[2].SubItems.Add("0x" + String.Format("{0:X}", fileSelect.offset));
                 listProp.Items[3].SubItems.Add(fileSelect.size.ToString());
 
                 btnExtract.Enabled = true;
+                if (fileSelect.type == FormatSound.SWAV)
+                {
+                    btnReproducir.Enabled = true;
+                    btnWav.Enabled = true;
+                }
             }
             else
             {
                 Folder folSelect = SearchFolder(id, sdat.files.root);
 
-                listProp.Items[0].SubItems.Add("0x" + String.Format("{0:X}", folSelect.id.ToString()));
+                listProp.Items[0].SubItems.Add("0x" + String.Format("{0:X}", folSelect.id));
                 listProp.Items[1].SubItems.Add(folSelect.name);
                 listProp.Items[2].SubItems.Add("");
                 listProp.Items[3].SubItems.Add("");
@@ -200,6 +232,59 @@ namespace SDAT
                     RecursivoExtractFolder(subFolder, path + '\\' + subFolder.name);
                 }
             }
+        }
+
+        private void btnWav_Click(object sender, EventArgs e)
+        {
+            string swav = Path.GetTempFileName();
+            Sound fileSelect = SearchFile(Convert.ToInt32(treeFiles.SelectedNode.Tag), sdat.files.root);
+            BinaryReader br = new BinaryReader(new FileStream(sdat.archivo, FileMode.Open));
+            br.BaseStream.Position = fileSelect.offset;
+            File.WriteAllBytes(swav, br.ReadBytes((int)fileSelect.size));
+            br.Close();
+
+            SaveFileDialog o = new SaveFileDialog();
+            o.FileName = fileSelect.name.Replace(".SWAV", ".wav");
+            o.Filter = "Sonido WAVE (*.wav)|*.wav";
+            if (o.ShowDialog() == DialogResult.OK)
+            {
+                string wavSaved = o.FileName;
+                SWAV.EscribirArchivo(SWAV.ConvertirSWAVaWAV(SWAV.LeerSWAV(swav)), wavSaved);
+            }
+
+            File.Delete(swav);
+        }
+        private void btnReproducir_Click(object sender, EventArgs e)
+        {
+            if (soundPlayer is SoundPlayer)
+            {
+                soundPlayer.Stop();
+                soundPlayer.Dispose();
+            }
+            if (wavFile != "")
+                File.Delete(wavFile);
+
+            string swav = Path.GetTempFileName();
+            Sound fileSelect = SearchFile(Convert.ToInt32(treeFiles.SelectedNode.Tag), sdat.files.root);
+            BinaryReader br = new BinaryReader(new FileStream(sdat.archivo, FileMode.Open));
+            br.BaseStream.Position = fileSelect.offset;
+            File.WriteAllBytes(swav, br.ReadBytes((int)fileSelect.size));
+            br.Close();
+
+            wavFile = Path.GetTempFileName();
+            SWAV.EscribirArchivo(SWAV.ConvertirSWAVaWAV(SWAV.LeerSWAV(swav)), wavFile);
+
+            File.Delete(swav);
+
+            if (soundPlayer is SoundPlayer)
+                soundPlayer.Stop();
+            soundPlayer = new SoundPlayer(wavFile);
+            soundPlayer.Play();
+        }
+        private void btnStop_Click(object sender, EventArgs e)
+        {
+            if (soundPlayer is SoundPlayer)
+                soundPlayer.Stop();
         }
 
     }

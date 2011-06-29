@@ -28,11 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("S05");
-            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("S06");
-            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem("S07");
-            System.Windows.Forms.ListViewItem listViewItem4 = new System.Windows.Forms.ListViewItem("S08");
-            System.Windows.Forms.ListViewItem listViewItem5 = new System.Windows.Forms.ListViewItem("S09");
+            System.Windows.Forms.ListViewItem listViewItem6 = new System.Windows.Forms.ListViewItem("S05");
+            System.Windows.Forms.ListViewItem listViewItem7 = new System.Windows.Forms.ListViewItem("S06");
+            System.Windows.Forms.ListViewItem listViewItem8 = new System.Windows.Forms.ListViewItem("S07");
+            System.Windows.Forms.ListViewItem listViewItem9 = new System.Windows.Forms.ListViewItem("S08");
+            System.Windows.Forms.ListViewItem listViewItem10 = new System.Windows.Forms.ListViewItem("S09");
             this.paletaBox = new System.Windows.Forms.PictureBox();
             this.nPaleta = new System.Windows.Forms.NumericUpDown();
             this.label1 = new System.Windows.Forms.Label();
@@ -100,11 +100,11 @@
             this.columnValor});
             this.listProp.Dock = System.Windows.Forms.DockStyle.Top;
             this.listProp.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem1,
-            listViewItem2,
-            listViewItem3,
-            listViewItem4,
-            listViewItem5});
+            listViewItem6,
+            listViewItem7,
+            listViewItem8,
+            listViewItem9,
+            listViewItem10});
             this.listProp.Location = new System.Drawing.Point(3, 16);
             this.listProp.Name = "listProp";
             this.listProp.Size = new System.Drawing.Size(261, 134);
@@ -139,13 +139,14 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Transparent;
-            this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.Controls.Add(this.btnSave);
             this.Controls.Add(this.groupProp);
             this.Controls.Add(this.btnShow);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.nPaleta);
             this.Controls.Add(this.paletaBox);
+            this.MaximumSize = new System.Drawing.Size(512, 512);
+            this.MinimumSize = new System.Drawing.Size(512, 512);
             this.Name = "iNCLR";
             this.Size = new System.Drawing.Size(512, 512);
             ((System.ComponentModel.ISupportInitialize)(this.paletaBox)).EndInit();

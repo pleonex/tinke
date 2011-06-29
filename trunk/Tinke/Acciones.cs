@@ -606,7 +606,8 @@ namespace Tinke
                 {
                     if (archivo.formato == formato)
                     {
-
+                        if (archivo.name.StartsWith("overlay9") || archivo.name == "fnt.bin") // Archivos de la cabecera de la ROM
+                            continue;
                         if (formato == Formato.Imagen || formato == Formato.Celdas ||
                             formato == Formato.Animación || formato == Formato.Screen)
                         {
