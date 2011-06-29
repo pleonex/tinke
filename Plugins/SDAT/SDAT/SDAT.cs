@@ -32,6 +32,7 @@ namespace SDAT
     public class SDAT : IPlugin
     {
         IPluginHost pluginHost;
+        string archivo;
 
         #region Plugin
         public Formato Get_Formato(string nombre, byte[] magic)
@@ -54,14 +55,19 @@ namespace SDAT
         }
         public Control Show_Info(string archivo)
         {
-            return new iSDAT(Informacion(archivo));
+            this.archivo = archivo;
+
+            return new iSDAT(Informacion());
         }
         #endregion
 
-        private sSDAT Informacion(string archivo)
+        private sSDAT Informacion()
         {
-            BinaryReader br = new BinaryReader(new FileStream(archivo, FileMode.Open));
             sSDAT sdat = new sSDAT();
+            sdat.archivo = Path.GetTempFileName();
+            File.Copy(archivo, sdat.archivo, true);
+
+            BinaryReader br = new BinaryReader(new FileStream(archivo, FileMode.Open));
 
             #region Cabecera genérica
             sdat.generico.id = br.ReadChars(4);
@@ -307,18 +313,186 @@ namespace SDAT
             sdat.info = info;
             #endregion
             #region Bloque FAT
+            br.BaseStream.Position = sdat.cabecera.fatOffset;
+            FAT fat = new FAT();
+
+            // Header
+            fat.header.id = br.ReadChars(4);
+            fat.header.size = br.ReadUInt32();
+            fat.header.nRecords = br.ReadUInt32();
+            
+            // Records
+            fat.records = new FAT.Record[fat.header.nRecords];
+            for (int i = 0; i < fat.header.nRecords; i++)
+            {
+                fat.records[i].offset = br.ReadUInt32();
+                fat.records[i].size = br.ReadUInt32();
+                fat.records[i].reserved = br.ReadBytes(8);
+            }
+            sdat.fat = fat;
             #endregion
             #region Bloque File
+            br.BaseStream.Position = sdat.cabecera.fileOffset;
+
+            // Header
+            sdat.files.header.id = br.ReadChars(4);
+            sdat.files.header.size = br.ReadUInt32();
+            sdat.files.header.nSounds = br.ReadUInt32();
+            sdat.files.header.reserved = br.ReadUInt32();
             #endregion
 
             br.Close();
+
+            Console.WriteLine("Lectura de archivo SDAT completa:");
+            Console.WriteLine("\tArchivos totales: <b>" + sdat.files.header.nSounds.ToString() + "</b>");
+
+            FileSystem(ref sdat);
+
             return sdat;
         }
 
+        private void FileSystem(ref sSDAT sdat)
+        {
+            #region Definición de carpetas
+            Folder root = new Folder();
+            root.name = "SDAT";
+            root.id = 0x0F00;
+            root.folders = new List<Folder>();
+
+            Folder sseq, ssar, sbnk, swav, swar, strm;
+            sseq = new Folder();
+            sseq.files = new List<Sound>();
+            sseq.name = "SSEQ";
+            sseq.id = 0x0F01;
+
+            ssar = new Folder();
+            ssar.files = new List<Sound>();
+            ssar.name = "SSAR";
+            ssar.id = 0x0F02;
+
+            sbnk = new Folder();
+            sbnk.files = new List<Sound>();
+            sbnk.name = "SBNK";
+            sbnk.id = 0x0F03;
+
+            swav = new Folder();
+            swav.files = new List<Sound>();
+            swav.name = "SWAV";
+            swav.id = 0x0F04;
+
+            swar = new Folder();
+            swar.files = new List<Sound>();
+            swar.name = "SWAR";
+            swar.id = 0x0F05;
+
+            strm = new Folder();
+            strm.files = new List<Sound>();
+            strm.name = "STRM";
+            strm.id = 0x0F06;
+            #endregion
+
+            BinaryReader br = new BinaryReader(new FileStream (archivo, FileMode.Open));
+            for (int i = 0; i < sdat.fat.header.nRecords; i++)
+            {
+                br.BaseStream.Position = sdat.fat.records[i].offset;
+
+                Sound sound = new Sound();
+                sound.offset = sdat.fat.records[i].offset;
+                sound.size = sdat.fat.records[i].size;
+                sound.id = (uint)i;
+
+                string magic = new String(Encoding.ASCII.GetChars(br.ReadBytes(4)));
+                switch (magic)
+                {
+                    case "SSEQ":
+                        sound.type = FormatSound.SSEQ;
+                        sound.name = "SSEQ_" + i.ToString() + ".sseq";
+                        sseq.files.Add(sound);
+                        break;
+                    case "SSAR":
+                        sound.type = FormatSound.SSAR;
+                        sound.name = "SSAR_" + i.ToString() + ".ssar";
+                        ssar.files.Add(sound);
+                        break;
+                    case "SBNK":
+                        sound.type = FormatSound.SBNK;
+                        sound.name = "SBNK_" + i.ToString() + ".sbnk";
+                        sbnk.files.Add(sound);
+                        break;
+                    case "SWAV":
+                        sound.type = FormatSound.SWAV;
+                        sound.name = "SWAV_" + i.ToString() + ".swav";
+                        swav.files.Add(sound);
+                        break;
+                    case "SWAR":
+                        sound.type = FormatSound.SWAR;
+                        sound.name = "SWAR_" + i.ToString() + ".swar";
+                        swar.files.Add(sound);
+                        break;
+                    case "STRM":
+                        sound.type = FormatSound.STRM;
+                        sound.name = "STRM_" + i.ToString() + ".strm";
+                        strm.files.Add(sound);
+                        break;
+                }
+            }
+            br.Close();
+
+            root.folders.Add(sseq);
+            root.folders.Add(ssar);
+            root.folders.Add(sbnk);
+            root.folders.Add(swav);
+            root.folders.Add(swar);
+            root.folders.Add(strm);
+
+
+            Console.WriteLine("\tArchivos detectados SSEQ: " + sseq.files.Count.ToString());
+            Console.WriteLine("\tArchivos secci Info SSEQ: " + sdat.info.block[0].nEntries.ToString());
+            Console.WriteLine("\tArchivos detectados SSAR: " + ssar.files.Count.ToString());
+            Console.WriteLine("\tArchivos secci Info SSAR: " + sdat.info.block[1].nEntries.ToString());
+            Console.WriteLine("\tArchivos detectados SBNK: " + sbnk.files.Count.ToString());
+            Console.WriteLine("\tArchivos secci Info SBNK: " + sdat.info.block[2].nEntries.ToString());
+            Console.WriteLine("\tArchivos detectados SWAV: " + swav.files.Count.ToString());
+            Console.WriteLine("\tArchivos secci Info SWAV: " + sdat.info.block[3].nEntries.ToString());
+            Console.WriteLine("\tArchivos detectados SWAR: " + swar.files.Count.ToString());
+            Console.WriteLine("\tArchivos detectados STRM: " + strm.files.Count.ToString());
+            Console.WriteLine("\tArchivos secci Info STRM: " + sdat.info.block[7].nEntries.ToString());
+            Console.WriteLine("\tArchivos secci Info PLAYER: " + sdat.info.block[4].nEntries.ToString());
+            Console.WriteLine("\tArchivos secci Info GROUP: " + sdat.info.block[5].nEntries.ToString());
+            Console.WriteLine("\tArchivos secci Info PLAYER2: " + sdat.info.block[6].nEntries.ToString());
+
+            sdat.files.root = root;
+        }
+    }
+
+    public struct Folder
+    {
+        public string name;
+        public uint id;
+        public List<Sound> files;
+        public List<Folder> folders;
+    }
+    public struct Sound
+    {
+        public string name;
+        public uint size;
+        public uint offset;
+        public uint id;
+        public FormatSound type;
+    }
+    public enum FormatSound
+    {
+        SSEQ,
+        SSAR,
+        SBNK,
+        SWAV,
+        SWAR,
+        STRM
     }
 
     public struct sSDAT
     {
+        public String archivo;
         public Header generico;
         public Cabecera cabecera;
         public Symbol symbol;
@@ -456,8 +630,33 @@ namespace SDAT
     }
     public struct FAT
     {
+        public Header header;
+        public Record[] records;
+
+        public struct Header
+        {
+            public char[] id;
+            public uint size;
+            public uint nRecords;
+        }
+        public struct Record
+        {
+            public uint offset;
+            public uint size;
+            public byte[] reserved;
+        }
     }
     public struct FileBlock
     {
+        public Header header;
+        public Folder root;
+
+        public struct Header
+        {
+            public char[] id;
+            public uint size;
+            public uint nSounds;
+            public uint reserved;
+        }
     }
 }

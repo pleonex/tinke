@@ -50,7 +50,7 @@
             this.ClientSize = new System.Drawing.Size(644, 152);
             this.ControlBox = false;
             this.Controls.Add(this.txtInfo);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
