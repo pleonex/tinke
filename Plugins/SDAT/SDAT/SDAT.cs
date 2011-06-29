@@ -40,7 +40,8 @@ namespace SDAT
             nombre = nombre.ToUpper();
             string ext = new String(System.Text.Encoding.ASCII.GetChars(magic));
 
-            if (nombre.EndsWith(".SDAT") && ext == "SDAT")
+            if ((nombre.EndsWith(".SDAT") && ext == "SDAT")
+                || (nombre.EndsWith(".SWAV") && ext == "SWAV"))
                 return Formato.Sonido;
 
             return Formato.Desconocido;
@@ -66,6 +67,22 @@ namespace SDAT
             sSDAT sdat = new sSDAT();
             sdat.archivo = Path.GetTempFileName();
             File.Copy(archivo, sdat.archivo, true);
+
+            if (archivo.EndsWith(".swav"))
+            {
+                sdat.files.root.id = 0x0F00;
+                sdat.files.root.name = "SDAT";
+                sdat.files.root.files = new List<Sound>();
+                Sound swavFile = new Sound();
+                swavFile.id = 0x00;
+                swavFile.name = new FileInfo(archivo).Name;
+                swavFile.offset = 0x00;
+                swavFile.size = (uint)new FileInfo(archivo).Length;
+                swavFile.type = FormatSound.SWAV;
+                sdat.files.root.files.Add(swavFile);
+                return sdat;
+            }
+
 
             BinaryReader br = new BinaryReader(new FileStream(archivo, FileMode.Open));
 
@@ -359,7 +376,7 @@ namespace SDAT
             root.id = 0x0F00;
             root.folders = new List<Folder>();
 
-            Folder sseq, ssar, sbnk, swav, swar, strm;
+            Folder sseq, ssar, sbnk, swar, strm;
             sseq = new Folder();
             sseq.files = new List<Sound>();
             sseq.name = "SSEQ";
@@ -374,11 +391,6 @@ namespace SDAT
             sbnk.files = new List<Sound>();
             sbnk.name = "SBNK";
             sbnk.id = 0x0F03;
-
-            swav = new Folder();
-            swav.files = new List<Sound>();
-            swav.name = "SWAV";
-            swav.id = 0x0F04;
 
             swar = new Folder();
             swar.files = new List<Sound>();
@@ -419,11 +431,6 @@ namespace SDAT
                         sound.name = "SBNK_" + i.ToString() + ".sbnk";
                         sbnk.files.Add(sound);
                         break;
-                    case "SWAV":
-                        sound.type = FormatSound.SWAV;
-                        sound.name = "SWAV_" + i.ToString() + ".swav";
-                        swav.files.Add(sound);
-                        break;
                     case "SWAR":
                         sound.type = FormatSound.SWAR;
                         sound.name = "SWAR_" + i.ToString() + ".swar";
@@ -441,7 +448,6 @@ namespace SDAT
             root.folders.Add(sseq);
             root.folders.Add(ssar);
             root.folders.Add(sbnk);
-            root.folders.Add(swav);
             root.folders.Add(swar);
             root.folders.Add(strm);
 
@@ -452,7 +458,6 @@ namespace SDAT
             Console.WriteLine("\tArchivos secci Info SSAR: " + sdat.info.block[1].nEntries.ToString());
             Console.WriteLine("\tArchivos detectados SBNK: " + sbnk.files.Count.ToString());
             Console.WriteLine("\tArchivos secci Info SBNK: " + sdat.info.block[2].nEntries.ToString());
-            Console.WriteLine("\tArchivos detectados SWAV: " + swav.files.Count.ToString());
             Console.WriteLine("\tArchivos secci Info SWAV: " + sdat.info.block[3].nEntries.ToString());
             Console.WriteLine("\tArchivos detectados SWAR: " + swar.files.Count.ToString());
             Console.WriteLine("\tArchivos detectados STRM: " + strm.files.Count.ToString());
