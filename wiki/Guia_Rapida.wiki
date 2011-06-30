@@ -1,50 +1,50 @@
-#summary GuÌa r·pida para iniciarse con el programa
+#summary Gu√≠a r√°pida para iniciarse con el programa
 #labels Featured
 
-*Tinke* es un intuitivo programa para hacer ingenierÌa inversa, es decir ver im·genes, audios, textos y dem·s que est·n contenidos en un juego para la NDS.
+*Tinke* es un intuitivo programa para hacer ingenier√≠a inversa, es decir ver im√°genes, audios, textos y dem√°s que est√°n contenidos en un juego para la NDS.
 
 ----
 
 =Interfaz=
 
-La ventana principal del programa se llama "Sistema", es la primera que ver·s. Adem·s se encuentran las ventanas "InformaciÛn de la ROM" y "Mensajes Debug".
+La ventana principal del programa se llama "Sistema", es la primera que ver√°s. Adem√°s se encuentran las ventanas "Informaci√≥n de la ROM" y "Mensajes Debug".
 
 ==_Sistema_==
 
-AquÌ se muestran el ·rbol de archivos y la informaciÛn de cada uno de ellos. Es la ventana principal del programa.
+Aqu√≠ se muestran el √°rbol de archivos y la informaci√≥n de cada uno de ellos. Es la ventana principal del programa.
 
 [https://lh3.googleusercontent.com/_H6ACRUcYPos/TajJVdoF5TI/AAAAAAAAAIk/gY28W3696XA/s800/system.PNG]
 
- # La barra del men˙ contiene las principales opciones del programa:
+ # La barra del men√∫ contiene las principales opciones del programa:
     * "Abrir ROM", abre un nuego juego.
-    * "InformaciÛn del juego", muestra o esconde la ventana.
+    * "Informaci√≥n del juego", muestra o esconde la ventana.
     * "Mensajes Debug", muestra o esconde la ventana.
-    * "Modo ventana", muestra el resultado de pulsar el botÛn "Ver" en una nueva ventana o en la ventana principal.
+    * "Modo ventana", muestra el resultado de pulsar el bot√≥n "Ver" en una nueva ventana o en la ventana principal.
     * "Plugins", recarga los plugins (no funciona)
     * "Language", cambia el idioma de la interfaz.
- # …ste es el ·rbol de archivos que contiene el juego.
- # Muestra la informaciÛn general de archivo seleccionado.
+ # √âste es el √°rbol de archivos que contiene el juego.
+ # Muestra la informaci√≥n general de archivo seleccionado.
  # Botones para interaccionar con el archivo seleccionado:
-    * "Borrar cadena", borra cualquier informaciÛn guardada anteriormente (ejemplo: paletas)
-    * "Abrir como...", abre un archivo desconocido de forma est·ndar.
+    * "Borrar cadena", borra cualquier informaci√≥n guardada anteriormente (ejemplo: paletas)
+    * "Abrir como...", abre un archivo desconocido de forma est√°ndar.
     * "Descomprimir", descomprime el archivo seleccionado (ejemplo: .NARC or LZ77, HUFFMAN)
     * "Extraer", guarda el archivo seleccionado a tu ordenador.
-    * "Ver", mira la informaciÛn del archivo, es decir lo que el archivo es (ejemplo: mira la animaciÛn de un archivo NANR)
+    * "Ver", mira la informaci√≥n del archivo, es decir lo que el archivo es (ejemplo: mira la animaci√≥n de un archivo NANR)
     * "Hexadecimal", abre el archivo con el visor hexadecimal.
- # Este es el control que el plugin devuelve cuando se pulsa el botÛn _Ver_ .
+ # Este es el control que el plugin devuelve cuando se pulsa el bot√≥n _Ver_ .
 
 
-==_InformaciÛn del juego_==
+==_Informaci√≥n del juego_==
 
-AquÌ aparece la informaciÛn que contiene la cabecera de la ROM.
+Aqu√≠ aparece la informaci√≥n que contiene la cabecera de la ROM.
 
 [https://lh5.googleusercontent.com/_H6ACRUcYPos/TajJVGyIlkI/AAAAAAAAAIg/xXiIc1nf3vE/s800/rominfo.PNG]
 
-Se pueden ver un gran n˙mero de variables del sistema como la posiciÛn del archivo FAT (File Allocation Table) o los diferentes tÌtulos en seis idiomas. TambiÈn tienes la posibilidad de guardar en banner a tu escritorio.
+Se pueden ver un gran n√∫mero de variables del sistema como la posici√≥n del archivo FAT (File Allocation Table) o los diferentes t√≠tulos en seis idiomas. Tambi√©n tienes la posibilidad de guardar en banner a tu escritorio.
 
 ==_Mensajes Debug_==
 
-Por ˙ltimo esta ventana muestra los mensajes que los plugins, usando el mÈtodo Console.Write() envÌan.
+Por √∫ltimo esta ventana muestra los mensajes que los plugins, usando el m√©todo Console.Write() env√≠an.
 
 [https://lh6.googleusercontent.com/_H6ACRUcYPos/TajJU__ClmI/AAAAAAAAAIc/pnY9jBqcJDg/s800/messages.PNG]
 
@@ -52,31 +52,31 @@ Por ˙ltimo esta ventana muestra los mensajes que los plugins, usando el mÈtodo C
 
 =Tipos de archivo=
 
-La versiÛn 0.6 soporta los siguientes archivos:
+La versi√≥n 0.6 soporta los siguientes archivos:
 
  * _Paleta_ [https://lh4.googleusercontent.com/_H6ACRUcYPos/TasvUW7HvHI/AAAAAAAAAI8/aTHOM7hIxY8/s800/palette.png]: Contiene los colores de la imagen (ejemplo: .NCLR)
  * _Tiles_ [https://lh3.googleusercontent.com/_H6ACRUcYPos/TaswOx7ktfI/AAAAAAAAAJE/rYqwMmnJ1ec/s800/picture.png]: Contiene los datos de la imagen. Junto con una paleta se puede ver la imagen (ejemplo: NCGR).
- * _Screen_ [https://lh6.googleusercontent.com/_H6ACRUcYPos/TaswfwsLhwI/AAAAAAAAAJM/3TRiAlDCCXU/s800/picture_link.png]: Contiene informaciÛn sobre cÛmo se organizan los tiles (ejemplo: .NSCR).
- * _Celda_ [https://lh5.googleusercontent.com/_H6ACRUcYPos/TaswixhG0cI/AAAAAAAAAJQ/r6rIlLtcnUU/s800/pictures.png]: Contiene informaciÛn sobre como organizar tiles para formar diferentes im·genes (ejemplo: .NCER).
- * _AnimaciÛn_ [https://lh3.googleusercontent.com/_H6ACRUcYPos/Taswo2KwZBI/AAAAAAAAAJc/Ha3LBLpQPso/s800/picture_go.png]: Contiene informaciÛn para animar celdas (ejemplo: .NANR)
- * _Imagen completa_ [https://lh5.googleusercontent.com/_H6ACRUcYPos/TaswzqUD8ZI/AAAAAAAAAJk/-_ATNaGCvac/s800/photo.png]: Archivo con toda la informaciÛn necesaria para mostrar una imagen (paleta + tiles, tambiÈn puede contener Screen, Celdas y Animaciones) (ejemplo .arc en los juegos del Profesor Layton). 
+ * _Screen_ [https://lh6.googleusercontent.com/_H6ACRUcYPos/TaswfwsLhwI/AAAAAAAAAJM/3TRiAlDCCXU/s800/picture_link.png]: Contiene informaci√≥n sobre c√≥mo se organizan los tiles (ejemplo: .NSCR).
+ * _Celda_ [https://lh5.googleusercontent.com/_H6ACRUcYPos/TaswixhG0cI/AAAAAAAAAJQ/r6rIlLtcnUU/s800/pictures.png]: Contiene informaci√≥n sobre como organizar tiles para formar diferentes im√°genes (ejemplo: .NCER).
+ * _Animaci√≥n_ [https://lh3.googleusercontent.com/_H6ACRUcYPos/Taswo2KwZBI/AAAAAAAAAJc/Ha3LBLpQPso/s800/picture_go.png]: Contiene informaci√≥n para animar celdas (ejemplo: .NANR)
+ * _Imagen completa_ [https://lh5.googleusercontent.com/_H6ACRUcYPos/TaswzqUD8ZI/AAAAAAAAAJk/-_ATNaGCvac/s800/photo.png]: Archivo con toda la informaci√≥n necesaria para mostrar una imagen (paleta + tiles, tambi√©n puede contener Screen, Celdas y Animaciones) (ejemplo .arc en los juegos del Profesor Layton). 
  * _Textos_ [https://lh5.googleusercontent.com/_H6ACRUcYPos/Tasw6A9FVzI/AAAAAAAAAJs/Q6ndBp2Tp9s/s800/page_white_text.png]: Contienen mensajes de texto (ejemplo .txt)
- * _Video_ [https://lh5.googleusercontent.com/_H6ACRUcYPos/TasxJCc5r0I/AAAAAAAAAKA/xzMFdACyfxY/s800/film.png] (todavÌa no hay ning˙n archivo soportado)
+ * _Video_ [https://lh5.googleusercontent.com/_H6ACRUcYPos/TasxJCc5r0I/AAAAAAAAAKA/xzMFdACyfxY/s800/film.png] (todav√≠a no hay ning√∫n archivo soportado)
  * _Sonido_ [https://lh5.googleusercontent.com/_H6ACRUcYPos/TasxFdvYSZI/AAAAAAAAAJ8/7SEse1Ay738/s800/music.png]: Contiene uno o varios archivos de sonido (ejemplo: .SDAT o .WAV)
- * _Fuentes_ [https://lh4.googleusercontent.com/_H6ACRUcYPos/Tas1rAhMcvI/AAAAAAAAAKM/45hRDPtLE0Q/s800/font.png]: Contiene informaciÛn sobre la tipografÌa del juego.
- * _Comprimido_ [https://lh3.googleusercontent.com/_H6ACRUcYPos/TasxB5Nk66I/AAAAAAAAAJ0/iPMDiuvvsps/s800/package.png]: Contiene diferentes archivos en Èl (ejemplo: .NARC).
+ * _Fuentes_ [https://lh4.googleusercontent.com/_H6ACRUcYPos/Tas1rAhMcvI/AAAAAAAAAKM/45hRDPtLE0Q/s800/font.png]: Contiene informaci√≥n sobre la tipograf√≠a del juego.
+ * _Comprimido_ [https://lh3.googleusercontent.com/_H6ACRUcYPos/TasxB5Nk66I/AAAAAAAAAJ0/iPMDiuvvsps/s800/package.png]: Contiene diferentes archivos en √©l (ejemplo: .NARC).
 
 ----
 
 =Acciones=
 
-Para ver un archivo (la paleta o animaciÛn que da un archivo), debes seleccionar el archivo y pulsar sobre el botÛn _Ver_ . Adem·s algunos archivo necesitan otra informaciÛn para crear el recurso final, algunos de ellos son los siguientes:
+Para ver un archivo (la paleta o animaci√≥n que da un archivo), debes seleccionar el archivo y pulsar sobre el bot√≥n _Ver_ . Adem√°s algunos archivo necesitan otra informaci√≥n para crear el recurso final, algunos de ellos son los siguientes:
  * Imagen (tiles): Requiere una paleta.
  * Screen: Requiere una imagen (y una paleta)
  * Celdas: Requiere una imagen (y una paleta)
- * AnimaciÛn: Requiere celdas (y una imagen con su paleta).
+ * Animaci√≥n: Requiere celdas (y una imagen con su paleta).
 
-Con el objetivo de guardar en la memoria estos archivo que se necesitan para otros hay dos mÈtodos:
- # Pulsa el botÛn *Ver*. Ver·s la informaciÛn de ese archivo y si es posible se guardar· en la memoria.
- # Haz *doble-click* sobre un archivo en el ·rbol de archivos. Si es posible se guardar· la informaciÛn que aporta ese archivo.
-Esos datos ser·n guardados pero no usados en el momentos, es decir, que su guardas la informaciÛn de un archivo Screen no modificar· la imagen hasta que pulses el botÛn _Ver_ y si guardas de nuevo otro archivo Screen, este modificar· la imagen original (no la modificada por al archivo Screen antiguo). De todas formas en cualquier momento puedes borrar estos datos guardados pulsando en los botos de _Borrar cadena_ .
+Con el objetivo de guardar en la memoria estos archivo que se necesitan para otros hay dos m√©todos:
+ # Pulsa el bot√≥n *Ver*. Ver√°s la informaci√≥n de ese archivo y si es posible se guardar√° en la memoria.
+ # Haz *doble-click* sobre un archivo en el √°rbol de archivos. Si es posible se guardar√° la informaci√≥n que aporta ese archivo.
+Esos datos ser√°n guardados pero no usados en el momentos, es decir, que su guardas la informaci√≥n de un archivo Screen no modificar√° la imagen hasta que pulses el bot√≥n _Ver_ y si guardas de nuevo otro archivo Screen, este modificar√° la imagen original (no la modificada por al archivo Screen antiguo). De todas formas en cualquier momento puedes borrar estos datos guardados pulsando en los botos de _Borrar cadena_ .
