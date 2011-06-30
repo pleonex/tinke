@@ -35,7 +35,7 @@ namespace Tinke
             ncgr.rahc.unknown1 = br.ReadUInt16();
             ncgr.rahc.unknown2 = br.ReadUInt16();
             ncgr.rahc.tiledFlag = br.ReadUInt32();
-            if (ncgr.rahc.tiledFlag == 0x0)
+            if ((ncgr.rahc.tiledFlag & 0xFF) == 0x0)
                 ncgr.orden = Orden_Tiles.Horizontal;
             else
             {
@@ -143,9 +143,15 @@ namespace Tinke
             if (tile.rahc.nTilesY == 0xFFFF)
             {
                 if (tile.orden == Orden_Tiles.No_Tiles)
-                    tile.rahc.nTilesY = (ushort)(tile.rahc.nTiles / 0x40);
+                    if (tile.rahc.nTiles >= 0x40) // Por si es menor, para que el tamaño no sea 0
+                        tile.rahc.nTilesY = (ushort)((tile.rahc.nTiles / 0x40) * 0x40);
+                    else
+                        tile.rahc.nTilesY = 0x40;
                 else
-                    tile.rahc.nTilesY = (ushort)(tile.rahc.nTiles / 0x08);
+                    if (tile.rahc.nTiles >= 0x40)
+                        tile.rahc.nTilesY = (ushort)(tile.rahc.nTiles / 0x08);
+                    else
+                        tile.rahc.nTilesY = 0x08;
             }
 
             switch (tile.orden)
@@ -165,16 +171,22 @@ namespace Tinke
             if (tile.rahc.nTilesX == 0xFFFF)        // En caso de que no venga la información hacemos la imagen de 256x256
             {
                 if (tile.orden == Orden_Tiles.No_Tiles)
-                    tile.rahc.nTilesX = 0x40;
+                        tile.rahc.nTilesX = 0x40;
                 else
                     tile.rahc.nTilesX = 0x08;
             }
             if (tile.rahc.nTilesY == 0xFFFF)
             {
                 if (tile.orden == Orden_Tiles.No_Tiles)
-                    tile.rahc.nTilesY = (ushort)((tile.rahc.nTiles / 0x40) * 0x40);
+                    if (tile.rahc.nTiles >= 0x40) // Por si es menor, para que el tamaño no sea 0
+                        tile.rahc.nTilesY = (ushort)((tile.rahc.nTiles / 0x40) * 0x40);
+                    else
+                        tile.rahc.nTilesY = 0x40;
                 else
-                    tile.rahc.nTilesY = (ushort)(tile.rahc.nTiles / 0x08);
+                    if (tile.rahc.nTiles >= 0x40)
+                        tile.rahc.nTilesY = (ushort)(tile.rahc.nTiles / 0x08);
+                    else
+                        tile.rahc.nTilesY = 0x08;
             }
 
             switch (tile.orden)

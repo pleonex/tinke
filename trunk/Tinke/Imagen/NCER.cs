@@ -86,6 +86,8 @@ namespace Tinke
                     ncer.cebk.banks[i].cells[j].height = (ushort)tamaño.Height;
                     ncer.cebk.banks[i].cells[j].width = (ushort)tamaño.Width;
                     ncer.cebk.banks[i].cells[j].tileOffset = (uint)(br.ReadUInt16() & 0x03FF);
+                    if (ncer.cebk.unknown1 == 0xAC) // Ni idea de porqué pero parece que funciona (solo encontrado en un archivo de Pokemon)
+                        ncer.cebk.banks[i].cells[j].tileOffset = (uint)(0x01 * i + j);
                     ncer.cebk.banks[i].cells[j].yFlip = (Tools.Helper.ByteTo4Bits(byte2)[0] & 2) == 2 ? true : false;
                     ncer.cebk.banks[i].cells[j].xFlip = (Tools.Helper.ByteTo4Bits(byte2)[0] & 1) == 1 ? true : false;
                 }
@@ -257,7 +259,7 @@ namespace Tinke
             {
                 uint tileOffset = banco.cells[i].tileOffset;
                 if (tile.rahc.depth == System.Windows.Forms.ColorDepth.Depth4Bit)
-                    tileOffset *= blockSize * 2;
+                    tileOffset *= (uint)((blockSize != 0) ? blockSize * 2 : 1);
                 else
                     tileOffset *= (uint)((blockSize != 0) ? blockSize : 1);
 
