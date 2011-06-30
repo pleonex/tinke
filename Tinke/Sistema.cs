@@ -338,6 +338,7 @@ namespace Tinke
 
         private void treeSystem_AfterSelect(object sender, TreeViewEventArgs e)
         {
+            btnExtraer.Enabled = true;
             accion.IDSelect = Convert.ToInt32(e.Node.Tag);
             // Limpiar información anterior
             if (listFile.Items[0].SubItems.Count == 2)
