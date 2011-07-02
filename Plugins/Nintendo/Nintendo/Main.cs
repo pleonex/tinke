@@ -53,10 +53,14 @@ namespace Nintendo
                 return Formato.Screen;
             else if (ext == "MESG" && nombre.EndsWith(".BMG"))
                 return Formato.Texto;
-            else if (nombre.EndsWith(".NTFT"))
+            else if (nombre.EndsWith(".NTFT") && ext != "CMPR" && ext != "BLDT")
                 return Formato.Imagen;
-            else if (nombre.EndsWith(".NTFP"))
+            else if (nombre.EndsWith(".NTFP") && ext != "BLDT")
                 return Formato.Paleta;
+            else if (nombre.EndsWith(".PLT"))
+                return Formato.Paleta;
+            else if (nombre.EndsWith(".CHAR"))
+                return Formato.Imagen;
 			
 			return Formato.Desconocido;
 		}
@@ -114,6 +118,24 @@ namespace Nintendo
                 iNCLR control = new iNCLR(pluginHost, pluginHost.Get_NCLR());
                 return control;
             }
+
+            if (archivo.ToUpper().EndsWith(".CHAR"))
+            {
+                new CHAR(pluginHost, archivo).Leer();
+
+                if (pluginHost.Get_NCLR().cabecera.file_size != 0x00)
+                {
+                    iNCGR control = new iNCGR(pluginHost, pluginHost.Get_NCGR(), pluginHost.Get_NCLR());
+                    return control;
+                }
+            }
+            if (archivo.ToUpper().EndsWith(".PLT"))
+            {
+                new PLT(pluginHost, archivo).Leer();
+
+                iNCLR control = new iNCLR(pluginHost, pluginHost.Get_NCLR());
+                return control;
+            }
 			
 			return new Control();
 		}
@@ -132,6 +154,10 @@ namespace Nintendo
                 new ntfp(pluginHost, archivo).Leer();
             if (archivo.ToUpper().EndsWith(".NTFT"))
                 new ntft(pluginHost, archivo).Leer();
+            if (archivo.ToUpper().EndsWith(".PLT"))
+                new PLT(pluginHost, archivo).Leer();
+            if (archivo.ToUpper().EndsWith(".CHAR"))
+                new CHAR(pluginHost, archivo).Leer();
 		}
 	}
 }

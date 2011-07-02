@@ -70,8 +70,6 @@ namespace Compresion
                             LZ77.DecompressLZ77(filein, fileout);
                         else if (tag == LZSS_TAG)
                             LZSS.Decompress11LZS(filein, fileout);
-                        else
-                            CopyFile(filein, fileout);
                         break;
                     case RLE_TAG >> 4: RLE.DecompressRLE(filein, fileout); break;
                     case HUFF_TAG >> 4: Huffman.DecompressHuffman(filein, fileout); break;
@@ -80,7 +78,7 @@ namespace Compresion
             }
             catch (InvalidDataException)
             {
-                CopyFile(filein, fileout);
+                return;
             }
             catch (Exception e)
             {
@@ -108,18 +106,15 @@ namespace Compresion
                             LZ77.DecompressLZ77(filein, fileout);
                         else if (tag == LZSS_TAG)
                             LZSS.Decompress11LZS(filein, fileout);
-                        else
-                            CopyFile(filein, fileout);
                         break;
                     case RLE_TAG >> 4: RLE.DecompressRLE(filein, fileout); break;
                     case NONE_TAG >> 4: None.DecompressNone(filein, fileout); break;
                     case HUFF_TAG >> 4: Huffman.DecompressHuffman(filein, fileout); break;
-                    default: CopyFile(filein, fileout); break;
                 }
             }
             catch (InvalidDataException)
             {
-                CopyFile(filein, fileout);
+                return;
             }
             catch (Exception e)
             {
@@ -129,24 +124,5 @@ namespace Compresion
             }
         }
         #endregion
-
-        #region Method: CopyFile
-        /// <summary>
-        /// Copies a file
-        /// </summary>
-        /// <param name="filein">The input file</param>
-        /// <param name="outflr">The output folder. (the file keeps its name, other files get overwritten)</param>
-        static void CopyFile(string filein, string outflr)
-        {
-            filein = Utils.makeSlashes(filein);
-            string outfname = filein.Substring(filein.LastIndexOf("/") + 1);
-            if (!outflr.EndsWith("/"))
-                outflr += "/";
-            outfname = outflr + outfname;
-            File.Copy(filein, outfname, true);
-            Console.WriteLine("Copied " + filein + " to " + outflr);
-        }
-        #endregion
-
     }
 }

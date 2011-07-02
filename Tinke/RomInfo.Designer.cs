@@ -192,6 +192,7 @@ namespace Tinke
             this.columnPosicion = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnCampo = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnValor = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.checkTrans = new System.Windows.Forms.CheckBox();
             this.groupBanner.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picIcon)).BeginInit();
             this.SuspendLayout();
@@ -199,6 +200,7 @@ namespace Tinke
             // groupBanner
             // 
             this.groupBanner.BackColor = System.Drawing.Color.Transparent;
+            this.groupBanner.Controls.Add(this.checkTrans);
             this.groupBanner.Controls.Add(this.lblGameTitle);
             this.groupBanner.Controls.Add(this.btnBannerGuardar);
             this.groupBanner.Controls.Add(this.txtBannerReserved);
@@ -213,7 +215,7 @@ namespace Tinke
             this.groupBanner.Dock = System.Windows.Forms.DockStyle.Top;
             this.groupBanner.Location = new System.Drawing.Point(494, 0);
             this.groupBanner.Name = "groupBanner";
-            this.groupBanner.Size = new System.Drawing.Size(200, 284);
+            this.groupBanner.Size = new System.Drawing.Size(200, 307);
             this.groupBanner.TabIndex = 7;
             this.groupBanner.TabStop = false;
             this.groupBanner.Text = "S02";
@@ -221,7 +223,7 @@ namespace Tinke
             // lblGameTitle
             // 
             this.lblGameTitle.AutoSize = true;
-            this.lblGameTitle.Location = new System.Drawing.Point(7, 151);
+            this.lblGameTitle.Location = new System.Drawing.Point(7, 173);
             this.lblGameTitle.Name = "lblGameTitle";
             this.lblGameTitle.Size = new System.Drawing.Size(26, 13);
             this.lblGameTitle.TabIndex = 12;
@@ -240,7 +242,7 @@ namespace Tinke
             // 
             // txtBannerReserved
             // 
-            this.txtBannerReserved.Location = new System.Drawing.Point(66, 118);
+            this.txtBannerReserved.Location = new System.Drawing.Point(66, 140);
             this.txtBannerReserved.Name = "txtBannerReserved";
             this.txtBannerReserved.ReadOnly = true;
             this.txtBannerReserved.Size = new System.Drawing.Size(126, 20);
@@ -248,7 +250,7 @@ namespace Tinke
             // 
             // txtBannerCRC
             // 
-            this.txtBannerCRC.Location = new System.Drawing.Point(65, 92);
+            this.txtBannerCRC.Location = new System.Drawing.Point(65, 114);
             this.txtBannerCRC.Name = "txtBannerCRC";
             this.txtBannerCRC.ReadOnly = true;
             this.txtBannerCRC.Size = new System.Drawing.Size(126, 20);
@@ -257,7 +259,7 @@ namespace Tinke
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(6, 121);
+            this.label4.Location = new System.Drawing.Point(6, 143);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(26, 13);
             this.label4.TabIndex = 8;
@@ -266,7 +268,7 @@ namespace Tinke
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(7, 95);
+            this.label3.Location = new System.Drawing.Point(7, 117);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(44, 13);
             this.label3.TabIndex = 7;
@@ -274,7 +276,7 @@ namespace Tinke
             // 
             // txtBannerVer
             // 
-            this.txtBannerVer.Location = new System.Drawing.Point(66, 66);
+            this.txtBannerVer.Location = new System.Drawing.Point(66, 88);
             this.txtBannerVer.Name = "txtBannerVer";
             this.txtBannerVer.ReadOnly = true;
             this.txtBannerVer.Size = new System.Drawing.Size(126, 20);
@@ -283,7 +285,7 @@ namespace Tinke
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(6, 69);
+            this.label2.Location = new System.Drawing.Point(6, 91);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(26, 13);
             this.label2.TabIndex = 5;
@@ -301,7 +303,7 @@ namespace Tinke
             "S09",
             "S0A",
             "S0B"});
-            this.comboBannerLang.Location = new System.Drawing.Point(10, 167);
+            this.comboBannerLang.Location = new System.Drawing.Point(10, 189);
             this.comboBannerLang.Name = "comboBannerLang";
             this.comboBannerLang.Size = new System.Drawing.Size(181, 21);
             this.comboBannerLang.TabIndex = 4;
@@ -309,7 +311,7 @@ namespace Tinke
             // txtBannerTitle
             // 
             this.txtBannerTitle.BackColor = System.Drawing.SystemColors.Control;
-            this.txtBannerTitle.Location = new System.Drawing.Point(10, 194);
+            this.txtBannerTitle.Location = new System.Drawing.Point(10, 216);
             this.txtBannerTitle.Multiline = true;
             this.txtBannerTitle.Name = "txtBannerTitle";
             this.txtBannerTitle.ReadOnly = true;
@@ -402,6 +404,17 @@ namespace Tinke
             this.columnValor.Text = "S0E";
             this.columnValor.Width = 214;
             // 
+            // checkTrans
+            // 
+            this.checkTrans.AutoSize = true;
+            this.checkTrans.Location = new System.Drawing.Point(66, 58);
+            this.checkTrans.Name = "checkTrans";
+            this.checkTrans.Size = new System.Drawing.Size(46, 17);
+            this.checkTrans.TabIndex = 13;
+            this.checkTrans.Text = "S3A";
+            this.checkTrans.UseVisualStyleBackColor = true;
+            this.checkTrans.CheckedChanged += new System.EventHandler(this.checkTrans_CheckedChanged);
+            // 
             // RomInfo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -445,5 +458,6 @@ namespace Tinke
         private System.Windows.Forms.ColumnHeader columnCampo;
         private System.Windows.Forms.ColumnHeader columnValor;
         private System.Windows.Forms.Label lblGameTitle;
+        private System.Windows.Forms.CheckBox checkTrans;
     }
 }

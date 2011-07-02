@@ -15,25 +15,24 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  *
  * Programador: pleoNeX
- * Programa utilizado: SharpDevelop
- * Fecha: 16/02/2011
+ * Fecha: 1/07/2011
  * 
  */
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using System.IO;
 using PluginInterface;
 
 namespace Nintendo
 {
-	/// <summary>
-	/// Description of nbfc.
-	/// </summary>
-	public class nbfc
-	{
-		IPluginHost pluginsHost;
+    class CHAR
+    {
+        IPluginHost pluginsHost;
 		string archivo;
 		
-		public nbfc(IPluginHost pluginHost, string archivo)
+		public CHAR(IPluginHost pluginHost, string archivo)
 		{
 			this.pluginsHost = pluginHost;
 			this.archivo = archivo;
@@ -53,37 +52,23 @@ namespace Nintendo
 			// El archivo es NTFT raw, sin ninguna información.
 			ncgr.orden = Orden_Tiles.Horizontal;
 			ncgr.rahc.nTiles = (ushort)(file_size / 64);
-            if (file_size == 512)
-            {
-                ncgr.rahc.depth = System.Windows.Forms.ColorDepth.Depth4Bit;
-                ncgr.rahc.nTilesX = 0x04;
-                ncgr.rahc.nTilesY = 0x02;
-            }
-            else
-            {
-                ncgr.rahc.depth = System.Windows.Forms.ColorDepth.Depth8Bit;
-                ncgr.rahc.nTilesX = 0x0020;
-                ncgr.rahc.nTilesY = 0x0018;
-            }
+			ncgr.rahc.depth = System.Windows.Forms.ColorDepth.Depth4Bit;
+			ncgr.rahc.nTilesX = 0x04;
+			ncgr.rahc.nTilesY = 0x02;
 			ncgr.rahc.tiledFlag = 0x00000000;
 			ncgr.rahc.size_section = file_size;
 			ncgr.rahc.tileData = new NTFT();
 			ncgr.rahc.tileData.nPaleta = new byte[ncgr.rahc.nTiles];
 			ncgr.rahc.tileData.tiles = new byte[ncgr.rahc.nTiles][];
-			
-			for (int i = 0; i < ncgr.rahc.nTiles; i++)
-			{
-                if (ncgr.rahc.depth == System.Windows.Forms.ColorDepth.Depth8Bit)
-                    ncgr.rahc.tileData.tiles[i] = br.ReadBytes(64);
-				else
-                    ncgr.rahc.tileData.tiles[i] = pluginsHost.BytesTo4BitsRev(br.ReadBytes(32));
 
+            for (int i = 0; i < ncgr.rahc.nTiles; i++)
+            {
+                ncgr.rahc.tileData.tiles[i] = pluginsHost.BytesTo4BitsRev(br.ReadBytes(32));
                 ncgr.rahc.tileData.nPaleta[i] = 0;
-			}
+            }
 			
 			br.Close();
 			pluginsHost.Set_NCGR(ncgr);
 		}
-		
-	}
+    }
 }

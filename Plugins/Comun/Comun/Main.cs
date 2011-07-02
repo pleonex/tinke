@@ -15,7 +15,7 @@ namespace Comun
         {
             nombre = nombre.ToUpper();
 
-            if (nombre.EndsWith(".TGA") || nombre.EndsWith(".JPG"))
+            if (nombre.EndsWith(".TGA") || nombre.EndsWith(".JPG") || nombre.EndsWith(".PNG"))
                 return Formato.ImagenCompleta;
             else if (nombre.EndsWith(".WAV"))
                 return Formato.Sonido;
@@ -30,7 +30,7 @@ namespace Comun
 
         public void Leer(string archivo)
         {
-            throw new NotImplementedException();
+            MessageBox.Show("Estos archivos no pueden guardar información.");
         }
 
         public Control Show_Info(string archivo)
@@ -39,6 +39,8 @@ namespace Comun
                 return new TGA(pluginHost, archivo).Show_Info();
             else if (archivo.ToUpper().EndsWith(".JPG"))
                 return new JPG(pluginHost, archivo).Show_Info();
+            else if (archivo.ToUpper().EndsWith(".PNG"))
+                return new PNG(pluginHost, archivo).Show_Info();
             else if (archivo.ToUpper().EndsWith(".WAV"))
                 return new WAV(pluginHost, archivo).Show_Info();
 

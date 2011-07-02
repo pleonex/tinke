@@ -33,6 +33,7 @@ namespace Tinke
     public partial class RomInfo : Form
     {
         Nitro.Estructuras.ROMHeader cabecera;
+        Bitmap picBanner;
         string[] titulos;
 
         public RomInfo(string archivo)
@@ -126,6 +127,7 @@ namespace Tinke
             listInfo.Items[39].SubItems[1].Text = xml.Element("S36").Value;
             listInfo.Items[40].SubItems[1].Text = xml.Element("S37").Value;
             listInfo.Items[41].SubItems[1].Text = xml.Element("S38").Value;
+            checkTrans.Text = xml.Element("S3A").Value;
 
         }
         private void Mostrar_Informacion(Nitro.Estructuras.ROMHeader cabecera, Nitro.Estructuras.Banner banner)
@@ -178,7 +180,8 @@ namespace Tinke
             #endregion
             #region Muestra la información del banner
             picIcon.BorderStyle = BorderStyle.None;
-            picIcon.Image = Nitro.NDS.IconoToBitmap(banner.tileData, banner.palette);
+            picBanner = Nitro.NDS.IconoToBitmap(banner.tileData, banner.palette);
+            picIcon.Image = picBanner;
 
             txtBannerVer.Text = banner.version.ToString();
             txtBannerCRC.Text = String.Format("{0:X}", banner.CRC16) + " (" + 
@@ -230,6 +233,18 @@ namespace Tinke
                     txtBannerTitle.Text = titulos[5];
                     break;
             }
+        }
+
+        private void checkTrans_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkTrans.Checked)
+            {
+                Bitmap imagen = (Bitmap)picBanner.Clone();
+                imagen.MakeTransparent();
+                picIcon.Image = imagen;
+            }
+            else
+                picIcon.Image = picBanner;
         }
 
     }

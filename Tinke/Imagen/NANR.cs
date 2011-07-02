@@ -65,8 +65,6 @@ namespace Tinke
                 Animation ani = new Animation();
                 ani.nFrames = br.ReadUInt32();
                 ani.dataType = br.ReadUInt16();
-                if (ani.dataType != 0x00)
-                    System.Windows.Forms.MessageBox.Show("Desconocido en parte");
                 ani.unknown1 = br.ReadUInt16();
                 ani.unknown2 = br.ReadUInt16();
                 ani.unknown3 = br.ReadUInt16();

@@ -52,12 +52,12 @@ namespace Tinke
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Sistema));
-            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("S09");
-            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("S0A");
-            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem("S0B");
-            System.Windows.Forms.ListViewItem listViewItem4 = new System.Windows.Forms.ListViewItem("S0C");
-            System.Windows.Forms.ListViewItem listViewItem5 = new System.Windows.Forms.ListViewItem("S0D");
-            System.Windows.Forms.ListViewItem listViewItem6 = new System.Windows.Forms.ListViewItem("S0E");
+            System.Windows.Forms.ListViewItem listViewItem19 = new System.Windows.Forms.ListViewItem("S09");
+            System.Windows.Forms.ListViewItem listViewItem20 = new System.Windows.Forms.ListViewItem("S0A");
+            System.Windows.Forms.ListViewItem listViewItem21 = new System.Windows.Forms.ListViewItem("S0B");
+            System.Windows.Forms.ListViewItem listViewItem22 = new System.Windows.Forms.ListViewItem("S0C");
+            System.Windows.Forms.ListViewItem listViewItem23 = new System.Windows.Forms.ListViewItem("S0D");
+            System.Windows.Forms.ListViewItem listViewItem24 = new System.Windows.Forms.ListViewItem("S0E");
             this.iconos = new System.Windows.Forms.ImageList(this.components);
             this.btnExtraer = new System.Windows.Forms.Button();
             this.btnSee = new System.Windows.Forms.Button();
@@ -94,6 +94,7 @@ namespace Tinke
             this.btnSearch = new System.Windows.Forms.Button();
             this.checkSearch = new System.Windows.Forms.CheckBox();
             this.toolTipSearch = new System.Windows.Forms.ToolTip(this.components);
+            this.lblSupport = new System.Windows.Forms.Label();
             this.toolStrip1.SuspendLayout();
             this.toolStrip2.SuspendLayout();
             this.SuspendLayout();
@@ -166,12 +167,12 @@ namespace Tinke
             this.columnHeader1,
             this.columnHeader2});
             this.listFile.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem1,
-            listViewItem2,
-            listViewItem3,
-            listViewItem4,
-            listViewItem5,
-            listViewItem6});
+            listViewItem19,
+            listViewItem20,
+            listViewItem21,
+            listViewItem22,
+            listViewItem23,
+            listViewItem24});
             this.listFile.Location = new System.Drawing.Point(409, 28);
             this.listFile.Name = "listFile";
             this.listFile.Size = new System.Drawing.Size(197, 202);
@@ -489,12 +490,23 @@ namespace Tinke
             this.toolTipSearch.ReshowDelay = 100;
             this.toolTipSearch.ToolTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             // 
+            // lblSupport
+            // 
+            this.lblSupport.AutoSize = true;
+            this.lblSupport.Font = new System.Drawing.Font("Consolas", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblSupport.Location = new System.Drawing.Point(409, 349);
+            this.lblSupport.Name = "lblSupport";
+            this.lblSupport.Size = new System.Drawing.Size(32, 17);
+            this.lblSupport.TabIndex = 17;
+            this.lblSupport.Text = "S30";
+            // 
             // Sistema
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
             this.ClientSize = new System.Drawing.Size(644, 537);
+            this.Controls.Add(this.lblSupport);
             this.Controls.Add(this.checkSearch);
             this.Controls.Add(this.btnSearch);
             this.Controls.Add(this.txtSearch);
@@ -562,6 +574,7 @@ namespace Tinke
         private System.Windows.Forms.Button btnSearch;
         private System.Windows.Forms.CheckBox checkSearch;
         private System.Windows.Forms.ToolTip toolTipSearch;
+        private System.Windows.Forms.Label lblSupport;
 
     }
 }

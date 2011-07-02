@@ -42,6 +42,8 @@ namespace Tinke
 
         Acciones accion;
         StringBuilder sb;
+        int filesSupported;
+        int nFiles;
 
         public Sistema()
         {
@@ -125,6 +127,8 @@ namespace Tinke
             Set_Formato(root);
             treeSystem.Nodes.Add(Jerarquizar_Nodos(root)); // Mostramos el árbol
             treeSystem.Nodes[0].Expand();
+
+            Get_SupportedFiles();
             #endregion
             espera.Abort();
 
@@ -188,6 +192,7 @@ namespace Tinke
                 "\n<Video> -> " + xml.Element("S27").Value +
                 "\n<Sound> -> " + xml.Element("S28").Value +
                 "\n<Font> -> " + xml.Element("S29").Value +
+                "\n<Compress> -> " + xml.Element("S2A").Value +
                 "\n<Unknown> -> " + xml.Element("S2B").Value
                 );
         }
@@ -238,6 +243,7 @@ namespace Tinke
         {
             return Nitro.FAT.LeerFAT(file, offset, size, root);
         }
+        
         private TreeNode Jerarquizar_Nodos(Carpeta currFolder)
         {
             TreeNode currNode = new TreeNode();
@@ -329,6 +335,36 @@ namespace Tinke
                 foreach (Carpeta subFolder in carpeta.folders)
                     Set_Formato(subFolder);
         }
+        private void Get_SupportedFiles()
+        {
+            filesSupported = nFiles = 0; // Reiniciamos el contador
+
+            RecursivoSupportFile(accion.Root);
+            lblSupport.Text = Tools.Helper.ObtenerTraduccion("Sistema", "S30") + ' ' + (filesSupported * 100 / nFiles) + '%';
+            if ((filesSupported * 100 / nFiles) >= 75)
+                lblSupport.Font = new Font("Consolas", 10, FontStyle.Bold | FontStyle.Underline);
+            else
+                lblSupport.Font = new Font("Consolas", 10, FontStyle.Regular);
+        }
+        private void RecursivoSupportFile(Carpeta carpeta)
+        {
+            if (carpeta.files is List<Archivo>)
+            {
+                foreach (Archivo archivo in carpeta.files)
+                {
+                    if (archivo.name == "fnt.bin" || archivo.name.StartsWith("overlay9_"))
+                        continue; // Evitamos archivos del sistema
+
+                    if (archivo.formato != Formato.Desconocido)
+                        filesSupported++;
+                    nFiles++;
+                }
+            }
+
+            if (carpeta.folders is List<Carpeta>)
+                foreach (Carpeta subFolder in carpeta.folders)
+                    RecursivoSupportFile(subFolder);
+        }
 
         private void ThreadEspera()
         {
@@ -356,8 +392,8 @@ namespace Tinke
 
                 btnHex.Enabled = false;
                 btnSee.Enabled = false;
-                btnDescomprimir.Enabled = false;
                 toolStripOpenAs.Enabled = false;
+                btnDescomprimir.Enabled = false;
             }
             else if (Convert.ToUInt16(e.Node.Tag) < 0xF000)
             {
@@ -414,18 +450,13 @@ namespace Tinke
 
                 PluginInterface.Formato tipo = accion.Get_Formato();
                 if (tipo != PluginInterface.Formato.Desconocido)
-                {
                     btnSee.Enabled = true;
-                    btnDescomprimir.Enabled = false;
-                }
                 else
-                {
                     btnSee.Enabled = false;
-                    btnDescomprimir.Enabled = false;
-                }
                 if (tipo == PluginInterface.Formato.Comprimido)
                     btnDescomprimir.Enabled = true;
-
+                else
+                    btnDescomprimir.Enabled = false;
             }
             else
             {
@@ -440,8 +471,8 @@ namespace Tinke
 
                 btnHex.Enabled = false;
                 btnSee.Enabled = false;
-                btnDescomprimir.Enabled = false;
                 toolStripOpenAs.Enabled = false;
+                btnDescomprimir.Enabled = false;
             }
         }
         private void btnHex_Click(object sender, EventArgs e)
@@ -484,9 +515,20 @@ namespace Tinke
         }
         private void btnUncompress_Click(object sender, EventArgs e)
         {
-            Carpeta descomprimidos = accion.Extract();
+            //if (accion.IDSelect >= 0x0F00)
+            //    Recursivo_UncompressFolder(accion.Select_Folder());    NO FUNCIONA
+            //else
+                UncompressFile(accion.IDSelect);
+        }
+        private void UncompressFile(int id)
+        {
+            Carpeta descomprimidos = accion.Extract(id);
+            if (!(descomprimidos.files is List<Archivo>) && !(descomprimidos.folders is List<Carpeta>)) // En caso de que falle la extracción
+                return;
+
+            Set_Formato(accion.Root);
+            Get_SupportedFiles();
             TreeNode selected = treeSystem.SelectedNode;
-            Set_Formato(descomprimidos);
             CarpetaANodo(descomprimidos, ref selected);
 
             TreeNode[] nodos = new TreeNode[selected.Nodes.Count]; selected.Nodes.CopyTo(nodos, 0);
@@ -497,11 +539,22 @@ namespace Tinke
 
             btnDescomprimir.Enabled = false;
             btnSee.Enabled = false;
-            btnExtraer.Enabled = false;
             btnHex.Enabled = false;
 
             debug.Añadir_Texto(sb.ToString());
             sb.Length = 0;
+        }
+        private void Recursivo_UncompressFolder(Carpeta currFolder)
+        {
+            if (currFolder.files is List<Archivo>)
+                foreach (Archivo archivo in currFolder.files)
+                    if (archivo.formato == Formato.Comprimido)
+                        UncompressFile(archivo.id);
+
+
+            if (currFolder.folders is List<Carpeta>)
+                foreach (Carpeta subFolder in currFolder.folders)
+                     Recursivo_UncompressFolder(subFolder);
         }
         private void btnExtraer_Click(object sender, EventArgs e)
         {
@@ -607,7 +660,6 @@ namespace Tinke
                 sb.Length = 0;
             }
         }
-
 
         private void toolStripInfoRom_Click(object sender, EventArgs e)
         {
@@ -764,6 +816,8 @@ namespace Tinke
                 resul = accion.Search_File(Formato.Sonido);
             else if (txtSearch.Text == "<Font>")
                 resul = accion.Search_File(Formato.Fuentes);
+            else if (txtSearch.Text == "<Compress>")
+                resul = accion.Search_File(Formato.Comprimido);
             else if (txtSearch.Text == "<Unknown>")
                 resul = accion.Search_File(Formato.Desconocido);
             else
@@ -800,8 +854,6 @@ namespace Tinke
             if (e.KeyCode == Keys.Enter)
                 btnSearch.PerformClick();
         }
-
-
 
     }
 }
