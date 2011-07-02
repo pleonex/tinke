@@ -842,8 +842,12 @@ namespace Tinke
 
         public Carpeta Extract()
         {
+            return Extract(idSelect);
+        }
+        public Carpeta Extract(int id)
+        {
             // Guardamos el archivo para descomprimir fuera del sistema de ROM
-            Archivo selectFile = Select_File();
+            Archivo selectFile = Search_File(id);
             string tempFile; 
             BinaryReader br;
             byte[] ext;
@@ -896,12 +900,16 @@ namespace Tinke
                 if (ext[0] == LZ77_TAG || ext[0] == LZSS_TAG || ext[0] == RLE_TAG || ext[0] == HUFF_TAG)
                 {
                     FileInfo info = new FileInfo(tempFile);
-                    Compresion.Basico.Decompress(tempFile, info.DirectoryName + Path.DirectorySeparatorChar + "un_" + info.Name);
+                    String uncompFile = info.DirectoryName + Path.DirectorySeparatorChar + "un_" + info.Name;
+                    Compresion.Basico.Decompress(tempFile, uncompFile);
+                    if (!File.Exists(uncompFile))
+                        throw new Exception("Hubo un fallo al descomprimir.\n¿Seguro que es un archivo comprimido?");
+
                     Carpeta carpeta = new Carpeta();
                     Archivo file = new Archivo();
                     file.name = selectFile.name;
-                    file.path = info.DirectoryName + Path.DirectorySeparatorChar + "un_" + info.Name;
-                    file.size = (uint)new FileInfo(info.DirectoryName + Path.DirectorySeparatorChar + "un_" + info.Name).Length;
+                    file.path = uncompFile;
+                    file.size = (uint)new FileInfo(uncompFile).Length;
                     carpeta.files = new List<Archivo>();
                     carpeta.files.Add(file);
                     pluginHost.Set_Files(carpeta);
@@ -916,11 +924,32 @@ namespace Tinke
             #endregion
         Continuar:
 
-            // Se añaden los archivos descomprimidos al árbol de archivos.
             File.Delete(tempFile);
             Carpeta desc = pluginHost.Get_Files();
-            Add_Files(desc);
+
+            // Comprobamos y eliminamos los archivos de tamaño 0 Bytes
+            Recursivo_EliminarArchivosNulos(desc);
+
+            Add_Files(desc);    // Añadimos los archivos descomprimidos al árbol de archivos
             return desc;
+        }
+        private void Recursivo_EliminarArchivosNulos(Carpeta carpeta)
+        {
+            if (carpeta.files is List<Archivo>)
+            {
+                for (int i = 0; i < carpeta.files.Count; i++)
+                {
+                    if (carpeta.files[i].size == 0x00)
+                    {
+                        carpeta.files.RemoveAt(i);
+                        i--; // Al eliminar los demás indices se desplazan hacia abajo
+                    }
+                }
+            }
+
+            if (carpeta.folders is List<Carpeta>)
+                foreach (Carpeta subCarpeta in carpeta.folders)
+                    Recursivo_EliminarArchivosNulos(subCarpeta);
         }
         /// <summary>
         /// Evento llamado desde los plugins en el cual se descomprime un archivo a través de otros plugins.

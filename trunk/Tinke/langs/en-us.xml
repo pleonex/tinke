@@ -48,6 +48,7 @@
       <S2D>Search</S2D>
       <S2E>Instant search</S2E>
       <S2F>Search keywords:</S2F>
+      <S30>Recognized files:</S30>
     </Sistema>
     <RomInfo>
       <S01>Game information</S01>
@@ -106,7 +107,8 @@
       <S36>Debug length</S36>
       <S37>Debug RAM offset</S37>
       <S38>Reserved</S38>
-	  <S39>Invalid</S39>
+	    <S39>Invalid</S39>
+      <S3A>Transparency</S3A>
     </RomInfo>
 	<Autores>
 	  <S01>About</S01>

@@ -75,6 +75,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Imagen\JPG.cs" />
+    <Compile Include="Imagen\PNG.cs" />
     <Compile Include="Imagen\TGA.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

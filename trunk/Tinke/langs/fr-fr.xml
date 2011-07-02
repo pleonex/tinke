@@ -48,6 +48,7 @@
       <S2D>Search</S2D>
       <S2E>Instant search</S2E>
       <S2F>Search keywords:</S2F>
+      <S30>Recognized files:</S30>
     </Sistema>
     <RomInfo>
       <S01>Information de la ROM</S01>
@@ -107,6 +108,7 @@
       <S37>Offset de la RAM de debug</S37>
       <S38>Réservé</S38>
 	    <S39>Non valide</S39>
+      <S3A>Transparency</S3A>
     </RomInfo>
     <Autores>
 	    <S01>À propos de</S01>
