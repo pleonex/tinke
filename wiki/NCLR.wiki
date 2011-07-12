@@ -1,0 +1,45 @@
+#summary Specification about NCLR files
+#labels Formato
+
+These files, which name could be "Nintendo CoLour Resource", are used in many games. They contains the information about
+the palettes of the image (It can have more than one palette (4-bpp)).
+
+=Palette structure=
+
+||_Offset_||_Type_||_Description_||
+*Generic header*
+||0x00||char[4]||Magic ID (NCLR)||
+||0x04||ushort||Endianess (if = 0xFFFE the Magic ID must be reverse)||
+||0x06||ushort||Constant (should be 0x1000)||
+||0x08||uint||File size||
+||0x0C||ushort||Header size||
+||0x0E||ushort||# of sections||
+*PLTT (PaLeTTe) section*
+||0x00||char[4]||Magic ID (PLTT)||
+||0x04||uint||Section size||
+||0x08||ushort||Depth (0x03 == 4bpp; 0x04 == 8bpp)||
+||0x0A||ushort||Unknown 1||
+||0x0C||uint||Unkwnon 2||
+||0x10||uint||Palettes size||
+||0x14||uint||# of colours per palette (if Depth == 8bpp then this must be 0x0100)||
+*Palettes data (NTFP Nintendo Tile Format Palette)*
+||0x00||byte[2]||Colour encoded with BGR555||
+||...||
+
+_Note:_ The number of palettes can be calcute from the following form:
+int nPalettes = (Palttes size) / (# of colours * 2);
+
+=BGR555 encoding=
+
+Each two bytes is a colour defined by three number (BGR Blue Green Red), they are stored in the following form:
+XBBBBBGGGGGRRRRR
+where each letter is a bit (5 bit per colour), the X letter is never used (always 0).
+A way of decoding the two bytes is (in C#):
+
+int r,b; double g;
+
+r = (byte1 % 0x20) * 0x8;
+g = (byte1 / 0x20 + ((byte2 % 0x4) * 7.96875)) * 0x8;
+b = byte2 / 0x4 * 0x8;
+
+return System.Drawing.Color.FromArgb(r, (int)g, b);
