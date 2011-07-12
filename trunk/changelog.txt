@@ -5,3 +5,7 @@
 * Add support for SDAT files
 * Add support for SWAV sound files
 * Add support for SWAR sound files
+* Add Zoom feature
+* Add possibility to change the bgd color with transparency checked.
+
+

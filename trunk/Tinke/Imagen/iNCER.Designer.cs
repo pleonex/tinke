@@ -28,15 +28,15 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.ListViewItem listViewItem17 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem41 = new System.Windows.Forms.ListViewItem(new string[] {
             "S07"}, -1, System.Drawing.Color.Empty, System.Drawing.Color.Empty, new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0))));
-            System.Windows.Forms.ListViewItem listViewItem18 = new System.Windows.Forms.ListViewItem("S08");
-            System.Windows.Forms.ListViewItem listViewItem19 = new System.Windows.Forms.ListViewItem("S09");
-            System.Windows.Forms.ListViewItem listViewItem20 = new System.Windows.Forms.ListViewItem("S0A");
-            System.Windows.Forms.ListViewItem listViewItem21 = new System.Windows.Forms.ListViewItem("S0B");
-            System.Windows.Forms.ListViewItem listViewItem22 = new System.Windows.Forms.ListViewItem("S0C");
-            System.Windows.Forms.ListViewItem listViewItem23 = new System.Windows.Forms.ListViewItem("S0D");
-            System.Windows.Forms.ListViewItem listViewItem24 = new System.Windows.Forms.ListViewItem("S0E");
+            System.Windows.Forms.ListViewItem listViewItem42 = new System.Windows.Forms.ListViewItem("S08");
+            System.Windows.Forms.ListViewItem listViewItem43 = new System.Windows.Forms.ListViewItem("S09");
+            System.Windows.Forms.ListViewItem listViewItem44 = new System.Windows.Forms.ListViewItem("S0A");
+            System.Windows.Forms.ListViewItem listViewItem45 = new System.Windows.Forms.ListViewItem("S0B");
+            System.Windows.Forms.ListViewItem listViewItem46 = new System.Windows.Forms.ListViewItem("S0C");
+            System.Windows.Forms.ListViewItem listViewItem47 = new System.Windows.Forms.ListViewItem("S0D");
+            System.Windows.Forms.ListViewItem listViewItem48 = new System.Windows.Forms.ListViewItem("S0E");
             this.imgBox = new System.Windows.Forms.PictureBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.listProp = new System.Windows.Forms.ListView();
@@ -52,8 +52,17 @@
             this.checkTransparencia = new System.Windows.Forms.CheckBox();
             this.checkImagen = new System.Windows.Forms.CheckBox();
             this.label2 = new System.Windows.Forms.Label();
+            this.btnBgdTrans = new System.Windows.Forms.Button();
+            this.pictureBgd = new System.Windows.Forms.PictureBox();
+            this.btnBgd = new System.Windows.Forms.Button();
+            this.label8 = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
+            this.lblZoom = new System.Windows.Forms.Label();
+            this.trackZoom = new System.Windows.Forms.TrackBar();
             ((System.ComponentModel.ISupportInitialize)(this.imgBox)).BeginInit();
             this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBgd)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackZoom)).BeginInit();
             this.SuspendLayout();
             // 
             // imgBox
@@ -83,14 +92,14 @@
             this.columnValor});
             this.listProp.Dock = System.Windows.Forms.DockStyle.Fill;
             this.listProp.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem17,
-            listViewItem18,
-            listViewItem19,
-            listViewItem20,
-            listViewItem21,
-            listViewItem22,
-            listViewItem23,
-            listViewItem24});
+            listViewItem41,
+            listViewItem42,
+            listViewItem43,
+            listViewItem44,
+            listViewItem45,
+            listViewItem46,
+            listViewItem47,
+            listViewItem48});
             this.listProp.Location = new System.Drawing.Point(3, 16);
             this.listProp.Name = "listProp";
             this.listProp.Size = new System.Drawing.Size(241, 237);
@@ -216,12 +225,93 @@
             this.label2.TabIndex = 11;
             this.label2.Text = "S15";
             // 
+            // btnBgdTrans
+            // 
+            this.btnBgdTrans.Enabled = false;
+            this.btnBgdTrans.Location = new System.Drawing.Point(202, 332);
+            this.btnBgdTrans.Name = "btnBgdTrans";
+            this.btnBgdTrans.Size = new System.Drawing.Size(51, 35);
+            this.btnBgdTrans.TabIndex = 29;
+            this.btnBgdTrans.Text = "Quitar";
+            this.btnBgdTrans.UseVisualStyleBackColor = true;
+            this.btnBgdTrans.Click += new System.EventHandler(this.btnBgdTrans_Click);
+            // 
+            // pictureBgd
+            // 
+            this.pictureBgd.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pictureBgd.Location = new System.Drawing.Point(161, 332);
+            this.pictureBgd.Name = "pictureBgd";
+            this.pictureBgd.Size = new System.Drawing.Size(35, 35);
+            this.pictureBgd.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBgd.TabIndex = 28;
+            this.pictureBgd.TabStop = false;
+            // 
+            // btnBgd
+            // 
+            this.btnBgd.Location = new System.Drawing.Point(46, 332);
+            this.btnBgd.Name = "btnBgd";
+            this.btnBgd.Size = new System.Drawing.Size(78, 35);
+            this.btnBgd.TabIndex = 27;
+            this.btnBgd.Text = "Color de fondo";
+            this.btnBgd.UseVisualStyleBackColor = true;
+            this.btnBgd.Click += new System.EventHandler(this.btnBgd_Click);
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(466, 342);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(25, 13);
+            this.label8.TabIndex = 26;
+            this.label8.Text = "800";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(262, 343);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(25, 13);
+            this.label7.TabIndex = 25;
+            this.label7.Text = "100";
+            // 
+            // lblZoom
+            // 
+            this.lblZoom.AutoSize = true;
+            this.lblZoom.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblZoom.Location = new System.Drawing.Point(348, 331);
+            this.lblZoom.Name = "lblZoom";
+            this.lblZoom.Size = new System.Drawing.Size(48, 17);
+            this.lblZoom.TabIndex = 24;
+            this.lblZoom.Text = "Zoom:";
+            // 
+            // trackZoom
+            // 
+            this.trackZoom.BackColor = System.Drawing.SystemColors.Control;
+            this.trackZoom.LargeChange = 100;
+            this.trackZoom.Location = new System.Drawing.Point(265, 358);
+            this.trackZoom.Maximum = 800;
+            this.trackZoom.Minimum = 100;
+            this.trackZoom.Name = "trackZoom";
+            this.trackZoom.Size = new System.Drawing.Size(226, 45);
+            this.trackZoom.SmallChange = 50;
+            this.trackZoom.TabIndex = 23;
+            this.trackZoom.TickFrequency = 50;
+            this.trackZoom.Value = 100;
+            this.trackZoom.Scroll += new System.EventHandler(this.trackZoom_Scroll);
+            // 
             // iNCER
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Transparent;
             this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.Controls.Add(this.btnBgdTrans);
+            this.Controls.Add(this.pictureBgd);
+            this.Controls.Add(this.btnBgd);
+            this.Controls.Add(this.label8);
+            this.Controls.Add(this.label7);
+            this.Controls.Add(this.lblZoom);
+            this.Controls.Add(this.trackZoom);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.checkImagen);
             this.Controls.Add(this.checkTransparencia);
@@ -238,6 +328,8 @@
             this.Size = new System.Drawing.Size(512, 512);
             ((System.ComponentModel.ISupportInitialize)(this.imgBox)).EndInit();
             this.groupBox1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBgd)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackZoom)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -260,5 +352,12 @@
         private System.Windows.Forms.CheckBox checkTransparencia;
         private System.Windows.Forms.CheckBox checkImagen;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Button btnBgdTrans;
+        private System.Windows.Forms.PictureBox pictureBgd;
+        private System.Windows.Forms.Button btnBgd;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label lblZoom;
+        private System.Windows.Forms.TrackBar trackZoom;
     }
 }
