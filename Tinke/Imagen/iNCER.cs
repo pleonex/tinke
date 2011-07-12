@@ -168,9 +168,9 @@ namespace Tinke
 
             pic.Location = new Point(0, 0);
             pic.SizeMode = PictureBoxSizeMode.AutoSize;
-            pic.BackColor = Color.Transparent;
+            pic.BackColor = pictureBgd.BackColor;
             ventana.AutoSize = true;
-            ventana.BackColor = pictureBgd.BackColor;
+            ventana.BackColor = SystemColors.GradientInactiveCaption;
             ventana.AutoScroll = true;
             ventana.MaximumSize = new Size(1024, 700);
             ventana.ShowIcon = false;
