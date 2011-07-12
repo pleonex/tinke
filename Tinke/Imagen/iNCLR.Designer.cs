@@ -28,11 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("S05");
-            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("S06");
-            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem("S07");
-            System.Windows.Forms.ListViewItem listViewItem4 = new System.Windows.Forms.ListViewItem("S08");
-            System.Windows.Forms.ListViewItem listViewItem5 = new System.Windows.Forms.ListViewItem("S09");
+            System.Windows.Forms.ListViewItem listViewItem11 = new System.Windows.Forms.ListViewItem("S05");
+            System.Windows.Forms.ListViewItem listViewItem12 = new System.Windows.Forms.ListViewItem("S06");
+            System.Windows.Forms.ListViewItem listViewItem13 = new System.Windows.Forms.ListViewItem("S07");
+            System.Windows.Forms.ListViewItem listViewItem14 = new System.Windows.Forms.ListViewItem("S08");
+            System.Windows.Forms.ListViewItem listViewItem15 = new System.Windows.Forms.ListViewItem("S09");
             this.paletaBox = new System.Windows.Forms.PictureBox();
             this.nPaleta = new System.Windows.Forms.NumericUpDown();
             this.label1 = new System.Windows.Forms.Label();
@@ -42,6 +42,7 @@
             this.columnName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnValor = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.btnSave = new System.Windows.Forms.Button();
+            this.lblRGB = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.paletaBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nPaleta)).BeginInit();
             this.groupProp.SuspendLayout();
@@ -55,10 +56,11 @@
             this.paletaBox.Size = new System.Drawing.Size(160, 160);
             this.paletaBox.TabIndex = 0;
             this.paletaBox.TabStop = false;
+            this.paletaBox.MouseClick += new System.Windows.Forms.MouseEventHandler(this.paletaBox_MouseClick);
             // 
             // nPaleta
             // 
-            this.nPaleta.Location = new System.Drawing.Point(78, 166);
+            this.nPaleta.Location = new System.Drawing.Point(78, 182);
             this.nPaleta.Name = "nPaleta";
             this.nPaleta.Size = new System.Drawing.Size(82, 20);
             this.nPaleta.TabIndex = 2;
@@ -67,7 +69,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(3, 168);
+            this.label1.Location = new System.Drawing.Point(3, 184);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(26, 13);
             this.label1.TabIndex = 3;
@@ -100,11 +102,11 @@
             this.columnValor});
             this.listProp.Dock = System.Windows.Forms.DockStyle.Top;
             this.listProp.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem1,
-            listViewItem2,
-            listViewItem3,
-            listViewItem4,
-            listViewItem5});
+            listViewItem11,
+            listViewItem12,
+            listViewItem13,
+            listViewItem14,
+            listViewItem15});
             this.listProp.Location = new System.Drawing.Point(3, 16);
             this.listProp.Name = "listProp";
             this.listProp.Size = new System.Drawing.Size(261, 134);
@@ -134,12 +136,22 @@
             this.btnSave.UseVisualStyleBackColor = true;
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
             // 
+            // lblRGB
+            // 
+            this.lblRGB.AutoSize = true;
+            this.lblRGB.Location = new System.Drawing.Point(3, 163);
+            this.lblRGB.Name = "lblRGB";
+            this.lblRGB.Size = new System.Drawing.Size(33, 13);
+            this.lblRGB.TabIndex = 7;
+            this.lblRGB.Text = "RGB:";
+            // 
             // iNCLR
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Transparent;
             this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.Controls.Add(this.lblRGB);
             this.Controls.Add(this.btnSave);
             this.Controls.Add(this.groupProp);
             this.Controls.Add(this.btnShow);
@@ -167,5 +179,6 @@
         private System.Windows.Forms.ColumnHeader columnName;
         private System.Windows.Forms.ColumnHeader columnValor;
         private System.Windows.Forms.Button btnSave;
+        private System.Windows.Forms.Label lblRGB;
     }
 }

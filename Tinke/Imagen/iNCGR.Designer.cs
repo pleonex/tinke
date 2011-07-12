@@ -49,37 +49,37 @@ namespace Tinke
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem12 = new System.Windows.Forms.ListViewItem(new string[] {
             "0x06",
             "S06"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem13 = new System.Windows.Forms.ListViewItem(new string[] {
             "0x0E",
             "S07"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem14 = new System.Windows.Forms.ListViewItem(new string[] {
             "0x10",
             "S08"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem4 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem15 = new System.Windows.Forms.ListViewItem(new string[] {
             "0x14",
             "S09"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem5 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem16 = new System.Windows.Forms.ListViewItem(new string[] {
             "0x18",
             "S0A"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem6 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem17 = new System.Windows.Forms.ListViewItem(new string[] {
             "0x1A",
             "S0B"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem7 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem18 = new System.Windows.Forms.ListViewItem(new string[] {
             "0x1C",
             "S0C"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem8 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem19 = new System.Windows.Forms.ListViewItem(new string[] {
             "0x20",
             "S0D"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem9 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem20 = new System.Windows.Forms.ListViewItem(new string[] {
             "0x24",
             "S0E"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem10 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem21 = new System.Windows.Forms.ListViewItem(new string[] {
             "0x28",
             "S0F"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem11 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem22 = new System.Windows.Forms.ListViewItem(new string[] {
             "0x2C",
             "S10"}, -1);
             this.numericWidth = new System.Windows.Forms.NumericUpDown();
@@ -87,7 +87,6 @@ namespace Tinke
             this.label2 = new System.Windows.Forms.Label();
             this.numericHeight = new System.Windows.Forms.NumericUpDown();
             this.groupProp = new System.Windows.Forms.GroupBox();
-            this.btnTransparency = new System.Windows.Forms.Button();
             this.comboImages = new System.Windows.Forms.ComboBox();
             this.btnDividir = new System.Windows.Forms.Button();
             this.label6 = new System.Windows.Forms.Label();
@@ -103,11 +102,21 @@ namespace Tinke
             this.columnValor = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.pic = new System.Windows.Forms.PictureBox();
             this.label5 = new System.Windows.Forms.Label();
+            this.trackZoom = new System.Windows.Forms.TrackBar();
+            this.lblZoom = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
+            this.checkTransparency = new System.Windows.Forms.CheckBox();
+            this.btnBgd = new System.Windows.Forms.Button();
+            this.pictureBgd = new System.Windows.Forms.PictureBox();
+            this.btnBgdTrans = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.numericWidth)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericHeight)).BeginInit();
             this.groupProp.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericStart)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pic)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackZoom)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBgd)).BeginInit();
             this.SuspendLayout();
             // 
             // numericWidth
@@ -184,7 +193,14 @@ namespace Tinke
             // 
             // groupProp
             // 
-            this.groupProp.Controls.Add(this.btnTransparency);
+            this.groupProp.Controls.Add(this.btnBgdTrans);
+            this.groupProp.Controls.Add(this.pictureBgd);
+            this.groupProp.Controls.Add(this.btnBgd);
+            this.groupProp.Controls.Add(this.checkTransparency);
+            this.groupProp.Controls.Add(this.label8);
+            this.groupProp.Controls.Add(this.label7);
+            this.groupProp.Controls.Add(this.lblZoom);
+            this.groupProp.Controls.Add(this.trackZoom);
             this.groupProp.Controls.Add(this.comboImages);
             this.groupProp.Controls.Add(this.btnDividir);
             this.groupProp.Controls.Add(this.label6);
@@ -206,22 +222,12 @@ namespace Tinke
             this.groupProp.TabStop = false;
             this.groupProp.Text = "S02";
             // 
-            // btnTransparency
-            // 
-            this.btnTransparency.Location = new System.Drawing.Point(7, 323);
-            this.btnTransparency.Name = "btnTransparency";
-            this.btnTransparency.Size = new System.Drawing.Size(108, 23);
-            this.btnTransparency.TabIndex = 14;
-            this.btnTransparency.Text = "S1C";
-            this.btnTransparency.UseVisualStyleBackColor = true;
-            this.btnTransparency.Click += new System.EventHandler(this.btnTransparency_Click);
-            // 
             // comboImages
             // 
             this.comboImages.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboImages.Enabled = false;
             this.comboImages.FormattingEnabled = true;
-            this.comboImages.Location = new System.Drawing.Point(116, 362);
+            this.comboImages.Location = new System.Drawing.Point(116, 322);
             this.comboImages.Name = "comboImages";
             this.comboImages.Size = new System.Drawing.Size(121, 21);
             this.comboImages.TabIndex = 13;
@@ -229,7 +235,7 @@ namespace Tinke
             // 
             // btnDividir
             // 
-            this.btnDividir.Location = new System.Drawing.Point(7, 362);
+            this.btnDividir.Location = new System.Drawing.Point(7, 320);
             this.btnDividir.Name = "btnDividir";
             this.btnDividir.Size = new System.Drawing.Size(75, 23);
             this.btnDividir.TabIndex = 12;
@@ -240,7 +246,7 @@ namespace Tinke
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(37, 298);
+            this.label6.Location = new System.Drawing.Point(7, 298);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(26, 13);
             this.label6.TabIndex = 11;
@@ -321,17 +327,17 @@ namespace Tinke
             this.columnValor});
             this.listInfo.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.listInfo.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem1,
-            listViewItem2,
-            listViewItem3,
-            listViewItem4,
-            listViewItem5,
-            listViewItem6,
-            listViewItem7,
-            listViewItem8,
-            listViewItem9,
-            listViewItem10,
-            listViewItem11});
+            listViewItem12,
+            listViewItem13,
+            listViewItem14,
+            listViewItem15,
+            listViewItem16,
+            listViewItem17,
+            listViewItem18,
+            listViewItem19,
+            listViewItem20,
+            listViewItem21,
+            listViewItem22});
             this.listInfo.Location = new System.Drawing.Point(7, 20);
             this.listInfo.Name = "listInfo";
             this.listInfo.Size = new System.Drawing.Size(229, 216);
@@ -376,6 +382,91 @@ namespace Tinke
             this.label5.TabIndex = 6;
             this.label5.Text = "S01";
             // 
+            // trackZoom
+            // 
+            this.trackZoom.BackColor = System.Drawing.SystemColors.Control;
+            this.trackZoom.LargeChange = 100;
+            this.trackZoom.Location = new System.Drawing.Point(10, 423);
+            this.trackZoom.Maximum = 800;
+            this.trackZoom.Minimum = 50;
+            this.trackZoom.Name = "trackZoom";
+            this.trackZoom.Size = new System.Drawing.Size(226, 45);
+            this.trackZoom.SmallChange = 50;
+            this.trackZoom.TabIndex = 15;
+            this.trackZoom.TickFrequency = 50;
+            this.trackZoom.Value = 100;
+            this.trackZoom.Scroll += new System.EventHandler(this.trackZoom_Scroll);
+            // 
+            // lblZoom
+            // 
+            this.lblZoom.AutoSize = true;
+            this.lblZoom.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblZoom.Location = new System.Drawing.Point(93, 396);
+            this.lblZoom.Name = "lblZoom";
+            this.lblZoom.Size = new System.Drawing.Size(48, 17);
+            this.lblZoom.TabIndex = 16;
+            this.lblZoom.Text = "Zoom:";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(7, 407);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(19, 13);
+            this.label7.TabIndex = 17;
+            this.label7.Text = "50";
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(212, 407);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(25, 13);
+            this.label8.TabIndex = 18;
+            this.label8.Text = "800";
+            // 
+            // checkTransparency
+            // 
+            this.checkTransparency.AutoSize = true;
+            this.checkTransparency.Location = new System.Drawing.Point(105, 480);
+            this.checkTransparency.Name = "checkTransparency";
+            this.checkTransparency.Size = new System.Drawing.Size(46, 17);
+            this.checkTransparency.TabIndex = 19;
+            this.checkTransparency.Text = "S1C";
+            this.checkTransparency.UseVisualStyleBackColor = true;
+            this.checkTransparency.CheckedChanged += new System.EventHandler(this.checkTransparency_CheckedChanged);
+            // 
+            // btnBgd
+            // 
+            this.btnBgd.Location = new System.Drawing.Point(7, 349);
+            this.btnBgd.Name = "btnBgd";
+            this.btnBgd.Size = new System.Drawing.Size(75, 35);
+            this.btnBgd.TabIndex = 20;
+            this.btnBgd.Text = "Color de fondo";
+            this.btnBgd.UseVisualStyleBackColor = true;
+            this.btnBgd.Click += new System.EventHandler(this.btnBgd_Click);
+            // 
+            // pictureBgd
+            // 
+            this.pictureBgd.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pictureBgd.Location = new System.Drawing.Point(115, 349);
+            this.pictureBgd.Name = "pictureBgd";
+            this.pictureBgd.Size = new System.Drawing.Size(35, 35);
+            this.pictureBgd.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBgd.TabIndex = 21;
+            this.pictureBgd.TabStop = false;
+            // 
+            // btnBgdTrans
+            // 
+            this.btnBgdTrans.Enabled = false;
+            this.btnBgdTrans.Location = new System.Drawing.Point(156, 349);
+            this.btnBgdTrans.Name = "btnBgdTrans";
+            this.btnBgdTrans.Size = new System.Drawing.Size(50, 35);
+            this.btnBgdTrans.TabIndex = 22;
+            this.btnBgdTrans.Text = "Quitar";
+            this.btnBgdTrans.UseVisualStyleBackColor = true;
+            this.btnBgdTrans.Click += new System.EventHandler(this.btnBgdTrans_Click);
+            // 
             // iNCGR
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -393,6 +484,8 @@ namespace Tinke
             this.groupProp.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericStart)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pic)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackZoom)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBgd)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -420,6 +513,13 @@ namespace Tinke
         private System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.ComboBox comboImages;
         private System.Windows.Forms.Button btnDividir;
-        private System.Windows.Forms.Button btnTransparency;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label lblZoom;
+        private System.Windows.Forms.TrackBar trackZoom;
+        private System.Windows.Forms.CheckBox checkTransparency;
+        private System.Windows.Forms.PictureBox pictureBgd;
+        private System.Windows.Forms.Button btnBgd;
+        private System.Windows.Forms.Button btnBgdTrans;
     }
 }

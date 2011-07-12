@@ -164,9 +164,10 @@ namespace Tinke
             PictureBox pcBox = new PictureBox();
             pcBox.Image = pic.Image;
             pcBox.SizeMode = PictureBoxSizeMode.AutoSize;
+            pcBox.BackColor = Color.Transparent;
 
             ven.Controls.Add(pcBox);
-            ven.BackColor = SystemColors.GradientInactiveCaption;
+            ven.BackColor = pictureBgd.BackColor;
             ven.Text = Tools.Helper.ObtenerTraduccion("NCGR","S19");
             ven.AutoScroll = true;
             ven.MaximumSize = new Size(1024, 700);
@@ -230,7 +231,7 @@ namespace Tinke
             comboBox1.Items[1] = xml.Element("S17").Value;
             //comboBox1.Items[2] = xml.Element("S18").Value;
             btnDividir.Text = xml.Element("S1A").Value;
-            btnTransparency.Text = xml.Element("S1C").Value;
+            checkTransparency.Text = xml.Element("S1C").Value;
         }
 
         private void btnDividir_Click(object sender, EventArgs e)
@@ -280,11 +281,49 @@ namespace Tinke
                 System.Drawing.Imaging.PixelFormat.DontCare);
         }
 
-        private void btnTransparency_Click(object sender, EventArgs e)
+        private void trackZoom_Scroll(object sender, EventArgs e)
         {
-            Bitmap imagen = (Bitmap)pic.Image;
-            imagen.MakeTransparent(paleta.pltt.paletas[tile.rahc.tileData.nPaleta[0]].colores[0]);
+            Actualizar_Imagen(); // Devolvemos la imagen original para no perder calidad
+
+            float scale = trackZoom.Value / 100f;
+            Bitmap imagen = new Bitmap((int)(pic.Image.Width * scale), (int)(pic.Image.Height * scale));
+            Graphics graficos = Graphics.FromImage(imagen);
+            graficos.DrawImage(pic.Image, 0, 0, pic.Image.Width * scale, pic.Image.Height * scale);
             pic.Image = imagen;
+        }
+
+        private void checkTransparency_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkTransparency.Checked)
+            {
+                Bitmap imagen = (Bitmap)pic.Image;
+                imagen.MakeTransparent(paleta.pltt.paletas[tile.rahc.tileData.nPaleta[0]].colores[0]);
+                pic.Image = imagen;
+            }
+            else
+                Actualizar_Imagen();
+        }
+
+        private void btnBgd_Click(object sender, EventArgs e)
+        {
+            ColorDialog o = new ColorDialog();
+            o.AllowFullOpen = true;
+            o.AnyColor = true;
+
+            if (o.ShowDialog() == DialogResult.OK)
+            {
+                pictureBgd.BackColor = o.Color;
+                pic.BackColor = o.Color;
+                btnBgdTrans.Enabled = true;
+            }
+        }
+
+        private void btnBgdTrans_Click(object sender, EventArgs e)
+        {
+            btnBgdTrans.Enabled = false;
+
+            pictureBgd.BackColor = Color.Transparent;
+            pic.BackColor = Color.Transparent;
         }
     }
 }

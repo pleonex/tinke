@@ -56,10 +56,7 @@ namespace Tinke
                 comboCelda.Items.Add(ncer.labl.names[i]);
             comboCelda.SelectedIndex = 0;
 
-            imgBox.Image = Imagen_NCER.Obtener_Imagen(ncer.cebk.banks[0], ncer.cebk.block_size,
-                tile, paleta, checkEntorno.Checked, checkCelda.Checked, checkNumber.Checked, 
-                checkTransparencia.Checked, checkImagen.Checked);
-
+            ActualizarImagen();
         }
 
         private void LeerIdioma()
@@ -102,15 +99,11 @@ namespace Tinke
 
         private void comboCelda_SelectedIndexChanged(object sender, EventArgs e)
         {
-            imgBox.Image = Imagen_NCER.Obtener_Imagen(ncer.cebk.banks[comboCelda.SelectedIndex], ncer.cebk.block_size,
-                tile, paleta, checkEntorno.Checked, checkCelda.Checked, checkNumber.Checked, checkTransparencia.Checked,
-                checkImagen.Checked);
+            ActualizarImagen();
         }
         private void check_CheckedChanged(object sender, EventArgs e)
         {
-            imgBox.Image = Imagen_NCER.Obtener_Imagen(ncer.cebk.banks[comboCelda.SelectedIndex], ncer.cebk.block_size,
-               tile, paleta, checkEntorno.Checked, checkCelda.Checked, checkNumber.Checked, checkTransparencia.Checked,
-               checkImagen.Checked);
+            ActualizarImagen();
         }
 
         private void btnSave_Click(object sender, EventArgs e)
@@ -123,9 +116,7 @@ namespace Tinke
             o.OverwritePrompt = true;
 
             if (o.ShowDialog() == DialogResult.OK)
-                Imagen_NCER.Obtener_Imagen(ncer.cebk.banks[comboCelda.SelectedIndex], ncer.cebk.block_size,
-                    tile, paleta, checkEntorno.Checked, checkCelda.Checked, checkNumber.Checked,
-                    checkTransparencia.Checked, checkImagen.Checked).Save(o.FileName);
+                ActualizarImagen().Save(o.FileName);
         }
 
         private void btnTodos_Click(object sender, EventArgs e)
@@ -177,9 +168,9 @@ namespace Tinke
 
             pic.Location = new Point(0, 0);
             pic.SizeMode = PictureBoxSizeMode.AutoSize;
-            pic.Dock = DockStyle.Fill;
+            pic.BackColor = Color.Transparent;
             ventana.AutoSize = true;
-            ventana.BackColor = SystemColors.GradientInactiveCaption;
+            ventana.BackColor = pictureBgd.BackColor;
             ventana.AutoScroll = true;
             ventana.MaximumSize = new Size(1024, 700);
             ventana.ShowIcon = false;
@@ -187,12 +178,72 @@ namespace Tinke
             ventana.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             ventana.MaximizeBox = false;
 
-            pic.Image = Imagen_NCER.Obtener_Imagen(ncer.cebk.banks[comboCelda.SelectedIndex], ncer.cebk.block_size,
-                tile, paleta, checkEntorno.Checked, checkCelda.Checked, checkNumber.Checked, checkTransparencia.Checked,
-                checkImagen.Checked, 512, 512);
+            pic.Image = ActualizarFullImagen();
 
             ventana.Controls.Add(pic);
             ventana.Show();
+        }
+
+        private void btnBgdTrans_Click(object sender, EventArgs e)
+        {
+            btnBgdTrans.Enabled = false;
+
+            pictureBgd.BackColor = Color.Transparent;
+            imgBox.BackColor = Color.Transparent;
+        }
+        private void btnBgd_Click(object sender, EventArgs e)
+        {
+            ColorDialog o = new ColorDialog();
+            o.AllowFullOpen = true;
+            o.AnyColor = true;
+
+            if (o.ShowDialog() == DialogResult.OK)
+            {
+                pictureBgd.BackColor = o.Color;
+                imgBox.BackColor = o.Color;
+                btnBgdTrans.Enabled = true;
+            }
+        }
+
+        private void trackZoom_Scroll(object sender, EventArgs e)
+        {
+            ActualizarImagen();
+        }
+
+        private Image ActualizarImagen()
+        {
+            // Devolvemos la imagen a su estado inicial
+            imgBox.Image = Imagen_NCER.Obtener_Imagen(ncer.cebk.banks[comboCelda.SelectedIndex], ncer.cebk.block_size,
+                tile, paleta, checkEntorno.Checked, checkCelda.Checked, checkNumber.Checked, checkTransparencia.Checked,
+                checkImagen.Checked);
+
+            float scale = trackZoom.Value / 100f;
+            int wSize = (int)(imgBox.Image.Width * scale);
+            int hSize = (int)(imgBox.Image.Height * scale);
+
+            Bitmap imagen = new Bitmap(wSize, hSize);
+            Graphics graficos = Graphics.FromImage(imagen);
+            graficos.DrawImage(imgBox.Image, wSize / 2 - wSize + 128, wSize / 2 - hSize + 128, wSize, hSize);
+            imgBox.Image = imagen;
+
+            return imagen;
+        }
+        private Image ActualizarFullImagen()
+        {
+            // Devolvemos la imagen a su estado inicial
+            imgBox.Image = Imagen_NCER.Obtener_Imagen(ncer.cebk.banks[comboCelda.SelectedIndex], ncer.cebk.block_size,
+                tile, paleta, checkEntorno.Checked, checkCelda.Checked, checkNumber.Checked, checkTransparencia.Checked,
+                checkImagen.Checked, 512, 512);
+
+            float scale = trackZoom.Value / 100f;
+            int wSize = (int)(imgBox.Image.Width * scale);
+            int hSize = (int)(imgBox.Image.Height * scale);
+
+            Bitmap imagen = new Bitmap(wSize, hSize);
+            Graphics graficos = Graphics.FromImage(imagen);
+            graficos.DrawImage(imgBox.Image, 0, 0, wSize, hSize);
+
+            return imagen;
         }
 
     }
