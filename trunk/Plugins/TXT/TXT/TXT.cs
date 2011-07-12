@@ -46,9 +46,23 @@ namespace TXT
             string txt = "";
             
             BinaryReader br = new BinaryReader(File.OpenRead(archivo));
-            
-            for (int i = 0; i < br.BaseStream.Length; i++)
-            	txt += (char)br.ReadByte();
+
+            if (br.ReadUInt16() == 0xFEFF)  // Codificación UNICODE
+            {
+                for (int i = 2; i < br.BaseStream.Length; i += 2)
+                {
+                    txt += (char)br.ReadByte();
+                    if (br.BaseStream.Position != br.BaseStream.Length - 1) // Fin del archivo
+                        br.ReadByte(); // Siempre 0x00
+                }
+            }
+            else
+            {
+                br.BaseStream.Position = 0x00;
+                for (int i = 0; i < br.BaseStream.Length; i++)
+                    txt += (char)br.ReadByte();
+            }
+
             
             #region Convierte caracteres especiales
             #region Encontrados en los juegos LAYTON

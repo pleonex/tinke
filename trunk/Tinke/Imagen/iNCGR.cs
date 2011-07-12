@@ -164,10 +164,10 @@ namespace Tinke
             PictureBox pcBox = new PictureBox();
             pcBox.Image = pic.Image;
             pcBox.SizeMode = PictureBoxSizeMode.AutoSize;
-            pcBox.BackColor = Color.Transparent;
+            pcBox.BackColor = pictureBgd.BackColor; ;
 
             ven.Controls.Add(pcBox);
-            ven.BackColor = pictureBgd.BackColor;
+            ven.BackColor = SystemColors.GradientInactiveCaption;
             ven.Text = Tools.Helper.ObtenerTraduccion("NCGR","S19");
             ven.AutoScroll = true;
             ven.MaximumSize = new Size(1024, 700);
