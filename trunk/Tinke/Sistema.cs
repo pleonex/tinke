@@ -65,7 +65,7 @@ namespace Tinke
                                  Encoding.UTF8);
             }
 
-            // TODO: controlar excepción de fallo al leer xml
+            // TODO: control fallo al leer xml
             XElement xml = XElement.Load(Application.StartupPath + Path.DirectorySeparatorChar + "Tinke.xml");
 
             foreach (string langFile in Directory.GetFiles(Application.StartupPath + Path.DirectorySeparatorChar + "langs"))
@@ -202,10 +202,6 @@ namespace Tinke
             System.Xml.Linq.XElement xml = System.Xml.Linq.XElement.Load(Application.StartupPath + Path.DirectorySeparatorChar + "Tinke.xml");
             xml.Element("Options").Element("Language").Value = idioma;
             xml.Save(Application.StartupPath + Path.DirectorySeparatorChar + "Tinke.xml");
-            // TODO: quitar esto
-            LeerIdioma();
-            romInfo.LeerIdioma();
-            debug.LeerIdioma();
 
             MessageBox.Show(Tools.Helper.ObtenerTraduccion("Messages", "S07"));
         }
@@ -374,7 +370,6 @@ namespace Tinke
 
         private void treeSystem_AfterSelect(object sender, TreeViewEventArgs e)
         {
-            btnExtraer.Enabled = true;
             accion.IDSelect = Convert.ToInt32(e.Node.Tag);
             // Limpiar información anterior
             if (listFile.Items[0].SubItems.Count == 2)
@@ -393,7 +388,7 @@ namespace Tinke
                 btnHex.Enabled = false;
                 btnSee.Enabled = false;
                 toolStripOpenAs.Enabled = false;
-                btnDescomprimir.Enabled = false;
+                btnDescomprimir.Enabled = true;
             }
             else if (Convert.ToUInt16(e.Node.Tag) < 0xF000)
             {
@@ -404,7 +399,7 @@ namespace Tinke
                 listFile.Items[2].SubItems.Add("0x" + String.Format("{0:X}", selectFile.offset));
                 listFile.Items[3].SubItems.Add(selectFile.size.ToString());
                 #region Obtener tipo de archivo traducido
-                switch (accion.Get_Formato())
+                switch (selectFile.formato)
                 {
                     case Formato.Paleta:
                         listFile.Items[4].SubItems.Add(Tools.Helper.ObtenerTraduccion("Sistema", "S20"));
@@ -442,18 +437,20 @@ namespace Tinke
                     case Formato.Desconocido:
                         listFile.Items[4].SubItems.Add(Tools.Helper.ObtenerTraduccion("Sistema", "S2B"));
                         break;
+                    case Formato.Sistema :
+                        listFile.Items[4].SubItems.Add(Tools.Helper.ObtenerTraduccion("Sistema", "S31"));
+                        break;
                 }
                 #endregion
                 listFile.Items[5].SubItems.Add(selectFile.path);
                 btnHex.Enabled = true;
                 toolStripOpenAs.Enabled = true;
 
-                PluginInterface.Formato tipo = accion.Get_Formato();
-                if (tipo != PluginInterface.Formato.Desconocido)
+                if (selectFile.formato != Formato.Desconocido && selectFile.formato != Formato.Sistema)
                     btnSee.Enabled = true;
                 else
                     btnSee.Enabled = false;
-                if (tipo == PluginInterface.Formato.Comprimido)
+                if (selectFile.formato == Formato.Comprimido)
                     btnDescomprimir.Enabled = true;
                 else
                     btnDescomprimir.Enabled = false;
@@ -472,7 +469,7 @@ namespace Tinke
                 btnHex.Enabled = false;
                 btnSee.Enabled = false;
                 toolStripOpenAs.Enabled = false;
-                btnDescomprimir.Enabled = false;
+                btnDescomprimir.Enabled = true;
             }
         }
         private void btnHex_Click(object sender, EventArgs e)
@@ -506,55 +503,81 @@ namespace Tinke
             else
             {
                 panelObj.Controls.Clear();
-                panelObj.Controls.Add(accion.See_File());
-                if (btnDesplazar.Text == ">>>>>")
-                    btnDesplazar.PerformClick();
+                Control control = accion.See_File();
+                if (control.Controls.Count > 0)
+                {
+                    panelObj.Controls.Add(accion.See_File());
+                    if (btnDesplazar.Text == ">>>>>")
+                        btnDesplazar.PerformClick();
+                }
             }
                 debug.Añadir_Texto(sb.ToString());
                 sb.Length = 0;
         }
         private void btnUncompress_Click(object sender, EventArgs e)
         {
-            //if (accion.IDSelect >= 0x0F00)
-            //    Recursivo_UncompressFolder(accion.Select_Folder());    NO FUNCIONA
-            //else
-                UncompressFile(accion.IDSelect);
-        }
-        private void UncompressFile(int id)
-        {
-            Carpeta descomprimidos = accion.Extract(id);
-            if (!(descomprimidos.files is List<Archivo>) && !(descomprimidos.folders is List<Carpeta>)) // En caso de que falle la extracción
-                return;
+            Carpeta uncompress;
 
+            if (accion.IDSelect >= 0x0F00)
+            {
+                if (MessageBox.Show("¿Estás seguro de que deseas descomprimir TODOS los archivos\n" +
+                    "de una carpeta?. Puede tardar bastante...", "Advertencia", MessageBoxButtons.OKCancel, MessageBoxIcon.Exclamation)
+                    == System.Windows.Forms.DialogResult.Cancel)
+                    return;
+                Recursivo_UncompressFolder(accion.Select_Folder());
+                Set_Formato(accion.Root);
+                Get_SupportedFiles();
+                treeSystem.Nodes.Clear();
+                treeSystem.Nodes.Add(Jerarquizar_Nodos(accion.Root));
+                treeSystem.Nodes[0].Expand();
+                return;
+            }
+
+            uncompress = accion.Extract();
+            if (!(uncompress.files is List<Archivo>) && !(uncompress.folders is List<Carpeta>)) // En caso de que falle la extracción
+            {
+                MessageBox.Show("Hubo un fallo al descomprimir.\n¿Seguro que es un archivo comprimido?");
+                return;
+            }
+
+            btnSee.Enabled = false;
+            btnHex.Enabled = false;
             Set_Formato(accion.Root);
             Get_SupportedFiles();
-            TreeNode selected = treeSystem.SelectedNode;
-            CarpetaANodo(descomprimidos, ref selected);
 
+            TreeNode selected = treeSystem.SelectedNode;
+            CarpetaANodo(uncompress, ref selected);
+
+            // Agregamos los nodos al árbol
             TreeNode[] nodos = new TreeNode[selected.Nodes.Count]; selected.Nodes.CopyTo(nodos, 0);
             treeSystem.SelectedNode.Tag = selected.Tag;
             accion.IDSelect = Convert.ToInt32(selected.Tag);
             selected.Nodes.Clear();
-            treeSystem.SelectedNode.Nodes.AddRange((TreeNode[])nodos);
 
-            btnDescomprimir.Enabled = false;
-            btnSee.Enabled = false;
-            btnHex.Enabled = false;
+            treeSystem.SelectedNode.Nodes.AddRange((TreeNode[])nodos);
+            treeSystem.SelectedNode.Expand();
 
             debug.Añadir_Texto(sb.ToString());
             sb.Length = 0;
         }
         private void Recursivo_UncompressFolder(Carpeta currFolder)
         {
-            if (currFolder.files is List<Archivo>)
-                foreach (Archivo archivo in currFolder.files)
-                    if (archivo.formato == Formato.Comprimido)
-                        UncompressFile(archivo.id);
-
-
             if (currFolder.folders is List<Carpeta>)
-                foreach (Carpeta subFolder in currFolder.folders)
-                     Recursivo_UncompressFolder(subFolder);
+            {
+                Carpeta[] carpetas = new Carpeta[currFolder.folders.Count];
+                currFolder.folders.CopyTo(carpetas);
+                foreach (Carpeta subFolder in carpetas)
+                    Recursivo_UncompressFolder(subFolder);
+            }
+
+            if (currFolder.files is List<Archivo>)
+            {
+                Archivo[] archivos = new Archivo[currFolder.files.Count];
+                currFolder.files.CopyTo(archivos);
+                foreach (Archivo archivo in archivos)
+                    if (archivo.formato == Formato.Comprimido)
+                        accion.Extract(archivo.id);
+            }
         }
         private void btnExtraer_Click(object sender, EventArgs e)
         {

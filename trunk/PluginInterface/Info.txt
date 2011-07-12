@@ -2,8 +2,8 @@
  a los cinco formatos predeterminados de Nintendo. Estos son:
 
  - NCLR ( paletas )
- - NCGR ( tile )
- - NSCR ( información de tiles )
+ - NCGR ( tiles )
+ - NSCR ( map )
  - NCER ( celdas )
  - NANR ( animación )
 
@@ -14,7 +14,7 @@
 
 + Paleta
 + Tile
-+ Información de tiles
++ Map
 + Celdas
 + Animación
 + ImagenCompleta (se puede visualizar)
@@ -23,6 +23,7 @@
 + Sonido
 + Fuente
 + Comprimido
++ Sistema (archivos como FAT y FNT)
 
 	* El segundo deberá guardar la información en el HostPlugin:
 

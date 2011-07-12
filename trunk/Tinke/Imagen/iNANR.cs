@@ -45,6 +45,32 @@ namespace Tinke
             InitializeComponent();
             LeerIdioma();
         }
+        public iNANR(Bitmap[] animaciones, int intervalo)
+        {
+            // Constructor para que sólo se vea una animación en bucle en el picturebox.
+            InitializeComponent();
+            LeerIdioma();
+
+            groupBox1.Hide();
+            groupBox2.Hide();
+            btnNext.Hide();
+            btnPlay.Hide();
+            btnPrevious.Hide();
+            btnSave.Hide();
+            btnStop.Hide();
+            label1.Hide();
+            label2.Hide();
+            label3.Hide();
+            comboAni.Hide();
+            txtTime.Hide();
+
+            bitAni = animaciones;
+            aniBox.Dock = DockStyle.Fill;
+            aniBox.Image = bitAni[0];
+            tempo.Interval = intervalo;
+            tempo.Enabled = true;
+            tempo.Start();
+        }
         public iNANR(NCLR paleta, NCGR tiles, NCER celdas, NANR ani)
         {
             InitializeComponent();
@@ -211,6 +237,30 @@ namespace Tinke
 
             if (o.ShowDialog() == DialogResult.OK)
                 Tools.APNG.Crear_APNG(bitAni, o.FileName, Convert.ToInt32(txtTime.Text) / 10, 0x00);            
+        }
+
+        private void aniBox_DoubleClick(object sender, EventArgs e)
+        {
+            Form ventana = new Form();
+            ventana.FormBorderStyle = FormBorderStyle.FixedSingle;
+            ventana.Size = new System.Drawing.Size(512, 512);
+            ventana.Text = Tools.Helper.ObtenerTraduccion("NANR", "S1D");
+            ventana.MaximizeBox = false;
+            ventana.ShowIcon = false;
+
+            int id = comboAni.SelectedIndex;
+            Bitmap[] animaciones = new Bitmap[ani.abnk.anis[id].nFrames];
+            for (int i = 0; i < ani.abnk.anis[id].nFrames; i++)
+            {
+                animaciones[i] = Imagen_NCER.Obtener_Imagen(celdas.cebk.banks[ani.abnk.anis[id].frames[i].data.nCell], celdas.cebk.block_size,
+                    tiles, paleta, checkEntorno.Checked, checkCeldas.Checked, checkNumeros.Checked, checkTransparencia.Checked,
+                    checkImage.Checked, 512, 512);
+            }
+
+            iNANR control = new iNANR(animaciones, Convert.ToInt32(txtTime.Text));
+            control.Dock = DockStyle.Fill;
+            ventana.Controls.Add(control);
+            ventana.Show();
         }
     }
 }

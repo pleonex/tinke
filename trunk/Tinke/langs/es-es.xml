@@ -49,6 +49,7 @@
       <S2E>Búsqueda instantánea</S2E>
       <S2F>Palabras claves de búsqueda:</S2F>
       <S30>Archivos reconocidos:</S30>
+      <S31>Sistema</S31>
     </Sistema>
   <RomInfo>
       <S01>Información de la ROM</S01>
@@ -243,5 +244,6 @@
 		<S1A>Datos frame</S1A>
 		<S1B>Número de celda</S1B>
 		<S1C>Guardar</S1C>
+    <S1D>Animaciones</S1D>
 	</NANR>
 </Language>

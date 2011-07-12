@@ -49,37 +49,37 @@ namespace Tinke
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.ListViewItem listViewItem12 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem(new string[] {
             "0x06",
             "S06"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem13 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem(new string[] {
             "0x0E",
             "S07"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem14 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem(new string[] {
             "0x10",
             "S08"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem15 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem4 = new System.Windows.Forms.ListViewItem(new string[] {
             "0x14",
             "S09"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem16 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem5 = new System.Windows.Forms.ListViewItem(new string[] {
             "0x18",
             "S0A"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem17 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem6 = new System.Windows.Forms.ListViewItem(new string[] {
             "0x1A",
             "S0B"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem18 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem7 = new System.Windows.Forms.ListViewItem(new string[] {
             "0x1C",
             "S0C"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem19 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem8 = new System.Windows.Forms.ListViewItem(new string[] {
             "0x20",
             "S0D"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem20 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem9 = new System.Windows.Forms.ListViewItem(new string[] {
             "0x24",
             "S0E"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem21 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem10 = new System.Windows.Forms.ListViewItem(new string[] {
             "0x28",
             "S0F"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem22 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem11 = new System.Windows.Forms.ListViewItem(new string[] {
             "0x2C",
             "S10"}, -1);
             this.numericWidth = new System.Windows.Forms.NumericUpDown();
@@ -87,6 +87,7 @@ namespace Tinke
             this.label2 = new System.Windows.Forms.Label();
             this.numericHeight = new System.Windows.Forms.NumericUpDown();
             this.groupProp = new System.Windows.Forms.GroupBox();
+            this.btnTransparency = new System.Windows.Forms.Button();
             this.comboImages = new System.Windows.Forms.ComboBox();
             this.btnDividir = new System.Windows.Forms.Button();
             this.label6 = new System.Windows.Forms.Label();
@@ -102,7 +103,6 @@ namespace Tinke
             this.columnValor = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.pic = new System.Windows.Forms.PictureBox();
             this.label5 = new System.Windows.Forms.Label();
-            this.btnTransparency = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.numericWidth)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericHeight)).BeginInit();
             this.groupProp.SuspendLayout();
@@ -206,6 +206,16 @@ namespace Tinke
             this.groupProp.TabStop = false;
             this.groupProp.Text = "S02";
             // 
+            // btnTransparency
+            // 
+            this.btnTransparency.Location = new System.Drawing.Point(7, 323);
+            this.btnTransparency.Name = "btnTransparency";
+            this.btnTransparency.Size = new System.Drawing.Size(108, 23);
+            this.btnTransparency.TabIndex = 14;
+            this.btnTransparency.Text = "S1C";
+            this.btnTransparency.UseVisualStyleBackColor = true;
+            this.btnTransparency.Click += new System.EventHandler(this.btnTransparency_Click);
+            // 
             // comboImages
             // 
             this.comboImages.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
@@ -242,8 +252,7 @@ namespace Tinke
             this.comboBox1.FormattingEnabled = true;
             this.comboBox1.Items.AddRange(new object[] {
             "S16",
-            "S17",
-            "S18"});
+            "S17"});
             this.comboBox1.Location = new System.Drawing.Point(115, 295);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(121, 21);
@@ -296,7 +305,7 @@ namespace Tinke
             // 
             this.numericStart.Location = new System.Drawing.Point(50, 243);
             this.numericStart.Maximum = new decimal(new int[] {
-            1024,
+            65535,
             0,
             0,
             0});
@@ -312,17 +321,17 @@ namespace Tinke
             this.columnValor});
             this.listInfo.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.listInfo.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem12,
-            listViewItem13,
-            listViewItem14,
-            listViewItem15,
-            listViewItem16,
-            listViewItem17,
-            listViewItem18,
-            listViewItem19,
-            listViewItem20,
-            listViewItem21,
-            listViewItem22});
+            listViewItem1,
+            listViewItem2,
+            listViewItem3,
+            listViewItem4,
+            listViewItem5,
+            listViewItem6,
+            listViewItem7,
+            listViewItem8,
+            listViewItem9,
+            listViewItem10,
+            listViewItem11});
             this.listInfo.Location = new System.Drawing.Point(7, 20);
             this.listInfo.Name = "listInfo";
             this.listInfo.Size = new System.Drawing.Size(229, 216);
@@ -366,16 +375,6 @@ namespace Tinke
             this.label5.Size = new System.Drawing.Size(26, 13);
             this.label5.TabIndex = 6;
             this.label5.Text = "S01";
-            // 
-            // btnTransparency
-            // 
-            this.btnTransparency.Location = new System.Drawing.Point(7, 323);
-            this.btnTransparency.Name = "btnTransparency";
-            this.btnTransparency.Size = new System.Drawing.Size(108, 23);
-            this.btnTransparency.TabIndex = 14;
-            this.btnTransparency.Text = "S1C";
-            this.btnTransparency.UseVisualStyleBackColor = true;
-            this.btnTransparency.Click += new System.EventHandler(this.btnTransparency_Click);
             // 
             // iNCGR
             // 

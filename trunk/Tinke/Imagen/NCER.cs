@@ -56,6 +56,8 @@ namespace Tinke
             ncer.cebk.unknown1 = br.ReadUInt32();
             ncer.cebk.unknown2 = br.ReadUInt64();
             ncer.cebk.banks = new Bank[ncer.cebk.nBanks];
+
+            uint tilePos = 0x00; // En caso de que Unknown 1 != 0x00
             // Lee cada banco
             for (int i = 0; i < ncer.cebk.nBanks; i++)
             {
@@ -85,11 +87,22 @@ namespace Tinke
                     Size tamaño = Obtener_Tamaño(Tools.Helper.ByteTo4Bits(byte1)[0], Tools.Helper.ByteTo4Bits(byte2)[0]);
                     ncer.cebk.banks[i].cells[j].height = (ushort)tamaño.Height;
                     ncer.cebk.banks[i].cells[j].width = (ushort)tamaño.Width;
+
                     ncer.cebk.banks[i].cells[j].tileOffset = (uint)(br.ReadUInt16() & 0x03FF);
-                    if (ncer.cebk.unknown1 == 0xAC) // Ni idea de porqué pero parece que funciona (solo encontrado en un archivo de Pokemon)
-                        ncer.cebk.banks[i].cells[j].tileOffset = (uint)(0x01 * i + j);
+                    if (ncer.cebk.unknown1 != 0x00)
+                        if ((ncer.cebk.unknown1 & 0x100) == 0x00)
+                            ncer.cebk.banks[i].cells[j].tileOffset = (uint)(i + ncer.cebk.banks[i].cells[j].tileOffset);
+                        else
+                            ncer.cebk.banks[i].cells[j].tileOffset += tilePos;
+
                     ncer.cebk.banks[i].cells[j].yFlip = (Tools.Helper.ByteTo4Bits(byte2)[0] & 2) == 2 ? true : false;
                     ncer.cebk.banks[i].cells[j].xFlip = (Tools.Helper.ByteTo4Bits(byte2)[0] & 1) == 1 ? true : false;
+                }
+                if (ncer.cebk.unknown1 != 0x00)
+                {
+                    Cell ultimaCelda = ncer.cebk.banks[i].cells[ncer.cebk.banks[i].nCells - 1];
+                    int ultimaCeldaSize = ultimaCelda.height * ultimaCelda.width / 64 / 2;
+                    tilePos += (uint)((ultimaCelda.tileOffset - tilePos) + ultimaCeldaSize);
                 }
                 br.BaseStream.Position = posicion;
             }
@@ -99,13 +112,13 @@ namespace Tinke
             br.BaseStream.Position = ncer.header.header_size + ncer.cebk.section_size;
             List<uint> offsets = new List<uint>();
             List<String> names = new List<string>();
+            ncer.labl.names = new string[ncer.cebk.nBanks];
 
             ncer.labl.id = br.ReadChars(4);
             if (new String(ncer.labl.id) != "LBAL")
                 goto Tercera;
             ncer.labl.section_size = br.ReadUInt32();
 
-            ncer.labl.names = new string[ncer.cebk.nBanks];
             // Primero se encuentran los offset a los nombres.
             for (int i = 0; i < ncer.cebk.nBanks; i++)
             {

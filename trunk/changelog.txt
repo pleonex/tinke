@@ -1,0 +1,7 @@
+0.6.5:
+* Minor problems fixed
+* Add new format file: 'System' (ie: overlays, FAT, FNT...)
+* Add support for the game AIIJ
+* Add support for SDAT files
+* Add support for SWAV sound files
+* Add support for SWAR sound files
