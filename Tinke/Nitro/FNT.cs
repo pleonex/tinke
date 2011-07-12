@@ -95,7 +95,7 @@ namespace Tinke.Nitro
             currFolder.id = (ushort)idFolder;
             currFolder.files = tables[idFolder & 0xFFF].subTable.files;
 
-           if (tables[idFolder & 0xFFF].subTable.folders is List<Carpeta>) // Si tiene carpetas dentro.
+            if (tables[idFolder & 0xFFF].subTable.folders is List<Carpeta>) // Si tiene carpetas dentro.
            {
                 currFolder.folders = new List<Carpeta>();
 
@@ -103,9 +103,7 @@ namespace Tinke.Nitro
                     currFolder.folders.Add(Jerarquizar_Carpetas(tables, subFolder.id, subFolder.name));
            }
 
-           return currFolder;
+            return currFolder;
         }
-
-
     }
 }

@@ -506,7 +506,7 @@ namespace Tinke
                 Control control = accion.See_File();
                 if (control.Controls.Count > 0)
                 {
-                    panelObj.Controls.Add(accion.See_File());
+                    panelObj.Controls.Add(control);
                     if (btnDesplazar.Text == ">>>>>")
                         btnDesplazar.PerformClick();
                 }

@@ -475,7 +475,7 @@ namespace SDAT
                     Sound newSound = sdat.files.root.folders[0].files[nFile];
                     newSound.id = id;
                     if (sdat.cabecera.symbSize != 0x00) // Si existe la sección SYMBOL
-                        newSound.name = sdat.symbol.records[0].entries[i]; 
+                        newSound.name = sdat.symbol.records[0].entries[i] + ".SSEQ"; 
                     sdat.files.root.folders[0].files[nFile] = newSound;
                 }
                 else
@@ -485,8 +485,8 @@ namespace SDAT
             }
 
             // SSAR
-            /* nFile = 0;
-             oldIDs.Clear();
+            nFile = 0;
+            oldIDs.Clear();
             for (int i = 0; i < sdat.info.block[1].nEntries; i++)
             {
                 uint id = ((Info.SEQARC)sdat.info.block[1].entries[i]).fileID;
@@ -499,15 +499,15 @@ namespace SDAT
 
                     Sound newSound = sdat.files.root.folders[1].files[nFile];
                     newSound.id = id;
-                    //if (sdat.cabecera.symbSize != 0x00) // Si existe la sección SYMBOL
-                    //    newSound.name = sdat.symbol.records[0].entries[i]; // TODO: SYMBOL SSAR
+                    if (sdat.cabecera.symbSize != 0x00) // Si existe la sección SYMBOL
+                        newSound.name = sdat.symbol.record2.group[i].groupName + ".SSAR"; // TODO: SYMBOL SSAR
                     sdat.files.root.folders[1].files[nFile] = newSound;
                 }
                 else
                     continue;
 
                 nFile++;
-            }*/
+            }
 
             // SBNK
             nFile = 0;
@@ -525,7 +525,7 @@ namespace SDAT
                     Sound newSound = sdat.files.root.folders[2].files[nFile];
                     newSound.id = id;
                     if (sdat.cabecera.symbSize != 0x00) // Si existe la sección SYMBOL
-                        newSound.name = sdat.symbol.records[1].entries[i];
+                        newSound.name = sdat.symbol.records[1].entries[i] + ".SBNK";
                     sdat.files.root.folders[2].files[nFile] = newSound;
                 }
                 else
@@ -550,7 +550,7 @@ namespace SDAT
                     Sound newSound = sdat.files.root.folders[3].files[nFile];
                     newSound.id = id;
                     if (sdat.cabecera.symbSize != 0x00) // Si existe la sección SYMBOL
-                        newSound.name = sdat.symbol.records[2].entries[i];
+                        newSound.name = sdat.symbol.records[2].entries[i] + ".SWAR";
                     sdat.files.root.folders[3].files[nFile] = newSound;
                 }
                 else
@@ -575,7 +575,7 @@ namespace SDAT
                     Sound newSound = sdat.files.root.folders[4].files[nFile];
                     newSound.id = id;
                     if (sdat.cabecera.symbSize != 0x00) // Si existe la sección SYMBOL
-                        newSound.name = sdat.symbol.records[7].entries[i];
+                        newSound.name = sdat.symbol.records[6].entries[i] + ".STRM";
                     sdat.files.root.folders[4].files[nFile] = newSound;
                 }
                 else
