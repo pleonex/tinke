@@ -1,0 +1,25 @@
+#summary Especificación de PCM (Pack CoMpress)
+#labels Formato
+
+Formato encontrado en el juego "El profesor Layton y la villa misteriosa" versión EUR. Son archivos de paquetes, es decir,
+contienen uno o más de un archivo dentro de él.
+
+Pueden tener compresión LZ77 (primer byte = 0x10)
+
+= Detalles =
+
+|| *Posición* || *Tamaño* || *Descripción* ||
+|| 0x00   || 4        || Tamaño de la cabecera, suele ser 0x10 ||
+|| 0x04   || 4        || Tamaño del archivo ||
+|| 0x08   || 4        || Número de archivos||
+|| 0x0C   || 4        || Magic ID (LPCK = List PaCK) ||
+
+Aquí comienzan los archivos:
+
+|| *Posición* || *Tamaño* || *Descripción* ||
+|| 0x00   || 4        || Indicador del comienzo de un archivo, debería ser 0x20 ||
+|| 0x04   || 4        || Tamaño del archivo ||
+|| 0x08   || 4        || Desconocido, siempre 0x00 ¿padding? ||
+|| 0x0C   || 4        || Tamaño de los datos ||
+|| 0x10   || 16 (0x10)|| Nombre del archivo ||
+|| 0x20   || ...      || Datos del archivo ||
