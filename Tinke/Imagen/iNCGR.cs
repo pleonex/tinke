@@ -228,7 +228,7 @@ namespace Tinke
             btnSave.Text = xml.Element("S15").Value;
             comboBox1.Items[0] = xml.Element("S16").Value;
             comboBox1.Items[1] = xml.Element("S17").Value;
-            comboBox1.Items[2] = xml.Element("S18").Value;
+            //comboBox1.Items[2] = xml.Element("S18").Value;
             btnDividir.Text = xml.Element("S1A").Value;
             btnTransparency.Text = xml.Element("S1C").Value;
         }

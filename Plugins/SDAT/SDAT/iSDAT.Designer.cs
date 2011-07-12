@@ -51,10 +51,10 @@ namespace SDAT
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(iSDAT));
-            System.Windows.Forms.ListViewItem listViewItem17 = new System.Windows.Forms.ListViewItem("ID");
-            System.Windows.Forms.ListViewItem listViewItem18 = new System.Windows.Forms.ListViewItem("Formato");
-            System.Windows.Forms.ListViewItem listViewItem19 = new System.Windows.Forms.ListViewItem("Offset");
-            System.Windows.Forms.ListViewItem listViewItem20 = new System.Windows.Forms.ListViewItem("Tamaño");
+            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("ID");
+            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("Formato");
+            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem("Offset");
+            System.Windows.Forms.ListViewItem listViewItem4 = new System.Windows.Forms.ListViewItem("Tamaño");
             this.treeFiles = new System.Windows.Forms.TreeView();
             this.imageList = new System.Windows.Forms.ImageList(this.components);
             this.listProp = new System.Windows.Forms.ListView();
@@ -65,6 +65,7 @@ namespace SDAT
             this.btnWav = new System.Windows.Forms.Button();
             this.btnMidi = new System.Windows.Forms.Button();
             this.btnStop = new System.Windows.Forms.Button();
+            this.btnUncompress = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // treeFiles
@@ -90,6 +91,7 @@ namespace SDAT
             this.imageList.Images.SetKeyName(4, "bell.png");
             this.imageList.Images.SetKeyName(5, "resultset_next.png");
             this.imageList.Images.SetKeyName(6, "stop.png");
+            this.imageList.Images.SetKeyName(7, "package.png");
             // 
             // listProp
             // 
@@ -97,10 +99,10 @@ namespace SDAT
             this.columnCampo,
             this.columnValor});
             this.listProp.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem17,
-            listViewItem18,
-            listViewItem19,
-            listViewItem20});
+            listViewItem1,
+            listViewItem2,
+            listViewItem3,
+            listViewItem4});
             this.listProp.Location = new System.Drawing.Point(251, 3);
             this.listProp.Name = "listProp";
             this.listProp.Size = new System.Drawing.Size(256, 104);
@@ -125,7 +127,7 @@ namespace SDAT
             this.btnExtract.ImageList = this.imageList;
             this.btnExtract.Location = new System.Drawing.Point(251, 472);
             this.btnExtract.Name = "btnExtract";
-            this.btnExtract.Size = new System.Drawing.Size(93, 35);
+            this.btnExtract.Size = new System.Drawing.Size(100, 35);
             this.btnExtract.TabIndex = 2;
             this.btnExtract.Text = "Extraer";
             this.btnExtract.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
@@ -148,9 +150,9 @@ namespace SDAT
             // 
             this.btnWav.Enabled = false;
             this.btnWav.ImageIndex = 5;
-            this.btnWav.Location = new System.Drawing.Point(415, 432);
+            this.btnWav.Location = new System.Drawing.Point(407, 432);
             this.btnWav.Name = "btnWav";
-            this.btnWav.Size = new System.Drawing.Size(92, 34);
+            this.btnWav.Size = new System.Drawing.Size(100, 34);
             this.btnWav.TabIndex = 4;
             this.btnWav.Text = "Guardar WAV";
             this.btnWav.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
@@ -160,9 +162,9 @@ namespace SDAT
             // btnMidi
             // 
             this.btnMidi.Enabled = false;
-            this.btnMidi.Location = new System.Drawing.Point(415, 472);
+            this.btnMidi.Location = new System.Drawing.Point(408, 472);
             this.btnMidi.Name = "btnMidi";
-            this.btnMidi.Size = new System.Drawing.Size(92, 35);
+            this.btnMidi.Size = new System.Drawing.Size(99, 35);
             this.btnMidi.TabIndex = 5;
             this.btnMidi.Text = "Guardar MIDI";
             this.btnMidi.UseVisualStyleBackColor = true;
@@ -178,12 +180,27 @@ namespace SDAT
             this.btnStop.UseVisualStyleBackColor = true;
             this.btnStop.Click += new System.EventHandler(this.btnStop_Click);
             // 
+            // btnUncompress
+            // 
+            this.btnUncompress.Enabled = false;
+            this.btnUncompress.ImageKey = "package.png";
+            this.btnUncompress.ImageList = this.imageList;
+            this.btnUncompress.Location = new System.Drawing.Point(251, 432);
+            this.btnUncompress.Name = "btnUncompress";
+            this.btnUncompress.Size = new System.Drawing.Size(100, 34);
+            this.btnUncompress.TabIndex = 7;
+            this.btnUncompress.Text = "Descomprimir";
+            this.btnUncompress.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnUncompress.UseVisualStyleBackColor = true;
+            this.btnUncompress.Click += new System.EventHandler(this.btnUncompress_Click);
+            // 
             // iSDAT
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Transparent;
             this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.Controls.Add(this.btnUncompress);
             this.Controls.Add(this.btnStop);
             this.Controls.Add(this.btnMidi);
             this.Controls.Add(this.btnWav);
@@ -209,5 +226,6 @@ namespace SDAT
         private System.Windows.Forms.Button btnWav;
         private System.Windows.Forms.Button btnMidi;
         private System.Windows.Forms.Button btnStop;
+        private System.Windows.Forms.Button btnUncompress;
     }
 }

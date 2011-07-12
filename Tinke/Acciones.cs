@@ -170,6 +170,8 @@ namespace Tinke
                     return 14;
                 case Formato.Video:
                     return 13;
+                case Formato.Sistema:
+                    return 17;
                 case Formato.Desconocido:
                 default:
                     return 1;
@@ -190,11 +192,7 @@ namespace Tinke
                 br = new BinaryReader(File.OpenRead(file));
                 br.BaseStream.Position = selectFile.offset;
 
-                BinaryWriter bw = new BinaryWriter(new FileStream(tempFile, FileMode.Create));
-                bw.Write(br.ReadBytes((int)selectFile.size));
-                bw.Flush();
-                bw.Close();
-
+                File.WriteAllBytes(tempFile, br.ReadBytes((int)selectFile.size));
                 br.BaseStream.Position = selectFile.offset;
             }
             else
@@ -389,14 +387,18 @@ namespace Tinke
                         return control;
                     }
                     else
+                    {
+                        MessageBox.Show("Para ver este archivo necesitas guardar la información (doble click sobre el archivo)" +
+                            " de una paleta");
                         return new Control();
+                    }
                 }
                 else if (formato == Formato.Screen)
                 {
                     NSCR nscr = Imagen_NSCR.Leer_Basico(tempFile);
                     pluginHost.Set_NSCR(nscr);
                     File.Delete(tempFile);
-                    
+
                     if (pluginHost.Get_NCGR().cabecera.file_size != 0x00 || pluginHost.Get_NCLR().cabecera.file_size != 0x00)
                     {
                         NCGR tile = pluginHost.Get_NCGR();
@@ -408,7 +410,12 @@ namespace Tinke
                         control.Dock = DockStyle.Fill;
                         return control;
                     }
-                    return new Control();
+                    else
+                    {
+                        MessageBox.Show("Para ver este archivo necesitas guardar la información (doble click sobre el archivo)" +
+                            " de una paleta y una imagen (tiles)");
+                        return new Control();
+                    }
                 }
 
             }
@@ -454,12 +461,14 @@ namespace Tinke
 
             return currFolder;
         }
-        public void Add_Files(Carpeta files)
+        public void Add_Files(Carpeta files, int id)
         {
-            files.name = Select_File().name;
-            root = FileToFolder(Select_File().id, root);
-            files = Add_ID(files); 
-            Add_Files(files, (ushort)(lastFolderId - 1), root);
+            Archivo file = Search_File(id); // Archivo descomprimido
+            files.name = file.name;
+            root = FileToFolder(file.id, root);
+            ushort idFolder = (ushort)(LastFolderID - 1); // ID que le hemos asignado a la nueva carpeta NARC
+            files = Add_ID(files);
+            Add_Files(files, idFolder, root);
         }
         public Carpeta Add_Files(Carpeta files, ushort idFolder, Carpeta currFolder)
         {
@@ -606,7 +615,7 @@ namespace Tinke
                 {
                     if (archivo.formato == formato)
                     {
-                        if (archivo.name.StartsWith("overlay9") || archivo.name == "fnt.bin") // Archivos de la cabecera de la ROM
+                        if (!archivo.name.Contains('.')) // Archivos de nombre desconocido
                             continue;
                         if (formato == Formato.Imagen || formato == Formato.Celdas ||
                             formato == Formato.Animación || formato == Formato.Screen)
@@ -833,6 +842,8 @@ namespace Tinke
                 return Formato.Celdas;
             else if (currFile.name.EndsWith(".NANR") || new String(Encoding.ASCII.GetChars(ext)) == "NANR" || new String(Encoding.ASCII.GetChars(ext)) == "RNAN")
                 return Formato.Animación;
+            else if (currFile.name == "FNT.BIN" || currFile.name.StartsWith("OVERLAY9_") || currFile.name.StartsWith("OVERLAY7_"))
+                return Formato.Sistema;
 
             if (ext[0] == LZ77_TAG || ext[0] == LZSS_TAG || ext[0] == RLE_TAG || ext[0] == HUFF_TAG)
                 return Formato.Comprimido;
@@ -857,11 +868,7 @@ namespace Tinke
                 tempFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + selectFile.name;
                 br = new BinaryReader(File.OpenRead(file));
                 br.BaseStream.Position = selectFile.offset;
-
-                BinaryWriter bw = new BinaryWriter(new FileStream(tempFile, FileMode.Create));
-                bw.Write(br.ReadBytes((int)selectFile.size));
-                bw.Flush();
-                bw.Close();
+                File.WriteAllBytes(tempFile, br.ReadBytes((int)selectFile.size));
 
                 br.BaseStream.Position = selectFile.offset;
             }
@@ -930,7 +937,7 @@ namespace Tinke
             // Comprobamos y eliminamos los archivos de tamaño 0 Bytes
             Recursivo_EliminarArchivosNulos(desc);
 
-            Add_Files(desc);    // Añadimos los archivos descomprimidos al árbol de archivos
+            Add_Files(desc, id);    // Añadimos los archivos descomprimidos al árbol de archivos
             return desc;
         }
         private void Recursivo_EliminarArchivosNulos(Carpeta carpeta)
@@ -1023,11 +1030,7 @@ namespace Tinke
                 br = new BinaryReader(File.OpenRead(file));
                 br.BaseStream.Position = selectFile.offset;
 
-                BinaryWriter bw = new BinaryWriter(new FileStream(tempFile, FileMode.Create));
-                bw.Write(br.ReadBytes((int)selectFile.size));
-                bw.Flush();
-                bw.Close();
-
+                File.WriteAllBytes(tempFile, br.ReadBytes((int)selectFile.size));
                 br.BaseStream.Position = selectFile.offset;
             }
             else
@@ -1039,7 +1042,6 @@ namespace Tinke
             }
 
             byte[] ext = br.ReadBytes(4);
-
             br.Close();
 
             #region Búsqueda y llamada a plugin
@@ -1074,7 +1076,6 @@ namespace Tinke
             }
             catch (Exception e)
             {
-                MessageBox.Show(e.Message);
                 Console.WriteLine(e.Message);
                 try { File.Delete(tempFile); }
                 catch { }
@@ -1109,7 +1110,11 @@ namespace Tinke
                         return control;
                     }
                     else
+                    {
+                        MessageBox.Show("Para ver este archivo necesitas guardar la información (doble click sobre el archivo)" +
+                            " de una paleta");
                         return new Control();
+                    }
                 }
                 else if (selectFile.name.EndsWith(".NSCR") || new String(Encoding.ASCII.GetChars(ext)) == "NSCR" || new String(Encoding.ASCII.GetChars(ext)) == "RCSN")
                 {
@@ -1126,7 +1131,12 @@ namespace Tinke
                         control.Dock = DockStyle.Fill;
                         return control;
                     }
-                    return new Control();
+                    else
+                    {
+                        MessageBox.Show("Para ver este archivo necesitas guardar la información (doble click sobre el archivo)" +
+                            " de una paleta y una imagen (tiles)");
+                        return new Control();
+                    }
                 }
                 else if (selectFile.name.EndsWith(".NCER") || new String(Encoding.ASCII.GetChars(ext)) == "NCER" || new String(Encoding.ASCII.GetChars(ext)) == "RECN")
                 {
@@ -1140,8 +1150,12 @@ namespace Tinke
 
                         return control;
                     }
-
-                    return new Control();
+                    else
+                    {
+                        MessageBox.Show("Para ver este archivo necesitas guardar la información (doble click sobre el archivo)" +
+                            " de una paleta y una imagen (tiles)");
+                        return new Control();
+                    }
                 }
                 else if (selectFile.name.EndsWith(".NANR") || new String(Encoding.ASCII.GetChars(ext)) == "NANR" || new String(Encoding.ASCII.GetChars(ext)) == "RNAN")
                 {
@@ -1156,7 +1170,12 @@ namespace Tinke
 
                         return control;
                     }
-                    return new Control();
+                    else
+                    {
+                        MessageBox.Show("Para ver este archivo necesitas guardar la información (doble click sobre el archivo)" +
+                            " de una paleta, una imagen (tiles) y una archivo de celdas");
+                        return new Control();
+                    }
                 }
             }
             catch (Exception e)

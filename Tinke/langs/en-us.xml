@@ -49,6 +49,7 @@
       <S2E>Instant search</S2E>
       <S2F>Search keywords:</S2F>
       <S30>Recognized files:</S30>
+      <S31>System</S31>
     </Sistema>
     <RomInfo>
       <S01>Game information</S01>
@@ -241,5 +242,6 @@ General Public License version 3.</S06>
 		<S1A>Frame data</S1A>
 		<S1B>Number of cell</S1B>
 		<S1C>Save</S1C>
+    <S1D>Animations</S1D>
 	</NANR>
 	</Language>

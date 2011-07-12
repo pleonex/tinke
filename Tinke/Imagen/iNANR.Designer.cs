@@ -133,6 +133,7 @@ namespace Tinke
             this.aniBox.Size = new System.Drawing.Size(256, 256);
             this.aniBox.TabIndex = 0;
             this.aniBox.TabStop = false;
+            this.aniBox.DoubleClick += new System.EventHandler(this.aniBox_DoubleClick);
             // 
             // groupBox1
             // 

@@ -49,6 +49,7 @@
       <S2E>Instant search</S2E>
       <S2F>Search keywords:</S2F>
       <S30>Recognized files:</S30>
+      <S31>System</S31>
     </Sistema>
     <RomInfo>
       <S01>Information de la ROM</S01>
@@ -240,5 +241,6 @@
 		<S1A>Datos frame</S1A>
 		<S1B>Número de celda</S1B>
 		<S1C>Guardar</S1C>
+      <S1D>Animations</S1D>
 	  </NANR>
    </Language>

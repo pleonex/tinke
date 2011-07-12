@@ -96,13 +96,13 @@ namespace Tinke
             br.BaseStream.Position = nanr.cabecera.header_size + nanr.abnk.length;
             List<uint> offsets = new List<uint>();
             List<String> names = new List<string>();
+            nanr.labl.names = new string[nanr.abnk.nBanks];
 
             nanr.labl.id = br.ReadChars(4);
             if (new String(nanr.labl.id) != "LBAL")
                 goto Tercera;
             nanr.labl.section_size = br.ReadUInt32();
 
-            nanr.labl.names = new string[nanr.abnk.nBanks];
             // Primero se encuentran los offset a los nombres.
             for (int i = 0; i < nanr.abnk.nBanks; i++)
             {

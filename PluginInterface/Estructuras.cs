@@ -198,6 +198,12 @@ namespace PluginInterface
     public struct Frame_Data
     {
         public ushort nCell;
+        // DataType 1
+        public ushort[] transform; // See http://nocash.emubase.de/gbatek.htm#lcdiobgrotationscaling
+        public short xDisplacement;
+        public short yDisplacement;
+        //DataType 2 (the Displacement above)
+        public ushort constant; // 0xBEEF
     }
     #endregion
     public struct LABL
@@ -227,7 +233,8 @@ namespace PluginInterface
         Sonido,
         Fuentes,
         Comprimido,
-        Desconocido
+        Desconocido,
+        Sistema
     }
     public enum Orden_Tiles
     {

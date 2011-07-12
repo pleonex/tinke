@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{2194A598-DFC2-4C02-B60E-3D21367E81C2}</ProjectGuid>
+    <ProjectGuid>{69CE705F-FC38-46B0-B653-8B080EF39A2A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SDAT</RootNamespace>
-    <AssemblyName>SDAT</AssemblyName>
+    <RootNamespace>AI_IGO_DS</RootNamespace>
+    <AssemblyName>AI IGO DS</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -22,6 +22,8 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>
+    </DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -45,22 +47,33 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Help.cs" />
-    <Compile Include="iSDAT.cs">
+    <Compile Include="ANCG.cs" />
+    <Compile Include="ANCL.cs" />
+    <Compile Include="ANSC.cs" />
+    <Compile Include="ATEX.cs" />
+    <Compile Include="BIN.cs" />
+    <Compile Include="ImageControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="iSDAT.Designer.cs">
-      <DependentUpon>iSDAT.cs</DependentUpon>
+    <Compile Include="ImageControl.Designer.cs">
+      <DependentUpon>ImageControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="SDAT.cs" />
+    <Compile Include="Main.cs" />
+    <Compile Include="PaletteControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="PaletteControl.Designer.cs">
+      <DependentUpon>PaletteControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SWAR.cs" />
-    <Compile Include="SWAV.cs" />
-    <Compile Include="WAV.cs" />
+    <Compile Include="R00.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="iSDAT.resx">
-      <DependentUpon>iSDAT.cs</DependentUpon>
+    <EmbeddedResource Include="ImageControl.resx">
+      <DependentUpon>ImageControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PaletteControl.resx">
+      <DependentUpon>PaletteControl.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
