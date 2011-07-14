@@ -29,19 +29,23 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Debug));
-            this.txtInfo = new System.Windows.Forms.WebBrowser();
+            if (System.Type.GetType("Mono.Runtime") == null) // Evitamos Mono que da problemas
+                this.txtInfo = new System.Windows.Forms.WebBrowser();
             this.SuspendLayout();
             // 
             // txtInfo
             // 
-            this.txtInfo.AllowWebBrowserDrop = false;
-            this.txtInfo.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtInfo.Location = new System.Drawing.Point(0, 0);
-            this.txtInfo.MinimumSize = new System.Drawing.Size(20, 20);
-            this.txtInfo.Name = "txtInfo";
-            this.txtInfo.ScriptErrorsSuppressed = true;
-            this.txtInfo.Size = new System.Drawing.Size(644, 152);
-            this.txtInfo.TabIndex = 0;
+            if (System.Type.GetType("Mono.Runtime") == null) // Evitamos Mono que da problemas
+            {
+                this.txtInfo.AllowWebBrowserDrop = false;
+                this.txtInfo.Dock = System.Windows.Forms.DockStyle.Fill;
+                this.txtInfo.Location = new System.Drawing.Point(0, 0);
+                this.txtInfo.MinimumSize = new System.Drawing.Size(20, 20);
+                this.txtInfo.Name = "txtInfo";
+                this.txtInfo.ScriptErrorsSuppressed = true;
+                this.txtInfo.Size = new System.Drawing.Size(644, 152);
+                this.txtInfo.TabIndex = 0;
+            }
             // 
             // Debug
             // 

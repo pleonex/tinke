@@ -51,5 +51,30 @@ namespace Tinke.Nitro
             return overlays;
 
         }
+
+        public static void EscribirOverlays(string salida, Carpeta overlays, string romFile)
+        {
+            BinaryWriter bw = new BinaryWriter(new FileStream(salida, FileMode.Open));
+            BinaryReader br = new BinaryReader(new FileStream(romFile, FileMode.Open));
+
+            for (int i = 0; i < overlays.files.Count; i++)
+            {
+                if (overlays.files[i].offset != 0x00)
+                {
+                    br.BaseStream.Position = overlays.files[i].offset;
+                    bw.Write(br.ReadBytes((int)overlays.files[i].size));
+                }
+                else // Quien sabe cuándo sucederá esto...
+                {
+                    BinaryReader br2 = new BinaryReader(new FileStream(overlays.files[i].path, FileMode.Open));
+                    bw.Write(br2.ReadBytes((int)overlays.files[i].size));
+                    br2.Close();
+                }
+            }
+
+            br.Close();
+            bw.Flush();
+            bw.Close();
+        }
     }
 }

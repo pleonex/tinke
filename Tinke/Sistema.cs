@@ -44,6 +44,7 @@ namespace Tinke
         StringBuilder sb;
         int filesSupported;
         int nFiles;
+        bool isMono;
 
         public Sistema()
         {
@@ -51,11 +52,14 @@ namespace Tinke
             this.Location = new Point(10, 10);
             this.Text = "Tinke V " + Application.ProductVersion + " - NDScene by pleoNeX";
 
-            // Modo debug donde se muestran los mensajes en otra ventana
+            // Modo debug donde se muestran los mensajes en otra ventana en caso de no ejecutarse en Mono
+            isMono = (Type.GetType("Mono.Runtime") != null) ? true : false;
+
             sb = new StringBuilder();
             TextWriter tw = new StringWriter(sb);
             tw.NewLine = "<br>";
-            Console.SetOut(tw);
+            if (!isMono)
+                Console.SetOut(tw);
 
             #region Idioma
             if (!File.Exists(Application.StartupPath + Path.DirectorySeparatorChar + "Tinke.xml"))
@@ -107,40 +111,42 @@ namespace Tinke
             }
 
             Thread espera = new System.Threading.Thread(ThreadEspera);
-            espera.Start();
+            //if (!isMono) TODO:
+            //    espera.Start();
             #region Lectura del archivo
             romInfo = new RomInfo(o.FileName);
             accion = new Acciones(o.FileName, new String(romInfo.Cabecera.gameCode));
             // Obtenemos el sistema de archivos
             Carpeta root = FNT(o.FileName, romInfo.Cabecera.fileNameTableOffset, romInfo.Cabecera.fileNameTableSize);
-            // Añadimos los Overlays
-            root.folders[root.folders.Count - 1].files.AddRange(
-                ARMOverlay(o.FileName, romInfo.Cabecera.ARM9overlayOffset, romInfo.Cabecera.ARM9overlaySize, true)
-                );
-            root.folders[root.folders.Count - 1].files.AddRange(
-                ARMOverlay(o.FileName, romInfo.Cabecera.ARM7overlayOffset, romInfo.Cabecera.ARM7overlaySize, false)
-                );
+            if (!(root.folders is List<Carpeta>))
+                root.folders = new List<Carpeta>();
+            root.folders.Add(Añadir_Sistema());
             // Añadimos los offset a cada archivo
             root = FAT(o.FileName, romInfo.Cabecera.FAToffset, romInfo.Cabecera.FATsize, root);
 
-            accion.Root = root;
             Set_Formato(root);
             treeSystem.Nodes.Add(Jerarquizar_Nodos(root)); // Mostramos el árbol
             treeSystem.Nodes[0].Expand();
 
             Get_SupportedFiles();
             #endregion
-            espera.Abort();
+            //if (!isMono)
+            //    espera.Abort();
 
+            toolStripDebug.Enabled = !isMono;
             debug = new Debug();
-            debug.Show();
+            if (!isMono)
+            {
+                debug.Show();
+                debug.Activate();
+            }
 
             o.Dispose();
+
             debug.Añadir_Texto(sb.ToString());
             sb.Length = 0;
 
             this.Activate();
-            debug.Activate();
         }
 
         private void LeerIdioma()
@@ -211,24 +217,6 @@ namespace Tinke
             Carpeta root = Nitro.FNT.LeerFNT(file, offset);
             accion.Root = root;
 
-            Archivo fnt = new Archivo();
-            fnt.name = "fnt.bin";
-            fnt.offset = offset;
-            fnt.size = size;
-            accion.LastFileID++;
-            fnt.id = (ushort)accion.LastFileID;
-            accion.LastFileID++;
-
-            if (!(root.folders is List<Carpeta>))
-                root.folders = new List<Carpeta>();
-            Carpeta ftc = new Carpeta();
-            ftc.name = "ftc";
-            ftc.id = (ushort)accion.LastFolderID;
-            accion.LastFolderID++;
-            ftc.files = new List<Archivo>();
-            ftc.files.Add(fnt);
-            root.folders.Add(ftc);
-
             return root;
         }
         private Archivo[] ARMOverlay(string file, UInt32 offset, UInt32 size, bool ARM9)
@@ -239,7 +227,74 @@ namespace Tinke
         {
             return Nitro.FAT.LeerFAT(file, offset, size, root);
         }
-        
+        private Carpeta Añadir_Sistema()
+        {
+            Carpeta ftc = new Carpeta();
+            ftc.name = "ftc";
+            ftc.id = (ushort)accion.LastFolderID;
+            accion.LastFolderID++;
+            ftc.files = new List<Archivo>();
+            ftc.files.AddRange(
+                ARMOverlay(accion.ROMFile, romInfo.Cabecera.ARM9overlayOffset, romInfo.Cabecera.ARM9overlaySize, true)
+                );
+            ftc.files.AddRange(
+                ARMOverlay(accion.ROMFile, romInfo.Cabecera.ARM7overlayOffset, romInfo.Cabecera.ARM7overlaySize, false)
+                );
+
+            Archivo fnt = new Archivo();
+            fnt.name = "fnt.bin";
+            fnt.offset = romInfo.Cabecera.fileNameTableOffset;
+            fnt.size = romInfo.Cabecera.fileNameTableSize;
+            fnt.id = (ushort)accion.LastFileID;
+            accion.LastFileID++;
+            ftc.files.Add(fnt);
+
+            Archivo fat = new Archivo();
+            fat.name = "fat.bin";
+            fat.offset = romInfo.Cabecera.FAToffset;
+            fat.size = romInfo.Cabecera.FATsize;
+            fat.id = (ushort)accion.LastFileID;
+            accion.LastFileID++;
+            ftc.files.Add(fat);
+
+            Archivo arm9 = new Archivo();
+            arm9.name = "arm9.bin";
+            arm9.offset = romInfo.Cabecera.ARM9romOffset;
+            arm9.size = romInfo.Cabecera.ARM9size;
+            arm9.id = (ushort)accion.LastFileID;
+            accion.LastFileID++;
+            ftc.files.Add(arm9);
+
+            Archivo arm7 = new Archivo();
+            arm7.name = "arm7.bin";
+            arm7.offset = romInfo.Cabecera.ARM7romOffset;
+            arm7.size = romInfo.Cabecera.ARM7size;
+            arm7.id = (ushort)accion.LastFileID;
+            accion.LastFileID++;
+            ftc.files.Add(arm7);
+
+            Archivo y9 = new Archivo();
+            y9.name = "y9.bin";
+            y9.offset = romInfo.Cabecera.ARM9overlayOffset;
+            y9.size = romInfo.Cabecera.ARM9overlaySize;
+            y9.id = (ushort)accion.LastFileID;
+            accion.LastFileID++;
+            ftc.files.Add(y9);
+
+            if (romInfo.Cabecera.ARM7overlaySize != 0)
+            {
+                Archivo y7 = new Archivo();
+                y7.name = "y7.bin";
+                y7.offset = romInfo.Cabecera.ARM7overlayOffset;
+                y7.size = romInfo.Cabecera.ARM7overlaySize;
+                y7.id = (ushort)accion.LastFileID;
+                accion.LastFileID++;
+                ftc.files.Add(y7);
+            }
+
+            return ftc;
+        }
+
         private TreeNode Jerarquizar_Nodos(Carpeta currFolder)
         {
             TreeNode currNode = new TreeNode();
@@ -389,6 +444,7 @@ namespace Tinke
                 btnSee.Enabled = false;
                 toolStripOpenAs.Enabled = false;
                 btnDescomprimir.Enabled = true;
+                btnImport.Enabled = false;
             }
             else if (Convert.ToUInt16(e.Node.Tag) < 0xF000)
             {
@@ -454,6 +510,10 @@ namespace Tinke
                     btnDescomprimir.Enabled = true;
                 else
                     btnDescomprimir.Enabled = false;
+                if (selectFile.formato == Formato.Sistema)
+                    btnImport.Enabled = false;
+                else
+                    btnImport.Enabled = true;
             }
             else
             {
@@ -470,6 +530,7 @@ namespace Tinke
                 btnSee.Enabled = false;
                 toolStripOpenAs.Enabled = false;
                 btnDescomprimir.Enabled = true;
+                btnImport.Enabled = false;
             }
         }
         private void btnHex_Click(object sender, EventArgs e)
@@ -518,7 +579,7 @@ namespace Tinke
         {
             Carpeta uncompress;
 
-            if (accion.IDSelect >= 0x0F00)
+            if (accion.IDSelect >= 0x0F000)
             {
                 if (MessageBox.Show("¿Estás seguro de que deseas descomprimir TODOS los archivos\n" +
                     "de una carpeta?. Puede tardar bastante...", "Advertencia", MessageBoxButtons.OKCancel, MessageBoxIcon.Exclamation)
@@ -640,9 +701,11 @@ namespace Tinke
                 Directory.CreateDirectory(o.SelectedPath + '\\' + folderSelect.name);
 
                 Thread espera = new System.Threading.Thread(ThreadEspera);
-                espera.Start();
+                if (!isMono)
+                    espera.Start();
                 RecursivoExtractFolder(folderSelect, o.SelectedPath + '\\' + folderSelect.name);
-                espera.Abort();
+                if (!isMono)
+                    espera.Abort();
             }
 
         }
@@ -876,6 +939,277 @@ namespace Tinke
         {
             if (e.KeyCode == Keys.Enter)
                 btnSearch.PerformClick();
+        }
+
+
+
+        private void btnSaveROM_Click(object sender, EventArgs e)
+        {
+            /* Una ROM se compone por las siguientes secciones:
+             * 
+             * Header (0x0000-0x4000)
+             * ARM9 Binary
+             *   |_ARM9
+             *   |_ARM9 Overlays Tables
+             *   |_ARM9 Overlays
+             * ARM7 Binary
+             *   |_ARM7
+             *   |_ARM7 Overlays Tables
+             *   |_ARM7 Overlays
+             * FNT (File Name Table)
+             *   |_Main tables
+             *   |_Subtables (names)
+             * FAT (File Allocation Table)
+             *   |_Files offset
+             *     |_Start offset
+             *     |_End offset
+             * Banner
+             *   |_Icon (Bitmap + palette) 0x200 + 0x20
+             *   |_Game titles (Japanese, English, French, German, Italian, Spanish) 6 * 0x100
+             * Files...
+            */
+
+            btnSaveROM.Enabled = false;
+
+            #region Preparativos
+            // Copia para no modificar el originial
+            List<Archivo> origianlFiles = new List<Archivo>();
+            origianlFiles.AddRange((Archivo[])accion.Search_Folder("ftc").files.ToArray().Clone());
+
+            // Quitamos archivos especiales que no cuentan en la ROM
+            int id = accion.Search_File("fnt.bin").files[0].id;
+            accion.Remove_File("fnt.bin", accion.Root);
+            accion.Recursivo_BajarID(id, accion.Root);
+
+            id = accion.Search_File("fat.bin").files[0].id;
+            accion.Remove_File("fat.bin", accion.Root);
+            accion.Recursivo_BajarID(id, accion.Root);
+
+            id = accion.Search_File("arm9.bin").files[0].id;
+            accion.Remove_File("arm9.bin", accion.Root);
+            accion.Recursivo_BajarID(id, accion.Root);
+
+            id = accion.Search_File("arm7.bin").files[0].id;
+            accion.Remove_File("arm7.bin", accion.Root);
+            accion.Recursivo_BajarID(id, accion.Root);
+            
+            id = accion.Search_File("y9.bin").files[0].id;
+            accion.Remove_File("y9.bin", accion.Root);
+            accion.Recursivo_BajarID(id, accion.Root);
+
+            Carpeta y7 = accion.Search_File("y7.bin");
+            if (y7.files.Count > 0)
+            {
+                id = y7.files[0].id;
+                accion.Remove_File("y7.bin", accion.Root);
+                accion.Recursivo_BajarID(id, accion.Root);
+            }
+
+            // Obtenemos el último ID de archivo sin los especiales
+            accion.LastFileID = 0;
+            accion.Set_LastFileID(accion.Root);
+            accion.LastFolderID = 0;
+            accion.Set_LastFolderID(accion.Root);
+            #endregion
+
+            #region Obtención de regiones de la ROM
+            BinaryReader br;
+            Console.WriteLine("Comenzando a crear nueva ROM");
+            Console.WriteLine("Escribiendo secciones:");
+            Console.Write("<p><dd>");
+            Nitro.Estructuras.ROMHeader cabecera = romInfo.Cabecera;
+
+            
+            // Escribimos el ARM9 Binary
+            string arm9Binary = Path.GetTempFileName();
+            string overlays9 = Path.GetTempFileName();
+            Console.Write("\tARM9 Binary...");
+
+            br = new BinaryReader(new FileStream(accion.ROMFile, FileMode.Open));
+            br.BaseStream.Position = romInfo.Cabecera.ARM9romOffset; // ARM9
+            BinaryWriter bw = new BinaryWriter(new FileStream(arm9Binary, FileMode.Create));
+            bw.Write(br.ReadBytes((int)romInfo.Cabecera.ARM9size));
+            bw.Flush();
+            cabecera.ARM9romOffset = cabecera.headerSize;
+
+            br.BaseStream.Position = romInfo.Cabecera.ARM9overlayOffset; // ARM9 Overlays Tables
+            bw.Write(br.ReadBytes((int)romInfo.Cabecera.ARM9overlaySize));
+            bw.Flush();
+            br.Close();
+            cabecera.ARM9overlayOffset = cabecera.ARM9romOffset + cabecera.ARM9size;
+
+            Nitro.Overlay.EscribirOverlays(overlays9, accion.Search_File("overlay9_"), accion.ROMFile);
+            bw.Write(File.ReadAllBytes(overlays9)); // ARM9 Overlays
+            bw.Flush();
+            bw.Close();
+            uint arm9overlayOffset = cabecera.ARM9overlayOffset + cabecera.ARM9overlaySize;
+
+            Console.WriteLine(" {0} bytes escritos correctamente.", new FileInfo(arm9Binary).Length);
+
+
+            // Escribismo el ARM7 Binary
+            string arm7Binary = Path.GetTempFileName();
+            string overlays7 = Path.GetTempFileName();
+
+            Console.Write("\tARM7 Binary...");
+            br = new BinaryReader(new FileStream(accion.ROMFile, FileMode.Open));
+            br.BaseStream.Position = romInfo.Cabecera.ARM7romOffset; // ARM7
+            bw = new BinaryWriter(new FileStream(arm7Binary, FileMode.Create));
+            bw.Write(br.ReadBytes((int)romInfo.Cabecera.ARM7size));
+            bw.Flush();
+            br.Close();
+            cabecera.ARM7romOffset = cabecera.ARM9romOffset + (uint)new FileInfo(arm9Binary).Length;
+            cabecera.ARM7overlayOffset = 0x00;
+            uint arm7overlayOffset = 0x00;
+
+            if (romInfo.Cabecera.ARM7overlaySize != 0x00)
+            {
+                br = new BinaryReader(new FileStream(accion.ROMFile, FileMode.Open));
+                br.BaseStream.Position = romInfo.Cabecera.ARM7overlayOffset; // ARM7 Overlays Tables
+                bw.Write(br.ReadBytes((int)romInfo.Cabecera.ARM7overlaySize));
+                bw.Flush();
+                br.Close();
+                cabecera.ARM7overlayOffset = cabecera.ARM7romOffset + cabecera.ARM7size;
+
+                Nitro.Overlay.EscribirOverlays(overlays7, accion.Search_File("overlay7_"), accion.ROMFile);
+                bw.Write(File.ReadAllBytes(overlays7)); // ARM7 Overlays
+                bw.Flush();
+                arm7overlayOffset = cabecera.ARM7overlayOffset + cabecera.ARM7overlaySize;
+            }
+            bw.Close();
+            Console.WriteLine(" {0} bytes escritos correctamente.", new FileInfo(arm7Binary).Length);
+
+
+            // Escribimos el FNT (File Name Table)
+            string fileFNT = Path.GetTempFileName();
+            Console.Write("\tFile Name Table (FNT)...");
+            br = new BinaryReader(new FileStream(accion.ROMFile, FileMode.Open));
+            br.BaseStream.Position = romInfo.Cabecera.fileNameTableOffset;
+            File.WriteAllBytes(fileFNT, br.ReadBytes((int)romInfo.Cabecera.fileNameTableSize));
+            br.Close();
+            Console.WriteLine(" {0} bytes escritos correctamente.", new FileInfo(fileFNT).Length);
+            cabecera.fileNameTableOffset = cabecera.ARM7romOffset + cabecera.ARM7size;
+
+
+            // Escribimos el FAT (File Allocation Table)
+            cabecera.FAToffset = cabecera.fileNameTableOffset + cabecera.fileNameTableSize;
+            string fileFAT = Path.GetTempFileName();
+            Nitro.FAT.EscribirFAT(fileFAT, accion.Root, (int)romInfo.Cabecera.FATsize / 0x08,
+                cabecera.FAToffset, arm9overlayOffset, arm7overlayOffset);
+
+
+            // Escribimos el banner
+            string banner = Path.GetTempFileName();
+            Nitro.NDS.EscribirBanner(banner, romInfo.Banner);
+            cabecera.bannerOffset = cabecera.FAToffset + cabecera.FATsize;
+
+
+            // Escribimos cabecera
+            string header = Path.GetTempFileName();
+            Nitro.NDS.EscribirCabecera(header, cabecera, accion.ROMFile);
+
+
+            // Escribimos los archivos
+            string files = Path.GetTempFileName();
+            Nitro.NDS.EscribirArchivos(files, accion.ROMFile, accion.Root, (int)romInfo.Cabecera.FATsize / 0x08);
+            Console.WriteLine("</dd></p>");
+            #endregion
+            
+            // Obtenemos el nuevo archivo para guardar
+            SaveFileDialog o = new SaveFileDialog();
+            o.AddExtension = true;
+            o.DefaultExt = ".nds";
+            o.Filter = "Nintendo DS ROM (*.nds)|*.nds";
+            o.OverwritePrompt = true;
+            if (o.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                Console.WriteLine("\nLa nueva ROM será: {0}", o.FileName);
+                bw = new BinaryWriter(new FileStream(o.FileName, FileMode.Create));
+
+                bw.Write(File.ReadAllBytes(header));
+                bw.Flush();
+                bw.Write(File.ReadAllBytes(arm9Binary));
+                bw.Flush();
+                bw.Write(File.ReadAllBytes(arm7Binary));
+                bw.Flush();
+                bw.Write(File.ReadAllBytes(fileFNT));
+                bw.Flush();
+                bw.Write(File.ReadAllBytes(fileFAT));
+                bw.Flush();
+                bw.Write(File.ReadAllBytes(banner));
+                bw.Flush();
+                bw.Write(File.ReadAllBytes(files));
+                bw.Flush();
+                bw.Close();
+
+                Console.WriteLine("<b>{0} bytes guardados en la nueva ROM</b>", new FileInfo(o.FileName).Length);
+            }
+
+            // Devolvemos sus valores buenos
+            accion.Set_LastFileID(accion.Root);
+            accion.Set_LastFolderID(accion.Root);
+            accion.LastFileID++; accion.LastFolderID++;
+            accion.Search_Folder("ftc").files.Clear(); ;
+            accion.Search_Folder("ftc").files.AddRange(origianlFiles);
+            
+            // Borramos archivos ya innecesarios
+            File.Delete(header);
+            File.Delete(arm9Binary);
+            File.Delete(overlays9);
+            File.Delete(arm7Binary);
+            File.Delete(overlays7);
+            File.Delete(fileFNT);
+            File.Delete(fileFAT);
+            File.Delete(banner);
+            File.Delete(files);
+
+            debug.Añadir_Texto(sb.ToString());
+            sb.Length = 0;
+        }
+        private void btnImport_Click(object sender, EventArgs e)
+        {
+            if (accion.IDSelect >= 0xF000) 
+                return;
+
+            // Se cambian un archivo por otro
+            OpenFileDialog o = new OpenFileDialog();
+            o.CheckFileExists = true;
+            o.CheckPathExists = true;
+            o.Multiselect = false;
+            if (o.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                Archivo newFile = new Archivo();
+                Archivo selectedFile = accion.Select_File();
+                newFile.name = selectedFile.name;
+                newFile.id = selectedFile.id;
+                newFile.offset = 0x00;
+                newFile.path = o.FileName;
+                newFile.size = (uint)new FileInfo(o.FileName).Length;
+
+                accion.Change_File(accion.IDSelect, newFile, accion.Root);
+                btnSaveROM.Enabled = true;
+            }
+        }
+        private TreeNode[] FilesToNodes(Archivo[] files)
+        {
+            TreeNode[] nodos = new TreeNode[files.Length];
+
+            for (int i = 0; i < files.Length; i++)
+            {
+                int nImage = accion.ImageFormatFile(files[i].formato);
+                string ext = "";
+                if (files[i].formato == Formato.Desconocido)
+                {
+                    ext = new String(Encoding.ASCII.GetChars(accion.Get_MagicID(files[i].path)));
+                    if (ext != "")
+                        ext = " [" + ext + ']';
+                }
+                nodos[i] = new TreeNode(files[i].name + ext, nImage, nImage);
+                nodos[i].Name = files[i].name;
+                nodos[i].Tag = files[i].id;
+            }
+
+            return nodos;
         }
 
     }

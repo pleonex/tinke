@@ -70,7 +70,7 @@ namespace SDAT
 
             if (archivo.EndsWith(".swav"))
             {
-                sdat.files.root.id = 0x0F00;
+                sdat.files.root.id = 0x0F000;
                 sdat.files.root.name = "SDAT";
                 sdat.files.root.files = new List<Sound>();
                 Sound swavFile = new Sound();
@@ -79,6 +79,7 @@ namespace SDAT
                 swavFile.offset = 0x00;
                 swavFile.size = (uint)new FileInfo(archivo).Length;
                 swavFile.type = FormatSound.SWAV;
+                swavFile.path = sdat.archivo;
                 sdat.files.root.files.Add(swavFile);
                 return sdat;
             }
@@ -375,7 +376,7 @@ namespace SDAT
             #region Definición de carpetas
             Folder root = new Folder();
             root.name = "SDAT";
-            root.id = 0x0F00;
+            root.id = 0x0F000;
             root.folders = new List<Folder>();
 
             Folder sseq, ssar, sbnk, swar, strm;

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Drawing;
+using PluginInterface;
 
 namespace Tinke.Nitro
 {
@@ -78,6 +79,69 @@ namespace Tinke.Nitro
 
             return nds;
         }
+        public static void EscribirCabecera(string salida, Estructuras.ROMHeader cabecera, string romFile)
+        {
+            BinaryWriter bw = new BinaryWriter(new FileStream(salida, FileMode.Create));
+            BinaryReader br = new BinaryReader(File.OpenRead(romFile));
+            br.BaseStream.Position = 0xC0;
+            Console.Write("Cabecera...");
+
+            bw.Write(cabecera.gameTitle);
+            bw.Write(cabecera.gameCode);
+            bw.Write(cabecera.makerCode);
+            bw.Write(cabecera.unitCode);
+            bw.Write(cabecera.encryptionSeed);
+            bw.Write((byte)(Math.Log(cabecera.tamaño, 2) - 20));
+            bw.Write(cabecera.reserved);
+            bw.Write(cabecera.ROMversion);
+            bw.Write(cabecera.internalFlags);
+            bw.Write(cabecera.ARM9romOffset);
+            bw.Write(cabecera.ARM9entryAddress);
+            bw.Write(cabecera.ARM9ramAddress);
+            bw.Write(cabecera.ARM9size);
+            bw.Write(cabecera.ARM7romOffset);
+            bw.Write(cabecera.ARM7entryAddress);
+            bw.Write(cabecera.ARM7ramAddress);
+            bw.Write(cabecera.ARM7size);
+            bw.Write(cabecera.fileNameTableOffset);
+            bw.Write(cabecera.fileNameTableSize);
+            bw.Write(cabecera.FAToffset);
+            bw.Write(cabecera.FATsize);
+            bw.Write(cabecera.ARM9overlayOffset);
+            bw.Write(cabecera.ARM9overlaySize);
+            bw.Write(cabecera.ARM7overlayOffset);
+            bw.Write(cabecera.ARM7overlaySize);
+            bw.Write(cabecera.flagsRead);
+            bw.Write(cabecera.flagsInit);
+            bw.Write(cabecera.bannerOffset);
+            bw.Write(cabecera.secureCRC16);
+            bw.Write(cabecera.ROMtimeout);
+            bw.Write(cabecera.ARM9autoload);
+            bw.Write(cabecera.ARM7autoload);
+            bw.Write(cabecera.secureDisable);
+            bw.Write(cabecera.ROMsize);
+            bw.Write(cabecera.headerSize);
+            bw.Write(cabecera.reserved2);
+            bw.Write(br.ReadBytes(0x9C));
+            bw.Write(cabecera.logoCRC16);
+            bw.Write(cabecera.headerCRC16);
+            bw.Write(cabecera.debug_romOffset);
+            bw.Write(cabecera.debug_size);
+            bw.Write(cabecera.debug_ramAddress);
+            bw.Write(cabecera.reserved3);
+            bw.Flush();
+
+            int relleno = (int)(cabecera.headerSize - bw.BaseStream.Length);
+            for (int i = 0; i < relleno; i++)
+                bw.Write((byte)0x00);
+
+            bw.Flush();
+            bw.Close();
+            br.Close();
+
+            Console.WriteLine(" {0} bytes escritos correctamente.", new FileInfo(salida).Length);
+        }
+
         public static string CodeToString(Type enumeracion, char[] id)
         {
             try { return Enum.GetName(enumeracion, Int32.Parse(Char.ConvertToUtf32(Char.ToString(id[0]), 0).ToString() + Char.ConvertToUtf32(char.ToString(id[1]), 0).ToString())); }
@@ -116,13 +180,34 @@ namespace Tinke.Nitro
 
             return bn;
         }
+        public static void EscribirBanner(string salida, Estructuras.Banner banner)
+        {
+            BinaryWriter bw = new BinaryWriter(new FileStream(salida, FileMode.Create));
+            Console.Write("Banner...");
+
+            bw.Write(banner.version);
+            bw.Write(banner.CRC16);
+            bw.Write(banner.reserved);
+            bw.Write(banner.tileData);
+            bw.Write(banner.palette);
+            bw.Write(StringToTitle(banner.japaneseTitle));
+            bw.Write(StringToTitle(banner.englishTitle));
+            bw.Write(StringToTitle(banner.frenchTitle));
+            bw.Write(StringToTitle(banner.germanTitle));
+            bw.Write(StringToTitle(banner.italianTitle));
+            bw.Write(StringToTitle(banner.spanishTitle));
+            bw.Flush();
+
+            Console.WriteLine(" {0} bytes escritos correctamente.", bw.BaseStream.Length);
+            bw.Close();
+        }
         public static string TitleToString(byte[] data)
         {
             string title = "";
             for (int i = 0; i < data.Length; i++)
             {
                 if (data[i] == 0x00)
-                    continue;
+                    continue; // Codificación UNICODE
                 if (data[i] == 0x0A)
                     title += '\r';      // Nueva línea
 
@@ -130,6 +215,19 @@ namespace Tinke.Nitro
             }
 
             return title;
+        }
+        public static byte[] StringToTitle(string title)
+        {
+            List<byte> data = new List<byte>();
+
+            title = title.Replace("\r", "");
+            data.AddRange(Encoding.Unicode.GetBytes(title));
+
+            int relleno = 0x100 - data.Count;
+            for (int i = 0; i < relleno; i++)
+                data.Add(0x00);
+
+            return data.ToArray();
         }
         public static Bitmap IconoToBitmap(byte[] tileData, byte[] paletteData)
         {
@@ -156,5 +254,56 @@ namespace Tinke.Nitro
             return imagen;
         }
 
+        public static void EscribirArchivos(string salida, string romFile, Carpeta root, int nFiles)
+        {
+            BinaryWriter bw = new BinaryWriter(new FileStream(salida, FileMode.Create));
+            BinaryReader br = new BinaryReader(new FileStream(romFile, FileMode.Open));
+
+            Console.Write("Archivos...");
+
+            for (int i = 0; i < nFiles; i++)
+            {
+                Archivo currFile = BuscarArchivo(i, root);
+                if (currFile.name.StartsWith("overlay")) // Los overlays no van en esta sección
+                    continue;
+
+                if (currFile.offset != 0x00)
+                {
+                    br.BaseStream.Position = currFile.offset;
+                    bw.Write(br.ReadBytes((int)currFile.size));
+                    bw.Flush();
+                }
+                else // El archivo es modificado y no está en la ROM
+                {
+                    bw.Write(File.ReadAllBytes(currFile.path));
+                    bw.Flush();
+                }
+            }
+
+            bw.Flush();
+            bw.Close();
+            br.Close();
+            Console.WriteLine(" {0} archivos escritos correctamente.", nFiles);
+        }
+        private static Archivo BuscarArchivo(int id, Carpeta currFolder)
+        {
+            if (currFolder.files is List<Archivo>)
+                foreach (Archivo archivo in currFolder.files)
+                    if (archivo.id == id)
+                        return archivo;
+
+
+            if (currFolder.folders is List<Carpeta>)
+            {
+                foreach (Carpeta subFolder in currFolder.folders)
+                {
+                    Archivo currFile = BuscarArchivo(id, subFolder);
+                    if (currFile.name is string)
+                        return currFile;
+                }
+            }
+
+            return new Archivo();
+        }
     }
 }

@@ -231,17 +231,17 @@ namespace Tinke
         private Image ActualizarFullImagen()
         {
             // Devolvemos la imagen a su estado inicial
-            imgBox.Image = Imagen_NCER.Obtener_Imagen(ncer.cebk.banks[comboCelda.SelectedIndex], ncer.cebk.block_size,
+            Image original = Imagen_NCER.Obtener_Imagen(ncer.cebk.banks[comboCelda.SelectedIndex], ncer.cebk.block_size,
                 tile, paleta, checkEntorno.Checked, checkCelda.Checked, checkNumber.Checked, checkTransparencia.Checked,
                 checkImagen.Checked, 512, 512);
 
             float scale = trackZoom.Value / 100f;
-            int wSize = (int)(imgBox.Image.Width * scale);
-            int hSize = (int)(imgBox.Image.Height * scale);
+            int wSize = (int)(original.Width * scale);
+            int hSize = (int)(original.Height * scale);
 
             Bitmap imagen = new Bitmap(wSize, hSize);
             Graphics graficos = Graphics.FromImage(imagen);
-            graficos.DrawImage(imgBox.Image, 0, 0, wSize, hSize);
+            graficos.DrawImage(original, 0, 0, wSize, hSize);
 
             return imagen;
         }
