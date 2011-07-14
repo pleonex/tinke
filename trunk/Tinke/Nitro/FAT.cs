@@ -16,7 +16,7 @@ namespace Tinke.Nitro
 
             for (int i = 0; ; i++)
             {
-                if (br.BaseStream.Position > offset + size)
+                if (br.BaseStream.Position >= offset + size)
                     break;
 
                 UInt32 currOffset = br.ReadUInt32();
@@ -26,8 +26,84 @@ namespace Tinke.Nitro
 
             return root;
         }
+        public static void EscribirFAT(string salida, Carpeta root, int lastID)
+        {
+            throw new NotImplementedException();
+            BinaryWriter bw = new BinaryWriter(new FileStream(salida, FileMode.Create));
+            UInt32 size, offset = 0x00;
+            
 
-        public static void Asignar_Archivo(int id, UInt32 offset, UInt32 size, Carpeta currFolder)
+            for (int i = 0; i <= lastID; i++)
+            {
+                bw.Write(offset); // Offset de inicio del archivo
+
+                //size = (UInt32)Obtener_Tamaño(i, root);
+                offset += offset + size;
+                bw.Write(offset); // Offset de fin del archivo
+
+                offset++;
+            }
+
+            bw.Flush();
+            bw.Close();
+        }
+        public static void EscribirFAT(string salida, Carpeta root, int nFiles, uint offsetFAT, uint offsetOverlay9,
+            uint offsetOverlay7)
+        {
+            BinaryWriter bw = new BinaryWriter(new FileStream(salida, FileMode.Create));
+            Console.Write("File Allocation Table (FAT)...");
+
+            UInt32 offset = (uint)(offsetFAT + nFiles * 0x08 + 0x240 + 0x600); // Comienzo de la sección de archivos (FAT+banner)
+
+            for (int i = 0; i < nFiles; i++)
+            {
+                Archivo currFile = BuscarArchivo(i, root);
+                if (currFile.name.StartsWith("overlay9"))
+                {
+                    bw.Write(offsetOverlay9);
+                    offsetOverlay9 += currFile.size;
+                    bw.Write(offsetOverlay9);
+                    continue;
+                }
+                else if (currFile.name.StartsWith("overlay7"))
+                {
+                    bw.Write(offsetOverlay7);
+                    offsetOverlay9 += currFile.size;
+                    bw.Write(offsetOverlay7);
+                    continue;
+                }
+
+                bw.Write(offset); // Offset de inicio del archivo
+                offset += currFile.size;
+                bw.Write(offset); // Offset de fin del archivo
+            }
+
+            bw.Flush();
+            bw.Close();
+            Console.WriteLine(" {0} bytes escritos correctamente.", new FileInfo(salida).Length);
+        }
+
+        private static Archivo BuscarArchivo(int id, Carpeta currFolder)
+        {
+            if (currFolder.files is List<Archivo>)
+                foreach (Archivo archivo in currFolder.files)
+                    if (archivo.id == id)
+                        return archivo;
+
+
+            if (currFolder.folders is List<Carpeta>)
+            {
+                foreach (Carpeta subFolder in currFolder.folders)
+                {
+                    Archivo currFile = BuscarArchivo(id, subFolder);
+                    if (currFile.name is string)
+                        return currFile;
+                }
+            }
+
+            return new Archivo();
+        }
+        private static void Asignar_Archivo(int id, UInt32 offset, UInt32 size, Carpeta currFolder)
         {
             if (currFolder.files is List<Archivo>)
             {

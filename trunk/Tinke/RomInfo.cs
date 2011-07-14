@@ -33,6 +33,7 @@ namespace Tinke
     public partial class RomInfo : Form
     {
         Nitro.Estructuras.ROMHeader cabecera;
+        Nitro.Estructuras.Banner banner;
         Bitmap picBanner;
         string[] titulos;
 
@@ -133,6 +134,7 @@ namespace Tinke
         private void Mostrar_Informacion(Nitro.Estructuras.ROMHeader cabecera, Nitro.Estructuras.Banner banner)
         {
             this.cabecera = cabecera;
+            this.banner = banner;
 
             #region Muestra la información de la cabecera
             listInfo.Items[0].SubItems.Add(new String(cabecera.gameTitle));
@@ -197,6 +199,12 @@ namespace Tinke
         public Nitro.Estructuras.ROMHeader Cabecera
         {
             get { return cabecera; }
+            set { cabecera = value; }
+        }
+        public Nitro.Estructuras.Banner Banner
+        {
+            get { return banner; }
+            set { banner = value; }
         }
 
         private void btnBannerGuardar_Click(object sender, EventArgs e)

@@ -291,7 +291,6 @@ namespace Tinke
             if (currFolder.folders is List<Carpeta>)
                 foreach (Carpeta subFolder in currFolder.folders)
                     Set_LastFileID(subFolder);
-
         }
         public void Set_LastFolderID(Carpeta currFolder)
         {
@@ -472,16 +471,59 @@ namespace Tinke
         }
         public Carpeta Add_Files(Carpeta files, ushort idFolder, Carpeta currFolder)
         {
+            if (currFolder.id == idFolder)
+            {
+                currFolder = files;
+                return currFolder;
+            }
+
             if (currFolder.folders is List<Carpeta>)   // Si tiene subdirectorios, buscamos en cada uno de ellos
             {
                 for (int i = 0; i < currFolder.folders.Count; i++)
                 {
-                    if (currFolder.folders[i].id == idFolder)
-                    {
-                        currFolder.folders[i] = files;
-                        return currFolder.folders[i];
-                    }
+                    Carpeta folder = Add_Files(files, idFolder, currFolder.folders[i]);
+                    if (folder.name is string)  // Comprobamos que se haya devuelto un directorio, en cuyo caso es el buscado que lo devolvemos
+                        return folder;
+                }
+            }
 
+            return new Carpeta();
+        }
+        public Carpeta Add_Folder(Carpeta folder, ushort idParentFolder, Carpeta currFolder)
+        {
+            if (currFolder.id == idParentFolder)
+            {
+                if (!(currFolder.folders is List<Carpeta>))
+                    currFolder.folders = new List<Carpeta>();
+                currFolder.folders.Add(folder);
+
+                return currFolder;
+            }
+
+            if (currFolder.folders is List<Carpeta>)   // Si tiene subdirectorios, buscamos en cada uno de ellos
+            {
+                for (int i = 0; i < currFolder.folders.Count; i++)
+                {
+                    Carpeta subfolder = Add_Files(folder, idParentFolder, currFolder.folders[i]);
+                    if (subfolder.name is string)  // Comprobamos que se haya devuelto un directorio, en cuyo caso es el buscado que lo devolvemos
+                        return subfolder;
+                }
+            }
+
+            return new Carpeta();
+        }
+        public Carpeta Add_Files(Archivo[] files, ushort idFolder, Carpeta currFolder)
+        {
+            if (currFolder.id == idFolder)
+            {
+                currFolder.files.AddRange(files);
+                return currFolder;
+            }
+
+            if (currFolder.folders is List<Carpeta>)   // Si tiene subdirectorios, buscamos en cada uno de ellos
+            {
+                for (int i = 0; i < currFolder.folders.Count; i++)
+                {
                     Carpeta folder = Add_Files(files, idFolder, currFolder.folders[i]);
                     if (folder.name is string)  // Comprobamos que se haya devuelto un directorio, en cuyo caso es el buscado que lo devolvemos
                         return folder;
@@ -533,6 +575,7 @@ namespace Tinke
         {
             return String.Compare(f1.name, f2.name);
         }
+
         public void Change_File(int id, Archivo fileChanged, Carpeta currFolder)
         {            
             if (currFolder.files is List<Archivo>)
@@ -545,7 +588,41 @@ namespace Tinke
                 foreach (Carpeta subFolder in currFolder.folders)
                     Change_File(id, fileChanged, subFolder);
         }
-    
+
+        public void Remove_File(string name, Carpeta currFolder)
+        {
+            if (currFolder.files is List<Archivo>)
+                for (int i = 0; i < currFolder.files.Count; i++)
+                    if (currFolder.files[i].name == name)
+                        currFolder.files.RemoveAt(i);
+
+
+            if (currFolder.folders is List<Carpeta>)
+                foreach (Carpeta subFolder in currFolder.folders)
+                    Remove_File(name, subFolder);
+        }
+        public void Recursivo_BajarID(int id, Carpeta currFolder)
+        {
+            if (currFolder.files is List<Archivo>)
+            {
+                for (int i = 0; i < currFolder.files.Count; i++)
+                {
+                    if (currFolder.files[i].id > id)
+                    {
+                        Archivo currFile = currFolder.files[i];
+                        currFile.id--;
+                        currFolder.files.RemoveAt(i);
+                        currFolder.files.Insert(i, currFile);
+                    }
+                }
+            }
+
+
+            if (currFolder.folders is List<Carpeta>)
+                foreach (Carpeta subFolder in currFolder.folders)
+                    Recursivo_BajarID(id, subFolder);
+        }
+
         public Archivo Select_File()
         {
             return Recursivo_Archivo(idSelect, root);
@@ -568,6 +645,10 @@ namespace Tinke
             carpeta.folders = new List<Carpeta>();
             Recursivo_Archivo(formato, root, carpeta);
             return carpeta;
+        }
+        public Carpeta Search_Folder(string name)
+        {
+            return Recursivo_Carpeta(name, root);
         }
 
         public Carpeta Select_Folder()
@@ -747,6 +828,26 @@ namespace Tinke
 
             return new Carpeta();
         }
+        private Carpeta Recursivo_Carpeta(string name, Carpeta currFolder)
+        {
+            if (currFolder.name == name)
+                return currFolder;
+
+            if (currFolder.folders is List<Carpeta>)   // Si tiene subdirectorios, buscamos en cada uno de ellos
+            {
+                foreach (Carpeta subFolder in currFolder.folders)
+                {
+                    if (subFolder.name == name)     // Si lo hemos encontrado lo devolvemos, en caso contrario, seguimos buscando
+                        return subFolder;
+
+                    Carpeta folder = Recursivo_Carpeta(name, subFolder);
+                    if (folder.name is string)  // Comprobamos que se haya devuelto un directorio, en cuyo caso es el buscado que lo devolvemos
+                        return folder;
+                }
+            }
+
+            return new Carpeta();
+        }
 
         public Byte[] Get_MagicID(int id)
         {
@@ -799,6 +900,21 @@ namespace Tinke
 
             return fin;
         }
+        public Byte[] Get_MagicID(string file)
+        {
+            BinaryReader br = new BinaryReader(File.OpenRead(file));
+
+            if (br.BaseStream.Length == 0x00)
+                return null;
+
+            byte[] ext = null;
+            try { ext = br.ReadBytes(4); }
+            catch { }
+
+            br.Close();
+
+            return ext;
+        }
         public Formato Get_Formato()
         {
             return Get_Formato(idSelect);
@@ -842,7 +958,56 @@ namespace Tinke
                 return Formato.Celdas;
             else if (currFile.name.EndsWith(".NANR") || new String(Encoding.ASCII.GetChars(ext)) == "NANR" || new String(Encoding.ASCII.GetChars(ext)) == "RNAN")
                 return Formato.Animación;
-            else if (currFile.name == "FNT.BIN" || currFile.name.StartsWith("OVERLAY9_") || currFile.name.StartsWith("OVERLAY7_"))
+            else if (currFile.name == "FNT.BIN" || currFile.name == "FAT.BIN" || currFile.name.StartsWith("OVERLAY9_") || currFile.name.StartsWith("OVERLAY7_") ||
+                currFile.name == "ARM9.BIN" || currFile.name == "ARM7.BIN" || currFile.name == "Y9.BIN" || currFile.name == "Y7.BIN")
+                return Formato.Sistema;
+
+            if (ext[0] == LZ77_TAG || ext[0] == LZSS_TAG || ext[0] == RLE_TAG || ext[0] == HUFF_TAG)
+                return Formato.Comprimido;
+
+            return Formato.Desconocido;
+        }
+        public Formato Get_Formato(string file)
+        {
+            Formato tipo = Formato.Desconocido;
+            string name = new FileInfo(file).Name;
+            byte[] ext = Get_MagicID(file);
+
+            #region Búsqueda y llamada de plugin
+            try
+            {
+                if (gamePlugin is IGamePlugin)
+                    tipo = gamePlugin.Get_Formato(name, ext, -1);
+                if (tipo != Formato.Desconocido)
+                    return tipo;
+
+                foreach (IPlugin formato in formatList)
+                {
+                    tipo = formato.Get_Formato(name, ext);
+                    if (tipo != Formato.Desconocido)
+                        return tipo;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return Formato.Desconocido;
+            }
+            #endregion
+
+            name = name.ToUpper();
+            if (name.EndsWith(".NCLR") || new String(Encoding.ASCII.GetChars(ext)) == "NCLR" || new String(Encoding.ASCII.GetChars(ext)) == "RLCN")
+                return Formato.Paleta;
+            else if (name.EndsWith(".NCGR") || new String(Encoding.ASCII.GetChars(ext)) == "NCGR" || new String(Encoding.ASCII.GetChars(ext)) == "RGCN")
+                return Formato.Imagen;
+            else if (name.EndsWith(".NSCR") || new String(Encoding.ASCII.GetChars(ext)) == "NSCR" || new String(Encoding.ASCII.GetChars(ext)) == "RCSN")
+                return Formato.Screen;
+            else if (name.EndsWith(".NCER") || new String(Encoding.ASCII.GetChars(ext)) == "NCER" || new String(Encoding.ASCII.GetChars(ext)) == "RECN")
+                return Formato.Celdas;
+            else if (name.EndsWith(".NANR") || new String(Encoding.ASCII.GetChars(ext)) == "NANR" || new String(Encoding.ASCII.GetChars(ext)) == "RNAN")
+                return Formato.Animación;
+            else if (name == "FNT.BIN" || name == "FAT.BIN" || name.StartsWith("OVERLAY9_") || name.StartsWith("OVERLAY7_") ||
+                name == "ARM9.BIN" || name == "ARM7.BIN")
                 return Formato.Sistema;
 
             if (ext[0] == LZ77_TAG || ext[0] == LZSS_TAG || ext[0] == RLE_TAG || ext[0] == HUFF_TAG)

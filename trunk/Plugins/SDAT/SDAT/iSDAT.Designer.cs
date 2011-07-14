@@ -71,6 +71,7 @@ namespace SDAT
             // treeFiles
             // 
             this.treeFiles.Dock = System.Windows.Forms.DockStyle.Left;
+            this.treeFiles.HideSelection = false;
             this.treeFiles.ImageIndex = 2;
             this.treeFiles.ImageList = this.imageList;
             this.treeFiles.Location = new System.Drawing.Point(0, 0);
@@ -92,6 +93,7 @@ namespace SDAT
             this.imageList.Images.SetKeyName(5, "resultset_next.png");
             this.imageList.Images.SetKeyName(6, "stop.png");
             this.imageList.Images.SetKeyName(7, "package.png");
+            this.imageList.Images.SetKeyName(8, "page_white.png");
             // 
             // listProp
             // 

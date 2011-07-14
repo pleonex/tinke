@@ -86,6 +86,33 @@ namespace Tinke.Nitro
 
             return root;
         }
+        public static void EscribirFNT(string salida, Carpeta root, ushort nCarpetas)
+        {
+            throw new NotImplementedException();
+
+            BinaryWriter bw = new BinaryWriter(new FileStream(salida, FileMode.Create));
+            List<Estructuras.MainFNT> mains = new List<Estructuras.MainFNT>();
+            Obtener_Mains(root, mains, nCarpetas, 0x0F000);
+
+            Estructuras.MainFNT main = mains[0];
+            main.idParentFolder = nCarpetas; // La primera carpeta contiene el nº total de carpetas
+            mains[0] = main;
+
+            // Escribimos primero las Subtables para saber el tamaño de cada una
+            for (int i = 0; i < mains.Count; i++)
+            {
+                long tamañoActual = bw.BaseStream.Length;
+
+                // Ponemos primero los archivos
+                for (int j = 0; j < mains[i].subTable.files.Count; j++)
+                {
+                    bw.Write((byte)mains[i].subTable.files[j].id);
+                }
+            }
+
+            bw.Flush();
+            bw.Close();
+        }
 
         public static Carpeta Jerarquizar_Carpetas(List<Estructuras.MainFNT> tables, int idFolder, string nameFolder)
         {
@@ -104,6 +131,39 @@ namespace Tinke.Nitro
            }
 
             return currFolder;
+        }
+
+        private static void Obtener_Mains(Carpeta currFolder, List<Estructuras.MainFNT> mains, int nTotalMains, ushort parent)
+        {
+            // Añadimos la carpeta actual al sistema
+            Estructuras.MainFNT main = new Estructuras.MainFNT();
+            main.offset = (uint)(nTotalMains * 0x08); // 0x08 == Tamaño de un Main sin SubTable
+            main.idFirstFile = (ushort)Obtener_FirstID(currFolder);
+            main.idParentFolder = parent;
+            main.subTable = currFolder;
+            mains.Add(main);
+
+            // Seguimos buscando más carpetas
+            if (currFolder.folders is List<Carpeta>)
+                foreach (Carpeta subFolder in currFolder.folders)
+                    Obtener_Mains(subFolder, mains, nTotalMains, currFolder.id);
+        }
+        private static int Obtener_FirstID(Carpeta currFolder)
+        {
+            if (currFolder.folders is List<Carpeta>)
+            {
+                for (int i = 0; i < currFolder.folders.Count; i++)
+                {
+                    int id = Obtener_FirstID(currFolder.folders[i]);
+                    if (id != -1)
+                        return id;
+                }
+            }
+
+            if (currFolder.files is List<Archivo>)
+                return currFolder.files[0].id;
+
+            return -1;
         }
     }
 }

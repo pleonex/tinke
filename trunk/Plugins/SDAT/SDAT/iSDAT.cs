@@ -97,17 +97,21 @@ namespace SDAT
             switch (formato)
             {
                 case FormatSound.SSEQ:
-                    return 2;
+                    //return 2; No soportado este formato aún
+                    return 8;
                 case FormatSound.SSAR:
-                    return 2;
+                    //return 2; No soportado este formato aún
+                    return 8;
                 case FormatSound.SBNK:
-                    return 4;
+                    //return 4; No soportado este formato aún
+                    return 8;
                 case FormatSound.SWAV:
                     return 1;
                 case FormatSound.SWAR:
                     return 7;
                 case FormatSound.STRM:
-                    return 1;
+                    //return 1; No soportado este formato aún
+                    return 8;
                 default:
                     return 1;
             }
@@ -125,7 +129,7 @@ namespace SDAT
                     listProp.Items[i].SubItems.RemoveAt(1);
 
             int id = Convert.ToInt32(e.Node.Tag);
-            if (id < 0x0F00)
+            if (id < 0x0F000)
             {
                 Sound fileSelect = SearchFile(id, sdat.files.root);
 
@@ -205,7 +209,7 @@ namespace SDAT
         private void btnExtract_Click(object sender, EventArgs e)
         {
             int id = Convert.ToInt32(treeFiles.SelectedNode.Tag);
-            if (id < 0x0F00)
+            if (id < 0x0F000)
             {
                 Sound currFile = SearchFile(id, sdat.files.root);
 
@@ -360,22 +364,31 @@ namespace SDAT
         }
         private void btnReproducir_Click(object sender, EventArgs e)
         {
-            if (soundPlayer is SoundPlayer)
+            try
             {
-                soundPlayer.Stop();
-                soundPlayer.Dispose();
+                if (soundPlayer is SoundPlayer)
+                {
+                    soundPlayer.Stop();
+                    soundPlayer.Dispose();
+                }
+
+                if (wavFile != "")
+                    File.Delete(wavFile);
+
+                string swav = SaveSelectedFile();
+                wavFile = Path.GetTempFileName();
+                WAV.EscribirArchivo(SWAV.ConvertirAWAV(SWAV.LeerArchivo(swav)), wavFile);
+
+                File.Delete(swav);
+
+                soundPlayer = new SoundPlayer(wavFile);
+                soundPlayer.Play();
             }
-            if (wavFile != "")
-                File.Delete(wavFile);
-
-            string swav = SaveSelectedFile();
-            wavFile = Path.GetTempFileName();
-            WAV.EscribirArchivo(SWAV.ConvertirAWAV(SWAV.LeerArchivo(swav)), wavFile);
-
-            File.Delete(swav);
-
-            soundPlayer = new SoundPlayer(wavFile);
-            soundPlayer.Play();
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                Console.WriteLine(ex.Message);
+            }
         }
         private void btnStop_Click(object sender, EventArgs e)
         {
@@ -386,11 +399,14 @@ namespace SDAT
         private string SaveSelectedFile()
         {
             Sound fileSelect = SearchFile();
+            string file = Path.GetTempFileName();
 
             if (fileSelect.offset == 0x00)
-                return fileSelect.path;
+            {
+                File.Copy(fileSelect.path, file, true);
+                return file;
+            }
 
-            string file = Path.GetTempFileName();
             BinaryReader br = new BinaryReader(new FileStream(sdat.archivo, FileMode.Open));
             br.BaseStream.Position = fileSelect.offset;
             File.WriteAllBytes(file, br.ReadBytes((int)fileSelect.size));

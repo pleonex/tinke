@@ -52,12 +52,12 @@ namespace Tinke
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Sistema));
-            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("S09");
-            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("S0A");
-            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem("S0B");
-            System.Windows.Forms.ListViewItem listViewItem4 = new System.Windows.Forms.ListViewItem("S0C");
-            System.Windows.Forms.ListViewItem listViewItem5 = new System.Windows.Forms.ListViewItem("S0D");
-            System.Windows.Forms.ListViewItem listViewItem6 = new System.Windows.Forms.ListViewItem("S0E");
+            System.Windows.Forms.ListViewItem listViewItem7 = new System.Windows.Forms.ListViewItem("S09");
+            System.Windows.Forms.ListViewItem listViewItem8 = new System.Windows.Forms.ListViewItem("S0A");
+            System.Windows.Forms.ListViewItem listViewItem9 = new System.Windows.Forms.ListViewItem("S0B");
+            System.Windows.Forms.ListViewItem listViewItem10 = new System.Windows.Forms.ListViewItem("S0C");
+            System.Windows.Forms.ListViewItem listViewItem11 = new System.Windows.Forms.ListViewItem("S0D");
+            System.Windows.Forms.ListViewItem listViewItem12 = new System.Windows.Forms.ListViewItem("S0E");
             this.iconos = new System.Windows.Forms.ImageList(this.components);
             this.btnExtraer = new System.Windows.Forms.Button();
             this.btnSee = new System.Windows.Forms.Button();
@@ -95,6 +95,8 @@ namespace Tinke
             this.checkSearch = new System.Windows.Forms.CheckBox();
             this.toolTipSearch = new System.Windows.Forms.ToolTip(this.components);
             this.lblSupport = new System.Windows.Forms.Label();
+            this.btnImport = new System.Windows.Forms.Button();
+            this.btnSaveROM = new System.Windows.Forms.Button();
             this.toolStrip1.SuspendLayout();
             this.toolStrip2.SuspendLayout();
             this.SuspendLayout();
@@ -121,6 +123,8 @@ namespace Tinke
             this.iconos.Images.SetKeyName(15, "picture_go.png");
             this.iconos.Images.SetKeyName(16, "font.png");
             this.iconos.Images.SetKeyName(17, "script.png");
+            this.iconos.Images.SetKeyName(18, "package_add.png");
+            this.iconos.Images.SetKeyName(19, "disk.png");
             // 
             // btnExtraer
             // 
@@ -168,12 +172,12 @@ namespace Tinke
             this.columnHeader1,
             this.columnHeader2});
             this.listFile.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem1,
-            listViewItem2,
-            listViewItem3,
-            listViewItem4,
-            listViewItem5,
-            listViewItem6});
+            listViewItem7,
+            listViewItem8,
+            listViewItem9,
+            listViewItem10,
+            listViewItem11,
+            listViewItem12});
             this.listFile.Location = new System.Drawing.Point(409, 28);
             this.listFile.Name = "listFile";
             this.listFile.Size = new System.Drawing.Size(197, 202);
@@ -193,6 +197,7 @@ namespace Tinke
             // 
             // treeSystem
             // 
+            this.treeSystem.HideSelection = false;
             this.treeSystem.ImageIndex = 0;
             this.treeSystem.ImageList = this.iconos;
             this.treeSystem.Location = new System.Drawing.Point(0, 28);
@@ -329,7 +334,7 @@ namespace Tinke
             this.toolStripDeleteChain,
             this.toolStripOpenAs});
             this.toolStrip2.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Table;
-            this.toolStrip2.Location = new System.Drawing.Point(409, 385);
+            this.toolStrip2.Location = new System.Drawing.Point(409, 360);
             this.toolStrip2.Name = "toolStrip2";
             this.toolStrip2.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
             this.toolStrip2.RightToLeft = System.Windows.Forms.RightToLeft.No;
@@ -455,7 +460,7 @@ namespace Tinke
             // txtSearch
             // 
             this.txtSearch.ForeColor = System.Drawing.Color.Black;
-            this.txtSearch.Location = new System.Drawing.Point(410, 279);
+            this.txtSearch.Location = new System.Drawing.Point(410, 267);
             this.txtSearch.Name = "txtSearch";
             this.txtSearch.Size = new System.Drawing.Size(183, 20);
             this.txtSearch.TabIndex = 14;
@@ -465,7 +470,7 @@ namespace Tinke
             // btnSearch
             // 
             this.btnSearch.Image = global::Tinke.Properties.Resources.zoom;
-            this.btnSearch.Location = new System.Drawing.Point(599, 277);
+            this.btnSearch.Location = new System.Drawing.Point(599, 267);
             this.btnSearch.Name = "btnSearch";
             this.btnSearch.Size = new System.Drawing.Size(43, 23);
             this.btnSearch.TabIndex = 15;
@@ -476,7 +481,7 @@ namespace Tinke
             // checkSearch
             // 
             this.checkSearch.AutoSize = true;
-            this.checkSearch.Location = new System.Drawing.Point(410, 306);
+            this.checkSearch.Location = new System.Drawing.Point(410, 293);
             this.checkSearch.Name = "checkSearch";
             this.checkSearch.Size = new System.Drawing.Size(46, 17);
             this.checkSearch.TabIndex = 16;
@@ -495,11 +500,37 @@ namespace Tinke
             // 
             this.lblSupport.AutoSize = true;
             this.lblSupport.Font = new System.Drawing.Font("Consolas", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblSupport.Location = new System.Drawing.Point(409, 349);
+            this.lblSupport.Location = new System.Drawing.Point(409, 325);
             this.lblSupport.Name = "lblSupport";
             this.lblSupport.Size = new System.Drawing.Size(32, 17);
             this.lblSupport.TabIndex = 17;
             this.lblSupport.Text = "S30";
+            // 
+            // btnImport
+            // 
+            this.btnImport.ImageIndex = 18;
+            this.btnImport.ImageList = this.iconos;
+            this.btnImport.Location = new System.Drawing.Point(525, 417);
+            this.btnImport.Name = "btnImport";
+            this.btnImport.Size = new System.Drawing.Size(110, 32);
+            this.btnImport.TabIndex = 18;
+            this.btnImport.Text = "Cambiar archivo";
+            this.btnImport.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnImport.UseVisualStyleBackColor = true;
+            this.btnImport.Click += new System.EventHandler(this.btnImport_Click);
+            // 
+            // btnSaveROM
+            // 
+            this.btnSaveROM.ImageIndex = 19;
+            this.btnSaveROM.ImageList = this.iconos;
+            this.btnSaveROM.Location = new System.Drawing.Point(409, 417);
+            this.btnSaveROM.Name = "btnSaveROM";
+            this.btnSaveROM.Size = new System.Drawing.Size(110, 32);
+            this.btnSaveROM.TabIndex = 19;
+            this.btnSaveROM.Text = "Guardar ROM";
+            this.btnSaveROM.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnSaveROM.UseVisualStyleBackColor = true;
+            this.btnSaveROM.Click += new System.EventHandler(this.btnSaveROM_Click);
             // 
             // Sistema
             // 
@@ -507,6 +538,8 @@ namespace Tinke
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
             this.ClientSize = new System.Drawing.Size(644, 537);
+            this.Controls.Add(this.btnSaveROM);
+            this.Controls.Add(this.btnImport);
             this.Controls.Add(this.lblSupport);
             this.Controls.Add(this.checkSearch);
             this.Controls.Add(this.btnSearch);
@@ -576,6 +609,8 @@ namespace Tinke
         private System.Windows.Forms.CheckBox checkSearch;
         private System.Windows.Forms.ToolTip toolTipSearch;
         private System.Windows.Forms.Label lblSupport;
+        private System.Windows.Forms.Button btnImport;
+        private System.Windows.Forms.Button btnSaveROM;
 
     }
 }
