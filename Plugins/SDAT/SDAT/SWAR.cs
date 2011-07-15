@@ -16,11 +16,12 @@
  *
  * Programador: rafael1193
  * 
- * Fecha: 11/07/2011
+ * Fecha: 15/07/2011
  * 
  */
 
 using System;
+using System.Text;
 
 namespace SDAT
 {
@@ -40,14 +41,14 @@ namespace SDAT
                 br = new System.IO.BinaryReader(fs);
 
                 //Leer Header
-                swar.header.type = Help.BytesToChars(br.ReadBytes(4));
+                swar.header.type = Encoding.ASCII.GetChars(br.ReadBytes(4));
                 swar.header.magic = br.ReadUInt32();
                 swar.header.nFileSize = br.ReadUInt32();
                 swar.header.nSize = br.ReadUInt16();
                 swar.header.nBlock = br.ReadUInt16();
 
                 //Leer Data
-                swar.data.type = Help.BytesToChars(br.ReadBytes(4));
+                swar.data.type = Encoding.ASCII.GetChars(br.ReadBytes(4));
                 swar.data.nSize = br.ReadUInt32();
                 swar.data.reserved = new uint[8];
                 for (int i = 0; i < 8; i++) { swar.data.reserved[i] = br.ReadUInt32(); }
@@ -121,7 +122,6 @@ namespace SDAT
 
             return swav;
         }
-
 
         public struct ArchivoSWAR
         {

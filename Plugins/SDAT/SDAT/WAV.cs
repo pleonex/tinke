@@ -68,7 +68,6 @@ namespace SDAT
 
         public static ArchivoWAV GenerarWAVPCM(ushort numChannels, uint sampleRate, ushort bitsPerSample, byte[] data)
         {
-
             ArchivoWAV archivo = new ArchivoWAV();
 
             archivo.chunkID = new char[] { 'R', 'I', 'F', 'F' };
@@ -87,46 +86,86 @@ namespace SDAT
             archivo.wave.data.chunkSize = (uint)data.Length;
             archivo.wave.data.data = new byte[data.Length];
 
-            for (int i = 0; i < data.Length; i++)
+            if (numChannels == 1)
             {
-                archivo.wave.data.data[i] = unchecked((byte)(data[i] ^ 0x80));
+                for (int i = 0; i < data.Length; i++)
+                {
+                    archivo.wave.data.data[i] = unchecked((byte)(data[i] ^ 0x80));
+                }
             }
 
+            else if (numChannels == 2)
+            {
+                for (int i = 0; i < data.Length; i++)
+                {
+                    archivo.wave.data.data[i] = data[i];
+                }
+            }
 
+            else if (numChannels >= 3)
+            {
+                throw new NotSupportedException("Channel count cannot be higher than 2");
+            }
 
             archivo.chunkSize = 4 + (8 + archivo.wave.fmt.chunkSize) + (8 + archivo.wave.data.chunkSize);
 
             return archivo;
         }
 
-        public static ArchivoWAV GenerarWAVADPCM(ushort numChannels, uint sampleRate, ushort bitsPerSample, byte[] compressedData)
+        public static ArchivoWAV GenerarWAVADPCM(ushort numChannels, uint sampleRate, ushort bitsPerSample, byte[] data)
         {
             ArchivoWAV archivo = new ArchivoWAV();
 
-            archivo.chunkID = new char[] { 'R', 'I', 'F', 'F' };
-            archivo.format = new char[] { 'W', 'A', 'V', 'E' };
+            if (numChannels == 1)
+            {
+                archivo.chunkID = new char[] { 'R', 'I', 'F', 'F' };
+                archivo.format = new char[] { 'W', 'A', 'V', 'E' };
 
-            archivo.wave.fmt.chunkID = new char[] { 'f', 'm', 't', ' ' };
-            archivo.wave.fmt.chunkSize = 16;
-            archivo.wave.fmt.audioFormat = ArchivoWAV.WaveChunk.FmtChunk.WaveFormat.WAVE_FORMAT_PCM;
-            archivo.wave.fmt.numChannels = numChannels;
-            archivo.wave.fmt.sampleRate = sampleRate;
-            archivo.wave.fmt.bitsPerSample = bitsPerSample;
-            archivo.wave.fmt.byteRate = archivo.wave.fmt.sampleRate * archivo.wave.fmt.bitsPerSample * archivo.wave.fmt.numChannels / 8;
-            archivo.wave.fmt.blockAlign = (ushort)(archivo.wave.fmt.numChannels * archivo.wave.fmt.bitsPerSample / (ushort)(8));
+                archivo.wave.fmt.chunkID = new char[] { 'f', 'm', 't', ' ' };
+                archivo.wave.fmt.chunkSize = 16;
+                archivo.wave.fmt.audioFormat = ArchivoWAV.WaveChunk.FmtChunk.WaveFormat.WAVE_FORMAT_PCM;
+                archivo.wave.fmt.numChannels = numChannels;
+                archivo.wave.fmt.sampleRate = sampleRate;
+                archivo.wave.fmt.bitsPerSample = bitsPerSample;
+                archivo.wave.fmt.byteRate = archivo.wave.fmt.sampleRate * archivo.wave.fmt.bitsPerSample * archivo.wave.fmt.numChannels / 8;
+                archivo.wave.fmt.blockAlign = (ushort)(archivo.wave.fmt.numChannels * archivo.wave.fmt.bitsPerSample / (ushort)(8));
 
-            archivo.wave.data.chunkID = new char[] { 'd', 'a', 't', 'a' };
-            archivo.wave.data.chunkSize = (uint)compressedData.Length;
-            archivo.wave.data.data = new byte[compressedData.Length];
+                archivo.wave.data.chunkID = new char[] { 'd', 'a', 't', 'a' };
+                archivo.wave.data.chunkSize = (uint)data.Length;
+                archivo.wave.data.data = new byte[data.Length];
 
-            archivo.wave.data.data = AdpcmDecompressor.Decompress_ADPCM(compressedData);
+                archivo.wave.data.data = AdpcmDecompressor.DecompressADPCM1Channel(data);
 
-            archivo.chunkSize = 4 + (8 + archivo.wave.fmt.chunkSize) + (8 + archivo.wave.data.chunkSize);
+                archivo.chunkSize = 4 + (8 + archivo.wave.fmt.chunkSize) + (8 + archivo.wave.data.chunkSize);
+            }
+
+            if (numChannels == 2)
+            {
+                archivo.chunkID = new char[] { 'R', 'I', 'F', 'F' };
+                archivo.format = new char[] { 'W', 'A', 'V', 'E' };
+
+                archivo.wave.fmt.chunkID = new char[] { 'f', 'm', 't', ' ' };
+                archivo.wave.fmt.chunkSize = 16;
+                archivo.wave.fmt.audioFormat = ArchivoWAV.WaveChunk.FmtChunk.WaveFormat.WAVE_FORMAT_PCM;
+                archivo.wave.fmt.numChannels = numChannels;
+                archivo.wave.fmt.sampleRate = sampleRate;
+                archivo.wave.fmt.bitsPerSample = bitsPerSample;
+                archivo.wave.fmt.byteRate = archivo.wave.fmt.sampleRate * archivo.wave.fmt.bitsPerSample * archivo.wave.fmt.numChannels / 8;
+                archivo.wave.fmt.blockAlign = (ushort)(archivo.wave.fmt.numChannels * archivo.wave.fmt.bitsPerSample / (ushort)(8));
+
+                archivo.wave.data.chunkID = new char[] { 'd', 'a', 't', 'a' };
+                archivo.wave.data.chunkSize = (uint)data.Length;
+                archivo.wave.data.data = new byte[data.Length];
+
+                archivo.wave.data.data = AdpcmDecompressor.DecompressADPCM2Channel(data);
+
+                archivo.chunkSize = 4 + (8 + archivo.wave.fmt.chunkSize) + (8 + archivo.wave.data.chunkSize);
+            }
 
             return archivo;
         }
 
-        
+
         public struct ArchivoWAV
         {
             public char[] chunkID;

@@ -21,6 +21,7 @@
  */
 
 using System;
+using System.Text;
 
 namespace SDAT
 {
@@ -40,14 +41,14 @@ namespace SDAT
                 br = new System.IO.BinaryReader(fs);
 
                 //Leer Header
-                swav.header.type = Help.BytesToChars(br.ReadBytes(4));
+                swav.header.type = Encoding.ASCII.GetChars(br.ReadBytes(4));
                 swav.header.magic = br.ReadUInt32();
                 swav.header.nFileSize = br.ReadUInt32();
                 swav.header.nSize = br.ReadUInt16();
                 swav.header.nBlock = br.ReadUInt16();
 
                 //Leer Data
-                swav.data.type = Help.BytesToChars(br.ReadBytes(4));
+                swav.data.type = Encoding.ASCII.GetChars(br.ReadBytes(4));
                 swav.data.nSize = br.ReadUInt32();
                 {//Leer Info
                     swav.data.info.nWaveType = br.ReadByte();
@@ -90,14 +91,14 @@ namespace SDAT
                 bw = new System.IO.BinaryWriter(fs);
 
                 //Escribir Header
-                bw.Write(Help.CharsToBytes(swav.header.type));
+                bw.Write(Encoding.ASCII.GetBytes(swav.header.type));
                 bw.Write(swav.header.magic);
                 bw.Write(swav.header.nFileSize);
                 bw.Write(swav.header.nSize);
                 bw.Write(swav.header.nBlock);
 
                 //Escribir Data
-                bw.Write(Help.CharsToBytes(swav.data.type));
+                bw.Write(Encoding.ASCII.GetBytes(swav.data.type));
                 bw.Write(swav.data.nSize);
 
                 //Escribir Info
