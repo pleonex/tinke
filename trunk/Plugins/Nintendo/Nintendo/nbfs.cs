@@ -32,11 +32,13 @@ namespace Nintendo
 	{
 		IPluginHost pluginsHost;
 		string archivo;
+        int id;
 		
-		public nbfs(IPluginHost pluginHost, string archivo)
+		public nbfs(IPluginHost pluginHost, string archivo, int id)
 		{
 			this.pluginsHost = pluginHost;
 			this.archivo = archivo;
+            this.id = id;
 		}
 		
 		public void Leer()
@@ -46,6 +48,7 @@ namespace Nintendo
 			
 			// Su formato es NTFS raw, sin información, nos la inventamos por tanto
             NSCR nscr = new NSCR();
+            nscr.id = (uint)id;
 
             // Lee cabecera genérica
             nscr.cabecera.id = "NSCR".ToCharArray();

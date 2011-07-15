@@ -80,5 +80,13 @@ namespace PluginInterface
         void Descomprimir(string archivo);
         void Descomprimir(byte[] datos);
         void Descomprimir(byte[] datos, byte tag);
+
+        event Action<int, string> ChangeFile_Event;
+        /// <summary>
+        /// Change the content of a file
+        /// </summary>
+        /// <param name="id">The id of the file to change</param>
+        /// <param name="newFile">The path where the new file is</param>
+        void ChangeFile(int id, string newFile);
     }
 }

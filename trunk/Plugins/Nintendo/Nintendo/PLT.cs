@@ -31,11 +31,13 @@ namespace Nintendo
     {	
         IPluginHost pluginHost;
 		string archivo;
+        int id;
 		
-		public PLT(IPluginHost pluginHost, string archivo)
+		public PLT(IPluginHost pluginHost, string archivo, int id)
 		{
 			this.pluginHost = pluginHost;
 			this.archivo = archivo;
+            this.id = id;
 		}
 		
 		public void Leer()
@@ -44,6 +46,7 @@ namespace Nintendo
 			BinaryReader br = new BinaryReader(File.OpenRead(archivo));
 			
 			NCLR nclr = new NCLR();
+            nclr.id = (uint)id;
 			// Ponemos una cabecera genérica
 			nclr.cabecera.id = "NCLR".ToCharArray();
 			nclr.cabecera.constant = 0x0100;

@@ -65,18 +65,18 @@ namespace Nintendo
 			return Formato.Desconocido;
 		}
 		
-		public Control Show_Info(string archivo)
+		public Control Show_Info(string archivo, int id)
 		{
             if (archivo.ToUpper().EndsWith(".NBFP"))
             {
-                new nbfp(pluginHost, archivo).Leer();
+                new nbfp(pluginHost, archivo, id).Leer();
                 
                 iNCLR control = new iNCLR(pluginHost, pluginHost.Get_NCLR());
                 return control;
             }
 			if (archivo.ToUpper().EndsWith(".NBFC"))
 			{
-				new nbfc(pluginHost, archivo).Leer();
+				new nbfc(pluginHost, archivo, id).Leer();
 
 				if (pluginHost.Get_NCLR().cabecera.file_size != 0x00)
 				{
@@ -87,7 +87,7 @@ namespace Nintendo
 
 			if (archivo.ToUpper().EndsWith(".NBFS"))
 			{
-				new nbfs(pluginHost, archivo).Leer();
+				new nbfs(pluginHost, archivo, id).Leer();
 				
 				if (pluginHost.Get_NCLR().cabecera.file_size != 0x00 && pluginHost.Get_NCGR().cabecera.file_size != 0x00)
 				{
@@ -103,7 +103,7 @@ namespace Nintendo
 
             if (archivo.ToUpper().EndsWith(".NTFT"))
             {
-                new ntft(pluginHost, archivo).Leer();
+                new ntft(pluginHost, archivo, id).Leer();
 
                 if (pluginHost.Get_NCLR().cabecera.file_size != 0x00)
                 {
@@ -113,7 +113,7 @@ namespace Nintendo
             }
             if (archivo.ToUpper().EndsWith(".NTFP"))
             {
-                new ntfp(pluginHost, archivo).Leer();
+                new ntfp(pluginHost, archivo, id).Leer();
 
                 iNCLR control = new iNCLR(pluginHost, pluginHost.Get_NCLR());
                 return control;
@@ -121,7 +121,7 @@ namespace Nintendo
 
             if (archivo.ToUpper().EndsWith(".CHAR"))
             {
-                new CHAR(pluginHost, archivo).Leer();
+                new CHAR(pluginHost, archivo, id).Leer();
 
                 if (pluginHost.Get_NCLR().cabecera.file_size != 0x00)
                 {
@@ -131,7 +131,7 @@ namespace Nintendo
             }
             if (archivo.ToUpper().EndsWith(".PLT"))
             {
-                new PLT(pluginHost, archivo).Leer();
+                new PLT(pluginHost, archivo, id).Leer();
 
                 iNCLR control = new iNCLR(pluginHost, pluginHost.Get_NCLR());
                 return control;
@@ -140,24 +140,24 @@ namespace Nintendo
 			return new Control();
 		}
 		
-		public void Leer(string archivo)
+		public void Leer(string archivo, int id)
 		{
 			if (archivo.ToUpper().EndsWith(".NBFP"))
-				new nbfp(pluginHost, archivo).Leer();
+				new nbfp(pluginHost, archivo, id).Leer();
 			if (archivo.ToUpper().EndsWith(".NBFC"))
-				new nbfc(pluginHost, archivo).Leer();
+				new nbfc(pluginHost, archivo, id).Leer();
 			if (archivo.ToUpper().EndsWith(".NBFS"))
-				new nbfs(pluginHost, archivo).Leer();
+				new nbfs(pluginHost, archivo, id).Leer();
             if (archivo.ToUpper().EndsWith(".BMG"))
                 Console.WriteLine("Este archivo no contiene información para guardar.");
             if (archivo.ToUpper().EndsWith(".NTFP"))
-                new ntfp(pluginHost, archivo).Leer();
+                new ntfp(pluginHost, archivo, id).Leer();
             if (archivo.ToUpper().EndsWith(".NTFT"))
-                new ntft(pluginHost, archivo).Leer();
+                new ntft(pluginHost, archivo, id).Leer();
             if (archivo.ToUpper().EndsWith(".PLT"))
-                new PLT(pluginHost, archivo).Leer();
+                new PLT(pluginHost, archivo, id).Leer();
             if (archivo.ToUpper().EndsWith(".CHAR"))
-                new CHAR(pluginHost, archivo).Leer();
+                new CHAR(pluginHost, archivo, id).Leer();
 		}
 	}
 }

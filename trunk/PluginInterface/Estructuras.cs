@@ -37,6 +37,7 @@ namespace PluginInterface
         public Header cabecera;
         public TTLP pltt;
         public Object other;
+        public UInt32 id;
     }
     public struct TTLP
     {
@@ -62,6 +63,7 @@ namespace PluginInterface
         public SOPC sopc;
         public Orden_Tiles orden;
         public Object other;
+        public UInt32 id;
     }
     public struct RAHC
     {
@@ -100,6 +102,7 @@ namespace PluginInterface
         public Header cabecera;
         public NSCR_Section section;        // Sección NSCR
         public Object other;
+        public UInt32 id;
     }
     public struct NSCR_Section
     {
@@ -127,6 +130,7 @@ namespace PluginInterface
         public LABL labl;
         public UEXT uext;
         public Object other;
+        public UInt32 id;
     }
     public struct CEBK
     {
@@ -165,6 +169,8 @@ namespace PluginInterface
         public ABNK abnk;
         public LABL labl;
         public UEXT uext;
+        public Object other;
+        public UInt32 id;
     }
     public struct ABNK
     {

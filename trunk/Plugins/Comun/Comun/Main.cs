@@ -28,12 +28,12 @@ namespace Comun
             this.pluginHost = pluginHost;
         }
 
-        public void Leer(string archivo)
+        public void Leer(string archivo, int id)
         {
             MessageBox.Show("Estos archivos no pueden guardar información.");
         }
 
-        public Control Show_Info(string archivo)
+        public Control Show_Info(string archivo, int id)
         {
             if (archivo.ToUpper().EndsWith(".TGA"))
                 return new TGA(pluginHost, archivo).Show_Info();

@@ -67,9 +67,9 @@ namespace Tinke
             this.lblLowLines = new System.Windows.Forms.Label();
             this.linkfamfamfam = new System.Windows.Forms.LinkLabel();
             this.lblfamfamfam = new System.Windows.Forms.Label();
-            this.linkTrad = new System.Windows.Forms.LinkLabel();
             this.label7 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
+            this.lblTrad = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureImage)).BeginInit();
             this.SuspendLayout();
             // 
@@ -239,18 +239,6 @@ namespace Tinke
             this.lblfamfamfam.TabIndex = 16;
             this.lblfamfamfam.Text = "S0B";
             // 
-            // linkTrad
-            // 
-            this.linkTrad.AutoSize = true;
-            this.linkTrad.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.linkTrad.Location = new System.Drawing.Point(297, 60);
-            this.linkTrad.Name = "linkTrad";
-            this.linkTrad.Size = new System.Drawing.Size(30, 13);
-            this.linkTrad.TabIndex = 17;
-            this.linkTrad.TabStop = true;
-            this.linkTrad.Text = "S0C";
-            this.linkTrad.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkTrad_LinkClicked);
-            // 
             // label7
             // 
             this.label7.AutoSize = true;
@@ -272,14 +260,24 @@ namespace Tinke
             this.label8.TabIndex = 19;
             this.label8.Text = "rafael1193   go11um   Odnetnin I";
             // 
+            // lblTrad
+            // 
+            this.lblTrad.AutoSize = true;
+            this.lblTrad.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTrad.Location = new System.Drawing.Point(297, 58);
+            this.lblTrad.Name = "lblTrad";
+            this.lblTrad.Size = new System.Drawing.Size(30, 15);
+            this.lblTrad.TabIndex = 20;
+            this.lblTrad.Text = "S0C";
+            // 
             // Autores
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(435, 340);
+            this.Controls.Add(this.lblTrad);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.label7);
-            this.Controls.Add(this.linkTrad);
             this.Controls.Add(this.lblfamfamfam);
             this.Controls.Add(this.linkfamfamfam);
             this.Controls.Add(this.lblLowLines);
@@ -331,9 +329,9 @@ namespace Tinke
         private System.Windows.Forms.Label lblLowLines;
         private System.Windows.Forms.LinkLabel linkfamfamfam;
         private System.Windows.Forms.Label lblfamfamfam;
-        private System.Windows.Forms.LinkLabel linkTrad;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Label lblTrad;
 
     }
 }

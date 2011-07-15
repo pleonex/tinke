@@ -29,7 +29,7 @@ namespace NARC
         }
 
 
-        public void Leer(string archivo)
+        public void Leer(string archivo, int idArchivo)
         {
             tempFolder = pluginHost.Get_TempFolder();
             // Determinamos la subcarpeta donde guardar los archivos descomprimidos.
@@ -191,7 +191,7 @@ namespace NARC
                     Asignar_Archivos(ref br, subFolder, idFile, size);
         }
 
-        public Control Show_Info(string archivo)
+        public Control Show_Info(string archivo, int id)
         {
             throw new NotImplementedException();
         }

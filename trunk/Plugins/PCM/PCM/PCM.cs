@@ -27,7 +27,7 @@ namespace PCM
             return Formato.Desconocido;
         }
 
-        public void Leer(string archivo)
+        public void Leer(string archivo, int id)
         {
             string folder = pluginHost.Get_TempFolder();
             // Determinamos la subcarpeta donde guardar los archivos descomprimidos.
@@ -84,7 +84,7 @@ namespace PCM
             carpeta.files.AddRange(files);
             pluginHost.Set_Files(carpeta);
         }
-        public Control Show_Info(string archivo)
+        public Control Show_Info(string archivo, int id)
         {
             throw new NotImplementedException();
         }

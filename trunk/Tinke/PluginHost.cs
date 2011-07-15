@@ -131,5 +131,11 @@ namespace Tinke
         	DescomprimirEvent(temp, tag);
         	System.IO.File.Delete(temp);
         }
+
+        public event Action<int, string> ChangeFile_Event;
+        public void ChangeFile(int id, string newFile)
+        {
+            ChangeFile_Event(id, newFile);
+        }
     }
 }

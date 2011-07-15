@@ -30,10 +30,11 @@ namespace Tinke
 {
     public static class Imagen_NANR
     {
-        public static NANR Leer(string archivo)
+        public static NANR Leer(string archivo, int id)
         {
             BinaryReader br = new BinaryReader(File.OpenRead(archivo));
             NANR nanr = new NANR();
+            nanr.id = (uint)id;
 
             // Cabecera genérica
             nanr.cabecera.id = br.ReadChars(4);

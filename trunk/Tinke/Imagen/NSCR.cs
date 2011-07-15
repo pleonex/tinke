@@ -10,10 +10,11 @@ namespace Tinke
 {
     public static class Imagen_NSCR
     {
-        public static NSCR Leer(string file)
+        public static NSCR Leer(string file, int id)
         {
             BinaryReader br = new BinaryReader(File.OpenRead(file));
             NSCR nscr = new NSCR();
+            nscr.id = (uint)id;
 
             // Lee cabecera genérica
             nscr.cabecera.id = br.ReadChars(4);
@@ -54,13 +55,14 @@ namespace Tinke
             br.Close();
             return nscr;
         }
-        public static NSCR Leer_Basico(string archivo)
+        public static NSCR Leer_Basico(string archivo, int id)
         {
             BinaryReader br = new BinaryReader(File.OpenRead(archivo));
             uint file_size = (uint)new FileInfo(archivo).Length;
 
             // Su formato es NTFS raw, sin información, nos la inventamos por tanto
             NSCR nscr = new NSCR();
+            nscr.id = (uint)id;
 
             // Lee cabecera genérica
             nscr.cabecera.id = "NSCR".ToCharArray();
