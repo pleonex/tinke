@@ -24,7 +24,7 @@ using System;
 
 namespace SDAT
 {
-    public static class SWAV
+    class SWAV
     {
         public static ArchivoSWAV LeerArchivo(string path)
         {
@@ -40,14 +40,14 @@ namespace SDAT
                 br = new System.IO.BinaryReader(fs);
 
                 //Leer Header
-                swav.header.type = Help.ConvertirBytesAChars(br.ReadBytes(4));
+                swav.header.type = Help.BytesToChars(br.ReadBytes(4));
                 swav.header.magic = br.ReadUInt32();
                 swav.header.nFileSize = br.ReadUInt32();
                 swav.header.nSize = br.ReadUInt16();
                 swav.header.nBlock = br.ReadUInt16();
 
                 //Leer Data
-                swav.data.type = Help.ConvertirBytesAChars(br.ReadBytes(4));
+                swav.data.type = Help.BytesToChars(br.ReadBytes(4));
                 swav.data.nSize = br.ReadUInt32();
                 {//Leer Info
                     swav.data.info.nWaveType = br.ReadByte();
@@ -58,11 +58,12 @@ namespace SDAT
                     swav.data.info.nNonLoopLen = br.ReadUInt32();
                 }
                 //Leer resto de Data
-                uint tamañoDatos = (uint)(swav.data.nSize - (uint)20);
+                uint tamañoDatos = (uint)(br.BaseStream.Length - br.BaseStream.Position);
                 swav.data.data = new byte[tamañoDatos];
                 for (uint i = 0; i < tamañoDatos; i++)
                 {
                     swav.data.data[i] = br.ReadByte();
+                    
                 }
             }
             catch (Exception ex)
@@ -89,14 +90,14 @@ namespace SDAT
                 bw = new System.IO.BinaryWriter(fs);
 
                 //Escribir Header
-                bw.Write(Help.ConvertirCharsABytes(swav.header.type));
+                bw.Write(Help.CharsToBytes(swav.header.type));
                 bw.Write(swav.header.magic);
                 bw.Write(swav.header.nFileSize);
                 bw.Write(swav.header.nSize);
                 bw.Write(swav.header.nBlock);
 
                 //Escribir Data
-                bw.Write(Help.ConvertirCharsABytes(swav.data.type));
+                bw.Write(Help.CharsToBytes(swav.data.type));
                 bw.Write(swav.data.nSize);
 
                 //Escribir Info
@@ -137,7 +138,7 @@ namespace SDAT
 
             if (swav.data.info.nWaveType >= 2)
             {
-                wav = WAV.GenerarWAVADPCM(1, swav.data.info.nSampleRate, 16, swav.data.data);
+                wav = WAV.GenerarWAVADPCM(1,33000, 16, swav.data.data);
             }
             return wav;
         }

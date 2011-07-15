@@ -16,19 +16,18 @@
  *
  * Programador: rafael1193
  * 
- * Fecha: 29/06/2011
+ * Fecha: 11/07/2011
  * 
  */
+
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace SDAT
 {
-    public static class Help
+    internal class Help
     {
-        internal static Char[] ConvertirBytesAChars(Byte[] bytes)
+
+        internal static Char[] BytesToChars(Byte[] bytes)
         {
             Char[] ch = new char[bytes.Length];
 
@@ -40,7 +39,7 @@ namespace SDAT
             return ch;
         }
 
-        internal static Byte[] ConvertirCharsABytes(Char[] chars)
+        internal static Byte[] CharsToBytes(Char[] chars)
         {
             Byte[] bytes = new byte[chars.Length];
 
@@ -52,5 +51,16 @@ namespace SDAT
             return bytes;
         }
 
+        internal static sbyte[] BytesToSbytes(byte[] bytes)
+        {
+            sbyte[] sbytes = new sbyte[bytes.Length];
+
+            for (int i = 0; i < bytes.Length; i++)
+            {
+                sbytes[i] = unchecked((sbyte)(bytes[i] ^ 0x80));
+            }
+
+            return sbytes;
+        }
     }
 }

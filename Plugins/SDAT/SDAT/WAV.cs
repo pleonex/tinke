@@ -16,7 +16,7 @@
  *
  * Programador: rafael1193
  * 
- * Fecha: 11/07/2011
+ * Fecha: 15/07/2011
  * 
  */
 
@@ -24,7 +24,7 @@ using System;
 
 namespace SDAT
 {
-    public static class WAV
+    class WAV
     {
         public static void EscribirArchivo(ArchivoWAV wr, string path)
         {
@@ -85,11 +85,11 @@ namespace SDAT
 
             archivo.wave.data.chunkID = new char[] { 'd', 'a', 't', 'a' };
             archivo.wave.data.chunkSize = (uint)data.Length;
-            archivo.wave.data.data = new sbyte[data.Length];
+            archivo.wave.data.data = new byte[data.Length];
 
             for (int i = 0; i < data.Length; i++)
             {
-                archivo.wave.data.data[i] = unchecked((sbyte)(data[i] ^ 0x80));
+                archivo.wave.data.data[i] = unchecked((byte)(data[i] ^ 0x80));
             }
 
 
@@ -99,10 +99,8 @@ namespace SDAT
             return archivo;
         }
 
-        public static ArchivoWAV GenerarWAVADPCM(ushort numChannels, uint sampleRate, ushort bitsPerSample, byte[] data)
+        public static ArchivoWAV GenerarWAVADPCM(ushort numChannels, uint sampleRate, ushort bitsPerSample, byte[] compressedData)
         {
-            throw new NotImplementedException();
-
             ArchivoWAV archivo = new ArchivoWAV();
 
             archivo.chunkID = new char[] { 'R', 'I', 'F', 'F' };
@@ -110,7 +108,7 @@ namespace SDAT
 
             archivo.wave.fmt.chunkID = new char[] { 'f', 'm', 't', ' ' };
             archivo.wave.fmt.chunkSize = 16;
-            archivo.wave.fmt.audioFormat = ArchivoWAV.WaveChunk.FmtChunk.WaveFormat.IBM_FORMAT_ADPCM;
+            archivo.wave.fmt.audioFormat = ArchivoWAV.WaveChunk.FmtChunk.WaveFormat.WAVE_FORMAT_PCM;
             archivo.wave.fmt.numChannels = numChannels;
             archivo.wave.fmt.sampleRate = sampleRate;
             archivo.wave.fmt.bitsPerSample = bitsPerSample;
@@ -118,26 +116,17 @@ namespace SDAT
             archivo.wave.fmt.blockAlign = (ushort)(archivo.wave.fmt.numChannels * archivo.wave.fmt.bitsPerSample / (ushort)(8));
 
             archivo.wave.data.chunkID = new char[] { 'd', 'a', 't', 'a' };
-            archivo.wave.data.chunkSize = (uint)data.Length;
-            archivo.wave.data.data = new sbyte[data.Length];
+            archivo.wave.data.chunkSize = (uint)compressedData.Length;
+            archivo.wave.data.data = new byte[compressedData.Length];
 
-            for (int i = 0; i < data.Length; i++)
-            {
-                archivo.wave.data.data[i] = unchecked((sbyte)(data[i] ^ 0x80));
-            }
-
-
+            archivo.wave.data.data = AdpcmDecompressor.Decompress_ADPCM(compressedData);
 
             archivo.chunkSize = 4 + (8 + archivo.wave.fmt.chunkSize) + (8 + archivo.wave.data.chunkSize);
 
             return archivo;
         }
 
-        private static short ADPCM()
-        {
-            return new short();
-        }
-
+        
         public struct ArchivoWAV
         {
             public char[] chunkID;
@@ -174,7 +163,7 @@ namespace SDAT
                 {
                     public char[] chunkID;
                     public uint chunkSize;
-                    public sbyte[] data;
+                    public byte[] data;
                 }
             }
         }
