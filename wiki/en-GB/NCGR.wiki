@@ -1,4 +1,5 @@
 #summary Specification about NCGR files
+#labels Formato
 
 These files, which name could be "Nintendo Character Graphic Resource", are used in many Nintendo games.
 They contains the data of the image, that is, the colour of each pixels.

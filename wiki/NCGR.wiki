@@ -1,0 +1,87 @@
+#summary Documentación sobre archivos NCGR
+#labels Formato
+
+Estos archivos, cuyo nombre podría ser _"Nintendo Character Graphic Resource"_, se usan en bastantes juegos
+de Nintendo. Contienen los datos de la imagen, es decir, los colores que corresponde a cada pixels.
+
+Un _tile_ es un bloque de 8x8 pixels.
+
+=Estructura=
+
+||_Posición_||_Tipo_||_Descripción_||
+
+*Cabecera genérica*
+
+||0x00||char`[4]`||ID (NCGR)||
+||0x04||ushort||Endianess (si es igual a 0xFFFE el ID está inverso)||
+||0x06||ushort||Constante (debería ser 0x1000)||
+||0x08||uint||Tamaño del archivo||
+||0x0C||ushort||Tamaño de la cabecera||
+||0x0E||ushort||# de secciones||
+
+*Sección: CHAR (CHARacter data)*
+
+||0x00||char`[4]`||ID (CHAR)||
+||0x04||uint||Tamaño de la sección||
+||0x08||ushort||Altura en tiles||
+||0x0A||ushort||Ancho en tiles||
+||0x0C||uint||Profundidad (0x03 == 4bpp; 0x04 == 8bpp)||
+||0x10||ushort||Desconocido 1||
+||0x12||ushort||Desconocido 2||
+||0x14||uint||Orden de tiles (0-7 bit => si 0x00 == Orden horizontal; sino == No ordenado en tiles (lineal))||
+||0x18||uint||Tamaño de los datos||
+||0x1C||uint||Desconocido 3||
+
+*Datos de la imagen*
+
+||0x00||byte`[]`||Datos||
+
+*Sección: SOPC*
+
+||0x00||char`[4]`||ID (SOPC)||
+||0x04||uint||Tamaño de la sección||
+||0x08||uint||Desconocido 1||
+||0x0A||ushort||Tamaño de personaje (suele ser 0x10)||
+||0x0C||ushort||# de personajes (suele ser 0x20)||
+
+ _Nota 1:_ Si el orden de los tiles es _lineal_ entonces el ancho y el alto deben ser multiplacos por 8 (el tamaño de un tile)
+
+ _Nota 2:_ El _Tamaño de los datos_ puede ser 0, entonces éste valor es (Ancho `*` Alto)
+
+ _Nota 3:_ La imagen generalmente tiene un color de transparencia que es siempre el primero de la paleta.
+
+
+=Datos de la imagen=
+
+Si la _profundidad_ es 8bpp, cada byte representa el color de un pixel, el valor de éste byte indica el lugar del color en la paleta
+(ejemplo: si éste es 0x05 el color de éste pixel es el color que se encuentra en la quinta posición de la paleta (empezando por 0)).
+
+Si la _profundidad_ es 4bpp, cada byte representa dos pixel: 0-3 bits = primer pixel; 4-7 bits = segundo pixel. El valor representa lo
+mismo que en el caso de 8bpp (teniendo en este caso la paleta como máximo 16 colores).
+
+Si el _orden de los tiles_ es _Horizontal_ significa que cada pixel se encuentra en un bloque de 8x8 pixels (un tile), que se ordena 
+de la siguiente forma:
+
+{{{
+ 0  1  2  3  4  5  6  7  64 65 66 67 68 69 70 71
+ 8  9 10 11 12 13 14 15  72 73 74 75 76 77 78 79
+16 17 18 19 20 21 22 23  80 ...
+24 25 26 27 28 29 30 31
+32 33 34 35 36 37 38 39
+40 41 42 43 44 45 46 47
+48 49 50 51 52 53 54 55
+56 57 58 59 60 61 62 63
+}}}
+
+Si la imagen no se ordena en tiles (_lineal_), entonces los pixels se ordenan de la siguiente forma:
+
+{{{
+0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 ...
+}}}
+
+=Sección: SOPC=
+
+Ésta es una sección desconocida que puede o no estar en el archivo. Desde mi punto de vista creo que contiene información
+sobre como dividir en subimágenes la imagen actual, pero esta relación la he visto en muy pocas imágenes. El valor _tamaño de personaje_
+indicaría el Ancho y Alto de cada una de las subimágenes (siempre cuadradas) que contiene la imagen y el siguiente valor el número de
+subimágenes que hay. Sin embargo ésto solo ha sido válido en una imagen...

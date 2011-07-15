@@ -1,0 +1,58 @@
+#summary Documentación sobre archivos NCLR
+#labels Formato
+
+Estos archivos, cuyo nombre podría ser _"Nintendo CoLour Resource"_, se usan en muchos juegos. Contienen la paleta de una imagen,
+pudiendo contener un archivo más de una paleta (4-bpp).
+
+=Estructura de la paleta=
+
+||_Posición_||_Tipo_||_Descripción_||
+
+*Cabecera genérica*
+
+||0x00||char`[4]`||ID (NCLR)||
+||0x04||ushort||Endianess (si es igual a 0xFFFE el ID se encuentra inverso)||
+||0x06||ushort||Constante (debería ser 0x1000)||
+||0x08||uint||Tamaño del archivo||
+||0x0C||ushort||Tamaño de la cabecera||
+||0x0E||ushort||# de secciones||
+
+*Sección: PLTT (PaLeTTe)*
+
+||0x00||char`[4]`||ID (PLTT)||
+||0x04||uint||Tamaño de la sección||
+||0x08||ushort||Profundidad (0x03 == 4bpp; 0x04 == 8bpp)||
+||0x0A||ushort||Desconocido 1||
+||0x0C||uint||Desconocido 2||
+||0x10||uint||Tamaño de las paletas||
+||0x14||uint||# de colores por paleta (si Profundidad == 8bpp entonces debe ser 0x0100)||
+
+*Datos de las paletas (NTFP Nintendo Tile Format Palette)*
+
+||0x00||byte`[2]`||Color codificado con BGR555||
+||...||
+
+_Nota:_ El número de paletas puede ser calculado de la siguiente forma:
+
+{{{
+int nPaletas = (Tamaño de paleta) / (# de colores * 2);
+}}}
+
+
+=Codificación BGR555=
+
+Cada dos bytes representa un color definido por tres números (BGR Blue Green Red), estos están guardados en el bytes de la
+siguiente forma:
+XBBBBBGGGGGRRRRR
+cada letras es un bit (5 bit por color), la letra X no se usa (siempre es 0).
+Una forma de decodificar los dos bytes a un color es (en C#):
+
+{{{
+int r,b; double g;
+
+r = (byte1 % 0x20) * 0x8;
+g = (byte1 / 0x20 + ((byte2 % 0x4) * 7.96875)) * 0x8;
+b = byte2 / 0x4 * 0x8;
+
+return System.Drawing.Color.FromArgb(r, (int)g, b);
+}}}
