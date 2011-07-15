@@ -31,10 +31,11 @@ namespace Tinke
 {
     public static class Imagen_NCER
     {
-        public static NCER Leer(string file)
+        public static NCER Leer(string file, int id)
         {
             BinaryReader br = new BinaryReader(File.OpenRead(file));
             NCER ncer = new NCER();
+            ncer.id = (uint)id;
 
             // Lee la cabecera genérica
             ncer.header.id = br.ReadChars(4);

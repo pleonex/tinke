@@ -29,20 +29,13 @@ namespace TXT
         }
 
 
-        public void Leer(string archivo)
+        public void Leer(string archivo, int id)
         {
             Console.WriteLine("Este archivo no contiene información para guardar.");
         }
 
-        public Control Show_Info(string archivo)
+        public Control Show_Info(string archivo, int id)
         {
-            TextBox txtBox = new TextBox();
-            txtBox.ReadOnly = true;
-            txtBox.HideSelection = true;
-            txtBox.Dock = DockStyle.Fill;
-            txtBox.Multiline = true;
-            txtBox.ScrollBars = ScrollBars.Both;
-
             string txt = "";
             
             BinaryReader br = new BinaryReader(File.OpenRead(archivo));
@@ -122,9 +115,8 @@ namespace TXT
             #endregion
 
             br.Close();
-            txtBox.Text = txt;
 
-            return txtBox;
+            return new iTXT(txt, pluginHost, id);
         }
     }
 }

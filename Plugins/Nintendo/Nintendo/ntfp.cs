@@ -1,4 +1,24 @@
-﻿using System;
+﻿/*
+ * Copyright (C) 2011  pleoNeX
+ *
+ *   This program is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+ *
+ * Programador: pleoNeX
+ * Fecha: 1/07/2011
+ * 
+ */
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,11 +31,13 @@ namespace Nintendo
     {
         IPluginHost pluginHost;
 		string archivo;
+        int id;
 		
-		public ntfp(IPluginHost pluginHost, string archivo)
+		public ntfp(IPluginHost pluginHost, string archivo, int id)
 		{
 			this.pluginHost = pluginHost;
 			this.archivo = archivo;
+            this.id = id;
 		}
 
         public void Leer()
@@ -24,6 +46,7 @@ namespace Nintendo
             BinaryReader br = new BinaryReader(File.OpenRead(archivo));
 
             NCLR nclr = new NCLR();
+            nclr.id = (uint)id;
             // Ponemos una cabecera genérica
             nclr.cabecera.id = "NCLR".ToCharArray();
             nclr.cabecera.constant = 0x0100;

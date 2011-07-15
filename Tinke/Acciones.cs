@@ -57,6 +57,7 @@ namespace Tinke
             formatList = new List<IPlugin>();
             pluginHost = new PluginHost();
             pluginHost.DescomprimirEvent += new Action<string, byte>(pluginHost_DescomprimirEvent);
+            pluginHost.ChangeFile_Event += new Action<int, string>(pluginHost_ChangeFile_Event);
             Cargar_Plugins();
         }
         public void Cargar_Plugins()
@@ -224,7 +225,7 @@ namespace Tinke
                 {
                     if (plugin.Get_Formato(selectFile.name, ext) != Formato.Desconocido)
                     {
-                        plugin.Leer(tempFile);
+                        plugin.Leer(tempFile, idSelect);
                         File.Delete(tempFile);
                         return;
                     }
@@ -247,27 +248,27 @@ namespace Tinke
                 selectFile.name = selectFile.name.ToUpper();
                 if (selectFile.name.EndsWith(".NCLR") || new String(Encoding.ASCII.GetChars(ext)) == "NCLR" || new String(Encoding.ASCII.GetChars(ext)) == "RLCN")
                 {
-                    pluginHost.Set_NCLR(Imagen_NCLR.Leer(tempFile));
+                    pluginHost.Set_NCLR(Imagen_NCLR.Leer(tempFile, idSelect));
                     File.Delete(tempFile);
                 }
                 if (selectFile.name.EndsWith(".NCGR") || new String(Encoding.ASCII.GetChars(ext)) == "NCGR" || new String(Encoding.ASCII.GetChars(ext)) == "RGCN")
                 {
-                    pluginHost.Set_NCGR(Imagen_NCGR.Leer(tempFile));
+                    pluginHost.Set_NCGR(Imagen_NCGR.Leer(tempFile, idSelect));
                     File.Delete(tempFile);
                 }
                 else if (selectFile.name.EndsWith(".NSCR") || new String(Encoding.ASCII.GetChars(ext)) == "NSCR" || new String(Encoding.ASCII.GetChars(ext)) == "RCSN")
                 {
-                    pluginHost.Set_NSCR(Imagen_NSCR.Leer(tempFile));
+                    pluginHost.Set_NSCR(Imagen_NSCR.Leer(tempFile, idSelect));
                     File.Delete(tempFile);
                 }
                 else if (selectFile.name.EndsWith(".NCER") || new String(Encoding.ASCII.GetChars(ext)) == "NCER" || new String(Encoding.ASCII.GetChars(ext)) == "RECN")
                 {
-                    pluginHost.Set_NCER(Imagen_NCER.Leer(tempFile));
+                    pluginHost.Set_NCER(Imagen_NCER.Leer(tempFile, idSelect));
                     File.Delete(tempFile);
                 }
                 else if (selectFile.name.EndsWith(".NANR") || new String(Encoding.ASCII.GetChars(ext)) == "NANR" || new String(Encoding.ASCII.GetChars(ext)) == "RNAN")
                 {
-                    pluginHost.Set_NANR(Imagen_NANR.Leer(tempFile));
+                    pluginHost.Set_NANR(Imagen_NANR.Leer(tempFile, idSelect));
                     File.Delete(tempFile);
                 }
             }
@@ -367,7 +368,7 @@ namespace Tinke
             {
                 if (formato == Formato.Paleta)
                 {
-                    NCLR paleta = Imagen_NCLR.Leer_Basico(tempFile);
+                    NCLR paleta = Imagen_NCLR.Leer_Basico(tempFile, idSelect);
                     pluginHost.Set_NCLR(paleta);
                     File.Delete(tempFile);
                     
@@ -375,7 +376,7 @@ namespace Tinke
                 }               
                 else if (formato == Formato.Imagen)
                 {
-                    NCGR tile = Imagen_NCGR.Leer_Basico(tempFile);
+                    NCGR tile = Imagen_NCGR.Leer_Basico(tempFile, idSelect);
                     pluginHost.Set_NCGR(tile);
                     File.Delete(tempFile);
 
@@ -394,7 +395,7 @@ namespace Tinke
                 }
                 else if (formato == Formato.Screen)
                 {
-                    NSCR nscr = Imagen_NSCR.Leer_Basico(tempFile);
+                    NSCR nscr = Imagen_NSCR.Leer_Basico(tempFile, idSelect);
                     pluginHost.Set_NSCR(nscr);
                     File.Delete(tempFile);
 
@@ -588,6 +589,18 @@ namespace Tinke
                 foreach (Carpeta subFolder in currFolder.folders)
                     Change_File(id, fileChanged, subFolder);
         }
+        void pluginHost_ChangeFile_Event(int id, string newFilePath)
+        {
+            Archivo newFile = new Archivo();
+            newFile.name = Search_File(id).name;
+            newFile.id = (ushort)id;
+            newFile.offset = 0x00;
+            newFile.path = newFilePath;
+            newFile.size = (uint)new FileInfo(newFilePath).Length;
+
+            Change_File(id, newFile, root);
+        }
+
 
         public void Remove_File(string name, Carpeta currFolder)
         {
@@ -1064,7 +1077,7 @@ namespace Tinke
                 {
                     if (plugin.Get_Formato(selectFile.name, ext) != Formato.Desconocido)
                     {
-                        plugin.Leer(tempFile);
+                        plugin.Leer(tempFile, id);
                         goto Continuar;
                     }
                 }
@@ -1140,7 +1153,7 @@ namespace Tinke
                 {
                     if (plugin.Get_Formato(new FileInfo(arg).Name, ext) != Formato.Desconocido)
                     {
-                        plugin.Leer(arg);
+                        plugin.Leer(arg, -1);
                         goto Continuar;
                     }
                 }
@@ -1226,7 +1239,7 @@ namespace Tinke
                 {
                     if (plugin.Get_Formato(selectFile.name, ext) != Formato.Desconocido)
                     {
-                        Control resultado = plugin.Show_Info(tempFile);
+                        Control resultado = plugin.Show_Info(tempFile, idSelect);
                         File.Delete(tempFile);
                         return resultado;
                     }
@@ -1254,7 +1267,7 @@ namespace Tinke
                 selectFile.name = selectFile.name.ToUpper();
                 if (selectFile.name.EndsWith(".NCLR") || new String(Encoding.ASCII.GetChars(ext)) == "NCLR" || new String(Encoding.ASCII.GetChars(ext)) == "RLCN")
                 {
-                    NCLR nclr = Imagen_NCLR.Leer(tempFile);
+                    NCLR nclr = Imagen_NCLR.Leer(tempFile, idSelect);
                     pluginHost.Set_NCLR(nclr);
                     File.Delete(tempFile);
 
@@ -1264,7 +1277,7 @@ namespace Tinke
                 }
                 if (selectFile.name.EndsWith(".NCGR") || new String(Encoding.ASCII.GetChars(ext)) == "NCGR" || new String(Encoding.ASCII.GetChars(ext)) == "RGCN")
                 {
-                    NCGR tile = Imagen_NCGR.Leer(tempFile);
+                    NCGR tile = Imagen_NCGR.Leer(tempFile, idSelect);
                     pluginHost.Set_NCGR(tile);
                     File.Delete(tempFile);
 
@@ -1283,7 +1296,7 @@ namespace Tinke
                 }
                 else if (selectFile.name.EndsWith(".NSCR") || new String(Encoding.ASCII.GetChars(ext)) == "NSCR" || new String(Encoding.ASCII.GetChars(ext)) == "RCSN")
                 {
-                    pluginHost.Set_NSCR(Imagen_NSCR.Leer(tempFile));
+                    pluginHost.Set_NSCR(Imagen_NSCR.Leer(tempFile, idSelect));
                     File.Delete(tempFile);
                     if (pluginHost.Get_NCGR().cabecera.file_size != 0x00 || pluginHost.Get_NCLR().cabecera.file_size != 0x00)
                     {
@@ -1305,7 +1318,7 @@ namespace Tinke
                 }
                 else if (selectFile.name.EndsWith(".NCER") || new String(Encoding.ASCII.GetChars(ext)) == "NCER" || new String(Encoding.ASCII.GetChars(ext)) == "RECN")
                 {
-                    pluginHost.Set_NCER(Imagen_NCER.Leer(tempFile));
+                    pluginHost.Set_NCER(Imagen_NCER.Leer(tempFile, idSelect));
                     File.Delete(tempFile);
 
                     if (pluginHost.Get_NCGR().cabecera.file_size != 0x00 && pluginHost.Get_NCLR().cabecera.file_size != 0x00)
@@ -1324,7 +1337,7 @@ namespace Tinke
                 }
                 else if (selectFile.name.EndsWith(".NANR") || new String(Encoding.ASCII.GetChars(ext)) == "NANR" || new String(Encoding.ASCII.GetChars(ext)) == "RNAN")
                 {
-                    pluginHost.Set_NANR(Imagen_NANR.Leer(tempFile));
+                    pluginHost.Set_NANR(Imagen_NANR.Leer(tempFile, idSelect));
                     File.Delete(tempFile);
 
                     if (pluginHost.Get_NCER().header.file_size != 0x00 && pluginHost.Get_NCGR().cabecera.file_size != 0x00 &&

@@ -79,10 +79,6 @@ namespace Tinke
         {
             System.Diagnostics.Process.Start("http://famfamfam.com/");
         }
-        private void linkTrad_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            System.Diagnostics.Process.Start(Tools.Helper.ObtenerTraduccion("Autores", "S0D"));
-        }
 
         private void LeerIdioma()
         {
@@ -93,7 +89,7 @@ namespace Tinke
             label1.Text = "Tinke  " + xml.Element("S02").Value + ' ' + AssemblyVersion;
             label2.Text = xml.Element("S03").Value;
             label4.Text = xml.Element("S04").Value;
-            linkTrad.Text = xml.Element("S0C").Value;
+            lblTrad.Text = xml.Element("S0C").Value;
             label5.Text = xml.Element("S06").Value;
             label6.Text = xml.Element("S05").Value;
             lblDescription.Text = xml.Element("S07").Value;

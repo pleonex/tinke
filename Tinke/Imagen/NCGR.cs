@@ -11,9 +11,11 @@ namespace Tinke
 {
     public static class Imagen_NCGR
     {
-        public static NCGR Leer(string file)
+        public static NCGR Leer(string file, int id)
         {
             NCGR ncgr = new NCGR();
+            ncgr.id = (uint)id;
+
             BinaryReader br = new BinaryReader(File.OpenRead(file));
 
             // Lee cabecera genérica
@@ -97,13 +99,14 @@ namespace Tinke
             br.Close();
             return ncgr;
         }
-        public static NCGR Leer_Basico(string file)
+        public static NCGR Leer_Basico(string file, int id)
         {
             BinaryReader br = new BinaryReader(File.OpenRead(file));
             uint file_size = (uint)new FileInfo(file).Length;
 
             // Creamos un archivo NCGR genérico.
             NCGR ncgr = new NCGR();
+            ncgr.id = (uint)id;
             ncgr.cabecera.endianess = 0xFEFF;
             ncgr.cabecera.id = "NCGR".ToCharArray();
             ncgr.cabecera.nSection = 1;

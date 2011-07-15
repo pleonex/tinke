@@ -11,7 +11,7 @@ namespace PluginInterface
         void Inicializar(IPluginHost pluginHost);
         Formato Get_Formato(string nombre, byte[] magic);
 
-        Control Show_Info(string archivo);
-        void Leer(string archivo);
+        Control Show_Info(string archivo, int id);
+        void Leer(string archivo, int id);
     }
 }

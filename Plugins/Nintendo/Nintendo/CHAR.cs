@@ -31,11 +31,13 @@ namespace Nintendo
     {
         IPluginHost pluginsHost;
 		string archivo;
+        int id;
 		
-		public CHAR(IPluginHost pluginHost, string archivo)
+		public CHAR(IPluginHost pluginHost, string archivo, int id)
 		{
 			this.pluginsHost = pluginHost;
 			this.archivo = archivo;
+            this.id = id;
 		}
 		
 		public void Leer()
@@ -45,6 +47,7 @@ namespace Nintendo
 
 			// Creamos un archivo NCGR genérico.
 			NCGR ncgr = new NCGR();
+            ncgr.id = (uint)id;
 			ncgr.cabecera.id = "NCGR".ToCharArray();
 			ncgr.cabecera.nSection = 1;
 			ncgr.cabecera.constant = 0x0100;

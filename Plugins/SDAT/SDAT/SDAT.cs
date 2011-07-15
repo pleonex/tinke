@@ -50,11 +50,11 @@ namespace SDAT
         {
             this.pluginHost = pluginHost;
         }
-        public void Leer(string archivo)
+        public void Leer(string archivo, int id)
         {
             MessageBox.Show("Este archivo no guarda información.");
         }
-        public Control Show_Info(string archivo)
+        public Control Show_Info(string archivo, int id)
         {
             this.archivo = archivo;
 

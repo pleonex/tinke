@@ -11,9 +11,11 @@ namespace Tinke
 {
     public static class Imagen_NCLR
     {
-        public static NCLR Leer(string file)
+        public static NCLR Leer(string file, int id)
         {
             NCLR nclr = new NCLR();
+            nclr.id = (uint)id;
+
             BinaryReader br = new BinaryReader(File.OpenRead(file));
             Console.WriteLine(Tools.Helper.ObtenerTraduccion("NCLR","S0D"));
 
@@ -71,12 +73,13 @@ namespace Tinke
         /// </summary>
         /// <param name="archivo">Archivo para leer</param>
         /// <returns></returns>
-        public static NCLR Leer_Basico(string archivo)
+        public static NCLR Leer_Basico(string archivo, int id)
         {
             uint file_size = (uint)new FileInfo(archivo).Length;
             BinaryReader br = new BinaryReader(File.OpenRead(archivo));
 
             NCLR nclr = new NCLR();
+            nclr.id = (uint)id;
             // Ponemos una cabecera genérica
             nclr.cabecera.id = "NCLR".ToCharArray();
             nclr.cabecera.endianess = 0xFEFF;
@@ -100,7 +103,7 @@ namespace Tinke
 
         public static Bitmap[] Mostrar(string file)
         {
-            return Mostrar(Leer(file));
+            return Mostrar(Leer(file, -1));
         }
         public static Bitmap[] Mostrar(NCLR nclr)
         {
