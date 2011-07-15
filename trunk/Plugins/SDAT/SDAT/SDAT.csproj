@@ -45,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AdpcmDecompressor.cs" />
     <Compile Include="Help.cs" />
     <Compile Include="iSDAT.cs">
       <SubType>UserControl</SubType>

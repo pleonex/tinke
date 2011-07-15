@@ -585,6 +585,17 @@ namespace SDAT
                 nFile++;
             }
         }
+
+
+        public void Leer(string archivo)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Control Show_Info(string archivo)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     public struct Folder

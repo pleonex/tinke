@@ -24,7 +24,7 @@ using System;
 
 namespace SDAT
 {
-    public static class SWAR
+    class SWAR
     {
         public static ArchivoSWAR LeerArchivo(string path)
         {
@@ -40,14 +40,14 @@ namespace SDAT
                 br = new System.IO.BinaryReader(fs);
 
                 //Leer Header
-                swar.header.type = Help.ConvertirBytesAChars(br.ReadBytes(4));
+                swar.header.type = Help.BytesToChars(br.ReadBytes(4));
                 swar.header.magic = br.ReadUInt32();
                 swar.header.nFileSize = br.ReadUInt32();
                 swar.header.nSize = br.ReadUInt16();
                 swar.header.nBlock = br.ReadUInt16();
 
                 //Leer Data
-                swar.data.type = Help.ConvertirBytesAChars(br.ReadBytes(4));
+                swar.data.type = Help.BytesToChars(br.ReadBytes(4));
                 swar.data.nSize = br.ReadUInt32();
                 swar.data.reserved = new uint[8];
                 for (int i = 0; i < 8; i++) { swar.data.reserved[i] = br.ReadUInt32(); }
@@ -55,7 +55,7 @@ namespace SDAT
 
                 swar.data.nOffset = new uint[swar.data.nSample];
                 for (int i = 0; i < swar.data.nSample; i++) { swar.data.nOffset[i] = br.ReadUInt32(); }
-
+ 
                 swar.data.samples = new ArchivoSWAR.Data.Sample[swar.data.nSample];
 
                 for (uint i = 0; i < swar.data.nSample; i++)
@@ -150,6 +150,13 @@ namespace SDAT
                     public byte[] data;
                 }
             }
+
+
+
+
         }
     }
+
+
+
 }
