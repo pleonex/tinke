@@ -101,5 +101,12 @@ namespace LAYTON.Properties {
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
+        
+        internal static System.Drawing.Bitmap stop1 {
+            get {
+                object obj = ResourceManager.GetObject("stop1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
     }
 }

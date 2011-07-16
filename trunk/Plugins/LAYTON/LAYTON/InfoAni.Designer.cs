@@ -143,7 +143,7 @@
             // 
             // btnStop
             // 
-            this.btnStop.Image = global::LAYTON.Properties.Resources.stop;
+            this.btnStop.Image = global::LAYTON.Properties.Resources.stop1;
             this.btnStop.Location = new System.Drawing.Point(298, 364);
             this.btnStop.Name = "btnStop";
             this.btnStop.Size = new System.Drawing.Size(25, 23);

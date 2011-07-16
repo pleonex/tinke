@@ -217,6 +217,12 @@ namespace SDAT
                 o.FileName = currFile.name;
                 if (o.ShowDialog() == DialogResult.OK)
                 {
+                    if (currFile.offset == 0x00)
+                    {
+                        File.Copy(currFile.path, o.FileName);
+                        return;
+                    }
+
                     BinaryReader br = new BinaryReader(new FileStream(sdat.archivo, FileMode.Open));
                     br.BaseStream.Position = currFile.offset;
                     File.WriteAllBytes(o.FileName, br.ReadBytes((int)currFile.size));

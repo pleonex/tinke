@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Language>
+  <Español>
+    <TXT>
+      <S00>Guardar</S00>
+    </TXT>
+  </Español>
+  <English>
+    <TXT>
+      <S00>Save</S00>
+    </TXT>
+  </English>
+  <Français>
+    <TXT>
+      <S00>Sauvegarder</S00>
+    </TXT>
+  </Français>
+</Language>

@@ -99,6 +99,7 @@ namespace Tinke
             lblGBATEK.Text = xml.Element("S09").Value;
             lblLowLines.Text = xml.Element("S0A").Value;
             lblfamfamfam.Text = xml.Element("S0B").Value;
+            label7.Text = xml.Element("S0D").Value;
         }
 
 

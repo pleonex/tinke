@@ -120,6 +120,7 @@ namespace Tinke
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
+            this.lblFullImage = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.aniBox)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -375,12 +376,22 @@ namespace Tinke
             this.label3.TabIndex = 12;
             this.label3.Text = "S11";
             // 
+            // lblFullImage
+            // 
+            this.lblFullImage.AutoSize = true;
+            this.lblFullImage.Location = new System.Drawing.Point(110, 478);
+            this.lblFullImage.Name = "lblFullImage";
+            this.lblFullImage.Size = new System.Drawing.Size(27, 13);
+            this.lblFullImage.TabIndex = 13;
+            this.lblFullImage.Text = "S1E";
+            // 
             // iNANR
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Transparent;
             this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.Controls.Add(this.lblFullImage);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
@@ -430,5 +441,6 @@ namespace Tinke
         private System.Windows.Forms.ColumnHeader columnCampo;
         private System.Windows.Forms.ColumnHeader columnValor;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label lblFullImage;
     }
 }

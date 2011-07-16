@@ -30,6 +30,10 @@
       <S17>Horizontal</S17>
       <S18>Vertical</S18>
       <S19>Imagen a tamaño real</S19>
+      <S1A>Zoom</S1A>
+      <S1B>Color de fondo</S1B>
+      <S1C>Quitar</S1C>
+      <S1D>Transparencia</S1D>
     </NCGR>
     <NCLR>
       <S01>Nº de paleta:</S01>
@@ -108,6 +112,10 @@
       <S17>Horizontal</S17>
       <S18>Vertical</S18>
       <S19>Full size image</S19>
+      <S1A>Zoom</S1A>
+      <S1B>Background colour</S1B>
+      <S1C>Remove</S1C>
+      <S1D>Transparency</S1D>
     </NCGR>
     <BMG>
       <S01>Property</S01>
@@ -168,6 +176,10 @@
       <S17>Horizontal</S17>
       <S18>Vertical</S18>
       <S19>Image en taille réelle</S19>
+      <S1A>Zoom</S1A>
+      <S1B>Background colour</S1B>
+      <S1C>Remove</S1C>
+      <S1D>Transparence</S1D>
     </NCGR>
     <BMG>
       <S01>Champ</S01>

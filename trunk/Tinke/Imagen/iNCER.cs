@@ -83,6 +83,9 @@ namespace Tinke
             checkTransparencia.Text = xml.Element("S12").Value;
             checkNumber.Text = xml.Element("S13").Value;
             label2.Text = xml.Element("S15").Value;
+            lblZoom.Text = xml.Element("S16").Value;
+            btnBgd.Text = xml.Element("S17").Value;
+            btnBgdTrans.Text = xml.Element("S18").Value;
         }
 
         private void ShowInfo()

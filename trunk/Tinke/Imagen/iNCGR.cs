@@ -232,6 +232,9 @@ namespace Tinke
             //comboBox1.Items[2] = xml.Element("S18").Value;
             btnDividir.Text = xml.Element("S1A").Value;
             checkTransparency.Text = xml.Element("S1C").Value;
+            lblZoom.Text = xml.Element("S1E").Value;
+            btnBgd.Text = xml.Element("S1F").Value;
+            btnBgdTrans.Text = xml.Element("S20").Value;
         }
 
         private void btnDividir_Click(object sender, EventArgs e)

@@ -228,6 +228,53 @@ namespace Nintendo
             comboBox1.Items[1] = xml.Element("S17").Value;
             comboBox1.Items[2] = xml.Element("S18").Value;
             tVen = xml.Element("S19").Value;
+            lblZoom.Text = xml.Element("S1A").Value;
+            btnBgd.Text = xml.Element("S1B").Value;
+            btnBgdTrans.Text = xml.Element("S1C").Value;
+            checkTrans.Text = xml.Element("S1D").Value;
+        }
+
+        private void trackZoom_Scroll(object sender, EventArgs e)
+        {
+            Actualizar_Imagen(); // Devolvemos la imagen original para no perder calidad
+
+            float scale = trackZoom.Value / 100f;
+            Bitmap imagen = new Bitmap((int)(pic.Image.Width * scale), (int)(pic.Image.Height * scale));
+            Graphics graficos = Graphics.FromImage(imagen);
+            graficos.DrawImage(pic.Image, 0, 0, pic.Image.Width * scale, pic.Image.Height * scale);
+            pic.Image = imagen;
+            graficos.Dispose();
+        }
+        private void checkTrans_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkTrans.Checked)
+            {
+                Bitmap imagen = (Bitmap)pic.Image;
+                imagen.MakeTransparent(paleta.pltt.paletas[tile.rahc.tileData.nPaleta[0]].colores[0]);
+                pic.Image = imagen;
+            }
+            else
+                Actualizar_Imagen();
+        }
+        private void btnBgd_Click(object sender, EventArgs e)
+        {
+            ColorDialog o = new ColorDialog();
+            o.AllowFullOpen = true;
+            o.AnyColor = true;
+
+            if (o.ShowDialog() == DialogResult.OK)
+            {
+                pictureBgd.BackColor = o.Color;
+                pic.BackColor = o.Color;
+                btnBgdTrans.Enabled = true;
+            }
+        }
+        private void btnBgdTrans_Click(object sender, EventArgs e)
+        {
+            btnBgdTrans.Enabled = false;
+
+            pictureBgd.BackColor = Color.Transparent;
+            pic.BackColor = Color.Transparent;
         }
     }
 }

@@ -52,12 +52,12 @@ namespace Tinke
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Sistema));
-            System.Windows.Forms.ListViewItem listViewItem7 = new System.Windows.Forms.ListViewItem("S09");
-            System.Windows.Forms.ListViewItem listViewItem8 = new System.Windows.Forms.ListViewItem("S0A");
-            System.Windows.Forms.ListViewItem listViewItem9 = new System.Windows.Forms.ListViewItem("S0B");
-            System.Windows.Forms.ListViewItem listViewItem10 = new System.Windows.Forms.ListViewItem("S0C");
-            System.Windows.Forms.ListViewItem listViewItem11 = new System.Windows.Forms.ListViewItem("S0D");
-            System.Windows.Forms.ListViewItem listViewItem12 = new System.Windows.Forms.ListViewItem("S0E");
+            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("S09");
+            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("S0A");
+            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem("S0B");
+            System.Windows.Forms.ListViewItem listViewItem4 = new System.Windows.Forms.ListViewItem("S0C");
+            System.Windows.Forms.ListViewItem listViewItem5 = new System.Windows.Forms.ListViewItem("S0D");
+            System.Windows.Forms.ListViewItem listViewItem6 = new System.Windows.Forms.ListViewItem("S0E");
             this.iconos = new System.Windows.Forms.ImageList(this.components);
             this.btnExtraer = new System.Windows.Forms.Button();
             this.btnSee = new System.Windows.Forms.Button();
@@ -172,12 +172,12 @@ namespace Tinke
             this.columnHeader1,
             this.columnHeader2});
             this.listFile.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem7,
-            listViewItem8,
-            listViewItem9,
-            listViewItem10,
-            listViewItem11,
-            listViewItem12});
+            listViewItem1,
+            listViewItem2,
+            listViewItem3,
+            listViewItem4,
+            listViewItem5,
+            listViewItem6});
             this.listFile.Location = new System.Drawing.Point(409, 28);
             this.listFile.Name = "listFile";
             this.listFile.Size = new System.Drawing.Size(197, 202);
@@ -514,20 +514,21 @@ namespace Tinke
             this.btnImport.Name = "btnImport";
             this.btnImport.Size = new System.Drawing.Size(110, 32);
             this.btnImport.TabIndex = 18;
-            this.btnImport.Text = "Cambiar archivo";
+            this.btnImport.Text = "S32";
             this.btnImport.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnImport.UseVisualStyleBackColor = true;
             this.btnImport.Click += new System.EventHandler(this.btnImport_Click);
             // 
             // btnSaveROM
             // 
+            this.btnSaveROM.Enabled = false;
             this.btnSaveROM.ImageIndex = 19;
             this.btnSaveROM.ImageList = this.iconos;
             this.btnSaveROM.Location = new System.Drawing.Point(409, 417);
             this.btnSaveROM.Name = "btnSaveROM";
             this.btnSaveROM.Size = new System.Drawing.Size(110, 32);
             this.btnSaveROM.TabIndex = 19;
-            this.btnSaveROM.Text = "Guardar ROM";
+            this.btnSaveROM.Text = "S33";
             this.btnSaveROM.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnSaveROM.UseVisualStyleBackColor = true;
             this.btnSaveROM.Click += new System.EventHandler(this.btnSaveROM_Click);

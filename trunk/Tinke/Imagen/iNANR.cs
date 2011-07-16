@@ -131,6 +131,7 @@ namespace Tinke
             listProp.Items[17].Text = xml.Element("S1B").Value;
             label3.Text = xml.Element("S11").Value;
             btnSave.Text = xml.Element("S1C").Value;
+            lblFullImage.Text = xml.Element("S1E").Value;
         }
 
         private void ShowInfo()
@@ -247,6 +248,7 @@ namespace Tinke
             ventana.Text = Tools.Helper.ObtenerTraduccion("NANR", "S1D");
             ventana.MaximizeBox = false;
             ventana.ShowIcon = false;
+            ventana.BackColor = SystemColors.GradientInactiveCaption;
 
             int id = comboAni.SelectedIndex;
             Bitmap[] animaciones = new Bitmap[ani.abnk.anis[id].nFrames];
