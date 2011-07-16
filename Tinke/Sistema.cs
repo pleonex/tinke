@@ -69,8 +69,8 @@ namespace Tinke
                                  Encoding.UTF8);
             }
 
-            // TODO: control fallo al leer xml
             XElement xml = XElement.Load(Application.StartupPath + Path.DirectorySeparatorChar + "Tinke.xml");
+
 
             foreach (string langFile in Directory.GetFiles(Application.StartupPath + Path.DirectorySeparatorChar + "langs"))
             {
@@ -111,8 +111,8 @@ namespace Tinke
             }
 
             Thread espera = new System.Threading.Thread(ThreadEspera);
-            //if (!isMono) TODO:
-            //    espera.Start();
+            if (!isMono)
+                espera.Start("S02");
             #region Lectura del archivo
             romInfo = new RomInfo(o.FileName);
             accion = new Acciones(o.FileName, new String(romInfo.Cabecera.gameCode));
@@ -130,8 +130,8 @@ namespace Tinke
 
             Get_SupportedFiles();
             #endregion
-            //if (!isMono)
-            //    espera.Abort();
+            if (!isMono)
+                espera.Abort();
 
             toolStripDebug.Enabled = !isMono;
             debug = new Debug();
@@ -201,6 +201,8 @@ namespace Tinke
                 "\n<Compress> -> " + xml.Element("S2A").Value +
                 "\n<Unknown> -> " + xml.Element("S2B").Value
                 );
+            btnImport.Text = xml.Element("S32").Value;
+            btnSaveROM.Text = xml.Element("S33").Value;
         }
         private void ToolStripLang_Click(Object sender, EventArgs e)
         {
@@ -417,9 +419,9 @@ namespace Tinke
                     RecursivoSupportFile(subFolder);
         }
 
-        private void ThreadEspera()
+        private void ThreadEspera(Object name)
         {
-            Espera espera = new Espera("S02", false);
+            Espera espera = new Espera((string)name, false);
             espera.ShowDialog();
         }
 
@@ -585,12 +587,20 @@ namespace Tinke
                     "de una carpeta?. Puede tardar bastante...", "Advertencia", MessageBoxButtons.OKCancel, MessageBoxIcon.Exclamation)
                     == System.Windows.Forms.DialogResult.Cancel)
                     return;
+
+                Thread espera = new System.Threading.Thread(ThreadEspera);
+                if (!isMono)
+                    espera.Start("S04");
+
                 Recursivo_UncompressFolder(accion.Select_Folder());
                 Set_Formato(accion.Root);
                 Get_SupportedFiles();
                 treeSystem.Nodes.Clear();
                 treeSystem.Nodes.Add(Jerarquizar_Nodos(accion.Root));
                 treeSystem.Nodes[0].Expand();
+
+                if (!isMono)
+                    espera.Abort();
                 return;
             }
 
@@ -702,7 +712,7 @@ namespace Tinke
 
                 Thread espera = new System.Threading.Thread(ThreadEspera);
                 if (!isMono)
-                    espera.Start();
+                    espera.Start("S03");
                 RecursivoExtractFolder(folderSelect, o.SelectedPath + '\\' + folderSelect.name);
                 if (!isMono)
                     espera.Abort();
@@ -1014,9 +1024,7 @@ namespace Tinke
 
             #region Obtención de regiones de la ROM
             BinaryReader br;
-            Console.WriteLine("Comenzando a crear nueva ROM");
-            Console.WriteLine("Escribiendo secciones:");
-            Console.Write("<p><dd>");
+            Console.WriteLine(Tools.Helper.ObtenerTraduccion("Messages", "S08"));
             Nitro.Estructuras.ROMHeader cabecera = romInfo.Cabecera;
 
             
@@ -1044,7 +1052,7 @@ namespace Tinke
             bw.Close();
             uint arm9overlayOffset = cabecera.ARM9overlayOffset + cabecera.ARM9overlaySize;
 
-            Console.WriteLine(" {0} bytes escritos correctamente.", new FileInfo(arm9Binary).Length);
+            Console.WriteLine(Tools.Helper.ObtenerTraduccion("Messages", "S09"), new FileInfo(arm9Binary).Length);
 
 
             // Escribismo el ARM7 Binary
@@ -1077,7 +1085,7 @@ namespace Tinke
                 arm7overlayOffset = cabecera.ARM7overlayOffset + cabecera.ARM7overlaySize;
             }
             bw.Close();
-            Console.WriteLine(" {0} bytes escritos correctamente.", new FileInfo(arm7Binary).Length);
+            Console.WriteLine(Tools.Helper.ObtenerTraduccion("Messages", "S09"), new FileInfo(arm7Binary).Length);
 
 
             // Escribimos el FNT (File Name Table)
@@ -1087,7 +1095,7 @@ namespace Tinke
             br.BaseStream.Position = romInfo.Cabecera.fileNameTableOffset;
             File.WriteAllBytes(fileFNT, br.ReadBytes((int)romInfo.Cabecera.fileNameTableSize));
             br.Close();
-            Console.WriteLine(" {0} bytes escritos correctamente.", new FileInfo(fileFNT).Length);
+            Console.WriteLine(Tools.Helper.ObtenerTraduccion("Messages", "S09"), new FileInfo(fileFNT).Length);
             cabecera.fileNameTableOffset = cabecera.ARM7romOffset + cabecera.ARM7size;
 
 
@@ -1112,7 +1120,7 @@ namespace Tinke
             // Escribimos los archivos
             string files = Path.GetTempFileName();
             Nitro.NDS.EscribirArchivos(files, accion.ROMFile, accion.Root, (int)romInfo.Cabecera.FATsize / 0x08);
-            Console.WriteLine("</dd></p>");
+            Console.Write("<br>");
             #endregion
             
             // Obtenemos el nuevo archivo para guardar
@@ -1123,7 +1131,7 @@ namespace Tinke
             o.OverwritePrompt = true;
             if (o.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                Console.WriteLine("\nLa nueva ROM será: {0}", o.FileName);
+                Console.WriteLine(Tools.Helper.ObtenerTraduccion("Messages", "S0D"), o.FileName);
                 bw = new BinaryWriter(new FileStream(o.FileName, FileMode.Create));
 
                 bw.Write(File.ReadAllBytes(header));
@@ -1142,7 +1150,7 @@ namespace Tinke
                 bw.Flush();
                 bw.Close();
 
-                Console.WriteLine("<b>{0} bytes guardados en la nueva ROM</b>", new FileInfo(o.FileName).Length);
+                Console.WriteLine("<b>" + Tools.Helper.ObtenerTraduccion("Messages", "S09") + "</b>", new FileInfo(o.FileName).Length);
             }
 
             // Devolvemos sus valores buenos

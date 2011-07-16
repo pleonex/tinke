@@ -32,5 +32,13 @@ namespace TXT
             File.WriteAllText(tempFile, txtBox.Text);
             pluginHost.ChangeFile(id, tempFile);
         }
+
+        private void LeerIdioma()
+        {
+            System.Xml.Linq.XElement xml = System.Xml.Linq.XElement.Load(Application.StartupPath + "\\Plugins\\TXTLang.xml");
+            xml = xml.Element(pluginHost.Get_Language()).Element("TXT");
+
+            btnSave.Text = xml.Element("S00").Value;
+        }
     }
 }

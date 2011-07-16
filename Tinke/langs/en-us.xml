@@ -50,6 +50,8 @@
       <S2F>Search keywords:</S2F>
       <S30>Recognized files:</S30>
       <S31>System</S31>
+	  <S32>Change file</S32>
+	  <S33>Save ROM</S33>
     </Sistema>
     <RomInfo>
       <S01>Game information</S01>
@@ -125,10 +127,13 @@ General Public License version 3.</S06>
 	  <S0A>Information about Nintendo files format.</S0A>
 	  <S0B>Icons used by this program.</S0B>
 	  <S0C>pleoNeX</S0C>
+	  <S0D>Special thanks:</S0D>
 	</Autores>
 	<Espera>
 		<S01>Loading...</S01>
-		<S02>Loading the game...</S02>
+		<S02>Loading the file system...</S02>
+		<S03>Extracting files...</S03>
+	    <S04>Uncompressing files...</S04>
 	</Espera>
 	<Messages>
 	  <S01>Error</S01>
@@ -139,6 +144,12 @@ General Public License version 3.</S06>
 	  <S06>The current .NSCR file is not compatible with the .NCGR selected file.
 	  Try another file.</S06>
 	  <S07>Please restart the program.</S07>
+	  <S08>Starting to save the new ROM...<br>Writing sections:</br></S08>
+	  <S09> {0} bytes written successfully.</S09>
+	  <S0A>Header...</S0A>
+	  <S0B>Files...</S0B>
+	  <S0C> {0} files written successfully.</S0C>
+	  <S0D><br>The new ROM will be saved in: {0}</br></S0D>
 	</Messages>
 	<NCLR>
 		<S01># palette:</S01>
@@ -184,10 +195,13 @@ General Public License version 3.</S06>
 		<S17>Horizontal</S17>
 		<S18>Vertical</S18>
 		<S19>Full size image</S19>
-    <S1A>Divide images</S1A>
-    <S1B>Image</S1B>
-    <S1C>Transparency</S1C>
-    <S1D>Restore</S1D>
+		<S1A>Divide images</S1A>
+		<S1B>Image</S1B>
+		<S1C>Transparency</S1C>
+		<S1D>Restore</S1D>
+		<S1E>Zoom</S1E>
+		<S1F>Background colour</S1F>
+		<S20>Remove</S20>
 	</NCGR>
 	<NCER>
 		<S01>Cell:</S01>
@@ -210,7 +224,10 @@ General Public License version 3.</S06>
 		<S12>Transparency</S12>
 		<S13>Show numbers</S13>
 		<S14>Cells</S14>
-    <S15>Double-click to see the full image.</S15>
+		<S15>Double-click to the image to see it in full size.</S15>
+		<S16>Zoom</S16>
+		<S17>Background colour</S17>
+		<S18>Remove</S18>
   </NCER>
 	<NANR>
 		<S01>Interval:</S01>
@@ -241,6 +258,7 @@ General Public License version 3.</S06>
 		<S1A>Frame data</S1A>
 		<S1B>Number of cell</S1B>
 		<S1C>Save</S1C>
-    <S1D>Animations</S1D>
+		<S1D>Animations</S1D>
+		<S1E>Double-click to the animation to see it in full size</S1E>
 	</NANR>
-	</Language>
+</Language>

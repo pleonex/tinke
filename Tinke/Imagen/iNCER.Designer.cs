@@ -28,15 +28,15 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.ListViewItem listViewItem41 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem(new string[] {
             "S07"}, -1, System.Drawing.Color.Empty, System.Drawing.Color.Empty, new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0))));
-            System.Windows.Forms.ListViewItem listViewItem42 = new System.Windows.Forms.ListViewItem("S08");
-            System.Windows.Forms.ListViewItem listViewItem43 = new System.Windows.Forms.ListViewItem("S09");
-            System.Windows.Forms.ListViewItem listViewItem44 = new System.Windows.Forms.ListViewItem("S0A");
-            System.Windows.Forms.ListViewItem listViewItem45 = new System.Windows.Forms.ListViewItem("S0B");
-            System.Windows.Forms.ListViewItem listViewItem46 = new System.Windows.Forms.ListViewItem("S0C");
-            System.Windows.Forms.ListViewItem listViewItem47 = new System.Windows.Forms.ListViewItem("S0D");
-            System.Windows.Forms.ListViewItem listViewItem48 = new System.Windows.Forms.ListViewItem("S0E");
+            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("S08");
+            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem("S09");
+            System.Windows.Forms.ListViewItem listViewItem4 = new System.Windows.Forms.ListViewItem("S0A");
+            System.Windows.Forms.ListViewItem listViewItem5 = new System.Windows.Forms.ListViewItem("S0B");
+            System.Windows.Forms.ListViewItem listViewItem6 = new System.Windows.Forms.ListViewItem("S0C");
+            System.Windows.Forms.ListViewItem listViewItem7 = new System.Windows.Forms.ListViewItem("S0D");
+            System.Windows.Forms.ListViewItem listViewItem8 = new System.Windows.Forms.ListViewItem("S0E");
             this.imgBox = new System.Windows.Forms.PictureBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.listProp = new System.Windows.Forms.ListView();
@@ -92,14 +92,14 @@
             this.columnValor});
             this.listProp.Dock = System.Windows.Forms.DockStyle.Fill;
             this.listProp.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem41,
-            listViewItem42,
-            listViewItem43,
-            listViewItem44,
-            listViewItem45,
-            listViewItem46,
-            listViewItem47,
-            listViewItem48});
+            listViewItem1,
+            listViewItem2,
+            listViewItem3,
+            listViewItem4,
+            listViewItem5,
+            listViewItem6,
+            listViewItem7,
+            listViewItem8});
             this.listProp.Location = new System.Drawing.Point(3, 16);
             this.listProp.Name = "listProp";
             this.listProp.Size = new System.Drawing.Size(241, 237);
@@ -232,7 +232,7 @@
             this.btnBgdTrans.Name = "btnBgdTrans";
             this.btnBgdTrans.Size = new System.Drawing.Size(51, 35);
             this.btnBgdTrans.TabIndex = 29;
-            this.btnBgdTrans.Text = "Quitar";
+            this.btnBgdTrans.Text = "S18";
             this.btnBgdTrans.UseVisualStyleBackColor = true;
             this.btnBgdTrans.Click += new System.EventHandler(this.btnBgdTrans_Click);
             // 
@@ -252,7 +252,7 @@
             this.btnBgd.Name = "btnBgd";
             this.btnBgd.Size = new System.Drawing.Size(78, 35);
             this.btnBgd.TabIndex = 27;
-            this.btnBgd.Text = "Color de fondo";
+            this.btnBgd.Text = "S17";
             this.btnBgd.UseVisualStyleBackColor = true;
             this.btnBgd.Click += new System.EventHandler(this.btnBgd_Click);
             // 
@@ -280,9 +280,9 @@
             this.lblZoom.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblZoom.Location = new System.Drawing.Point(348, 331);
             this.lblZoom.Name = "lblZoom";
-            this.lblZoom.Size = new System.Drawing.Size(48, 17);
+            this.lblZoom.Size = new System.Drawing.Size(33, 17);
             this.lblZoom.TabIndex = 24;
-            this.lblZoom.Text = "Zoom:";
+            this.lblZoom.Text = "S16";
             // 
             // trackZoom
             // 

@@ -144,5 +144,14 @@ namespace Nintendo
             if (o.ShowDialog() == DialogResult.OK)
                 paletaBox.Image.Save(o.FileName);
         }
+
+        private void paletaBox_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (paletaBox.Image is Image)
+            {
+                Color color = ((Bitmap)paletaBox.Image).GetPixel(e.X, e.Y);
+                lblRGB.Text = "RGB: " + color.R + ", " + color.G + ", " + color.B;
+            }
+        }
     }
 }

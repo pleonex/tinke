@@ -80,7 +80,7 @@ namespace Tinke.Nitro
 
             bw.Flush();
             bw.Close();
-            Console.WriteLine(" {0} bytes escritos correctamente.", new FileInfo(salida).Length);
+            Console.WriteLine(Tools.Helper.ObtenerTraduccion("Messages", "S09"), new FileInfo(salida).Length);
         }
 
         private static Archivo BuscarArchivo(int id, Carpeta currFolder)

@@ -15,6 +15,7 @@ namespace LAYTON
         Bitmap[] imagenes;
         int imgShow = 0;
         IPluginHost pluginHost;
+        Ani.Todo info;
 
         public InfoAni()
         {
@@ -26,13 +27,14 @@ namespace LAYTON
             this.pluginHost = pluginHost;
             LeerIdioma();
 
+            this.info = info;
             infoPicture1.Idioma = pluginHost.Get_Language();
             infoPicture1.Informacion = info;
             imagenes = new Bitmap[info.imgs];
             for (int i = 0; i < info.imgs; i++)
             {
                 comboBox1.Items.Add(info.imagenes[i].name);
-                imagenes[i] = info.imagenes[i].bitmap;
+                imagenes[i] = (Bitmap)info.imagenes[i].bitmap.Clone();
             }
 
             comboBox1.SelectedIndex = 0;
@@ -127,8 +129,12 @@ namespace LAYTON
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
-            for (int i = 0; i < imagenes.Length; i++)
-                imagenes[i].MakeTransparent();
+            if (checkBox1.Checked)
+                for (int i = 0; i < imagenes.Length; i++)
+                    imagenes[i].MakeTransparent();
+            else
+                for (int i = 0; i < imagenes.Length; i++)
+                    imagenes[i] = info.imagenes[i].bitmap;
 
             pictureBox1.Image = imagenes[imgShow];
         }

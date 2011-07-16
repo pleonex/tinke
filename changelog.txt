@@ -1,6 +1,7 @@
 0.7.1:
 *** Now plugins can change files in the rom
 * TXT plugin can change text files.
+* SWAV files with IMA-ADPCM supported
 
 0.7.0:
 *** Import files and save the new ROM

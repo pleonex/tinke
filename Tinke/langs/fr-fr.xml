@@ -50,6 +50,8 @@
       <S2F>Search keywords:</S2F>
       <S30>Recognized files:</S30>
       <S31>System</S31>
+	  <S32>Change file</S32>
+	  <S33>Save ROM</S33>
     </Sistema>
     <RomInfo>
       <S01>Information de la ROM</S01>
@@ -123,13 +125,16 @@
 	    <S09>Information téchnique sour la structure des ROMs.</S09>
 	    <S0A>Information sour la structure de formats de Nintendo.</S0A>
 	    <S0B>Icônes utilisés dans ce logiciel.</S0B>
-	    <S0C>rafael1193</S0C>
+	    <S0C>rafael1193, maldonado.valentin</S0C>
+		<S0D>Special thanks:</S0D>
 	  </Autores>
-	  <Espera>
+	<Espera>
 		  <S01>Chargeant...</S01>
 		  <S02>Chargeant le jeu...</S02>
+		  <S03>Extracting files...</S03>
+	      <S04>Uncompressing files...</S04>
 	  </Espera>
-	  <Messages>
+	<Messages>
 	    <S01>Erreur</S01>
 	    <S02>Le jeu n'a pas pu être identifié. ¿Est-ce que le fichier est un jeu pour NDS?</S02>
 	    <S03>Jeu en train d'être analysé:</S03>
@@ -138,8 +143,14 @@
 	    <S06>Ce fichier .NSCR est incompatible avec le fichier .NCGR sélectionné.
 		Essayez avec un fichier différent.</S06>
 	    <S07>Veuillez redémarrer le logiciel.</S07>
+	    <S08>Starting to save the new ROM...<br>Writing sections:</br></S08>
+	    <S09> {0} bytes written successfully.</S09>
+	    <S0A>Header...</S0A>
+	    <S0B>Files...</S0B>
+	    <S0C> {0} files written successfully.</S0C>
+	    <S0D><br>The new ROM will be saved in: {0}</br></S0D>
 	  </Messages>
-	  <NCLR>
+	<NCLR>
 		  <S01>Nombre de la palette:</S01>
 		  <S02>Propriétés</S02>
 		  <S03>Champ</S03>
@@ -157,7 +168,7 @@
 		  <S0F>paletas encontradas</S0F>
 		  <S10>colores.</S10>	
 	  </NCLR>
-	  <NCGR>
+	<NCGR>
 		  <S01>Faites doble click sur l'image pour la voir en taille réelle.</S01>
 		  <S02>Propriétés</S02>
 		  <S03>Position</S03>
@@ -183,12 +194,15 @@
 		  <S17>Horizontal</S17>
 		  <S18>Vertical</S18>
 		  <S19>Imagen a tamaño real</S19>
-      <S1A>Dividir imágenes</S1A>
-      <S1B>Imagen</S1B>
-      <S1C>Transparency</S1C>
-      <S1D>Restore</S1D>
+		  <S1A>Dividir imágenes</S1A>
+		  <S1B>Imagen</S1B>
+		  <S1C>Transparency</S1C>
+		  <S1D>Restore</S1D>
+		  <S1E>Zoom</S1E>
+		  <S1F>Background colour</S1F>
+		  <S20>Remove</S20>
 	  </NCGR>
-	  <NCER>
+	<NCER>
 		<S01>Celda:</S01>
 		<S02>Mostrar todas las celdas</S02>
 		<S03>Guardar</S03>
@@ -209,9 +223,12 @@
 		<S12>Transparencia</S12>
 		<S13>Mostrar números</S13>
 		<S14>Celdas</S14>
-    <S15>Faites doble click sur l'image pour la voir en taille réelle.</S15>
+		<S15>Faites doble click sur l'image pour la voir en taille réelle.</S15>
+		<S16>Zoom</S16>
+		<S17>Background colour</S17>
+		<S18>Remove</S18>
     </NCER>
-	  <NANR>
+	<NANR>
 		<S01>Intervalo:</S01>
 		<S02>milisegundos</S02>
 		<S03>Opciones de entorno</S03>
@@ -240,6 +257,7 @@
 		<S1A>Datos frame</S1A>
 		<S1B>Número de celda</S1B>
 		<S1C>Guardar</S1C>
-      <S1D>Animations</S1D>
+		<S1D>Animations</S1D>
+		<S1E>Faites doble click sur l'animation pour la voir en taille réelle.</S1E>
 	  </NANR>
-   </Language>
+</Language>

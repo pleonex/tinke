@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Language name="Español">
-  <Sistema>
+	<Sistema>
       <S01>Abrir ROM</S01>
       <S02>Información del juego</S02>
       <S03>Mensajes debug</S03>
@@ -31,27 +31,29 @@
       <S1C>Ver</S1C>
       <S1D>Hexadecimal</S1D>
       <S1E>Languages</S1E>
-	    <S1F>Directorio</S1F>
-	    <S20>Paleta</S20>
-	    <S21>Tiles</S21>
-	    <S22>Screen</S22>
-	    <S23>Celdas</S23>
-	    <S24>Animación</S24>
-	    <S25>Imagen</S25>
-	    <S26>Texto</S26>
-	    <S27>Vídeo</S27>
-	    <S28>Sonido</S28>
-	    <S29>Fuentes</S29>
-	    <S2A>Comprimido</S2A>
-	    <S2B>Desconocido</S2B>
+	  <S1F>Directorio</S1F>
+	  <S20>Paleta</S20>
+	  <S21>Tiles</S21>
+	  <S22>Map</S22>
+	  <S23>Celdas</S23>
+	  <S24>Animación</S24>
+	  <S25>Imagen</S25>
+	  <S26>Texto</S26>
+	  <S27>Vídeo</S27>
+	  <S28>Sonido</S28>
+	  <S29>Fuentes</S29>
+	  <S2A>Comprimido</S2A>
+	  <S2B>Desconocido</S2B>
       <S2C>Selecciona la carpeta donde se guardarán los archivos.</S2C>
       <S2D>Búsqueda</S2D>
       <S2E>Búsqueda instantánea</S2E>
       <S2F>Palabras claves de búsqueda:</S2F>
       <S30>Archivos reconocidos:</S30>
       <S31>Sistema</S31>
+	  <S32>Cambiar archivo</S32>
+	  <S33>Guardar ROM</S33>
     </Sistema>
-  <RomInfo>
+	<RomInfo>
       <S01>Información de la ROM</S01>
       <S02>Banner</S02>
       <S03>Guardar como...</S03>
@@ -108,7 +110,7 @@
       <S36>Tamaño de debug</S36>
       <S37>Offset de la RAM de debug</S37>
       <S38>Reservado</S38>
-	    <S39>Inválido</S39>
+	  <S39>Inválido</S39>
       <S3A>Transparencia</S3A>
     </RomInfo>
 	<Autores>
@@ -126,10 +128,13 @@
 	  <S0A>Información sobre estructura de formatos de Nintendo.</S0A>
 	  <S0B>Iconos usados en este programa.</S0B>
 	  <S0C>pleoNeX</S0C>
+	  <S0D>Agradecimientos:</S0D>
 	</Autores>
 	<Espera>
-		<S01>Cargando...</S01>
-		<S02>Cargando datos del juego...</S02>
+	  <S01>Cargando...</S01>
+	  <S02>Cargando datos del juego...</S02>
+	  <S03>Extrayendo archivos...</S03>
+	  <S04>Descomprimiendo carpetas...</S04>
 	</Espera>
 	<Messages>
 	  <S01>Error</S01>
@@ -140,6 +145,12 @@
 	  <S06>Este archivo .NSCR es incompatible con el archivo .NCGR seleccionado.
 	  Inténtalo con otro.</S06>
 	  <S07>Por favor reinicie el programa.</S07>
+	  <S08>Comenzando a crear nueva ROM...<br>Escribiendo secciones:</br></S08>
+	  <S09> {0} bytes escritos correctamente.</S09>
+	  <S0A>Cabecera...</S0A>
+	  <S0B>Archivos...</S0B>
+	  <S0C> {0} archivos escritos correctamente.</S0C>
+	  <S0D><br>La nueva ROM se guardará en: {0}</br></S0D>
 	</Messages>
 	<NCLR>
 		<S01>Nº de paleta:</S01>
@@ -186,10 +197,13 @@
 		<S17>Horizontal</S17>
 		<S18>Vertical</S18>
 		<S19>Imagen a tamaño real</S19>
-    <S1A>Dividir imágenes</S1A>
-    <S1B>Imagen</S1B>
-    <S1C>Transparencia</S1C>
-    <S1D>Restaurar</S1D>
+        <S1A>Dividir imágenes</S1A>
+        <S1B>Imagen</S1B>
+		<S1C>Transparencia</S1C>
+		<S1D>Restaurar</S1D>
+		<S1E>Zoom</S1E>
+		<S1F>Color de fondo</S1F>
+		<S20>Quitar</S20>
 	</NCGR>
 	<NCER>
 		<S01>Celda:</S01>
@@ -212,7 +226,10 @@
 		<S12>Transparencia</S12>
 		<S13>Mostrar números</S13>
 		<S14>Celdas</S14>
-    <S15>Haga doble click en la imagen para verla a tamaño real.</S15>
+		<S15>Haga doble click en la imagen para verla a tamaño real.</S15>
+		<S16>Zoom</S16>
+		<S17>Color de fondo</S17>
+		<S18>Quitar</S18>
 	</NCER>
 	<NANR>
 		<S01>Intervalo:</S01>
@@ -243,6 +260,7 @@
 		<S1A>Datos frame</S1A>
 		<S1B>Número de celda</S1B>
 		<S1C>Guardar</S1C>
-    <S1D>Animaciones</S1D>
+		<S1D>Animaciones</S1D>
+		<S1E>Haz doble click en la animación para verla a tamaño real.</S1E>
 	</NANR>
 </Language>

@@ -84,7 +84,7 @@ namespace Tinke.Nitro
             BinaryWriter bw = new BinaryWriter(new FileStream(salida, FileMode.Create));
             BinaryReader br = new BinaryReader(File.OpenRead(romFile));
             br.BaseStream.Position = 0xC0;
-            Console.Write("Cabecera...");
+            Console.Write(Tools.Helper.ObtenerTraduccion("Messages", "S0A"));
 
             bw.Write(cabecera.gameTitle);
             bw.Write(cabecera.gameCode);
@@ -139,7 +139,7 @@ namespace Tinke.Nitro
             bw.Close();
             br.Close();
 
-            Console.WriteLine(" {0} bytes escritos correctamente.", new FileInfo(salida).Length);
+            Console.WriteLine(Tools.Helper.ObtenerTraduccion("Messages", "S09"), new FileInfo(salida).Length);
         }
 
         public static string CodeToString(Type enumeracion, char[] id)
@@ -198,7 +198,7 @@ namespace Tinke.Nitro
             bw.Write(StringToTitle(banner.spanishTitle));
             bw.Flush();
 
-            Console.WriteLine(" {0} bytes escritos correctamente.", bw.BaseStream.Length);
+            Console.WriteLine(Tools.Helper.ObtenerTraduccion("Messages", "S09"), bw.BaseStream.Length);
             bw.Close();
         }
         public static string TitleToString(byte[] data)
@@ -259,7 +259,7 @@ namespace Tinke.Nitro
             BinaryWriter bw = new BinaryWriter(new FileStream(salida, FileMode.Create));
             BinaryReader br = new BinaryReader(new FileStream(romFile, FileMode.Open));
 
-            Console.Write("Archivos...");
+            Console.Write(Tools.Helper.ObtenerTraduccion("Messages", "S0B"));
 
             for (int i = 0; i < nFiles; i++)
             {
@@ -283,7 +283,7 @@ namespace Tinke.Nitro
             bw.Flush();
             bw.Close();
             br.Close();
-            Console.WriteLine(" {0} archivos escritos correctamente.", nFiles);
+            Console.WriteLine(Tools.Helper.ObtenerTraduccion("Messages", "S0C"), nFiles);
         }
         private static Archivo BuscarArchivo(int id, Carpeta currFolder)
         {

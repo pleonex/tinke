@@ -246,9 +246,9 @@ namespace Tinke
             this.label7.ForeColor = System.Drawing.Color.Black;
             this.label7.Location = new System.Drawing.Point(169, 291);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(104, 17);
+            this.label7.Size = new System.Drawing.Size(35, 17);
             this.label7.TabIndex = 18;
-            this.label7.Text = "Special thanks:";
+            this.label7.Text = "S0D";
             // 
             // label8
             // 
