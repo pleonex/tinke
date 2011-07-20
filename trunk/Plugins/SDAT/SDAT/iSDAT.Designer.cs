@@ -170,6 +170,7 @@ namespace SDAT
             this.btnMidi.TabIndex = 5;
             this.btnMidi.Text = "Guardar MIDI";
             this.btnMidi.UseVisualStyleBackColor = true;
+            this.btnMidi.Visible = false;
             // 
             // btnStop
             // 

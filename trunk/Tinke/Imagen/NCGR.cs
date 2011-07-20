@@ -114,8 +114,8 @@ namespace Tinke
             ncgr.cabecera.file_size = file_size;
             // El archivo es NTFT raw, sin ninguna información.
             ncgr.orden = Orden_Tiles.Horizontal;
-            ncgr.rahc.nTiles = (ushort)(file_size / 64);
-            ncgr.rahc.depth = System.Windows.Forms.ColorDepth.Depth8Bit;
+            ncgr.rahc.nTiles = (ushort)(file_size / 32);
+            ncgr.rahc.depth = System.Windows.Forms.ColorDepth.Depth4Bit;
             ncgr.rahc.nTilesX = 0x0020;
             ncgr.rahc.nTilesY = 0x0018;
             ncgr.rahc.tiledFlag = 0x00000000;
@@ -126,7 +126,7 @@ namespace Tinke
 
             for (int i = 0; i < ncgr.rahc.nTiles; i++)
             {
-                ncgr.rahc.tileData.tiles[i] = br.ReadBytes(64);
+                ncgr.rahc.tileData.tiles[i] = Tools.Helper.BytesTo4BitsRev(br.ReadBytes(32));
                 ncgr.rahc.tileData.nPaleta[i] = 0;
             }
 

@@ -28,12 +28,15 @@ namespace Tinke.Nitro
 {
     public static class Estructuras
     {
+        public static Dictionary<string, string> makerCode;
+        public static Dictionary<byte, string> unitCode;
+
         public struct ROMHeader
         {
             public char[] gameTitle;
             public char[] gameCode;
             public char[] makerCode;
-            public char unitCode;
+            public byte unitCode;
             public byte encryptionSeed;
             public UInt32 tamaño;
             public byte[] reserved;
@@ -119,23 +122,5 @@ namespace Tinke.Nitro
             public UInt32 reserved;
             public bool ARM9;           // Si es true es ARM9, sino es ARM7
         }
-    }
-
-    public enum Unitcode
-    {
-        NintendoDS = 00
-    }
-    public enum Makercode
-    {
-        Nintendo = 4849,
-        Rocket_Games = 4850,
-        Imagineer_Zoom = 4851,
-        Gray_Matter = 4852,
-        Zamuse = 4853,
-        Falcom = 4854,
-        Enix = 4855,
-	    Capcom = 4856,
-	    Hot_B = 4857,
-        Jaleco = 4810,
     }
 }

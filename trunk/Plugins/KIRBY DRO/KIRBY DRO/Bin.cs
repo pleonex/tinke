@@ -24,6 +24,7 @@ namespace KIRBY_DRO
         {
             PictureBox pics = new PictureBox();
             pics.SizeMode = PictureBoxSizeMode.AutoSize;
+            pics.BorderStyle = BorderStyle.FixedSingle;
             pics.Image = Imagen_Bin();
 
             return pics;
@@ -51,8 +52,11 @@ namespace KIRBY_DRO
             }
             else
             {
-                Console.WriteLine("Archivo .bin no reconocido, cabecera diferente a 0x18");
-                throw new Exception("Archivo incompatible");
+                //Console.WriteLine("Archivo .bin no reconocido, cabecera diferente a 0x18");
+                //throw new Exception("Archivo incompatible");
+                screen.section.width = 0x0200;
+                screen.section.height = 0x00C0;
+                screen.section.id = "NO MAP".ToCharArray();
             }
 
             tile.rahc.nTilesX = (ushort)(screen.section.width / 8);
@@ -63,11 +67,15 @@ namespace KIRBY_DRO
                 tile.rahc.size_tiledata / 64);
 
             // Comienzo de la paleta
-            paleta.pltt.nColores = 0x10;
+            if (paleta.pltt.profundidad == ColorDepth.Depth4Bit)
+                paleta.pltt.nColores = 0x10;
+            else
+                paleta.pltt.nColores = 0x0100;
             paleta.pltt.paletas = new NTFP[(paleta.pltt.tamaño / 2) / paleta.pltt.nColores];
             for (int i = 0; i < paleta.pltt.paletas.Length; i++)
                 paleta.pltt.paletas[i].colores = pluginHost.BGR555(br.ReadBytes((int)(paleta.pltt.nColores * 2)));
 
+            // Lectura de tiles
             tile.rahc.tileData.tiles = new byte[tile.rahc.nTiles][];
             for (int i = 0; i < tile.rahc.nTiles; i++)
                 if (paleta.pltt.profundidad == ColorDepth.Depth4Bit)
@@ -75,20 +83,36 @@ namespace KIRBY_DRO
                 else
                     tile.rahc.tileData.tiles[i] = br.ReadBytes(64);
 
+            // Lectura del map
+            //if (new String(screen.section.id) == "NO MAP")
+            //    goto Fin;
+
             screen.section.screenData = new NTFS[tile.rahc.nTilesX * tile.rahc.nTilesY];
             for (int i = 0; i < (screen.section.data_size / 2); i++)
             {
-                string bits = pluginHost.BytesToBits(br.ReadBytes(2));
+                if (new String(screen.section.id) == "NO MAP")
+                {
+                    screen.section.screenData[i] = new NTFS();
+                    screen.section.screenData[i].nPalette = 0;
+                    screen.section.screenData[i].yFlip = 0;
+                    screen.section.screenData[i].xFlip = 0;
+                    screen.section.screenData[i].nTile = (ushort)br.ReadByte(); ;
+                }
+                else
+                {
+                    string bits = pluginHost.BytesToBits(br.ReadBytes(2));
 
-                screen.section.screenData[i] = new NTFS();
-                screen.section.screenData[i].nPalette = Convert.ToByte(bits.Substring(0, 4), 2);
-                screen.section.screenData[i].yFlip = Convert.ToByte(bits.Substring(4, 1), 2);
-                screen.section.screenData[i].xFlip = Convert.ToByte(bits.Substring(5, 1), 2);
-                screen.section.screenData[i].nTile = Convert.ToUInt16(bits.Substring(6, 10), 2);
+                    screen.section.screenData[i] = new NTFS();
+                    screen.section.screenData[i].nPalette = Convert.ToByte(bits.Substring(0, 4), 2);
+                    screen.section.screenData[i].yFlip = Convert.ToByte(bits.Substring(4, 1), 2);
+                    screen.section.screenData[i].xFlip = Convert.ToByte(bits.Substring(5, 1), 2);
+                    screen.section.screenData[i].nTile = Convert.ToUInt16(bits.Substring(6, 10), 2);
+                }
             }
-            br.Close();
-
             tile.rahc.tileData = pluginHost.Transformar_NSCR(screen, tile.rahc.tileData);
+
+            Fin:
+            br.Close();
             return pluginHost.Bitmap_NCGR(tile, paleta);
         }
 

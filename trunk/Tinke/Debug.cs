@@ -39,8 +39,18 @@ namespace Tinke
         public void LeerIdioma()
         {
             System.Xml.Linq.XElement xml = Tools.Helper.ObtenerTraduccion("Sistema");
-
             this.Text = xml.Element("S03").Value;
+
+            xml = Tools.Helper.ObtenerTraduccion("Messages");
+            contextMenuStrip1.Items[0].Text = xml.Element("S0E").Value;
+        }
+
+        private void s01ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (Type.GetType("Mono.Runtime") == null) // Evitamos Mono que da problemas
+            {
+                txtInfo.ShowSaveAsDialog();
+            }
         }
     }
 }

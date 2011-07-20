@@ -19,10 +19,13 @@ namespace Tinke.Nitro
                 Tools.Helper.ObtenerTraduccion("Messages", "S03") + "</b> "
                 + new FileInfo(file).Name);
 
+            Rellenar_MakerCodes();
+            Rellenar_UnitCodes();
+
             nds.gameTitle = br.ReadChars(12);
             nds.gameCode = br.ReadChars(4);
             nds.makerCode = br.ReadChars(2);
-            nds.unitCode = br.ReadChar();
+            nds.unitCode = br.ReadByte();
             nds.encryptionSeed = br.ReadByte();
             nds.tamaño = (UInt32)Math.Pow(2, 20 + br.ReadByte());
             nds.reserved = br.ReadBytes(9);
@@ -140,17 +143,6 @@ namespace Tinke.Nitro
             br.Close();
 
             Console.WriteLine(Tools.Helper.ObtenerTraduccion("Messages", "S09"), new FileInfo(salida).Length);
-        }
-
-        public static string CodeToString(Type enumeracion, char[] id)
-        {
-            try { return Enum.GetName(enumeracion, Int32.Parse(Char.ConvertToUtf32(Char.ToString(id[0]), 0).ToString() + Char.ConvertToUtf32(char.ToString(id[1]), 0).ToString())); }
-            catch { return "Desconocido"; }
-        }
-        public static string CodeToString(Type enumeracion, char id)
-        {
-            try { return Enum.GetName(enumeracion, Char.ConvertToUtf32(char.ToString(id), 0)); }
-            catch { return "Desconocido"; }
         }
 
         public static Estructuras.Banner LeerBanner(string file, UInt32 offset)
@@ -304,6 +296,46 @@ namespace Tinke.Nitro
             }
 
             return new Archivo();
+        }
+
+        private static void Rellenar_MakerCodes()
+        {
+            Estructuras.makerCode = new Dictionary<string, string>();
+            Dictionary<string, string> diccionario = Estructuras.makerCode;
+
+            diccionario.Add("01", "Nintendo");
+            diccionario.Add("02", "Rocket Games");
+            diccionario.Add("03", "Imagineer Zoom");
+            diccionario.Add("04", "Gray Matter");
+            diccionario.Add("05", "Zamuse");
+            diccionario.Add("06", "Falcom");
+            diccionario.Add("07", "Enix");
+            diccionario.Add("08", "Capcom");
+            diccionario.Add("09", "Hot B");
+            diccionario.Add("0A", "Jaleco");
+
+            diccionario.Add("52", "Activision");
+            diccionario.Add("5G", "Majesco Entertainment");
+            diccionario.Add("64", "LucasArts Entertainment");
+            diccionario.Add("6V", "JoWooD Entertainment");
+            diccionario.Add("78", "THQ");
+            diccionario.Add("7J", "zushi games");
+            diccionario.Add("99", "Rising Star Games");
+            diccionario.Add("A4", "Konami Digital Entertainment");
+            diccionario.Add("GD", "SQUARE ENIX");
+            diccionario.Add("LR", "Asylum Entertainment");
+            diccionario.Add("KM", "Deep Silver");
+            diccionario.Add("MJ", "MumboJumbo");
+            diccionario.Add("SU", "Slitherine Software UK Ltd");
+            diccionario.Add("SV", "SevenOne Intermedia GmbH");
+            diccionario.Add("RM", "rondomedia");
+            diccionario.Add("WR", "Interactive Entertainment");
+        }
+        private static void Rellenar_UnitCodes()
+        {
+            Estructuras.unitCode = new Dictionary<byte, string>();
+
+            Estructuras.unitCode.Add(0x00, "Nintendo DS");
         }
     }
 }

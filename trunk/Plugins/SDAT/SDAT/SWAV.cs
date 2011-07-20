@@ -127,8 +127,10 @@ namespace SDAT
         {
             WAV.ArchivoWAV wav = new WAV.ArchivoWAV();
 
+
             if (swav.data.info.nWaveType == 0)
             {
+                swav.data.data = PCM8(swav.data.data);
                 wav = WAV.GenerarWAVPCM(1, swav.data.info.nSampleRate, 8, swav.data.data);
             }
 
@@ -139,9 +141,21 @@ namespace SDAT
 
             if (swav.data.info.nWaveType >= 2)
             {
+                swav.data.data = AdpcmDecompressor.DecompressADPCM(swav.data.data);
                 wav = WAV.GenerarWAVADPCM(1,33000, 16, swav.data.data);
             }
             return wav;
+        }
+        static byte[] PCM8(byte[] data)
+        {
+            byte[] resul = new byte[data.Length];
+
+            for (int i = 0; i < data.Length; i++)
+            {
+                resul[i] = unchecked((byte)(data[i] ^ 0x80));
+            }
+
+            return resul;
         }
 
         public struct ArchivoSWAV

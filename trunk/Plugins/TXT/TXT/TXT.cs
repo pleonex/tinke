@@ -20,9 +20,14 @@ namespace TXT
         {
             nombre = nombre.ToUpper();
 
+            if (nombre.EndsWith("LZ.TXT") && magic[0] == 0x10)
+                return Formato.Desconocido;
+
             if (nombre.EndsWith(".TXT") || nombre.EndsWith(".SADL") || nombre.EndsWith(".XML")
                 || nombre.EndsWith(".INI") || nombre.EndsWith(".H") || nombre.EndsWith(".XSADL")
-                || nombre.EndsWith(".BAT") || nombre.EndsWith(".SARC") || nombre.EndsWith(".SBDL"))
+                || nombre.EndsWith(".BAT") || nombre.EndsWith(".SARC") || nombre.EndsWith(".SBDL")
+                || nombre.EndsWith(".C") || nombre.EndsWith("MAKEFILE") || nombre.EndsWith(".BSF")
+                || nombre.EndsWith(".LUA") || nombre.EndsWith(".CSV") || nombre.EndsWith(".SMAP"))
                 return Formato.Texto;
 
             return Formato.Desconocido;

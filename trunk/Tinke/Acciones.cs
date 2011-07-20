@@ -468,6 +468,7 @@ namespace Tinke
             root = FileToFolder(file.id, root);
             ushort idFolder = (ushort)(LastFolderID - 1); // ID que le hemos asignado a la nueva carpeta NARC
             files = Add_ID(files);
+            files.id = idFolder;
             Add_Files(files, idFolder, root);
         }
         public Carpeta Add_Files(Carpeta files, ushort idFolder, Carpeta currFolder)
@@ -484,7 +485,10 @@ namespace Tinke
                 {
                     Carpeta folder = Add_Files(files, idFolder, currFolder.folders[i]);
                     if (folder.name is string)  // Comprobamos que se haya devuelto un directorio, en cuyo caso es el buscado que lo devolvemos
-                        return folder;
+                    {
+                        currFolder.folders[i] = folder;
+                        return currFolder;
+                    }
                 }
             }
 
@@ -592,10 +596,12 @@ namespace Tinke
         void pluginHost_ChangeFile_Event(int id, string newFilePath)
         {
             Archivo newFile = new Archivo();
-            newFile.name = Search_File(id).name;
+            Archivo oldFile = Search_File(id);
+            newFile.name = oldFile.name;
             newFile.id = (ushort)id;
             newFile.offset = 0x00;
             newFile.path = newFilePath;
+            newFile.formato = oldFile.formato;
             newFile.size = (uint)new FileInfo(newFilePath).Length;
 
             Change_File(id, newFile, root);
@@ -709,11 +715,13 @@ namespace Tinke
                 {
                     if (archivo.formato == formato)
                     {
-                        if (!archivo.name.Contains('.')) // Archivos de nombre desconocido
-                            continue;
+
                         if (formato == Formato.Imagen || formato == Formato.Celdas ||
                             formato == Formato.Animación || formato == Formato.Screen)
                         {
+                            if (!archivo.name.Contains('.')) // Archivos de nombre desconocido
+                                continue;
+
                             #region Búsqueda de compañeros
 
                             string name = archivo.name.Remove(archivo.name.LastIndexOf('.'));
@@ -778,10 +786,7 @@ namespace Tinke
                             }
 
                             if (fm.files.Count > 0)
-                            {
-                                fm.id = (ushort)LastFolderID;
                                 carpeta.folders.Add(fm);
-                            }
 
                         No_Valido: // No se han encontrado todos los archivos necesario y no se añade
                             continue;
@@ -963,7 +968,8 @@ namespace Tinke
             currFile.name = currFile.name.ToUpper();
             if (currFile.name.EndsWith(".NCLR") || new String(Encoding.ASCII.GetChars(ext)) == "NCLR" || new String(Encoding.ASCII.GetChars(ext)) == "RLCN")
                 return Formato.Paleta;
-            else if (currFile.name.EndsWith(".NCGR") || new String(Encoding.ASCII.GetChars(ext)) == "NCGR" || new String(Encoding.ASCII.GetChars(ext)) == "RGCN")
+            else if ((currFile.name.EndsWith(".NCGR") || new String(Encoding.ASCII.GetChars(ext)) == "NCGR" || new String(Encoding.ASCII.GetChars(ext)) == "RGCN") &&
+                  !(new String(Encoding.ASCII.GetChars(ext)) == "PMOC"))
                 return Formato.Imagen;
             else if (currFile.name.EndsWith(".NSCR") || new String(Encoding.ASCII.GetChars(ext)) == "NSCR" || new String(Encoding.ASCII.GetChars(ext)) == "RCSN")
                 return Formato.Screen;
@@ -1011,7 +1017,8 @@ namespace Tinke
             name = name.ToUpper();
             if (name.EndsWith(".NCLR") || new String(Encoding.ASCII.GetChars(ext)) == "NCLR" || new String(Encoding.ASCII.GetChars(ext)) == "RLCN")
                 return Formato.Paleta;
-            else if (name.EndsWith(".NCGR") || new String(Encoding.ASCII.GetChars(ext)) == "NCGR" || new String(Encoding.ASCII.GetChars(ext)) == "RGCN")
+            else if (name.EndsWith(".NCGR") || new String(Encoding.ASCII.GetChars(ext)) == "NCGR" || new String(Encoding.ASCII.GetChars(ext)) == "RGCN" &&
+                    !(new String(Encoding.ASCII.GetChars(ext)) == "PMOC"))
                 return Formato.Imagen;
             else if (name.EndsWith(".NSCR") || new String(Encoding.ASCII.GetChars(ext)) == "NSCR" || new String(Encoding.ASCII.GetChars(ext)) == "RCSN")
                 return Formato.Screen;
@@ -1093,6 +1100,10 @@ namespace Tinke
                     Carpeta carpeta = new Carpeta();
                     Archivo file = new Archivo();
                     file.name = selectFile.name;
+                    if (file.name.ToUpper().EndsWith("LZ"))
+                        file.name = file.name.Remove(file.name.Length - 3);
+                    else if (file.name.ToUpper().EndsWith("Z"))
+                        file.name = file.name.Remove(file.name.Length - 2);
                     file.path = uncompFile;
                     file.size = (uint)new FileInfo(uncompFile).Length;
                     carpeta.files = new List<Archivo>();
@@ -1275,7 +1286,8 @@ namespace Tinke
                     control.Dock = DockStyle.Fill;
                     return control; ;
                 }
-                if (selectFile.name.EndsWith(".NCGR") || new String(Encoding.ASCII.GetChars(ext)) == "NCGR" || new String(Encoding.ASCII.GetChars(ext)) == "RGCN")
+                if (selectFile.name.EndsWith(".NCGR") || new String(Encoding.ASCII.GetChars(ext)) == "NCGR" || new String(Encoding.ASCII.GetChars(ext)) == "RGCN" &&
+                   !(new String(Encoding.ASCII.GetChars(ext)) == "PMOC"))
                 {
                     NCGR tile = Imagen_NCGR.Leer(tempFile, idSelect);
                     pluginHost.Set_NCGR(tile);

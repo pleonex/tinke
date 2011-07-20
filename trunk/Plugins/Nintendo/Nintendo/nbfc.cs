@@ -55,16 +55,18 @@ namespace Nintendo
 			ncgr.cabecera.file_size = file_size;
 			// El archivo es NTFT raw, sin ninguna información.
 			ncgr.orden = Orden_Tiles.Horizontal;
-			ncgr.rahc.nTiles = (ushort)(file_size / 64);
+
             if (file_size == 512)
             {
                 ncgr.rahc.depth = System.Windows.Forms.ColorDepth.Depth4Bit;
+                ncgr.rahc.nTiles = (ushort)(file_size / 32);
                 ncgr.rahc.nTilesX = 0x04;
-                ncgr.rahc.nTilesY = 0x02;
+                ncgr.rahc.nTilesY = 0x04;
             }
             else
             {
                 ncgr.rahc.depth = System.Windows.Forms.ColorDepth.Depth8Bit;
+                ncgr.rahc.nTiles = (ushort)(file_size / 64);
                 ncgr.rahc.nTilesX = 0x0020;
                 ncgr.rahc.nTilesY = 0x0018;
             }

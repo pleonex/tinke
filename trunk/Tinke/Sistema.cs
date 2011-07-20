@@ -123,6 +123,7 @@ namespace Tinke
             root.folders.Add(Añadir_Sistema());
             // Añadimos los offset a cada archivo
             root = FAT(o.FileName, romInfo.Cabecera.FAToffset, romInfo.Cabecera.FATsize, root);
+            accion.Root = root;
 
             Set_Formato(root);
             treeSystem.Nodes.Add(Jerarquizar_Nodos(root)); // Mostramos el árbol
@@ -203,6 +204,7 @@ namespace Tinke
                 );
             btnImport.Text = xml.Element("S32").Value;
             btnSaveROM.Text = xml.Element("S33").Value;
+            toolStripMenuComprimido.Text = xml.Element("S2A").Value;
         }
         private void ToolStripLang_Click(Object sender, EventArgs e)
         {
@@ -275,13 +277,16 @@ namespace Tinke
             accion.LastFileID++;
             ftc.files.Add(arm7);
 
-            Archivo y9 = new Archivo();
-            y9.name = "y9.bin";
-            y9.offset = romInfo.Cabecera.ARM9overlayOffset;
-            y9.size = romInfo.Cabecera.ARM9overlaySize;
-            y9.id = (ushort)accion.LastFileID;
-            accion.LastFileID++;
-            ftc.files.Add(y9);
+            if (romInfo.Cabecera.ARM9overlaySize != 0)
+            {
+                Archivo y9 = new Archivo();
+                y9.name = "y9.bin";
+                y9.offset = romInfo.Cabecera.ARM9overlayOffset;
+                y9.size = romInfo.Cabecera.ARM9overlaySize;
+                y9.id = (ushort)accion.LastFileID;
+                accion.LastFileID++;
+                ftc.files.Add(y9);
+            }
 
             if (romInfo.Cabecera.ARM7overlaySize != 0)
             {
@@ -871,6 +876,11 @@ namespace Tinke
         {
             AbrirComo(Formato.Screen);
         }
+        private void s2AToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            btnUncompress_Click(btnDescomprimir, e);
+        }
+
 
         private void linkAboutBox_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
@@ -919,18 +929,17 @@ namespace Tinke
             else
                 resul = accion.Search_File(txtSearch.Text);
 
+            resul.id = (ushort)accion.LastFolderID;
+            accion.LastFolderID++;
             if (resul.folders is List<Carpeta>)
             {
                 for (int i = 0; i < resul.folders.Count; i++)
                 {
                     Carpeta newFolder = resul.folders[i];
-                    newFolder.id = (ushort)accion.LastFolderID;
-                    accion.LastFolderID++;
+                    newFolder.id = resul.id;
                     resul.folders[i] = newFolder;
                 }
             }
-            resul.id = (ushort)accion.LastFolderID;
-            accion.LastFolderID++;
 
             TreeNode nodo = new TreeNode(Tools.Helper.ObtenerTraduccion("Sistema", "S2D"));
             CarpetaANodo(resul, ref nodo);
@@ -950,7 +959,6 @@ namespace Tinke
             if (e.KeyCode == Keys.Enter)
                 btnSearch.PerformClick();
         }
-
 
 
         private void btnSaveROM_Click(object sender, EventArgs e)
@@ -978,8 +986,6 @@ namespace Tinke
              *   |_Game titles (Japanese, English, French, German, Italian, Spanish) 6 * 0x100
              * Files...
             */
-
-            btnSaveROM.Enabled = false;
 
             #region Preparativos
             // Copia para no modificar el originial
@@ -1192,10 +1198,10 @@ namespace Tinke
                 newFile.id = selectedFile.id;
                 newFile.offset = 0x00;
                 newFile.path = o.FileName;
+                newFile.formato = selectedFile.formato;
                 newFile.size = (uint)new FileInfo(o.FileName).Length;
 
                 accion.Change_File(accion.IDSelect, newFile, accion.Root);
-                btnSaveROM.Enabled = true;
             }
         }
         private TreeNode[] FilesToNodes(Archivo[] files)

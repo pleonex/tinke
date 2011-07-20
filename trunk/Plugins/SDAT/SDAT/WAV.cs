@@ -53,6 +53,7 @@ namespace SDAT
                     bw.Write(wr.wave.data.data[i]);
                 }
 
+                bw.Flush();
             }
             catch (Exception ex)
             {
@@ -85,27 +86,7 @@ namespace SDAT
             archivo.wave.data.chunkID = new char[] { 'd', 'a', 't', 'a' };
             archivo.wave.data.chunkSize = (uint)data.Length;
             archivo.wave.data.data = new byte[data.Length];
-
-            if (numChannels == 1)
-            {
-                for (int i = 0; i < data.Length; i++)
-                {
-                    archivo.wave.data.data[i] = unchecked((byte)(data[i] ^ 0x80));
-                }
-            }
-
-            else if (numChannels == 2)
-            {
-                for (int i = 0; i < data.Length; i++)
-                {
-                    archivo.wave.data.data[i] = data[i];
-                }
-            }
-
-            else if (numChannels >= 3)
-            {
-                throw new NotSupportedException("Channel count cannot be higher than 2");
-            }
+            archivo.wave.data.data = data;
 
             archivo.chunkSize = 4 + (8 + archivo.wave.fmt.chunkSize) + (8 + archivo.wave.data.chunkSize);
 
@@ -133,8 +114,7 @@ namespace SDAT
                 archivo.wave.data.chunkID = new char[] { 'd', 'a', 't', 'a' };
                 archivo.wave.data.chunkSize = (uint)data.Length;
                 archivo.wave.data.data = new byte[data.Length];
-
-                archivo.wave.data.data = AdpcmDecompressor.DecompressADPCM1Channel(data);
+                archivo.wave.data.data = data;
 
                 archivo.chunkSize = 4 + (8 + archivo.wave.fmt.chunkSize) + (8 + archivo.wave.data.chunkSize);
             }
@@ -156,10 +136,9 @@ namespace SDAT
                 archivo.wave.data.chunkID = new char[] { 'd', 'a', 't', 'a' };
                 archivo.wave.data.chunkSize = (uint)data.Length;
                 archivo.wave.data.data = new byte[data.Length];
+                archivo.wave.data.data = data;
 
-                archivo.wave.data.data = AdpcmDecompressor.DecompressADPCM2Channel(data);
-
-                archivo.chunkSize = 4 + (8 + archivo.wave.fmt.chunkSize) + (8 + archivo.wave.data.chunkSize);
+                archivo.chunkSize = (uint)(0x24 + data.Length);
             }
 
             return archivo;

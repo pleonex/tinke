@@ -56,10 +56,11 @@ namespace Tinke
         public static Color BGR555(byte byte1, byte byte2)
         {
             int r, b; double g;
+            short bgr = BitConverter.ToInt16(new Byte[] { byte1, byte2 }, 0);
 
-            r = (byte1 % 0x20) * 0x8;
-            g = (byte1 / 0x20 + ((byte2 % 0x4) * 7.96875)) * 0x8;
-            b = byte2 / 0x4 * 0x8;
+            r = (bgr & 0x001F) * 0x08;
+            g = ((bgr & 0x03E0) >> 5) * 0x08;
+            b = ((bgr & 0x7C00) >> 10) * 0x08;
 
             return System.Drawing.Color.FromArgb(r, (int)g, b);
         }
