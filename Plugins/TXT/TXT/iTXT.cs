@@ -23,6 +23,8 @@ namespace TXT
             this.pluginHost = pluginHost;
             this.id = id;
             this.txtBox.Text = text;
+
+            LeerIdioma();
         }
 
         private void btnSave_Click(object sender, EventArgs e)
@@ -36,7 +38,8 @@ namespace TXT
         private void LeerIdioma()
         {
             System.Xml.Linq.XElement xml = System.Xml.Linq.XElement.Load(Application.StartupPath + "\\Plugins\\TXTLang.xml");
-            xml = xml.Element(pluginHost.Get_Language()).Element("TXT");
+            xml = xml.Element(pluginHost.Get_Language());
+            xml = xml.Element("TXT");
 
             btnSave.Text = xml.Element("S00").Value;
         }

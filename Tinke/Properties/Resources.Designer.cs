@@ -74,6 +74,13 @@ namespace Tinke.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap package {
+            get {
+                object obj = ResourceManager.GetObject("package", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap picture_save {
             get {
                 object obj = ResourceManager.GetObject("picture_save", resourceCulture);

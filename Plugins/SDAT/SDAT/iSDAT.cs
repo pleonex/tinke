@@ -110,8 +110,7 @@ namespace SDAT
                 case FormatSound.SWAR:
                     return 7;
                 case FormatSound.STRM:
-                    //return 1; No soportado este formato aún
-                    return 8;
+                    return 1;
                 default:
                     return 1;
             }
@@ -139,7 +138,7 @@ namespace SDAT
                 listProp.Items[3].SubItems.Add(fileSelect.size.ToString());
 
                 btnExtract.Enabled = true;
-                if (fileSelect.type == FormatSound.SWAV)
+                if (fileSelect.type == FormatSound.SWAV || fileSelect.type == FormatSound.STRM)
                 {
                     btnReproducir.Enabled = true;
                     btnWav.Enabled = true;
@@ -355,18 +354,27 @@ namespace SDAT
 
         private void btnWav_Click(object sender, EventArgs e)
         {
-            string swav = SaveSelectedFile();
+            string sound = SaveSelectedFile();
 
             SaveFileDialog o = new SaveFileDialog();
-            o.FileName = SearchFile().name.Replace(".SWAV", ".wav");
+            o.FileName = SearchFile().name;
             o.Filter = "Sonido WAVE (*.wav)|*.wav";
             if (o.ShowDialog() == DialogResult.OK)
             {
                 string wavSaved = o.FileName;
-                WAV.EscribirArchivo(SWAV.ConvertirAWAV(SWAV.LeerArchivo(swav)), wavSaved);
+
+                switch(SearchFile().type)
+                {
+                    case FormatSound.SWAV:
+                        WAV.EscribirArchivo(SWAV.ConvertirAWAV(SWAV.LeerArchivo(sound)), wavSaved);
+                        break;
+                    case FormatSound.STRM:
+                        WAV.EscribirArchivo(STRM.ConvertirAWAV(STRM.LeerArchivo(sound)), wavSaved);
+                        break;
+                }
             }
 
-            File.Delete(swav);
+            File.Delete(sound);
         }
         private void btnReproducir_Click(object sender, EventArgs e)
         {
@@ -381,11 +389,20 @@ namespace SDAT
                 if (wavFile != "")
                     File.Delete(wavFile);
 
-                string swav = SaveSelectedFile();
+                string sound = SaveSelectedFile();
                 wavFile = Path.GetTempFileName();
-                WAV.EscribirArchivo(SWAV.ConvertirAWAV(SWAV.LeerArchivo(swav)), wavFile);
 
-                File.Delete(swav);
+                switch(SearchFile().type)
+                {
+                    case FormatSound.SWAV:
+                        WAV.EscribirArchivo(SWAV.ConvertirAWAV(SWAV.LeerArchivo(sound)), wavFile);
+                        break;
+                    case FormatSound.STRM:
+                        WAV.EscribirArchivo(STRM.ConvertirAWAV(STRM.LeerArchivo(sound)), wavFile);
+                        break;
+            }
+
+                File.Delete(sound);
 
                 soundPlayer = new SoundPlayer(wavFile);
                 soundPlayer.Play();

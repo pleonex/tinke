@@ -1,7 +1,14 @@
-0.7.1:
+0.7.1 (public release):
 *** Now plugins can change files in the rom
 * TXT plugin can change text files.
-* SWAV files with IMA-ADPCM supported
+* SWAV sound files with IMA-ADPCM supported.
+* STRM sound files supported.
+* Improved NCER files with more than one palette (4bpp)
+* Fixed BIN files in KIRBY DRO games
+* Fixed 4bpp CHAR and NBFC files
+* Add Log export function
+* Fixed BGR555 codification
+
 
 0.7.0:
 *** Import files and save the new ROM

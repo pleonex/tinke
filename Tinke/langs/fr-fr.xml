@@ -149,6 +149,7 @@
 	    <S0B>Files...</S0B>
 	    <S0C> {0} files written successfully.</S0C>
 	    <S0D><br>The new ROM will be saved in: {0}</br></S0D>
+      <S0E>Exporter log</S0E>
 	  </Messages>
 	<NCLR>
 		  <S01>Nombre de la palette:</S01>

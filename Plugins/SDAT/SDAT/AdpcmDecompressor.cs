@@ -28,7 +28,7 @@ namespace SDAT
 {
     internal static class AdpcmDecompressor
     {
-        public static byte[] DecompressADPCM1Channel(byte[] data)
+        public static byte[] DecompressADPCM(byte[] data)
         {
             List<byte> resul = new List<byte>();
 
@@ -89,15 +89,11 @@ namespace SDAT
             return resul.ToArray();
         }
 
-        public static byte[] DecompressADPCM2Channel(byte[] data)
+        public static byte[] DecompressBlock_ADPCM(byte[] datos, int sample = 0, int stepindex = 0)
         {
             List<byte> resul = new List<byte>();
 
             #region Preinitialized variables
-            int index1 = 0;
-            int index2 = 0;
-            int stepsize1 = 7;
-            int stepsize2 = 7;
             int[] indexTable = new int[16] { -1, -1, -1, -1, 2, 4, 6, 8,
                                              -1, -1, -1, -1, 2, 4, 6, 8 };
 
@@ -113,78 +109,53 @@ namespace SDAT
                                                 4428, 4871, 5358, 5894, 6484, 7132, 7845, 8630,
                                                 9493, 10442, 11487, 12635, 13899, 15289, 16818,
                                                 18500, 20350, 22385, 24623, 27086, 29794, 32767 };
+            int index = stepindex;
+            if (index < 0)
+                index = 0;
+            else if (index > 88)
+                index = 88;
+            int stepsize = stepsizeTable[index];
             #endregion
 
+            byte[] data = new byte[datos.Length - 4];
+            Array.Copy(datos, 4, data, 0, datos.Length - 4);
             data = Bit8ToBit4(data);
 
-            int difference1, newSample1 = 0;
-            int difference2, newSample2 = 0;
-
+            int difference, newSample = sample;
             for (int i = 0; i < data.Length; i++)
             {
-                //Left Channel
-                difference1 = 0;
+                difference = 0;
 
                 if ((data[i] & 4) != 0)
-                    difference1 += stepsize1;
+                    difference += stepsize;
                 if ((data[i] & 2) != 0)
-                    difference1 += stepsize1 >> 1;
+                    difference += stepsize >> 1;
                 if ((data[i] & 1) != 0)
-                    difference1 += stepsize1 >> 2;
-                difference1 += stepsize1 >> 3;
+                    difference += stepsize >> 2;
+                difference += stepsize >> 3;
 
                 if ((data[i] & 8) != 0)
-                    difference1 = -difference1;
-                newSample1 += difference1;
+                    difference = -difference;
+                newSample += difference;
 
-                if (newSample1 > 32767)
-                    newSample1 = 32767;
-                else if (newSample1 < -32768)
-                    newSample1 = -32768;
+                if (newSample > 32767)
+                    newSample = 32767;
+                else if (newSample < -32768)
+                    newSample = -32768;
 
-                resul.AddRange(BitConverter.GetBytes((short)newSample1));
+                resul.AddRange(BitConverter.GetBytes((short)newSample));
 
-                index1 += indexTable[data[i]];
-                if (index1 < 0)
-                    index1 = 0;
-                else if (index1 > 88)
-                    index1 = 88;
-                stepsize1 = stepsizeTable[index1];
-                //
-                i++;
-                //Right Channel
-                difference2 = 0;
-
-                if ((data[i] & 4) != 0)
-                    difference2 += stepsize2;
-                if ((data[i] & 2) != 0)
-                    difference2 += stepsize2 >> 1;
-                if ((data[i] & 1) != 0)
-                    difference2 += stepsize2 >> 2;
-                difference2 += stepsize2 >> 3;
-
-                if ((data[i] & 8) != 0)
-                    difference2 = -difference2;
-                newSample2 += difference2;
-
-                if (newSample2 > 32767)
-                    newSample2 = 32767;
-                else if (newSample2 < -32768)
-                    newSample2 = -32768;
-
-                resul.AddRange(BitConverter.GetBytes((short)newSample2));
-
-                index2 += indexTable[data[i]];
-                if (index2 < 0)
-                    index2 = 0;
-                else if (index2 > 88)
-                    index2 = 88;
-                stepsize2 = stepsizeTable[index2];
-                //
+                index += indexTable[data[i]];
+                if (index < 0)
+                    index = 0;
+                else if (index > 88)
+                    index = 88;
+                stepsize = stepsizeTable[index];
             }
 
             return resul.ToArray();
         }
+
 
         static byte[] Bit8ToBit4(byte[] data)
         {

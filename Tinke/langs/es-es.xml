@@ -138,7 +138,7 @@
 	</Espera>
 	<Messages>
 	  <S01>Error</S01>
-	  <S02>No se pudo identificar el juego. ¿El archivo es un juego para NDS?</S02>
+	  <S02>No se pudo identificar el juego. Verifique que es una ROM para NDS</S02>
 	  <S03>Analizando el juego:</S03>
 	  <S04>Información del juego:</S04>
 	  <S05>Cargando el programa...</S05>
@@ -151,6 +151,7 @@
 	  <S0B>Archivos...</S0B>
 	  <S0C> {0} archivos escritos correctamente.</S0C>
 	  <S0D><br>La nueva ROM se guardará en: {0}</br></S0D>
+    <S0E>Exportar log</S0E>
 	</Messages>
 	<NCLR>
 		<S01>Nº de paleta:</S01>

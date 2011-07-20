@@ -59,7 +59,7 @@ namespace Nintendo
                 return Formato.Paleta;
             else if (nombre.EndsWith(".PLT"))
                 return Formato.Paleta;
-            else if (nombre.EndsWith(".CHAR"))
+            else if (nombre.EndsWith(".CHAR") || nombre.EndsWith(".CHR"))
                 return Formato.Imagen;
 			
 			return Formato.Desconocido;
@@ -119,7 +119,7 @@ namespace Nintendo
                 return control;
             }
 
-            if (archivo.ToUpper().EndsWith(".CHAR"))
+            if (archivo.ToUpper().EndsWith(".CHAR") || archivo.ToUpper().EndsWith(".CHR"))
             {
                 new CHAR(pluginHost, archivo, id).Leer();
 
@@ -156,7 +156,7 @@ namespace Nintendo
                 new ntft(pluginHost, archivo, id).Leer();
             if (archivo.ToUpper().EndsWith(".PLT"))
                 new PLT(pluginHost, archivo, id).Leer();
-            if (archivo.ToUpper().EndsWith(".CHAR"))
+            if (archivo.ToUpper().EndsWith(".CHAR") || archivo.ToUpper().EndsWith(".CHR"))
                 new CHAR(pluginHost, archivo, id).Leer();
 		}
 	}

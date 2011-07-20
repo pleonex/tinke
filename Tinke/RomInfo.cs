@@ -139,8 +139,25 @@ namespace Tinke
             #region Muestra la información de la cabecera
             listInfo.Items[0].SubItems.Add(new String(cabecera.gameTitle));
             listInfo.Items[1].SubItems.Add(new string(cabecera.gameCode));
-            listInfo.Items[2].SubItems.Add(Nitro.NDS.CodeToString(Nitro.Makercode.Nintendo.GetType(), cabecera.makerCode));
-            listInfo.Items[3].SubItems.Add(Nitro.NDS.CodeToString(Nitro.Unitcode.NintendoDS.GetType(), cabecera.unitCode));
+            try
+            {
+
+                listInfo.Items[2].SubItems.Add(new String(cabecera.makerCode) + " (" +
+                    Nitro.Estructuras.makerCode[new String(cabecera.makerCode)] + ')');
+            }
+            catch
+            {
+                listInfo.Items[2].SubItems.Add(new String(cabecera.makerCode) + " (Desconocido)");
+            }
+            try
+            {
+                listInfo.Items[3].SubItems.Add("0x" + String.Format("{0:X}", cabecera.unitCode) +
+                    " (" + Nitro.Estructuras.unitCode[cabecera.unitCode] + ')');
+            }
+            catch
+            {
+                listInfo.Items[3].SubItems.Add("0x" + String.Format("{0:X}", cabecera.unitCode) + " (Desconocido)");
+            }
             listInfo.Items[4].SubItems.Add(Convert.ToString(cabecera.encryptionSeed));
             listInfo.Items[5].SubItems.Add((cabecera.tamaño / 8388608).ToString() + " MB");
             listInfo.Items[6].SubItems.Add(Tools.Helper.BytesToHexString(cabecera.reserved));

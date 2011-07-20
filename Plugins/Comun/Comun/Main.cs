@@ -15,7 +15,7 @@ namespace Comun
         {
             nombre = nombre.ToUpper();
 
-            if (nombre.EndsWith(".TGA") || nombre.EndsWith(".JPG") || nombre.EndsWith(".PNG"))
+            if (nombre.EndsWith(".TGA") || nombre.EndsWith(".JPG") || nombre.EndsWith(".PNG") || nombre.EndsWith(".BMP"))
                 return Formato.ImagenCompleta;
             else if (nombre.EndsWith(".WAV"))
                 return Formato.Sonido;
@@ -43,6 +43,8 @@ namespace Comun
                 return new PNG(pluginHost, archivo).Show_Info();
             else if (archivo.ToUpper().EndsWith(".WAV"))
                 return new WAV(pluginHost, archivo).Show_Info();
+            else if (archivo.ToUpper().EndsWith(".BMP"))
+                return new BMP(pluginHost, archivo).Show_Info();
 
             return new Control();
         }

@@ -74,6 +74,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Imagen\BMP.cs" />
     <Compile Include="Imagen\JPG.cs" />
     <Compile Include="Imagen\PNG.cs" />
     <Compile Include="Imagen\TGA.cs" />

@@ -294,7 +294,7 @@ namespace Tinke
             // 
             // trackZoom
             // 
-            this.trackZoom.BackColor = System.Drawing.SystemColors.Control;
+            this.trackZoom.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
             this.trackZoom.LargeChange = 100;
             this.trackZoom.Location = new System.Drawing.Point(10, 423);
             this.trackZoom.Maximum = 800;

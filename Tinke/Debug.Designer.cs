@@ -28,17 +28,23 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Debug));
-            if (System.Type.GetType("Mono.Runtime") == null) // Evitamos Mono que da problemas
+            if (System.Type.GetType("Mono.Runtime") == null)
                 this.txtInfo = new System.Windows.Forms.WebBrowser();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.s0EToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // txtInfo
             // 
-            if (System.Type.GetType("Mono.Runtime") == null) // Evitamos Mono que da problemas
+            if (System.Type.GetType("Mono.Runtime") == null)
             {
                 this.txtInfo.AllowWebBrowserDrop = false;
+                this.txtInfo.ContextMenuStrip = this.contextMenuStrip1;
                 this.txtInfo.Dock = System.Windows.Forms.DockStyle.Fill;
+                this.txtInfo.IsWebBrowserContextMenuEnabled = false;
                 this.txtInfo.Location = new System.Drawing.Point(0, 0);
                 this.txtInfo.MinimumSize = new System.Drawing.Size(20, 20);
                 this.txtInfo.Name = "txtInfo";
@@ -47,13 +53,30 @@
                 this.txtInfo.TabIndex = 0;
             }
             // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.s0EToolStripMenuItem});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.ShowImageMargin = false;
+            this.contextMenuStrip1.Size = new System.Drawing.Size(128, 48);
+            // 
+            // s0EToolStripMenuItem
+            // 
+            this.s0EToolStripMenuItem.Name = "s0EToolStripMenuItem";
+            this.s0EToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
+            this.s0EToolStripMenuItem.Text = "S0E";
+            this.s0EToolStripMenuItem.Click += new System.EventHandler(this.s01ToolStripMenuItem_Click);
+            // 
             // Debug
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(644, 152);
+            this.ContextMenuStrip = this.contextMenuStrip1;
             this.ControlBox = false;
-            this.Controls.Add(this.txtInfo);
+            if (System.Type.GetType("Mono.Runtime") == null)
+                this.Controls.Add(this.txtInfo);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
@@ -62,6 +85,7 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "Mensajes";
+            this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -69,6 +93,8 @@
         #endregion
 
         private System.Windows.Forms.WebBrowser txtInfo;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem s0EToolStripMenuItem;
 
 
     }
