@@ -3,40 +3,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
-using System.Windows.Forms;
 using PluginInterface;
 
 namespace NARC
 {
-    public class NARC : IPlugin 
+    public class Utility
     {
-        IPluginHost pluginHost;
         string tempFolder;
+        IPluginHost pluginHost;
 
-        public void Inicializar(IPluginHost pluginHost)
+        public Utility(IPluginHost pluginHost)
         {
             this.pluginHost = pluginHost;
         }
-        public Formato Get_Formato(string nombre, byte[] magic)
-        {
-            nombre = nombre.ToUpper();
-            string id = new String(Encoding.ASCII.GetChars(magic));
-
-            if (id == "NARC" || id == "CRAN" || (nombre.EndsWith("UTILITY.BIN") && magic[0] == 0x10))
-                return Formato.Comprimido;
-
-            return Formato.Desconocido;
-        }
-
 
         public void Leer(string archivo, int idArchivo)
         {
-            if (archivo.ToUpper().EndsWith("UTILITY.BIN"))
-            {
-                new Utility(pluginHost).Leer(archivo, idArchivo);
-                return;
-            }
-
             tempFolder = pluginHost.Get_TempFolder();
             // Determinamos la subcarpeta donde guardar los archivos descomprimidos.
             string[] subFolders = Directory.GetDirectories(tempFolder);
@@ -53,20 +35,15 @@ namespace NARC
             ARC arc = new ARC();
             BinaryReader br = new BinaryReader(System.IO.File.OpenRead(archivo));
 
-            // Lee cabecera genérica e inicial:
-            arc.id = br.ReadChars(4);
-            arc.id_endian = br.ReadUInt16();
-            if (arc.id_endian == 0xFFFE)
-                arc.id.Reverse<Char>();
-            arc.constant = br.ReadUInt16();
-            arc.file_size = br.ReadUInt32();
-            arc.header_size = br.ReadUInt16();
-            arc.nSections = br.ReadUInt16();
+            uint fntOffset = br.ReadUInt32();
+            uint fntSize = br.ReadUInt32();
+            uint fatOffset = br.ReadUInt32();
+            uint fatSize = br.ReadUInt32();
 
-            // Lee primera sección BTAF (File Allocation TaBle)
-            arc.btaf.id = br.ReadChars(4);
-            arc.btaf.section_size = br.ReadUInt32();
-            arc.btaf.nFiles = br.ReadUInt32();
+            // FAT (File Allocation TaBle)
+            br.BaseStream.Position = fatOffset;
+
+            arc.btaf.nFiles = fatSize / 0x08;
             arc.btaf.entries = new BTAF_Entry[arc.btaf.nFiles];
             for (int i = 0; i < arc.btaf.nFiles; i++)
             {
@@ -74,11 +51,10 @@ namespace NARC
                 arc.btaf.entries[i].end_offset = br.ReadUInt32();
             }
 
-            // Lee la segunda sección BTNF (File Name TaBle)
-            arc.btnf.id = br.ReadChars(4);
-            arc.btnf.section_size = br.ReadUInt32();
+            // FNT (File Name TaBle)
+            br.BaseStream.Position = fntOffset;
             arc.btnf.entries = new List<BTNF_MainEntry>();
-            long pos = br.BaseStream.Position;
+     
             #region Obtener carpeta root
             do
             {
@@ -88,24 +64,8 @@ namespace NARC
                 main.parent = br.ReadUInt16();
                 uint idFile = main.first_pos;
 
-                if (main.offset < 0x8)  // No hay nombres, juegos como el pokemon
-                {
-
-                    for (int i = 0; i < arc.btaf.nFiles; i++)
-                    {
-                        Archivo currFile = new Archivo();
-                        currFile.id = (ushort)idFile; idFile++;
-                        currFile.name = "file" + idFile.ToString();
-                        if (!(main.files is List<Archivo>))
-                            main.files = new List<Archivo>();
-                        main.files.Add(currFile);
-                    }
-                    br.BaseStream.Position = main.offset + pos; // Para que funcione la condición while
-                    arc.btnf.entries.Add(main);
-                    continue;
-                }
-                long posmain = br.BaseStream.Position;
-                br.BaseStream.Position = main.offset + pos;
+                long currOffset = br.BaseStream.Position;
+                br.BaseStream.Position = main.offset + fntOffset;
                 int id = br.ReadByte();
 
                 while (id != 0x0)   // Indicador de fin de subtable
@@ -133,21 +93,20 @@ namespace NARC
                     id = br.ReadByte();
                 }
                 arc.btnf.entries.Add(main);
-                br.BaseStream.Position = posmain;
+                br.BaseStream.Position = currOffset;
 
-            } while (arc.btnf.entries[0].offset + pos != br.BaseStream.Position);
+            } while (fntOffset + arc.btnf.entries[0].offset != br.BaseStream.Position);
 
-            br.BaseStream.Position = pos - 8 + arc.btnf.section_size;
             Carpeta root = Jerarquizar_Carpetas(arc.btnf.entries, 0xF000, "root");
             #endregion
 
-            // Lee tercera sección GMIF (File IMaGe)
-            arc.gmif.id = br.ReadChars(4);
-            arc.gmif.section_size = br.ReadUInt32();
-            pos = br.BaseStream.Position;
+            // Archivos
+            br.BaseStream.Position = fatOffset + fatSize;
+
+            //pos = br.BaseStream.Position;
             for (int i = 0; i < arc.btaf.nFiles; i++)
             {
-                br.BaseStream.Position = pos + arc.btaf.entries[i].start_offset;
+                br.BaseStream.Position = arc.btaf.entries[i].start_offset;
                 Asignar_Archivos(ref br, root, i, arc.btaf.entries[i].end_offset - arc.btaf.entries[i].start_offset);
             }
             br.Close();
@@ -196,60 +155,5 @@ namespace NARC
                 foreach (Carpeta subFolder in currFolder.folders)
                     Asignar_Archivos(ref br, subFolder, idFile, size);
         }
-
-        public Control Show_Info(string archivo, int id)
-        {
-            throw new NotImplementedException();
-        }
     }
-
-    #region Estructuras
-    public struct ARC
-    {
-        public char[] id;           // Always NARC = 0x4E415243
-        public UInt16 id_endian;    // Si 0xFFFE hay que darle la vuelta al id
-        public UInt16 constant;     // Always 0x0100
-        public UInt32 file_size;
-        public UInt16 header_size;  // Siempre 0x0010
-        public UInt16 nSections;    // En este caso siempre 0x0003
-
-        public BTAF btaf;
-        public BTNF btnf;
-        public GMIF gmif;
-    }
-    public struct BTAF
-    {
-        public char[] id;
-        public UInt32 section_size;
-        public UInt32 nFiles;
-        public BTAF_Entry[] entries;
-    }
-    public struct BTAF_Entry
-    {
-        // Ambas son relativas a la sección GMIF
-        public UInt32 start_offset;
-        public UInt32 end_offset;
-    }
-    public struct BTNF
-    {
-        public char[] id;
-        public UInt32 section_size;
-        public List<BTNF_MainEntry> entries;
-    }
-    public struct BTNF_MainEntry
-    {
-        public UInt32 offset;       // Relativo a la primera entrada
-        public UInt32 first_pos;    // ID del primer archivo.
-        public UInt32 parent;       // En el caso de root, número de carpetas;
-        public List<Archivo> files;
-        public List<Carpeta> folders;
-    }
-    public struct GMIF
-    {
-        public char[] id;
-        public UInt32 section_size;
-        // Datos de los archivos....
-    }
-    #endregion
-
 }

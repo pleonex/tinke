@@ -57,6 +57,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="bmg.cs" />
+    <Compile Include="iBMG.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="iBMG.Designer.cs">
+      <DependentUpon>iBMG.cs</DependentUpon>
+    </Compile>
     <Compile Include="iTXT.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -67,6 +74,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="iBMG.resx">
+      <DependentUpon>iBMG.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="iTXT.resx">
       <DependentUpon>iTXT.cs</DependentUpon>
     </EmbeddedResource>

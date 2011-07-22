@@ -134,6 +134,7 @@ namespace Tinke
             if (!isMono)
                 espera.Abort();
 
+
             toolStripDebug.Enabled = !isMono;
             debug = new Debug();
             if (!isMono)
@@ -147,6 +148,8 @@ namespace Tinke
             debug.Añadir_Texto(sb.ToString());
             sb.Length = 0;
 
+            this.Show();
+            debug.ShowInTaskbar = true;
             this.Activate();
         }
 
@@ -761,6 +764,11 @@ namespace Tinke
                 sb.Length = 0;
             }
         }
+        private void Sistema_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Space)
+                btnSee.PerformClick();
+        }
 
         private void toolStripInfoRom_Click(object sender, EventArgs e)
         {
@@ -1225,6 +1233,7 @@ namespace Tinke
 
             return nodos;
         }
+
 
     }
 }

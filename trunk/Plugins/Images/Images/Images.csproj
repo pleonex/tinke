@@ -5,8 +5,8 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <OutputType>Library</OutputType>
-    <RootNamespace>Nintendo</RootNamespace>
-    <AssemblyName>Nintendo</AssemblyName>
+    <RootNamespace>Images</RootNamespace>
+    <AssemblyName>Images</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
@@ -105,14 +105,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="bmg.cs" />
     <Compile Include="CHAR.cs" />
-    <Compile Include="iBMG.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="iBMG.Designer.cs">
-      <DependentUpon>iBMG.cs</DependentUpon>
-    </Compile>
     <Compile Include="iNCGR.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -140,9 +133,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="iBMG.resx">
-      <DependentUpon>iBMG.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="iNCGR.resx">
       <DependentUpon>iNCGR.cs</DependentUpon>
     </EmbeddedResource>
@@ -158,7 +148,7 @@
     <None Include="Resources\picture_save.png" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="NintendoLang.xml">
+    <Content Include="ImagesLang.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

@@ -15,26 +15,25 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  *
  * Programador: pleoNeX
- * Programa utilizado: SharpDevelop
- * Fecha: 16/02/2011
+ * Fecha: 1/07/2011
  * 
  */
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using System.IO;
 using PluginInterface;
 
-namespace Nintendo
+namespace Images
 {
-	/// <summary>
-	/// Description of nbfp.
-	/// </summary>
-	public class nbfp
-	{
-		IPluginHost pluginHost;
+    class PLT
+    {	
+        IPluginHost pluginHost;
 		string archivo;
         int id;
 		
-		public nbfp(IPluginHost pluginHost, string archivo, int id)
+		public PLT(IPluginHost pluginHost, string archivo, int id)
 		{
 			this.pluginHost = pluginHost;
 			this.archivo = archivo;
@@ -62,9 +61,10 @@ namespace Nintendo
 			nclr.pltt.paletas = new NTFP[1];
 			// Rellenamos los colores en formato BGR555
 			nclr.pltt.paletas[0].colores = pluginHost.BGR555(br.ReadBytes((int)file_size));
+            nclr.pltt.nColores = file_size / 2;
 			
 			br.Close();
 			pluginHost.Set_NCLR(nclr);
 		}
-	}
+	}  
 }

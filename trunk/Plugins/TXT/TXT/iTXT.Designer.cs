@@ -46,6 +46,7 @@
             this.txtBox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.txtBox.Size = new System.Drawing.Size(510, 466);
             this.txtBox.TabIndex = 0;
+            this.txtBox.WordWrap = false;
             // 
             // btnSave
             // 

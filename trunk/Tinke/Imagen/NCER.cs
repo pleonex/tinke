@@ -54,7 +54,7 @@ namespace Tinke
             ncer.cebk.nBanks = br.ReadUInt16();
             ncer.cebk.tBank = br.ReadUInt16();
             ncer.cebk.constant = br.ReadUInt32();
-            ncer.cebk.block_size = br.ReadUInt32() >> 2;
+            ncer.cebk.block_size = br.ReadUInt32();
             ncer.cebk.unknown1 = br.ReadUInt32();
             ncer.cebk.unknown2 = br.ReadUInt64();
             ncer.cebk.banks = new Bank[ncer.cebk.nBanks];
@@ -311,10 +311,19 @@ namespace Tinke
                     for (int j = 0; j < tile.rahc.tileData.nPaleta.Length; j++)
                         tile.rahc.tileData.nPaleta[j] = banco.cells[i].nPalette;
 
-                    if (tile.orden == Orden_Tiles.No_Tiles)
-                        celdas[i] = Imagen_NCGR.Crear_Imagen(tile, paleta, (int)tileOffset * 64, banco.cells[i].width, banco.cells[i].height);
+                    if (blockSize != 4)
+                    {
+                        if (tile.orden == Orden_Tiles.No_Tiles)
+                            celdas[i] = Imagen_NCGR.Crear_Imagen(tile, paleta, (int)tileOffset * 64, banco.cells[i].width, banco.cells[i].height);
+                        else
+                            celdas[i] = Imagen_NCGR.Crear_Imagen(tile, paleta, (int)tileOffset, banco.cells[i].width / 8, banco.cells[i].height / 8);
+                    }
                     else
-                        celdas[i] = Imagen_NCGR.Crear_Imagen(tile, paleta, (int)tileOffset, banco.cells[i].width / 8, banco.cells[i].height / 8);
+                    {
+                        //celdas[i] = Imagen_NCGR.Crear_Imagen(tile, paleta).Clone(new RectangleF(
+
+                             
+                    }
                     #region Rotaciones
                     if (banco.cells[i].xFlip && banco.cells[i].yFlip)
                         celdas[i].RotateFlip(RotateFlipType.RotateNoneFlipXY);

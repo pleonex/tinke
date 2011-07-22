@@ -53,19 +53,6 @@
       <S0F>paletas encontradas</S0F>
       <S10>colores.</S10>
     </NCLR>
-    <BMG>
-      <S01>Campo</S01>
-      <S02>Valor</S02>
-      <S03>Codificación</S03>
-      <S04>Sección</S04>
-      <S05># mensajes</S05>
-      <S06>Tamaño offset</S06>
-      <S07>Desconocido 1</S07>
-      <S08>Desconocido 2</S08>
-      <S09>Mensaje:</S09>
-      <S0A>Sí</S0A>
-      <S0B>No</S0B>
-    </BMG>
   </Español>
   <English>
     <NCLR>
@@ -117,19 +104,6 @@
       <S1C>Remove</S1C>
       <S1D>Transparency</S1D>
     </NCGR>
-    <BMG>
-      <S01>Property</S01>
-      <S02>Content</S02>
-      <S03>Codification</S03>
-      <S04>Section</S04>
-      <S05># messages</S05>
-      <S06>Offset length</S06>
-      <S07>Unknown 1</S07>
-      <S08>Unknown 2</S08>
-      <S09>Message:</S09>
-      <S0A>Yes</S0A>
-      <S0B>No</S0B>
-    </BMG>
   </English>
   <Français>
     <NCLR>
@@ -181,18 +155,5 @@
       <S1C>Remove</S1C>
       <S1D>Transparence</S1D>
     </NCGR>
-    <BMG>
-      <S01>Champ</S01>
-      <S02>Valeur</S02>
-      <S03>Codification</S03>
-      <S04>Section</S04>
-      <S05>Nombre messages</S05>
-      <S06>Taille offset</S06>
-      <S07>Inconnu 1</S07>
-      <S08>Inconnu 2</S08>
-      <S09>Message:</S09>
-      <S0A>Oui</S0A>
-      <S0B>Non</S0B>
-    </BMG>
   </Français>
 </Language>
