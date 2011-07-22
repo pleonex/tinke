@@ -19,7 +19,7 @@
  * Fecha: 18/02/2011
  * 
  */
-namespace Nintendo
+namespace Images
 {
     partial class iNCGR
     {
@@ -252,7 +252,7 @@ namespace Nintendo
             // 
             // btnSave
             // 
-            this.btnSave.Image = global::Nintendo.Properties.Resources.picture_save;
+            this.btnSave.Image = global::Images.Properties.Resources.picture_save;
             this.btnSave.Location = new System.Drawing.Point(9, 474);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(79, 32);

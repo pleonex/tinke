@@ -25,7 +25,7 @@ using System.Text;
 using System.IO;
 using PluginInterface;
 
-namespace Nintendo
+namespace Images
 {
     public class ntfp
     {

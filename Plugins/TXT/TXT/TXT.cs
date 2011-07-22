@@ -19,6 +19,7 @@ namespace TXT
         public Formato Get_Formato(string nombre, byte[] magic)
         {
             nombre = nombre.ToUpper();
+            string ext = new String(System.Text.Encoding.ASCII.GetChars(magic));
 
             if (nombre.EndsWith("LZ.TXT") && magic[0] == 0x10)
                 return Formato.Desconocido;
@@ -28,6 +29,8 @@ namespace TXT
                 || nombre.EndsWith(".BAT") || nombre.EndsWith(".SARC") || nombre.EndsWith(".SBDL")
                 || nombre.EndsWith(".C") || nombre.EndsWith("MAKEFILE") || nombre.EndsWith(".BSF")
                 || nombre.EndsWith(".LUA") || nombre.EndsWith(".CSV") || nombre.EndsWith(".SMAP"))
+                return Formato.Texto;
+            else if (ext == "MESG" && nombre.EndsWith(".BMG"))
                 return Formato.Texto;
 
             return Formato.Desconocido;
@@ -41,6 +44,9 @@ namespace TXT
 
         public Control Show_Info(string archivo, int id)
         {
+            if (archivo.ToUpper().EndsWith(".BMG"))
+                return new bmg(pluginHost, archivo).ShowInfo();
+
             string txt = "";
             
             BinaryReader br = new BinaryReader(File.OpenRead(archivo));

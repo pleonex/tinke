@@ -23,7 +23,7 @@ using System;
 using System.IO;
 using PluginInterface;
 
-namespace Nintendo
+namespace Images
 {
 	/// <summary>
 	/// Description of nbfs.

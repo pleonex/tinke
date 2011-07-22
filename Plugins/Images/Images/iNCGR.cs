@@ -29,7 +29,7 @@ using System.Text;
 using System.Windows.Forms;
 using PluginInterface;
 
-namespace Nintendo
+namespace Images
 {
     public partial class iNCGR : UserControl
     {
@@ -200,7 +200,7 @@ namespace Nintendo
 
         private void LeerIdioma()
         {
-            System.Xml.Linq.XElement xml = System.Xml.Linq.XElement.Load(Application.StartupPath + "\\Plugins\\NintendoLang.xml");
+            System.Xml.Linq.XElement xml = System.Xml.Linq.XElement.Load(Application.StartupPath + "\\Plugins\\ImagesLang.xml");
             xml = xml.Element(pluginHost.Get_Language()).Element("NCGR");
 
             label5.Text = xml.Element("S01").Value;

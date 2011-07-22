@@ -26,7 +26,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using PluginInterface;
 
-namespace Nintendo
+namespace Images
 {
 	/// <summary>
 	/// Archivo de entrada al módulo.
@@ -51,8 +51,6 @@ namespace Nintendo
                 return Formato.Imagen;
             else if (nombre.EndsWith(".NBFS"))
                 return Formato.Screen;
-            else if (ext == "MESG" && nombre.EndsWith(".BMG"))
-                return Formato.Texto;
             else if (nombre.EndsWith(".NTFT") && ext != "CMPR" && ext != "BLDT")
                 return Formato.Imagen;
             else if (nombre.EndsWith(".NTFP") && ext != "BLDT")
@@ -98,8 +96,6 @@ namespace Nintendo
 					return control;
 				}
 			}
-            if (archivo.ToUpper().EndsWith(".BMG"))
-                return new bmg(pluginHost, archivo).ShowInfo();
 
             if (archivo.ToUpper().EndsWith(".NTFT"))
             {
@@ -148,8 +144,6 @@ namespace Nintendo
 				new nbfc(pluginHost, archivo, id).Leer();
 			if (archivo.ToUpper().EndsWith(".NBFS"))
 				new nbfs(pluginHost, archivo, id).Leer();
-            if (archivo.ToUpper().EndsWith(".BMG"))
-                Console.WriteLine("Este archivo no contiene información para guardar.");
             if (archivo.ToUpper().EndsWith(".NTFP"))
                 new ntfp(pluginHost, archivo, id).Leer();
             if (archivo.ToUpper().EndsWith(".NTFT"))

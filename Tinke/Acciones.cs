@@ -1089,7 +1089,8 @@ namespace Tinke
                     }
                 }
 
-                if (ext[0] == LZ77_TAG || ext[0] == LZSS_TAG || ext[0] == RLE_TAG || ext[0] == HUFF_TAG)
+                if (ext[0] == LZ77_TAG || ext[0] == LZSS_TAG || ext[0] == RLE_TAG || ext[0] == HUFF_TAG ||
+                    new String(System.Text.Encoding.ASCII.GetChars(ext)) == "LZ77")
                 {
                     FileInfo info = new FileInfo(tempFile);
                     String uncompFile = info.DirectoryName + Path.DirectorySeparatorChar + "un_" + info.Name;
@@ -1099,11 +1100,27 @@ namespace Tinke
 
                     Carpeta carpeta = new Carpeta();
                     Archivo file = new Archivo();
+
                     file.name = selectFile.name;
                     if (file.name.ToUpper().EndsWith("LZ"))
+                    {
                         file.name = file.name.Remove(file.name.Length - 3);
+                        File.Move(uncompFile, uncompFile.Replace(info.Name, file.name));
+                        uncompFile = uncompFile.Replace(info.Name, file.name);
+                    }
                     else if (file.name.ToUpper().EndsWith("Z"))
+                    {
                         file.name = file.name.Remove(file.name.Length - 2);
+                        File.Move(uncompFile, uncompFile.Replace(info.Name, file.name));
+                        uncompFile = uncompFile.Replace(info.Name, file.name);
+                    }
+                    else if (file.name.ToUpper().EndsWith(".L"))
+                    {
+                        file.name = file.name.Remove(file.name.Length - 2);
+                        File.Move(uncompFile, uncompFile.Replace(info.Name, file.name));
+                        uncompFile = uncompFile.Replace(info.Name, file.name);
+                    }
+
                     file.path = uncompFile;
                     file.size = (uint)new FileInfo(uncompFile).Length;
                     carpeta.files = new List<Archivo>();

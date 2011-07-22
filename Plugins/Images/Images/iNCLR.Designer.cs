@@ -1,4 +1,4 @@
-﻿namespace Nintendo
+﻿namespace Images
 {
     partial class iNCLR
     {
@@ -126,7 +126,7 @@
             // 
             // btnSave
             // 
-            this.btnSave.Image = global::Nintendo.Properties.Resources.picture_save;
+            this.btnSave.Image = global::Images.Properties.Resources.picture_save;
             this.btnSave.Location = new System.Drawing.Point(245, 168);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(75, 28);

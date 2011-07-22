@@ -177,6 +177,7 @@ namespace Tinke
             "S38"}, -1);
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(RomInfo));
             this.groupBanner = new System.Windows.Forms.GroupBox();
+            this.checkTrans = new System.Windows.Forms.CheckBox();
             this.lblGameTitle = new System.Windows.Forms.Label();
             this.btnBannerGuardar = new System.Windows.Forms.Button();
             this.txtBannerReserved = new System.Windows.Forms.TextBox();
@@ -192,7 +193,6 @@ namespace Tinke
             this.columnPosicion = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnCampo = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnValor = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.checkTrans = new System.Windows.Forms.CheckBox();
             this.groupBanner.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picIcon)).BeginInit();
             this.SuspendLayout();
@@ -219,6 +219,17 @@ namespace Tinke
             this.groupBanner.TabIndex = 7;
             this.groupBanner.TabStop = false;
             this.groupBanner.Text = "S02";
+            // 
+            // checkTrans
+            // 
+            this.checkTrans.AutoSize = true;
+            this.checkTrans.Location = new System.Drawing.Point(66, 58);
+            this.checkTrans.Name = "checkTrans";
+            this.checkTrans.Size = new System.Drawing.Size(46, 17);
+            this.checkTrans.TabIndex = 13;
+            this.checkTrans.Text = "S3A";
+            this.checkTrans.UseVisualStyleBackColor = true;
+            this.checkTrans.CheckedChanged += new System.EventHandler(this.checkTrans_CheckedChanged);
             // 
             // lblGameTitle
             // 
@@ -404,17 +415,6 @@ namespace Tinke
             this.columnValor.Text = "S0E";
             this.columnValor.Width = 214;
             // 
-            // checkTrans
-            // 
-            this.checkTrans.AutoSize = true;
-            this.checkTrans.Location = new System.Drawing.Point(66, 58);
-            this.checkTrans.Name = "checkTrans";
-            this.checkTrans.Size = new System.Drawing.Size(46, 17);
-            this.checkTrans.TabIndex = 13;
-            this.checkTrans.Text = "S3A";
-            this.checkTrans.UseVisualStyleBackColor = true;
-            this.checkTrans.CheckedChanged += new System.EventHandler(this.checkTrans_CheckedChanged);
-            // 
             // RomInfo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -429,7 +429,6 @@ namespace Tinke
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "RomInfo";
-            this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "S01";
             this.VisibleChanged += new System.EventHandler(this.RomInfo_VisibleChanged);

@@ -314,18 +314,26 @@ namespace Tinke.Nitro
             diccionario.Add("09", "Hot B");
             diccionario.Add("0A", "Jaleco");
 
+            diccionario.Add("41", "Ubisoft");
             diccionario.Add("52", "Activision");
+            diccionario.Add("5D", "Midway");
             diccionario.Add("5G", "Majesco Entertainment");
             diccionario.Add("64", "LucasArts Entertainment");
+            diccionario.Add("69", "Electronic Arts Inc.");
             diccionario.Add("6V", "JoWooD Entertainment");
             diccionario.Add("78", "THQ");
-            diccionario.Add("7J", "zushi games");
+            diccionario.Add("7J", "Zoo Digital Publishing Ltd");
             diccionario.Add("99", "Rising Star Games");
             diccionario.Add("A4", "Konami Digital Entertainment");
+            diccionario.Add("AF", "Namco");
             diccionario.Add("GD", "SQUARE ENIX");
+            diccionario.Add("GT", "505 Games");
+            diccionario.Add("H4", "SNK PLAYMORE");
+            diccionario.Add("HF", "Level 5");
             diccionario.Add("LR", "Asylum Entertainment");
             diccionario.Add("KM", "Deep Silver");
             diccionario.Add("MJ", "MumboJumbo");
+            diccionario.Add("NK", "Neko Entertainment");
             diccionario.Add("SU", "Slitherine Software UK Ltd");
             diccionario.Add("SV", "SevenOne Intermedia GmbH");
             diccionario.Add("RM", "rondomedia");
