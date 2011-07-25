@@ -8,7 +8,8 @@
 * Fixed 4bpp CHAR and NBFC files
 * Add Log export function
 * Fixed BGR555 codification
-
+* Fixed problems with strage NCLR files
+* Minor problems fixed
 
 0.7.0:
 *** Import files and save the new ROM
@@ -19,7 +20,7 @@
 * Add support for SWAV sound files
 * Add support for SWAR sound files
 * Add Zoom feature
-* Add possibility to change the bgd color with transparency checked
+* Add button to change the bgd color with transparency checked
 * UNICODE encoding support for text files
 * Minor problems fixed
 

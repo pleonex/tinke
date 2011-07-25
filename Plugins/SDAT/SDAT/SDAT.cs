@@ -40,8 +40,7 @@ namespace SDAT
             nombre = nombre.ToUpper();
             string ext = new String(System.Text.Encoding.ASCII.GetChars(magic));
 
-            if ((nombre.EndsWith(".SDAT") || ext == "SDAT")
-                || (nombre.EndsWith(".SWAV") || ext == "SWAV"))
+            if (ext == "SDAT" || (nombre.EndsWith(".SWAV") || ext == "SWAV"))
                 return Formato.Sonido;
 
             return Formato.Desconocido;
@@ -291,6 +290,12 @@ namespace SDAT
             // GROUP
             for (int i = 0; i < info.block[5].nEntries; i++)
             {
+                if (info.block[5].offsetEntries[i] == 0x00)
+                {
+                    info.block[5].entries[i] = new Info.GROUP();
+                    continue;
+                }
+
                 br.BaseStream.Position = sdat.cabecera.infoOffset + info.block[5].offsetEntries[i];
 
                 Info.GROUP group = new Info.GROUP();

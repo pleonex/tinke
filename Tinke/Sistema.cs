@@ -413,7 +413,7 @@ namespace Tinke
             {
                 foreach (Archivo archivo in carpeta.files)
                 {
-                    if (archivo.name == "fnt.bin" || archivo.name.StartsWith("overlay9_"))
+                    if (archivo.formato == Formato.Sistema)
                         continue; // Evitamos archivos del sistema
 
                     if (archivo.formato != Formato.Desconocido)

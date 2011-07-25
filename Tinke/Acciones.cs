@@ -966,22 +966,22 @@ namespace Tinke
             #endregion
 
             currFile.name = currFile.name.ToUpper();
-            if (currFile.name.EndsWith(".NCLR") || new String(Encoding.ASCII.GetChars(ext)) == "NCLR" || new String(Encoding.ASCII.GetChars(ext)) == "RLCN")
+            if (new String(Encoding.ASCII.GetChars(ext)) == "NCLR" || new String(Encoding.ASCII.GetChars(ext)) == "RLCN")
                 return Formato.Paleta;
-            else if ((currFile.name.EndsWith(".NCGR") || new String(Encoding.ASCII.GetChars(ext)) == "NCGR" || new String(Encoding.ASCII.GetChars(ext)) == "RGCN") &&
-                  !(new String(Encoding.ASCII.GetChars(ext)) == "PMOC"))
+            else if (new String(Encoding.ASCII.GetChars(ext)) == "NCGR" || new String(Encoding.ASCII.GetChars(ext)) == "RGCN")
                 return Formato.Imagen;
-            else if (currFile.name.EndsWith(".NSCR") || new String(Encoding.ASCII.GetChars(ext)) == "NSCR" || new String(Encoding.ASCII.GetChars(ext)) == "RCSN")
+            else if (new String(Encoding.ASCII.GetChars(ext)) == "NSCR" || new String(Encoding.ASCII.GetChars(ext)) == "RCSN")
                 return Formato.Screen;
-            else if (currFile.name.EndsWith(".NCER") || new String(Encoding.ASCII.GetChars(ext)) == "NCER" || new String(Encoding.ASCII.GetChars(ext)) == "RECN")
+            else if (new String(Encoding.ASCII.GetChars(ext)) == "NCER" || new String(Encoding.ASCII.GetChars(ext)) == "RECN")
                 return Formato.Celdas;
-            else if (currFile.name.EndsWith(".NANR") || new String(Encoding.ASCII.GetChars(ext)) == "NANR" || new String(Encoding.ASCII.GetChars(ext)) == "RNAN")
+            else if (new String(Encoding.ASCII.GetChars(ext)) == "NANR" || new String(Encoding.ASCII.GetChars(ext)) == "RNAN")
                 return Formato.Animación;
             else if (currFile.name == "FNT.BIN" || currFile.name == "FAT.BIN" || currFile.name.StartsWith("OVERLAY9_") || currFile.name.StartsWith("OVERLAY7_") ||
                 currFile.name == "ARM9.BIN" || currFile.name == "ARM7.BIN" || currFile.name == "Y9.BIN" || currFile.name == "Y7.BIN")
                 return Formato.Sistema;
 
-            if (ext[0] == LZ77_TAG || ext[0] == LZSS_TAG || ext[0] == RLE_TAG || ext[0] == HUFF_TAG)
+            if (ext[0] == LZ77_TAG || ext[0] == LZSS_TAG || ext[0] == RLE_TAG || ext[0] == HUFF_TAG ||
+                new String(System.Text.Encoding.ASCII.GetChars(ext)) == "LZ77")
                 return Formato.Comprimido;
 
             return Formato.Desconocido;
@@ -1015,22 +1015,22 @@ namespace Tinke
             #endregion
 
             name = name.ToUpper();
-            if (name.EndsWith(".NCLR") || new String(Encoding.ASCII.GetChars(ext)) == "NCLR" || new String(Encoding.ASCII.GetChars(ext)) == "RLCN")
+            if (new String(Encoding.ASCII.GetChars(ext)) == "NCLR" || new String(Encoding.ASCII.GetChars(ext)) == "RLCN")
                 return Formato.Paleta;
-            else if (name.EndsWith(".NCGR") || new String(Encoding.ASCII.GetChars(ext)) == "NCGR" || new String(Encoding.ASCII.GetChars(ext)) == "RGCN" &&
-                    !(new String(Encoding.ASCII.GetChars(ext)) == "PMOC"))
+            else if (new String(Encoding.ASCII.GetChars(ext)) == "NCGR" || new String(Encoding.ASCII.GetChars(ext)) == "RGCN")
                 return Formato.Imagen;
-            else if (name.EndsWith(".NSCR") || new String(Encoding.ASCII.GetChars(ext)) == "NSCR" || new String(Encoding.ASCII.GetChars(ext)) == "RCSN")
+            else if (new String(Encoding.ASCII.GetChars(ext)) == "NSCR" || new String(Encoding.ASCII.GetChars(ext)) == "RCSN")
                 return Formato.Screen;
-            else if (name.EndsWith(".NCER") || new String(Encoding.ASCII.GetChars(ext)) == "NCER" || new String(Encoding.ASCII.GetChars(ext)) == "RECN")
+            else if (new String(Encoding.ASCII.GetChars(ext)) == "NCER" || new String(Encoding.ASCII.GetChars(ext)) == "RECN")
                 return Formato.Celdas;
-            else if (name.EndsWith(".NANR") || new String(Encoding.ASCII.GetChars(ext)) == "NANR" || new String(Encoding.ASCII.GetChars(ext)) == "RNAN")
+            else if (new String(Encoding.ASCII.GetChars(ext)) == "NANR" || new String(Encoding.ASCII.GetChars(ext)) == "RNAN")
                 return Formato.Animación;
             else if (name == "FNT.BIN" || name == "FAT.BIN" || name.StartsWith("OVERLAY9_") || name.StartsWith("OVERLAY7_") ||
                 name == "ARM9.BIN" || name == "ARM7.BIN")
                 return Formato.Sistema;
 
-            if (ext[0] == LZ77_TAG || ext[0] == LZSS_TAG || ext[0] == RLE_TAG || ext[0] == HUFF_TAG)
+            if (ext[0] == LZ77_TAG || ext[0] == LZSS_TAG || ext[0] == RLE_TAG || ext[0] == HUFF_TAG ||
+                new String(System.Text.Encoding.ASCII.GetChars(ext)) == "LZ77")
                 return Formato.Comprimido;
 
             return Formato.Desconocido;
@@ -1130,7 +1130,6 @@ namespace Tinke
             }
             catch (Exception e)
             {
-                MessageBox.Show(e.Message);
                 Console.WriteLine(e.Message);
                 return new Carpeta();
             }
@@ -1293,7 +1292,7 @@ namespace Tinke
             try
             {
                 selectFile.name = selectFile.name.ToUpper();
-                if (selectFile.name.EndsWith(".NCLR") || new String(Encoding.ASCII.GetChars(ext)) == "NCLR" || new String(Encoding.ASCII.GetChars(ext)) == "RLCN")
+                if (new String(Encoding.ASCII.GetChars(ext)) == "NCLR" || new String(Encoding.ASCII.GetChars(ext)) == "RLCN")
                 {
                     NCLR nclr = Imagen_NCLR.Leer(tempFile, idSelect);
                     pluginHost.Set_NCLR(nclr);
@@ -1303,8 +1302,7 @@ namespace Tinke
                     control.Dock = DockStyle.Fill;
                     return control; ;
                 }
-                if (selectFile.name.EndsWith(".NCGR") || new String(Encoding.ASCII.GetChars(ext)) == "NCGR" || new String(Encoding.ASCII.GetChars(ext)) == "RGCN" &&
-                   !(new String(Encoding.ASCII.GetChars(ext)) == "PMOC"))
+                if (new String(Encoding.ASCII.GetChars(ext)) == "NCGR" || new String(Encoding.ASCII.GetChars(ext)) == "RGCN")
                 {
                     NCGR tile = Imagen_NCGR.Leer(tempFile, idSelect);
                     pluginHost.Set_NCGR(tile);
@@ -1323,7 +1321,7 @@ namespace Tinke
                         return new Control();
                     }
                 }
-                else if (selectFile.name.EndsWith(".NSCR") || new String(Encoding.ASCII.GetChars(ext)) == "NSCR" || new String(Encoding.ASCII.GetChars(ext)) == "RCSN")
+                else if (new String(Encoding.ASCII.GetChars(ext)) == "NSCR" || new String(Encoding.ASCII.GetChars(ext)) == "RCSN")
                 {
                     pluginHost.Set_NSCR(Imagen_NSCR.Leer(tempFile, idSelect));
                     File.Delete(tempFile);
@@ -1345,7 +1343,7 @@ namespace Tinke
                         return new Control();
                     }
                 }
-                else if (selectFile.name.EndsWith(".NCER") || new String(Encoding.ASCII.GetChars(ext)) == "NCER" || new String(Encoding.ASCII.GetChars(ext)) == "RECN")
+                else if (new String(Encoding.ASCII.GetChars(ext)) == "NCER" || new String(Encoding.ASCII.GetChars(ext)) == "RECN")
                 {
                     pluginHost.Set_NCER(Imagen_NCER.Leer(tempFile, idSelect));
                     File.Delete(tempFile);
@@ -1364,7 +1362,7 @@ namespace Tinke
                         return new Control();
                     }
                 }
-                else if (selectFile.name.EndsWith(".NANR") || new String(Encoding.ASCII.GetChars(ext)) == "NANR" || new String(Encoding.ASCII.GetChars(ext)) == "RNAN")
+                else if (new String(Encoding.ASCII.GetChars(ext)) == "NANR" || new String(Encoding.ASCII.GetChars(ext)) == "RNAN")
                 {
                     pluginHost.Set_NANR(Imagen_NANR.Leer(tempFile, idSelect));
                     File.Delete(tempFile);

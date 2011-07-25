@@ -227,9 +227,17 @@ namespace SDAT
             }
             blockData = new byte[(int)lastBlockLen];
             datos.CopyTo((int)(nBlocks - 1) * (int)blockLen, blockData, 0, (int)lastBlockLen);
-           
+            
+
             if (waveType == 2)
+            {
+                if (blockData.Length < 4) // Archivos sin sonido
+                {
+                    resultado.AddRange(blockData);
+                    return resultado.ToArray();
+                }
                 resultado.AddRange(AdpcmDecompressor.DecompressBlock_ADPCM(blockData, BitConverter.ToInt16(blockData, 0), BitConverter.ToInt16(blockData, 2)));
+            }
             else if (waveType == 1)
                 resultado.AddRange(blockData);
             else if (waveType == 0)

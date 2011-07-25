@@ -63,6 +63,7 @@ namespace Tinke
             label3.Hide();
             comboAni.Hide();
             txtTime.Hide();
+            lblFullImage.Hide();
 
             bitAni = animaciones;
             aniBox.Dock = DockStyle.Fill;
