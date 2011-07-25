@@ -152,7 +152,7 @@ namespace SDAT
             // 
             this.btnWav.Enabled = false;
             this.btnWav.ImageIndex = 5;
-            this.btnWav.Location = new System.Drawing.Point(407, 432);
+            this.btnWav.Location = new System.Drawing.Point(407, 472);
             this.btnWav.Name = "btnWav";
             this.btnWav.Size = new System.Drawing.Size(100, 34);
             this.btnWav.TabIndex = 4;
@@ -164,7 +164,7 @@ namespace SDAT
             // btnMidi
             // 
             this.btnMidi.Enabled = false;
-            this.btnMidi.Location = new System.Drawing.Point(408, 472);
+            this.btnMidi.Location = new System.Drawing.Point(408, 432);
             this.btnMidi.Name = "btnMidi";
             this.btnMidi.Size = new System.Drawing.Size(99, 35);
             this.btnMidi.TabIndex = 5;

@@ -314,7 +314,9 @@ namespace Tinke.Nitro
             diccionario.Add("09", "Hot B");
             diccionario.Add("0A", "Jaleco");
 
+            diccionario.Add("18", "Hudson Entertainment");
             diccionario.Add("41", "Ubisoft");
+            diccionario.Add("4Q", "Disney Interactive Studios");
             diccionario.Add("52", "Activision");
             diccionario.Add("5D", "Midway");
             diccionario.Add("5G", "Majesco Entertainment");
@@ -322,22 +324,35 @@ namespace Tinke.Nitro
             diccionario.Add("69", "Electronic Arts Inc.");
             diccionario.Add("6V", "JoWooD Entertainment");
             diccionario.Add("78", "THQ");
+            diccionario.Add("7D", "Vivendi Universal Games");
             diccionario.Add("7J", "Zoo Digital Publishing Ltd");
+            diccionario.Add("8J", "General Entertainment");
+            diccionario.Add("8P", "SEGA");
             diccionario.Add("99", "Rising Star Games");
             diccionario.Add("A4", "Konami Digital Entertainment");
             diccionario.Add("AF", "Namco");
+            diccionario.Add("FH", "Foreign Media Games");
+            diccionario.Add("FK", "The Game Factory");
             diccionario.Add("GD", "SQUARE ENIX");
             diccionario.Add("GT", "505 Games");
+            diccionario.Add("GQ", "Engine Software");
+            diccionario.Add("H3", "Zen");
             diccionario.Add("H4", "SNK PLAYMORE");
             diccionario.Add("HF", "Level 5");
+            diccionario.Add("HM", "HMH - INTERACTIVE");
             diccionario.Add("LR", "Asylum Entertainment");
             diccionario.Add("KM", "Deep Silver");
             diccionario.Add("MJ", "MumboJumbo");
             diccionario.Add("NK", "Neko Entertainment");
+            diccionario.Add("NP", "Nobilis Publishing");
+            diccionario.Add("PG", "Phoenix Games");
+            diccionario.Add("PL", "Playlogic");
             diccionario.Add("SU", "Slitherine Software UK Ltd");
             diccionario.Add("SV", "SevenOne Intermedia GmbH");
             diccionario.Add("RM", "rondomedia");
-            diccionario.Add("WR", "Interactive Entertainment");
+            diccionario.Add("RT", "RTL Games");
+            diccionario.Add("WP", "White Park Bay");
+            diccionario.Add("WR", "WB Games");
         }
         private static void Rellenar_UnitCodes()
         {

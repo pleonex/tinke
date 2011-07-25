@@ -28,7 +28,8 @@ namespace TXT
                 || nombre.EndsWith(".INI") || nombre.EndsWith(".H") || nombre.EndsWith(".XSADL")
                 || nombre.EndsWith(".BAT") || nombre.EndsWith(".SARC") || nombre.EndsWith(".SBDL")
                 || nombre.EndsWith(".C") || nombre.EndsWith("MAKEFILE") || nombre.EndsWith(".BSF")
-                || nombre.EndsWith(".LUA") || nombre.EndsWith(".CSV") || nombre.EndsWith(".SMAP"))
+                || nombre.EndsWith(".LUA") || nombre.EndsWith(".CSV") || nombre.EndsWith(".SMAP")
+                || nombre.EndsWith("BUILDTIME"))
                 return Formato.Texto;
             else if (ext == "MESG" && nombre.EndsWith(".BMG"))
                 return Formato.Texto;

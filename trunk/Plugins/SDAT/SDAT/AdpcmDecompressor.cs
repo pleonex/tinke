@@ -91,6 +91,9 @@ namespace SDAT
 
         public static byte[] DecompressBlock_ADPCM(byte[] datos, int sample = 0, int stepindex = 0)
         {
+            if (datos.Length < 4)
+                return datos;
+
             List<byte> resul = new List<byte>();
 
             #region Preinitialized variables
