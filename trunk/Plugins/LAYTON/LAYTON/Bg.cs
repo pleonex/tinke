@@ -42,11 +42,10 @@ namespace LAYTON
             archivo = pluginHost.Get_Files().files[0].path;
             File.Delete(temp);
 
-            PictureBox pic = new PictureBox();
-            pic.Image = Obtener_Background();
-            pic.Dock = DockStyle.Fill;
+            InfoBG control = new InfoBG(pluginHost, Obtener_Background());
             File.Delete(archivo);
-            return pic;
+
+            return control;
         }
 
         public Bitmap Obtener_Background()

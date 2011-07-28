@@ -19,6 +19,7 @@
  * Fecha: 24/06/2011
  * 
  */
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -29,6 +30,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.IO;
 using System.Media;
+using System.Threading;
 using PluginInterface;
 
 namespace SDAT
@@ -38,6 +40,8 @@ namespace SDAT
         sSDAT sdat;
         SoundPlayer soundPlayer;
         string wavFile = "";
+        string loopFile = "";
+        Thread loop;
         IPluginHost pluginHost;
 
         uint lastFolderID;
@@ -147,6 +151,8 @@ namespace SDAT
                 {
                     btnUncompress.Enabled = true;
                 }
+                if (fileSelect.type == FormatSound.STRM)
+                    checkLoop.Enabled = true;
             }
             else
             {
@@ -369,7 +375,7 @@ namespace SDAT
                         WAV.EscribirArchivo(SWAV.ConvertirAWAV(SWAV.LeerArchivo(sound)), wavSaved);
                         break;
                     case FormatSound.STRM:
-                        WAV.EscribirArchivo(STRM.ConvertirAWAV(STRM.LeerArchivo(sound)), wavSaved);
+                        WAV.EscribirArchivo(STRM.ConvertirAWAV(STRM.LeerArchivo(sound), false), wavSaved);
                         break;
                 }
             }
@@ -380,17 +386,17 @@ namespace SDAT
         {
             try
             {
-                if (soundPlayer is SoundPlayer)
-                {
-                    soundPlayer.Stop();
-                    soundPlayer.Dispose();
-                }
+                btnStop.PerformClick();
 
-                if (wavFile != "")
+                if (File.Exists(wavFile))
                     File.Delete(wavFile);
+                if (File.Exists(loopFile))
+                    File.Delete(loopFile);
 
                 string sound = SaveSelectedFile();
                 wavFile = Path.GetTempFileName();
+                if (checkLoop.Checked)
+                    loopFile = Path.GetTempFileName();
 
                 switch(SearchFile().type)
                 {
@@ -398,14 +404,23 @@ namespace SDAT
                         WAV.EscribirArchivo(SWAV.ConvertirAWAV(SWAV.LeerArchivo(sound)), wavFile);
                         break;
                     case FormatSound.STRM:
-                        WAV.EscribirArchivo(STRM.ConvertirAWAV(STRM.LeerArchivo(sound)), wavFile);
+                        WAV.EscribirArchivo(STRM.ConvertirAWAV(STRM.LeerArchivo(sound), false), wavFile);
+                        WAV.EscribirArchivo(STRM.ConvertirAWAV(STRM.LeerArchivo(sound), true), loopFile);
                         break;
-            }
+                }
 
                 File.Delete(sound);
 
-                soundPlayer = new SoundPlayer(wavFile);
-                soundPlayer.Play();
+                if (checkLoop.Checked)
+                {
+                    loop = new Thread(Thread_Loop);
+                    loop.Start(new String[] { wavFile, loopFile });
+                }
+                else
+                {
+                    soundPlayer = new SoundPlayer(wavFile);
+                    soundPlayer.Play();
+                }
             }
             catch (Exception ex)
             {
@@ -413,10 +428,24 @@ namespace SDAT
                 Console.WriteLine(ex.Message);
             }
         }
+        private void Thread_Loop(Object e)
+        {
+            string wave = ((String[])e)[0];
+            string loopWave = ((String[])e)[1];
+
+            SoundPlayer soundLoop = new SoundPlayer(loopWave);
+            soundPlayer = new SoundPlayer(wave);
+
+            soundPlayer.PlaySync();
+            soundLoop.PlayLooping();
+        }
         private void btnStop_Click(object sender, EventArgs e)
         {
             if (soundPlayer is SoundPlayer)
                 soundPlayer.Stop();
+            if (loop is Thread)
+                if (loop.ThreadState == ThreadState.Running)
+                    loop.Abort();
         }
 
         private string SaveSelectedFile()

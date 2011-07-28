@@ -99,6 +99,9 @@ namespace Tinke
         }
         void Sistema_Load(object sender, EventArgs e)
         {
+            SplashScreen splash = new SplashScreen(); // Splash Screen del concurso de Scene Beta
+            splash.ShowDialog();
+
             // Iniciamos la lectura del archivo.
             OpenFileDialog o = new OpenFileDialog();
             o.CheckFileExists = true;
@@ -114,22 +117,51 @@ namespace Tinke
             if (!isMono)
                 espera.Start("S02");
             #region Lectura del archivo
-            romInfo = new RomInfo(o.FileName);
+            DateTime startTime = DateTime.Now;
+
+            romInfo = new RomInfo(o.FileName);  // Se obtienen datos de la cabecera
+            DateTime t1 = DateTime.Now;
             accion = new Acciones(o.FileName, new String(romInfo.Cabecera.gameCode));
+            DateTime t2 = DateTime.Now;
+
             // Obtenemos el sistema de archivos
             Carpeta root = FNT(o.FileName, romInfo.Cabecera.fileNameTableOffset, romInfo.Cabecera.fileNameTableSize);
+            DateTime t3 = DateTime.Now;
             if (!(root.folders is List<Carpeta>))
                 root.folders = new List<Carpeta>();
             root.folders.Add(Añadir_Sistema());
+            DateTime t4 = DateTime.Now;
+
             // Añadimos los offset a cada archivo
             root = FAT(o.FileName, romInfo.Cabecera.FAToffset, romInfo.Cabecera.FATsize, root);
+            DateTime t5 = DateTime.Now;
             accion.Root = root;
+            DateTime t6 = DateTime.Now;
 
             Set_Formato(root);
+            DateTime t7 = DateTime.Now;
             treeSystem.Nodes.Add(Jerarquizar_Nodos(root)); // Mostramos el árbol
+            DateTime t8 = DateTime.Now;
             treeSystem.Nodes[0].Expand();
+            DateTime t9 = DateTime.Now;
 
             Get_SupportedFiles();
+            DateTime t10 = DateTime.Now;
+
+            DateTime finalTime = DateTime.Now;
+            Console.Write("<br><u>Cálculo de tiempos:</u><ul><font size=\"2\" face=\"consolas\">");
+            Console.WriteLine("<li>Tiempo {0}: {1}</li>", "total", (finalTime - startTime).ToString());
+            Console.WriteLine("<li>Tiempo {0}: {1}</li>", "en obtener cabecera", (t1 - startTime).ToString());
+            Console.WriteLine("<li>Tiempo {0}: {1}</li>", "inicializar Acciones", (t2 - t1).ToString());
+            Console.WriteLine("<li>Tiempo {0}: {1}</li>", "en leer FNT", (t3 - t2).ToString());
+            Console.WriteLine("<li>Tiempo {0}: {1}</li>", "añadir archivos del sistema", (t4 - t3).ToString());
+            Console.WriteLine("<li>Tiempo {0}: {1}</li>", "en leer FAT", (t5 - t4).ToString());
+            Console.WriteLine("<li>Tiempo {0}: {1}</li>", "en asignar ROOT", (t6 - t5).ToString());
+            Console.WriteLine("<li>Tiempo {0}: {1}</li>", "en obtener los formatos", (t7 - t6).ToString());
+            Console.WriteLine("<li>Tiempo {0}: {1}</li>", "en jerarquizar el árbol", (t8 - t7).ToString());
+            Console.WriteLine("<li>Tiempo {0}: {1}</li>", "expandir el nodo principal", (t9 - t8).ToString());
+            Console.WriteLine("<li>Tiempo {0}: {1}</li>", "obtener el porcentaje de archivos soportados", (t10 - t9).ToString());
+            Console.Write("</font></ul><br>");
             #endregion
             if (!isMono)
                 espera.Abort();
@@ -545,22 +577,16 @@ namespace Tinke
         }
         private void btnHex_Click(object sender, EventArgs e)
         {
-            Archivo fileSelect = accion.Select_File();
-            Thread hex = new Thread(ThreadHexadecimal);
-            hex.Start(fileSelect);
-        }
-        private void ThreadHexadecimal(Object archivo)
-        {
-            Archivo file = (Archivo)archivo;
+            Archivo file = accion.Select_File();
+            
             VisorHex hex;
-
             if (file.offset != 0x0)
                 hex = new VisorHex(accion.ROMFile, file.offset, file.size);
             else
                 hex = new VisorHex(file.path, 0, file.size);
 
             hex.Text += " - " + file.name;
-            hex.ShowDialog();
+            hex.Show();
         }
         private void BtnSee(object sender, EventArgs e)
         {

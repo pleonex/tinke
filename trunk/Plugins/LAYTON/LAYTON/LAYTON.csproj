@@ -54,6 +54,12 @@
     <Compile Include="InfoAni.Designer.cs">
       <DependentUpon>InfoAni.cs</DependentUpon>
     </Compile>
+    <Compile Include="InfoBG.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="InfoBG.Designer.cs">
+      <DependentUpon>InfoBG.cs</DependentUpon>
+    </Compile>
     <Compile Include="InfoImage.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -83,6 +89,9 @@
   <ItemGroup>
     <EmbeddedResource Include="InfoAni.resx">
       <DependentUpon>InfoAni.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="InfoBG.resx">
+      <DependentUpon>InfoBG.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="InfoImage.resx">
       <DependentUpon>InfoImage.cs</DependentUpon>

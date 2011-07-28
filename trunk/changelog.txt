@@ -1,3 +1,9 @@
+0.7.2:
+* LASTWINDOW game support
+* Improved french translation (by Vix33)
+* Fix problem loading some ROMs (problem in FAT section)
+* Play looping option in STRM sound files
+
 0.7.1 (public release):
 *** Now plugins can change files in the rom
 * TXT plugin can change text files.
