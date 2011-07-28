@@ -66,6 +66,7 @@ namespace SDAT
             this.btnMidi = new System.Windows.Forms.Button();
             this.btnStop = new System.Windows.Forms.Button();
             this.btnUncompress = new System.Windows.Forms.Button();
+            this.checkLoop = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // treeFiles
@@ -197,12 +198,24 @@ namespace SDAT
             this.btnUncompress.UseVisualStyleBackColor = true;
             this.btnUncompress.Click += new System.EventHandler(this.btnUncompress_Click);
             // 
+            // checkLoop
+            // 
+            this.checkLoop.AutoSize = true;
+            this.checkLoop.Enabled = false;
+            this.checkLoop.Location = new System.Drawing.Point(252, 409);
+            this.checkLoop.Name = "checkLoop";
+            this.checkLoop.Size = new System.Drawing.Size(82, 17);
+            this.checkLoop.TabIndex = 8;
+            this.checkLoop.Text = "Activar loop";
+            this.checkLoop.UseVisualStyleBackColor = true;
+            // 
             // iSDAT
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Transparent;
             this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.Controls.Add(this.checkLoop);
             this.Controls.Add(this.btnUncompress);
             this.Controls.Add(this.btnStop);
             this.Controls.Add(this.btnMidi);
@@ -214,6 +227,7 @@ namespace SDAT
             this.Name = "iSDAT";
             this.Size = new System.Drawing.Size(510, 510);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -230,5 +244,6 @@ namespace SDAT
         private System.Windows.Forms.Button btnMidi;
         private System.Windows.Forms.Button btnStop;
         private System.Windows.Forms.Button btnUncompress;
+        private System.Windows.Forms.CheckBox checkLoop;
     }
 }

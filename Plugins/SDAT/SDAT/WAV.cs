@@ -48,10 +48,7 @@ namespace SDAT
                 bw.Write(wr.wave.fmt.bitsPerSample);
                 bw.Write(System.Text.Encoding.ASCII.GetBytes(wr.wave.data.chunkID));
                 bw.Write(wr.wave.data.chunkSize);
-                for (int i = 0; i < wr.wave.data.data.Length; i++)
-                {
-                    bw.Write(wr.wave.data.data[i]);
-                }
+                bw.Write(wr.wave.data.data);
 
                 bw.Flush();
             }

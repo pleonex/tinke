@@ -14,11 +14,10 @@ namespace Tinke.Nitro
             BinaryReader br = new BinaryReader(File.OpenRead(file));
             br.BaseStream.Position = offset;
 
-            for (int i = 0; ; i++)
-            {
-                if (br.BaseStream.Position >= offset + size)
-                    break;
+            int idFin = BuscarArchivo("fnt.bin", root).id; // ID del último archivo de la rom
 
+            for (int i = 0; i < idFin; i++)
+            {
                 UInt32 currOffset = br.ReadUInt32();
                 UInt32 currSize = br.ReadUInt32() - currOffset;
                 Asignar_Archivo(i, currOffset, currSize, root);
@@ -103,6 +102,27 @@ namespace Tinke.Nitro
 
             return new Archivo();
         }
+        private static Archivo BuscarArchivo(string name, Carpeta currFolder)
+        {
+            if (currFolder.files is List<Archivo>)
+                foreach (Archivo archivo in currFolder.files)
+                    if (archivo.name == name)
+                        return archivo;
+
+
+            if (currFolder.folders is List<Carpeta>)
+            {
+                foreach (Carpeta subFolder in currFolder.folders)
+                {
+                    Archivo currFile = BuscarArchivo(name, subFolder);
+                    if (currFile.name is String)
+                        return currFile;
+                }
+            }
+
+            return new Archivo();
+        }
+
         private static void Asignar_Archivo(int id, UInt32 offset, UInt32 size, Carpeta currFolder)
         {
             if (currFolder.files is List<Archivo>)

@@ -119,7 +119,7 @@ namespace SDAT
             }*/
         }
 
-        public static WAV.ArchivoWAV ConvertirAWAV(sSTRM strm)
+        public static WAV.ArchivoWAV ConvertirAWAV(sSTRM strm, bool loop)
         {
             WAV.ArchivoWAV wav = new WAV.ArchivoWAV();
 
@@ -131,25 +131,42 @@ namespace SDAT
                     strm.head.lastBlocklen, false, strm.head.waveType);
                 Array.Clear(strm.data.data, 0, strm.data.data.Length); // Borramos datos no necesarios
 
-                strm.data.data = AlternarCanales(strm.data.leftChannel, strm.data.rightChannel);
+                if (loop && strm.head.waveType == 0) // 8 bits per sample
+                    strm.data.data = AlternarCanales(strm.data.leftChannel, strm.data.rightChannel, (int)strm.head.loopOffset);
+                else if (loop) // 16 bits per sample
+                    strm.data.data = AlternarCanales(strm.data.leftChannel, strm.data.rightChannel, (int)strm.head.loopOffset * 2);
+                else // No loop
+                    strm.data.data = AlternarCanales(strm.data.leftChannel, strm.data.rightChannel);
             }
             else if (strm.head.channels == 1)
             {
                 strm.data.data = ObtenerCanal(strm.data.data, strm.head.nBlocks, strm.head.blockLen,
                     strm.head.lastBlocklen, strm.head.waveType);
+
+                if (strm.head.waveType == 0 && loop) // 8 bits per sample
+                {
+                    Byte[] data = new Byte[strm.data.data.Length - (int)strm.head.loopOffset];
+                    Array.Copy(strm.data.data, strm.head.loopOffset, data, 0, data.Length);
+                    strm.data.data = data;
+                }
+                else if (loop) // 16 bits per sample
+                {
+                    Byte[] data = new Byte[strm.data.data.Length - ((int)strm.head.loopOffset * 2)];
+                    Array.Copy(strm.data.data, strm.head.loopOffset * 2, data, 0, data.Length);
+                    strm.data.data = data;
+                }
             }
 
             if (strm.head.waveType == 0)
             {
                 wav = WAV.GenerarWAVPCM(strm.head.channels, strm.head.sampleRate, 8, strm.data.data);
             }
-
-            if (strm.head.waveType == 1)
+            else if (strm.head.waveType == 1)
             {
                 wav = WAV.GenerarWAVPCM(strm.head.channels, strm.head.sampleRate, 16, strm.data.data);
             }
 
-            if (strm.head.waveType >= 2)
+            else if (strm.head.waveType >= 2)
             {
                 wav = WAV.GenerarWAVADPCM(strm.head.channels, strm.head.sampleRate, 16, strm.data.data);
             }
@@ -189,11 +206,11 @@ namespace SDAT
 
             return resultado.ToArray();
         }
-        static byte[] AlternarCanales(byte[] leftChannel, byte[] rightChannel)
+        static byte[] AlternarCanales(byte[] leftChannel, byte[] rightChannel, int loopSample = 0)
         {
             List<byte> resultado = new List<byte>();
 
-            for (int i = 0; i < leftChannel.Length; i += 2)
+            for (int i = loopSample; i < leftChannel.Length; i += 2)
             {
                 resultado.Add(leftChannel[i]);
                 if (i + 1 < leftChannel.Length)
