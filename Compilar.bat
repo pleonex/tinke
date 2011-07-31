@@ -16,6 +16,9 @@ IF errorlevel 2 goto inicio
 
 RMDIR /S /Q "%cd%\build"
 
+REM Compilación normal del programa que los plugin puedan encontrar la DLL (pluginInterface)
+%windir%\microsoft.net\framework\v4.0.30319\msbuild Tinke.sln /v:minimal /p:Configuration=Debug;TarjetFrameworkVersion=v3.5 "/p:Platform=Any CPU"
+REM Compilación del programa
 %windir%\microsoft.net\framework\v4.0.30319\msbuild Tinke.sln /v:minimal /p:Configuration=%conf%;TarjetFrameworkVersion=v3.5 "/p:Platform=%plat%" "/p:OutputPath=%CD%\build\"
 
 REM Compilación de plugins de los juegos
