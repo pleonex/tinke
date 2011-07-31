@@ -68,27 +68,27 @@ namespace LAYTON
                 tile.rahc.tileData.tiles[i] = br.ReadBytes(64);
             tile.orden = Orden_Tiles.Horizontal;
 
-            // Tile Screen Info
-            NSCR screen = new NSCR();
-            screen.section.width = (ushort)(br.ReadUInt16() * 8);
-            screen.section.height = (ushort)(br.ReadUInt16() * 8);
-            tile.rahc.nTilesX = (ushort)(screen.section.width / 8);
-            tile.rahc.nTilesY = (ushort)(screen.section.height / 8);
-            screen.section.screenData = new NTFS[screen.section.width * screen.section.height / 64];
-            for (int i = 0; i < screen.section.width * screen.section.height / 64; i++)
+            // Tile Map Info
+            NSCR map = new NSCR();
+            map.section.width = (ushort)(br.ReadUInt16() * 8);
+            map.section.height = (ushort)(br.ReadUInt16() * 8);
+            tile.rahc.nTilesX = (ushort)(map.section.width / 8);
+            tile.rahc.nTilesY = (ushort)(map.section.height / 8);
+            map.section.mapData = new NTFS[map.section.width * map.section.height / 64];
+            for (int i = 0; i < map.section.width * map.section.height / 64; i++)
             {
                 string bits = pluginHost.BytesToBits(br.ReadBytes(2));
 
-                screen.section.screenData[i] = new NTFS();
-                screen.section.screenData[i].nPalette = Convert.ToByte(bits.Substring(0, 4), 2);
-                screen.section.screenData[i].yFlip = Convert.ToByte(bits.Substring(4, 1), 2);
-                screen.section.screenData[i].xFlip = Convert.ToByte(bits.Substring(5, 1), 2);
-                screen.section.screenData[i].nTile = Convert.ToUInt16(bits.Substring(6, 10), 2);
+                map.section.mapData[i] = new NTFS();
+                map.section.mapData[i].nPalette = Convert.ToByte(bits.Substring(0, 4), 2);
+                map.section.mapData[i].yFlip = Convert.ToByte(bits.Substring(4, 1), 2);
+                map.section.mapData[i].xFlip = Convert.ToByte(bits.Substring(5, 1), 2);
+                map.section.mapData[i].nTile = Convert.ToUInt16(bits.Substring(6, 10), 2);
             }
 
             br.Close();
 
-            tile.rahc.tileData = pluginHost.Transformar_NSCR(screen, tile.rahc.tileData);
+            tile.rahc.tileData = pluginHost.Transformar_NSCR(map, tile.rahc.tileData);
             return pluginHost.Bitmap_NCGR(tile, paleta);
         }
     }

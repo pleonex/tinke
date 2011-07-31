@@ -19,13 +19,13 @@
       <S10>Delete chain</S10>
       <S11>Delete palette</S11>
       <S12>Delete tile</S12>
-      <S13>Delete screen</S13>
+      <S13>Delete map</S13>
       <S14>Delete cells</S14>
       <S15>Delete animation</S15>
       <S16>Open as...</S16>
       <S17>Palette</S17>
       <S18>Tile</S18>
-      <S19>Screen</S19>
+      <S19>Map</S19>
       <S1A>Decompress</S1A>
       <S1B>Extract</S1B>
       <S1C>View</S1C>
@@ -34,7 +34,7 @@
 	    <S1F>Folder</S1F>
 	    <S20>Palette</S20>
 	    <S21>Tiles</S21>
-	    <S22>Screen</S22>
+	    <S22>Map</S22>
 	    <S23>Cells</S23>
 	    <S24>Animation</S24>
 	    <S25>Image</S25>

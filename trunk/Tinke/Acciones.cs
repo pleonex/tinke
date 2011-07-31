@@ -155,7 +155,7 @@ namespace Tinke
                     return 2;
                 case Formato.Imagen:
                     return 3;
-                case Formato.Screen:
+                case Formato.Map:
                     return 9;
                 case Formato.Celdas:
                     return 8;
@@ -320,7 +320,7 @@ namespace Tinke
                 case Formato.Imagen:
                     pluginHost.Set_NCGR(new NCGR());
                     break;
-                case Formato.Screen:
+                case Formato.Map:
                     pluginHost.Set_NSCR(new NSCR());
                     break;
                 case Formato.Celdas:
@@ -393,7 +393,7 @@ namespace Tinke
                         return new Control();
                     }
                 }
-                else if (formato == Formato.Screen)
+                else if (formato == Formato.Map)
                 {
                     NSCR nscr = Imagen_NSCR.Leer_Basico(tempFile, idSelect);
                     pluginHost.Set_NSCR(nscr);
@@ -717,7 +717,7 @@ namespace Tinke
                     {
 
                         if (formato == Formato.Imagen || formato == Formato.Celdas ||
-                            formato == Formato.Animación || formato == Formato.Screen)
+                            formato == Formato.Animación || formato == Formato.Map)
                         {
                             if (!archivo.name.Contains('.')) // Archivos de nombre desconocido
                                 continue;
@@ -762,7 +762,7 @@ namespace Tinke
                                     fm.files.Add(archivo);
                                     break;
 
-                                case Formato.Screen:
+                                case Formato.Map:
                                     pal = Recursivo_Archivo(Formato.Paleta, name, root);
                                     if (!(pal.name is String))
                                         goto No_Valido;
@@ -971,7 +971,7 @@ namespace Tinke
             else if (new String(Encoding.ASCII.GetChars(ext)) == "NCGR" || new String(Encoding.ASCII.GetChars(ext)) == "RGCN")
                 return Formato.Imagen;
             else if (new String(Encoding.ASCII.GetChars(ext)) == "NSCR" || new String(Encoding.ASCII.GetChars(ext)) == "RCSN")
-                return Formato.Screen;
+                return Formato.Map;
             else if (new String(Encoding.ASCII.GetChars(ext)) == "NCER" || new String(Encoding.ASCII.GetChars(ext)) == "RECN")
                 return Formato.Celdas;
             else if (new String(Encoding.ASCII.GetChars(ext)) == "NANR" || new String(Encoding.ASCII.GetChars(ext)) == "RNAN")
@@ -1020,7 +1020,7 @@ namespace Tinke
             else if (new String(Encoding.ASCII.GetChars(ext)) == "NCGR" || new String(Encoding.ASCII.GetChars(ext)) == "RGCN")
                 return Formato.Imagen;
             else if (new String(Encoding.ASCII.GetChars(ext)) == "NSCR" || new String(Encoding.ASCII.GetChars(ext)) == "RCSN")
-                return Formato.Screen;
+                return Formato.Map;
             else if (new String(Encoding.ASCII.GetChars(ext)) == "NCER" || new String(Encoding.ASCII.GetChars(ext)) == "RECN")
                 return Formato.Celdas;
             else if (new String(Encoding.ASCII.GetChars(ext)) == "NANR" || new String(Encoding.ASCII.GetChars(ext)) == "RNAN")

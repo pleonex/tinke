@@ -33,7 +33,7 @@ namespace Tinke
     {
         NCLR paleta;
         NCGR tile;
-        NSCR screen;
+        NSCR map;
         NCER celda;
         NANR animacion;
 
@@ -62,13 +62,13 @@ namespace Tinke
 
         public NCLR Get_NCLR() { return paleta; }
         public NCGR Get_NCGR() { return tile; }
-        public NSCR Get_NSCR() { return screen; }
+        public NSCR Get_NSCR() { return map; }
         public NCER Get_NCER() { return celda; }
         public NANR Get_NANR() { return animacion; }
 
         public void Set_NCLR(NCLR nclr) { paleta = nclr; }
         public void Set_NCGR(NCGR ncgr) { tile = ncgr; }
-        public void Set_NSCR(NSCR nscr) { screen = nscr; }
+        public void Set_NSCR(NSCR nscr) { map = nscr; }
         public void Set_NCER(NCER ncer) { celda = ncer; }
         public void Set_NANR(NANR nanr) { animacion = nanr; }
 
