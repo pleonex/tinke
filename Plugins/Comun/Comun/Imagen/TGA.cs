@@ -22,11 +22,7 @@ namespace Comun
 
         public Control Show_Info()
         {
-            PictureBox pic = new PictureBox();
-            pic.SizeMode = PictureBoxSizeMode.AutoSize;
-            pic.Image = Leer();
-            pic.BorderStyle = BorderStyle.FixedSingle;
-            return pic;
+            return new BasicControl(Leer());
         }
 
         private Bitmap Leer()
@@ -98,9 +94,16 @@ namespace Comun
             		br = new BinaryReader(File.OpenRead(archivo));
             		br.BaseStream.Position = pos;
             		// Luego convertimos los colores
-            		for (int j = 0; j < colores.Length; j++)
-            			colores[j] = Color.FromArgb(255, tga.imageData.image[3 * j],
-            			                            tga.imageData.image[3 * j + 1], tga.imageData.image[3 * j + 2]);
+                    for (int j = 0; j < colores.Length; j++)
+                    {
+                        if (tga.header.image_spec.depth == 0x20)
+                            colores[j] = Color.FromArgb(tga.imageData.image[4 * j + 3], tga.imageData.image[4 * j],
+                                                        tga.imageData.image[4 * j + 1], tga.imageData.image[4 * j + 2]);
+
+                        else
+                            colores[j] = Color.FromArgb(255, tga.imageData.image[3 * j],
+                                                        tga.imageData.image[3 * j + 1], tga.imageData.image[3 * j + 2]);
+                    }
 					break;
 					
             	case TGA.ImageType.Uncompressed_TrueColor:

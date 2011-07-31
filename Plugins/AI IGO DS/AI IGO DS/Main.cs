@@ -35,8 +35,9 @@ namespace AI_IGO_DS
             else if (nombre.EndsWith(".ATEX"))
                 return Formato.Imagen;
             else if (nombre.EndsWith(".ANSC"))
-                return Formato.Screen;
-            else if (nombre.EndsWith("FNT.BIN") || nombre.EndsWith(".SRL"))
+                return Formato.Map;
+            else if (nombre.EndsWith("FNT.BIN") || nombre.EndsWith(".SRL") || nombre.EndsWith("FAT.BIN") ||
+                nombre.EndsWith("ARM9.BIN") || nombre.EndsWith("ARM7.BIN"))
                 return Formato.Sistema;
             else if (nombre.EndsWith(".BIN") || nombre.EndsWith(".R00"))
                 return Formato.ImagenCompleta;
@@ -50,12 +51,8 @@ namespace AI_IGO_DS
                 ANCL.Leer(archivo, pluginHost);
             else if (archivo.ToUpper().EndsWith(".ANCG"))
                 ANCG.Leer(archivo, pluginHost);
-            else if (archivo.ToUpper().EndsWith(".ANCS"))
-                ANSC.Leer(archivo, pluginHost);
-            else if (archivo.ToUpper().EndsWith(".BIN"))
-                BIN.Leer(archivo, pluginHost);
-            else if (archivo.ToUpper().EndsWith(".R00"))
-                R00.Leer(archivo, pluginHost);
+            else if (archivo.ToUpper().EndsWith(".ANSC"))
+                ANSC.Leer(archivo, id, pluginHost);
             else if (archivo.ToUpper().EndsWith(".ATEX"))
                 ATEX.Leer(archivo, pluginHost);
         }
@@ -66,16 +63,16 @@ namespace AI_IGO_DS
             if (archivo.ToUpper().EndsWith(".ANCL"))
                 return new PaletteControl(pluginHost);
             if (archivo.ToUpper().EndsWith(".ANCG") && pluginHost.Get_NCLR().cabecera.file_size != 0x00)
-                return new ImageControl(pluginHost, false);
-            if (archivo.ToUpper().EndsWith(".ANCS") && pluginHost.Get_NCLR().cabecera.file_size != 0x00 &&
+                return new BinControl(pluginHost, false);
+            if (archivo.ToUpper().EndsWith(".ANSC") && pluginHost.Get_NCLR().cabecera.file_size != 0x00 &&
                 pluginHost.Get_NCGR().cabecera.file_size != 0x00)
-                return new ImageControl(pluginHost, true);
+                return new BinControl(pluginHost, true);
             if (archivo.ToUpper().EndsWith(".BIN"))
-                return new ImageControl(pluginHost, false);
+                return BIN.Leer(archivo, pluginHost);
             if (archivo.ToUpper().EndsWith(".R00"))
-                return new ImageControl(pluginHost, true);
+                return R00.Leer(archivo, pluginHost);
             if (archivo.ToUpper().EndsWith(".ATEX") && pluginHost.Get_NCLR().cabecera.file_size != 0x00)
-                return new ImageControl(pluginHost, false);
+                return new BinControl(pluginHost, false);
 
             return new Control();
         }

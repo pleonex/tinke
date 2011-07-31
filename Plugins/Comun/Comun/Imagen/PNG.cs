@@ -23,14 +23,7 @@ namespace Comun
 
         public Control Show_Info()
         {
-            PictureBox pic = new PictureBox();
-            pic.SizeMode = PictureBoxSizeMode.AutoSize;
-            FileStream fs = new FileStream(archivo, FileMode.Open);
-            pic.Image = Image.FromStream(fs);
-            fs.Close();
-            fs.Dispose();
-            pic.BorderStyle = BorderStyle.FixedSingle;
-            return pic;
+            return new BasicControl(archivo);
         }
 
     }

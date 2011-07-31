@@ -52,11 +52,11 @@
     <Compile Include="ANSC.cs" />
     <Compile Include="ATEX.cs" />
     <Compile Include="BIN.cs" />
-    <Compile Include="ImageControl.cs">
+    <Compile Include="BinControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="ImageControl.Designer.cs">
-      <DependentUpon>ImageControl.cs</DependentUpon>
+    <Compile Include="BinControl.Designer.cs">
+      <DependentUpon>BinControl.cs</DependentUpon>
     </Compile>
     <Compile Include="Main.cs" />
     <Compile Include="PaletteControl.cs">
@@ -66,15 +66,27 @@
       <DependentUpon>PaletteControl.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="R00.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="ImageControl.resx">
-      <DependentUpon>ImageControl.cs</DependentUpon>
+    <EmbeddedResource Include="BinControl.resx">
+      <DependentUpon>BinControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="PaletteControl.resx">
       <DependentUpon>PaletteControl.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\picture_save.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -429,6 +429,7 @@ namespace Tinke
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "RomInfo";
+            this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "S01";
             this.VisibleChanged += new System.EventHandler(this.RomInfo_VisibleChanged);

@@ -39,17 +39,17 @@ namespace Tinke
                 nscr.section.width = height;
             }*/
             nscr.section.data_size = br.ReadUInt32();
-            nscr.section.screenData = new NTFS[nscr.section.data_size / 2];
+            nscr.section.mapData = new NTFS[nscr.section.data_size / 2];
 
             for (int i = 0; i < (nscr.section.data_size / 2); i++)
             {
                 string bits = Tools.Helper.BytesToBits(br.ReadBytes(2));
 
-                nscr.section.screenData[i] = new NTFS();
-                nscr.section.screenData[i].nPalette = Convert.ToByte(bits.Substring(0, 4), 2);
-                nscr.section.screenData[i].yFlip = Convert.ToByte(bits.Substring(4, 1), 2);
-                nscr.section.screenData[i].xFlip = Convert.ToByte(bits.Substring(5, 1), 2);
-                nscr.section.screenData[i].nTile = Convert.ToUInt16(bits.Substring(6, 10), 2);
+                nscr.section.mapData[i] = new NTFS();
+                nscr.section.mapData[i].nPalette = Convert.ToByte(bits.Substring(0, 4), 2);
+                nscr.section.mapData[i].yFlip = Convert.ToByte(bits.Substring(4, 1), 2);
+                nscr.section.mapData[i].xFlip = Convert.ToByte(bits.Substring(5, 1), 2);
+                nscr.section.mapData[i].nTile = Convert.ToUInt16(bits.Substring(6, 10), 2);
             }
 
             br.Close();
@@ -79,17 +79,17 @@ namespace Tinke
             nscr.section.height = 0x00C0;
             nscr.section.padding = 0x00000000;
             nscr.section.data_size = file_size;
-            nscr.section.screenData = new NTFS[file_size / 2];
+            nscr.section.mapData = new NTFS[file_size / 2];
 
             for (int i = 0; i < (file_size / 2); i++)
             {
                 string bits = Tools.Helper.BytesToBits(br.ReadBytes(2));
 
-                nscr.section.screenData[i] = new NTFS();
-                nscr.section.screenData[i].nPalette = Convert.ToByte(bits.Substring(0, 4), 2);
-                nscr.section.screenData[i].yFlip = Convert.ToByte(bits.Substring(4, 1), 2);
-                nscr.section.screenData[i].xFlip = Convert.ToByte(bits.Substring(5, 1), 2);
-                nscr.section.screenData[i].nTile = Convert.ToUInt16(bits.Substring(6, 10), 2);
+                nscr.section.mapData[i] = new NTFS();
+                nscr.section.mapData[i].nPalette = Convert.ToByte(bits.Substring(0, 4), 2);
+                nscr.section.mapData[i].yFlip = Convert.ToByte(bits.Substring(4, 1), 2);
+                nscr.section.mapData[i].xFlip = Convert.ToByte(bits.Substring(5, 1), 2);
+                nscr.section.mapData[i].nTile = Convert.ToUInt16(bits.Substring(6, 10), 2);
             }
 
             br.Close();
@@ -103,10 +103,10 @@ namespace Tinke
             List<Byte> nPltt = new List<Byte>();
             int j = 0;
             
-            for (int i = 0; i < nscr.section.screenData.Length; i++)
+            for (int i = 0; i < nscr.section.mapData.Length; i++)
             {
                 byte[] currTile;
-                if (nscr.section.screenData[i].nTile == j)
+                if (nscr.section.mapData[i].nTile == j)
                 {
                     if (j == tiles.tiles.Length)
                         throw new Exception(Tools.Helper.ObtenerTraduccion("Messages", "S06"));
@@ -116,18 +116,18 @@ namespace Tinke
                 }
                 else
                 {
-                    if (nscr.section.screenData[i].nTile >= tiles.tiles.Length)
+                    if (nscr.section.mapData[i].nTile >= tiles.tiles.Length)
                         throw new Exception(Tools.Helper.ObtenerTraduccion("Messages", "S06"));
 
-                    currTile = tiles.tiles[nscr.section.screenData[i].nTile];
+                    currTile = tiles.tiles[nscr.section.mapData[i].nTile];
                 }
 
-                if (nscr.section.screenData[i].xFlip == 1)
+                if (nscr.section.mapData[i].xFlip == 1)
                     currTile = XFlip(currTile);
-                if (nscr.section.screenData[i].yFlip == 1)
+                if (nscr.section.mapData[i].yFlip == 1)
                     currTile = YFlip(currTile);
                 bytes.Add(currTile);
-                nPltt.Add(nscr.section.screenData[i].nPalette);
+                nPltt.Add(nscr.section.mapData[i].nPalette);
             }
             ntft.nPaleta = nPltt.ToArray();
             ntft.tiles = bytes.ToArray();

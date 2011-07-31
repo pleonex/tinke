@@ -29,7 +29,7 @@ namespace AI_IGO_DS
             imagen.rahc.depth = System.Windows.Forms.ColorDepth.Depth4Bit;
             imagen.rahc.nTiles = (ushort)(imagen.rahc.size_tiledata / 32);
             imagen.rahc.nTilesX = 8;
-            imagen.rahc.nTilesY = 24;
+            imagen.rahc.nTilesY = (ushort)(imagen.rahc.nTiles / 8);
             imagen.rahc.tiledFlag = 0x00;
 
             imagen.rahc.tileData.tiles = new byte[imagen.rahc.nTiles][];

@@ -65,12 +65,15 @@ namespace Tinke
             if (!File.Exists(Application.StartupPath + Path.DirectorySeparatorChar + "Tinke.xml"))
             {
                 File.WriteAllText(Application.StartupPath + Path.DirectorySeparatorChar + "Tinke.xml", "<?xml version=\"1.0\" encoding=\"utf-8\"?>" +
-                                 "\n<Tinke>\n  <Options>\n    <Language>Español</Language>\n  </Options>\n</Tinke>",
+                                 "\n<Tinke>\n  <Options>" +
+                                 "\n    <Language>Español</Language>" + 
+                                 "\n    <InstantSearch>True</InstantSearch>" +
+                                 "\n    <WindowDebug>True</WindowDebug>" +
+                                 "\n    <WindowInformation>True</WindowInformation>" +
+                                 "\n    <ModeWindow>False</ModeWindow>" +
+                                 "\n  </Options>\n</Tinke>",
                                  Encoding.UTF8);
             }
-
-            XElement xml = XElement.Load(Application.StartupPath + Path.DirectorySeparatorChar + "Tinke.xml");
-
 
             foreach (string langFile in Directory.GetFiles(Application.StartupPath + Path.DirectorySeparatorChar + "langs"))
             {
@@ -99,19 +102,24 @@ namespace Tinke
         }
         void Sistema_Load(object sender, EventArgs e)
         {
-            SplashScreen splash = new SplashScreen(); // Splash Screen del concurso de Scene Beta
-            splash.ShowDialog();
+            //SplashScreen splash = new SplashScreen(); // Splash Screen del concurso de Scene Beta
+            //splash.ShowDialog();
 
             // Iniciamos la lectura del archivo.
             OpenFileDialog o = new OpenFileDialog();
             o.CheckFileExists = true;
             o.Filter = "Nintendo DS rom (*.nds)|*.nds";
             o.DefaultExt = ".nds";
-            if (o.ShowDialog() != System.Windows.Forms.DialogResult.OK)
+            if (Environment.GetCommandLineArgs().Length == 1)
             {
-                Application.Exit();
-                return;
+                if (o.ShowDialog() != System.Windows.Forms.DialogResult.OK)
+                {
+                    Application.Exit();
+                    return;
+                }
             }
+            else if (Environment.GetCommandLineArgs().Length == 2)  // Viene dado el juego a cargar
+                o.FileName = Environment.GetCommandLineArgs()[1];
 
             Thread espera = new System.Threading.Thread(ThreadEspera);
             if (!isMono)
@@ -166,14 +174,28 @@ namespace Tinke
             if (!isMono)
                 espera.Abort();
 
-
-            toolStripDebug.Enabled = !isMono;
             debug = new Debug();
-            if (!isMono)
+
+            // Cargar preferencias
+            XElement xml = XElement.Load(Application.StartupPath + Path.DirectorySeparatorChar + "Tinke.xml").Element("Options");
+            
+            toolStripDebug.Enabled = !isMono;
+            if (!isMono && xml.Element("WindowDebug").Value == "True")
             {
+                toolStripDebug.Checked = true;
                 debug.Show();
                 debug.Activate();
             }
+            if (xml.Element("WindowInformation").Value == "True")
+            {
+                toolStripInfoRom.Checked = true;
+                romInfo.Show();
+                romInfo.Activate();
+            }
+            if (xml.Element("InstantSearch").Value == "True")
+                checkSearch.Checked = true;
+            if (xml.Element("ModeWindow").Value == "True")
+                toolStripVentana.Checked = true;
 
             o.Dispose();
 
@@ -182,7 +204,20 @@ namespace Tinke
 
             this.Show();
             debug.ShowInTaskbar = true;
+            romInfo.ShowInTaskbar = true;
             this.Activate();
+        }
+        private void Sistema_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            XElement xml = XElement.Load(Application.StartupPath + Path.DirectorySeparatorChar + "Tinke.xml").Element("Options");
+
+            xml.Element("WindowDebug").Value = toolStripDebug.Checked.ToString();
+            xml.Element("WindowInformation").Value = toolStripInfoRom.Checked.ToString();
+            xml.Element("InstantSearch").Value = checkSearch.Checked.ToString();
+            xml.Element("ModeWindow").Value = toolStripVentana.Checked.ToString();
+            
+            xml = xml.Parent;
+            xml.Save(Application.StartupPath + Path.DirectorySeparatorChar + "Tinke.xml");
         }
 
         private void LeerIdioma()
@@ -226,7 +261,7 @@ namespace Tinke
             toolTipSearch.SetToolTip(txtSearch,
                 "<Ani> -> " + xml.Element("S24").Value +
                 "\n<Cell> -> " + xml.Element("S23").Value +
-                "\n<Screen> -> " + xml.Element("S22").Value +
+                "\n<Map> -> " + xml.Element("S22").Value +
                 "\n<Image> -> " + xml.Element("S21").Value +
                 "\n<FullImage> -> " + xml.Element("S25").Value +
                 "\n<Palette> -> " + xml.Element("S20").Value +
@@ -243,8 +278,8 @@ namespace Tinke
         }
         private void ToolStripLang_Click(Object sender, EventArgs e)
         {
+            XElement xml = XElement.Load(Application.StartupPath + Path.DirectorySeparatorChar + "Tinke.xml");
             string idioma = ((ToolStripMenuItem)sender).Text;
-            System.Xml.Linq.XElement xml = System.Xml.Linq.XElement.Load(Application.StartupPath + Path.DirectorySeparatorChar + "Tinke.xml");
             xml.Element("Options").Element("Language").Value = idioma;
             xml.Save(Application.StartupPath + Path.DirectorySeparatorChar + "Tinke.xml");
 
@@ -505,7 +540,7 @@ namespace Tinke
                     case Formato.Imagen:
                         listFile.Items[4].SubItems.Add(Tools.Helper.ObtenerTraduccion("Sistema", "S21"));
                         break;
-                    case Formato.Screen:
+                    case Formato.Map:
                         listFile.Items[4].SubItems.Add(Tools.Helper.ObtenerTraduccion("Sistema", "S22"));
                         break;
                     case Formato.Celdas:
@@ -869,7 +904,7 @@ namespace Tinke
         }
         private void borrarScreenToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            accion.Delete_PicturesSaved(Formato.Screen);
+            accion.Delete_PicturesSaved(Formato.Map);
         }
         private void borrarCeldasToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -908,7 +943,7 @@ namespace Tinke
         }
         private void toolAbrirComoItemScreen_Click(object sender, EventArgs e)
         {
-            AbrirComo(Formato.Screen);
+            AbrirComo(Formato.Map);
         }
         private void s2AToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -940,8 +975,8 @@ namespace Tinke
                 resul = accion.Search_File(Formato.Animación);
             else if (txtSearch.Text == "<Cell>")
                 resul = accion.Search_File(Formato.Celdas);
-            else if (txtSearch.Text == "<Screen>")
-                resul = accion.Search_File(Formato.Screen);
+            else if (txtSearch.Text == "<Map>")
+                resul = accion.Search_File(Formato.Map);
             else if (txtSearch.Text == "<Image>")
                 resul = accion.Search_File(Formato.Imagen);
             else if (txtSearch.Text == "<FullImage")
@@ -1259,7 +1294,6 @@ namespace Tinke
 
             return nodos;
         }
-
 
     }
 }

@@ -112,7 +112,7 @@ namespace PluginInterface
         public UInt16 height;               // Alto de la imagen
         public UInt32 padding;              // Siempre 0x0
         public UInt32 data_size;            //
-        public NTFS[] screenData;
+        public NTFS[] mapData;
     }
     public struct NTFS              // Nintedo Tile Format Screen
     {
@@ -231,7 +231,7 @@ namespace PluginInterface
     {
         Paleta,
         Imagen,
-        Screen,
+        Map,
         Celdas,
         Animación,
         ImagenCompleta,

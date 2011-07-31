@@ -44,7 +44,7 @@ namespace KIRBY_DRO
 
         public Control Show_Info(string archivo, int id)
         {
-            if (new FileInfo(archivo).Name.EndsWith(".bin"))
+            if (archivo.ToUpper().EndsWith(".BIN"))
                 return new Bin(archivo, pluginHost).Show_Info();
 
             return new Control();
