@@ -65,17 +65,17 @@ namespace Images
             nscr.section.height = 0x0018;
             nscr.section.padding = 0x00000000;
             nscr.section.data_size = file_size;
-            nscr.section.screenData = new NTFS[file_size / 2];
+            nscr.section.mapData = new NTFS[file_size / 2];
 
             for (int i = 0; i < (file_size / 2); i++)
             {
                 string bits = pluginsHost.BytesToBits(br.ReadBytes(2));
 
-                nscr.section.screenData[i] = new NTFS();
-                nscr.section.screenData[i].nPalette = Convert.ToByte(bits.Substring(0, 4), 2);
-                nscr.section.screenData[i].yFlip = Convert.ToByte(bits.Substring(4, 1), 2);
-                nscr.section.screenData[i].xFlip = Convert.ToByte(bits.Substring(5, 1), 2);
-                nscr.section.screenData[i].nTile = Convert.ToUInt16(bits.Substring(6, 10), 2);
+                nscr.section.mapData[i] = new NTFS();
+                nscr.section.mapData[i].nPalette = Convert.ToByte(bits.Substring(0, 4), 2);
+                nscr.section.mapData[i].yFlip = Convert.ToByte(bits.Substring(4, 1), 2);
+                nscr.section.mapData[i].xFlip = Convert.ToByte(bits.Substring(5, 1), 2);
+                nscr.section.mapData[i].nTile = Convert.ToUInt16(bits.Substring(6, 10), 2);
             }
 
             br.Close();
