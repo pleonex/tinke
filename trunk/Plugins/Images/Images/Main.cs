@@ -50,7 +50,7 @@ namespace Images
             else if (nombre.EndsWith(".NBFC"))
                 return Formato.Imagen;
             else if (nombre.EndsWith(".NBFS"))
-                return Formato.Screen;
+                return Formato.Map;
             else if (nombre.EndsWith(".NTFT") && ext != "CMPR" && ext != "BLDT")
                 return Formato.Imagen;
             else if (nombre.EndsWith(".NTFP") && ext != "BLDT")
