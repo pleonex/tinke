@@ -54,18 +54,15 @@ namespace TXT
 
             if (br.ReadUInt16() == 0xFEFF)  // Codificación UNICODE
             {
-                for (int i = 2; i < br.BaseStream.Length; i += 2)
-                {
-                    txt += (char)br.ReadByte();
-                    if (br.BaseStream.Position != br.BaseStream.Length - 1) // Fin del archivo
-                        br.ReadByte(); // Siempre 0x00
-                }
+                txt = new String(Encoding.Unicode.GetChars(br.ReadBytes((int)br.BaseStream.Length - 2)));
+                txt = txt.Replace("\n", "\r\n");
+                txt = txt.Replace("\\n", "\r\n");
             }
             else
             {
                 br.BaseStream.Position = 0x00;
                 for (int i = 0; i < br.BaseStream.Length; i++)
-                    txt += (char)br.ReadByte();
+                    txt +=  (char)br.ReadByte();
             }
 
             

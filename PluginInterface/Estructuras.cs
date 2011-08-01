@@ -12,7 +12,8 @@ namespace PluginInterface
             public string name;             // Nombre dado en la FNT
             public UInt16 id;               // ID único de cada archivo.
             public string path;             // En caso de haber sido descomprimido y estar fuera del sistema de archivos.
-            public Formato formato;         // Formato del archivo   
+            public Formato formato;         // Formato del archivo  
+            public Object tag;              // Para asignar cualquier valor
     }
     public struct Carpeta
     {
@@ -20,6 +21,7 @@ namespace PluginInterface
         public List<Carpeta> folders;      // Lista de carpetas que contiene el directorio
         public string name;                // Nombre de la carpeta
         public UInt16 id;                  // ID de la carpeta. Comienza en 0xF000 que es root
+        public Object tag;                 // Para asignar cualquier valor
     }
 
     public struct Header    // Generic Header

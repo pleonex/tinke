@@ -196,15 +196,8 @@ namespace Tinke.Nitro
         public static string TitleToString(byte[] data)
         {
             string title = "";
-            for (int i = 0; i < data.Length; i++)
-            {
-                if (data[i] == 0x00)
-                    continue; // Codificación UNICODE
-                if (data[i] == 0x0A)
-                    title += '\r';      // Nueva línea
-
-                title += Char.ConvertFromUtf32(data[i]);
-            }
+            title = new String(Encoding.Unicode.GetChars(data));
+            title = title.Replace("\n", "\r\n");
 
             return title;
         }
@@ -279,6 +272,20 @@ namespace Tinke.Nitro
         }
         private static Archivo BuscarArchivo(int id, Carpeta currFolder)
         {
+            if (currFolder.id == id) // Archivos descomprimidos
+            {
+                Archivo folderFile = new Archivo();
+                folderFile.name = currFolder.name;
+                folderFile.id = currFolder.id;
+                if (((String)currFolder.tag).Length != 16)
+                    folderFile.path = ((string)currFolder.tag).Substring(8);
+                else
+                    folderFile.offset = Convert.ToUInt32(((String)currFolder.tag).Substring(8), 16);
+                folderFile.size = Convert.ToUInt32(((String)currFolder.tag).Substring(0, 8), 16);
+
+                return folderFile;
+            }
+
             if (currFolder.files is List<Archivo>)
                 foreach (Archivo archivo in currFolder.files)
                     if (archivo.id == id)
@@ -314,6 +321,7 @@ namespace Tinke.Nitro
             diccionario.Add("09", "Hot B");
             diccionario.Add("0A", "Jaleco");
 
+            diccionario.Add("13", "Electronic Arts Japan");
             diccionario.Add("18", "Hudson Entertainment");
             diccionario.Add("41", "Ubisoft");
             diccionario.Add("4Q", "Disney Interactive Studios");
@@ -351,6 +359,7 @@ namespace Tinke.Nitro
             diccionario.Add("SV", "SevenOne Intermedia GmbH");
             diccionario.Add("RM", "rondomedia");
             diccionario.Add("RT", "RTL Games");
+            diccionario.Add("TK", "Tasuke");
             diccionario.Add("WP", "White Park Bay");
             diccionario.Add("WR", "WB Games");
         }

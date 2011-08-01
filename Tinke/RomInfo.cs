@@ -43,7 +43,7 @@ namespace Tinke
             this.Location = new Point(670, 10);
             this.btnBannerGuardar.Image = Properties.Resources.picture_save;
 
-            try 
+            try
             {
                 Nitro.Estructuras.ROMHeader cabecera = Nitro.NDS.LeerCabecera(archivo);
                 Nitro.Estructuras.Banner banner = Nitro.NDS.LeerBanner(archivo, cabecera.bannerOffset);
@@ -59,11 +59,6 @@ namespace Tinke
             }
 
             LeerIdioma();
-        }
-        private void RomInfo_VisibleChanged(object sender, EventArgs e)
-        {
-            if (this.Visible)
-                LeerIdioma();
         }
 
         public void LeerIdioma()
@@ -203,7 +198,7 @@ namespace Tinke
             picIcon.Image = picBanner;
 
             txtBannerVer.Text = banner.version.ToString();
-            txtBannerCRC.Text = String.Format("{0:X}", banner.CRC16) + " (" + 
+            txtBannerCRC.Text = String.Format("{0:X}", banner.CRC16) + " (" +
                 (banner.checkCRC ? "OK)" : Tools.Helper.ObtenerTraduccion("RomInfo", "S39") + ')');
             txtBannerReserved.Text = Tools.Helper.BytesToHexString(banner.reserved);
 
@@ -271,6 +266,5 @@ namespace Tinke
             else
                 picIcon.Image = picBanner;
         }
-
     }
 }
