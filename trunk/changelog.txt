@@ -1,8 +1,15 @@
 0.7.2:
+* AI IGO DS game plugin support completed!
 * LASTWINDOW game support
-* Improved french translation (by Vix33)
+* Support for reading a NDS file from an console argument
+* Fixed problem saving new ROMs
 * Fix problem loading some ROMs (problem in FAT section)
+* Fixed problem with NBFP and NTFP palettes
+* Preferences saved
+* Change format file name "Screen" to "Map"
+* Improved french translation (by Vix33)
 * Play looping option in STRM sound files
+* Improved Unicode support in TXT plugin and titles in banner
 
 0.7.1 (public release):
 *** Now plugins can change files in the rom

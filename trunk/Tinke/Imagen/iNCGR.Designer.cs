@@ -95,8 +95,6 @@ namespace Tinke
             this.label7 = new System.Windows.Forms.Label();
             this.lblZoom = new System.Windows.Forms.Label();
             this.trackZoom = new System.Windows.Forms.TrackBar();
-            this.comboImages = new System.Windows.Forms.ComboBox();
-            this.btnDividir = new System.Windows.Forms.Button();
             this.label6 = new System.Windows.Forms.Label();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.label4 = new System.Windows.Forms.Label();
@@ -201,8 +199,6 @@ namespace Tinke
             this.groupProp.Controls.Add(this.label7);
             this.groupProp.Controls.Add(this.lblZoom);
             this.groupProp.Controls.Add(this.trackZoom);
-            this.groupProp.Controls.Add(this.comboImages);
-            this.groupProp.Controls.Add(this.btnDividir);
             this.groupProp.Controls.Add(this.label6);
             this.groupProp.Controls.Add(this.comboBox1);
             this.groupProp.Controls.Add(this.label4);
@@ -306,27 +302,6 @@ namespace Tinke
             this.trackZoom.TickFrequency = 50;
             this.trackZoom.Value = 100;
             this.trackZoom.Scroll += new System.EventHandler(this.trackZoom_Scroll);
-            // 
-            // comboImages
-            // 
-            this.comboImages.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboImages.Enabled = false;
-            this.comboImages.FormattingEnabled = true;
-            this.comboImages.Location = new System.Drawing.Point(116, 322);
-            this.comboImages.Name = "comboImages";
-            this.comboImages.Size = new System.Drawing.Size(121, 21);
-            this.comboImages.TabIndex = 13;
-            this.comboImages.SelectedIndexChanged += new System.EventHandler(this.comboImages_SelectedIndexChanged);
-            // 
-            // btnDividir
-            // 
-            this.btnDividir.Location = new System.Drawing.Point(7, 320);
-            this.btnDividir.Name = "btnDividir";
-            this.btnDividir.Size = new System.Drawing.Size(75, 23);
-            this.btnDividir.TabIndex = 12;
-            this.btnDividir.Text = "S1A";
-            this.btnDividir.UseVisualStyleBackColor = true;
-            this.btnDividir.Click += new System.EventHandler(this.btnDividir_Click);
             // 
             // label6
             // 
@@ -511,8 +486,6 @@ namespace Tinke
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.ComboBox comboBox1;
-        private System.Windows.Forms.ComboBox comboImages;
-        private System.Windows.Forms.Button btnDividir;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label lblZoom;

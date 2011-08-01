@@ -528,7 +528,7 @@ namespace Tinke
                 Archivo selectFile = accion.Select_File();
 
                 listFile.Items[0].SubItems.Add(selectFile.name);
-                listFile.Items[1].SubItems.Add(selectFile.id.ToString());
+                listFile.Items[1].SubItems.Add("0x" + String.Format("{0:X}" , selectFile.id));
                 listFile.Items[2].SubItems.Add("0x" + String.Format("{0:X}", selectFile.offset));
                 listFile.Items[3].SubItems.Add(selectFile.size.ToString());
                 #region Obtener tipo de archivo traducido
@@ -591,6 +591,11 @@ namespace Tinke
                     btnImport.Enabled = false;
                 else
                     btnImport.Enabled = true;
+                if (selectFile.tag is String)
+                {
+                    btnDescomprimir.Enabled = false;
+                    toolStripOpenAs.Enabled = false;
+                }
             }
             else
             {
@@ -680,13 +685,16 @@ namespace Tinke
                 return;
             }
 
-            btnSee.Enabled = false;
-            btnHex.Enabled = false;
+            btnDescomprimir.Enabled = false;
+            toolStripOpenAs.Enabled = false;
+
             Set_Formato(accion.Root);
             Get_SupportedFiles();
 
             TreeNode selected = treeSystem.SelectedNode;
             CarpetaANodo(uncompress, ref selected);
+            selected.ImageIndex = accion.ImageFormatFile(Formato.Comprimido);
+            selected.SelectedImageIndex = accion.ImageFormatFile(Formato.Comprimido);
 
             // Agregamos los nodos al árbol
             TreeNode[] nodos = new TreeNode[selected.Nodes.Count]; selected.Nodes.CopyTo(nodos, 0);
@@ -827,7 +835,7 @@ namespace Tinke
         }
         private void Sistema_KeyUp(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Space)
+            if (e.KeyCode == Keys.Space && treeSystem.Focused)
                 btnSee.PerformClick();
         }
 

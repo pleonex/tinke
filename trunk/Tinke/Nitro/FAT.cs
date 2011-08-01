@@ -84,6 +84,20 @@ namespace Tinke.Nitro
 
         private static Archivo BuscarArchivo(int id, Carpeta currFolder)
         {
+            if (currFolder.id == id) // Archivos descomprimidos
+            {
+                Archivo folderFile = new Archivo();
+                folderFile.name = currFolder.name;
+                folderFile.id = currFolder.id;
+                if (((String)currFolder.tag).Length != 16)
+                    folderFile.path = ((string)currFolder.tag).Substring(8);
+                else
+                    folderFile.offset = Convert.ToUInt32(((String)currFolder.tag).Substring(8), 16);
+                folderFile.size = Convert.ToUInt32(((String)currFolder.tag).Substring(0, 8), 16);
+
+                return folderFile;
+            }
+
             if (currFolder.files is List<Archivo>)
                 foreach (Archivo archivo in currFolder.files)
                     if (archivo.id == id)

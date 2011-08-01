@@ -49,37 +49,37 @@ namespace Images
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.ListViewItem listViewItem23 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem(new string[] {
             "0x06",
             "S06"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem24 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem(new string[] {
             "0x0E",
             "S07"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem25 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem(new string[] {
             "0x10",
             "S08"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem26 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem4 = new System.Windows.Forms.ListViewItem(new string[] {
             "0x14",
             "S09"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem27 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem5 = new System.Windows.Forms.ListViewItem(new string[] {
             "0x18",
             "S0A"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem28 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem6 = new System.Windows.Forms.ListViewItem(new string[] {
             "0x1A",
             "S0B"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem29 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem7 = new System.Windows.Forms.ListViewItem(new string[] {
             "0x1C",
             "S0C"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem30 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem8 = new System.Windows.Forms.ListViewItem(new string[] {
             "0x20",
             "S0D"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem31 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem9 = new System.Windows.Forms.ListViewItem(new string[] {
             "0x24",
             "S0E"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem32 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem10 = new System.Windows.Forms.ListViewItem(new string[] {
             "0x28",
             "S0F"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem33 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem11 = new System.Windows.Forms.ListViewItem(new string[] {
             "0x2C",
             "S10"}, -1);
             this.numericWidth = new System.Windows.Forms.NumericUpDown();
@@ -87,6 +87,14 @@ namespace Images
             this.label2 = new System.Windows.Forms.Label();
             this.numericHeight = new System.Windows.Forms.NumericUpDown();
             this.groupProp = new System.Windows.Forms.GroupBox();
+            this.checkTrans = new System.Windows.Forms.CheckBox();
+            this.btnBgdTrans = new System.Windows.Forms.Button();
+            this.pictureBgd = new System.Windows.Forms.PictureBox();
+            this.btnBgd = new System.Windows.Forms.Button();
+            this.label8 = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
+            this.lblZoom = new System.Windows.Forms.Label();
+            this.trackZoom = new System.Windows.Forms.TrackBar();
             this.label6 = new System.Windows.Forms.Label();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.label4 = new System.Windows.Forms.Label();
@@ -100,21 +108,13 @@ namespace Images
             this.columnValor = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.pic = new System.Windows.Forms.PictureBox();
             this.label5 = new System.Windows.Forms.Label();
-            this.btnBgdTrans = new System.Windows.Forms.Button();
-            this.pictureBgd = new System.Windows.Forms.PictureBox();
-            this.btnBgd = new System.Windows.Forms.Button();
-            this.label8 = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
-            this.lblZoom = new System.Windows.Forms.Label();
-            this.trackZoom = new System.Windows.Forms.TrackBar();
-            this.checkTrans = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.numericWidth)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericHeight)).BeginInit();
             this.groupProp.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericStart)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pic)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBgd)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackZoom)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericStart)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pic)).BeginInit();
             this.SuspendLayout();
             // 
             // numericWidth
@@ -218,145 +218,16 @@ namespace Images
             this.groupProp.TabStop = false;
             this.groupProp.Text = "S02";
             // 
-            // label6
+            // checkTrans
             // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(37, 298);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(26, 13);
-            this.label6.TabIndex = 11;
-            this.label6.Text = "S14";
-            // 
-            // comboBox1
-            // 
-            this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Items.AddRange(new object[] {
-            "S16",
-            "S17",
-            "S18"});
-            this.comboBox1.Location = new System.Drawing.Point(115, 295);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(121, 21);
-            this.comboBox1.TabIndex = 10;
-            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(143, 245);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(31, 13);
-            this.label4.TabIndex = 9;
-            this.label4.Text = "BPP:";
-            // 
-            // btnSave
-            // 
-            this.btnSave.Image = global::Images.Properties.Resources.picture_save;
-            this.btnSave.Location = new System.Drawing.Point(9, 474);
-            this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(79, 32);
-            this.btnSave.TabIndex = 6;
-            this.btnSave.Text = "S15";
-            this.btnSave.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.btnSave.UseVisualStyleBackColor = true;
-            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
-            // 
-            // comboDepth
-            // 
-            this.comboDepth.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboDepth.FormattingEnabled = true;
-            this.comboDepth.Items.AddRange(new object[] {
-            "4 bpp",
-            "8 bpp"});
-            this.comboDepth.Location = new System.Drawing.Point(182, 242);
-            this.comboDepth.Name = "comboDepth";
-            this.comboDepth.Size = new System.Drawing.Size(54, 21);
-            this.comboDepth.TabIndex = 8;
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(7, 245);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(26, 13);
-            this.label3.TabIndex = 7;
-            this.label3.Text = "S11";
-            // 
-            // numericStart
-            // 
-            this.numericStart.Location = new System.Drawing.Point(50, 243);
-            this.numericStart.Maximum = new decimal(new int[] {
-            1024,
-            0,
-            0,
-            0});
-            this.numericStart.Name = "numericStart";
-            this.numericStart.Size = new System.Drawing.Size(55, 20);
-            this.numericStart.TabIndex = 6;
-            // 
-            // listInfo
-            // 
-            this.listInfo.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnPos,
-            this.columnCampo,
-            this.columnValor});
-            this.listInfo.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-            this.listInfo.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem23,
-            listViewItem24,
-            listViewItem25,
-            listViewItem26,
-            listViewItem27,
-            listViewItem28,
-            listViewItem29,
-            listViewItem30,
-            listViewItem31,
-            listViewItem32,
-            listViewItem33});
-            this.listInfo.Location = new System.Drawing.Point(7, 20);
-            this.listInfo.Name = "listInfo";
-            this.listInfo.Size = new System.Drawing.Size(229, 216);
-            this.listInfo.TabIndex = 5;
-            this.listInfo.UseCompatibleStateImageBehavior = false;
-            this.listInfo.View = System.Windows.Forms.View.Details;
-            // 
-            // columnPos
-            // 
-            this.columnPos.Text = "S03";
-            this.columnPos.Width = 54;
-            // 
-            // columnCampo
-            // 
-            this.columnCampo.Text = "S04";
-            this.columnCampo.Width = 94;
-            // 
-            // columnValor
-            // 
-            this.columnValor.Text = "S05";
-            this.columnValor.Width = 81;
-            // 
-            // pic
-            // 
-            this.pic.BackColor = System.Drawing.Color.Transparent;
-            this.pic.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pic.Location = new System.Drawing.Point(0, 0);
-            this.pic.MaximumSize = new System.Drawing.Size(260, 480);
-            this.pic.Name = "pic";
-            this.pic.Size = new System.Drawing.Size(100, 50);
-            this.pic.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.pic.TabIndex = 0;
-            this.pic.TabStop = false;
-            this.pic.DoubleClick += new System.EventHandler(this.pic_DoubleClick);
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(3, 458);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(26, 13);
-            this.label5.TabIndex = 6;
-            this.label5.Text = "S01";
+            this.checkTrans.AutoSize = true;
+            this.checkTrans.Location = new System.Drawing.Point(97, 483);
+            this.checkTrans.Name = "checkTrans";
+            this.checkTrans.Size = new System.Drawing.Size(47, 17);
+            this.checkTrans.TabIndex = 30;
+            this.checkTrans.Text = "S1D";
+            this.checkTrans.UseVisualStyleBackColor = true;
+            this.checkTrans.CheckedChanged += new System.EventHandler(this.checkTrans_CheckedChanged);
             // 
             // btnBgdTrans
             // 
@@ -432,16 +303,144 @@ namespace Images
             this.trackZoom.Value = 100;
             this.trackZoom.Scroll += new System.EventHandler(this.trackZoom_Scroll);
             // 
-            // checkTrans
+            // label6
             // 
-            this.checkTrans.AutoSize = true;
-            this.checkTrans.Location = new System.Drawing.Point(97, 483);
-            this.checkTrans.Name = "checkTrans";
-            this.checkTrans.Size = new System.Drawing.Size(47, 17);
-            this.checkTrans.TabIndex = 30;
-            this.checkTrans.Text = "S1D";
-            this.checkTrans.UseVisualStyleBackColor = true;
-            this.checkTrans.CheckedChanged += new System.EventHandler(this.checkTrans_CheckedChanged);
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(37, 298);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(26, 13);
+            this.label6.TabIndex = 11;
+            this.label6.Text = "S14";
+            // 
+            // comboBox1
+            // 
+            this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Items.AddRange(new object[] {
+            "S16",
+            "S17"});
+            this.comboBox1.Location = new System.Drawing.Point(115, 295);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(121, 21);
+            this.comboBox1.TabIndex = 10;
+            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(143, 245);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(31, 13);
+            this.label4.TabIndex = 9;
+            this.label4.Text = "BPP:";
+            // 
+            // btnSave
+            // 
+            this.btnSave.Image = global::Images.Properties.Resources.picture_save;
+            this.btnSave.Location = new System.Drawing.Point(9, 474);
+            this.btnSave.Name = "btnSave";
+            this.btnSave.Size = new System.Drawing.Size(79, 32);
+            this.btnSave.TabIndex = 6;
+            this.btnSave.Text = "S15";
+            this.btnSave.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnSave.UseVisualStyleBackColor = true;
+            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
+            // 
+            // comboDepth
+            // 
+            this.comboDepth.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboDepth.FormattingEnabled = true;
+            this.comboDepth.Items.AddRange(new object[] {
+            "4 bpp",
+            "8 bpp"});
+            this.comboDepth.Location = new System.Drawing.Point(182, 242);
+            this.comboDepth.Name = "comboDepth";
+            this.comboDepth.Size = new System.Drawing.Size(54, 21);
+            this.comboDepth.TabIndex = 8;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(7, 245);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(26, 13);
+            this.label3.TabIndex = 7;
+            this.label3.Text = "S11";
+            // 
+            // numericStart
+            // 
+            this.numericStart.Location = new System.Drawing.Point(50, 243);
+            this.numericStart.Maximum = new decimal(new int[] {
+            1024,
+            0,
+            0,
+            0});
+            this.numericStart.Name = "numericStart";
+            this.numericStart.Size = new System.Drawing.Size(55, 20);
+            this.numericStart.TabIndex = 6;
+            // 
+            // listInfo
+            // 
+            this.listInfo.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnPos,
+            this.columnCampo,
+            this.columnValor});
+            this.listInfo.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            this.listInfo.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
+            listViewItem1,
+            listViewItem2,
+            listViewItem3,
+            listViewItem4,
+            listViewItem5,
+            listViewItem6,
+            listViewItem7,
+            listViewItem8,
+            listViewItem9,
+            listViewItem10,
+            listViewItem11});
+            this.listInfo.Location = new System.Drawing.Point(7, 20);
+            this.listInfo.Name = "listInfo";
+            this.listInfo.Size = new System.Drawing.Size(229, 216);
+            this.listInfo.TabIndex = 5;
+            this.listInfo.UseCompatibleStateImageBehavior = false;
+            this.listInfo.View = System.Windows.Forms.View.Details;
+            // 
+            // columnPos
+            // 
+            this.columnPos.Text = "S03";
+            this.columnPos.Width = 54;
+            // 
+            // columnCampo
+            // 
+            this.columnCampo.Text = "S04";
+            this.columnCampo.Width = 94;
+            // 
+            // columnValor
+            // 
+            this.columnValor.Text = "S05";
+            this.columnValor.Width = 81;
+            // 
+            // pic
+            // 
+            this.pic.BackColor = System.Drawing.Color.Transparent;
+            this.pic.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pic.Location = new System.Drawing.Point(0, 0);
+            this.pic.MaximumSize = new System.Drawing.Size(260, 480);
+            this.pic.Name = "pic";
+            this.pic.Size = new System.Drawing.Size(100, 50);
+            this.pic.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pic.TabIndex = 0;
+            this.pic.TabStop = false;
+            this.pic.DoubleClick += new System.EventHandler(this.pic_DoubleClick);
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(3, 458);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(26, 13);
+            this.label5.TabIndex = 6;
+            this.label5.Text = "S01";
             // 
             // iNCGR
             // 
@@ -459,10 +458,10 @@ namespace Images
             ((System.ComponentModel.ISupportInitialize)(this.numericHeight)).EndInit();
             this.groupProp.ResumeLayout(false);
             this.groupProp.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericStart)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pic)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBgd)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackZoom)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericStart)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pic)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 

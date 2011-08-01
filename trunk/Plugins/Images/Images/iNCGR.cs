@@ -70,10 +70,6 @@ namespace Images
                     oldTiles = 1;
                     comboBox1.SelectedIndex = 1;
                     break;
-                case Orden_Tiles.Vertical:
-                    oldTiles = 2;
-                    comboBox1.SelectedIndex = 2;
-                    break;
             }
             this.comboDepth.SelectedIndexChanged += new EventHandler(comboDepth_SelectedIndexChanged);
             this.numericWidth.ValueChanged += new EventHandler(numericSize_ValueChanged);
@@ -128,6 +124,7 @@ namespace Images
             }
 
             pic.Image = pluginHost.Bitmap_NCGR(tile, paleta, startTile);
+            pluginHost.Set_NCGR(tile);
         }
         private void Info()
         {
@@ -226,7 +223,6 @@ namespace Images
             btnSave.Text = xml.Element("S15").Value;
             comboBox1.Items[0] = xml.Element("S16").Value;
             comboBox1.Items[1] = xml.Element("S17").Value;
-            comboBox1.Items[2] = xml.Element("S18").Value;
             tVen = xml.Element("S19").Value;
             lblZoom.Text = xml.Element("S1A").Value;
             btnBgd.Text = xml.Element("S1B").Value;

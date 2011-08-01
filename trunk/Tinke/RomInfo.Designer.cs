@@ -250,6 +250,7 @@ namespace Tinke
             this.btnBannerGuardar.Text = "S03";
             this.btnBannerGuardar.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnBannerGuardar.UseVisualStyleBackColor = true;
+            this.btnBannerGuardar.Click += new System.EventHandler(this.btnBannerGuardar_Click);
             // 
             // txtBannerReserved
             // 
@@ -318,6 +319,7 @@ namespace Tinke
             this.comboBannerLang.Name = "comboBannerLang";
             this.comboBannerLang.Size = new System.Drawing.Size(181, 21);
             this.comboBannerLang.TabIndex = 4;
+            this.comboBannerLang.SelectedIndexChanged += new System.EventHandler(this.comboBannerLang_SelectedIndexChanged);
             // 
             // txtBannerTitle
             // 
@@ -432,7 +434,6 @@ namespace Tinke
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "S01";
-            this.VisibleChanged += new System.EventHandler(this.RomInfo_VisibleChanged);
             this.groupBanner.ResumeLayout(false);
             this.groupBanner.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picIcon)).EndInit();
