@@ -52,6 +52,7 @@
       <S31>System</S31>
 	  <S32>Change file</S32>
 	  <S33>Save ROM</S33>
+      <S34>Script</S34>
     </Sistema>
     <RomInfo>
       <S01>Game information</S01>
@@ -205,15 +206,15 @@ General Public License version 3.</S06>
 		<S20>Remove</S20>
 	</NCGR>
 	<NCER>
-		<S01>Cell:</S01>
-		<S02>Show all cells</S02>
+		<S01>Bank:</S01>
+		<S02>Show all banks</S02>
 		<S03>Save</S03>
 		<S04>Properties</S04>
 		<S05>Property</S05>
 		<S06>Content</S06>
 		<S07>Section</S07>
-		<S08>Number of cells</S08>
-		<S09>Type of cell</S09>
+		<S08>Number of banks</S08>
+		<S09>Type of banks</S09>
 		<S0A>Constant</S0A>
 		<S0B>Block size</S0B>
 		<S0C>Unknown 1</S0C>
@@ -229,6 +230,17 @@ General Public License version 3.</S06>
 		<S16>Zoom</S16>
 		<S17>Background colour</S17>
 		<S18>Remove</S18>
+    <S19>Number of cells</S19>
+    <S1A>Unknown 1</S1A>
+    <S1B>Offset</S1B>
+    <S1C>Cell</S1C>
+    <S1D>Y Position</S1D>
+    <S1E>X Position</S1E>
+    <S1F>Width</S1F>
+    <S20>Height</S20>
+    <S21>Palette number</S21>
+    <S22>Original tile offset</S22>
+    <S23>Fixed tile offset</S23>
   </NCER>
 	<NANR>
 		<S01>Interval:</S01>

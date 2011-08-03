@@ -61,8 +61,7 @@ namespace TXT
             else
             {
                 br.BaseStream.Position = 0x00;
-                for (int i = 0; i < br.BaseStream.Length; i++)
-                    txt +=  (char)br.ReadByte();
+                txt = new String(Encoding.UTF8.GetChars(br.ReadBytes((int)br.BaseStream.Length)));
             }
 
             

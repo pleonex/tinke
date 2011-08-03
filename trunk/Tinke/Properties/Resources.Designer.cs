@@ -88,13 +88,6 @@ namespace Tinke.Properties {
             }
         }
         
-        internal static System.Drawing.Bitmap splash1080pc2011 {
-            get {
-                object obj = ResourceManager.GetObject("splash1080pc2011", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
         internal static System.Drawing.Bitmap zoom {
             get {
                 object obj = ResourceManager.GetObject("zoom", resourceCulture);

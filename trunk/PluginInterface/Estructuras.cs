@@ -243,7 +243,8 @@ namespace PluginInterface
         Fuentes,
         Comprimido,
         Desconocido,
-        Sistema
+        Sistema,
+        Script
     }
     public enum Orden_Tiles
     {

@@ -16,7 +16,6 @@
  *
  * Programador: pleoNeX
  * Programa utilizado: Visual Studio 2010
- * Fecha: 24/06/2011
  * 
  */
 
@@ -57,6 +56,7 @@ namespace SDAT
 
             this.sdat = sdat;
             this.pluginHost = pluginHost;
+            LeerIdioma();
 
             treeFiles.Nodes.Add(CarpetaToNodo(sdat.files.root));
             treeFiles.Nodes[0].Expand();
@@ -66,7 +66,26 @@ namespace SDAT
             lastFileID++;
             lastFolderID++;
         }
+        private void LeerIdioma()
+        {
+            System.Xml.Linq.XElement xml = System.Xml.Linq.XElement.Load(Application.StartupPath + "\\Plugins\\SDATLang.xml");
+            xml = xml.Element(pluginHost.Get_Language());
+            xml = xml.Element("iSDAT");
 
+            columnCampo.Text = xml.Element("S00").Value;
+            columnValor.Text = xml.Element("S01").Value;
+            listProp.Items[0].Text = xml.Element("S02").Value;
+            listProp.Items[1].Text = xml.Element("S03").Value;
+            listProp.Items[2].Text = xml.Element("S04").Value;
+            listProp.Items[3].Text = xml.Element("S05").Value;
+            checkLoop.Text = xml.Element("S06").Value;
+            btnUncompress.Text = xml.Element("S07").Value;
+            btnExtract.Text = xml.Element("S08").Value;
+            btnMidi.Text = xml.Element("S09").Value;
+            btnWav.Text = xml.Element("S0A").Value;
+        }
+
+        #region Administración de carpetas
         private TreeNode CarpetaToNodo(Folder carpeta)
         {
             TreeNode currNode = new TreeNode();
@@ -210,6 +229,69 @@ namespace SDAT
 
             return new Folder();
         }
+        public void Set_LastFileID(Folder currFolder)
+        {
+            if (currFolder.files is List<Sound>)
+                foreach (Sound archivo in currFolder.files)
+                    if (archivo.id > lastFileID)
+                        lastFileID = archivo.id;
+
+            if (currFolder.folders is List<Folder>)
+                foreach (Folder subFolder in currFolder.folders)
+                    Set_LastFileID(subFolder);
+
+        }
+        public void Set_LastFolderID(Folder currFolder)
+        {
+            if (currFolder.id > lastFolderID)
+                lastFolderID = currFolder.id;
+
+            if (currFolder.folders is List<Folder>)
+                foreach (Folder subFolder in currFolder.folders)
+                    Set_LastFolderID(subFolder);
+        }
+        public Folder Add_Files(Folder files, int id, Folder currFolder)
+        {
+            if (currFolder.files is List<Sound>)
+            {
+                for (int i = 0; i < currFolder.files.Count; i++)
+                {
+                    if (currFolder.files[i].id == id)
+                    {
+                        files.id = (ushort)lastFolderID;
+                        lastFolderID++;
+                        currFolder.files.RemoveAt(i);
+                        if (!(currFolder.folders is List<Folder>))
+                            currFolder.folders = new List<Folder>();
+                        currFolder.folders.Add(files);
+                        return currFolder;
+                    }
+                }
+            }
+
+
+            if (currFolder.folders is List<Folder>)
+            {
+                foreach (Folder subFolder in currFolder.folders)
+                {
+                    Folder folder = Add_Files(files, id, subFolder);
+                    if (folder.name is string)
+                    {
+                        currFolder.folders.Remove(subFolder);
+                        currFolder.folders.Add(folder);
+                        currFolder.folders.Sort(Comparacion_Directorios);
+                        return currFolder;
+                    }
+                }
+            }
+
+            return new Folder();
+        }
+        private static int Comparacion_Directorios(Folder f1, Folder f2)
+        {
+            return String.Compare(f1.name, f2.name);
+        }
+        #endregion
 
         private void btnExtract_Click(object sender, EventArgs e)
         {
@@ -314,49 +396,6 @@ namespace SDAT
             treeFiles.SelectedNode.Expand();
 
         }
-
-        public Folder Add_Files(Folder files, int id, Folder currFolder)
-        {
-            if (currFolder.files is List<Sound>)
-            {
-                for (int i = 0; i < currFolder.files.Count; i++)
-                {
-                    if (currFolder.files[i].id == id)
-                    {
-                        files.id = (ushort)lastFolderID;
-                        lastFolderID++;
-                        currFolder.files.RemoveAt(i);
-                        if (!(currFolder.folders is List<Folder>))
-                            currFolder.folders = new List<Folder>();
-                        currFolder.folders.Add(files);
-                        return currFolder;
-                    }
-                }
-            }
-
-
-            if (currFolder.folders is List<Folder>)
-            {
-                foreach (Folder subFolder in currFolder.folders)
-                {
-                    Folder folder = Add_Files(files, id, subFolder);
-                    if (folder.name is string)
-                    {
-                        currFolder.folders.Remove(subFolder);
-                        currFolder.folders.Add(folder);
-                        currFolder.folders.Sort(Comparacion_Directorios);
-                        return currFolder;
-                    }
-                }
-            }
-
-            return new Folder();
-        }
-        private static int Comparacion_Directorios(Folder f1, Folder f2)
-        {
-            return String.Compare(f1.name, f2.name);
-        }
-
 
         private void btnWav_Click(object sender, EventArgs e)
         {
@@ -467,27 +506,6 @@ namespace SDAT
             return file;
         }
 
-        public void Set_LastFileID(Folder currFolder)
-        {
-            if (currFolder.files is List<Sound>)
-                foreach (Sound archivo in currFolder.files)
-                    if (archivo.id > lastFileID)
-                        lastFileID = archivo.id;
-
-            if (currFolder.folders is List<Folder>)
-                foreach (Folder subFolder in currFolder.folders)
-                    Set_LastFileID(subFolder);
-
-        }
-        public void Set_LastFolderID(Folder currFolder)
-        {
-            if (currFolder.id > lastFolderID)
-                lastFolderID = currFolder.id;
-
-            if (currFolder.folders is List<Folder>)
-                foreach (Folder subFolder in currFolder.folders)
-                    Set_LastFolderID(subFolder);
-        }
 
     }
 }

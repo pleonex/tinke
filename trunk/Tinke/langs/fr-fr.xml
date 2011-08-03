@@ -52,6 +52,7 @@
       <S31>Système</S31>
 	  <S32>Changer de fichier</S32>
 	  <S33>Sauver ROM</S33>
+      <S34>Script</S34>
     </Sistema>
     <RomInfo>
       <S01>Information de la ROM</S01>
@@ -204,16 +205,16 @@
 	  <S20>Supprimer</S20>
     </NCGR>
 	<NCER>
-	  <S01>Cellule:</S01>
-	  <S02>Montrer toutes les cellules</S02>
+	  <S01>Banques:</S01>
+	  <S02>Montrer toutes les banques</S02>
 	  <S03>Enregistrer</S03>
 	  <S04>Propriétés</S04>
 	  <S05>Champ</S05>
 	  <S06>Valeur</S06>
 	  <S07>Section</S07>
-	  <S08>Numéro des cellules</S08>
-	  <S09>Type des cellules</S09> 
-      <S0A>Constante</S0A>
+	  <S08>Numéro des banques</S08>
+	  <S09>Type des banques</S09> 
+    <S0A>Constante</S0A>
 	  <S0B>Taille du bloc</S0B>
 	  <S0C>Inconnu 1</S0C>
 	  <S0D>Inconnu 2</S0D>
@@ -228,6 +229,17 @@
  	  <S16>Zoom</S16>
 	  <S17>Couleur du background</S17>
 	  <S18>Supprimer</S18>
+    <S19>Numéro des cellules</S19>
+    <S1A>Inconnu 1</S1A>
+    <S1B>Offset</S1B>
+    <S1C>Cellule</S1C>
+    <S1D>Y Position</S1D>
+    <S1E>X Position</S1E>
+    <S1F>Longueur</S1F>
+    <S20>Hauteur</S20>
+    <S21>Numéro de palette</S21>
+    <S22>Original tile offset</S22>
+    <S23>Fixed tile offset</S23>
     </NCER>
 	<NANR>
 	  <S01>Intervalle:</S01>

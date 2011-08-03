@@ -1,4 +1,12 @@
-0.7.2:
+0.7.3:
+* Fixed problem with some SDAT and SWAV files
+* Add option to open external files
+* Fixed normal encoding in TXT plugin
+* Add new format file: Script
+* Multilenguage support to SDAT plugin.
+* Fixed problem with some palettes
+
+0.7.2 (public release):
 * AI IGO DS game plugin support completed!
 * LASTWINDOW game support
 * Support for reading a NDS file from an console argument

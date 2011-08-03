@@ -37,6 +37,10 @@ namespace Tinke
         Bitmap picBanner;
         string[] titulos;
 
+        public RomInfo()
+        {
+            InitializeComponent();
+        }
         public RomInfo(string archivo)
         {
             InitializeComponent();

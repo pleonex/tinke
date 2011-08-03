@@ -86,33 +86,6 @@ namespace Tinke.Nitro
 
             return root;
         }
-        public static void EscribirFNT(string salida, Carpeta root, ushort nCarpetas)
-        {
-            throw new NotImplementedException();
-
-            BinaryWriter bw = new BinaryWriter(new FileStream(salida, FileMode.Create));
-            List<Estructuras.MainFNT> mains = new List<Estructuras.MainFNT>();
-            Obtener_Mains(root, mains, nCarpetas, 0x0F000);
-
-            Estructuras.MainFNT main = mains[0];
-            main.idParentFolder = nCarpetas; // La primera carpeta contiene el nº total de carpetas
-            mains[0] = main;
-
-            // Escribimos primero las Subtables para saber el tamaño de cada una
-            for (int i = 0; i < mains.Count; i++)
-            {
-                long tamañoActual = bw.BaseStream.Length;
-
-                // Ponemos primero los archivos
-                for (int j = 0; j < mains[i].subTable.files.Count; j++)
-                {
-                    bw.Write((byte)mains[i].subTable.files[j].id);
-                }
-            }
-
-            bw.Flush();
-            bw.Close();
-        }
 
         public static Carpeta Jerarquizar_Carpetas(List<Estructuras.MainFNT> tables, int idFolder, string nameFolder)
         {

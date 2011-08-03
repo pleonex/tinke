@@ -106,10 +106,12 @@ namespace Tinke
             //splash.ShowDialog();
 
             // Iniciamos la lectura del archivo.
+            string[] filesToRead = new string[1];
             OpenFileDialog o = new OpenFileDialog();
             o.CheckFileExists = true;
-            o.Filter = "Nintendo DS rom (*.nds)|*.nds";
-            o.DefaultExt = ".nds";
+            //o.Filter = "Nintendo DS rom (*.nds)|*.nds";
+            //o.DefaultExt = ".nds";
+            o.Multiselect = true;
             if (Environment.GetCommandLineArgs().Length == 1)
             {
                 if (o.ShowDialog() != System.Windows.Forms.DialogResult.OK)
@@ -117,23 +119,51 @@ namespace Tinke
                     Application.Exit();
                     return;
                 }
+                filesToRead = o.FileNames;
+                o.Dispose();
             }
-            else if (Environment.GetCommandLineArgs().Length == 2)  // Viene dado el juego a cargar
-                o.FileName = Environment.GetCommandLineArgs()[1];
+            else if (Environment.GetCommandLineArgs().Length == 2)
+                filesToRead[0] = Environment.GetCommandLineArgs()[1];  // Juego NDS
+            else if (Environment.GetCommandLineArgs().Length >= 3)
+            {
+                filesToRead = new String[Environment.GetCommandLineArgs().Length - 2];
+                Array.Copy(Environment.GetCommandLineArgs(), 2, filesToRead, 0, filesToRead.Length);
+            }
 
             Thread espera = new System.Threading.Thread(ThreadEspera);
             if (!isMono)
                 espera.Start("S02");
-            #region Lectura del archivo
+
+            if (filesToRead.Length == 1 && Path.GetFileName(filesToRead[0]).ToUpper().EndsWith(".NDS")) // Si se ha seleccionado un juego de la NDS
+                ReadGame(filesToRead[0]);
+            else
+                ReadFiles(filesToRead);
+
+            if (!isMono)
+                espera.Abort();
+
+            debug = new Debug();
+            LoadPreferences();
+
+            debug.Añadir_Texto(sb.ToString());
+            sb.Length = 0;
+
+            this.Show();
+            debug.ShowInTaskbar = true;
+            romInfo.ShowInTaskbar = true;
+            this.Activate();
+        }
+        private void ReadGame(string file)
+        {
             DateTime startTime = DateTime.Now;
 
-            romInfo = new RomInfo(o.FileName);  // Se obtienen datos de la cabecera
+            romInfo = new RomInfo(file);  // Se obtienen datos de la cabecera
             DateTime t1 = DateTime.Now;
-            accion = new Acciones(o.FileName, new String(romInfo.Cabecera.gameCode));
+            accion = new Acciones(file, new String(romInfo.Cabecera.gameCode));
             DateTime t2 = DateTime.Now;
 
             // Obtenemos el sistema de archivos
-            Carpeta root = FNT(o.FileName, romInfo.Cabecera.fileNameTableOffset, romInfo.Cabecera.fileNameTableSize);
+            Carpeta root = FNT(file, romInfo.Cabecera.fileNameTableOffset, romInfo.Cabecera.fileNameTableSize);
             DateTime t3 = DateTime.Now;
             if (!(root.folders is List<Carpeta>))
                 root.folders = new List<Carpeta>();
@@ -141,7 +171,7 @@ namespace Tinke
             DateTime t4 = DateTime.Now;
 
             // Añadimos los offset a cada archivo
-            root = FAT(o.FileName, romInfo.Cabecera.FAToffset, romInfo.Cabecera.FATsize, root);
+            root = FAT(file, romInfo.Cabecera.FAToffset, romInfo.Cabecera.FATsize, root);
             DateTime t5 = DateTime.Now;
             accion.Root = root;
             DateTime t6 = DateTime.Now;
@@ -151,7 +181,6 @@ namespace Tinke
             treeSystem.Nodes.Add(Jerarquizar_Nodos(root)); // Mostramos el árbol
             DateTime t8 = DateTime.Now;
             treeSystem.Nodes[0].Expand();
-            DateTime t9 = DateTime.Now;
 
             Get_SupportedFiles();
             DateTime t10 = DateTime.Now;
@@ -167,45 +196,59 @@ namespace Tinke
             Console.WriteLine("<li>Tiempo {0}: {1}</li>", "en asignar ROOT", (t6 - t5).ToString());
             Console.WriteLine("<li>Tiempo {0}: {1}</li>", "en obtener los formatos", (t7 - t6).ToString());
             Console.WriteLine("<li>Tiempo {0}: {1}</li>", "en jerarquizar el árbol", (t8 - t7).ToString());
-            Console.WriteLine("<li>Tiempo {0}: {1}</li>", "expandir el nodo principal", (t9 - t8).ToString());
-            Console.WriteLine("<li>Tiempo {0}: {1}</li>", "obtener el porcentaje de archivos soportados", (t10 - t9).ToString());
+            Console.WriteLine("<li>Tiempo {0}: {1}</li>", "obtener el porcentaje de archivos soportados", (t10 - t8).ToString());
             Console.Write("</font></ul><br>");
-            #endregion
-            if (!isMono)
-                espera.Abort();
+        }
+        private void ReadFiles(string[] files)
+        {
+            toolStripInfoRom.Enabled = false;
+            btnSaveROM.Enabled = false;
 
-            debug = new Debug();
+            romInfo = new RomInfo(); // Para que se formen errores...
+            DateTime startTime = DateTime.Now;
 
-            // Cargar preferencias
-            XElement xml = XElement.Load(Application.StartupPath + Path.DirectorySeparatorChar + "Tinke.xml").Element("Options");
-            
-            toolStripDebug.Enabled = !isMono;
-            if (!isMono && xml.Element("WindowDebug").Value == "True")
+            accion = new Acciones("", "NO GAME");
+            DateTime t1 = DateTime.Now;
+
+            // Obtenemos el sistema de archivos
+            Carpeta root = new Carpeta();
+            root.name = "root";
+            root.id = 0xF000;
+            root.files = new List<Archivo>();
+            for (int i = 0; i < files.Length; i++)
             {
-                toolStripDebug.Checked = true;
-                debug.Show();
-                debug.Activate();
+                Archivo currFile = new Archivo();
+                currFile.id = (ushort)i;
+                currFile.name = Path.GetFileName(files[i]);
+                currFile.offset = 0x00;
+                currFile.path = files[i];
+                currFile.size = (uint)new FileInfo(files[i]).Length;
+                root.files.Add(currFile);
             }
-            if (xml.Element("WindowInformation").Value == "True")
-            {
-                toolStripInfoRom.Checked = true;
-                romInfo.Show();
-                romInfo.Activate();
-            }
-            if (xml.Element("InstantSearch").Value == "True")
-                checkSearch.Checked = true;
-            if (xml.Element("ModeWindow").Value == "True")
-                toolStripVentana.Checked = true;
+            DateTime t2 = DateTime.Now;
 
-            o.Dispose();
+            accion.Root = root;
+            DateTime t3 = DateTime.Now;
 
-            debug.Añadir_Texto(sb.ToString());
-            sb.Length = 0;
+            Set_Formato(root);
+            DateTime t4 = DateTime.Now;
+            treeSystem.Nodes.Add(Jerarquizar_Nodos(root)); // Mostramos el árbol
+            DateTime t5 = DateTime.Now;
+            treeSystem.Nodes[0].Expand();
 
-            this.Show();
-            debug.ShowInTaskbar = true;
-            romInfo.ShowInTaskbar = true;
-            this.Activate();
+            Get_SupportedFiles();
+            DateTime t6 = DateTime.Now;
+
+            DateTime finalTime = DateTime.Now;
+            Console.Write("<br><u>Cálculo de tiempos:</u><ul><font size=\"2\" face=\"consolas\">");
+            Console.WriteLine("<li>Tiempo {0}: {1}</li>", "total", (finalTime - startTime).ToString());
+            Console.WriteLine("<li>Tiempo {0}: {1}</li>", "inicializar Acciones", (t1 - startTime).ToString());
+            Console.WriteLine("<li>Tiempo {0}: {1}</li>", "en crear nodo principal", (t2 - t1).ToString());
+            Console.WriteLine("<li>Tiempo {0}: {1}</li>", "en asignar ROOT", (t3 - t2).ToString());
+            Console.WriteLine("<li>Tiempo {0}: {1}</li>", "en obtener los formatos", (t4 - t3).ToString());
+            Console.WriteLine("<li>Tiempo {0}: {1}</li>", "en jerarquizar el árbol", (t5 - t4).ToString());
+            Console.WriteLine("<li>Tiempo {0}: {1}</li>", "obtener el porcentaje de archivos soportados", (t6 - t5).ToString());
+            Console.Write("</font></ul><br>");
         }
         private void Sistema_FormClosing(object sender, FormClosingEventArgs e)
         {
@@ -220,6 +263,28 @@ namespace Tinke
             xml.Save(Application.StartupPath + Path.DirectorySeparatorChar + "Tinke.xml");
         }
 
+        private void LoadPreferences()
+        {
+            XElement xml = XElement.Load(Application.StartupPath + Path.DirectorySeparatorChar + "Tinke.xml").Element("Options");
+
+            toolStripDebug.Enabled = !isMono;
+            if (!isMono && xml.Element("WindowDebug").Value == "True")
+            {
+                toolStripDebug.Checked = true;
+                debug.Show();
+                debug.Activate();
+            }
+            if (xml.Element("WindowInformation").Value == "True" && accion.ROMFile != "") // En caso de que se haya abierto una ROM, no archivos sueltos
+            {
+                toolStripInfoRom.Checked = true;
+                romInfo.Show();
+                romInfo.Activate();
+            }
+            if (xml.Element("InstantSearch").Value == "True")
+                checkSearch.Checked = true;
+            if (xml.Element("ModeWindow").Value == "True")
+                toolStripVentana.Checked = true;
+        }
         private void LeerIdioma()
         {
             XElement xml = Tools.Helper.ObtenerTraduccion("Sistema");
@@ -270,6 +335,7 @@ namespace Tinke
                 "\n<Sound> -> " + xml.Element("S28").Value +
                 "\n<Font> -> " + xml.Element("S29").Value +
                 "\n<Compress> -> " + xml.Element("S2A").Value +
+                "\n<Script> -> " + xml.Element("S34").Value +
                 "\n<Unknown> -> " + xml.Element("S2B").Value
                 );
             btnImport.Text = xml.Element("S32").Value;
@@ -572,6 +638,9 @@ namespace Tinke
                         break;
                     case Formato.Sistema :
                         listFile.Items[4].SubItems.Add(Tools.Helper.ObtenerTraduccion("Sistema", "S31"));
+                        break;
+                    case Formato.Script:
+                        listFile.Items[4].SubItems.Add(Tools.Helper.ObtenerTraduccion("Sistema", "S34"));
                         break;
                 }
                 #endregion
@@ -1001,6 +1070,8 @@ namespace Tinke
                 resul = accion.Search_File(Formato.Fuentes);
             else if (txtSearch.Text == "<Compress>")
                 resul = accion.Search_File(Formato.Comprimido);
+            else if (txtSearch.Text == "<Script>")
+                resul = accion.Search_File(Formato.Script);
             else if (txtSearch.Text == "<Unknown>")
                 resul = accion.Search_File(Formato.Desconocido);
             else
@@ -1274,7 +1345,13 @@ namespace Tinke
                 newFile.name = selectedFile.name;
                 newFile.id = selectedFile.id;
                 newFile.offset = 0x00;
-                newFile.path = o.FileName;
+                if (accion.ROMFile == "") // Si no es una ROM, se cambia el contenido directamente
+                {
+                    File.Copy(o.FileName, selectedFile.path, true);
+                    newFile.path = selectedFile.path;
+                }
+                else
+                    newFile.path = o.FileName;
                 newFile.formato = selectedFile.formato;
                 newFile.size = (uint)new FileInfo(o.FileName).Length;
 

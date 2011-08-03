@@ -66,8 +66,9 @@ namespace SDAT
             sSDAT sdat = new sSDAT();
             sdat.archivo = Path.GetTempFileName();
             File.Copy(archivo, sdat.archivo, true);
+            BinaryReader br = new BinaryReader(new FileStream(archivo, FileMode.Open));
 
-            if (archivo.EndsWith(".swav"))
+            if (new String(br.ReadChars(4)) == "SWAV")
             {
                 sdat.files.root.id = 0x0F000;
                 sdat.files.root.name = "SDAT";
@@ -80,11 +81,12 @@ namespace SDAT
                 swavFile.type = FormatSound.SWAV;
                 swavFile.path = sdat.archivo;
                 sdat.files.root.files.Add(swavFile);
+
+                br.Close();
                 return sdat;
             }
 
-
-            BinaryReader br = new BinaryReader(new FileStream(archivo, FileMode.Open));
+            br.BaseStream.Position = 0x00;
 
             #region Cabecera genérica
             sdat.generico.id = br.ReadChars(4);
@@ -167,16 +169,29 @@ namespace SDAT
             // Lee los subgrupos de cada grupo
             for (int i = 0; i < sdat.symbol.record2.nEntries; i++)
             {
-                // Lee el nombre del grupo
-                br.BaseStream.Position = 0x40 + sdat.symbol.record2.group[i].groupOffset;
                 char c = '\0';
-                do
+
+                if (sdat.symbol.record2.group[i].groupOffset == 0x00) // En caso de que no exista el nombre
+                    sdat.symbol.record2.group[i].groupName = "SEQARC_" + i.ToString();
+                else
                 {
-                    c = (char)br.ReadByte();
-                    sdat.symbol.record2.group[i].groupName += c;
-                } while (c != 0x0);
+                    // Lee el nombre del grupo
+                    br.BaseStream.Position = 0x40 + sdat.symbol.record2.group[i].groupOffset;
+                    c = '\0';
+                    do
+                    {
+                        c = (char)br.ReadByte();
+                        sdat.symbol.record2.group[i].groupName += c;
+                    } while (c != 0x0);
+                }
 
                 // Lee los offset de las entradas del subgrupo
+                if (sdat.symbol.record2.group[i].subRecOffset == 0x00) // En caso de que no haya subgrupos
+                {
+                    sdat.symbol.record2.group[i].subRecord = new Record();
+                    continue;
+                }
+
                 br.BaseStream.Position = 0x40 + sdat.symbol.record2.group[i].subRecOffset;
                 Record subRecord = new Record();
                 subRecord.nEntries = br.ReadUInt32();
