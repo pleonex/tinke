@@ -25,27 +25,6 @@ namespace Tinke.Nitro
 
             return root;
         }
-        public static void EscribirFAT(string salida, Carpeta root, int lastID)
-        {
-            throw new NotImplementedException();
-            BinaryWriter bw = new BinaryWriter(new FileStream(salida, FileMode.Create));
-            UInt32 size, offset = 0x00;
-            
-
-            for (int i = 0; i <= lastID; i++)
-            {
-                bw.Write(offset); // Offset de inicio del archivo
-
-                //size = (UInt32)Obtener_Tamaño(i, root);
-                offset += offset + size;
-                bw.Write(offset); // Offset de fin del archivo
-
-                offset++;
-            }
-
-            bw.Flush();
-            bw.Close();
-        }
         public static void EscribirFAT(string salida, Carpeta root, int nFiles, uint offsetFAT, uint offsetOverlay9,
             uint offsetOverlay7)
         {

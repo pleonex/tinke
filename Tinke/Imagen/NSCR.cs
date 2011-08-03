@@ -101,26 +101,15 @@ namespace Tinke
             NTFT ntft = new NTFT();
             List<Byte[]> bytes = new List<byte[]>();
             List<Byte> nPltt = new List<Byte>();
-            int j = 0;
             
             for (int i = 0; i < nscr.section.mapData.Length; i++)
             {
-                byte[] currTile;
-                if (nscr.section.mapData[i].nTile == j)
-                {
-                    if (j == tiles.tiles.Length)
-                        throw new Exception(Tools.Helper.ObtenerTraduccion("Messages", "S06"));
+                Byte[] currTile;
 
-                    currTile = tiles.tiles[j];
-                    j++;
-                }
-                else
-                {
-                    if (nscr.section.mapData[i].nTile >= tiles.tiles.Length)
-                        throw new Exception(Tools.Helper.ObtenerTraduccion("Messages", "S06"));
+                if (nscr.section.mapData[i].nTile >= tiles.tiles.Length)
+                    throw new Exception(Tools.Helper.ObtenerTraduccion("Messages", "S06"));
 
-                    currTile = tiles.tiles[nscr.section.mapData[i].nTile];
-                }
+                currTile = tiles.tiles[nscr.section.mapData[i].nTile];
 
                 if (nscr.section.mapData[i].xFlip == 1)
                     currTile = XFlip(currTile);

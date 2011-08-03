@@ -39,7 +39,6 @@ namespace Tinke
 
         string oldDepth;
         int oldTiles;
-        bool dividido;
 
         public iNCGR()
         {

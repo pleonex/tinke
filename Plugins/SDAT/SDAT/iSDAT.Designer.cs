@@ -51,10 +51,10 @@ namespace SDAT
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(iSDAT));
-            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("ID");
-            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("Formato");
-            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem("Offset");
-            System.Windows.Forms.ListViewItem listViewItem4 = new System.Windows.Forms.ListViewItem("Tamaño");
+            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("S02");
+            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("S03");
+            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem("S04");
+            System.Windows.Forms.ListViewItem listViewItem4 = new System.Windows.Forms.ListViewItem("S05");
             this.treeFiles = new System.Windows.Forms.TreeView();
             this.imageList = new System.Windows.Forms.ImageList(this.components);
             this.listProp = new System.Windows.Forms.ListView();
@@ -115,12 +115,12 @@ namespace SDAT
             // 
             // columnCampo
             // 
-            this.columnCampo.Text = "Campo";
+            this.columnCampo.Text = "S00";
             this.columnCampo.Width = 118;
             // 
             // columnValor
             // 
-            this.columnValor.Text = "Valor";
+            this.columnValor.Text = "S01";
             this.columnValor.Width = 121;
             // 
             // btnExtract
@@ -132,7 +132,7 @@ namespace SDAT
             this.btnExtract.Name = "btnExtract";
             this.btnExtract.Size = new System.Drawing.Size(100, 35);
             this.btnExtract.TabIndex = 2;
-            this.btnExtract.Text = "Extraer";
+            this.btnExtract.Text = "S08";
             this.btnExtract.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnExtract.UseVisualStyleBackColor = true;
             this.btnExtract.Click += new System.EventHandler(this.btnExtract_Click);
@@ -157,7 +157,7 @@ namespace SDAT
             this.btnWav.Name = "btnWav";
             this.btnWav.Size = new System.Drawing.Size(100, 34);
             this.btnWav.TabIndex = 4;
-            this.btnWav.Text = "Guardar WAV";
+            this.btnWav.Text = "S0A";
             this.btnWav.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnWav.UseVisualStyleBackColor = true;
             this.btnWav.Click += new System.EventHandler(this.btnWav_Click);
@@ -169,7 +169,7 @@ namespace SDAT
             this.btnMidi.Name = "btnMidi";
             this.btnMidi.Size = new System.Drawing.Size(99, 35);
             this.btnMidi.TabIndex = 5;
-            this.btnMidi.Text = "Guardar MIDI";
+            this.btnMidi.Text = "S09";
             this.btnMidi.UseVisualStyleBackColor = true;
             this.btnMidi.Visible = false;
             // 
@@ -193,7 +193,7 @@ namespace SDAT
             this.btnUncompress.Name = "btnUncompress";
             this.btnUncompress.Size = new System.Drawing.Size(100, 34);
             this.btnUncompress.TabIndex = 7;
-            this.btnUncompress.Text = "Descomprimir";
+            this.btnUncompress.Text = "S07";
             this.btnUncompress.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnUncompress.UseVisualStyleBackColor = true;
             this.btnUncompress.Click += new System.EventHandler(this.btnUncompress_Click);
@@ -204,9 +204,9 @@ namespace SDAT
             this.checkLoop.Enabled = false;
             this.checkLoop.Location = new System.Drawing.Point(252, 409);
             this.checkLoop.Name = "checkLoop";
-            this.checkLoop.Size = new System.Drawing.Size(82, 17);
+            this.checkLoop.Size = new System.Drawing.Size(45, 17);
             this.checkLoop.TabIndex = 8;
-            this.checkLoop.Text = "Activar loop";
+            this.checkLoop.Text = "S06";
             this.checkLoop.UseVisualStyleBackColor = true;
             // 
             // iSDAT

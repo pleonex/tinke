@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Language>
+  <Español>
+    <iSDAT>
+      <S00>Campo</S00>
+      <S01>Valor</S01>
+      <S02>ID</S02>
+      <S03>Formato</S03>
+      <S04>Offset</S04>
+      <S05>Tamaño</S05>
+      <S06>Activar loop</S06>
+      <S07>Descomprimir</S07>
+      <S08>Extraer</S08>
+      <S09>Guardar MIDI</S09>
+      <S0A>Guardar WAV</S0A>
+    </iSDAT>
+  </Español>
+  <English>
+    <iSDAT>
+      <S00>Property</S00>
+      <S01>Content</S01>
+      <S02>ID</S02>
+      <S03>Format</S03>
+      <S04>Offset</S04>
+      <S05>Size</S05>
+      <S06>Enabled loop</S06>
+      <S07>Unpack</S07>
+      <S08>Extract</S08>
+      <S09>Save MIDI</S09>
+      <S0A>Save WAV</S0A>
+    </iSDAT>    
+  </English>
+  <Français>
+    <iSDAT>
+      <S00>Property</S00>
+      <S01>Content</S01>
+      <S02>ID</S02>
+      <S03>Format</S03>
+      <S04>Offset</S04>
+      <S05>Size</S05>
+      <S06>Enabled loop</S06>
+      <S07>Unpack</S07>
+      <S08>Extract</S08>
+      <S09>Save MIDI</S09>
+      <S0A>Save WAV</S0A>
+    </iSDAT>
+  </Français>
+</Language>

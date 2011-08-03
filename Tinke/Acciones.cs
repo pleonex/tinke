@@ -180,6 +180,8 @@ namespace Tinke
                 case Formato.Video:
                     return 13;
                 case Formato.Sistema:
+                    return 20;
+                case Formato.Script:
                     return 17;
                 case Formato.Desconocido:
                 default:
@@ -621,7 +623,13 @@ namespace Tinke
             newFile.name = oldFile.name;
             newFile.id = (ushort)id;
             newFile.offset = 0x00;
-            newFile.path = newFilePath;
+            if (ROMFile == "") // Si no es una ROM, se cambia directamente el contenido
+            {
+                File.Copy(newFilePath, oldFile.path, true);
+                newFile.path = oldFile.path;
+            }
+            else
+                newFile.path = newFilePath;
             newFile.formato = oldFile.formato;
             newFile.size = (uint)new FileInfo(newFilePath).Length;
 

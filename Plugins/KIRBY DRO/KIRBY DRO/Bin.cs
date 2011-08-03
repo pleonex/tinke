@@ -106,7 +106,6 @@ namespace KIRBY_DRO
             }
             tile.rahc.tileData = pluginHost.Transformar_NSCR(map, tile.rahc.tileData);
 
-            Fin:
             br.Close();
             return pluginHost.Bitmap_NCGR(tile, paleta);
         }

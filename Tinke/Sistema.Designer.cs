@@ -126,6 +126,7 @@ namespace Tinke
             this.iconos.Images.SetKeyName(17, "script.png");
             this.iconos.Images.SetKeyName(18, "package_add.png");
             this.iconos.Images.SetKeyName(19, "disk.png");
+            this.iconos.Images.SetKeyName(20, "page_gear.png");
             // 
             // btnExtraer
             // 

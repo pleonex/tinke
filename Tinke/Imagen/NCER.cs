@@ -33,10 +33,11 @@ namespace Tinke
     {
         public static NCER Leer(string file, int id)
         {
+            System.Xml.Linq.XElement xml = Tools.Helper.ObtenerTraduccion("NCER");
             BinaryReader br = new BinaryReader(File.OpenRead(file));
             NCER ncer = new NCER();
             ncer.id = (uint)id;
-            Console.WriteLine("Leyendo archivo NCER {0}<pre>", Path.GetFileName(file));
+            Console.WriteLine("NCER {0}<pre>", Path.GetFileName(file));
 
             // Lee la cabecera genérica
             ncer.header.id = br.ReadChars(4);
@@ -59,16 +60,16 @@ namespace Tinke
             ncer.cebk.unknown2 = br.ReadUInt64();
             ncer.cebk.banks = new Bank[ncer.cebk.nBanks];
 
-            Console.WriteLine("Block Size: {0}", ncer.cebk.block_size.ToString());
-            Console.WriteLine("Unknown1: {0}", ncer.cebk.unknown1.ToString());
-            Console.WriteLine("Tipo de banco: {0}", ncer.cebk.tBank.ToString());
-            Console.WriteLine("# bancos: {0}", ncer.cebk.nBanks.ToString());
+            Console.WriteLine(xml.Element("S0B").Value + ": 0x{0:X}", ncer.cebk.block_size);
+            Console.WriteLine(xml.Element("S0C").Value + ": 0x{0:X}", ncer.cebk.unknown1);
+            Console.WriteLine(xml.Element("S09").Value + ": {0}", ncer.cebk.tBank.ToString());
+            Console.WriteLine(xml.Element("S08").Value + ": {0}", ncer.cebk.nBanks.ToString());
             uint tilePos = 0x00; // En caso de que Unknown 1 != 0x00
             // Lee cada banco
             for (int i = 0; i < ncer.cebk.nBanks; i++)
             {
                 Console.WriteLine("<br>--------------");
-                Console.WriteLine("Banco {0}:", i.ToString());
+                Console.WriteLine(xml.Element("S01").Value + " {0}:", i.ToString());
 
                 ncer.cebk.banks[i].nCells = br.ReadUInt16();
                 ncer.cebk.banks[i].unknown1 = br.ReadUInt16();
@@ -85,9 +86,9 @@ namespace Tinke
 
                 ncer.cebk.banks[i].cells = new Cell[ncer.cebk.banks[i].nCells];
 
-                Console.WriteLine("|_# celdas: {0}", ncer.cebk.banks[i].nCells.ToString());
-                Console.WriteLine("|_Unknown1: {0}", ncer.cebk.banks[i].unknown1.ToString());
-                Console.WriteLine("|_Offset: {0}", ncer.cebk.banks[i].cell_offset.ToString());
+                Console.WriteLine("|_" + xml.Element("S19").Value + ": {0}", ncer.cebk.banks[i].nCells.ToString());
+                Console.WriteLine("|_" + xml.Element("S1A").Value + ": {0}", ncer.cebk.banks[i].unknown1.ToString());
+                Console.WriteLine("|_" + xml.Element("S1B").Value + ": {0}", ncer.cebk.banks[i].cell_offset.ToString());
                 // Lee la información de cada banco
                 for (int j = 0; j < ncer.cebk.banks[i].nCells; j++)
                 {
@@ -113,14 +114,14 @@ namespace Tinke
                     ncer.cebk.banks[i].cells[j].yFlip = (Tools.Helper.ByteTo4Bits(byte2)[0] & 2) == 2 ? true : false;
                     ncer.cebk.banks[i].cells[j].xFlip = (Tools.Helper.ByteTo4Bits(byte2)[0] & 1) == 1 ? true : false;
 
-                    Console.WriteLine("|_Celda {0}:", j.ToString());
-                    Console.WriteLine("    Y offset: {0}", ncer.cebk.banks[i].cells[j].yOffset.ToString());
-                    Console.WriteLine("    X offset: {0}", ncer.cebk.banks[i].cells[j].xOffset.ToString());
-                    Console.WriteLine("    Ancho: {0}", ncer.cebk.banks[i].cells[j].width.ToString());
-                    Console.WriteLine("    Altura: {0}", ncer.cebk.banks[i].cells[j].height.ToString());
-                    Console.WriteLine("    # paleta: {0}", ncer.cebk.banks[i].cells[j].nPalette.ToString());
-                    Console.WriteLine("    Tile offset original: {0}", (pos & 0x03FF).ToString());
-                    Console.WriteLine("    Tile offset modificado: {0}", ncer.cebk.banks[i].cells[j].tileOffset.ToString());
+                    Console.WriteLine("|_" + xml.Element("S1C").Value + " {0}:", j.ToString());
+                    Console.WriteLine("    " + xml.Element("S1D").Value  + ": {0}", ncer.cebk.banks[i].cells[j].yOffset.ToString());
+                    Console.WriteLine("    " + xml.Element("S1E").Value  + ": {0}", ncer.cebk.banks[i].cells[j].xOffset.ToString());
+                    Console.WriteLine("    " + xml.Element("S1F").Value  + ": {0}", ncer.cebk.banks[i].cells[j].width.ToString());
+                    Console.WriteLine("    " + xml.Element("S20").Value  + ": {0}", ncer.cebk.banks[i].cells[j].height.ToString());
+                    Console.WriteLine("    " + xml.Element("S21").Value  + ": {0}", ncer.cebk.banks[i].cells[j].nPalette.ToString());
+                    Console.WriteLine("    " + xml.Element("S22").Value  + ": {0}", (pos & 0x03FF).ToString());
+                    Console.WriteLine("    " + xml.Element("S23").Value  + ": {0}", ncer.cebk.banks[i].cells[j].tileOffset.ToString());
                 }
                 if (ncer.cebk.unknown1 != 0x00)
                 {
@@ -191,7 +192,7 @@ namespace Tinke
 
             Fin:
             br.Close();
-            Console.WriteLine("</pre>Fin de lectura");
+            Console.WriteLine("</pre>EOF");
             return ncer;
         }
         public static Size Obtener_Tamaño(byte byte1, byte byte2)
