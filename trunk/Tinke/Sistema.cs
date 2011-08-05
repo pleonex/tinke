@@ -109,8 +109,6 @@ namespace Tinke
             string[] filesToRead = new string[1];
             OpenFileDialog o = new OpenFileDialog();
             o.CheckFileExists = true;
-            //o.Filter = "Nintendo DS rom (*.nds)|*.nds";
-            //o.DefaultExt = ".nds";
             o.Multiselect = true;
             if (Environment.GetCommandLineArgs().Length == 1)
             {
@@ -660,11 +658,8 @@ namespace Tinke
                     btnImport.Enabled = false;
                 else
                     btnImport.Enabled = true;
-                if (selectFile.tag is String)
-                {
-                    btnDescomprimir.Enabled = false;
+                if ((String)selectFile.tag == "Descomprimido")
                     toolStripOpenAs.Enabled = false;
-                }
             }
             else
             {
@@ -726,35 +721,22 @@ namespace Tinke
 
             if (accion.IDSelect >= 0x0F000)
             {
-                if (MessageBox.Show("¿Estás seguro de que deseas descomprimir TODOS los archivos\n" +
-                    "de una carpeta?. Puede tardar bastante...", "Advertencia", MessageBoxButtons.OKCancel, MessageBoxIcon.Exclamation)
-                    == System.Windows.Forms.DialogResult.Cancel)
-                    return;
-
-                Thread espera = new System.Threading.Thread(ThreadEspera);
-                if (!isMono)
-                    espera.Start("S04");
-
-                Recursivo_UncompressFolder(accion.Select_Folder());
-                Set_Formato(accion.Root);
-                Get_SupportedFiles();
-                treeSystem.Nodes.Clear();
-                treeSystem.Nodes.Add(Jerarquizar_Nodos(accion.Root));
-                treeSystem.Nodes[0].Expand();
-
-                if (!isMono)
-                    espera.Abort();
+                UncompressFolder();
+                return;
+            }
+            if ((String)accion.Select_File().tag == "Descomprimido")
+            {
+                UncompressFolder();
                 return;
             }
 
             uncompress = accion.Extract();
             if (!(uncompress.files is List<Archivo>) && !(uncompress.folders is List<Carpeta>)) // En caso de que falle la extracción
             {
-                MessageBox.Show("Hubo un fallo al descomprimir.\n¿Seguro que es un archivo comprimido?");
+                MessageBox.Show(Tools.Helper.ObtenerTraduccion("Sistema", "S36"));
                 return;
             }
 
-            btnDescomprimir.Enabled = false;
             toolStripOpenAs.Enabled = false;
 
             Set_Formato(accion.Root);
@@ -776,6 +758,26 @@ namespace Tinke
 
             debug.Añadir_Texto(sb.ToString());
             sb.Length = 0;
+        }
+        private void UncompressFolder()
+        {
+            if (MessageBox.Show(Tools.Helper.ObtenerTraduccion("Sistema", "S35"), "", MessageBoxButtons.OKCancel, MessageBoxIcon.Exclamation)
+                == System.Windows.Forms.DialogResult.Cancel)
+                return;
+
+            Thread espera = new System.Threading.Thread(ThreadEspera);
+            if (!isMono)
+                espera.Start("S04");
+
+            Recursivo_UncompressFolder(accion.Select_Folder());
+            Set_Formato(accion.Root);
+            Get_SupportedFiles();
+            treeSystem.Nodes.Clear();
+            treeSystem.Nodes.Add(Jerarquizar_Nodos(accion.Root));
+            treeSystem.Nodes[0].Expand();
+
+            if (!isMono)
+                espera.Abort();
         }
         private void Recursivo_UncompressFolder(Carpeta currFolder)
         {

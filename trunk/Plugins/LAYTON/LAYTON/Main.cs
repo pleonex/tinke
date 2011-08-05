@@ -44,10 +44,12 @@ namespace LAYTON
                         return new Bg(pluginHost, gameCode, "").Get_Formato(nombre);
                     break;
             }
+
+            if (nombre.ToUpper().EndsWith(".TXT"))
+                return Formato.Texto;
             
             return Formato.Desconocido;
         }
-
 
         public void Leer(string archivo, int id)
         {
@@ -70,6 +72,10 @@ namespace LAYTON
                         return new Bg(pluginHost, gameCode, archivo).Show_Info();
                     break;
             }
+
+            if (archivo.ToUpper().EndsWith(".TXT"))
+                return new Text(pluginHost, gameCode, archivo).Show_Info(id);
+
             return new Control();
         }
     }

@@ -48,80 +48,8 @@ namespace TXT
             if (archivo.ToUpper().EndsWith(".BMG"))
                 return new bmg(pluginHost, archivo).ShowInfo();
 
-            string txt = "";
-            
             BinaryReader br = new BinaryReader(File.OpenRead(archivo));
-
-            if (br.ReadUInt16() == 0xFEFF)  // Codificación UNICODE
-            {
-                txt = new String(Encoding.Unicode.GetChars(br.ReadBytes((int)br.BaseStream.Length - 2)));
-                txt = txt.Replace("\n", "\r\n");
-                txt = txt.Replace("\\n", "\r\n");
-            }
-            else
-            {
-                br.BaseStream.Position = 0x00;
-                txt = new String(Encoding.UTF8.GetChars(br.ReadBytes((int)br.BaseStream.Length)));
-            }
-
-            
-            #region Convierte caracteres especiales
-            #region Encontrados en los juegos LAYTON
-            txt = txt.Replace("\x0A", "\r\n");
-            txt = txt.Replace("<`a>", "à");
-            txt = txt.Replace("<'a>", "á");
-            txt = txt.Replace("<:a>", "ä");
-            txt = txt.Replace("<`e>", "è");
-            txt = txt.Replace("<'e>", "é");
-            txt = txt.Replace("<^e>", "ê");
-            txt = txt.Replace("<:e>", "ë");
-            txt = txt.Replace("<`i>", "ì");
-            txt = txt.Replace("<'i>", "í");
-            txt = txt.Replace("<^i>", "î");
-            txt = txt.Replace("<:i>", "ï");
-            txt = txt.Replace("<`o>", "ò");
-            txt = txt.Replace("<'o>", "ó");
-            txt = txt.Replace("<^o>", "ô");
-            txt = txt.Replace("<:o>", "ö");
-            txt = txt.Replace("<oe>", "œ");
-            txt = txt.Replace("<`u>", "ù");
-            txt = txt.Replace("<'u>", "ú");
-            txt = txt.Replace("<^u>", "û");
-            txt = txt.Replace("<:u>", "ü");
-            txt = txt.Replace("<,c>", "ç");
-            txt = txt.Replace("<~n>", "ñ");
-            //txt = txt.Replace("<ss>", ""); Desconocida la equivalencia
-            txt = txt.Replace("<`A>", "À");
-            txt = txt.Replace("<'A>", "Á");
-            txt = txt.Replace("<~A>", "Ã");
-            txt = txt.Replace("<^A>", "Â");
-            txt = txt.Replace("<:A>", "Ä");
-            txt = txt.Replace("<`E>", "È");
-            txt = txt.Replace("<'E>", "É");
-            txt = txt.Replace("<^E>", "Ê");
-            txt = txt.Replace("<:E>", "Ë");
-            txt = txt.Replace("<`I>", "Ì");
-            txt = txt.Replace("<'I>", "Í");
-            txt = txt.Replace("<^I>", "Î");
-            txt = txt.Replace("<:I>", "Ï");
-            txt = txt.Replace("<`O>", "Ò");
-            txt = txt.Replace("<'O>", "Ó");
-            txt = txt.Replace("<^O>", "Ô");
-            txt = txt.Replace("<:O>", "Ö");
-            txt = txt.Replace("<OE>", "Œ");
-            txt = txt.Replace("<`U>", "Ù");
-            txt = txt.Replace("<'U>", "Ú");
-            txt = txt.Replace("<^U>", "Û");
-            txt = txt.Replace("<:U>", "Ü");
-            txt = txt.Replace("<,C>", "Ç");
-            txt = txt.Replace("<~N>", "Ñ");
-            txt = txt.Replace("<^!>", "¡");
-            txt = txt.Replace("<^?>", "¿");
-            //txt = txt.Replace("<a>", ""); Desconocida la equivalencia
-            //txt = txt.Replace("<0>", ""); Desconocida la equivalencia
-            #endregion
-            #endregion
-
+            byte[] txt = br.ReadBytes((int)br.BaseStream.Length);
             br.Close();
 
             return new iTXT(txt, pluginHost, id);

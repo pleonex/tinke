@@ -1211,7 +1211,7 @@ namespace Tinke
                     String uncompFile = info.DirectoryName + Path.DirectorySeparatorChar + "un_" + info.Name;
                     Compresion.Basico.Decompress(tempFile, uncompFile);
                     if (!File.Exists(uncompFile))
-                        throw new Exception("Hubo un fallo al descomprimir.\n¿Seguro que es un archivo comprimido?");
+                        throw new Exception(Tools.Helper.ObtenerTraduccion("Sistema", "S36"));
 
                     Carpeta carpeta = new Carpeta();
                     Archivo file = new Archivo();

@@ -1,235 +1,251 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Language name="English">
-    <Sistema>
-      <S01>Open ROM</S01>
-      <S02>Game information</S02>
-      <S03>Debug messages</S03>
-      <S04>Windowed</S04>
-      <S05>Plugins</S05>
-      <S06>Reload plugins</S06>
-      <S07>Property</S07>
-      <S08>Content</S08>
-      <S09>Name</S09>
-      <S0A>ID</S0A>
-      <S0B>Offset</S0B>
-      <S0C>Length</S0C>
-      <S0D>Type</S0D>
-      <S0E>Path</S0E>
-      <S0F>About</S0F>
-      <S10>Delete chain</S10>
-      <S11>Delete palette</S11>
-      <S12>Delete tile</S12>
-      <S13>Delete map</S13>
-      <S14>Delete cells</S14>
-      <S15>Delete animation</S15>
-      <S16>Open as...</S16>
-      <S17>Palette</S17>
-      <S18>Tile</S18>
-      <S19>Map</S19>
-      <S1A>Decompress</S1A>
-      <S1B>Extract</S1B>
-      <S1C>View</S1C>
-      <S1D>Hexadecimal</S1D>
-      <S1E>Languages</S1E>
-	    <S1F>Folder</S1F>
-	    <S20>Palette</S20>
-	    <S21>Tiles</S21>
-	    <S22>Map</S22>
-	    <S23>Cells</S23>
-	    <S24>Animation</S24>
-	    <S25>Image</S25>
-	    <S26>Texts</S26>
-	    <S27>Video</S27>
-	    <S28>Sound</S28>
-	    <S29>Font</S29>
-	    <S2A>Compress</S2A>
-	    <S2B>Unknown</S2B>
-      <S2C>Select the folder where you want to save the files</S2C>
-      <S2D>Search</S2D>
-      <S2E>Instant search</S2E>
-      <S2F>Search keywords:</S2F>
-      <S30>Recognized files:</S30>
-      <S31>System</S31>
-	  <S32>Change file</S32>
-	  <S33>Save ROM</S33>
-      <S34>Script</S34>
-    </Sistema>
-    <RomInfo>
-      <S01>Game information</S01>
-      <S02>Banner</S02>
-      <S03>Save as...</S03>
-      <S04>Version:</S04>
-      <S05>Reserved:</S05>
-      <S06>Japanese</S06>
-      <S07>English</S07>
-      <S08>French</S08>
-      <S09>German</S09>
-      <S0A>Italian</S0A>
-      <S0B>Spanish</S0B>
-      <S0C>Position</S0C>
-      <S0D>Property</S0D>
-      <S0E>Content</S0E>
-      <S0F>Game title</S0F>
-      <S10>Game code</S10>
-      <S11>Maker code</S11>
-      <S12>Device code</S12>
-      <S13>Encryption seed</S13>
-      <S14>Length file</S14>
-      <S15>Reserved</S15>
-      <S16>ROM version</S16>
-      <S17>Internal flags</S17>
-      <S18>ARM9 rom offset</S18>
-      <S19>ARM9 entry address</S19>
-      <S1A>ARM9 load address</S1A>
-      <S1B>ARM9 length</S1B>
-      <S1C>ARM7 rom offset</S1C>
-      <S1D>ARM7 entry address</S1D>
-      <S1E>ARM7 load address</S1E>
-      <S1F>ARM7 length</S1F>
-      <S20>File Name Table (FNT) offset</S20>
-      <S21>File Name Table (FNT) length</S21>
-      <S22>File Allocation Table (FAT) offset</S22>
-      <S23>File Allocation Table (FAT) length</S23>
-      <S24>ARM9 overlay offset</S24>
-      <S25>ARM9 overlay legnth</S25>
-      <S26>ARM7 overlay offset</S26>
-      <S27>ARM7 overlay length</S27>
-      <S28>Normal card control register settings</S28>
-      <S29>Secure card control register settings</S29>
-      <S2A>Icon banner offset</S2A>
-      <S2B>Secure area CRC</S2B>
-      <S2C>Secure transfer timeout</S2C>
-      <S2D>ARM9 autoload</S2D>
-      <S2E>ARM7 autoload</S2E>
-      <S2F>Secure disable</S2F>
-      <S30>ROM length</S30>
-      <S31>Header length</S31>
-      <S32>Reserved</S32>
-      <S33>Nintendo logo CRC</S33>
-      <S34>Header CRC</S34>
-      <S35>Debug ROM offset</S35>
-      <S36>Debug length</S36>
-      <S37>Debug RAM offset</S37>
-      <S38>Reserved</S38>
-	    <S39>Invalid</S39>
-      <S3A>Transparency</S3A>
-    </RomInfo>
-	<Autores>
-	  <S01>About</S01>
-	  <S02>Version</S02>
-	  <S03>Made by:</S03>
-	  <S04>English translation by</S04>
-	  <S05>Source code:</S05>
-	  <S06>This program is free software under the terms of the GNU
-General Public License version 3.</S06>
-	  <S07>This program is made with the help from following webs pages.</S07>
-	  <S08>Library for decompressing files</S08>
-	  <S09>Information about rom header.</S09>
-	  <S0A>Information about Nintendo files format.</S0A>
-	  <S0B>Icons used by this program.</S0B>
-	  <S0C>pleoNeX</S0C>
-	  <S0D>Special thanks:</S0D>
-	</Autores>
-	<Espera>
-		<S01>Loading...</S01>
-		<S02>Loading the file system...</S02>
-		<S03>Extracting files...</S03>
-	    <S04>Uncompressing files...</S04>
-	</Espera>
-	<Messages>
-	  <S01>Error</S01>
-	  <S02>Error opening game. Are you sure it's a NDS game?</S02>
-	  <S03>Analysing game:</S03>
-	  <S04>Game information:</S04>
-	  <S05>Loading program...</S05>
-	  <S06>The current .NSCR file is not compatible with the .NCGR selected file.
-	  Try another file.</S06>
-	  <S07>Please restart the program.</S07>
-	  <S08>Starting to save the new ROM...<br>Writing sections:</br></S08>
-	  <S09> {0} bytes written successfully.</S09>
-	  <S0A>Header...</S0A>
-	  <S0B>Files...</S0B>
-	  <S0C> {0} files written successfully.</S0C>
-	  <S0D><br>The new ROM will be saved in: {0}</br></S0D>
+  <Sistema>
+    <S01>Open file(s)</S01>
+    <S02>Game information</S02>
+    <S03>Debug messages</S03>
+    <S04>Windowed</S04>
+    <S05>Plugins</S05>
+    <S06>Reload plugins</S06>
+    <S07>Property</S07>
+    <S08>Content</S08>
+    <S09>Name</S09>
+    <S0A>ID</S0A>
+    <S0B>Offset</S0B>
+    <S0C>Length</S0C>
+    <S0D>Type</S0D>
+    <S0E>Path</S0E>
+    <S0F>About</S0F>
+    <S10>Delete chain</S10>
+    <S11>Delete palette</S11>
+    <S12>Delete tile</S12>
+    <S13>Delete map</S13>
+    <S14>Delete cells</S14>
+    <S15>Delete animation</S15>
+    <S16>Open as...</S16>
+    <S17>Palette</S17>
+    <S18>Tile</S18>
+    <S19>Map</S19>
+    <S1A>Decompress</S1A>
+    <S1B>Extract</S1B>
+    <S1C>View</S1C>
+    <S1D>Hexadecimal</S1D>
+    <S1E>Languages</S1E>
+    <S1F>Folder</S1F>
+    <S20>Palette</S20>
+    <S21>Tiles</S21>
+    <S22>Map</S22>
+    <S23>Cells</S23>
+    <S24>Animation</S24>
+    <S25>Image</S25>
+    <S26>Texts</S26>
+    <S27>Video</S27>
+    <S28>Sound</S28>
+    <S29>Font</S29>
+    <S2A>Compress</S2A>
+    <S2B>Unknown</S2B>
+    <S2C>Select the folder where you want to save the files</S2C>
+    <S2D>Search</S2D>
+    <S2E>Instant search</S2E>
+    <S2F>Search keywords:</S2F>
+    <S30>Recognized files:</S30>
+    <S31>System</S31>
+    <S32>Change file</S32>
+    <S33>Save ROM</S33>
+    <S34>Script</S34>
+    <S35>
+      Are you sure about uncompressing ALL the files
+      from this folder?. It can take a long time...
+    </S35>
+    <S36>
+      The uncompression is unsuccessfully.
+      Are you sure is a compressed file?
+    </S36>
+  </Sistema>
+  <RomInfo>
+    <S01>Game information</S01>
+    <S02>Banner</S02>
+    <S03>Save as...</S03>
+    <S04>Version:</S04>
+    <S05>Reserved:</S05>
+    <S06>Japanese</S06>
+    <S07>English</S07>
+    <S08>French</S08>
+    <S09>German</S09>
+    <S0A>Italian</S0A>
+    <S0B>Spanish</S0B>
+    <S0C>Position</S0C>
+    <S0D>Property</S0D>
+    <S0E>Content</S0E>
+    <S0F>Game title</S0F>
+    <S10>Game code</S10>
+    <S11>Maker code</S11>
+    <S12>Device code</S12>
+    <S13>Encryption seed</S13>
+    <S14>Length file</S14>
+    <S15>Reserved</S15>
+    <S16>ROM version</S16>
+    <S17>Internal flags</S17>
+    <S18>ARM9 rom offset</S18>
+    <S19>ARM9 entry address</S19>
+    <S1A>ARM9 load address</S1A>
+    <S1B>ARM9 length</S1B>
+    <S1C>ARM7 rom offset</S1C>
+    <S1D>ARM7 entry address</S1D>
+    <S1E>ARM7 load address</S1E>
+    <S1F>ARM7 length</S1F>
+    <S20>File Name Table (FNT) offset</S20>
+    <S21>File Name Table (FNT) length</S21>
+    <S22>File Allocation Table (FAT) offset</S22>
+    <S23>File Allocation Table (FAT) length</S23>
+    <S24>ARM9 overlay offset</S24>
+    <S25>ARM9 overlay legnth</S25>
+    <S26>ARM7 overlay offset</S26>
+    <S27>ARM7 overlay length</S27>
+    <S28>Normal card control register settings</S28>
+    <S29>Secure card control register settings</S29>
+    <S2A>Icon banner offset</S2A>
+    <S2B>Secure area CRC</S2B>
+    <S2C>Secure transfer timeout</S2C>
+    <S2D>ARM9 autoload</S2D>
+    <S2E>ARM7 autoload</S2E>
+    <S2F>Secure disable</S2F>
+    <S30>ROM length</S30>
+    <S31>Header length</S31>
+    <S32>Reserved</S32>
+    <S33>Nintendo logo CRC</S33>
+    <S34>Header CRC</S34>
+    <S35>Debug ROM offset</S35>
+    <S36>Debug length</S36>
+    <S37>Debug RAM offset</S37>
+    <S38>Reserved</S38>
+    <S39>Invalid</S39>
+    <S3A>Transparency</S3A>
+  </RomInfo>
+  <Autores>
+    <S01>About</S01>
+    <S02>Version</S02>
+    <S03>Made by:</S03>
+    <S04>English translation by</S04>
+    <S05>Source code:</S05>
+    <S06>
+      This program is free software under the terms of the GNU
+      General Public License version 3.
+    </S06>
+    <S07>This program is made with the help from following webs pages.</S07>
+    <S08>Library for decompressing files</S08>
+    <S09>Information about rom header.</S09>
+    <S0A>Information about Nintendo files format.</S0A>
+    <S0B>Icons used by this program.</S0B>
+    <S0C>pleoNeX</S0C>
+    <S0D>Special thanks:</S0D>
+  </Autores>
+  <Espera>
+    <S01>Loading...</S01>
+    <S02>Loading the file system...</S02>
+    <S03>Extracting files...</S03>
+    <S04>Uncompressing files...</S04>
+  </Espera>
+  <Messages>
+    <S01>Error</S01>
+    <S02>Error opening game. Are you sure it's a NDS game?</S02>
+    <S03>Analysing game:</S03>
+    <S04>Game information:</S04>
+    <S05>Loading program...</S05>
+    <S06>
+      The current .NSCR file is not compatible with the .NCGR selected file.
+      Try another file.
+    </S06>
+    <S07>Please restart the program.</S07>
+    <S08>
+      Starting to save the new ROM...<br>Writing sections:</br>
+    </S08>
+    <S09> {0} bytes written successfully.</S09>
+    <S0A>Header...</S0A>
+    <S0B>Files...</S0B>
+    <S0C> {0} files written successfully.</S0C>
+    <S0D>
+      <br>The new ROM will be saved in: {0}</br>
+    </S0D>
     <S0E>Export log</S0E>
-	</Messages>
-	<NCLR>
-		<S01># palette:</S01>
-		<S02>Properties</S02>
-		<S03>Property</S03>
-		<S04>Content</S04>
-		<S05># palettes</S05>
-		<S06>Depth</S06>
-		<S07>Padding</S07>
-		<S08>Colors per palette</S08>
-		<S09>Palette length</S09>
-		<S0A>Save</S0A>
-		<S0B>Show all palettes</S0B>
-		<S0C>Palette</S0C>
-		<S0D>Analyzing NCLR palette:</S0D>
-		<S0E>Strange number of sections ¿?: </S0E>
-		<S0F>palettes found</S0F>
-		<S10>colors.</S10>
-	</NCLR>
-	<NCGR>
-		<S01>Double-click to see the full image.</S01>
-		<S02>Properties</S02>
-		<S03>Offset</S03>
-		<S04>Property</S04>
-		<S05>Content</S05>
-		<S06>Unknown</S06>
-		<S07>Number of sections</S07>
-		<S08>ID Section 1</S08>
-		<S09>Lenght</S09>
-		<S0A>Tiles Y</S0A>
-		<S0B>Tiles X</S0B>
-		<S0C>Tile form</S0C>
-		<S0D>Unknown</S0D>
-		<S0E>Unknown</S0E>
-		<S0F>Length of pixels data</S0F>
-		<S10>Unknown</S10>
-		<S11>Offset:</S11>
-		<S12>Width:</S12>
-		<S13>Height:</S13>
-		<S14>Image pattern:</S14>
-		<S15>Save</S15>
-		<S16>No tiled</S16>
-		<S17>Horizontal</S17>
-		<S18>Vertical</S18>
-		<S19>Full size image</S19>
-		<S1A>Divide images</S1A>
-		<S1B>Image</S1B>
-		<S1C>Transparency</S1C>
-		<S1D>Restore</S1D>
-		<S1E>Zoom</S1E>
-		<S1F>Background colour</S1F>
-		<S20>Remove</S20>
-	</NCGR>
-	<NCER>
-		<S01>Bank:</S01>
-		<S02>Show all banks</S02>
-		<S03>Save</S03>
-		<S04>Properties</S04>
-		<S05>Property</S05>
-		<S06>Content</S06>
-		<S07>Section</S07>
-		<S08>Number of banks</S08>
-		<S09>Type of banks</S09>
-		<S0A>Constant</S0A>
-		<S0B>Block size</S0B>
-		<S0C>Unknown 1</S0C>
-		<S0D>Unknown 2</S0D>
-		<S0E>Unknown (Section UEXT)</S0E>
-		<S0F>Show guides</S0F>
-		<S10>Show cells</S10>
-		<S11>Show image</S11>
-		<S12>Transparency</S12>
-		<S13>Show numbers</S13>
-		<S14>Cells</S14>
-		<S15>Double-click to the image to see it in full size.</S15>
-		<S16>Zoom</S16>
-		<S17>Background colour</S17>
-		<S18>Remove</S18>
+  </Messages>
+  <NCLR>
+    <S01># palette:</S01>
+    <S02>Properties</S02>
+    <S03>Property</S03>
+    <S04>Content</S04>
+    <S05># palettes</S05>
+    <S06>Depth</S06>
+    <S07>Padding</S07>
+    <S08>Colors per palette</S08>
+    <S09>Palette length</S09>
+    <S0A>Save</S0A>
+    <S0B>Show all palettes</S0B>
+    <S0C>Palette</S0C>
+    <S0D>Analyzing NCLR palette:</S0D>
+    <S0E>Strange number of sections ¿?: </S0E>
+    <S0F>palettes found</S0F>
+    <S10>colors.</S10>
+  </NCLR>
+  <NCGR>
+    <S01>Double-click to see the full image.</S01>
+    <S02>Properties</S02>
+    <S03>Offset</S03>
+    <S04>Property</S04>
+    <S05>Content</S05>
+    <S06>Unknown</S06>
+    <S07>Number of sections</S07>
+    <S08>ID Section 1</S08>
+    <S09>Lenght</S09>
+    <S0A>Tiles Y</S0A>
+    <S0B>Tiles X</S0B>
+    <S0C>Tile form</S0C>
+    <S0D>Unknown</S0D>
+    <S0E>Unknown</S0E>
+    <S0F>Length of pixels data</S0F>
+    <S10>Unknown</S10>
+    <S11>Offset:</S11>
+    <S12>Width:</S12>
+    <S13>Height:</S13>
+    <S14>Image pattern:</S14>
+    <S15>Save</S15>
+    <S16>No tiled</S16>
+    <S17>Horizontal</S17>
+    <S18>Vertical</S18>
+    <S19>Full size image</S19>
+    <S1A>Divide images</S1A>
+    <S1B>Image</S1B>
+    <S1C>Transparency</S1C>
+    <S1D>Restore</S1D>
+    <S1E>Zoom</S1E>
+    <S1F>Background colour</S1F>
+    <S20>Remove</S20>
+  </NCGR>
+  <NCER>
+    <S01>Bank:</S01>
+    <S02>Show all banks</S02>
+    <S03>Save</S03>
+    <S04>Properties</S04>
+    <S05>Property</S05>
+    <S06>Content</S06>
+    <S07>Section</S07>
+    <S08>Number of banks</S08>
+    <S09>Type of banks</S09>
+    <S0A>Constant</S0A>
+    <S0B>Block size</S0B>
+    <S0C>Unknown 1</S0C>
+    <S0D>Unknown 2</S0D>
+    <S0E>Unknown (Section UEXT)</S0E>
+    <S0F>Show guides</S0F>
+    <S10>Show cells</S10>
+    <S11>Show image</S11>
+    <S12>Transparency</S12>
+    <S13>Show numbers</S13>
+    <S14>Cells</S14>
+    <S15>Double-click to the image to see it in full size.</S15>
+    <S16>Zoom</S16>
+    <S17>Background colour</S17>
+    <S18>Remove</S18>
     <S19>Number of cells</S19>
     <S1A>Unknown 1</S1A>
     <S1B>Offset</S1B>
@@ -242,36 +258,36 @@ General Public License version 3.</S06>
     <S22>Original tile offset</S22>
     <S23>Fixed tile offset</S23>
   </NCER>
-	<NANR>
-		<S01>Interval:</S01>
-		<S02>miliseconds</S02>
-		<S03>Guides options</S03>
-		<S04>Show guides</S04>
-		<S05>Show cells</S05>
-		<S06>Show image</S06>
-		<S07>Transparency</S07>
-		<S08>Show numbers</S08>
-		<S09>Properties</S09>
-		<S0A>Property</S0A>
-		<S0B>Content</S0B>
-		<S0C>Section:</S0C>
-		<S0D>Number of animations</S0D>
-		<S0E>Number of frames</S0E>
-		<S0F>Constant</S0F>
-		<S10>Padding</S10>
-		<S11>Animation</S11>
-		<S12>Number of animation</S12>
-		<S13>Number of frames</S13>
-		<S14>Data type</S14>
-		<S15>Unknown 1</S15>
-		<S16>Unknown 2</S16>
-		<S17>Unknown 3</S17>
-		<S18>Frame</S18>
-		<S19>Number</S19>
-		<S1A>Frame data</S1A>
-		<S1B>Number of cell</S1B>
-		<S1C>Save</S1C>
-		<S1D>Animations</S1D>
-		<S1E>Double-click to the animation to see it in full size</S1E>
-	</NANR>
+  <NANR>
+    <S01>Interval:</S01>
+    <S02>miliseconds</S02>
+    <S03>Guides options</S03>
+    <S04>Show guides</S04>
+    <S05>Show cells</S05>
+    <S06>Show image</S06>
+    <S07>Transparency</S07>
+    <S08>Show numbers</S08>
+    <S09>Properties</S09>
+    <S0A>Property</S0A>
+    <S0B>Content</S0B>
+    <S0C>Section:</S0C>
+    <S0D>Number of animations</S0D>
+    <S0E>Number of frames</S0E>
+    <S0F>Constant</S0F>
+    <S10>Padding</S10>
+    <S11>Animation</S11>
+    <S12>Number of animation</S12>
+    <S13>Number of frames</S13>
+    <S14>Data type</S14>
+    <S15>Unknown 1</S15>
+    <S16>Unknown 2</S16>
+    <S17>Unknown 3</S17>
+    <S18>Frame</S18>
+    <S19>Number</S19>
+    <S1A>Frame data</S1A>
+    <S1B>Number of cell</S1B>
+    <S1C>Save</S1C>
+    <S1D>Animations</S1D>
+    <S1E>Double-click to the animation to see it in full size</S1E>
+  </NANR>
 </Language>

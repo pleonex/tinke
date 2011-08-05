@@ -15,14 +15,29 @@ namespace TXT
     {
         IPluginHost pluginHost;
         int id;
+        byte[] text;
 
-        public iTXT(string text, IPluginHost pluginHost, int id)
+        public iTXT(byte[] text, IPluginHost pluginHost, int id)
         {
             InitializeComponent();
 
             this.pluginHost = pluginHost;
             this.id = id;
-            this.txtBox.Text = text;
+            this.text = text;
+
+            if (text[0] == 0xFE && text[1] == 0xFF)
+            {
+                txtBox.Text = Descodificar(Encoding.Unicode);
+                comboEncod.SelectedIndex = 1;
+            }
+            else
+            {
+                txtBox.Text = Descodificar(Encoding.UTF8);
+                comboEncod.SelectedIndex = 0;
+            }
+
+            txtBox.Text = txtBox.Text.Replace("\n", "\r\n");
+            txtBox.Text = txtBox.Text.Replace("\\n", "\r\n");
 
             LeerIdioma();
         }
@@ -31,7 +46,8 @@ namespace TXT
         {
             string tempFile = Path.GetTempFileName();
 
-            File.WriteAllText(tempFile, txtBox.Text);
+            text = Encoding.GetEncoding(comboEncod.Text).GetBytes(txtBox.Text);
+            File.WriteAllBytes(tempFile, text);
             pluginHost.ChangeFile(id, tempFile);
         }
 
@@ -42,6 +58,16 @@ namespace TXT
             xml = xml.Element("TXT");
 
             btnSave.Text = xml.Element("S00").Value;
+            label1.Text = xml.Element("S01").Value;
+        }
+
+        private String Descodificar(Encoding encoding)
+        {
+            return new String(encoding.GetChars(text));
+        }
+        private void comboEncod_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            txtBox.Text = Descodificar(Encoding.GetEncoding(comboEncod.Text));
         }
     }
 }

@@ -33,6 +33,8 @@
             this.txtBox = new System.Windows.Forms.TextBox();
             this.btnSave = new System.Windows.Forms.Button();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
+            this.comboEncod = new System.Windows.Forms.ComboBox();
+            this.label1 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // txtBox
@@ -67,12 +69,37 @@
             this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
             this.imageList1.Images.SetKeyName(0, "page_save.png");
             // 
+            // comboEncod
+            // 
+            this.comboEncod.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboEncod.FormattingEnabled = true;
+            this.comboEncod.Items.AddRange(new object[] {
+            "utf-8",
+            "unicode",
+            "shift-jis"});
+            this.comboEncod.Location = new System.Drawing.Point(82, 480);
+            this.comboEncod.Name = "comboEncod";
+            this.comboEncod.Size = new System.Drawing.Size(121, 21);
+            this.comboEncod.TabIndex = 2;
+            this.comboEncod.SelectedIndexChanged += new System.EventHandler(this.comboEncod_SelectedIndexChanged);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(3, 483);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(26, 13);
+            this.label1.TabIndex = 3;
+            this.label1.Text = "S01";
+            // 
             // iTXT
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Transparent;
             this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.comboEncod);
             this.Controls.Add(this.btnSave);
             this.Controls.Add(this.txtBox);
             this.Name = "iTXT";
@@ -87,5 +114,7 @@
         private System.Windows.Forms.TextBox txtBox;
         private System.Windows.Forms.Button btnSave;
         private System.Windows.Forms.ImageList imageList1;
+        private System.Windows.Forms.ComboBox comboEncod;
+        private System.Windows.Forms.Label label1;
     }
 }

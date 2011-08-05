@@ -1,237 +1,257 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Language name="Español">
-	<Sistema>
-      <S01>Abrir ROM</S01>
-      <S02>Información del juego</S02>
-      <S03>Mensajes debug</S03>
-      <S04>Modo ventana</S04>
-      <S05>Plugins</S05>
-      <S06>Recargar plugins</S06>
-      <S07>Campo</S07>
-      <S08>Valor</S08>
-      <S09>Nombre</S09>
-      <S0A>ID</S0A>
-      <S0B>Offset</S0B>
-      <S0C>Tamaño</S0C>
-      <S0D>Tipo</S0D>
-      <S0E>Ruta</S0E>
-      <S0F>Acerca de...</S0F>
-      <S10>Borrar cadena</S10>
-      <S11>Borrar paleta</S11>
-      <S12>Borrar tile</S12>
-      <S13>Borrar map</S13>
-      <S14>Borrar celdas</S14>
-      <S15>Borrar animación</S15>
-      <S16>Abrir como...</S16>
-      <S17>Paleta</S17>
-      <S18>Tile</S18>
-      <S19>Map</S19>
-      <S1A>Descomprimir</S1A>
-      <S1B>Extraer</S1B>
-      <S1C>Ver</S1C>
-      <S1D>Hexadecimal</S1D>
-      <S1E>Languages</S1E>
-	    <S1F>Directorio</S1F>
-	    <S20>Paleta</S20>
-	    <S21>Tiles</S21>
-	    <S22>Map</S22>
-	    <S23>Celdas</S23>
-	    <S24>Animación</S24>
-	    <S25>Imagen</S25>
-	    <S26>Texto</S26>
-	    <S27>Vídeo</S27>
-	    <S28>Sonido</S28>
-	    <S29>Fuentes</S29>
-	    <S2A>Comprimido</S2A>
-	    <S2B>Desconocido</S2B>
-      <S2C>Selecciona la carpeta donde se guardarán los archivos.</S2C>
-      <S2D>Búsqueda</S2D>
-      <S2E>Búsqueda instantánea</S2E>
-      <S2F>Palabras claves de búsqueda:</S2F>
-      <S30>Archivos reconocidos:</S30>
-      <S31>Sistema</S31>
-	    <S32>Cambiar archivo</S32>
-	    <S33>Guardar ROM</S33>
-      <S34>Script</S34>
-    </Sistema>
-	<RomInfo>
-      <S01>Información de la ROM</S01>
-      <S02>Banner</S02>
-      <S03>Guardar como...</S03>
-      <S04>Versión:</S04>
-      <S05>Reservado:</S05>
-      <S06>Japonés</S06>
-      <S07>Inglés</S07>
-      <S08>Francés</S08>
-      <S09>Alemán</S09>
-      <S0A>Italiano</S0A>
-      <S0B>Español</S0B>
-      <S0C>Posición</S0C>
-      <S0D>Campo</S0D>
-      <S0E>Valor</S0E>
-      <S0F>Título del juego</S0F>
-      <S10>Código del juego</S10>
-      <S11>Código del creador</S11>
-      <S12>Código de consola</S12>
-      <S13>Semillas de encriptación</S13>
-      <S14>Tamaño del archivo</S14>
-      <S15>Reservado</S15>
-      <S16>Versión de la ROM</S16>
-      <S17>Indicadores internos</S17>
-      <S18>ARM9 rom offset</S18>
-      <S19>ARM9 entry address</S19>
-      <S1A>ARM9 load address</S1A>
-      <S1B>ARM9 tamaño</S1B>
-      <S1C>ARM7 rom offset</S1C>
-      <S1D>ARM7 entry address</S1D>
-      <S1E>ARM7 load address</S1E>
-      <S1F>ARM7 tamaño</S1F>
-      <S20>File Name Table (FNT) offset</S20>
-      <S21>File Name Table (FNT) tamaño</S21>
-      <S22>File Allocation Table (FAT) offset</S22>
-      <S23>File Allocation Table (FAT) tamaño</S23>
-      <S24>ARM9 overlay offset</S24>
-      <S25>ARM9 overlay tamaño</S25>
-      <S26>ARM7 overlay offset</S26>
-      <S27>ARM7 overlay tamaño</S27>
-      <S28>Ajuste de control normales</S28>
-      <S29>Ajuste de seguridad normales</S29>
-      <S2A>Offset del icono del banner</S2A>
-      <S2B>Área segura CRC</S2B>
-      <S2C>Tiempo de espera de transferencia segura</S2C>
-      <S2D>ARM9 autoload</S2D>
-      <S2E>ARM7 autoload</S2E>
-      <S2F>Seguridad deshabilitada</S2F>
-      <S30>Tamaño ROM</S30>
-      <S31>Tamaño cabecera</S31>
-      <S32>Reservado</S32>
-      <S33>CRC del logo de Nintendo</S33>
-      <S34>CRC de la cabecera</S34>
-      <S35>Offset de debug de ROM</S35>
-      <S36>Tamaño de debug</S36>
-      <S37>Offset de la RAM de debug</S37>
-      <S38>Reservado</S38>
-	  <S39>Inválido</S39>
-      <S3A>Transparencia</S3A>
-    </RomInfo>
-	<Autores>
-	  <S01>Acerca de</S01>
-	  <S02>Versión</S02>
-	  <S03>Programado por:</S03>
-	  <S04>Traducción al español por</S04>
-	  <S05>Código de fuente:</S05>
-	  <S06>Este programa se encuentra bajo los términos de la
-	  licencia GPL V3.</S06>
-	  <S07>Este programa se ha realizado gracias a la información y a las herramientas de código
-	  abierto encontradas en las siguientes páginas.</S07>
-	  <S08>Librería de descompresión de formatos</S08>
-	  <S09>Información técnica sobre estructuras de las roms.</S09>
-	  <S0A>Información sobre estructura de formatos de Nintendo.</S0A>
-	  <S0B>Iconos usados en este programa.</S0B>
-	  <S0C>pleoNeX</S0C>
-	  <S0D>Agradecimientos:</S0D>
-	</Autores>
-	<Espera>
-	  <S01>Cargando...</S01>
-	  <S02>Cargando datos del juego...</S02>
-	  <S03>Extrayendo archivos...</S03>
-	  <S04>Descomprimiendo carpetas...</S04>
-	</Espera>
-	<Messages>
-	  <S01>Error</S01>
-	  <S02>No se pudo identificar el juego. Verifique que es una ROM para NDS</S02>
-	  <S03>Analizando el juego:</S03>
-	  <S04>Información del juego:</S04>
-	  <S05>Cargando el programa...</S05>
-	  <S06>Este archivo .NSCR es incompatible con el archivo .NCGR seleccionado.
-	  Inténtalo con otro.</S06>
-	  <S07>Por favor reinicie el programa.</S07>
-	  <S08>Comenzando a crear nueva ROM...<br>Escribiendo secciones:</br></S08>
-	  <S09> {0} bytes escritos correctamente.</S09>
-	  <S0A>Cabecera...</S0A>
-	  <S0B>Archivos...</S0B>
-	  <S0C> {0} archivos escritos correctamente.</S0C>
-	  <S0D><br>La nueva ROM se guardará en: {0}</br></S0D>
+  <Sistema>
+    <S01>Abrir archivo(s)</S01>
+    <S02>Información del juego</S02>
+    <S03>Mensajes debug</S03>
+    <S04>Modo ventana</S04>
+    <S05>Plugins</S05>
+    <S06>Recargar plugins</S06>
+    <S07>Campo</S07>
+    <S08>Valor</S08>
+    <S09>Nombre</S09>
+    <S0A>ID</S0A>
+    <S0B>Offset</S0B>
+    <S0C>Tamaño</S0C>
+    <S0D>Tipo</S0D>
+    <S0E>Ruta</S0E>
+    <S0F>Acerca de...</S0F>
+    <S10>Borrar cadena</S10>
+    <S11>Borrar paleta</S11>
+    <S12>Borrar tile</S12>
+    <S13>Borrar map</S13>
+    <S14>Borrar celdas</S14>
+    <S15>Borrar animación</S15>
+    <S16>Abrir como...</S16>
+    <S17>Paleta</S17>
+    <S18>Tile</S18>
+    <S19>Map</S19>
+    <S1A>Descomprimir</S1A>
+    <S1B>Extraer</S1B>
+    <S1C>Ver</S1C>
+    <S1D>Hexadecimal</S1D>
+    <S1E>Languages</S1E>
+    <S1F>Directorio</S1F>
+    <S20>Paleta</S20>
+    <S21>Tiles</S21>
+    <S22>Map</S22>
+    <S23>Celdas</S23>
+    <S24>Animación</S24>
+    <S25>Imagen</S25>
+    <S26>Texto</S26>
+    <S27>Vídeo</S27>
+    <S28>Sonido</S28>
+    <S29>Fuentes</S29>
+    <S2A>Comprimido</S2A>
+    <S2B>Desconocido</S2B>
+    <S2C>Selecciona la carpeta donde se guardarán los archivos.</S2C>
+    <S2D>Búsqueda</S2D>
+    <S2E>Búsqueda instantánea</S2E>
+    <S2F>Palabras claves de búsqueda:</S2F>
+    <S30>Archivos reconocidos:</S30>
+    <S31>Sistema</S31>
+    <S32>Cambiar archivo</S32>
+    <S33>Guardar ROM</S33>
+    <S34>Script</S34>
+    <S35>
+      ¿Estás seguro de que deseas descomprimir TODOS los archivos
+      de una carpeta?. Puede tardar bastante...
+    </S35>
+    <S36>
+      Hubo un fallo al descomprimir.
+      ¿Seguro que es un archivo comprimido?
+    </S36>
+  </Sistema>
+  <RomInfo>
+    <S01>Información de la ROM</S01>
+    <S02>Banner</S02>
+    <S03>Guardar como...</S03>
+    <S04>Versión:</S04>
+    <S05>Reservado:</S05>
+    <S06>Japonés</S06>
+    <S07>Inglés</S07>
+    <S08>Francés</S08>
+    <S09>Alemán</S09>
+    <S0A>Italiano</S0A>
+    <S0B>Español</S0B>
+    <S0C>Posición</S0C>
+    <S0D>Campo</S0D>
+    <S0E>Valor</S0E>
+    <S0F>Título del juego</S0F>
+    <S10>Código del juego</S10>
+    <S11>Código del creador</S11>
+    <S12>Código de consola</S12>
+    <S13>Semillas de encriptación</S13>
+    <S14>Tamaño del archivo</S14>
+    <S15>Reservado</S15>
+    <S16>Versión de la ROM</S16>
+    <S17>Indicadores internos</S17>
+    <S18>ARM9 rom offset</S18>
+    <S19>ARM9 entry address</S19>
+    <S1A>ARM9 load address</S1A>
+    <S1B>ARM9 tamaño</S1B>
+    <S1C>ARM7 rom offset</S1C>
+    <S1D>ARM7 entry address</S1D>
+    <S1E>ARM7 load address</S1E>
+    <S1F>ARM7 tamaño</S1F>
+    <S20>File Name Table (FNT) offset</S20>
+    <S21>File Name Table (FNT) tamaño</S21>
+    <S22>File Allocation Table (FAT) offset</S22>
+    <S23>File Allocation Table (FAT) tamaño</S23>
+    <S24>ARM9 overlay offset</S24>
+    <S25>ARM9 overlay tamaño</S25>
+    <S26>ARM7 overlay offset</S26>
+    <S27>ARM7 overlay tamaño</S27>
+    <S28>Ajuste de control normales</S28>
+    <S29>Ajuste de seguridad normales</S29>
+    <S2A>Offset del icono del banner</S2A>
+    <S2B>Área segura CRC</S2B>
+    <S2C>Tiempo de espera de transferencia segura</S2C>
+    <S2D>ARM9 autoload</S2D>
+    <S2E>ARM7 autoload</S2E>
+    <S2F>Seguridad deshabilitada</S2F>
+    <S30>Tamaño ROM</S30>
+    <S31>Tamaño cabecera</S31>
+    <S32>Reservado</S32>
+    <S33>CRC del logo de Nintendo</S33>
+    <S34>CRC de la cabecera</S34>
+    <S35>Offset de debug de ROM</S35>
+    <S36>Tamaño de debug</S36>
+    <S37>Offset de la RAM de debug</S37>
+    <S38>Reservado</S38>
+    <S39>Inválido</S39>
+    <S3A>Transparencia</S3A>
+  </RomInfo>
+  <Autores>
+    <S01>Acerca de</S01>
+    <S02>Versión</S02>
+    <S03>Programado por:</S03>
+    <S04>Traducción al español por</S04>
+    <S05>Código de fuente:</S05>
+    <S06>
+      Este programa se encuentra bajo los términos de la
+      licencia GPL V3.
+    </S06>
+    <S07>
+      Este programa se ha realizado gracias a la información y a las herramientas de código
+      abierto encontradas en las siguientes páginas.
+    </S07>
+    <S08>Librería de descompresión de formatos</S08>
+    <S09>Información técnica sobre estructuras de las roms.</S09>
+    <S0A>Información sobre estructura de formatos de Nintendo.</S0A>
+    <S0B>Iconos usados en este programa.</S0B>
+    <S0C>pleoNeX</S0C>
+    <S0D>Agradecimientos:</S0D>
+  </Autores>
+  <Espera>
+    <S01>Cargando...</S01>
+    <S02>Cargando datos del juego...</S02>
+    <S03>Extrayendo archivos...</S03>
+    <S04>Descomprimiendo carpetas...</S04>
+  </Espera>
+  <Messages>
+    <S01>Error</S01>
+    <S02>No se pudo identificar el juego. Verifique que es una ROM para NDS</S02>
+    <S03>Analizando el juego:</S03>
+    <S04>Información del juego:</S04>
+    <S05>Cargando el programa...</S05>
+    <S06>
+      Este archivo .NSCR es incompatible con el archivo .NCGR seleccionado.
+      Inténtalo con otro.
+    </S06>
+    <S07>Por favor reinicie el programa.</S07>
+    <S08>
+      Comenzando a crear nueva ROM...<br>Escribiendo secciones:</br>
+    </S08>
+    <S09> {0} bytes escritos correctamente.</S09>
+    <S0A>Cabecera...</S0A>
+    <S0B>Archivos...</S0B>
+    <S0C> {0} archivos escritos correctamente.</S0C>
+    <S0D>
+      <br>La nueva ROM se guardará en: {0}</br>
+    </S0D>
     <S0E>Exportar log</S0E>
-	</Messages>
-	<NCLR>
-		<S01>Nº de paleta:</S01>
-		<S02>Propiedades</S02>
-		<S03>Campo</S03>
-		<S04>Valor</S04>
-		<S05>Número de paletas</S05>
-		<S06>Profundidad del color</S06>
-		<S07>Padding</S07>
-		<S08>Nº de colores por paleta</S08>
-		<S09>Tamaño de paleta</S09>
-		<S0A>Guardar</S0A>
-		<S0B>Mostrar todas las paletas</S0B>
-		<S0C>Paleta</S0C>
-		<S0D>Analizando paleta NCLR:</S0D>
-		<S0E>No hay secciones o hay de más ¿?: </S0E>
-		<S0F>paletas encontradas</S0F>
-		<S10>colores.</S10>
-	</NCLR>
-	<NCGR>
-		<S01>Haga doble click en la imagen para verla a
-		tamaño real.</S01>
-		<S02>Propiedades</S02>
-		<S03>Posición</S03>
-		<S04>Campo</S04>
-		<S05>Valor</S05>
-		<S06>Desconocido</S06>
-		<S07>Nº secciones</S07>
-		<S08>ID Sección 1</S08>
-		<S09>Tamaño</S09>
-		<S0A>Tiles Y</S0A>
-		<S0B>Tiles X</S0B>
-		<S0C>Formato</S0C>
-		<S0D>Desconocido</S0D>
-		<S0E>Desconocido</S0E>
-		<S0F>Tamaño píxels datos</S0F>
-		<S10>Desconocido</S10>
-		<S11>Inicio:</S11>
-		<S12>Ancho:</S12>
-		<S13>Alto:</S13>
-		<S14>Orden de tiles:</S14>
-		<S15>Guardar</S15>
-		<S16>Sin tiles</S16>
-		<S17>Horizontal</S17>
-		<S18>Vertical</S18>
-		<S19>Imagen a tamaño real</S19>
-        <S1A>Dividir imágenes</S1A>
-        <S1B>Imagen</S1B>
-		<S1C>Transparencia</S1C>
-		<S1D>Restaurar</S1D>
-		<S1E>Zoom</S1E>
-		<S1F>Color de fondo</S1F>
-		<S20>Quitar</S20>
-	</NCGR>
-	<NCER>
-		<S01>Banco:</S01>
-		<S02>Mostrar todas los bancos</S02>
-		<S03>Guardar</S03>
-		<S04>Propiedades</S04>
-		<S05>Campo</S05>
-		<S06>Valor</S06>
-		<S07>Sección</S07>
-		<S08>Número de bancos</S08>
-		<S09>Tipo de bancos</S09>
-		<S0A>Constante</S0A>
-		<S0B>Tamaño bloque</S0B>
-		<S0C>Desconocido 1</S0C>
-		<S0D>Desconocido 2</S0D>
-		<S0E>Desconocido (Sección UEXT)</S0E>
-		<S0F>Mostrar entorno</S0F>
-		<S10>Mostrar celdas</S10>
-		<S11>Mostrar imagen</S11>
-		<S12>Transparencia</S12>
-		<S13>Mostrar números</S13>
-		<S14>Celdas</S14>
-		<S15>Haga doble click en la imagen para verla a tamaño real.</S15>
-		<S16>Zoom</S16>
-		<S17>Color de fondo</S17>
-		<S18>Quitar</S18>
+  </Messages>
+  <NCLR>
+    <S01>Nº de paleta:</S01>
+    <S02>Propiedades</S02>
+    <S03>Campo</S03>
+    <S04>Valor</S04>
+    <S05>Número de paletas</S05>
+    <S06>Profundidad del color</S06>
+    <S07>Padding</S07>
+    <S08>Nº de colores por paleta</S08>
+    <S09>Tamaño de paleta</S09>
+    <S0A>Guardar</S0A>
+    <S0B>Mostrar todas las paletas</S0B>
+    <S0C>Paleta</S0C>
+    <S0D>Analizando paleta NCLR:</S0D>
+    <S0E>No hay secciones o hay de más ¿?: </S0E>
+    <S0F>paletas encontradas</S0F>
+    <S10>colores.</S10>
+  </NCLR>
+  <NCGR>
+    <S01>
+      Haga doble click en la imagen para verla a
+      tamaño real.
+    </S01>
+    <S02>Propiedades</S02>
+    <S03>Posición</S03>
+    <S04>Campo</S04>
+    <S05>Valor</S05>
+    <S06>Desconocido</S06>
+    <S07>Nº secciones</S07>
+    <S08>ID Sección 1</S08>
+    <S09>Tamaño</S09>
+    <S0A>Tiles Y</S0A>
+    <S0B>Tiles X</S0B>
+    <S0C>Formato</S0C>
+    <S0D>Desconocido</S0D>
+    <S0E>Desconocido</S0E>
+    <S0F>Tamaño píxels datos</S0F>
+    <S10>Desconocido</S10>
+    <S11>Inicio:</S11>
+    <S12>Ancho:</S12>
+    <S13>Alto:</S13>
+    <S14>Orden de tiles:</S14>
+    <S15>Guardar</S15>
+    <S16>Sin tiles</S16>
+    <S17>Horizontal</S17>
+    <S18>Vertical</S18>
+    <S19>Imagen a tamaño real</S19>
+    <S1A>Dividir imágenes</S1A>
+    <S1B>Imagen</S1B>
+    <S1C>Transparencia</S1C>
+    <S1D>Restaurar</S1D>
+    <S1E>Zoom</S1E>
+    <S1F>Color de fondo</S1F>
+    <S20>Quitar</S20>
+  </NCGR>
+  <NCER>
+    <S01>Banco:</S01>
+    <S02>Mostrar todas los bancos</S02>
+    <S03>Guardar</S03>
+    <S04>Propiedades</S04>
+    <S05>Campo</S05>
+    <S06>Valor</S06>
+    <S07>Sección</S07>
+    <S08>Número de bancos</S08>
+    <S09>Tipo de bancos</S09>
+    <S0A>Constante</S0A>
+    <S0B>Tamaño bloque</S0B>
+    <S0C>Desconocido 1</S0C>
+    <S0D>Desconocido 2</S0D>
+    <S0E>Desconocido (Sección UEXT)</S0E>
+    <S0F>Mostrar entorno</S0F>
+    <S10>Mostrar celdas</S10>
+    <S11>Mostrar imagen</S11>
+    <S12>Transparencia</S12>
+    <S13>Mostrar números</S13>
+    <S14>Celdas</S14>
+    <S15>Haga doble click en la imagen para verla a tamaño real.</S15>
+    <S16>Zoom</S16>
+    <S17>Color de fondo</S17>
+    <S18>Quitar</S18>
     <S19>Número de celdas</S19>
     <S1A>Desconocido 1</S1A>
     <S1B>Offset</S1B>
@@ -243,37 +263,37 @@
     <S21>Número de paleta</S21>
     <S22>Tile offset original</S22>
     <S23>Tile offset modificado</S23>
-	</NCER>
-	<NANR>
-		<S01>Intervalo:</S01>
-		<S02>milisegundos</S02>
-		<S03>Opciones de entorno</S03>
-		<S04>Mostrar entorno</S04>
-		<S05>Mostrar celdas</S05>
-		<S06>Mostrar imagen</S06>
-		<S07>Transparencia</S07>
-		<S08>Mostrar números</S08>
-		<S09>Propiedades</S09>
-		<S0A>Campo</S0A>
-		<S0B>Valor</S0B>
-		<S0C>Sección:</S0C>
-		<S0D>Número de animaciones</S0D>
-		<S0E>Número total de frames</S0E>
-		<S0F>Constante</S0F>
-		<S10>Padding</S10>
-		<S11>Animación</S11>
-		<S12>Número de animación</S12>
-		<S13>Número de frames</S13>
-		<S14>Tipo de datos</S14>
-		<S15>Desconocido 1</S15>
-		<S16>Desconocido 2</S16>
-		<S17>Desconocido 3</S17>
-		<S18>Frame</S18>
-		<S19>Número</S19>
-		<S1A>Datos frame</S1A>
-		<S1B>Número de celda</S1B>
-		<S1C>Guardar</S1C>
-		<S1D>Animaciones</S1D>
-		<S1E>Haz doble click en la animación para verla a tamaño real.</S1E>
-	</NANR>
+  </NCER>
+  <NANR>
+    <S01>Intervalo:</S01>
+    <S02>milisegundos</S02>
+    <S03>Opciones de entorno</S03>
+    <S04>Mostrar entorno</S04>
+    <S05>Mostrar celdas</S05>
+    <S06>Mostrar imagen</S06>
+    <S07>Transparencia</S07>
+    <S08>Mostrar números</S08>
+    <S09>Propiedades</S09>
+    <S0A>Campo</S0A>
+    <S0B>Valor</S0B>
+    <S0C>Sección:</S0C>
+    <S0D>Número de animaciones</S0D>
+    <S0E>Número total de frames</S0E>
+    <S0F>Constante</S0F>
+    <S10>Padding</S10>
+    <S11>Animación</S11>
+    <S12>Número de animación</S12>
+    <S13>Número de frames</S13>
+    <S14>Tipo de datos</S14>
+    <S15>Desconocido 1</S15>
+    <S16>Desconocido 2</S16>
+    <S17>Desconocido 3</S17>
+    <S18>Frame</S18>
+    <S19>Número</S19>
+    <S1A>Datos frame</S1A>
+    <S1B>Número de celda</S1B>
+    <S1C>Guardar</S1C>
+    <S1D>Animaciones</S1D>
+    <S1E>Haz doble click en la animación para verla a tamaño real.</S1E>
+  </NANR>
 </Language>
