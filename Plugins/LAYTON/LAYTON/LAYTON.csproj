@@ -78,6 +78,12 @@
     <Compile Include="InfoPicture.designer.cs">
       <DependentUpon>InfoPicture.cs</DependentUpon>
     </Compile>
+    <Compile Include="iText.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="iText.Designer.cs">
+      <DependentUpon>iText.cs</DependentUpon>
+    </Compile>
     <Compile Include="Main.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -85,6 +91,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Text.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="InfoAni.resx">
@@ -101,6 +108,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="InfoPicture.resx">
       <DependentUpon>InfoPicture.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="iText.resx">
+      <DependentUpon>iText.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -129,6 +139,7 @@
     <Content Include="LaytonLang.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="Resources\disk.png" />
     <None Include="Resources\stop1.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

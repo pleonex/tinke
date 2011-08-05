@@ -32,6 +32,9 @@
       <S04>Información de las imágenes</S04>
       <S05>Imagen</S05>
     </InfoPicture>
+    <Text>
+      <S00>Cambiar</S00>
+    </Text>
   </Español>
   <English>
     <InfoAni>
@@ -65,6 +68,9 @@
       <S04>Image information</S04>
       <S05>Image</S05>
     </InfoPicture>
+    <Text>
+      <S00>Change</S00>
+    </Text>
   </English>
   <Français>
     <InfoAni>
@@ -98,5 +104,8 @@
       <S04>Information des images</S04>
       <S05>Image</S05>
     </InfoPicture>
+    <Text>
+      <S00>Changer</S00>
+    </Text>
   </Français>
 </Language>

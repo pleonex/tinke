@@ -60,6 +60,13 @@ namespace LAYTON.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap disk {
+            get {
+                object obj = ResourceManager.GetObject("disk", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap picture_go {
             get {
                 object obj = ResourceManager.GetObject("picture_go", resourceCulture);

@@ -3,6 +3,7 @@
   <Español>
     <TXT>
       <S00>Cambiar</S00>
+      <S01>Codificación:</S01>
     </TXT>
     <BMG>
       <S01>Campo</S01>
@@ -21,6 +22,7 @@
   <English>
     <TXT>
       <S00>Change</S00>
+      <S01>Encoding:</S01>
     </TXT>
     <BMG>
       <S01>Property</S01>
@@ -39,6 +41,7 @@
   <Français>
     <TXT>
       <S00>Sauvegarder</S00>
+      <S01>Encoding:</S01>
     </TXT>
     <BMG>
       <S01>Champ</S01>
