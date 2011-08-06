@@ -254,11 +254,11 @@ namespace Tinke
             // 
             this.label8.AutoSize = true;
             this.label8.Font = new System.Drawing.Font("Consolas", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label8.Location = new System.Drawing.Point(88, 314);
+            this.label8.Location = new System.Drawing.Point(36, 314);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(264, 17);
+            this.label8.Size = new System.Drawing.Size(336, 17);
             this.label8.TabIndex = 19;
-            this.label8.Text = "rafael1193   go11um   Odnetnin I";
+            this.label8.Text = "ana1is1a rafael1193   go11um   Odnetnin I";
             // 
             // lblTrad
             // 

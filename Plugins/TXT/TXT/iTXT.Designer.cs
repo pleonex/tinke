@@ -74,9 +74,12 @@
             this.comboEncod.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboEncod.FormattingEnabled = true;
             this.comboEncod.Items.AddRange(new object[] {
-            "utf-8",
+            "utf-7",
             "unicode",
-            "shift-jis"});
+            "shift-jis",
+            "utf-32",
+            "utf-8",
+            "ascii"});
             this.comboEncod.Location = new System.Drawing.Point(82, 480);
             this.comboEncod.Name = "comboEncod";
             this.comboEncod.Size = new System.Drawing.Size(121, 21);

@@ -337,6 +337,7 @@
     </Content>
     <Content Include="nintendo-ds.ico" />
     <Content Include="Nitro\MakerCodes.txt" />
+    <None Include="Resources\splash1080pc20111.png" />
     <None Include="Resources\splash1080pc2011.png" />
     <None Include="Resources\package.png" />
     <None Include="Resources\picture_save.png" />

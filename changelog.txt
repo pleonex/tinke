@@ -1,10 +1,10 @@
-0.7.3:
+0.7.3 (Contest release):
 * Fixed problem with some SDAT and SWAV files
-* Add option to open external files
-* Fixed normal encoding in TXT plugin
-* Add new format file: Script
+* Added option to open external files
+* Added new format file: Script
 * Multilenguage support to SDAT plugin.
 * Fixed problem with some palettes
+* Added Shift-jis, UTF-7, UTF-32 and ASCII encodings to TXT plugin.
 
 0.7.2 (public release):
 * AI IGO DS game plugin support completed!
