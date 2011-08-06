@@ -61,6 +61,13 @@
       The uncompression is unsuccessfully.
       Are you sure is a compressed file?
     </S36>
+    <S37>There was an error saving the user preferences.</S37>
+    <S38>There was an error loading the user preferences.</S38>
+    <S39>
+      You have changed some files but the new ROM is not saved
+      Are you sure you want exit? All the changes will be lost.
+    </S39>
+    <S3A>Warning</S3A>
   </Sistema>
   <RomInfo>
     <S01>Game information</S01>

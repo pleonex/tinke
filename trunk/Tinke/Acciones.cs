@@ -44,6 +44,7 @@ namespace Tinke
         int idSelect;
         int lastFileId;
         int lastFolderId;
+        bool isNewRom;
 
         IList<IPlugin> formatList;
         IGamePlugin gamePlugin;
@@ -152,6 +153,11 @@ namespace Tinke
         {
             get { return lastFolderId; }
             set { lastFolderId = value; }
+        }
+        public bool IsNewRom
+        {
+            get { return isNewRom; }
+            set { isNewRom = value; }
         }
         public int ImageFormatFile(Formato name)
         {
@@ -605,11 +611,18 @@ namespace Tinke
         }
 
         public void Change_File(int id, Archivo fileChanged, Carpeta currFolder)
-        {            
+        {
             if (currFolder.files is List<Archivo>)
+            {
                 for (int i = 0; i < currFolder.files.Count; i++)
+                {
                     if (currFolder.files[i].id == id)
+                    {
                         currFolder.files[i] = fileChanged;
+                        isNewRom = true;
+                    }
+                }
+            }
 
 
             if (currFolder.folders is List<Carpeta>)

@@ -23,6 +23,8 @@ namespace Comun
             snd.Load();
             fs.Close();
             fs.Dispose();
+
+            btnPlay.PerformClick();
         }
 
         private void btnPlay_Click(object sender, EventArgs e)

@@ -58,6 +58,7 @@
             // SplashScreen
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
+            this.BackgroundImage = global::Tinke.Properties.Resources.splash1080pc2011;
             resources.ApplyResources(this, "$this");
             this.ControlBox = false;
             this.Controls.Add(this.label2);

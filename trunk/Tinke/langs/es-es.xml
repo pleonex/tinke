@@ -61,6 +61,14 @@
       Hubo un fallo al descomprimir.
       ¿Seguro que es un archivo comprimido?
     </S36>
+    <S37>Hubo un error guardando las preferencias de usuario.</S37>
+    <S38>Hubo un error leyendo las preferencias de usuario.</S38>
+    <S39>
+      Ha cambiado archivos pero no ha guardado la nueva ROM.
+      ¿Está seguro de que deseas salir? De ser así, perderás
+      todos los cambios.
+    </S39>
+    <S3A>Advertencia</S3A>
   </Sistema>
   <RomInfo>
     <S01>Información de la ROM</S01>

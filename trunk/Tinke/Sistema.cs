@@ -102,8 +102,8 @@ namespace Tinke
         }
         void Sistema_Load(object sender, EventArgs e)
         {
-            //SplashScreen splash = new SplashScreen(); // Splash Screen del concurso de Scene Beta
-            //splash.ShowDialog();
+            SplashScreen splash = new SplashScreen(); // Splash Screen del concurso de Scene Beta
+            splash.ShowDialog();
 
             // Iniciamos la lectura del archivo.
             string[] filesToRead = new string[1];
@@ -250,38 +250,53 @@ namespace Tinke
         }
         private void Sistema_FormClosing(object sender, FormClosingEventArgs e)
         {
-            XElement xml = XElement.Load(Application.StartupPath + Path.DirectorySeparatorChar + "Tinke.xml").Element("Options");
+            try
+            {
+                XElement xml = XElement.Load(Application.StartupPath + Path.DirectorySeparatorChar + "Tinke.xml").Element("Options");
 
-            xml.Element("WindowDebug").Value = toolStripDebug.Checked.ToString();
-            xml.Element("WindowInformation").Value = toolStripInfoRom.Checked.ToString();
-            xml.Element("InstantSearch").Value = checkSearch.Checked.ToString();
-            xml.Element("ModeWindow").Value = toolStripVentana.Checked.ToString();
-            
-            xml = xml.Parent;
-            xml.Save(Application.StartupPath + Path.DirectorySeparatorChar + "Tinke.xml");
+                xml.Element("WindowDebug").Value = toolStripDebug.Checked.ToString();
+                xml.Element("WindowInformation").Value = toolStripInfoRom.Checked.ToString();
+                xml.Element("InstantSearch").Value = checkSearch.Checked.ToString();
+                xml.Element("ModeWindow").Value = toolStripVentana.Checked.ToString();
+
+                xml = xml.Parent;
+                xml.Save(Application.StartupPath + Path.DirectorySeparatorChar + "Tinke.xml");
+            }
+            catch { MessageBox.Show(Tools.Helper.ObtenerTraduccion("Sistema", "S37"), Tools.Helper.ObtenerTraduccion("Sistema", "S3A")); }
+
+            if (accion.IsNewRom)
+            {
+                if (MessageBox.Show(Tools.Helper.ObtenerTraduccion("Sistema", "S39"), Tools.Helper.ObtenerTraduccion("Sistema", "S3A"),
+                    MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == System.Windows.Forms.DialogResult.Cancel)
+                        e.Cancel = true;
+            }
         }
 
         private void LoadPreferences()
         {
-            XElement xml = XElement.Load(Application.StartupPath + Path.DirectorySeparatorChar + "Tinke.xml").Element("Options");
+            try
+            {
+                XElement xml = XElement.Load(Application.StartupPath + Path.DirectorySeparatorChar + "Tinke.xml").Element("Options");
 
-            toolStripDebug.Enabled = !isMono;
-            if (!isMono && xml.Element("WindowDebug").Value == "True")
-            {
-                toolStripDebug.Checked = true;
-                debug.Show();
-                debug.Activate();
+                toolStripDebug.Enabled = !isMono;
+                if (!isMono && xml.Element("WindowDebug").Value == "True")
+                {
+                    toolStripDebug.Checked = true;
+                    debug.Show();
+                    debug.Activate();
+                }
+                if (xml.Element("WindowInformation").Value == "True" && accion.ROMFile != "") // En caso de que se haya abierto una ROM, no archivos sueltos
+                {
+                    toolStripInfoRom.Checked = true;
+                    romInfo.Show();
+                    romInfo.Activate();
+                }
+                if (xml.Element("InstantSearch").Value == "True")
+                    checkSearch.Checked = true;
+                if (xml.Element("ModeWindow").Value == "True")
+                    toolStripVentana.Checked = true;
             }
-            if (xml.Element("WindowInformation").Value == "True" && accion.ROMFile != "") // En caso de que se haya abierto una ROM, no archivos sueltos
-            {
-                toolStripInfoRom.Checked = true;
-                romInfo.Show();
-                romInfo.Activate();
-            }
-            if (xml.Element("InstantSearch").Value == "True")
-                checkSearch.Checked = true;
-            if (xml.Element("ModeWindow").Value == "True")
-                toolStripVentana.Checked = true;
+            catch { MessageBox.Show(Tools.Helper.ObtenerTraduccion("Sistema", "S38"), Tools.Helper.ObtenerTraduccion("Sistema", "S3A")); }
         }
         private void LeerIdioma()
         {
@@ -1172,10 +1187,10 @@ namespace Tinke
             }
 
             // Obtenemos el último ID de archivo sin los especiales
-            accion.LastFileID = 0;
-            accion.Set_LastFileID(accion.Root);
-            accion.LastFolderID = 0;
-            accion.Set_LastFolderID(accion.Root);
+            //accion.LastFileID = 0;
+            //accion.Set_LastFileID(accion.Root);
+            //accion.LastFolderID = 0;
+            //accion.Set_LastFolderID(accion.Root);
             #endregion
 
             #region Obtención de regiones de la ROM
@@ -1307,12 +1322,13 @@ namespace Tinke
                 bw.Close();
 
                 Console.WriteLine("<b>" + Tools.Helper.ObtenerTraduccion("Messages", "S09") + "</b>", new FileInfo(o.FileName).Length);
+                accion.IsNewRom = false;
             }
 
             // Devolvemos sus valores buenos
-            accion.Set_LastFileID(accion.Root);
-            accion.Set_LastFolderID(accion.Root);
-            accion.LastFileID++; accion.LastFolderID++;
+            //accion.Set_LastFileID(accion.Root);
+            //accion.Set_LastFolderID(accion.Root);
+            //accion.LastFileID++; accion.LastFolderID++;
             accion.Search_Folder("ftc").files.Clear(); ;
             accion.Search_Folder("ftc").files.AddRange(origianlFiles);
             
