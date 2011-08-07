@@ -5,6 +5,7 @@
 * Multilenguage support to SDAT plugin.
 * Fixed problem with some palettes
 * Added Shift-jis, UTF-7, UTF-32 and ASCII encodings to TXT plugin.
+* Added wordwrap option to TXT plugin.
 
 0.7.2 (public release):
 * AI IGO DS game plugin support completed!

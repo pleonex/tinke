@@ -425,9 +425,9 @@ namespace Tinke
             this.pic.BackColor = System.Drawing.Color.Transparent;
             this.pic.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pic.Location = new System.Drawing.Point(0, 0);
-            this.pic.MaximumSize = new System.Drawing.Size(260, 480);
+            this.pic.MaximumSize = new System.Drawing.Size(260, 459);
             this.pic.Name = "pic";
-            this.pic.Size = new System.Drawing.Size(100, 50);
+            this.pic.Size = new System.Drawing.Size(100, 100);
             this.pic.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.pic.TabIndex = 0;
             this.pic.TabStop = false;
@@ -436,7 +436,7 @@ namespace Tinke
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(3, 480);
+            this.label5.Location = new System.Drawing.Point(3, 462);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(26, 13);
             this.label5.TabIndex = 6;
@@ -446,7 +446,6 @@ namespace Tinke
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.AutoScroll = true;
             this.BackColor = System.Drawing.Color.Transparent;
             this.Controls.Add(this.label5);
             this.Controls.Add(this.pic);

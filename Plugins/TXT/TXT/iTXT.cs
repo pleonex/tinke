@@ -59,6 +59,7 @@ namespace TXT
 
             btnSave.Text = xml.Element("S00").Value;
             label1.Text = xml.Element("S01").Value;
+            checkWordWrap.Text = xml.Element("S02").Value;
         }
 
         private String Descodificar(Encoding encoding)
@@ -68,6 +69,11 @@ namespace TXT
         private void comboEncod_SelectedIndexChanged(object sender, EventArgs e)
         {
             txtBox.Text = Descodificar(Encoding.GetEncoding(comboEncod.Text));
+        }
+
+        private void checkWordWrap_CheckedChanged(object sender, EventArgs e)
+        {
+            txtBox.WordWrap = checkWordWrap.Checked;
         }
     }
 }

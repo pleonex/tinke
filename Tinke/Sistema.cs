@@ -121,7 +121,7 @@ namespace Tinke
                 o.Dispose();
             }
             else if (Environment.GetCommandLineArgs().Length == 2)
-                filesToRead[0] = Environment.GetCommandLineArgs()[1];  // Juego NDS
+                filesToRead[0] = Environment.GetCommandLineArgs()[1];
             else if (Environment.GetCommandLineArgs().Length >= 3)
             {
                 filesToRead = new String[Environment.GetCommandLineArgs().Length - 2];
@@ -264,11 +264,14 @@ namespace Tinke
             }
             catch { MessageBox.Show(Tools.Helper.ObtenerTraduccion("Sistema", "S37"), Tools.Helper.ObtenerTraduccion("Sistema", "S3A")); }
 
-            if (accion.IsNewRom)
+            if (accion is Acciones)
             {
-                if (MessageBox.Show(Tools.Helper.ObtenerTraduccion("Sistema", "S39"), Tools.Helper.ObtenerTraduccion("Sistema", "S3A"),
-                    MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == System.Windows.Forms.DialogResult.Cancel)
+                if (accion.IsNewRom)
+                {
+                    if (MessageBox.Show(Tools.Helper.ObtenerTraduccion("Sistema", "S39"), Tools.Helper.ObtenerTraduccion("Sistema", "S3A"),
+                        MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == System.Windows.Forms.DialogResult.Cancel)
                         e.Cancel = true;
+                }
             }
         }
 
@@ -455,7 +458,11 @@ namespace Tinke
         {
             TreeNode currNode = new TreeNode();
 
-            currNode = new TreeNode(currFolder.name, 0, 0);
+            if (currFolder.id < 0xF000) // Archivo descomprimido
+                currNode = new TreeNode(currFolder.name,
+                    accion.ImageFormatFile(Formato.Comprimido), accion.ImageFormatFile(Formato.Comprimido));
+            else
+                currNode = new TreeNode(currFolder.name, 0, 0);
             currNode.Tag = currFolder.id;
             currNode.Name = currFolder.name;
 
@@ -488,8 +495,16 @@ namespace Tinke
         }
         private void CarpetaANodo(Carpeta carpeta, ref TreeNode nodo)
         {
-            nodo.ImageIndex = 0;
-            nodo.SelectedImageIndex = 0;
+            if (carpeta.id < 0xF000)
+            {
+                nodo.ImageIndex = accion.ImageFormatFile(Formato.Comprimido);
+                nodo.SelectedImageIndex = accion.ImageFormatFile(Formato.Comprimido);
+            }
+            else
+            {
+                nodo.ImageIndex = 0;
+                nodo.SelectedImageIndex = 0;
+            }
             nodo.Tag = carpeta.id;
             nodo.Name = carpeta.name;
 
@@ -726,6 +741,9 @@ namespace Tinke
                     if (btnDesplazar.Text == ">>>>>")
                         btnDesplazar.PerformClick();
                 }
+                else
+                    if (btnDesplazar.Text == "<<<<<")
+                        btnDesplazar.PerformClick();
             }
                 debug.Añadir_Texto(sb.ToString());
                 sb.Length = 0;
