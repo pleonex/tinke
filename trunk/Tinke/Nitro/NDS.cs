@@ -323,6 +323,7 @@ namespace Tinke.Nitro
 
             diccionario.Add("13", "Electronic Arts Japan");
             diccionario.Add("18", "Hudson Entertainment");
+            diccionario.Add("36", "Codemasters");
             diccionario.Add("41", "Ubisoft");
             diccionario.Add("4Q", "Disney Interactive Studios");
             diccionario.Add("52", "Activision");
@@ -342,6 +343,7 @@ namespace Tinke.Nitro
             diccionario.Add("FH", "Foreign Media Games");
             diccionario.Add("FK", "The Game Factory");
             diccionario.Add("GD", "SQUARE ENIX");
+            diccionario.Add("GR", "GSP");
             diccionario.Add("GT", "505 Games");
             diccionario.Add("GQ", "Engine Software");
             diccionario.Add("H3", "Zen");

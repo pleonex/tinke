@@ -19,9 +19,9 @@ namespace TXT
         public Formato Get_Formato(string nombre, byte[] magic)
         {
             nombre = nombre.ToUpper();
-            string ext = new String(System.Text.Encoding.ASCII.GetChars(magic));
+            string ext = new String(Encoding.ASCII.GetChars(magic));
 
-            if (nombre.EndsWith("LZ.TXT") && magic[0] == 0x10)
+            if ((nombre.EndsWith("LZ.TXT") || nombre.EndsWith("LZ.XML")) && magic[0] == 0x10)
                 return Formato.Desconocido;
 
             if (nombre.EndsWith(".TXT") || nombre.EndsWith(".SADL") || nombre.EndsWith(".XML")
@@ -31,7 +31,7 @@ namespace TXT
                 || nombre.EndsWith(".LUA") || nombre.EndsWith(".CSV") || nombre.EndsWith(".SMAP")
                 || nombre.EndsWith("BUILDTIME"))
                 return Formato.Texto;
-            else if (ext == "MESG" && nombre.EndsWith(".BMG"))
+            else if (ext == "MESG")
                 return Formato.Texto;
 
             return Formato.Desconocido;
@@ -45,10 +45,16 @@ namespace TXT
 
         public Control Show_Info(string archivo, int id)
         {
-            if (archivo.ToUpper().EndsWith(".BMG"))
-                return new bmg(pluginHost, archivo).ShowInfo();
-
             BinaryReader br = new BinaryReader(File.OpenRead(archivo));
+
+            if (new String(Encoding.ASCII.GetChars(br.ReadBytes(4))) == "MESG")
+            {
+                br.Close();
+                return new bmg(pluginHost, archivo).ShowInfo();
+            }
+            else
+                br.BaseStream.Position = 0x00;
+
             byte[] txt = br.ReadBytes((int)br.BaseStream.Length);
             br.Close();
 

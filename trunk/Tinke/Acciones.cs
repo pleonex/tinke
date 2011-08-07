@@ -928,6 +928,9 @@ namespace Tinke
         public Byte[] Get_MagicID(int id)
         {
             Archivo currFile = Search_File(id);
+            if (currFile.size == 0x00)
+                return null;
+
             BinaryReader br;
             if (currFile.offset != 0x0)
             {
@@ -950,6 +953,9 @@ namespace Tinke
         }
         public Byte[] Get_MagicID(Archivo currFile)
         {
+            if (currFile.size == 0x00)
+                return null;
+
             BinaryReader br;
             if (currFile.offset != 0x0)
             {
@@ -973,6 +979,9 @@ namespace Tinke
         public String Get_MagicIDS(int id)
         {
             Archivo currFile = Search_File(id);
+            if (currFile.size == 0x00)
+                return "";
+
             BinaryReader br;
             if (currFile.offset != 0x0)
             {
@@ -1268,7 +1277,7 @@ namespace Tinke
             Carpeta desc = pluginHost.Get_Files();
 
             // Comprobamos y eliminamos los archivos de tamaño 0 Bytes
-            Recursivo_EliminarArchivosNulos(desc);
+            //Recursivo_EliminarArchivosNulos(desc);
 
             Add_Files(ref desc, id);    // Añadimos los archivos descomprimidos al árbol de archivos
             return desc;

@@ -35,6 +35,7 @@
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.comboEncod = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.checkWordWrap = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // txtBox
@@ -95,12 +96,24 @@
             this.label1.TabIndex = 3;
             this.label1.Text = "S01";
             // 
+            // checkWordWrap
+            // 
+            this.checkWordWrap.AutoSize = true;
+            this.checkWordWrap.Location = new System.Drawing.Point(236, 483);
+            this.checkWordWrap.Name = "checkWordWrap";
+            this.checkWordWrap.Size = new System.Drawing.Size(45, 17);
+            this.checkWordWrap.TabIndex = 4;
+            this.checkWordWrap.Text = "S02";
+            this.checkWordWrap.UseVisualStyleBackColor = true;
+            this.checkWordWrap.CheckedChanged += new System.EventHandler(this.checkWordWrap_CheckedChanged);
+            // 
             // iTXT
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Transparent;
             this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.Controls.Add(this.checkWordWrap);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.comboEncod);
             this.Controls.Add(this.btnSave);
@@ -119,5 +132,6 @@
         private System.Windows.Forms.ImageList imageList1;
         private System.Windows.Forms.ComboBox comboEncod;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.CheckBox checkWordWrap;
     }
 }
