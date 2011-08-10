@@ -52,12 +52,12 @@ namespace Tinke
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Sistema));
-            System.Windows.Forms.ListViewItem listViewItem7 = new System.Windows.Forms.ListViewItem("S09");
-            System.Windows.Forms.ListViewItem listViewItem8 = new System.Windows.Forms.ListViewItem("S0A");
-            System.Windows.Forms.ListViewItem listViewItem9 = new System.Windows.Forms.ListViewItem("S0B");
-            System.Windows.Forms.ListViewItem listViewItem10 = new System.Windows.Forms.ListViewItem("S0C");
-            System.Windows.Forms.ListViewItem listViewItem11 = new System.Windows.Forms.ListViewItem("S0D");
-            System.Windows.Forms.ListViewItem listViewItem12 = new System.Windows.Forms.ListViewItem("S0E");
+            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("S09");
+            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("S0A");
+            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem("S0B");
+            System.Windows.Forms.ListViewItem listViewItem4 = new System.Windows.Forms.ListViewItem("S0C");
+            System.Windows.Forms.ListViewItem listViewItem5 = new System.Windows.Forms.ListViewItem("S0D");
+            System.Windows.Forms.ListViewItem listViewItem6 = new System.Windows.Forms.ListViewItem("S0E");
             this.iconos = new System.Windows.Forms.ImageList(this.components);
             this.btnExtraer = new System.Windows.Forms.Button();
             this.btnSee = new System.Windows.Forms.Button();
@@ -90,6 +90,10 @@ namespace Tinke
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuComprimido = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripAbrirFat = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripFAT1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripFAT2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripAbrirTexto = new System.Windows.Forms.ToolStripMenuItem();
             this.linkAboutBox = new System.Windows.Forms.LinkLabel();
             this.txtSearch = new System.Windows.Forms.TextBox();
             this.btnSearch = new System.Windows.Forms.Button();
@@ -134,7 +138,7 @@ namespace Tinke
             this.btnExtraer.ImageList = this.iconos;
             this.btnExtraer.Location = new System.Drawing.Point(525, 455);
             this.btnExtraer.Name = "btnExtraer";
-            this.btnExtraer.Size = new System.Drawing.Size(110, 32);
+            this.btnExtraer.Size = new System.Drawing.Size(110, 40);
             this.btnExtraer.TabIndex = 4;
             this.btnExtraer.Text = "S1B";
             this.btnExtraer.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
@@ -145,9 +149,9 @@ namespace Tinke
             // 
             this.btnSee.Enabled = false;
             this.btnSee.Image = global::Tinke.Properties.Resources.zoom;
-            this.btnSee.Location = new System.Drawing.Point(409, 493);
+            this.btnSee.Location = new System.Drawing.Point(409, 501);
             this.btnSee.Name = "btnSee";
-            this.btnSee.Size = new System.Drawing.Size(110, 32);
+            this.btnSee.Size = new System.Drawing.Size(110, 40);
             this.btnSee.TabIndex = 2;
             this.btnSee.Text = "S1C";
             this.btnSee.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
@@ -159,9 +163,9 @@ namespace Tinke
             this.btnHex.Enabled = false;
             this.btnHex.Image = global::Tinke.Properties.Resources.calculator;
             this.btnHex.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnHex.Location = new System.Drawing.Point(525, 493);
+            this.btnHex.Location = new System.Drawing.Point(525, 501);
             this.btnHex.Name = "btnHex";
-            this.btnHex.Size = new System.Drawing.Size(110, 32);
+            this.btnHex.Size = new System.Drawing.Size(110, 40);
             this.btnHex.TabIndex = 1;
             this.btnHex.Text = "S1D";
             this.btnHex.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
@@ -174,12 +178,12 @@ namespace Tinke
             this.columnHeader1,
             this.columnHeader2});
             this.listFile.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem7,
-            listViewItem8,
-            listViewItem9,
-            listViewItem10,
-            listViewItem11,
-            listViewItem12});
+            listViewItem1,
+            listViewItem2,
+            listViewItem3,
+            listViewItem4,
+            listViewItem5,
+            listViewItem6});
             this.listFile.Location = new System.Drawing.Point(409, 28);
             this.listFile.Name = "listFile";
             this.listFile.Size = new System.Drawing.Size(197, 202);
@@ -298,7 +302,7 @@ namespace Tinke
             this.btnDescomprimir.ImageList = this.iconos;
             this.btnDescomprimir.Location = new System.Drawing.Point(409, 455);
             this.btnDescomprimir.Name = "btnDescomprimir";
-            this.btnDescomprimir.Size = new System.Drawing.Size(110, 32);
+            this.btnDescomprimir.Size = new System.Drawing.Size(110, 40);
             this.btnDescomprimir.TabIndex = 7;
             this.btnDescomprimir.Text = "S1A";
             this.btnDescomprimir.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
@@ -334,7 +338,7 @@ namespace Tinke
             this.toolStripDeleteChain,
             this.toolStripOpenAs});
             this.toolStrip2.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Table;
-            this.toolStrip2.Location = new System.Drawing.Point(409, 360);
+            this.toolStrip2.Location = new System.Drawing.Point(409, 355);
             this.toolStrip2.Name = "toolStrip2";
             this.toolStrip2.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
             this.toolStrip2.RightToLeft = System.Windows.Forms.RightToLeft.No;
@@ -414,7 +418,9 @@ namespace Tinke
             this.toolStripMenuItem1,
             this.toolStripMenuItem2,
             this.toolStripMenuItem3,
-            this.toolStripMenuComprimido});
+            this.toolStripMenuComprimido,
+            this.toolStripAbrirFat,
+            this.toolStripAbrirTexto});
             this.toolStripOpenAs.Image = global::Tinke.Properties.Resources.zoom;
             this.toolStripOpenAs.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripOpenAs.Name = "toolStripOpenAs";
@@ -425,7 +431,7 @@ namespace Tinke
             // 
             this.toolStripMenuItem1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripMenuItem1.Image")));
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(94, 22);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(95, 22);
             this.toolStripMenuItem1.Text = "S17";
             this.toolStripMenuItem1.Click += new System.EventHandler(this.toolAbrirComoItemPaleta_Click);
             // 
@@ -433,7 +439,7 @@ namespace Tinke
             // 
             this.toolStripMenuItem2.Image = ((System.Drawing.Image)(resources.GetObject("toolStripMenuItem2.Image")));
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(94, 22);
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(95, 22);
             this.toolStripMenuItem2.Text = "S18";
             this.toolStripMenuItem2.Click += new System.EventHandler(this.toolAbrirComoItemTile_Click);
             // 
@@ -441,7 +447,7 @@ namespace Tinke
             // 
             this.toolStripMenuItem3.Image = ((System.Drawing.Image)(resources.GetObject("toolStripMenuItem3.Image")));
             this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(94, 22);
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(95, 22);
             this.toolStripMenuItem3.Text = "S19";
             this.toolStripMenuItem3.Click += new System.EventHandler(this.toolAbrirComoItemScreen_Click);
             // 
@@ -449,9 +455,41 @@ namespace Tinke
             // 
             this.toolStripMenuComprimido.Image = global::Tinke.Properties.Resources.package;
             this.toolStripMenuComprimido.Name = "toolStripMenuComprimido";
-            this.toolStripMenuComprimido.Size = new System.Drawing.Size(94, 22);
+            this.toolStripMenuComprimido.Size = new System.Drawing.Size(95, 22);
             this.toolStripMenuComprimido.Text = "S2A";
             this.toolStripMenuComprimido.Click += new System.EventHandler(this.s2AToolStripMenuItem_Click);
+            // 
+            // toolStripAbrirFat
+            // 
+            this.toolStripAbrirFat.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripFAT1,
+            this.toolStripFAT2});
+            this.toolStripAbrirFat.Image = global::Tinke.Properties.Resources.package;
+            this.toolStripAbrirFat.Name = "toolStripAbrirFat";
+            this.toolStripAbrirFat.Size = new System.Drawing.Size(95, 22);
+            this.toolStripAbrirFat.Text = "FAT";
+            // 
+            // toolStripFAT1
+            // 
+            this.toolStripFAT1.Name = "toolStripFAT1";
+            this.toolStripFAT1.Size = new System.Drawing.Size(107, 22);
+            this.toolStripFAT1.Text = "Tipo 1";
+            this.toolStripFAT1.Click += new System.EventHandler(this.toolStripFAT1_Click);
+            // 
+            // toolStripFAT2
+            // 
+            this.toolStripFAT2.Name = "toolStripFAT2";
+            this.toolStripFAT2.Size = new System.Drawing.Size(107, 22);
+            this.toolStripFAT2.Text = "Tipo 2";
+            this.toolStripFAT2.Click += new System.EventHandler(this.toolStripFAT2_Click);
+            // 
+            // toolStripAbrirTexto
+            // 
+            this.toolStripAbrirTexto.Image = global::Tinke.Properties.Resources.page_white_text;
+            this.toolStripAbrirTexto.Name = "toolStripAbrirTexto";
+            this.toolStripAbrirTexto.Size = new System.Drawing.Size(95, 22);
+            this.toolStripAbrirTexto.Text = "S26";
+            this.toolStripAbrirTexto.Click += new System.EventHandler(this.toolStripAbrirTexto_Click);
             // 
             // linkAboutBox
             // 
@@ -479,7 +517,7 @@ namespace Tinke
             // btnSearch
             // 
             this.btnSearch.Image = global::Tinke.Properties.Resources.zoom;
-            this.btnSearch.Location = new System.Drawing.Point(599, 267);
+            this.btnSearch.Location = new System.Drawing.Point(599, 264);
             this.btnSearch.Name = "btnSearch";
             this.btnSearch.Size = new System.Drawing.Size(43, 23);
             this.btnSearch.TabIndex = 15;
@@ -519,9 +557,9 @@ namespace Tinke
             // 
             this.btnImport.ImageIndex = 18;
             this.btnImport.ImageList = this.iconos;
-            this.btnImport.Location = new System.Drawing.Point(525, 417);
+            this.btnImport.Location = new System.Drawing.Point(525, 409);
             this.btnImport.Name = "btnImport";
-            this.btnImport.Size = new System.Drawing.Size(110, 32);
+            this.btnImport.Size = new System.Drawing.Size(110, 40);
             this.btnImport.TabIndex = 18;
             this.btnImport.Text = "S32";
             this.btnImport.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
@@ -532,9 +570,9 @@ namespace Tinke
             // 
             this.btnSaveROM.ImageIndex = 19;
             this.btnSaveROM.ImageList = this.iconos;
-            this.btnSaveROM.Location = new System.Drawing.Point(409, 417);
+            this.btnSaveROM.Location = new System.Drawing.Point(409, 409);
             this.btnSaveROM.Name = "btnSaveROM";
-            this.btnSaveROM.Size = new System.Drawing.Size(110, 32);
+            this.btnSaveROM.Size = new System.Drawing.Size(110, 40);
             this.btnSaveROM.TabIndex = 19;
             this.btnSaveROM.Text = "S33";
             this.btnSaveROM.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
@@ -623,6 +661,10 @@ namespace Tinke
         private System.Windows.Forms.Button btnImport;
         private System.Windows.Forms.Button btnSaveROM;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuComprimido;
+        private System.Windows.Forms.ToolStripMenuItem toolStripAbrirFat;
+        private System.Windows.Forms.ToolStripMenuItem toolStripAbrirTexto;
+        private System.Windows.Forms.ToolStripMenuItem toolStripFAT1;
+        private System.Windows.Forms.ToolStripMenuItem toolStripFAT2;
 
     }
 }

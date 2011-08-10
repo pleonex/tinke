@@ -54,20 +54,20 @@
     <S33>Sauver ROM</S33>
     <S34>Script</S34>
     <S35>
-      Are you sure about uncompressing ALL the files
-      from this folder?. It can take a long time...
+      Êtes-vous sûr à propos de la décompression de TOUT les fichiers
+      depuis ce dossier ? Cela prendra un long moment...
     </S35>
     <S36>
-      The uncompression is unsuccessfully.
-      Are you sure is a compressed file?
+      La décompression est un échec.
+      Êtes-vous sûr qu'il s'agisse d'un fichier compressé ?
     </S36>
-    <S37>There was an error saving the user preferences.</S37>
-    <S38>There was an error loading the user preferences.</S38>
+    <S37>Il y a une erreur en sauvegardant les préférences de l'utilisateur.</S37>
+    <S38>Il y a une erreur en chargeant les préférences de l'utilisateur.</S38>
     <S39>
-      You have changed some files but the new ROM is not saved
-      Are you sure you want exit? All the changes will be lost.
+      Vous avez changé des fichiers mais la nouvelle ROM n'a pas été sauvegardée.
+      Êtes-vous sûr de vouloir quitter ? Toutes les modifications seront perdues.
     </S39>
-    <S3A>Warning</S3A>
+    <S3A>Attention</S3A>
   </Sistema>
   <RomInfo>
     <S01>Informations de la ROM</S01>
@@ -164,7 +164,7 @@
     <S08>
       Prêt pour sauver la nouvelle ROM...<br>Écriture des sections :</br>
     </S08>
-    <S09> {0} bytes écrits avec succès.</S09>
+    <S09> {0} octets écrits avec succès.</S09>
     <S0A>Entête...</S0A>
     <S0B>Fichiers...</S0B>
     <S0C> {0} fichiers écrits avec succès.</S0C>
@@ -190,6 +190,10 @@
     <S0E>Nombre étrange de sections ? : </S0E>
     <S0F>palettes trouvées</S0F>
     <S10>couleurs.</S10>
+    <S11>Modify</S11>
+    <S12>Start byte:</S12>
+    <S13>Import</S13>
+    <S14>Change the depth</S14>
   </NCLR>
   <NCGR>
     <S01>Faites un double clique sur l'image pour la voir en taille réelle.</S01>
@@ -201,8 +205,8 @@
     <S07>Nombre de sections</S07>
     <S08>ID Section 1</S08>
     <S09>Taille</S09>
-    <S0A>Tiles Y</S0A>
-    <S0B>Tiles X</S0B>
+    <S0A>Tuiles Y</S0A>
+    <S0B>Tuiles X</S0B>
     <S0C>Format</S0C>
     <S0D>Inconnu</S0D>
     <S0E>Inconnu</S0E>
@@ -224,6 +228,7 @@
     <S1E>Zoom</S1E>
     <S1F>Couleur du fond</S1F>
     <S20>Supprimer</S20>
+    <S21>Importer</S21>
   </NCGR>
   <NCER>
     <S01>Banques:</S01>

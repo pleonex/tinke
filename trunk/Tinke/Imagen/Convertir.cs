@@ -26,6 +26,7 @@ using System.Text;
 using System.Drawing;
 using System.IO;
 using System.Windows.Media.Imaging;
+using PluginInterface;
 
 namespace Tinke
 {
@@ -55,14 +56,99 @@ namespace Tinke
         /// <returns>Color convertido</returns>
         public static Color BGR555(byte byte1, byte byte2)
         {
-            int r, b; double g;
+            int r, b, g;
             short bgr = BitConverter.ToInt16(new Byte[] { byte1, byte2 }, 0);
 
             r = (bgr & 0x001F) * 0x08;
             g = ((bgr & 0x03E0) >> 5) * 0x08;
             b = ((bgr & 0x7C00) >> 10) * 0x08;
 
-            return System.Drawing.Color.FromArgb(r, (int)g, b);
+            return System.Drawing.Color.FromArgb(r, g, b);
+        }
+        /// <summary>
+        /// Convert colors to byte with BGR555 encoding
+        /// </summary>
+        /// <param name="colores">Colors to convert</param>
+        /// <returns>Bytes converted</returns>
+        public static Byte[] ColorToBGR555(Color[] colores)
+        {
+            List<Byte> datos = new List<Byte>(colores.Length * 2);
+
+            for (int i = 0; i < colores.Length; i++)
+            {
+                int r = colores[i].R / 8;
+                int g = (colores[i].G / 8) << 5;
+                int b = (colores[i].B / 8) << 10;
+
+                ushort bgr = (ushort)(r + g + b);
+                datos.AddRange(BitConverter.GetBytes(bgr));
+            }
+
+            return datos.ToArray();
+        }
+
+        public static TTLP Palette_4bppTo8bpp(TTLP palette)
+        {
+            TTLP newPalette = new TTLP();
+
+            newPalette.ID = palette.ID;
+            newPalette.tamaño = palette.tamaño;
+            newPalette.unknown1 = palette.unknown1;
+
+            // Get the colours of all the palettes in BGR555 encoding
+            List<Color> paletteColor = new List<Color>();
+            for (int i = 0; i < palette.paletas.Length; i++)
+                paletteColor.AddRange(palette.paletas[i].colores);
+
+            // Set the colours in one palette
+            newPalette.paletas = new NTFP[1];
+            newPalette.paletas[0].colores = paletteColor.ToArray();
+
+            newPalette.nColores = (uint)newPalette.paletas[0].colores.Length;
+            newPalette.tamañoPaletas = newPalette.nColores * 2;
+            newPalette.profundidad = System.Windows.Forms.ColorDepth.Depth8Bit;
+
+            return newPalette;
+        }
+
+        public static TTLP Palette_8bppTo4bpp(TTLP palette)
+        {
+            TTLP newPalette = new TTLP();
+
+            newPalette.ID = palette.ID;
+            newPalette.tamaño = palette.tamaño;
+            newPalette.unknown1 = palette.unknown1;
+            newPalette.nColores = 0x10;
+            newPalette.tamañoPaletas = 0x20;
+            newPalette.profundidad = System.Windows.Forms.ColorDepth.Depth4Bit;
+
+            int isExact = (int)palette.nColores % 0x10;
+
+            if (isExact == 0)
+            {
+                newPalette.paletas = new NTFP[palette.nColores / 0x10];
+                for (int i = 0; i < newPalette.paletas.Length; i++)
+                {
+                    Color[] tempColor = new Color[0x10];
+                    Array.Copy(palette.paletas[0].colores, i * 0x10, tempColor, 0, 0x10);
+                    newPalette.paletas[i].colores = tempColor;
+                }
+            }
+            else
+            {
+                newPalette.paletas = new NTFP[(palette.nColores / 0x10) + 1];
+                for (int i = 0; i < newPalette.paletas.Length - 1; i++)
+                {
+                    Color[] tempColor = new Color[0x10];
+                    Array.Copy(palette.paletas[0].colores, i * 0x10, tempColor, 0, 0x10);
+                    newPalette.paletas[i].colores = tempColor;
+                }
+                Color[] temp = new Color[isExact];
+                Array.Copy(palette.paletas[0].colores, palette.nColores / 0x10, temp, 0, isExact);
+                newPalette.paletas[newPalette.paletas.Length - 1].colores = temp;
+            }
+           
+            return newPalette;
         }
         #endregion
 
@@ -103,6 +189,32 @@ namespace Tinke
 
             return resul.ToArray();
         }
+
+        public static byte[][] BytesToTiles_NoChanged(byte[] bytes, int tilesX, int tilesY)
+        {
+            List<byte[]> tiles = new List<byte[]>();
+            List<byte> temp = new List<byte>();
+
+            for (int ht = 0; ht < tilesY; ht++)
+            {
+                for (int wt = 0; wt < tilesX; wt++)
+                {
+                    // Get the tile data
+                    for (int h = 0; h < 8; h++)
+                    {
+                        for (int w = 0; w < 8; w++)
+                        {
+                            temp.Add(bytes[wt * 8 + ht * tilesX * 64 + (w + h * 8 * tilesX)]);
+                        }
+                    }
+                    // Set the tile data
+                    tiles.Add(temp.ToArray());
+                    temp.Clear();
+                }
+            }
+
+            return tiles.ToArray();
+        }
         #endregion
 
         /// <summary>
@@ -116,10 +228,9 @@ namespace Tinke
 
             for (int i = 0; i < bits4.Length; i += 2)
             {
-                string nByte = String.Format("{0:X}", bits4[i]);
-                nByte += String.Format("{0:X}", bits4[i + 1]);
-
-                bits8.Add((byte)Convert.ToInt32(nByte, 16));
+                int byte1 = bits4[i];
+                int byte2 = bits4[i + 1] << 4;
+                bits8.Add((byte)(byte1 + byte2));
             }
 
             return bits8.ToArray();

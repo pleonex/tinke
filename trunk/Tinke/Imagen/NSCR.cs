@@ -95,6 +95,67 @@ namespace Tinke
             br.Close();
             return nscr;
         }
+        public static NSCR Create_BasicMap(int nTiles, int width, int height)
+        {
+            NSCR map = new NSCR();
+
+            // Common header
+            map.cabecera.id = "RCSN".ToCharArray();
+            map.cabecera.endianess = 0xFEFF;
+            map.cabecera.constant = 0x0100;
+            map.cabecera.header_size = 0x10;
+            map.cabecera.nSection = 1;
+
+            // Lee primera y única sección:
+            map.section.id = "NRCS".ToCharArray();
+            map.section.width = (ushort)width;
+            map.section.height = (ushort)height;
+            map.section.padding = 0x00000000;
+            map.section.data_size = (uint)nTiles * 2;
+            map.section.mapData = new NTFS[nTiles];
+            for (int i = 0; i < nTiles; i++)
+            {
+                map.section.mapData[i] = new NTFS();
+                map.section.mapData[i].nPalette = 0;
+                map.section.mapData[i].yFlip = 0;
+                map.section.mapData[i].xFlip = 0;
+                map.section.mapData[i].nTile = (ushort)i;
+            }
+            map.section.section_size = map.section.data_size + 0x14;
+            map.cabecera.file_size = map.section.section_size + map.cabecera.header_size;
+
+            return map;
+        }
+        public static void Write(NSCR map, string fileout)
+        {
+            BinaryWriter bw = new BinaryWriter(File.OpenWrite(fileout));
+
+            // Common header
+            bw.Write(map.cabecera.id);
+            bw.Write(map.cabecera.endianess);
+            bw.Write(map.cabecera.constant);
+            bw.Write(map.cabecera.file_size);
+            bw.Write(map.cabecera.header_size);
+            bw.Write(map.cabecera.nSection);
+            // SCRN section
+            bw.Write(map.section.id);
+            bw.Write(map.section.section_size);
+            bw.Write(map.section.width);
+            bw.Write(map.section.height);
+            bw.Write(map.section.padding);
+            bw.Write(map.section.data_size);
+            for (int i = 0; i < map.section.mapData.Length; i++)
+            {
+                int npalette = map.section.mapData[i].nPalette << 12;
+                int yFlip = map.section.mapData[i].yFlip << 11;
+                int xFlip = map.section.mapData[i].xFlip << 10;
+                int data = npalette + yFlip + xFlip + map.section.mapData[i].nTile;
+                bw.Write((ushort)data);
+            }
+
+            bw.Flush();
+            bw.Close();
+        }
 
         public static NTFT Modificar_Tile(NSCR nscr, NTFT tiles)
         {
@@ -107,7 +168,10 @@ namespace Tinke
                 Byte[] currTile;
 
                 if (nscr.section.mapData[i].nTile >= tiles.tiles.Length)
-                    throw new Exception(Tools.Helper.ObtenerTraduccion("Messages", "S06"));
+                {
+                    nscr.section.mapData[i].nTile = 00;
+                    //throw new Exception(Tools.Helper.ObtenerTraduccion("Messages", "S06"));
+                }
 
                 currTile = tiles.tiles[nscr.section.mapData[i].nTile];
 

@@ -87,6 +87,7 @@ namespace Tinke
             this.label2 = new System.Windows.Forms.Label();
             this.numericHeight = new System.Windows.Forms.NumericUpDown();
             this.groupProp = new System.Windows.Forms.GroupBox();
+            this.btnImport = new System.Windows.Forms.Button();
             this.btnBgdTrans = new System.Windows.Forms.Button();
             this.pictureBgd = new System.Windows.Forms.PictureBox();
             this.btnBgd = new System.Windows.Forms.Button();
@@ -106,8 +107,8 @@ namespace Tinke
             this.columnPos = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnCampo = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnValor = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.pic = new System.Windows.Forms.PictureBox();
             this.label5 = new System.Windows.Forms.Label();
+            this.pic = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.numericWidth)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericHeight)).BeginInit();
             this.groupProp.SuspendLayout();
@@ -191,6 +192,7 @@ namespace Tinke
             // 
             // groupProp
             // 
+            this.groupProp.Controls.Add(this.btnImport);
             this.groupProp.Controls.Add(this.btnBgdTrans);
             this.groupProp.Controls.Add(this.pictureBgd);
             this.groupProp.Controls.Add(this.btnBgd);
@@ -218,10 +220,22 @@ namespace Tinke
             this.groupProp.TabStop = false;
             this.groupProp.Text = "S02";
             // 
+            // btnImport
+            // 
+            this.btnImport.Image = global::Tinke.Properties.Resources.picture_go;
+            this.btnImport.Location = new System.Drawing.Point(157, 474);
+            this.btnImport.Name = "btnImport";
+            this.btnImport.Size = new System.Drawing.Size(79, 32);
+            this.btnImport.TabIndex = 23;
+            this.btnImport.Text = "S21";
+            this.btnImport.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnImport.UseVisualStyleBackColor = true;
+            this.btnImport.Click += new System.EventHandler(this.btnImport_Click);
+            // 
             // btnBgdTrans
             // 
             this.btnBgdTrans.Enabled = false;
-            this.btnBgdTrans.Location = new System.Drawing.Point(156, 349);
+            this.btnBgdTrans.Location = new System.Drawing.Point(158, 347);
             this.btnBgdTrans.Name = "btnBgdTrans";
             this.btnBgdTrans.Size = new System.Drawing.Size(50, 35);
             this.btnBgdTrans.TabIndex = 22;
@@ -232,7 +246,7 @@ namespace Tinke
             // pictureBgd
             // 
             this.pictureBgd.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pictureBgd.Location = new System.Drawing.Point(115, 349);
+            this.pictureBgd.Location = new System.Drawing.Point(117, 347);
             this.pictureBgd.Name = "pictureBgd";
             this.pictureBgd.Size = new System.Drawing.Size(35, 35);
             this.pictureBgd.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -241,7 +255,7 @@ namespace Tinke
             // 
             // btnBgd
             // 
-            this.btnBgd.Location = new System.Drawing.Point(7, 349);
+            this.btnBgd.Location = new System.Drawing.Point(9, 347);
             this.btnBgd.Name = "btnBgd";
             this.btnBgd.Size = new System.Drawing.Size(75, 35);
             this.btnBgd.TabIndex = 20;
@@ -252,7 +266,7 @@ namespace Tinke
             // checkTransparency
             // 
             this.checkTransparency.AutoSize = true;
-            this.checkTransparency.Location = new System.Drawing.Point(105, 480);
+            this.checkTransparency.Location = new System.Drawing.Point(9, 324);
             this.checkTransparency.Name = "checkTransparency";
             this.checkTransparency.Size = new System.Drawing.Size(46, 17);
             this.checkTransparency.TabIndex = 19;
@@ -420,6 +434,15 @@ namespace Tinke
             this.columnValor.Text = "S05";
             this.columnValor.Width = 81;
             // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(3, 462);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(26, 13);
+            this.label5.TabIndex = 6;
+            this.label5.Text = "S01";
+            // 
             // pic
             // 
             this.pic.BackColor = System.Drawing.Color.Transparent;
@@ -432,15 +455,6 @@ namespace Tinke
             this.pic.TabIndex = 0;
             this.pic.TabStop = false;
             this.pic.DoubleClick += new System.EventHandler(this.pic_DoubleClick);
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(3, 462);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(26, 13);
-            this.label5.TabIndex = 6;
-            this.label5.Text = "S01";
             // 
             // iNCGR
             // 
@@ -493,5 +507,6 @@ namespace Tinke
         private System.Windows.Forms.PictureBox pictureBgd;
         private System.Windows.Forms.Button btnBgd;
         private System.Windows.Forms.Button btnBgdTrans;
+        internal System.Windows.Forms.Button btnImport;
     }
 }

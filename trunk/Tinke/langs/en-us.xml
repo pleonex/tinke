@@ -193,6 +193,10 @@
     <S0E>Strange number of sections ¿?: </S0E>
     <S0F>palettes found</S0F>
     <S10>colors.</S10>
+    <S11>Modify</S11>
+    <S12>Start byte:</S12>
+    <S13>Import</S13>
+    <S14>Change the depth</S14>
   </NCLR>
   <NCGR>
     <S01>Double-click to see the full image.</S01>
@@ -227,6 +231,7 @@
     <S1E>Zoom</S1E>
     <S1F>Background colour</S1F>
     <S20>Remove</S20>
+    <S21>Import</S21>
   </NCGR>
   <NCER>
     <S01>Bank:</S01>

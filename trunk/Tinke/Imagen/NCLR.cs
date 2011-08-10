@@ -105,6 +105,76 @@ namespace Tinke
             return nclr;
         }
 
+        public static void Escribir(NCLR paleta, string fileout)
+        {
+            BinaryWriter bw = new BinaryWriter(File.OpenWrite(fileout));
+
+            bw.Write(paleta.cabecera.id);
+            bw.Write(paleta.cabecera.endianess);
+            bw.Write(paleta.cabecera.constant);
+            bw.Write(paleta.cabecera.file_size);
+            bw.Write(paleta.cabecera.header_size);
+            bw.Write(paleta.cabecera.nSection);
+            bw.Write(paleta.pltt.ID);
+            bw.Write(paleta.pltt.tamaño);
+            bw.Write((ushort)(paleta.pltt.profundidad == ColorDepth.Depth4Bit ? 0x03 : 0x04));
+            bw.Write((ushort)0x00);
+            bw.Write((uint)0x00);
+            bw.Write(paleta.pltt.tamañoPaletas);
+            bw.Write(paleta.pltt.nColores);
+            for (int i = 0; i < paleta.pltt.paletas.Length; i++)
+                bw.Write(Convertir.ColorToBGR555(paleta.pltt.paletas[i].colores));
+
+            bw.Flush();
+            bw.Close();
+        }
+        public static NCLR BitmapToPalette(string bitmap)
+        {
+            NCLR paleta = new NCLR();
+            BinaryReader br = new BinaryReader(File.OpenRead(bitmap));
+            if (new String(br.ReadChars(2)) != "BM")
+                throw new NotSupportedException("Archivo no soportado, no es BITMAP");
+            
+            paleta.cabecera.id = "RLCN".ToCharArray();
+            paleta.cabecera.endianess = 0xFEFF;
+            paleta.cabecera.constant = 0x0100;
+            paleta.cabecera.header_size = 0x10;
+            paleta.cabecera.nSection = 0x01;
+
+            br.BaseStream.Position = 0x1C;
+            ushort profundidad = br.ReadUInt16();
+            if (profundidad == 0x04)
+                paleta.pltt.profundidad = System.Windows.Forms.ColorDepth.Depth4Bit;
+            else if (profundidad == 0x08)
+                paleta.pltt.profundidad = System.Windows.Forms.ColorDepth.Depth8Bit;
+            else
+                throw new NotSupportedException("Esta imagen bitmap no contiene paleta de colores pues su profundidad es " + profundidad.ToString());
+
+            br.BaseStream.Position += 0x10;
+            paleta.pltt.nColores = br.ReadUInt32();
+            if (paleta.pltt.nColores == 0x00)
+                paleta.pltt.nColores = (uint)(profundidad == 0x04 ? 0x10 : 0x0100);
+
+            br.BaseStream.Position += 0x04;
+            paleta.pltt.paletas = new NTFP[1];
+            paleta.pltt.paletas[0].colores = new Color[(int)paleta.pltt.nColores];
+            for (int i = 0; i < paleta.pltt.nColores; i++)
+            {
+                Byte[] color = br.ReadBytes(4);
+                paleta.pltt.paletas[0].colores[i] = Color.FromArgb(color[2], color[1], color[0]);
+            }
+
+            paleta.pltt.ID = "TTLP".ToCharArray();
+            paleta.pltt.tamañoPaletas = paleta.pltt.nColores * 2;
+            paleta.pltt.unknown1 = 0x00;
+            paleta.pltt.tamaño = paleta.pltt.tamañoPaletas + 0x18;
+            paleta.cabecera.file_size = paleta.pltt.tamaño + paleta.cabecera.header_size;
+
+            br.Close();
+            return paleta;
+        }
+
+
         public static Bitmap[] Mostrar(string file)
         {
             return Mostrar(Leer(file, -1));
@@ -122,7 +192,7 @@ namespace Tinke
                 {
                     for (int j = 0; j < 16; j++)
                     {
-                        if (nclr.pltt.nColores == j + 16 * i)
+                        if (nclr.pltt.paletas[p].colores.Length == j + 16 * i)
                         {
                             fin = true;
                             break;

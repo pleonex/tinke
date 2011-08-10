@@ -43,9 +43,16 @@
             this.columnValor = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.btnSave = new System.Windows.Forms.Button();
             this.lblRGB = new System.Windows.Forms.Label();
+            this.groupModificar = new System.Windows.Forms.GroupBox();
+            this.btnImport = new System.Windows.Forms.Button();
+            this.btnConverter = new System.Windows.Forms.Button();
+            this.label2 = new System.Windows.Forms.Label();
+            this.numericStartByte = new System.Windows.Forms.NumericUpDown();
             ((System.ComponentModel.ISupportInitialize)(this.paletaBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.nPaleta)).BeginInit();
             this.groupProp.SuspendLayout();
+            this.groupModificar.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericStartByte)).BeginInit();
             this.SuspendLayout();
             // 
             // paletaBox
@@ -127,9 +134,9 @@
             // btnSave
             // 
             this.btnSave.Image = global::Tinke.Properties.Resources.picture_save;
-            this.btnSave.Location = new System.Drawing.Point(245, 168);
+            this.btnSave.Location = new System.Drawing.Point(245, 166);
             this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(75, 28);
+            this.btnSave.Size = new System.Drawing.Size(75, 30);
             this.btnSave.TabIndex = 6;
             this.btnSave.Text = "S0A";
             this.btnSave.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
@@ -145,12 +152,64 @@
             this.lblRGB.TabIndex = 7;
             this.lblRGB.Text = "RGB:";
             // 
+            // groupModificar
+            // 
+            this.groupModificar.Controls.Add(this.btnImport);
+            this.groupModificar.Controls.Add(this.btnConverter);
+            this.groupModificar.Controls.Add(this.label2);
+            this.groupModificar.Controls.Add(this.numericStartByte);
+            this.groupModificar.Location = new System.Drawing.Point(289, 226);
+            this.groupModificar.Name = "groupModificar";
+            this.groupModificar.Size = new System.Drawing.Size(217, 101);
+            this.groupModificar.TabIndex = 8;
+            this.groupModificar.TabStop = false;
+            this.groupModificar.Text = "S11";
+            // 
+            // btnImport
+            // 
+            this.btnImport.Location = new System.Drawing.Point(107, 54);
+            this.btnImport.Name = "btnImport";
+            this.btnImport.Size = new System.Drawing.Size(95, 30);
+            this.btnImport.TabIndex = 3;
+            this.btnImport.Text = "S13";
+            this.btnImport.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnImport.UseVisualStyleBackColor = true;
+            this.btnImport.Click += new System.EventHandler(this.btnImport_Click);
+            // 
+            // btnConverter
+            // 
+            this.btnConverter.Location = new System.Drawing.Point(6, 54);
+            this.btnConverter.Name = "btnConverter";
+            this.btnConverter.Size = new System.Drawing.Size(95, 30);
+            this.btnConverter.TabIndex = 2;
+            this.btnConverter.Text = "S14";
+            this.btnConverter.UseVisualStyleBackColor = true;
+            this.btnConverter.Click += new System.EventHandler(this.btnConverter_Click);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(6, 24);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(26, 13);
+            this.label2.TabIndex = 1;
+            this.label2.Text = "S12";
+            // 
+            // numericStartByte
+            // 
+            this.numericStartByte.Location = new System.Drawing.Point(107, 22);
+            this.numericStartByte.Name = "numericStartByte";
+            this.numericStartByte.Size = new System.Drawing.Size(95, 20);
+            this.numericStartByte.TabIndex = 0;
+            this.numericStartByte.ValueChanged += new System.EventHandler(this.numericStartByte_ValueChanged);
+            // 
             // iNCLR
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Transparent;
             this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.Controls.Add(this.groupModificar);
             this.Controls.Add(this.lblRGB);
             this.Controls.Add(this.btnSave);
             this.Controls.Add(this.groupProp);
@@ -163,6 +222,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.paletaBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nPaleta)).EndInit();
             this.groupProp.ResumeLayout(false);
+            this.groupModificar.ResumeLayout(false);
+            this.groupModificar.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericStartByte)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -180,5 +242,10 @@
         private System.Windows.Forms.ColumnHeader columnValor;
         private System.Windows.Forms.Button btnSave;
         private System.Windows.Forms.Label lblRGB;
+        private System.Windows.Forms.GroupBox groupModificar;
+        private System.Windows.Forms.Button btnImport;
+        private System.Windows.Forms.Button btnConverter;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.NumericUpDown numericStartByte;
     }
 }

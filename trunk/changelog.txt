@@ -1,3 +1,12 @@
+0.7.4 (public release):
+*** Import BitMaP images and convert it to NCLR,NCGR,NSCR files
+* New methods and functions in IPluginHost interface
+* Add new file format in "Open As..." -> Extract FAT (files with offsets at the beggining)
+* Add new file format in "Open As..." -> Text
+* Fixed problem saving roms without arm9 overlay
+* Improved french translation (by Vix33)
+* Fixed minor problems.
+
 0.7.3 (Contest release):
 * Fixed problem with some SDAT and SWAV files
 * Added option to open external files

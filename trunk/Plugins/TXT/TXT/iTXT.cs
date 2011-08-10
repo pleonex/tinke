@@ -25,7 +25,7 @@ namespace TXT
             this.id = id;
             this.text = text;
 
-            if (text[0] == 0xFE && text[1] == 0xFF)
+            if ((text[0] == 0xFE && text[1] == 0xFF) || (text[0] == 0xFF && text[1] == 0xFE))
             {
                 txtBox.Text = Descodificar(Encoding.Unicode);
                 comboEncod.SelectedIndex = 1;
@@ -64,7 +64,9 @@ namespace TXT
 
         private String Descodificar(Encoding encoding)
         {
-            return new String(encoding.GetChars(text));
+            String texto = new String(encoding.GetChars(text));
+            texto = texto.Replace("\n", "\r\n");
+            return texto;
         }
         private void comboEncod_SelectedIndexChanged(object sender, EventArgs e)
         {

@@ -388,7 +388,7 @@ namespace Tinke
                     pluginHost.Set_NCLR(paleta);
                     File.Delete(tempFile);
                     
-                    return new iNCLR(paleta);
+                    return new iNCLR(paleta, pluginHost);
                 }               
                 else if (formato == Formato.Imagen)
                 {
@@ -398,7 +398,8 @@ namespace Tinke
 
                     if (pluginHost.Get_NCLR().cabecera.file_size != 0x00)
                     {
-                        iNCGR control = new iNCGR(tile, pluginHost.Get_NCLR());
+                        iNCGR control = new iNCGR(tile, pluginHost.Get_NCLR(), pluginHost);
+                        control.btnImport.Enabled = false;
                         control.Dock = DockStyle.Fill;
                         return control;
                     }
@@ -417,12 +418,8 @@ namespace Tinke
 
                     if (pluginHost.Get_NCGR().cabecera.file_size != 0x00 || pluginHost.Get_NCLR().cabecera.file_size != 0x00)
                     {
-                        NCGR tile = pluginHost.Get_NCGR();
-                        tile.rahc.tileData = Imagen_NSCR.Modificar_Tile(pluginHost.Get_NSCR(), tile.rahc.tileData);
-                        tile.rahc.nTilesX = (ushort)(pluginHost.Get_NSCR().section.width / 8);
-                        tile.rahc.nTilesY = (ushort)(pluginHost.Get_NSCR().section.height / 8);
-
-                        iNCGR control = new iNCGR(tile, pluginHost.Get_NCLR());
+                        iNCGR control = new iNCGR(pluginHost.Get_NCGR(), pluginHost.Get_NCLR(), nscr, pluginHost);
+                        control.btnImport.Enabled = false;
                         control.Dock = DockStyle.Fill;
                         return control;
                     }
@@ -991,7 +988,7 @@ namespace Tinke
             else    // En caso de que el archivo haya sido extraído y no esté en la ROM
                 br = new BinaryReader(File.OpenRead(currFile.path));
 
-            if (br.BaseStream.Length == 0x00)
+            if (br.BaseStream.Length < 0x04)
                 return "";
 
             byte[] ext = null;
@@ -1282,6 +1279,145 @@ namespace Tinke
             Add_Files(ref desc, id);    // Añadimos los archivos descomprimidos al árbol de archivos
             return desc;
         }
+        public Carpeta Extract_FAT()
+        {
+            #region Guardamos el archivo fuera del sistema de ROM
+            Archivo selectFile = Select_File();
+            string tempFile;
+            BinaryReader br;
+
+            if (selectFile.offset != 0x0)
+            {
+                tempFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + selectFile.name;
+                br = new BinaryReader(File.OpenRead(file));
+                br.BaseStream.Position = selectFile.offset;
+
+                BinaryWriter bw = new BinaryWriter(new FileStream(tempFile, FileMode.Create));
+                bw.Write(br.ReadBytes((int)selectFile.size));
+                bw.Flush();
+                bw.Close();
+
+                br.BaseStream.Position = selectFile.offset;
+            }
+            else
+            {
+                FileInfo info = new FileInfo(selectFile.path);
+                File.Copy(selectFile.path, info.DirectoryName + Path.DirectorySeparatorChar + "temp_" + info.Name, true);
+                tempFile = info.DirectoryName + Path.DirectorySeparatorChar + "temp_" + info.Name;
+                br = new BinaryReader(File.OpenRead(tempFile));
+            }
+
+            byte[] ext = br.ReadBytes(4);
+
+            br.Close();
+            #endregion
+
+            Carpeta desc = new Carpeta();
+            desc.files = new List<Archivo>();
+            desc.name = "root";
+
+            br = new BinaryReader(File.OpenRead(tempFile));
+            uint currOffset = br.ReadUInt32();
+            int nFiles = ((int)currOffset / 0x04) - 1;
+
+            for (int i = 0; i < nFiles; i++)
+            {
+                uint nextOffset = br.ReadUInt32();
+                long pos = br.BaseStream.Position;
+                br.BaseStream.Position = currOffset;
+
+                String currTempFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + Path.GetRandomFileName();
+                File.WriteAllBytes(currTempFile, br.ReadBytes((int)(nextOffset - currOffset)));
+
+                Archivo currFile = new Archivo();
+                currFile.name = "file " + i.ToString();
+                currFile.offset = 0x00;
+                currFile.path = currTempFile;
+                currFile.size = nextOffset - currOffset;
+                desc.files.Add(currFile);
+
+                currOffset = nextOffset;
+                br.BaseStream.Position = pos;
+            }
+            br.Close();
+
+            File.Delete(tempFile);
+            Add_Files(ref desc, idSelect);    // Añadimos los archivos descomprimidos al árbol de archivos
+            return desc;
+        }
+        public Carpeta Extract_FAT2() // BETA (hay errores)
+        {
+            int start = 0x0c;
+
+            #region Guardamos el archivo fuera del sistema de ROM
+            Archivo selectFile = Select_File();
+            string tempFile;
+            BinaryReader br;
+
+            if (selectFile.offset != 0x0)
+            {
+                tempFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + selectFile.name;
+                br = new BinaryReader(File.OpenRead(file));
+                br.BaseStream.Position = selectFile.offset;
+
+                BinaryWriter bw = new BinaryWriter(new FileStream(tempFile, FileMode.Create));
+                bw.Write(br.ReadBytes((int)selectFile.size));
+                bw.Flush();
+                bw.Close();
+
+                br.BaseStream.Position = selectFile.offset;
+            }
+            else
+            {
+                FileInfo info = new FileInfo(selectFile.path);
+                File.Copy(selectFile.path, info.DirectoryName + Path.DirectorySeparatorChar + "temp_" + info.Name, true);
+                tempFile = info.DirectoryName + Path.DirectorySeparatorChar + "temp_" + info.Name;
+                br = new BinaryReader(File.OpenRead(tempFile));
+            }
+
+            byte[] ext = br.ReadBytes(4);
+
+            br.Close();
+            #endregion
+
+            Carpeta desc = new Carpeta();
+            desc.files = new List<Archivo>();
+            desc.name = "root";
+
+            br = new BinaryReader(File.OpenRead(tempFile));
+            br.BaseStream.Position = start;
+            uint endOffset, startOffset = br.ReadUInt32();
+            int nFiles = (int)(startOffset - start) / 0x08;
+            br.BaseStream.Position = start;
+
+            for (int i = 0; i < nFiles; i++)
+            {
+                startOffset = br.ReadUInt32();
+                endOffset = br.ReadUInt32();
+                if (startOffset > endOffset || endOffset > br.BaseStream.Length)
+                    continue;
+
+                long pos = br.BaseStream.Position;
+                br.BaseStream.Position = startOffset;
+
+                String currTempFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + Path.GetRandomFileName();
+                File.WriteAllBytes(currTempFile, br.ReadBytes((int)(endOffset - startOffset)));
+
+                Archivo currFile = new Archivo();
+                currFile.name = "file " + i.ToString();
+                currFile.offset = 0x00;
+                currFile.path = currTempFile;
+                currFile.size = endOffset - startOffset;
+                desc.files.Add(currFile);
+
+                br.BaseStream.Position = pos;
+            }
+            br.Close();
+
+            File.Delete(tempFile);
+            Add_Files(ref desc, idSelect);    // Añadimos los archivos descomprimidos al árbol de archivos
+            return desc;
+        }
         private void Recursivo_EliminarArchivosNulos(Carpeta carpeta)
         {
             if (carpeta.files is List<Archivo>)
@@ -1357,6 +1493,25 @@ namespace Tinke
             }
         Continuar:
             return;
+        }
+
+        public void Save_File(int id, string outFile)
+        {
+            // Guardamos el archivo fuera del sistema de ROM
+            Archivo selectFile = Select_File();
+
+            if (selectFile.offset != 0x0)
+            {
+                BinaryReader br = new BinaryReader(File.OpenRead(file));
+                br.BaseStream.Position = selectFile.offset;
+                File.WriteAllBytes(outFile, br.ReadBytes((int)selectFile.size));
+                br.Close();
+            }
+            else
+            {
+                FileInfo info = new FileInfo(selectFile.path);
+                File.Copy(selectFile.path, outFile, true);
+            }
         }
 
         public Control See_File()
@@ -1435,7 +1590,7 @@ namespace Tinke
                     pluginHost.Set_NCLR(nclr);
                     File.Delete(tempFile);
 
-                    iNCLR control = new iNCLR(nclr);
+                    iNCLR control = new iNCLR(nclr, pluginHost);
                     control.Dock = DockStyle.Fill;
                     return control; ;
                 }
@@ -1447,7 +1602,7 @@ namespace Tinke
 
                     if (pluginHost.Get_NCLR().cabecera.file_size != 0x00)
                     {
-                        iNCGR control = new iNCGR(tile, pluginHost.Get_NCLR());
+                        iNCGR control = new iNCGR(tile, pluginHost.Get_NCLR(), pluginHost);
                         control.Dock = DockStyle.Fill;
                         return control;
                     }
@@ -1464,12 +1619,7 @@ namespace Tinke
                     File.Delete(tempFile);
                     if (pluginHost.Get_NCGR().cabecera.file_size != 0x00 || pluginHost.Get_NCLR().cabecera.file_size != 0x00)
                     {
-                        NCGR tile = pluginHost.Get_NCGR();
-                        tile.rahc.tileData = Imagen_NSCR.Modificar_Tile(pluginHost.Get_NSCR(), tile.rahc.tileData);
-                        tile.rahc.nTilesX = (ushort)(pluginHost.Get_NSCR().section.width / 8);
-                        tile.rahc.nTilesY = (ushort)(pluginHost.Get_NSCR().section.height / 8);
-
-                        iNCGR control = new iNCGR(tile, pluginHost.Get_NCLR());
+                        iNCGR control = new iNCGR(pluginHost.Get_NCGR(), pluginHost.Get_NCLR(), pluginHost.Get_NSCR(), pluginHost);
                         control.Dock = DockStyle.Fill;
                         return control;
                     }
@@ -1528,6 +1678,153 @@ namespace Tinke
             #endregion
 
             try { File.Delete(tempFile); }
+            catch { }
+            return new Control();
+        }
+        public Control See_File(String archivo)
+        {
+            BinaryReader br = new BinaryReader(File.OpenRead(archivo));
+            byte[] ext = br.ReadBytes(4);
+            br.Close();
+            string name = Path.GetFileName(archivo);
+
+            #region Búsqueda y llamada a plugin
+            try
+            {
+                if (gamePlugin is IGamePlugin)
+                {
+                    if (gamePlugin.Get_Formato(name, ext, idSelect) != Formato.Desconocido)
+                    {
+                        Control resultado = gamePlugin.Show_Info(archivo, idSelect);
+                        File.Delete(archivo);
+                        return resultado;
+                    }
+                }
+
+                foreach (IPlugin plugin in formatList)
+                {
+                    if (plugin.Get_Formato(name, ext) != Formato.Desconocido)
+                    {
+                        Control resultado = plugin.Show_Info(archivo, idSelect);
+                        File.Delete(archivo);
+                        return resultado;
+                    }
+                }
+
+                if (ext[0] == LZ77_TAG || ext[0] == LZSS_TAG || ext[0] == RLE_TAG || ext[0] == HUFF_TAG)
+                {
+                    File.Delete(archivo);
+                    MessageBox.Show("Por el momento compresiones normales no devuelven información.");
+                    return new Control();
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                try { File.Delete(archivo); }
+                catch { }
+                return new Control();
+            }
+            #endregion
+
+            #region Formatos comunes
+            try
+            {
+                name = name.ToUpper();
+                if (new String(Encoding.ASCII.GetChars(ext)) == "NCLR" || new String(Encoding.ASCII.GetChars(ext)) == "RLCN")
+                {
+                    NCLR nclr = Imagen_NCLR.Leer(archivo, idSelect);
+                    pluginHost.Set_NCLR(nclr);
+                    File.Delete(archivo);
+
+                    iNCLR control = new iNCLR(nclr, pluginHost);
+                    control.Dock = DockStyle.Fill;
+                    return control; ;
+                }
+                if (new String(Encoding.ASCII.GetChars(ext)) == "NCGR" || new String(Encoding.ASCII.GetChars(ext)) == "RGCN")
+                {
+                    NCGR tile = Imagen_NCGR.Leer(archivo, idSelect);
+                    pluginHost.Set_NCGR(tile);
+                    File.Delete(archivo);
+
+                    if (pluginHost.Get_NCLR().cabecera.file_size != 0x00)
+                    {
+                        iNCGR control = new iNCGR(tile, pluginHost.Get_NCLR(), pluginHost);
+                        control.Dock = DockStyle.Fill;
+                        return control;
+                    }
+                    else
+                    {
+                        MessageBox.Show("Para ver este archivo necesitas guardar la información (doble click sobre el archivo)" +
+                            " de una paleta");
+                        return new Control();
+                    }
+                }
+                else if (new String(Encoding.ASCII.GetChars(ext)) == "NSCR" || new String(Encoding.ASCII.GetChars(ext)) == "RCSN")
+                {
+                    pluginHost.Set_NSCR(Imagen_NSCR.Leer(archivo, idSelect));
+                    File.Delete(archivo);
+                    if (pluginHost.Get_NCGR().cabecera.file_size != 0x00 || pluginHost.Get_NCLR().cabecera.file_size != 0x00)
+                    {
+                        iNCGR control = new iNCGR(pluginHost.Get_NCGR(), pluginHost.Get_NCLR(), pluginHost.Get_NSCR(), pluginHost);
+                        control.Dock = DockStyle.Fill;
+                        return control;
+                    }
+                    else
+                    {
+                        MessageBox.Show("Para ver este archivo necesitas guardar la información (doble click sobre el archivo)" +
+                            " de una paleta y una imagen (tiles)");
+                        return new Control();
+                    }
+                }
+                else if (new String(Encoding.ASCII.GetChars(ext)) == "NCER" || new String(Encoding.ASCII.GetChars(ext)) == "RECN")
+                {
+                    pluginHost.Set_NCER(Imagen_NCER.Leer(archivo, idSelect));
+                    File.Delete(archivo);
+
+                    if (pluginHost.Get_NCGR().cabecera.file_size != 0x00 && pluginHost.Get_NCLR().cabecera.file_size != 0x00)
+                    {
+                        iNCER control = new iNCER(pluginHost.Get_NCER(), pluginHost.Get_NCGR(), pluginHost.Get_NCLR());
+                        control.Dock = DockStyle.Fill;
+
+                        return control;
+                    }
+                    else
+                    {
+                        MessageBox.Show("Para ver este archivo necesitas guardar la información (doble click sobre el archivo)" +
+                            " de una paleta y una imagen (tiles)");
+                        return new Control();
+                    }
+                }
+                else if (new String(Encoding.ASCII.GetChars(ext)) == "NANR" || new String(Encoding.ASCII.GetChars(ext)) == "RNAN")
+                {
+                    pluginHost.Set_NANR(Imagen_NANR.Leer(archivo, idSelect));
+                    File.Delete(archivo);
+
+                    if (pluginHost.Get_NCER().header.file_size != 0x00 && pluginHost.Get_NCGR().cabecera.file_size != 0x00 &&
+                        pluginHost.Get_NCLR().cabecera.file_size != 0x00)
+                    {
+                        iNANR control = new iNANR(pluginHost.Get_NCLR(), pluginHost.Get_NCGR(), pluginHost.Get_NCER(), pluginHost.Get_NANR());
+                        control.Dock = DockStyle.Fill;
+
+                        return control;
+                    }
+                    else
+                    {
+                        MessageBox.Show("Para ver este archivo necesitas guardar la información (doble click sobre el archivo)" +
+                            " de una paleta, una imagen (tiles) y una archivo de celdas");
+                        return new Control();
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message);
+                Console.WriteLine(e.Message);
+            }
+            #endregion
+
+            try { File.Delete(archivo); }
             catch { }
             return new Control();
         }

@@ -81,6 +81,20 @@ namespace Tinke.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap page_white_text {
+            get {
+                object obj = ResourceManager.GetObject("page_white_text", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap picture_go {
+            get {
+                object obj = ResourceManager.GetObject("picture_go", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap picture_save {
             get {
                 object obj = ResourceManager.GetObject("picture_save", resourceCulture);

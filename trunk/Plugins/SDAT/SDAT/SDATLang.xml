@@ -32,17 +32,17 @@
   </English>
   <Français>
     <iSDAT>
-      <S00>Property</S00>
-      <S01>Content</S01>
+      <S00>Champ</S00>
+      <S01>Données</S01>
       <S02>ID</S02>
       <S03>Format</S03>
       <S04>Offset</S04>
-      <S05>Size</S05>
-      <S06>Enabled loop</S06>
-      <S07>Unpack</S07>
-      <S08>Extract</S08>
-      <S09>Save MIDI</S09>
-      <S0A>Save WAV</S0A>
+      <S05>Taille</S05>
+      <S06>Activer la boucle</S06>
+      <S07>Décompresser</S07>
+      <S08>Extraire</S08>
+      <S09>Sauver MIDI</S09>
+      <S0A>Sauver WAV</S0A>
     </iSDAT>
   </Français>
 </Language>
