@@ -42,20 +42,20 @@
   </English>
   <Français>
     <TXT>
-      <S00>Sauvegarder</S00>
-      <S01>Encoding:</S01>
-      <S02>WordWrap</S02>
+      <S00>Changer</S00>
+      <S01>Codage :</S01>
+      <S02>Retour auto à la ligne</S02>
     </TXT>
     <BMG>
       <S01>Champ</S01>
       <S02>Valeur</S02>
-      <S03>Codification</S03>
+      <S03>Codage</S03>
       <S04>Section</S04>
-      <S05>Nombre messages</S05>
+      <S05>Nombre de messages</S05>
       <S06>Taille offset</S06>
       <S07>Inconnu 1</S07>
       <S08>Inconnu 2</S08>
-      <S09>Message:</S09>
+      <S09>Message :</S09>
       <S0A>Oui</S0A>
       <S0B>Non</S0B>
     </BMG>

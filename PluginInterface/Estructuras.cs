@@ -119,7 +119,7 @@ namespace PluginInterface
     public struct NTFS              // Nintedo Tile Format Screen
     {
         public byte nPalette;        // Junto con los cuatro siguientes forman dos bytes de la siguiente forma (en bits):
-        public byte xFlip;           // PPPP X Y NNNNNNNNNN
+        public byte xFlip;           // PPPP Y X NNNNNNNNNN
         public byte yFlip;
         public ushort nTile;
     }

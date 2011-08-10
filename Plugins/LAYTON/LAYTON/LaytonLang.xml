@@ -74,33 +74,33 @@
   </English>
   <Français>
     <InfoAni>
-      <S01>Intervalle:</S01>
+      <S01>Intervalle :</S01>
       <S02>Transparence</S02>
-      <S03>Sauvegarder image</S03>
-      <S04>Sauvegarder animation</S04>
+      <S03>Sauver image</S03>
+      <S04>Sauver animation</S04>
     </InfoAni>
     <InfoImage>
-      <S01>Images:</S01>
-      <S02>Taille img:</S02>
-      <S03>Longueur:</S03>
-      <S04>Hauteur:</S04>
-      <S05>Nombre de portions:</S05>
-      <S06>Nom:</S06>
-      <S07>Information des portions:</S07>
-      <S08>Portion</S08>
+      <S01>Images :</S01>
+      <S02>Taille de l'image :</S02>
+      <S03>Longueur :</S03>
+      <S04>Hauteur :</S04>
+      <S05>Nombre de parties :</S05>
+      <S06>Nom :</S06>
+      <S07>Information des parties :</S07>
+      <S08>Partie</S08>
     </InfoImage>
     <InfoParte>
-      <S01>Position:</S01>
-      <S02>Taille:</S02>
-      <S03>Longueur:</S03>
-      <S04>Hauteur:</S04>
-      <S05>Position X:</S05>
-      <S06>Position Y:</S06>
+      <S01>Position :</S01>
+      <S02>Taille :</S02>
+      <S03>Longueur :</S03>
+      <S04>Hauteur :</S04>
+      <S05>Position X :</S05>
+      <S06>Position Y :</S06>
     </InfoParte>
     <InfoPicture>
-      <S01>Information du  fichier:</S01>
-      <S02>Type:</S02>
-      <S03>Nombre images:</S03>
+      <S01>Information du  fichier :</S01>
+      <S02>Type :</S02>
+      <S03>Nombre d'images :</S03>
       <S04>Information des images</S04>
       <S05>Image</S05>
     </InfoPicture>

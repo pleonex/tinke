@@ -55,9 +55,9 @@
             // 
             this.btnSave.ImageKey = "page_save.png";
             this.btnSave.ImageList = this.imageList1;
-            this.btnSave.Location = new System.Drawing.Point(432, 472);
+            this.btnSave.Location = new System.Drawing.Point(408, 472);
             this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(75, 35);
+            this.btnSave.Size = new System.Drawing.Size(99, 35);
             this.btnSave.TabIndex = 1;
             this.btnSave.Text = "S00";
             this.btnSave.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;

@@ -18,7 +18,7 @@ namespace Tinke
 
             BinaryReader br = new BinaryReader(File.OpenRead(file));
 
-            // Lee cabecera genérica
+            // Read the common header
             ncgr.cabecera.id = br.ReadChars(4);
             ncgr.cabecera.endianess = br.ReadUInt16();
             if (ncgr.cabecera.endianess == 0xFFFE)
@@ -28,7 +28,7 @@ namespace Tinke
             ncgr.cabecera.header_size = br.ReadUInt16();
             ncgr.cabecera.nSection = br.ReadUInt16();
 
-            // Lee primera sección CHAR (CHARacter data)
+            // Read the first section: CHAR (CHARacter data)
             ncgr.rahc.id = br.ReadChars(4);
             ncgr.rahc.size_section = br.ReadUInt32();
             ncgr.rahc.nTilesY = br.ReadUInt16();
@@ -83,13 +83,13 @@ namespace Tinke
             if (ncgr.orden == Orden_Tiles.No_Tiles)
                 ncgr.rahc.tileData.tiles[0] = noTile.ToArray();
 
-            if (ncgr.cabecera.nSection == 1 || br.BaseStream.Position == br.BaseStream.Length)   // En caso de que no haya más secciones
+            if (ncgr.cabecera.nSection == 1 || br.BaseStream.Position == br.BaseStream.Length)   // If there isn't SOPC section
             {
                 br.Close();
                 return ncgr;
             }
             
-            // Lee la segunda sección SOPC
+            // Read the second section: SOPC
             ncgr.sopc.id = br.ReadChars(4);
             ncgr.sopc.size_section = br.ReadUInt32();
             ncgr.sopc.unknown1 = br.ReadUInt32();
@@ -133,7 +133,166 @@ namespace Tinke
             br.Close();
             return ncgr;
         }
-        
+
+        public static void Write(NCGR tile, string fileout)
+        {
+            BinaryWriter bw = new BinaryWriter(File.OpenWrite(fileout));
+
+            // Common header
+            bw.Write(tile.cabecera.id);
+            bw.Write(tile.cabecera.endianess);
+            bw.Write(tile.cabecera.constant);
+            bw.Write(tile.cabecera.file_size);
+            bw.Write(tile.cabecera.header_size);
+            bw.Write(tile.cabecera.nSection);
+            // RAHC section
+            bw.Write(tile.rahc.id);
+            bw.Write(tile.rahc.size_section);
+            bw.Write(tile.rahc.nTilesY);
+            bw.Write(tile.rahc.nTilesX);
+            bw.Write((uint)(tile.rahc.depth == ColorDepth.Depth4Bit ? 0x03 : 0x04));
+            bw.Write(tile.rahc.unknown1);
+            bw.Write(tile.rahc.unknown2);
+            bw.Write(tile.rahc.tiledFlag);
+            bw.Write((uint)(tile.rahc.depth == ColorDepth.Depth4Bit ? tile.rahc.size_tiledata * 2 : tile.rahc.size_tiledata));
+            bw.Write(tile.rahc.unknown3);
+            for (int i = 0; i < tile.rahc.tileData.tiles.Length; i++)
+                if (tile.rahc.depth == ColorDepth.Depth4Bit)
+                    bw.Write(Convertir.Bit4ToBit8(tile.rahc.tileData.tiles[i]));
+                else
+                    bw.Write(tile.rahc.tileData.tiles[i]);
+            // SOPC section
+            if (tile.cabecera.nSection == 2)
+            {
+                bw.Write(tile.sopc.id);
+                bw.Write(tile.sopc.size_section);
+                bw.Write(tile.sopc.unknown1);
+                bw.Write(tile.sopc.charSize);
+                bw.Write(tile.sopc.nChar);
+            }
+
+            bw.Flush();
+            bw.Close();
+        }
+        public static NCGR BitmapToTile(string bitmap, Orden_Tiles tileOrder)
+        {
+            NCGR tile = new NCGR();
+            BinaryReader br = new BinaryReader(File.OpenRead(bitmap));
+            if (new String(br.ReadChars(2)) != "BM")
+                throw new NotSupportedException("Archivo no soportado, no es BITMAP");
+
+            tile.cabecera.id = "RGCN".ToCharArray();
+            tile.cabecera.endianess = 0xFEFF;
+            tile.cabecera.constant = 0x0001;
+            tile.cabecera.header_size = 0x10;
+            tile.cabecera.nSection = 0x01;
+
+            br.BaseStream.Position = 0x0A;
+            uint offsetImagen = br.ReadUInt32();
+
+            br.BaseStream.Position += 0x04;
+            uint ancho = br.ReadUInt32();
+            uint alto = br.ReadUInt32();
+            tile.rahc.nTilesX = (ushort)(ancho);
+            tile.rahc.nTilesY = (ushort)(alto);
+            if (tileOrder == Orden_Tiles.Horizontal)
+            {
+                tile.rahc.nTilesX /= 8;
+                tile.rahc.nTilesY /= 8;
+            }
+            tile.rahc.nTiles = (ushort)(tile.rahc.nTilesX * tile.rahc.nTilesY);
+
+            br.BaseStream.Position += 0x02;
+            uint bpp = br.ReadUInt16();
+            if (bpp == 0x04)
+                tile.rahc.depth = System.Windows.Forms.ColorDepth.Depth4Bit;
+            else if (bpp == 0x08)
+                tile.rahc.depth = System.Windows.Forms.ColorDepth.Depth8Bit;
+            else
+                throw new NotSupportedException("Archivo BMP no soportado, profundidad " + bpp.ToString());
+
+            uint compresion = br.ReadUInt32();
+            uint tamañoImagen = br.ReadUInt32();
+
+            tile.rahc.tileData.tiles = new byte[1][];
+            switch (tile.rahc.depth)
+            {
+                case System.Windows.Forms.ColorDepth.Depth4Bit:
+                    #region 4 BPP
+                    tile.rahc.tileData.tiles[0] = new byte[ancho * alto * 2];
+                    tile.rahc.tileData.nPaleta = new byte[ancho * alto * 2];
+
+                    int divisor = (int)ancho / 2;
+                    if (ancho % 4 != 0)
+                    {
+                        int res;
+                        Math.DivRem((int)ancho / 2, 4, out res);
+                        divisor = (int)ancho / 2 + (4 - res);
+                    }
+                    br.BaseStream.Position = offsetImagen;
+
+                    for (int h = (int)alto - 1; h >= 0; h--)
+                    {
+                        for (int w = 0; w < ancho; w += 2)
+                        {
+                            string hex = String.Format("{0:X}", br.ReadByte());
+                            if (hex.Length == 1)
+                                hex = '0' + hex;
+
+                            tile.rahc.tileData.tiles[0][w + h * ancho] = Convert.ToByte(hex[0].ToString(), 16);
+                            tile.rahc.tileData.nPaleta[w + h * ancho] = 0;
+                            if (w + 1 == (int)ancho)
+                                continue;
+                            tile.rahc.tileData.tiles[0][w + 1 + h * ancho] = Convert.ToByte(hex[1].ToString(), 16);
+                            tile.rahc.tileData.nPaleta[w + 1 + h * ancho] = 0;
+                        }
+                        br.ReadBytes((int)(divisor - ((float)ancho / 2)));
+                    }
+                    #endregion
+                    break;
+                case System.Windows.Forms.ColorDepth.Depth8Bit:
+                    #region 8 BPP
+                    tile.rahc.tileData.tiles[0] = new byte[ancho * alto];
+                    tile.rahc.tileData.nPaleta = new byte[ancho * alto];
+
+                    divisor = (int)ancho;
+                    if (ancho % 4 != 0)
+                    {
+                        int res;
+                        Math.DivRem((int)ancho, 4, out res);
+                        divisor = (int)ancho + (4 - res);
+                    }
+                    br.BaseStream.Position = offsetImagen;
+                    for (int h = (int)alto - 1; h >= 0; h--)
+                    {
+                        for (int w = 0; w < ancho; w++)
+                        {
+                            tile.rahc.tileData.tiles[0][w + h * ancho] = br.ReadByte();
+                            tile.rahc.tileData.nPaleta[w + h * ancho] = 0;
+                        }
+                        br.ReadBytes(divisor - (int)ancho);
+                    }
+                    #endregion
+                    break;
+            }
+            if (tileOrder == Orden_Tiles.Horizontal)
+                tile.rahc.tileData.tiles = Convertir.BytesToTiles_NoChanged(tile.rahc.tileData.tiles[0], 
+                                           tile.rahc.nTilesX, tile.rahc.nTilesY);
+
+            tile.rahc.id = "RAHC".ToCharArray();
+            tile.rahc.size_tiledata = (uint)tile.rahc.tileData.nPaleta.Length;
+            tile.rahc.tiledFlag = (uint)(tileOrder == Orden_Tiles.No_Tiles ? 0x01 : 0x00);
+            tile.rahc.unknown1 = 0x00;
+            tile.rahc.unknown2 = 0x00;
+            tile.rahc.unknown3 = 0x0018;
+            tile.rahc.size_section = tile.rahc.size_tiledata + 0x20;
+            tile.cabecera.file_size = tile.rahc.size_section + tile.cabecera.header_size;
+            tile.orden = tileOrder;
+
+            return tile;
+        }
+
+
         public static Bitmap Crear_Imagen(NCGR tile, NCLR paleta)
         {
             if (tile.rahc.nTilesX == 0xFFFF)        // En caso de que no venga la información hacemos la imagen de 256x256

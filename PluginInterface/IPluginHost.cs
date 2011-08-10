@@ -18,7 +18,7 @@
  * Programa utilizado: Microsoft Visual C# 2010 Express
  * Fecha: 18/02/2011
  * 
- */
+ */ 
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,13 +42,17 @@ namespace PluginInterface
         void Set_NANR(NANR nanr);
 
         
-        Color[] BGR555(byte[] datos);
+        Color[] BGR555(byte[] data);
+        Byte[] ColorToBGR555(Color[] color);
         Byte[] BytesTo4BitsRev(byte[] datos);
         String BytesToBits(byte[] datos);
         Byte[] Bit4ToBit8(byte[] bits4);
         Byte[] Bit8ToBit4(byte[] bits8);
         Byte[] TilesToBytes(byte[][] tiles);
         Byte[][] BytesToTiles(byte[] bytes);
+        Byte[][] BytesToTiles_NoChanged(byte[] bytes, int tilesX, int tilesY);
+        TTLP Palette_4bppTo8bpp(TTLP palette);
+        TTLP Palette_8bppTo4bpp(TTLP palette);
 
         Bitmap[] Bitmaps_NCLR(string archivo);
         Bitmap[] Bitmaps_NCLR(NCLR nclr);
@@ -88,5 +92,13 @@ namespace PluginInterface
         /// <param name="id">The id of the file to change</param>
         /// <param name="newFile">The path where the new file is</param>
         void ChangeFile(int id, string newFile);
+
+        void Write_NCLR(NCLR nclr, string fileout);
+        void Write_NCGR(NCGR ncgr, string fileout);
+        void Write_NSCR(NSCR nscr, string fileout);
+
+        NCLR BitmapToPalette(string bitmap);
+        NCGR BitmapToTile(string bitmap, Orden_Tiles tileOrder);
+        NSCR Create_BasicMap(int nTiles, int width, int height);
     }
 }

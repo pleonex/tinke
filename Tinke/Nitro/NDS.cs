@@ -335,6 +335,7 @@ namespace Tinke.Nitro
             diccionario.Add("78", "THQ");
             diccionario.Add("7D", "Vivendi Universal Games");
             diccionario.Add("7J", "Zoo Digital Publishing Ltd");
+            diccionario.Add("7U", "Ignition Entertainment");
             diccionario.Add("8J", "General Entertainment");
             diccionario.Add("8P", "SEGA");
             diccionario.Add("99", "Rising Star Games");
@@ -342,7 +343,9 @@ namespace Tinke.Nitro
             diccionario.Add("AF", "Namco");
             diccionario.Add("FH", "Foreign Media Games");
             diccionario.Add("FK", "The Game Factory");
+            diccionario.Add("G9", "D3Publisher of America");
             diccionario.Add("GD", "SQUARE ENIX");
+            diccionario.Add("GN", "Oxygen Interactive");
             diccionario.Add("GR", "GSP");
             diccionario.Add("GT", "505 Games");
             diccionario.Add("GQ", "Engine Software");
@@ -351,8 +354,10 @@ namespace Tinke.Nitro
             diccionario.Add("HF", "Level 5");
             diccionario.Add("HM", "HMH - INTERACTIVE");
             diccionario.Add("LR", "Asylum Entertainment");
+            diccionario.Add("KJ", "Gamebridge");
             diccionario.Add("KM", "Deep Silver");
             diccionario.Add("MJ", "MumboJumbo");
+            diccionario.Add("MT", "Blast Entertainment");
             diccionario.Add("NK", "Neko Entertainment");
             diccionario.Add("NP", "Nobilis Publishing");
             diccionario.Add("PG", "Phoenix Games");

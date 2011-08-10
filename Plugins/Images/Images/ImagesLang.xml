@@ -107,7 +107,7 @@
   </English>
   <Français>
     <NCLR>
-      <S01>Numéro de palette:</S01>
+      <S01>Numéro de palette :</S01>
       <S02>Propriétés</S02>
       <S03>Champ</S03>
       <S04>Valeur</S04>
@@ -119,13 +119,13 @@
       <S0A>Sauvegarder</S0A>
       <S0B>Montrer toutes les palettes</S0B>
       <S0C>Palette</S0C>
-      <S0D>Analysant palette NCLR:</S0D>
-      <S0E>Pas de sections où excès ¿?:</S0E>
+      <S0D>Analyser la palette NCLR :</S0D>
+      <S0E>Nombre étrange de sections ? :</S0E>
       <S0F>palettes trouvées</S0F>
       <S10>couleurs.</S10>
     </NCLR>
     <NCGR>
-      <S01>Faites doble click sur l'image pour la voir en taille réelle.</S01>
+      <S01>Faites un double clique sur l'image pour la voir en taille réelle.</S01>
       <S02>Propriétés</S02>
       <S03>Position</S03>
       <S04>Champ</S04>
@@ -134,25 +134,25 @@
       <S07>Nombre de sections</S07>
       <S08>ID Section 1</S08>
       <S09>Taille</S09>
-      <S0A>Tiles Y</S0A>
-      <S0B>Tiles X</S0B>
+      <S0A>Tuiles Y</S0A>
+      <S0B>Tuiles X</S0B>
       <S0C>Format</S0C>
       <S0D>Inconnu</S0D>
       <S0E>Inconnu</S0E>
-      <S0F>Taille pixels donnés</S0F>
+      <S0F>Taille données de pixels</S0F>
       <S10>Inconnu</S10>
-      <S11>Début:</S11>
-      <S12>Longueur:</S12>
-      <S13>Hauteur:</S13>
-      <S14>Ordre des tiles:</S14>
+      <S11>Début :</S11>
+      <S12>Longueur :</S12>
+      <S13>Hauteur :</S13>
+      <S14>Ordre des tuiles :</S14>
       <S15>Sauvegarder</S15>
-      <S16>No tiled</S16>
+      <S16>Aucune tuile</S16>
       <S17>Horizontal</S17>
       <S18>Vertical</S18>
       <S19>Image en taille réelle</S19>
       <S1A>Zoom</S1A>
-      <S1B>Background colour</S1B>
-      <S1C>Remove</S1C>
+      <S1B>Couleur du fond</S1B>
+      <S1C>Supprimer</S1C>
       <S1D>Transparence</S1D>
     </NCGR>
   </Français>

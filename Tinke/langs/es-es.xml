@@ -197,6 +197,10 @@
     <S0E>No hay secciones o hay de más ¿?: </S0E>
     <S0F>paletas encontradas</S0F>
     <S10>colores.</S10>
+    <S11>Modificar</S11>
+    <S12>Byte de inicio:</S12>
+    <S13>Importar</S13>
+    <S14>Cambiar de profundidad</S14>
   </NCLR>
   <NCGR>
     <S01>
@@ -234,6 +238,7 @@
     <S1E>Zoom</S1E>
     <S1F>Color de fondo</S1F>
     <S20>Quitar</S20>
+    <S21>Importar</S21>
   </NCGR>
   <NCER>
     <S01>Banco:</S01>

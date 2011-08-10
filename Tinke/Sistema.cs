@@ -102,8 +102,8 @@ namespace Tinke
         }
         void Sistema_Load(object sender, EventArgs e)
         {
-            SplashScreen splash = new SplashScreen(); // Splash Screen del concurso de Scene Beta
-            splash.ShowDialog();
+            //SplashScreen splash = new SplashScreen(); // Splash Screen del concurso de Scene Beta
+            //splash.ShowDialog();
 
             // Iniciamos la lectura del archivo.
             string[] filesToRead = new string[1];
@@ -357,6 +357,7 @@ namespace Tinke
             btnImport.Text = xml.Element("S32").Value;
             btnSaveROM.Text = xml.Element("S33").Value;
             toolStripMenuComprimido.Text = xml.Element("S2A").Value;
+            toolStripAbrirTexto.Text = xml.Element("S26").Value;
         }
         private void ToolStripLang_Click(Object sender, EventArgs e)
         {
@@ -689,7 +690,10 @@ namespace Tinke
                 else
                     btnImport.Enabled = true;
                 if ((String)selectFile.tag == "Descomprimido")
+                {
                     toolStripOpenAs.Enabled = false;
+                    btnDescomprimir.Enabled = true;
+                }
             }
             else
             {
@@ -854,7 +858,7 @@ namespace Tinke
                     br.Close();
                 }
                 else
-                    File.Copy(fileSelect.path, o.FileName);
+                    File.Copy(fileSelect.path, o.FileName, true);
             }
         }
         private void ExtractFolder()
@@ -1029,18 +1033,44 @@ namespace Tinke
 
         private void AbrirComo(Formato formato)
         {
+            Archivo selectedFile = accion.Select_File();
+
+            if (formato == Formato.Texto)
+                if (selectedFile.offset != 0x00)
+                    accion.Save_File(accion.IDSelect, selectedFile.path + ".txt");
+                else
+                    File.Copy(selectedFile.path, selectedFile.path + ".txt", true);
+
             if (toolStripVentana.Checked)
             {
                 Visor visor = new Visor();
-                visor.Controls.Add(accion.Set_PicturesSaved(formato));
+                Control control;
+                if (formato == Formato.Texto)
+                    control = accion.See_File(selectedFile.path + ".txt");
+                else
+                    control = accion.Set_PicturesSaved(formato);
+                visor.Controls.Add(control);
+                visor.Text += " - " + accion.Select_File().name;
                 visor.Show();
             }
             else
             {
                 panelObj.Controls.Clear();
-                panelObj.Controls.Add(accion.Set_PicturesSaved(formato));
-                if (btnDesplazar.Text == ">>>>>")
-                    btnDesplazar.PerformClick();
+                Control control;
+                if (formato == Formato.Texto)
+                    control = accion.See_File(selectedFile.path + ".txt");
+                else
+                    control = accion.Set_PicturesSaved(formato);
+
+                if (control.Size.Height != 0 && control.Size.Width != 0) // Si no sería nulo
+                {
+                    panelObj.Controls.Add(control);
+                    if (btnDesplazar.Text == ">>>>>")
+                        btnDesplazar.PerformClick();
+                }
+                else
+                    if (btnDesplazar.Text == "<<<<<")
+                        btnDesplazar.PerformClick();
             }
             debug.Añadir_Texto(sb.ToString());
             sb.Length = 0;
@@ -1061,7 +1091,67 @@ namespace Tinke
         {
             btnUncompress_Click(btnDescomprimir, e);
         }
+        private void toolStripFAT1_Click(object sender, EventArgs e)
+        {
+            Carpeta uncompress = accion.Extract_FAT();
+            if (!(uncompress.files is List<Archivo>)) // En caso de que falle la extracción
+            {
+                MessageBox.Show(Tools.Helper.ObtenerTraduccion("Sistema", "S36"));
+                return;
+            }
 
+            toolStripOpenAs.Enabled = false;
+
+            Set_Formato(accion.Root);
+            Get_SupportedFiles();
+
+            TreeNode selected = treeSystem.SelectedNode;
+            CarpetaANodo(uncompress, ref selected);
+            selected.ImageIndex = accion.ImageFormatFile(Formato.Comprimido);
+            selected.SelectedImageIndex = accion.ImageFormatFile(Formato.Comprimido);
+
+            // Agregamos los nodos al árbol
+            TreeNode[] nodos = new TreeNode[selected.Nodes.Count]; selected.Nodes.CopyTo(nodos, 0);
+            treeSystem.SelectedNode.Tag = selected.Tag;
+            accion.IDSelect = Convert.ToInt32(selected.Tag);
+            selected.Nodes.Clear();
+
+            treeSystem.SelectedNode.Nodes.AddRange((TreeNode[])nodos);
+            treeSystem.SelectedNode.Expand();
+
+        }
+        private void toolStripFAT2_Click(object sender, EventArgs e)
+        {
+            Carpeta uncompress = accion.Extract_FAT2();
+            if (!(uncompress.files is List<Archivo>)) // En caso de que falle la extracción
+            {
+                MessageBox.Show(Tools.Helper.ObtenerTraduccion("Sistema", "S36"));
+                return;
+            }
+
+            toolStripOpenAs.Enabled = false;
+
+            Set_Formato(accion.Root);
+            Get_SupportedFiles();
+
+            TreeNode selected = treeSystem.SelectedNode;
+            CarpetaANodo(uncompress, ref selected);
+            selected.ImageIndex = accion.ImageFormatFile(Formato.Comprimido);
+            selected.SelectedImageIndex = accion.ImageFormatFile(Formato.Comprimido);
+
+            // Agregamos los nodos al árbol
+            TreeNode[] nodos = new TreeNode[selected.Nodes.Count]; selected.Nodes.CopyTo(nodos, 0);
+            treeSystem.SelectedNode.Tag = selected.Tag;
+            accion.IDSelect = Convert.ToInt32(selected.Tag);
+            selected.Nodes.Clear();
+
+            treeSystem.SelectedNode.Nodes.AddRange((TreeNode[])nodos);
+            treeSystem.SelectedNode.Expand();
+        }
+        private void toolStripAbrirTexto_Click(object sender, EventArgs e)
+        {
+            AbrirComo(Formato.Texto);
+        }
 
         private void linkAboutBox_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
@@ -1192,9 +1282,13 @@ namespace Tinke
             accion.Remove_File("arm7.bin", accion.Root);
             accion.Recursivo_BajarID(id, accion.Root);
             
-            id = accion.Search_File("y9.bin").files[0].id;
-            accion.Remove_File("y9.bin", accion.Root);
-            accion.Recursivo_BajarID(id, accion.Root);
+            Carpeta y9 = accion.Search_File("y9.bin");
+            if (y9.files.Count > 0)
+            {
+                id = y9.files[0].id;
+                accion.Remove_File("y9.bin", accion.Root);
+                accion.Recursivo_BajarID(id, accion.Root);
+            }
 
             Carpeta y7 = accion.Search_File("y7.bin");
             if (y7.files.Count > 0)
@@ -1415,6 +1509,5 @@ namespace Tinke
 
             return nodos;
         }
-
     }
 }

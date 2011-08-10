@@ -73,12 +73,16 @@ namespace Tinke
         public void Set_NANR(NANR nanr) { animacion = nanr; }
 
         public Color[] BGR555(byte[] datos) { return Convertir.BGR555(datos); }
+        public Byte[] ColorToBGR555(Color[] color) { return Convertir.ColorToBGR555(color); }
         public Byte[] BytesTo4BitsRev(byte[] datos) { return Tools.Helper.BytesTo4BitsRev(datos); }
         public String BytesToBits(byte[] datos) { return Tools.Helper.BytesToBits(datos); }
         public Byte[] Bit4ToBit8(byte[] bits4) { return Convertir.Bit4ToBit8(bits4); }
         public Byte[] Bit8ToBit4(byte[] bits8) { return Convertir.Bit8ToBit4(bits8); }
         public Byte[] TilesToBytes(byte[][] tiles) { return Convertir.TilesToBytes(tiles); }
         public Byte[][] BytesToTiles(byte[] bytes) { return Convertir.BytesToTiles(bytes); }
+        public Byte[][] BytesToTiles_NoChanged(byte[] bytes, int tilesX, int tilesY) { return Convertir.BytesToTiles_NoChanged(bytes, tilesX, tilesY); }
+        public TTLP Palette_4bppTo8bpp(TTLP palette) { return Convertir.Palette_4bppTo8bpp(palette); }
+        public TTLP Palette_8bppTo4bpp(TTLP palette) { return Convertir.Palette_8bppTo4bpp(palette); }
 
         public Bitmap[] Bitmaps_NCLR(string archivo) { return Imagen_NCLR.Mostrar(archivo); }
         public Bitmap[] Bitmaps_NCLR(NCLR nclr) { return Imagen_NCLR.Mostrar(nclr); }
@@ -137,5 +141,14 @@ namespace Tinke
         {
             ChangeFile_Event(id, newFile);
         }
+
+        public void Write_NCLR(NCLR nclr, string fileout) { Imagen_NCLR.Escribir(nclr, fileout); }
+        public void Write_NCGR(NCGR ncgr, string fileout) { Imagen_NCGR.Write(ncgr, fileout); }
+        public void Write_NSCR(NSCR nscr, string fileout) { Imagen_NSCR.Write(nscr, fileout); }
+
+        public NCLR BitmapToPalette(string bitmap) { return Imagen_NCLR.BitmapToPalette(bitmap); }
+        public NCGR BitmapToTile(string bitmap, Orden_Tiles tileOrder) { return Imagen_NCGR.BitmapToTile(bitmap, tileOrder); }
+        public NSCR Create_BasicMap(int nTiles, int width, int height) { return Imagen_NSCR.Create_BasicMap(nTiles, width, height); }
+
     }
 }
