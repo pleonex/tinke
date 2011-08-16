@@ -334,6 +334,7 @@ namespace SDAT
         {
             String fileout = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + Path.GetRandomFileName();
             Save_NewSDAT(fileout);
+            sdat.archivo = fileout;
 
             pluginHost.ChangeFile(sdat.id, fileout);
         }
@@ -587,7 +588,141 @@ namespace SDAT
 
         private void Save_NewSDAT(string fileout)
         {
+            /*
+             * File format *
+             * 
+             * Header
+             * |_ Offset of all sections
+             * 
+             * Symbol block
+             *
+             * 
+             * Info block
+             * |_ Records
+             * |_ Entries
+             * 
+             * FAT block
+             * |_ Offset
+             * |_ Size
+             * 
+             * File block
+             * |_ Files...
+             */
 
+            BinaryReader br = new BinaryReader(File.OpenRead(sdat.archivo));
+
+            // Symbol section
+            String symbTemp = Path.GetTempFileName();
+            br.BaseStream.Position = sdat.cabecera.symbOffset;
+            File.WriteAllBytes(symbTemp, br.ReadBytes((int)sdat.symbol.size));
+
+            // Info section
+            String infoTemp = Path.GetTempFileName();
+            br.BaseStream.Position = sdat.cabecera.infoOffset;
+            File.WriteAllBytes(infoTemp, br.ReadBytes((int)sdat.info.header.size));
+            br.Close();
+
+            // FAT section
+            String fatTemp = Path.GetTempFileName();
+            Write_FAT(fatTemp, sdat.cabecera.fileOffset + 0x10);
+
+            // File section
+            String fileTemp = Path.GetTempFileName();
+            Write_Files(fileTemp); // File without header
+
+            // Write the new SDAT file
+            int file_size = (int)(sdat.cabecera.symbSize + sdat.cabecera.infoSize + sdat.cabecera.fatSize + sdat.cabecera.fileSize);
+            BinaryWriter bw = new BinaryWriter(File.OpenWrite(fileout));
+
+            // Common header
+            bw.Write(sdat.generico.id);
+            bw.Write(sdat.generico.endianess);
+            bw.Write(sdat.generico.constant);
+            bw.Write(file_size);
+            bw.Write(sdat.generico.header_size);
+            bw.Write(sdat.generico.nSection);
+            // Header
+            bw.Write(sdat.cabecera.symbOffset);
+            bw.Write(sdat.cabecera.symbSize);
+            bw.Write(sdat.cabecera.infoOffset);
+            bw.Write(sdat.cabecera.infoSize);
+            bw.Write(sdat.cabecera.fatOffset);
+            bw.Write(sdat.cabecera.fatSize);
+            bw.Write(sdat.cabecera.fileOffset);
+            bw.Write(sdat.cabecera.fileSize);
+            bw.Write(sdat.cabecera.reserved);
+
+            // Write other sections
+            bw.Write(File.ReadAllBytes(symbTemp));
+            bw.Write(File.ReadAllBytes(infoTemp));
+            bw.Write(File.ReadAllBytes(fatTemp));
+
+            bw.Write(sdat.files.header.id);
+            bw.Write(sdat.files.header.size);
+            bw.Write(sdat.files.header.nSounds);
+            bw.Write(sdat.files.header.reserved);
+            bw.Write(File.ReadAllBytes(fileTemp));
+
+            bw.Flush();
+            bw.Close();
+
+            File.Delete(symbTemp);
+            File.Delete(infoTemp);
+            File.Delete(fatTemp);
+            File.Delete(fileTemp);
+
+        }
+        private void Write_FAT(string fileout, uint startOffset)
+        {
+            BinaryWriter bw = new BinaryWriter(File.OpenWrite(fileout));
+            uint currOffset = startOffset;
+
+            bw.Write(sdat.fat.header.id);
+            bw.Write(sdat.fat.header.size);
+            bw.Write(sdat.fat.header.nRecords);
+
+            for (int i = 0; i < sdat.files.root.folders.Count; i++)
+            {
+                for (int j = 0; j < sdat.files.root.folders[i].files.Count; j++)
+                {
+                    bw.Write(currOffset);
+                    bw.Write(sdat.files.root.folders[i].files[j].size);
+                    bw.Write((uint)0x00);
+                    bw.Write((uint)0x00);
+                    currOffset += sdat.files.root.folders[i].files[j].size;
+                }
+            }
+
+            bw.Flush();
+            bw.Close();
+        }
+        private void Write_Files(string fileout)
+        {
+            BinaryWriter bw = new BinaryWriter(File.OpenWrite(fileout));
+            BinaryReader br = new BinaryReader(File.OpenRead(sdat.archivo));
+
+            for (int i = 0; i < sdat.files.root.folders.Count; i++)
+            {
+                for (int j = 0; j < sdat.files.root.folders[i].files.Count; j++)
+                {
+                    if (sdat.files.root.folders[i].files[j].offset == 0x00)
+                    {
+                        bw.Write(File.ReadAllBytes(sdat.files.root.folders[i].files[j].path));
+                        bw.Flush();
+                    }
+                    else
+                    {
+                        br.BaseStream.Position = sdat.files.root.folders[i].files[j].offset;
+                        bw.Write(br.ReadBytes((int)sdat.files.root.folders[i].files[j].size));
+                        bw.Flush();
+                    }
+                }
+            }
+
+            bw.Close();
+
+            sdat.files.header.size = (uint)new FileInfo(fileout).Length + 0x10;
+            sdat.cabecera.fileSize = sdat.files.header.size;
         }
     }
 }

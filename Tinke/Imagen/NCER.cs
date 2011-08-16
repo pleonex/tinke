@@ -15,8 +15,6 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  *
  * Programador: pleoNeX
- * Programa utilizado: Microsoft Visual C# 2010 Express
- * Fecha: 18/02/2011
  * 
  */
 using System;
@@ -98,12 +96,13 @@ namespace Tinke
                     ncer.cebk.banks[i].cells[j].xOffset = (x >= 0x100) ? x - 0x200 : x;
                     br.BaseStream.Position -= 1;
                     byte byte2 = br.ReadByte();
-                    Size tamaño = Obtener_Tamaño(Tools.Helper.ByteTo4Bits(byte1)[0], Tools.Helper.ByteTo4Bits(byte2)[0]);
+                    Size tamaño = Obtener_Tamaño(Tools.Helper.ByteTo4Bits(byte1)[1], Tools.Helper.ByteTo4Bits(byte2)[1]);
                     ncer.cebk.banks[i].cells[j].height = (ushort)tamaño.Height;
                     ncer.cebk.banks[i].cells[j].width = (ushort)tamaño.Width;
 
                     ushort pos = br.ReadUInt16();
                     ncer.cebk.banks[i].cells[j].nPalette = (byte)((pos & 0xF000) >> 12);
+                    ncer.cebk.banks[i].cells[j].priority = (byte)((pos & 0xC00) >> 10);
                     ncer.cebk.banks[i].cells[j].tileOffset = (uint)(pos & 0x03FF);
                     if (ncer.cebk.unknown1 != 0x00)
                         if ((ncer.cebk.unknown1 & 0x100) == 0x00)
@@ -111,8 +110,8 @@ namespace Tinke
                         else
                             ncer.cebk.banks[i].cells[j].tileOffset += tilePos;
 
-                    ncer.cebk.banks[i].cells[j].yFlip = (Tools.Helper.ByteTo4Bits(byte2)[0] & 2) == 2 ? true : false;
-                    ncer.cebk.banks[i].cells[j].xFlip = (Tools.Helper.ByteTo4Bits(byte2)[0] & 1) == 1 ? true : false;
+                    ncer.cebk.banks[i].cells[j].yFlip = (Tools.Helper.ByteTo4Bits(byte2)[1] & 2) == 2 ? true : false;
+                    ncer.cebk.banks[i].cells[j].xFlip = (Tools.Helper.ByteTo4Bits(byte2)[1] & 1) == 1 ? true : false;
 
                     Console.WriteLine("|_" + xml.Element("S1C").Value + " {0}:", j.ToString());
                     Console.WriteLine("    " + xml.Element("S1D").Value  + ": {0}", ncer.cebk.banks[i].cells[j].yOffset.ToString());
@@ -123,6 +122,12 @@ namespace Tinke
                     Console.WriteLine("    " + xml.Element("S22").Value  + ": {0}", (pos & 0x03FF).ToString());
                     Console.WriteLine("    " + xml.Element("S23").Value  + ": {0}", ncer.cebk.banks[i].cells[j].tileOffset.ToString());
                 }
+                // Sort the cell using the priority value
+                List<Cell> cells = new List<Cell>();
+                cells.AddRange(ncer.cebk.banks[i].cells);
+                cells.Sort(Comparision_Cell);
+                ncer.cebk.banks[i].cells = cells.ToArray();
+
                 if (ncer.cebk.unknown1 != 0x00)
                 {
                     Cell ultimaCelda = ncer.cebk.banks[i].cells[ncer.cebk.banks[i].nCells - 1];
@@ -414,5 +419,10 @@ namespace Tinke
             return imagen;
         }
 
+
+        private static int Comparision_Cell(Cell c1, Cell c2)
+        {
+            return c1.priority.CompareTo(c2.priority);
+        }
     }
 }

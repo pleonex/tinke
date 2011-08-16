@@ -161,6 +161,7 @@ namespace PluginInterface
         public Int32 yOffset;
         public UInt32 tileOffset;
         public byte nPalette;
+        public byte priority;
         public bool xFlip;
         public bool yFlip;
     }
