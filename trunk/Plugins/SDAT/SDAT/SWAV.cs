@@ -16,8 +16,6 @@
  *
  * Programador: rafael1193
  * 
- * Fecha: 11/07/2011
- * 
  */
 
 using System;
@@ -27,13 +25,13 @@ namespace SDAT
 {
     class SWAV
     {
-        public static ArchivoSWAV LeerArchivo(string path)
+        public static sSWAV LeerArchivo(string path)
         {
             /***Lectura del archivo SWAV***/
             System.IO.FileStream fs = null;
             System.IO.BinaryReader br = null;
 
-            ArchivoSWAV swav = new ArchivoSWAV();
+            sSWAV swav = new sSWAV();
 
             try
             {
@@ -80,7 +78,7 @@ namespace SDAT
             return swav;
         }
 
-        public static void EscribirArchivo(ArchivoSWAV swav, string path)
+        public static void EscribirArchivo(sSWAV swav, string path)
         {
             System.IO.FileStream fs = null;
             System.IO.BinaryWriter bw = null;
@@ -123,26 +121,24 @@ namespace SDAT
             }
         }
 
-        public static WAV.ArchivoWAV ConvertirAWAV(ArchivoSWAV swav)
+        public static sWAV ConvertirAWAV(sSWAV swav)
         {
-            WAV.ArchivoWAV wav = new WAV.ArchivoWAV();
+            sWAV wav = new sWAV();
 
 
             if (swav.data.info.nWaveType == 0)
             {
                 swav.data.data = PCM8(swav.data.data);
-                wav = WAV.GenerarWAVPCM(1, swav.data.info.nSampleRate, 8, swav.data.data);
+                wav = WAV.Create_WAV(1, swav.data.info.nSampleRate, 8, swav.data.data);
             }
-
-            if (swav.data.info.nWaveType == 1)
+            else if (swav.data.info.nWaveType == 1)
             {
-                wav = WAV.GenerarWAVPCM(1, swav.data.info.nSampleRate, 16, swav.data.data);
+                wav = WAV.Create_WAV(1, swav.data.info.nSampleRate, 16, swav.data.data);
             }
-
-            if (swav.data.info.nWaveType >= 2)
+            else if (swav.data.info.nWaveType >= 2)
             {
-                swav.data.data = AdpcmDecompressor.DecompressADPCM(swav.data.data);
-                wav = WAV.GenerarWAVADPCM(1,33000, 16, swav.data.data);
+                swav.data.data = Compression_ADPCM.Decompress_ADPCM(swav.data.data);
+                wav = WAV.Create_WAV(1, 33000, 16, swav.data.data);
             }
             return wav;
         }
@@ -157,37 +153,37 @@ namespace SDAT
 
             return resul;
         }
+    }
 
-        public struct ArchivoSWAV
+    public struct sSWAV
+    {
+        public Header header;
+        public Data data;
+
+        public struct Header
         {
-            public Header header;
-            public Data data;
+            public char[] type;   // 'SWAV'
+            public uint magic;	// 0x0100feff
+            public uint nFileSize;	// Size of this SWAV file
+            public ushort nSize;	// Size of this structure = 16
+            public ushort nBlock;	// Number of Blocks = 1
+        }
+        public struct Data
+        {
+            public char[] type;	// 'DATA'
+            public uint nSize;	// Size of this structure
+            public SWAVInfo info;	// info about the sample
+            public byte[] data;	// array of binary data
 
-            public struct Header
+            // info about the sample
+            public struct SWAVInfo
             {
-                public char[] type;   // 'SWAV'
-                public uint magic;	// 0x0100feff
-                public uint nFileSize;	// Size of this SWAV file
-                public ushort nSize;	// Size of this structure = 16
-                public ushort nBlock;	// Number of Blocks = 1
-            }
-            public struct Data
-            {
-                public char[] type;	// 'DATA'
-                public uint nSize;	// Size of this structure
-                public SWAVInfo info;	// info about the sample
-                public byte[] data;	// array of binary data
-
-                // info about the sample
-                public struct SWAVInfo
-                {
-                    public byte nWaveType;		// 0 = PCM8, 1 = PCM16, 2 = (IMA-)ADPCM
-                    public byte bLoop;		// Loop flag = TRUE|FALSE
-                    public ushort nSampleRate;	// Sampling Rate
-                    public ushort nTime;		// (ARM7_CLOCK / nSampleRate) [ARM7_CLOCK: 33.513982MHz / 2 = 1.6756991 E +7]
-                    public ushort nLoopOffset;	// Loop Offset (expressed in words (32-bits))
-                    public uint nNonLoopLen;	// Non Loop Length (expressed in words (32-bits))
-                }
+                public byte nWaveType;		// 0 = PCM8, 1 = PCM16, 2 = (IMA-)ADPCM
+                public byte bLoop;		// Loop flag = TRUE|FALSE
+                public ushort nSampleRate;	// Sampling Rate
+                public ushort nTime;		// (ARM7_CLOCK / nSampleRate) [ARM7_CLOCK: 33.513982MHz / 2 = 1.6756991 E +7]
+                public ushort nLoopOffset;	// Loop Offset (expressed in words (32-bits))
+                public uint nNonLoopLen;	// Non Loop Length (expressed in words (32-bits))
             }
         }
     }

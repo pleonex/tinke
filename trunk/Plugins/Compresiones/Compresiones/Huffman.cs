@@ -8,13 +8,8 @@ namespace Compresion
 {
     public static class Huffman
     {
-        const int N = 4096, F = 18;
-        const byte THRESHOLD = 2;
-        const int NIL = N;
-
         const int LZ77_TAG = 0x10, LZSS_TAG = 0x11, RLE_TAG = 0x30, HUFF_TAG = 0x20, NONE_TAG = 0x00;
 
-        #region Huffman
         public static void DecompressHuffman(String filename, String  fileout)
         {
             /*
@@ -36,7 +31,7 @@ namespace Compresion
                    Compressed Bitstream (stored in units of 32bits)
                        Bit0-31  Node Bits (Bit31=First Bit)  (0=Node0, 1=Node1)
             */
-
+            System.Xml.Linq.XElement xml = Basico.ObtenerTraduccion("Compression");
             BinaryReader br = new BinaryReader(File.OpenRead(filename));
 
             byte firstByte = br.ReadByte();
@@ -47,11 +42,11 @@ namespace Compresion
             {
                 br.BaseStream.Seek(0x4, SeekOrigin.Begin);
                 if (br.ReadByte() != HUFF_TAG)
-                    throw new InvalidDataException(String.Format("Invalid huffman comressed file; invalid tag {0:x}", firstByte));
+                    throw new InvalidDataException(String.Format(xml.Element("S08").Value, firstByte));
             }
 
             if (dataSize != 8 && dataSize != 4)
-                throw new InvalidDataException(String.Format("Unhandled dataSize {0:x}", dataSize));
+                throw new InvalidDataException(String.Format(xml.Element("S09").Value, dataSize));
 
             int decomp_size = 0;
             for (int i = 0; i < 3; i++)
@@ -59,7 +54,7 @@ namespace Compresion
                 decomp_size |= br.ReadByte() << (i * 8);
             }
 
-            #region Descompresión
+            #region Decompress
             byte treeSize = br.ReadByte();
             HuffTreeNode.maxInpos = 4 + (treeSize + 1) * 2;
 
@@ -88,7 +83,7 @@ namespace Compresion
                 }
                 catch (IndexOutOfRangeException e)
                 {
-                    throw new IndexOutOfRangeException("not enough data.", e);
+                    throw new IndexOutOfRangeException(xml.Element("S0A").Value, e);
                 }
                 while (codestr.Length > 0)
                 {
@@ -115,7 +110,7 @@ namespace Compresion
                     codestr += Utils.uint_to_bits(indata[++idx]);
                 codestr = codestr.Replace("0", "");
                 if (codestr.Length > 0)
-                    Console.WriteLine("too much data; str={0:s}, idx={1:g}/{2:g}", codestr, idx, indata.Length);
+                    Console.WriteLine(xml.Element("S0B").Value, codestr, idx, indata.Length);
             }
 
             byte[] realout;
@@ -126,7 +121,7 @@ namespace Compresion
                 {
                     if ((outdata[i * 2] & 0xF0) > 0
                         || (outdata[i * 2 + 1] & 0xF0) > 0)
-                        throw new Exception("first 4 bits of data should be 0 if dataSize = 4");
+                        throw new Exception(xml.Element("S0C").Value);
                     realout[i] = (byte)((outdata[i * 2] << 4) | outdata[i * 2 + 1]);
                 }
             }
@@ -141,12 +136,10 @@ namespace Compresion
             bw.Flush();
             bw.Close();
 
-            Console.WriteLine("Huffman decompressed {0:s}", filename);
+            Console.WriteLine(xml.Element("S0D").Value, filename);
 
             br.Close();
         }
-        #endregion
-
     }
 
     class HuffTreeNode

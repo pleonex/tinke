@@ -9,14 +9,10 @@ namespace Compresion
     public static class RLE
     {
         static int MAX_OUTSIZE = 0x200000;
-        const int N = 4096, F = 18;
-        const byte THRESHOLD = 2;
-        const int NIL = N;
         static bool showAlways = true;
 
         const int LZ77_TAG = 0x10, LZSS_TAG = 0x11, RLE_TAG = 0x30, HUFF_TAG = 0x20, NONE_TAG = 0x00;
 
-        #region RLE
         public static void DecompressRLE(string filein, string fileout)
         {
             /*  SWI 14h (GBA/NDS7/NDS9) - RLUnCompWram
@@ -40,9 +36,10 @@ namespace Compresion
 
                 Return: No return value, Data written to destination address.*/
 
+            System.Xml.Linq.XElement xml = Basico.ObtenerTraduccion("Compression");
             FileStream fstr = new FileStream(filein, FileMode.Open);
             if (fstr.Length > int.MaxValue)
-                throw new Exception("Files larger than 2GB cannot be RLE-compressed files.");
+                throw new Exception(xml.Element("S00").Value);
             BinaryReader br = new BinaryReader(fstr);
 
             long decomp_size = 0, curr_size = 0;
@@ -54,15 +51,15 @@ namespace Compresion
             {
                 br.BaseStream.Seek(0x4, SeekOrigin.Begin);
                 if (br.ReadByte() != RLE_TAG)
-                    throw new InvalidDataException(String.Format("File {0:s} is not a valid RLE file", filein));
+                    throw new InvalidDataException(String.Format(xml.Element("S10").Value, filein));
             }
             for (i = 0; i < 3; i++)
                 decomp_size += br.ReadByte() << (i * 8);
             if (decomp_size > MAX_OUTSIZE)
-                throw new Exception(String.Format("{0:s} will be larger than 0x{1:x} and will not be decompressed.", filein, MAX_OUTSIZE));
+                throw new Exception(String.Format(xml.Element("S02").Value, filein, MAX_OUTSIZE));
 
             if (showAlways)
-                Console.WriteLine("Decompressing {0:s}. (outsize: 0x{1:x})", filein, decomp_size);
+                Console.WriteLine(xml.Element("S03").Value, filein, decomp_size);
 
             #region decompress
             byte[] outdata = new byte[decomp_size];
@@ -111,9 +108,8 @@ namespace Compresion
             fstr.Close();
             fstr.Dispose();
 
-            Console.WriteLine("RLE decompressed " + filein);
+            Console.WriteLine(xml.Element("S11").Value, filein);
         }
-        #endregion
 
     }
 }

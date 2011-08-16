@@ -9,18 +9,21 @@ namespace TXT
 {
     public class bmg
     {
-        IPluginHost iPluginHost;
+        IPluginHost pluginHost;
         string archivo;
 
         public bmg(IPluginHost iPluginHost, string file)
         {
-            this.iPluginHost = iPluginHost;
+            this.pluginHost = iPluginHost;
             this.archivo = file;
         }
 
         public System.Windows.Forms.Control ShowInfo()
         {
-            Console.WriteLine("Detectado archivo de texto <b>MESGbmg1</b>. Analizando...");
+            System.Xml.Linq.XElement xml = System.Xml.Linq.XElement.Load(System.Windows.Forms.Application.StartupPath + "\\Plugins\\TXTLang.xml");
+            xml = xml.Element(pluginHost.Get_Language()).Element("BMG");
+
+            Console.WriteLine(xml.Element("S0C").Value);
             sBMG bmg = new sBMG();
             BinaryReader br = new BinaryReader(new FileStream(archivo, FileMode.Open));
             
@@ -42,11 +45,11 @@ namespace TXT
             bmg.inf1.magicID = br.ReadChars(4);
             bmg.inf1.length = br.ReadUInt32();
             bmg.inf1.nMsg = br.ReadUInt16();
-            Console.WriteLine("Contiene {0} mensajes", bmg.inf1.nMsg.ToString());
+            Console.WriteLine(xml.Element("S0D").Value, bmg.inf1.nMsg.ToString());
             bmg.inf1.offsetLength = br.ReadUInt16();
             bmg.inf1.unknown1 = br.ReadUInt16();
             bmg.inf1.unknown2 = br.ReadUInt16();
-            Console.WriteLine("Datos desconocidos {0}, {1}", bmg.inf1.unknown1, bmg.inf1.unknown2);
+            Console.WriteLine(xml.Element("S0E").Value, bmg.inf1.unknown1, bmg.inf1.unknown2);
 
             bmg.inf1.offset = new uint[bmg.inf1.nMsg];
             if (bmg.inf1.offsetLength == 0x08)
@@ -101,7 +104,7 @@ namespace TXT
             }
 
             br.Close();
-            return new iBMG(iPluginHost, bmg);
+            return new iBMG(pluginHost, bmg);
         }
         public System.Windows.Forms.Control ShowInfo_BigEndian()
         {
@@ -176,7 +179,7 @@ namespace TXT
             }
 
             br.Close();
-            return new iBMG(iPluginHost, bmg);
+            return new iBMG(pluginHost, bmg);
         }
     }
 

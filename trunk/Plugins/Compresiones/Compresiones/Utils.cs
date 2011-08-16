@@ -9,7 +9,6 @@ namespace Compresion
 
     public static class Utils
     {
-        #region helper methods
         public static string byte_to_bits(byte b)
         {
             string o = "";
@@ -48,6 +47,5 @@ namespace Compresion
             }
             return sbout.ToString();
         }
-        #endregion
     }
 }

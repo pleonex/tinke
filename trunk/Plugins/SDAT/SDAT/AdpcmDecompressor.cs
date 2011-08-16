@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (C) 2011  rafael1193
+ * Copyright (C) 2011
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -16,8 +16,6 @@
  *
  * Programador: rafael1193, pleonex
  * 
- * Fecha: 16/07/2011
- * 
  */
 using System;
 using System.Collections.Generic;
@@ -26,9 +24,17 @@ using System.Text;
 
 namespace SDAT
 {
-    internal static class AdpcmDecompressor
+    /// <summary>
+    /// Operations with the AD-PCM compression
+    /// </summary>
+    public static class Compression_ADPCM
     {
-        public static byte[] DecompressADPCM(byte[] data)
+        /// <summary>
+        /// Decompress an array data of bytes using AD-PCM compression
+        /// </summary>
+        /// <param name="data">Data to be decompress</param>
+        /// <returns>Data decompressed</returns>
+        public static byte[] Decompress_ADPCM(byte[] data)
         {
             List<byte> resul = new List<byte>();
 
@@ -88,7 +94,13 @@ namespace SDAT
 
             return resul.ToArray();
         }
-
+        /// <summary>
+        /// Decompress a block of bytes (used in the STRM data)
+        /// </summary>
+        /// <param name="data">Bytes to be decompressed</param>
+        /// <param name="sample"></param>
+        /// <param name="stepindex"></param>
+        /// <returns>Bytes decompressed</returns>
         public static byte[] DecompressBlock_ADPCM(byte[] datos, int sample = 0, int stepindex = 0)
         {
             if (datos.Length < 4)
@@ -121,7 +133,7 @@ namespace SDAT
             #endregion
 
             byte[] data = new byte[datos.Length - 4];
-            Array.Copy(datos, 4, data, 0, datos.Length - 4);
+            Array.Copy(datos, 4, data, 0, data.Length);
             data = Bit8ToBit4(data);
 
             int difference, newSample = sample;
@@ -160,7 +172,7 @@ namespace SDAT
         }
 
 
-        static byte[] Bit8ToBit4(byte[] data)
+        private static byte[] Bit8ToBit4(byte[] data)
         {
             List<byte> bit4 = new List<byte>();
 

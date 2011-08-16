@@ -48,7 +48,7 @@
             this.btnSave.Image = global::LAYTON.Properties.Resources.picture_save;
             this.btnSave.Location = new System.Drawing.Point(4, 462);
             this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(100, 45);
+            this.btnSave.Size = new System.Drawing.Size(130, 45);
             this.btnSave.TabIndex = 1;
             this.btnSave.Text = "S03";
             this.btnSave.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;

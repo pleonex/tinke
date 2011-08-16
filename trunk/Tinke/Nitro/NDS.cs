@@ -144,6 +144,66 @@ namespace Tinke.Nitro
 
             Console.WriteLine(Tools.Helper.ObtenerTraduccion("Messages", "S09"), new FileInfo(salida).Length);
         }
+        public static void EscribirCabecera(string salida, Estructuras.ROMHeader cabecera, byte[] nintendoLogo)
+        {
+            BinaryWriter bw = new BinaryWriter(new FileStream(salida, FileMode.Create));
+            Console.Write(Tools.Helper.ObtenerTraduccion("Messages", "S0A"));
+
+            bw.Write(cabecera.gameTitle);
+            bw.Write(cabecera.gameCode);
+            bw.Write(cabecera.makerCode);
+            bw.Write(cabecera.unitCode);
+            bw.Write(cabecera.encryptionSeed);
+            bw.Write((byte)(Math.Log(cabecera.tamaño, 2) - 20));
+            bw.Write(cabecera.reserved);
+            bw.Write(cabecera.ROMversion);
+            bw.Write(cabecera.internalFlags);
+            bw.Write(cabecera.ARM9romOffset);
+            bw.Write(cabecera.ARM9entryAddress);
+            bw.Write(cabecera.ARM9ramAddress);
+            bw.Write(cabecera.ARM9size);
+            bw.Write(cabecera.ARM7romOffset);
+            bw.Write(cabecera.ARM7entryAddress);
+            bw.Write(cabecera.ARM7ramAddress);
+            bw.Write(cabecera.ARM7size);
+            bw.Write(cabecera.fileNameTableOffset);
+            bw.Write(cabecera.fileNameTableSize);
+            bw.Write(cabecera.FAToffset);
+            bw.Write(cabecera.FATsize);
+            bw.Write(cabecera.ARM9overlayOffset);
+            bw.Write(cabecera.ARM9overlaySize);
+            bw.Write(cabecera.ARM7overlayOffset);
+            bw.Write(cabecera.ARM7overlaySize);
+            bw.Write(cabecera.flagsRead);
+            bw.Write(cabecera.flagsInit);
+            bw.Write(cabecera.bannerOffset);
+            bw.Write(cabecera.secureCRC16);
+            bw.Write(cabecera.ROMtimeout);
+            bw.Write(cabecera.ARM9autoload);
+            bw.Write(cabecera.ARM7autoload);
+            bw.Write(cabecera.secureDisable);
+            bw.Write(cabecera.ROMsize);
+            bw.Write(cabecera.headerSize);
+            bw.Write(cabecera.reserved2);
+            bw.Write(nintendoLogo);
+            bw.Write(cabecera.logoCRC16);
+            bw.Write(cabecera.headerCRC16);
+            bw.Write(cabecera.debug_romOffset);
+            bw.Write(cabecera.debug_size);
+            bw.Write(cabecera.debug_ramAddress);
+            bw.Write(cabecera.reserved3);
+            bw.Flush();
+
+            int relleno = (int)(cabecera.headerSize - bw.BaseStream.Length);
+            for (int i = 0; i < relleno; i++)
+                bw.Write((byte)0x00);
+
+            bw.Flush();
+            bw.Close();
+
+            Console.WriteLine(Tools.Helper.ObtenerTraduccion("Messages", "S09"), new FileInfo(salida).Length);
+        }
+
 
         public static Estructuras.Banner LeerBanner(string file, UInt32 offset)
         {
@@ -325,6 +385,7 @@ namespace Tinke.Nitro
             diccionario.Add("18", "Hudson Entertainment");
             diccionario.Add("36", "Codemasters");
             diccionario.Add("41", "Ubisoft");
+            diccionario.Add("4F", "Eidos");
             diccionario.Add("4Q", "Disney Interactive Studios");
             diccionario.Add("52", "Activision");
             diccionario.Add("5D", "Midway");
@@ -343,6 +404,7 @@ namespace Tinke.Nitro
             diccionario.Add("AF", "Namco");
             diccionario.Add("FH", "Foreign Media Games");
             diccionario.Add("FK", "The Game Factory");
+            diccionario.Add("FR", "dtp young");
             diccionario.Add("G9", "D3Publisher of America");
             diccionario.Add("GD", "SQUARE ENIX");
             diccionario.Add("GN", "Oxygen Interactive");
@@ -367,8 +429,11 @@ namespace Tinke.Nitro
             diccionario.Add("RM", "rondomedia");
             diccionario.Add("RT", "RTL Games");
             diccionario.Add("TK", "Tasuke");
+            diccionario.Add("TR", "Tetris Online");
+            diccionario.Add("TV", "Tivola Publishing");
+            diccionario.Add("VP", "Virgin Play");
             diccionario.Add("WP", "White Park Bay");
-            diccionario.Add("WR", "WB Games");
+            diccionario.Add("WR", "Warner Bros");
         }
         private static void Rellenar_UnitCodes()
         {

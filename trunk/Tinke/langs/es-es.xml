@@ -69,6 +69,13 @@
       todos los cambios.
     </S39>
     <S3A>Advertencia</S3A>
+    <S3B>
+      ¿Desea exportar la carpeta descomprimida en lugar
+      del archivo comprimido?
+    </S3B>
+    <S3C>Información completa de archivos</S3C>
+    <S3D>Tipo 1</S3D>
+    <S3E>Tipo 2</S3E>
   </Sistema>
   <RomInfo>
     <S01>Información de la ROM</S01>
@@ -129,6 +136,7 @@
     <S38>Reservado</S38>
     <S39>Inválido</S39>
     <S3A>Transparencia</S3A>
+    <S3B>Editar</S3B>
   </RomInfo>
   <Autores>
     <S01>Acerca de</S01>
@@ -179,6 +187,17 @@
       <br>La nueva ROM se guardará en: {0}</br>
     </S0D>
     <S0E>Exportar log</S0E>
+    <S0F>Cálculo de tiempos:</S0F>
+    <S10>Tiempo total:</S10>
+    <S11>Tiempo en obtener cabecera:</S11>
+    <S12>Tiempo en inicializar Acciones.cs:</S12>
+    <S13>Tiempo en leer FNT:</S13>
+    <S14>Tiempo en añadir archivos del sistema:</S14>
+    <S15>Tiempo en leer FAT:</S15>
+    <S16>Tiempo en asignar ROOT:</S16>
+    <S17>Tiempo en obtener los formatos:</S17>
+    <S18>Tiempo en jerarquizar el árbol:</S18>
+    <S19>Tiempo en obtener el porcentaje de archivos soportados:</S19>
   </Messages>
   <NCLR>
     <S01>Nº de paleta:</S01>
@@ -309,4 +328,82 @@
     <S1D>Animaciones</S1D>
     <S1E>Haz doble click en la animación para verla a tamaño real.</S1E>
   </NANR>
+  <Compression>
+    <!-- LZ77-->
+    <S00>Tamaño máximo excedido (>2GB).</S00>
+    <S01>El archivo {0:s} no tiene una compresión LZ77 válida.</S01>
+    <S02>El archivo {0:s} excede el tamaño máximo 0x{1:x} (0x{2:x}) y no puede ser descomprimido.</S02>
+    <S03>Descomprimiendo {0:s}. Tamaño descomprimido 0x{1:x}</S03>
+    <S04>Datos incompletos.</S04>
+    <S05>No se puede retroceder más. Fallo al descomprimir.</S05>
+    <S06>Demasiados datos en el archivo. Posición actual = {0:x}</S06>
+    <S07>Archivo LZ77 descomprimido {0:s}</S07>
+    <!-- HUFFMAN -->
+    <S08>Archivo con compresión huffman inválida, Tag {0:x}</S08>
+    <S09>Tamaño de datos no soportado {0:x}</S09>
+    <S0A>Faltan datos</S0A>
+    <S0B>Hay demasiados datos; str={0:s}, idx={1:g}/{2:g}</S0B>
+    <S0C>Los primeros 4 bits de datos deberían ser 0 si dataSize = 4</S0C>
+    <S0D>Archivo HUFFMAN descomprimido {0:s}</S0D>
+    <!-- LZSS -->
+    <S0E>El archivo {0:s} no tiene una compresión LZSS-11 válida.</S0E>
+    <S0F>Archivo LZSS-11 descomprimido {0:s}</S0F>
+    <!-- RLE -->
+    <S10>El archivo {0:s} no tiene una compresión RLE válida.</S10>
+    <S11>Archivo RLE descomprimido {0:s}</S11>
+    <!-- NONE -->
+    <S12>El archivo {0:s} no tiene tag válido como primer byte</S12>
+    <S13>El archivo {0:s} no es un archivo NONE válido, el tamaño descomprimido debería ser "tamaño del archivo - 4"</S13>
+    <S14>Archivo NONE descomprimido {0:s}</S14>
+    <!-- Basico -->
+    <S15>El archivo no pudo ser descomprimido correctamente {0:s}</S15>
+  </Compression>
+  <EditRomInfo>
+    <S00>Editar cabecera y banner del juego</S00>
+    <S01>Aceptar</S01>
+    <S02>Cancelar</S02>
+    <S03>Cabecera</S03>
+    <S04>Banner</S04>
+    <S05>Cambiar icono</S05>
+    <S06>Versión:</S06>
+    <S07>Títulos del juego:</S07>
+    <S08>Japonés</S08>
+    <S09>Inglés</S09>
+    <S0A>Francés</S0A>
+    <S0B>Alemán</S0B>
+    <S0C>Italiano</S0C>
+    <S0D>Español</S0D>
+    <S0E>Reservado (28 bytes en Hexadecimal):</S0E>
+    <S0F>Título del juego:</S0F>
+    <S10>Código del juego:</S10>
+    <S11>Código de la compañía:</S11>
+    <S12>Código de la consola:</S12>
+    <S13>Reservado (9 bytes en Hexadecimal):</S13>
+    <S14>Versión de la ROM:</S14>
+    <S15>Indicadores internos:</S15>
+    <S16>ARM9 entry address:</S16>
+    <S17>ARM9 load address:</S17>
+    <S18>ARM7 entry address:</S18>
+    <S19>ARM7 load address:</S19>
+    <S1A>Ajuste de control normales:</S1A>
+    <S1B>Ajuste de seguridad normales:</S1B>
+    <S1C>Mostrar todos los códigos de las compañías</S1C>
+    <S1D>ROM timeout:</S1D>
+    <S1E>Seguridad deshabilitada:</S1E>
+    <S1F>Reservado 3 (4 bytes en Hexadecimal):</S1F>
+    <S20>Reservado 2 (56 bytes en Hexadecimal):</S20>
+    <S21>ARM9 autoload:</S21>
+    <S22>ARM7 autoload:</S22>
+    <S23>Offset de debug de la ROM:</S23>
+    <S24>Tamaño de debug:</S24>
+    <S25>Offset de la RAM de debug:</S25>
+    <S26>
+      La imagen se debe guardar con profundidad 4bpp.
+      La imagen importada en 8bpp y por tanto no se puede importar.
+    </S26>
+    <S27>Encryption seed:</S27>
+    <S28>Código</S28>
+    <S29>Compañía</S29>
+    <S2A>Códigos de las compañías</S2A>
+  </EditRomInfo>
 </Language>

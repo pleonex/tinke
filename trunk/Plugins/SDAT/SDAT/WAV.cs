@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (C) 2011  rafael1193
+ * Copyright (C) 2011
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -14,47 +14,86 @@
  *   You should have received a copy of the GNU General Public License
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  *
- * Programador: rafael1193
- * 
- * Fecha: 15/07/2011
+ * Programador: rafael1193, pleoNeX
  * 
  */
 
 using System;
+using System.IO;
+using System.Text;
 
 namespace SDAT
 {
-    class WAV
+    /// <summary>
+    /// Static class with WAV files operations
+    /// </summary>
+    public static class WAV
     {
-        public static void EscribirArchivo(ArchivoWAV wr, string path)
+        /// <summary>
+        /// Read a wave file and return its structure.
+        /// </summary>
+        /// <param name="filein">File to read</param>
+        /// <returns>Structure of the wave file</returns>
+        public static sWAV Read(string filein)
         {
-            System.IO.FileStream fs = null;
-            System.IO.BinaryWriter bw = null;
+            sWAV wav = new sWAV();
+            BinaryReader br = new BinaryReader(File.OpenRead(filein));
+
+            // RIFF header
+            wav.chunkID = br.ReadChars(4);
+            wav.chunkSize = br.ReadUInt32();
+            wav.format = br.ReadChars(4);
+            // fmt sub-chunk
+            wav.wave.fmt.chunkID = br.ReadChars(4);
+            wav.wave.fmt.chunkSize = br.ReadUInt32();
+            wav.wave.fmt.audioFormat = (WaveFormat)br.ReadUInt16();
+            wav.wave.fmt.numChannels = br.ReadUInt16();
+            wav.wave.fmt.sampleRate = br.ReadUInt32();
+            wav.wave.fmt.byteRate = br.ReadUInt32();
+            wav.wave.fmt.blockAlign = br.ReadUInt16();
+            wav.wave.fmt.bitsPerSample = br.ReadUInt16();
+            // data sub-chunk
+            wav.wave.data.chunkID = br.ReadChars(4);
+            wav.wave.data.chunkSize = br.ReadUInt32();
+            wav.wave.data.data = br.ReadBytes((int)wav.wave.data.chunkSize - 0x08);
+
+            br.Close();
+            return wav;
+        }
+        /// <summary>
+        /// Write a WAV structure to a WAV file
+        /// </summary>
+        /// <param name="wav">WAV structu to write</param>
+        /// <param name="fileout">File where the structure will be written</param>
+        public static void Write(sWAV wav, string fileout)
+        {
+            FileStream fs = null;
+            BinaryWriter bw = null;
             try
             {
-                fs = new System.IO.FileStream(path, System.IO.FileMode.Create);
-                bw = new System.IO.BinaryWriter(fs);
+                fs = new FileStream(fileout, System.IO.FileMode.Create);
+                bw = new BinaryWriter(fs);
 
-                bw.Write(System.Text.Encoding.ASCII.GetBytes(wr.chunkID));
-                bw.Write(wr.chunkSize);
-                bw.Write(System.Text.Encoding.ASCII.GetBytes(wr.format));
-                bw.Write(System.Text.Encoding.ASCII.GetBytes(wr.wave.fmt.chunkID));
-                bw.Write(wr.wave.fmt.chunkSize);
-                bw.Write(Convert.ToUInt16(wr.wave.fmt.audioFormat));
-                bw.Write(wr.wave.fmt.numChannels);
-                bw.Write(wr.wave.fmt.sampleRate);
-                bw.Write(wr.wave.fmt.byteRate);
-                bw.Write(wr.wave.fmt.blockAlign);
-                bw.Write(wr.wave.fmt.bitsPerSample);
-                bw.Write(System.Text.Encoding.ASCII.GetBytes(wr.wave.data.chunkID));
-                bw.Write(wr.wave.data.chunkSize);
-                bw.Write(wr.wave.data.data);
+                bw.Write(Encoding.ASCII.GetBytes(wav.chunkID));
+                bw.Write(wav.chunkSize);
+                bw.Write(Encoding.ASCII.GetBytes(wav.format));
+                bw.Write(Encoding.ASCII.GetBytes(wav.wave.fmt.chunkID));
+                bw.Write(wav.wave.fmt.chunkSize);
+                bw.Write(Convert.ToUInt16(wav.wave.fmt.audioFormat));
+                bw.Write(wav.wave.fmt.numChannels);
+                bw.Write(wav.wave.fmt.sampleRate);
+                bw.Write(wav.wave.fmt.byteRate);
+                bw.Write(wav.wave.fmt.blockAlign);
+                bw.Write(wav.wave.fmt.bitsPerSample);
+                bw.Write(Encoding.ASCII.GetBytes(wav.wave.data.chunkID));
+                bw.Write(wav.wave.data.chunkSize);
+                bw.Write(wav.wave.data.data);
 
                 bw.Flush();
             }
             catch (Exception ex)
             {
-                System.Console.WriteLine(ex.Message.ToString());
+                Console.WriteLine(ex.Message.ToString());
             }
             finally
             {
@@ -64,123 +103,79 @@ namespace SDAT
 
         }
 
-        public static ArchivoWAV GenerarWAVPCM(ushort numChannels, uint sampleRate, ushort bitsPerSample, byte[] data)
+        /// <summary>
+        /// Create a WAV structure using PCM audio format
+        /// </summary>
+        /// <param name="numChannels">Number of channels</param>
+        /// <param name="sampleRate">Sample rate</param>
+        /// <param name="bitsPerSample">Bits per sample</param>
+        /// <param name="data">Audio data</param>
+        /// <returns>New wav structure</returns>
+        public static sWAV Create_WAV(ushort numChannels, uint sampleRate, ushort bitsPerSample, byte[] data)
         {
-            ArchivoWAV archivo = new ArchivoWAV();
+            sWAV wav = new sWAV();
 
-            archivo.chunkID = new char[] { 'R', 'I', 'F', 'F' };
-            archivo.format = new char[] { 'W', 'A', 'V', 'E' };
+            wav.chunkID = new char[] { 'R', 'I', 'F', 'F' };
+            wav.format = new char[] { 'W', 'A', 'V', 'E' };
 
-            archivo.wave.fmt.chunkID = new char[] { 'f', 'm', 't', ' ' };
-            archivo.wave.fmt.chunkSize = 16;
-            archivo.wave.fmt.audioFormat = ArchivoWAV.WaveChunk.FmtChunk.WaveFormat.WAVE_FORMAT_PCM;
-            archivo.wave.fmt.numChannels = numChannels;
-            archivo.wave.fmt.sampleRate = sampleRate;
-            archivo.wave.fmt.bitsPerSample = bitsPerSample;
-            archivo.wave.fmt.byteRate = archivo.wave.fmt.sampleRate * archivo.wave.fmt.bitsPerSample * archivo.wave.fmt.numChannels / 8;
-            archivo.wave.fmt.blockAlign = (ushort)(archivo.wave.fmt.numChannels * archivo.wave.fmt.bitsPerSample / (ushort)(8));
+            wav.wave.fmt.chunkID = new char[] { 'f', 'm', 't', '\x20' };
+            wav.wave.fmt.chunkSize = 16;
+            wav.wave.fmt.audioFormat = WaveFormat.WAVE_FORMAT_PCM;
+            wav.wave.fmt.numChannels = numChannels;
+            wav.wave.fmt.sampleRate = sampleRate;
+            wav.wave.fmt.bitsPerSample = bitsPerSample;
+            wav.wave.fmt.byteRate = wav.wave.fmt.sampleRate * wav.wave.fmt.bitsPerSample * wav.wave.fmt.numChannels / 8;
+            wav.wave.fmt.blockAlign = (ushort)(wav.wave.fmt.numChannels * wav.wave.fmt.bitsPerSample / (ushort)(8));
 
-            archivo.wave.data.chunkID = new char[] { 'd', 'a', 't', 'a' };
-            archivo.wave.data.chunkSize = (uint)data.Length;
-            archivo.wave.data.data = new byte[data.Length];
-            archivo.wave.data.data = data;
+            wav.wave.data.chunkID = new char[] { 'd', 'a', 't', 'a' };
+            wav.wave.data.chunkSize = (uint)data.Length;
+            wav.wave.data.data = new byte[data.Length];
+            wav.wave.data.data = data;
 
-            archivo.chunkSize = 4 + (8 + archivo.wave.fmt.chunkSize) + (8 + archivo.wave.data.chunkSize);
+            wav.chunkSize = (uint)(0x24 + data.Length);
 
-            return archivo;
+            return wav;
         }
+    }
 
-        public static ArchivoWAV GenerarWAVADPCM(ushort numChannels, uint sampleRate, ushort bitsPerSample, byte[] data)
+    public struct sWAV
+    {
+        public char[] chunkID;
+        public uint chunkSize;
+        public char[] format;
+        public WaveChunk wave;
+
+        public struct WaveChunk
         {
-            ArchivoWAV archivo = new ArchivoWAV();
+            public FmtChunk fmt;
+            public DataChunk data;
 
-            if (numChannels == 1)
+            public struct FmtChunk
             {
-                archivo.chunkID = new char[] { 'R', 'I', 'F', 'F' };
-                archivo.format = new char[] { 'W', 'A', 'V', 'E' };
-
-                archivo.wave.fmt.chunkID = new char[] { 'f', 'm', 't', ' ' };
-                archivo.wave.fmt.chunkSize = 16;
-                archivo.wave.fmt.audioFormat = ArchivoWAV.WaveChunk.FmtChunk.WaveFormat.WAVE_FORMAT_PCM;
-                archivo.wave.fmt.numChannels = numChannels;
-                archivo.wave.fmt.sampleRate = sampleRate;
-                archivo.wave.fmt.bitsPerSample = bitsPerSample;
-                archivo.wave.fmt.byteRate = archivo.wave.fmt.sampleRate * archivo.wave.fmt.bitsPerSample * archivo.wave.fmt.numChannels / 8;
-                archivo.wave.fmt.blockAlign = (ushort)(archivo.wave.fmt.numChannels * archivo.wave.fmt.bitsPerSample / (ushort)(8));
-
-                archivo.wave.data.chunkID = new char[] { 'd', 'a', 't', 'a' };
-                archivo.wave.data.chunkSize = (uint)data.Length;
-                archivo.wave.data.data = new byte[data.Length];
-                archivo.wave.data.data = data;
-
-                archivo.chunkSize = 4 + (8 + archivo.wave.fmt.chunkSize) + (8 + archivo.wave.data.chunkSize);
+                public char[] chunkID;
+                public uint chunkSize;
+                public WaveFormat audioFormat;
+                public ushort numChannels;
+                public uint sampleRate;
+                public uint byteRate;
+                public ushort blockAlign;
+                public ushort bitsPerSample;
             }
-
-            if (numChannels == 2)
+            public struct DataChunk
             {
-                archivo.chunkID = new char[] { 'R', 'I', 'F', 'F' };
-                archivo.format = new char[] { 'W', 'A', 'V', 'E' };
-
-                archivo.wave.fmt.chunkID = new char[] { 'f', 'm', 't', ' ' };
-                archivo.wave.fmt.chunkSize = 16;
-                archivo.wave.fmt.audioFormat = ArchivoWAV.WaveChunk.FmtChunk.WaveFormat.WAVE_FORMAT_PCM;
-                archivo.wave.fmt.numChannels = numChannels;
-                archivo.wave.fmt.sampleRate = sampleRate;
-                archivo.wave.fmt.bitsPerSample = bitsPerSample;
-                archivo.wave.fmt.byteRate = archivo.wave.fmt.sampleRate * archivo.wave.fmt.bitsPerSample * archivo.wave.fmt.numChannels / 8;
-                archivo.wave.fmt.blockAlign = (ushort)(archivo.wave.fmt.numChannels * archivo.wave.fmt.bitsPerSample / (ushort)(8));
-
-                archivo.wave.data.chunkID = new char[] { 'd', 'a', 't', 'a' };
-                archivo.wave.data.chunkSize = (uint)data.Length;
-                archivo.wave.data.data = new byte[data.Length];
-                archivo.wave.data.data = data;
-
-                archivo.chunkSize = (uint)(0x24 + data.Length);
-            }
-
-            return archivo;
-        }
-
-
-        public struct ArchivoWAV
-        {
-            public char[] chunkID;
-            public uint chunkSize;
-            public char[] format;
-            public WaveChunk wave;
-
-            public struct WaveChunk
-            {
-                public FmtChunk fmt;
-                public DataChunk data;
-
-                public struct FmtChunk
-                {
-                    public char[] chunkID;
-                    public uint chunkSize;
-                    public WaveFormat audioFormat;
-                    public ushort numChannels;
-                    public uint sampleRate;
-                    public uint byteRate;
-                    public ushort blockAlign;
-                    public ushort bitsPerSample;
-
-                    public enum WaveFormat : ushort
-                    {
-                        WAVE_FORMAT_PCM = 0x0001,
-                        IBM_FORMAT_ADPCM = 0x0002,
-                        IBM_FORMAT_MULAW = 0x0007,
-                        IBM_FORMAT_ALAW = 0x0006,
-                        WAVE_FORMAT_EXTENSIBLE = 0xFFFE
-                    }
-                }
-                public struct DataChunk
-                {
-                    public char[] chunkID;
-                    public uint chunkSize;
-                    public byte[] data;
-                }
+                public char[] chunkID;
+                public uint chunkSize;
+                public byte[] data;
             }
         }
     }
+    public enum WaveFormat : ushort
+    {
+        WAVE_FORMAT_PCM = 0x0001,
+        IBM_FORMAT_ADPCM = 0x0002,
+        IBM_FORMAT_MULAW = 0x0007,
+        IBM_FORMAT_ALAW = 0x0006,
+        WAVE_FORMAT_EXTENSIBLE = 0xFFFE
+    }
+
 }

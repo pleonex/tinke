@@ -67,7 +67,7 @@
             // lblNPartes
             // 
             this.lblNPartes.AutoSize = true;
-            this.lblNPartes.Location = new System.Drawing.Point(4, 61);
+            this.lblNPartes.Location = new System.Drawing.Point(1, 58);
             this.lblNPartes.Name = "lblNPartes";
             this.lblNPartes.Size = new System.Drawing.Size(26, 13);
             this.lblNPartes.TabIndex = 37;
@@ -75,9 +75,9 @@
             // 
             // txtNPartes
             // 
-            this.txtNPartes.Location = new System.Drawing.Point(60, 58);
+            this.txtNPartes.Location = new System.Drawing.Point(100, 55);
             this.txtNPartes.Name = "txtNPartes";
-            this.txtNPartes.Size = new System.Drawing.Size(100, 20);
+            this.txtNPartes.Size = new System.Drawing.Size(60, 20);
             this.txtNPartes.TabIndex = 38;
             // 
             // lblTamanoImg
@@ -91,16 +91,16 @@
             // 
             // txtTamanoImg
             // 
-            this.txtTamanoImg.Location = new System.Drawing.Point(240, 3);
+            this.txtTamanoImg.Location = new System.Drawing.Point(280, 3);
             this.txtTamanoImg.Name = "txtTamanoImg";
-            this.txtTamanoImg.Size = new System.Drawing.Size(100, 20);
+            this.txtTamanoImg.Size = new System.Drawing.Size(60, 20);
             this.txtTamanoImg.TabIndex = 46;
             // 
             // txtImgs
             // 
-            this.txtImgs.Location = new System.Drawing.Point(60, 3);
+            this.txtImgs.Location = new System.Drawing.Point(100, 3);
             this.txtImgs.Name = "txtImgs";
-            this.txtImgs.Size = new System.Drawing.Size(100, 20);
+            this.txtImgs.Size = new System.Drawing.Size(60, 20);
             this.txtImgs.TabIndex = 40;
             // 
             // lblImgs
@@ -115,7 +115,7 @@
             // lblAncho
             // 
             this.lblAncho.AutoSize = true;
-            this.lblAncho.Location = new System.Drawing.Point(3, 36);
+            this.lblAncho.Location = new System.Drawing.Point(1, 32);
             this.lblAncho.Name = "lblAncho";
             this.lblAncho.Size = new System.Drawing.Size(26, 13);
             this.lblAncho.TabIndex = 41;
@@ -123,15 +123,15 @@
             // 
             // txtAlto
             // 
-            this.txtAlto.Location = new System.Drawing.Point(240, 29);
+            this.txtAlto.Location = new System.Drawing.Point(280, 29);
             this.txtAlto.Name = "txtAlto";
-            this.txtAlto.Size = new System.Drawing.Size(100, 20);
+            this.txtAlto.Size = new System.Drawing.Size(60, 20);
             this.txtAlto.TabIndex = 43;
             // 
             // lblAlto
             // 
             this.lblAlto.AutoSize = true;
-            this.lblAlto.Location = new System.Drawing.Point(168, 32);
+            this.lblAlto.Location = new System.Drawing.Point(166, 32);
             this.lblAlto.Name = "lblAlto";
             this.lblAlto.Size = new System.Drawing.Size(26, 13);
             this.lblAlto.TabIndex = 44;
@@ -139,15 +139,15 @@
             // 
             // txtAncho
             // 
-            this.txtAncho.Location = new System.Drawing.Point(62, 29);
+            this.txtAncho.Location = new System.Drawing.Point(100, 29);
             this.txtAncho.Name = "txtAncho";
-            this.txtAncho.Size = new System.Drawing.Size(100, 20);
+            this.txtAncho.Size = new System.Drawing.Size(60, 20);
             this.txtAncho.TabIndex = 42;
             // 
             // lblName
             // 
             this.lblName.AutoSize = true;
-            this.lblName.Location = new System.Drawing.Point(168, 61);
+            this.lblName.Location = new System.Drawing.Point(166, 58);
             this.lblName.Name = "lblName";
             this.lblName.Size = new System.Drawing.Size(26, 13);
             this.lblName.TabIndex = 48;
@@ -155,9 +155,9 @@
             // 
             // txtName
             // 
-            this.txtName.Location = new System.Drawing.Point(240, 58);
+            this.txtName.Location = new System.Drawing.Point(280, 55);
             this.txtName.Name = "txtName";
-            this.txtName.Size = new System.Drawing.Size(100, 20);
+            this.txtName.Size = new System.Drawing.Size(60, 20);
             this.txtName.TabIndex = 49;
             // 
             // InfoImage

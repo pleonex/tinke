@@ -151,6 +151,12 @@
     <Compile Include="Debug.Designer.cs">
       <DependentUpon>Debug.cs</DependentUpon>
     </Compile>
+    <Compile Include="EditRomInfo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EditRomInfo.Designer.cs">
+      <DependentUpon>EditRomInfo.cs</DependentUpon>
+    </Compile>
     <Compile Include="Espera.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -233,6 +239,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Debug.resx">
       <DependentUpon>Debug.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EditRomInfo.resx">
+      <DependentUpon>EditRomInfo.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Espera.resx">
       <DependentUpon>Espera.cs</DependentUpon>
@@ -337,6 +346,11 @@
     </Content>
     <Content Include="nintendo-ds.ico" />
     <Content Include="Nitro\MakerCodes.txt" />
+    <None Include="Resources\picture_edit.png" />
+    <None Include="Resources\image_edit.png" />
+    <None Include="Resources\pencil.png" />
+    <None Include="Resources\cancel.png" />
+    <None Include="Resources\accept.png" />
     <None Include="Resources\picture_go.png" />
     <None Include="Resources\page_white_text.png" />
     <None Include="Resources\splash1080pc20111.png" />

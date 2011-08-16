@@ -188,11 +188,12 @@ namespace Tinke
             this.label2 = new System.Windows.Forms.Label();
             this.comboBannerLang = new System.Windows.Forms.ComboBox();
             this.txtBannerTitle = new System.Windows.Forms.TextBox();
-            this.picIcon = new System.Windows.Forms.PictureBox();
             this.listInfo = new System.Windows.Forms.ListView();
             this.columnPosicion = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnCampo = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnValor = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.btnEdit = new System.Windows.Forms.Button();
+            this.picIcon = new System.Windows.Forms.PictureBox();
             this.groupBanner.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picIcon)).BeginInit();
             this.SuspendLayout();
@@ -331,15 +332,6 @@ namespace Tinke
             this.txtBannerTitle.Size = new System.Drawing.Size(182, 85);
             this.txtBannerTitle.TabIndex = 3;
             // 
-            // picIcon
-            // 
-            this.picIcon.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.picIcon.Location = new System.Drawing.Point(9, 19);
-            this.picIcon.Name = "picIcon";
-            this.picIcon.Size = new System.Drawing.Size(32, 32);
-            this.picIcon.TabIndex = 0;
-            this.picIcon.TabStop = false;
-            // 
             // listInfo
             // 
             this.listInfo.Activation = System.Windows.Forms.ItemActivation.OneClick;
@@ -417,6 +409,27 @@ namespace Tinke
             this.columnValor.Text = "S0E";
             this.columnValor.Width = 214;
             // 
+            // btnEdit
+            // 
+            this.btnEdit.Image = global::Tinke.Properties.Resources.pencil;
+            this.btnEdit.Location = new System.Drawing.Point(500, 313);
+            this.btnEdit.Name = "btnEdit";
+            this.btnEdit.Size = new System.Drawing.Size(90, 30);
+            this.btnEdit.TabIndex = 8;
+            this.btnEdit.Text = "S3B";
+            this.btnEdit.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnEdit.UseVisualStyleBackColor = true;
+            this.btnEdit.Click += new System.EventHandler(this.btnEdit_Click);
+            // 
+            // picIcon
+            // 
+            this.picIcon.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.picIcon.Location = new System.Drawing.Point(9, 19);
+            this.picIcon.Name = "picIcon";
+            this.picIcon.Size = new System.Drawing.Size(32, 32);
+            this.picIcon.TabIndex = 0;
+            this.picIcon.TabStop = false;
+            // 
             // RomInfo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -424,6 +437,7 @@ namespace Tinke
             this.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
             this.ClientSize = new System.Drawing.Size(694, 472);
             this.ControlBox = false;
+            this.Controls.Add(this.btnEdit);
             this.Controls.Add(this.groupBanner);
             this.Controls.Add(this.listInfo);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
@@ -460,5 +474,6 @@ namespace Tinke
         private System.Windows.Forms.ColumnHeader columnValor;
         private System.Windows.Forms.Label lblGameTitle;
         private System.Windows.Forms.CheckBox checkTrans;
+        private System.Windows.Forms.Button btnEdit;
     }
 }

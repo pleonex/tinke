@@ -181,20 +181,20 @@ namespace Tinke
             treeSystem.Nodes[0].Expand();
 
             Get_SupportedFiles();
-            DateTime t10 = DateTime.Now;
+            DateTime t9 = DateTime.Now;
 
-            DateTime finalTime = DateTime.Now;
-            Console.Write("<br><u>Cálculo de tiempos:</u><ul><font size=\"2\" face=\"consolas\">");
-            Console.WriteLine("<li>Tiempo {0}: {1}</li>", "total", (finalTime - startTime).ToString());
-            Console.WriteLine("<li>Tiempo {0}: {1}</li>", "en obtener cabecera", (t1 - startTime).ToString());
-            Console.WriteLine("<li>Tiempo {0}: {1}</li>", "inicializar Acciones", (t2 - t1).ToString());
-            Console.WriteLine("<li>Tiempo {0}: {1}</li>", "en leer FNT", (t3 - t2).ToString());
-            Console.WriteLine("<li>Tiempo {0}: {1}</li>", "añadir archivos del sistema", (t4 - t3).ToString());
-            Console.WriteLine("<li>Tiempo {0}: {1}</li>", "en leer FAT", (t5 - t4).ToString());
-            Console.WriteLine("<li>Tiempo {0}: {1}</li>", "en asignar ROOT", (t6 - t5).ToString());
-            Console.WriteLine("<li>Tiempo {0}: {1}</li>", "en obtener los formatos", (t7 - t6).ToString());
-            Console.WriteLine("<li>Tiempo {0}: {1}</li>", "en jerarquizar el árbol", (t8 - t7).ToString());
-            Console.WriteLine("<li>Tiempo {0}: {1}</li>", "obtener el porcentaje de archivos soportados", (t10 - t8).ToString());
+            XElement xml = Tools.Helper.ObtenerTraduccion("Messages");
+            Console.Write("<br><u>" + xml.Element("S0F").Value + "</u><ul><font size=\"2\" face=\"consolas\">");
+            Console.WriteLine("<li>" + xml.Element("S10").Value + (t9 - startTime).ToString() + "</li>");
+            Console.WriteLine("<li>" + xml.Element("S11").Value + (t1 - startTime).ToString() + "</li>");
+            Console.WriteLine("<li>" + xml.Element("S12").Value + (t2 - t1).ToString() + "</li>");
+            Console.WriteLine("<li>" + xml.Element("S13").Value + (t3 - t2).ToString() + "</li>");
+            Console.WriteLine("<li>" + xml.Element("S14").Value + (t4 - t3).ToString() + "</li>");
+            Console.WriteLine("<li>" + xml.Element("S15").Value + (t5 - t4).ToString() + "</li>");
+            Console.WriteLine("<li>" + xml.Element("S16").Value + (t6 - t5).ToString() + "</li>");
+            Console.WriteLine("<li>" + xml.Element("S17").Value + (t7 - t6).ToString() + "</li>");
+            Console.WriteLine("<li>" + xml.Element("S18").Value + (t8 - t7).ToString() + "</li>");
+            Console.WriteLine("<li>" + xml.Element("S19").Value + (t9 - t8).ToString() + "</li>");
             Console.Write("</font></ul><br>");
         }
         private void ReadFiles(string[] files)
@@ -358,6 +358,8 @@ namespace Tinke
             btnSaveROM.Text = xml.Element("S33").Value;
             toolStripMenuComprimido.Text = xml.Element("S2A").Value;
             toolStripAbrirTexto.Text = xml.Element("S26").Value;
+            toolStripFAT1.Text = xml.Element("S3D").Value;
+            toolStripFAT2.Text = xml.Element("S3E").Value;
         }
         private void ToolStripLang_Click(Object sender, EventArgs e)
         {
@@ -838,7 +840,18 @@ namespace Tinke
         private void btnExtraer_Click(object sender, EventArgs e)
         {
             if (Convert.ToUInt16(treeSystem.SelectedNode.Tag) < 0xF000)
-                ExtractFile();
+            {
+                if ((String)accion.Select_File().tag == "Descomprimido")
+                {
+                    if (MessageBox.Show(Tools.Helper.ObtenerTraduccion("Sistema", "S3B"), "", MessageBoxButtons.YesNo,
+                          MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Yes)
+                        ExtractFolder();
+                    else
+                        ExtractFile();
+                }
+                else
+                    ExtractFile();
+            }
             else
                 ExtractFolder();
         }

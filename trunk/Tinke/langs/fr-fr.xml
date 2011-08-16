@@ -68,6 +68,13 @@
       Êtes-vous sûr de vouloir quitter ? Toutes les modifications seront perdues.
     </S39>
     <S3A>Attention</S3A>
+    <S3B>
+      Do you want to export the uncompressed folder instead of
+      the compress file?
+    </S3B>
+    <S3C>Full file information</S3C>
+    <S3D>Type 1</S3D>
+    <S3E>Type 2</S3E>
   </Sistema>
   <RomInfo>
     <S01>Informations de la ROM</S01>
@@ -128,6 +135,7 @@
     <S38>Réservé</S38>
     <S39>Non valide</S39>
     <S3A>Transparence</S3A>
+    <S3B>Edit</S3B>
   </RomInfo>
   <Autores>
     <S01>À propos de</S01>
@@ -172,6 +180,17 @@
       <br>La nouvelle ROM a été sauvegardée dans : {0}</br>
     </S0D>
     <S0E>Exporter registre</S0E>
+    <S0F>Time log:</S0F>
+    <S10>Total time:</S10>
+    <S11>Time reading header:</S11>
+    <S12>Time starting variable from Acciones.cs:</S12>
+    <S13>Time reading FNT:</S13>
+    <S14>Time adding system files:</S14>
+    <S15>Time reading FAT:</S15>
+    <S16>Time setting ROOT:</S16>
+    <S17>Time getting format files:</S17>
+    <S18>Time creating tree files:</S18>
+    <S19>Time recognizing files:</S19>
   </Messages>
   <NCLR>
     <S01>Nombre de la palette :</S01>
@@ -190,13 +209,16 @@
     <S0E>Nombre étrange de sections ? : </S0E>
     <S0F>palettes trouvées</S0F>
     <S10>couleurs.</S10>
-    <S11>Modify</S11>
-    <S12>Start byte:</S12>
-    <S13>Import</S13>
-    <S14>Change the depth</S14>
+    <S11>Modifier</S11>
+    <S12>Octet de départ :</S12>
+    <S13>Importer</S13>
+    <S14>Changer la profondeur</S14>
   </NCLR>
   <NCGR>
-    <S01>Faites un double clique sur l'image pour la voir en taille réelle.</S01>
+    <S01>
+      Faites un double clique sur l'image pour la voir en
+      taille réelle.
+    </S01>
     <S02>Propriétés</S02>
     <S03>Position</S03>
     <S04>Champ</S04>
@@ -231,7 +253,7 @@
     <S21>Importer</S21>
   </NCGR>
   <NCER>
-    <S01>Banques:</S01>
+    <S01>Banques :</S01>
     <S02>Montrer toutes les banques</S02>
     <S03>Enregistrer</S03>
     <S04>Propriétés</S04>
@@ -264,8 +286,8 @@
     <S1F>Longueur</S1F>
     <S20>Hauteur</S20>
     <S21>Numéro de palette</S21>
-    <S22>Original tile offset</S22>
-    <S23>Fixed tile offset</S23>
+    <S22>Offset tuile originale</S22>
+    <S23>Offset tuile fixée</S23>
   </NCER>
   <NANR>
     <S01>Intervalle :</S01>
@@ -299,4 +321,82 @@
     <S1D>Animations</S1D>
     <S1E>Faites un double clique sur l'image pour la voir en taille réelle.</S1E>
   </NANR>
+  <Compression>
+    <!-- LZ77 -->
+    <S00>Size is over the limit (>2GB).</S00>
+    <S01>File {0:s} is not a valid LZ77 file.</S01>
+    <S02>{0:s} will be larger than 0x{1:x} (0x{2:x}) and will not be decompressed</S02>
+    <S03>Decompressing {0:s}. Decompressed size 0x{1:x}</S03>
+    <S04>Incompleted data.</S04>
+    <S05>Cannot go back more than already written</S05>
+    <S06>Too many data in file; current INPOS = {0:x}</S06>
+    <S07>LZ77 file decompressed {0:s}</S07>
+    <!-- HUFFMAN -->
+    <S08>Invalid huffman compressed file; invalid tag {0:x}</S08>
+    <S09>Invalid size data {0:x}</S09>
+    <S0A>Incompleted data</S0A>
+    <S0B>Too many data, str={0:s}, idx={1:g}/{2:g}</S0B>
+    <S0C>First 4 bits of data should be 0 if dataSize = 4</S0C>
+    <S0D>HUFFMAN file decompressed {0:s}</S0D>
+    <!-- LZSS -->
+    <S0E>File {0:s} is not a valid LZSS-11 compressed file.</S0E>
+    <S0F>LZSS-11 file decompressed {0:s}</S0F>
+    <!-- RLE -->
+    <S10>File {0:s} is not a valid RLE compressed file.</S10>
+    <S11>RLE file decompressed {0:s}</S11>
+    <!-- NONE -->
+    <S12>File {0:s} is not a valid NONE file, it does not have the NONE-tag as first byte</S12>
+    <S13>File {0:s} is not a valid NONE file, the decompression size shold be the file size - 4</S13>
+    <S14>NONE file decompressed {0:s}</S14>
+    <!-- Basico -->
+    <S15>The file couldn't been decompressed correctly {0:s}</S15>
+  </Compression>
+  <EditRomInfo>
+    <S00>Header and banner editor</S00>
+    <S01>Save</S01>
+    <S02>Cancel</S02>
+    <S03>Header</S03>
+    <S04>Bannière</S04>
+    <S05>Changer icone</S05>
+    <S06>Version :</S06>
+    <S07>Titres du jeu :</S07>
+    <S08>Japonais</S08>
+    <S09>Anglais</S09>
+    <S0A>Français</S0A>
+    <S0B>Allemand</S0B>
+    <S0C>Italien</S0C>
+    <S0D>Espagnol</S0D>
+    <S0E>Réservé (28 bytes Hexadecimal):</S0E>
+    <S0F>Titre du jeu :</S0F>
+    <S10>Code du jeu :</S10>
+    <S11>Code du créateur :</S11>
+    <S12>Code de console :</S12>
+    <S13>Réservé (9 bytes Hexadecimal) :</S13>
+    <S14>Version de la ROM :</S14>
+    <S15>Indicateurs internes :</S15>
+    <S16>Adresse entrée ARM9 :</S16>
+    <S17>Adresse chargée ARM9 :</S17>
+    <S18>Adresse entrée ARM7 :</S18>
+    <S19>Adresse chargée ARM7 :</S19>
+    <S1A>Ajustements de contrôle normales :</S1A>
+    <S1B>Ajustements de sécurité normales :</S1B>
+    <S1C>Show all maker codes</S1C>
+    <S1D>Délai de transfert sécurisé :</S1D>
+    <S1E>Sécurité désactivée :</S1E>
+    <S1F>Réservé 3 (4 bytes Hexadecimal) :</S1F>
+    <S20>Réservé 2 (56 bytes Hexadecimal) :</S20>
+    <S21>Auto-charger ARM9 :</S21>
+    <S22>Auto-charger ARM7 :</S22>
+    <S23>Offset de debug de la ROM :</S23>
+    <S24>Taille de debug :</S24>
+    <S25>Offset de la RAM de debug :</S25>
+    <S26>
+      The image must be saved with 4bpp depth.
+      The selected image is 8bpp and can not be imported.
+    </S26>
+    <S27>Encryption seed:</S27>
+    <S28>Code</S28>
+    <S29>Company</S29>
+    <S2A>Company codes</S2A>
+  </EditRomInfo>
 </Language>

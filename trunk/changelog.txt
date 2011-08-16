@@ -1,5 +1,7 @@
 0.7.4 (public release):
 *** Import BitMaP images and convert it to NCLR,NCGR,NSCR files
+*** Header and banner editor
+*** WAV to STRM converter
 * New methods and functions in IPluginHost interface
 * Add new file format in "Open As..." -> Extract FAT (files with offsets at the beggining)
 * Add new file format in "Open As..." -> Text

@@ -128,12 +128,18 @@ namespace Tinke
             listInfo.Items[40].SubItems[1].Text = xml.Element("S37").Value;
             listInfo.Items[41].SubItems[1].Text = xml.Element("S38").Value;
             checkTrans.Text = xml.Element("S3A").Value;
+            btnEdit.Text = xml.Element("S3B").Value;
 
         }
         private void Mostrar_Informacion(Nitro.Estructuras.ROMHeader cabecera, Nitro.Estructuras.Banner banner)
         {
             this.cabecera = cabecera;
             this.banner = banner;
+
+            // Remove older values
+            if (listInfo.Items[0].SubItems.Count == 3)
+                for (int i = 0; i < listInfo.Items.Count; i++)
+                    listInfo.Items[i].SubItems.RemoveAt(2);
 
             #region Muestra la información de la cabecera
             listInfo.Items[0].SubItems.Add(new String(cabecera.gameTitle));
@@ -232,7 +238,7 @@ namespace Tinke
             o.OverwritePrompt = true;
             o.Filter = "Imagen Bitmap (*.bmp)|*.bmp";
             if (o.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-                picIcon.Image.Save(o.FileName);
+                picIcon.Image.Save(o.FileName, System.Drawing.Imaging.ImageFormat.Bmp);
         }
         private void comboBannerLang_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -269,6 +275,24 @@ namespace Tinke
             }
             else
                 picIcon.Image = picBanner;
+        }
+
+        private void btnEdit_Click(object sender, EventArgs e)
+        {
+            EditRomInfo editor = new EditRomInfo(cabecera, banner);
+            editor.FormClosed += new FormClosedEventHandler(editor_FormClosed);
+            editor.Show();
+        }
+        void editor_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            EditRomInfo editor = (EditRomInfo)sender;
+            if (editor.DialogResult != System.Windows.Forms.DialogResult.OK)
+                return;
+
+            cabecera = editor.Header;
+            banner = editor.Banner;
+
+            Mostrar_Informacion(cabecera, banner);
         }
     }
 }

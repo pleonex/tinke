@@ -28,11 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.ListViewItem listViewItem11 = new System.Windows.Forms.ListViewItem("S05");
-            System.Windows.Forms.ListViewItem listViewItem12 = new System.Windows.Forms.ListViewItem("S06");
-            System.Windows.Forms.ListViewItem listViewItem13 = new System.Windows.Forms.ListViewItem("S07");
-            System.Windows.Forms.ListViewItem listViewItem14 = new System.Windows.Forms.ListViewItem("S08");
-            System.Windows.Forms.ListViewItem listViewItem15 = new System.Windows.Forms.ListViewItem("S09");
+            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("S05");
+            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("S06");
+            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem("S07");
+            System.Windows.Forms.ListViewItem listViewItem4 = new System.Windows.Forms.ListViewItem("S08");
+            System.Windows.Forms.ListViewItem listViewItem5 = new System.Windows.Forms.ListViewItem("S09");
             this.paletaBox = new System.Windows.Forms.PictureBox();
             this.nPaleta = new System.Windows.Forms.NumericUpDown();
             this.label1 = new System.Windows.Forms.Label();
@@ -67,9 +67,9 @@
             // 
             // nPaleta
             // 
-            this.nPaleta.Location = new System.Drawing.Point(78, 182);
+            this.nPaleta.Location = new System.Drawing.Point(123, 182);
             this.nPaleta.Name = "nPaleta";
-            this.nPaleta.Size = new System.Drawing.Size(82, 20);
+            this.nPaleta.Size = new System.Drawing.Size(37, 20);
             this.nPaleta.TabIndex = 2;
             this.nPaleta.ValueChanged += new System.EventHandler(this.nPaleta_ValueChanged);
             // 
@@ -84,9 +84,9 @@
             // 
             // btnShow
             // 
-            this.btnShow.Location = new System.Drawing.Point(326, 166);
+            this.btnShow.Location = new System.Drawing.Point(346, 166);
             this.btnShow.Name = "btnShow";
-            this.btnShow.Size = new System.Drawing.Size(180, 30);
+            this.btnShow.Size = new System.Drawing.Size(160, 30);
             this.btnShow.TabIndex = 4;
             this.btnShow.Text = "S0B";
             this.btnShow.UseVisualStyleBackColor = true;
@@ -109,11 +109,11 @@
             this.columnValor});
             this.listProp.Dock = System.Windows.Forms.DockStyle.Top;
             this.listProp.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem11,
-            listViewItem12,
-            listViewItem13,
-            listViewItem14,
-            listViewItem15});
+            listViewItem1,
+            listViewItem2,
+            listViewItem3,
+            listViewItem4,
+            listViewItem5});
             this.listProp.Location = new System.Drawing.Point(3, 16);
             this.listProp.Name = "listProp";
             this.listProp.Size = new System.Drawing.Size(261, 134);
@@ -136,7 +136,7 @@
             this.btnSave.Image = global::Tinke.Properties.Resources.picture_save;
             this.btnSave.Location = new System.Drawing.Point(245, 166);
             this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(75, 30);
+            this.btnSave.Size = new System.Drawing.Size(95, 30);
             this.btnSave.TabIndex = 6;
             this.btnSave.Text = "S0A";
             this.btnSave.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
@@ -158,18 +158,18 @@
             this.groupModificar.Controls.Add(this.btnConverter);
             this.groupModificar.Controls.Add(this.label2);
             this.groupModificar.Controls.Add(this.numericStartByte);
-            this.groupModificar.Location = new System.Drawing.Point(289, 226);
+            this.groupModificar.Location = new System.Drawing.Point(245, 226);
             this.groupModificar.Name = "groupModificar";
-            this.groupModificar.Size = new System.Drawing.Size(217, 101);
+            this.groupModificar.Size = new System.Drawing.Size(261, 93);
             this.groupModificar.TabIndex = 8;
             this.groupModificar.TabStop = false;
             this.groupModificar.Text = "S11";
             // 
             // btnImport
             // 
-            this.btnImport.Location = new System.Drawing.Point(107, 54);
+            this.btnImport.Location = new System.Drawing.Point(149, 54);
             this.btnImport.Name = "btnImport";
-            this.btnImport.Size = new System.Drawing.Size(95, 30);
+            this.btnImport.Size = new System.Drawing.Size(106, 30);
             this.btnImport.TabIndex = 3;
             this.btnImport.Text = "S13";
             this.btnImport.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
@@ -180,7 +180,7 @@
             // 
             this.btnConverter.Location = new System.Drawing.Point(6, 54);
             this.btnConverter.Name = "btnConverter";
-            this.btnConverter.Size = new System.Drawing.Size(95, 30);
+            this.btnConverter.Size = new System.Drawing.Size(137, 30);
             this.btnConverter.TabIndex = 2;
             this.btnConverter.Text = "S14";
             this.btnConverter.UseVisualStyleBackColor = true;
@@ -197,7 +197,7 @@
             // 
             // numericStartByte
             // 
-            this.numericStartByte.Location = new System.Drawing.Point(107, 22);
+            this.numericStartByte.Location = new System.Drawing.Point(160, 22);
             this.numericStartByte.Name = "numericStartByte";
             this.numericStartByte.Size = new System.Drawing.Size(95, 20);
             this.numericStartByte.TabIndex = 0;
@@ -243,9 +243,9 @@
         private System.Windows.Forms.Button btnSave;
         private System.Windows.Forms.Label lblRGB;
         private System.Windows.Forms.GroupBox groupModificar;
-        private System.Windows.Forms.Button btnImport;
         private System.Windows.Forms.Button btnConverter;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.NumericUpDown numericStartByte;
+        internal System.Windows.Forms.Button btnImport;
     }
 }

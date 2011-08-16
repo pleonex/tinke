@@ -51,10 +51,8 @@ namespace Tinke.Tools
 
             for (int i = 0; i < bytes.Length; i++)
             {
-                string hex = DecToHex(bytes[i]);
-
-                bits[i * 2] = (byte)HexToSingleDec(hex[1]);
-                bits[i * 2 + 1] = (byte)HexToSingleDec(hex[0]);
+                bits[i * 2 + 1] = (byte)((bytes[i] & 0xF0) >> 4);
+                bits[i * 2] = (byte)(bytes[i] & 0x0F);
             }
 
             return bits;
@@ -68,148 +66,23 @@ namespace Tinke.Tools
         {
             byte[] bits = new byte[2];
 
-            string hex = DecToHex(Byte);
-            bits[0] = (byte)HexToSingleDec(hex[0]);
-            bits[1] = (byte)HexToSingleDec(hex[1]);
+            bits[0] = (byte)(Byte & 0x0F);
+            bits[1] = (byte)((Byte & 0xF0) >> 4);
 
             return bits;
         }
-
-        /// <summary>
-        /// Convierte números decimales a hexadecimales.
-        /// </summary>
-        /// <param name="x">Número decimal.</param>
-        /// <returns>Número hexadecimal en string para que no se autoconvierta a decimal.</returns>
-        public static string DecToHex(int x)
+        public static byte[] Bits4ToBits8Rev(byte[] bytes)
         {
+            List<Byte> bit8 = new List<byte>();
 
-            if (x < 10) { return '0' + x.ToString(); }
-            else if (x < 16) { return '0' + DecToSingleHex(x).ToString(); }
-            else
+            for (int i = 0; i < bytes.Length; i += 2)
             {
-                string y = "";
-                do
-                {
-                    y = DecToSingleHex((x / 16)) + y;
-                    x = x % 16;
-                } while (x > 15);
-
-                if (x < 10) { return y + x.ToString(); }
-                else { return y + DecToSingleHex(x); }
-            }
-        }
-
-        /// <summary>
-        /// Convierte los números decimales a la letra correspondiente en hexadecimal
-        /// </summary>
-        /// <param name="x">número decimal</param>
-        /// <returns>Letra hexadecimal</returns>
-        public static char DecToSingleHex(int x)
-        {
-            switch (x)
-            {
-                case 10:
-                    return 'A';
-                case 11:
-                    return 'B';
-                case 12:
-                    return 'C';
-                case 13:
-                    return 'D';
-                case 14:
-                    return 'E';
-                case 15:
-                    return 'F';
-                case 9:
-                    return '9';
-                case 8:
-                    return '8';
-                case 7:
-                    return '7';
-                case 6:
-                    return '6';
-                case 5:
-                    return '5';
-                case 4:
-                    return '4';
-                case 3:
-                    return '3';
-                case 2:
-                    return '2';
-                case 1:
-                    return '1';
-                default:
-                    return '0';
-            }
-        }
-
-        /// <summary>
-        /// Convierte de hexadecimal a decimal
-        /// </summary>
-        /// <param name="x">número hexadecimal</param>
-        /// <returns>número decimal</returns>
-        public static int HexToSingleDec(char x)
-        {
-            switch (x)
-            {
-                case 'A':
-                    return 10;
-                case 'B':
-                    return 11;
-                case 'C':
-                    return 12;
-                case 'D':
-                    return 13;
-                case 'E':
-                    return 14;
-                case 'F':
-                    return 15;
-                case '1':
-                    return 1;
-                case '2':
-                    return 2;
-                case '3':
-                    return 3;
-                case '4':
-                    return 4;
-                case '5':
-                    return 5;
-                case '6':
-                    return 6;
-                case '7':
-                    return 7;
-                case '8':
-                    return 8;
-                case '9':
-                    return 9;
-                case '0':
-                    return 0;
-                default:
-                    return 0;
-            }
-        }
-
-        /// <summary>
-        /// Convierte un número hexadecimal en decimal
-        /// </summary>
-        /// <param name="hex">número hexadecimal</param>
-        /// <returns>número decimal</returns>
-        public static int HexToDec(string hex)
-        {
-            int resultado = 0;
-            int[] numeros = new int[hex.Length];
-            double j = 0;
-
-            for (int i = 0; i < hex.Length; i++)
-                numeros[i] = HexToSingleDec(hex[i]);
-
-            for (int i = numeros.Length - 1; i >= 0; i--)
-            {
-                resultado += numeros[i] * (int)Math.Pow(2, j);
-                j += 4;
+                byte byte1 = bytes[i];
+                byte byte2 = (byte)(bytes[i + 1] << 4);
+                bit8.Add((byte)(byte1 + byte2));
             }
 
-            return resultado;
+            return bit8.ToArray();
         }
 
         public static string BytesToBits(byte[] bytes)
