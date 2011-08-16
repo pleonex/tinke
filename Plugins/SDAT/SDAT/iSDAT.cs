@@ -15,7 +15,6 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  *
  * Programador: pleoNeX
- * Programa utilizado: Visual Studio 2010
  * 
  */
 
@@ -56,7 +55,7 @@ namespace SDAT
 
             this.sdat = sdat;
             this.pluginHost = pluginHost;
-            LeerIdioma();
+            ReadLanguage();
 
             treeFiles.Nodes.Add(CarpetaToNodo(sdat.files.root));
             treeFiles.Nodes[0].Expand();
@@ -66,7 +65,7 @@ namespace SDAT
             lastFileID++;
             lastFolderID++;
         }
-        private void LeerIdioma()
+        private void ReadLanguage()
         {
             System.Xml.Linq.XElement xml = System.Xml.Linq.XElement.Load(Application.StartupPath + "\\Plugins\\SDATLang.xml");
             xml = xml.Element(pluginHost.Get_Language());
@@ -83,9 +82,11 @@ namespace SDAT
             btnExtract.Text = xml.Element("S08").Value;
             btnMidi.Text = xml.Element("S09").Value;
             btnWav.Text = xml.Element("S0A").Value;
+            btnImport.Text = xml.Element("S0B").Value;
+            btnCreate.Text = xml.Element("S0C").Value;
         }
 
-        #region Administración de carpetas
+        #region System folder administration
         private TreeNode CarpetaToNodo(Folder carpeta)
         {
             TreeNode currNode = new TreeNode();
@@ -145,6 +146,7 @@ namespace SDAT
             btnReproducir.Enabled = false;
             btnWav.Enabled = false;
             btnMidi.Enabled = false;
+            btnImport.Enabled = false;
             btnUncompress.Enabled = false;
             if (listProp.Items[0].SubItems.Count == 2)
                 for (int i = 0; i < listProp.Items.Count; i++)
@@ -171,7 +173,10 @@ namespace SDAT
                     btnUncompress.Enabled = true;
                 }
                 if (fileSelect.type == FormatSound.STRM)
+                {
                     checkLoop.Enabled = true;
+                    btnImport.Enabled = true;
+                }
             }
             else
             {
@@ -291,8 +296,47 @@ namespace SDAT
         {
             return String.Compare(f1.name, f2.name);
         }
+
+        public void ChangeFile(int id, Sound fileChanged, Folder currFolder)
+        {
+            if (currFolder.files is List<Sound>)
+            {
+                for (int i = 0; i < currFolder.files.Count; i++)
+                {
+                    if (currFolder.files[i].id == id)
+                    {
+                        currFolder.files[i] = fileChanged;
+                    }
+                }
+            }
+
+
+            if (currFolder.folders is List<Folder>)
+                foreach (Folder subFolder in currFolder.folders)
+                    ChangeFile(id, fileChanged, subFolder);
+        }
+        public void ChangeFile(int id, string newFilePath)
+        {
+            Sound newFile = new Sound();
+            Sound oldFile = SearchFile(id, sdat.files.root);
+            newFile.name = oldFile.name;
+            newFile.id = (ushort)id;
+            newFile.offset = 0x00;
+            newFile.path = newFilePath;
+            newFile.type = oldFile.type;
+            newFile.size = (uint)new FileInfo(newFilePath).Length;
+
+            ChangeFile(id, newFile, sdat.files.root);
+        }
         #endregion
 
+        private void btnCreate_Click(object sender, EventArgs e)
+        {
+            String fileout = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + Path.GetRandomFileName();
+            Save_NewSDAT(fileout);
+
+            pluginHost.ChangeFile(sdat.id, fileout);
+        }
         private void btnExtract_Click(object sender, EventArgs e)
         {
             int id = Convert.ToInt32(treeFiles.SelectedNode.Tag);
@@ -355,7 +399,7 @@ namespace SDAT
             btnUncompress.Enabled = false;
             string swar = SaveSelectedFile();
 
-            SWAV.ArchivoSWAV[] archivos = SWAR.ConvertirASWAV(SWAR.LeerArchivo(swar));
+            sSWAV[] archivos = SWAR.ConvertToSWAV(SWAR.Read(swar));
             string[] swav = new string[archivos.Length];
             
             Folder carpeta = new Folder();
@@ -396,6 +440,41 @@ namespace SDAT
             treeFiles.SelectedNode.Expand();
 
         }
+        private void btnImport_Click(object sender, EventArgs e)
+        {
+            Sound selectedFile = SearchFile();
+            String fileout = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + Path.GetRandomFileName();
+
+            OpenFileDialog o = new OpenFileDialog();
+            o.CheckFileExists = true;
+            o.AddExtension = true;
+            o.DefaultExt = "wav";
+            o.Filter = "WAVE audio format (*.wav)|*.wav";
+            if (o.ShowDialog() != DialogResult.OK)
+                return;
+            String filein = o.FileName;
+
+            switch (selectedFile.type)
+            {
+                case FormatSound.STRM:
+                    sWAV wav = WAV.Read(filein);
+                    sSTRM strm = STRM.ConvertToSTRM(wav);
+                    STRM.Write(strm, fileout);
+                    break;
+
+                case FormatSound.SSEQ:
+                case FormatSound.SSAR:
+                case FormatSound.SBNK:
+                case FormatSound.SWAV:
+                case FormatSound.SWAR:
+                default:
+                    break;
+            }
+
+            if (!File.Exists(fileout))
+                return;
+            ChangeFile((int)selectedFile.id, fileout);
+        }
 
         private void btnWav_Click(object sender, EventArgs e)
         {
@@ -403,7 +482,7 @@ namespace SDAT
 
             SaveFileDialog o = new SaveFileDialog();
             o.FileName = SearchFile().name;
-            o.Filter = "Sonido WAVE (*.wav)|*.wav";
+            o.Filter = "WAVE (*.wav)|*.wav";
             if (o.ShowDialog() == DialogResult.OK)
             {
                 string wavSaved = o.FileName;
@@ -411,10 +490,10 @@ namespace SDAT
                 switch(SearchFile().type)
                 {
                     case FormatSound.SWAV:
-                        WAV.EscribirArchivo(SWAV.ConvertirAWAV(SWAV.LeerArchivo(sound)), wavSaved);
+                        WAV.Write(SWAV.ConvertirAWAV(SWAV.LeerArchivo(sound)), wavSaved);
                         break;
                     case FormatSound.STRM:
-                        WAV.EscribirArchivo(STRM.ConvertirAWAV(STRM.LeerArchivo(sound), false), wavSaved);
+                        WAV.Write(STRM.ConvertToWAV(STRM.Read(sound), false), wavSaved);
                         break;
                 }
             }
@@ -440,11 +519,11 @@ namespace SDAT
                 switch(SearchFile().type)
                 {
                     case FormatSound.SWAV:
-                        WAV.EscribirArchivo(SWAV.ConvertirAWAV(SWAV.LeerArchivo(sound)), wavFile);
+                        WAV.Write(SWAV.ConvertirAWAV(SWAV.LeerArchivo(sound)), wavFile);
                         break;
                     case FormatSound.STRM:
-                        WAV.EscribirArchivo(STRM.ConvertirAWAV(STRM.LeerArchivo(sound), false), wavFile);
-                        WAV.EscribirArchivo(STRM.ConvertirAWAV(STRM.LeerArchivo(sound), true), loopFile);
+                        WAV.Write(STRM.ConvertToWAV(STRM.Read(sound), false), wavFile);
+                        WAV.Write(STRM.ConvertToWAV(STRM.Read(sound), true), loopFile);
                         break;
                 }
 
@@ -506,6 +585,9 @@ namespace SDAT
             return file;
         }
 
+        private void Save_NewSDAT(string fileout)
+        {
 
+        }
     }
 }

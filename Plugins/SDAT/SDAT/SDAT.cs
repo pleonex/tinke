@@ -15,8 +15,6 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  *
  * Programador: pleoNeX
- * Programa utilizado: Visual Studio 2010
- * Fecha: 24/06/2011
  * 
  */
 using System;
@@ -57,13 +55,14 @@ namespace SDAT
         {
             this.archivo = archivo;
 
-            return new iSDAT(Informacion(), pluginHost);
+            return new iSDAT(Informacion(id), pluginHost);
         }
         #endregion
 
-        private sSDAT Informacion()
+        private sSDAT Informacion(int id)
         {
             sSDAT sdat = new sSDAT();
+            sdat.id = id;
             sdat.archivo = Path.GetTempFileName();
             File.Copy(archivo, sdat.archivo, true);
             BinaryReader br = new BinaryReader(new FileStream(archivo, FileMode.Open));
@@ -381,8 +380,10 @@ namespace SDAT
 
             br.Close();
 
-            Console.WriteLine("Lectura de archivo SDAT completa:");
-            Console.WriteLine("\tArchivos totales: <b>" + sdat.files.header.nSounds.ToString() + "</b>");
+            System.Xml.Linq.XElement xml = System.Xml.Linq.XElement.Load(Application.StartupPath + "\\Plugins\\SDATLang.xml");
+            xml = xml.Element(pluginHost.Get_Language()).Element("Messages");
+            Console.WriteLine(xml.Element("S00").Value);
+            Console.WriteLine(xml.Element("S01").Value, sdat.files.header.nSounds.ToString());
 
             FileSystem(ref sdat);
 
@@ -476,7 +477,6 @@ namespace SDAT
 
             sdat.files.root = root;
         }
-
         private void Asignar_Datos(ref sSDAT sdat)
         {
             int nFile = 0;
@@ -605,17 +605,6 @@ namespace SDAT
                 nFile++;
             }
         }
-
-
-        public void Leer(string archivo)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Control Show_Info(string archivo)
-        {
-            throw new NotImplementedException();
-        }
     }
 
     public struct Folder
@@ -648,6 +637,7 @@ namespace SDAT
     public struct sSDAT
     {
         public String archivo;
+        public int id;
         public Header generico;
         public Cabecera cabecera;
         public Symbol symbol;

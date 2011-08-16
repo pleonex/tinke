@@ -30,9 +30,14 @@ namespace TXT
                 txtBox.Text = Descodificar(Encoding.Unicode);
                 comboEncod.SelectedIndex = 1;
             }
-            else
+            else if (BitConverter.ToUInt16(text, 0) == 0xBBEF)
             {
                 txtBox.Text = Descodificar(Encoding.UTF8);
+                comboEncod.SelectedIndex = 4;
+            }
+            else
+            {
+                txtBox.Text = Descodificar(Encoding.UTF7);
                 comboEncod.SelectedIndex = 0;
             }
 

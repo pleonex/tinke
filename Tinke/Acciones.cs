@@ -387,8 +387,10 @@ namespace Tinke
                     NCLR paleta = Imagen_NCLR.Leer_Basico(tempFile, idSelect);
                     pluginHost.Set_NCLR(paleta);
                     File.Delete(tempFile);
-                    
-                    return new iNCLR(paleta, pluginHost);
+
+                    iNCLR control = new iNCLR(paleta, pluginHost);
+                    control.btnImport.Enabled = false;
+                    return control;
                 }               
                 else if (formato == Formato.Imagen)
                 {

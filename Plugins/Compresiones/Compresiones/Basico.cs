@@ -3,60 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using System.Xml.Linq;
 
 namespace Compresion
 {
     public static class Basico
     {
-        const int N = 4096, F = 18;
-        const byte THRESHOLD = 2;
-        const int NIL = N;
-
         const int LZ77_TAG = 0x10, LZSS_TAG = 0x11, RLE_TAG = 0x30, HUFF_TAG = 0x20, NONE_TAG = 0x00;
 
-        #region method: DecompressFolder
-        public static void DecompressFolder(string inflr, string outflr)
-        {
-            if (!outflr.EndsWith("/") && !outflr.EndsWith("\\"))
-                outflr += "/";
-            StreamWriter sw = null;
-            if (!Directory.Exists(inflr))
-            {
-                Console.WriteLine("No such file or folder: " + inflr);
-                return;
-            }
-            string[] files = Directory.GetFiles(inflr);
-            foreach (string fname in files)
-                try
-                {
-                    Decompress(Utils.makeSlashes(fname), outflr);
-                }
-                catch (Exception e)
-                {
-                    if (sw == null)
-                        sw = new StreamWriter(new FileStream(outflr + "lzsslog.txt", FileMode.Create));
-                    Console.WriteLine(e.Message);
-                    sw.WriteLine(e.Message);
-                    string copied = fname.Replace(inflr, outflr);
-                    if (!File.Exists(copied))
-                        File.Copy(fname, copied);
-                }
-            Console.WriteLine("Done decompressing files in folder " + inflr);
-            if (sw != null)
-            {
-                Console.WriteLine("Errors have been logged to " + outflr + "lzsslog.txt");
-                sw.Flush();
-                sw.Close();
-            }
-        }
-        #endregion
-
-        #region Method: Decompress
         public static void Decompress(string filein, string fileout)
         {
             FileStream fstr = File.OpenRead(filein);
             if (fstr.Length > int.MaxValue)
-                throw new Exception("Files larger than " + int.MaxValue.ToString() + " cannot be decompressed by this program.");
+                throw new Exception(ObtenerTraduccion("Compression").Element("S00").Value);
             BinaryReader br = new BinaryReader(fstr);
             
             byte tag = br.ReadByte();
@@ -82,7 +41,7 @@ namespace Compresion
             }
             catch (Exception e)
             {
-                Console.WriteLine("Could not properly decompress {0:s};", filein);
+                Console.WriteLine(ObtenerTraduccion("Compression").Element("S15").Value, filein);
                 Console.WriteLine(e.Message);
                 Console.WriteLine(e.StackTrace);
             }
@@ -91,7 +50,7 @@ namespace Compresion
         {
             FileStream fstr = File.OpenRead(filein);
             if (fstr.Length > int.MaxValue)
-                throw new Exception("Files larger than " + int.MaxValue.ToString() + " cannot be decompressed by this program.");
+                throw new Exception(ObtenerTraduccion("Compression").Element("S00").Value);
             
             BinaryReader br = new BinaryReader(fstr);
             br.BaseStream.Seek(0x4, SeekOrigin.Begin); // A veces la etiqueta está en la posición 0x4
@@ -118,11 +77,30 @@ namespace Compresion
             }
             catch (Exception e)
             {
-                Console.WriteLine("Could not properly decompress {0:s};", filein);
+                Console.WriteLine(ObtenerTraduccion("Compression").Element("S15").Value, filein);
                 Console.WriteLine(e.Message);
                 Console.WriteLine(e.StackTrace);
             }
         }
-        #endregion
+
+        internal static XElement ObtenerTraduccion(string arbol)
+        {
+            XElement xml = XElement.Load(System.Windows.Forms.Application.StartupPath + Path.DirectorySeparatorChar + "Tinke.xml");
+            string idioma = xml.Element("Options").Element("Language").Value;
+            xml = null;
+
+            foreach (string langFile in Directory.GetFiles(System.Windows.Forms.Application.StartupPath + Path.DirectorySeparatorChar + "langs"))
+            {
+                if (!langFile.EndsWith(".xml"))
+                    continue;
+
+                xml = XElement.Load(langFile);
+                if (xml.Attribute("name").Value == idioma)
+                    break;
+            }
+
+            return xml.Element(arbol);
+        }
+
     }
 }

@@ -28,15 +28,15 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.ListViewItem listViewItem9 = new System.Windows.Forms.ListViewItem(new string[] {
+            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem(new string[] {
             "S07"}, -1, System.Drawing.Color.Empty, System.Drawing.Color.Empty, new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0))));
-            System.Windows.Forms.ListViewItem listViewItem10 = new System.Windows.Forms.ListViewItem("S08");
-            System.Windows.Forms.ListViewItem listViewItem11 = new System.Windows.Forms.ListViewItem("S09");
-            System.Windows.Forms.ListViewItem listViewItem12 = new System.Windows.Forms.ListViewItem("S0A");
-            System.Windows.Forms.ListViewItem listViewItem13 = new System.Windows.Forms.ListViewItem("S0B");
-            System.Windows.Forms.ListViewItem listViewItem14 = new System.Windows.Forms.ListViewItem("S0C");
-            System.Windows.Forms.ListViewItem listViewItem15 = new System.Windows.Forms.ListViewItem("S0D");
-            System.Windows.Forms.ListViewItem listViewItem16 = new System.Windows.Forms.ListViewItem("S0E");
+            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("S08");
+            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem("S09");
+            System.Windows.Forms.ListViewItem listViewItem4 = new System.Windows.Forms.ListViewItem("S0A");
+            System.Windows.Forms.ListViewItem listViewItem5 = new System.Windows.Forms.ListViewItem("S0B");
+            System.Windows.Forms.ListViewItem listViewItem6 = new System.Windows.Forms.ListViewItem("S0C");
+            System.Windows.Forms.ListViewItem listViewItem7 = new System.Windows.Forms.ListViewItem("S0D");
+            System.Windows.Forms.ListViewItem listViewItem8 = new System.Windows.Forms.ListViewItem("S0E");
             this.imgBox = new System.Windows.Forms.PictureBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.listProp = new System.Windows.Forms.ListView();
@@ -92,14 +92,14 @@
             this.columnValor});
             this.listProp.Dock = System.Windows.Forms.DockStyle.Fill;
             this.listProp.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem9,
-            listViewItem10,
-            listViewItem11,
-            listViewItem12,
-            listViewItem13,
-            listViewItem14,
-            listViewItem15,
-            listViewItem16});
+            listViewItem1,
+            listViewItem2,
+            listViewItem3,
+            listViewItem4,
+            listViewItem5,
+            listViewItem6,
+            listViewItem7,
+            listViewItem8});
             this.listProp.Location = new System.Drawing.Point(3, 16);
             this.listProp.Name = "listProp";
             this.listProp.Size = new System.Drawing.Size(241, 237);
@@ -130,17 +130,17 @@
             // 
             this.comboCelda.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboCelda.FormattingEnabled = true;
-            this.comboCelda.Location = new System.Drawing.Point(46, 263);
+            this.comboCelda.Location = new System.Drawing.Point(73, 263);
             this.comboCelda.Name = "comboCelda";
-            this.comboCelda.Size = new System.Drawing.Size(210, 21);
+            this.comboCelda.Size = new System.Drawing.Size(183, 21);
             this.comboCelda.TabIndex = 3;
             this.comboCelda.SelectedIndexChanged += new System.EventHandler(this.comboCelda_SelectedIndexChanged);
             // 
             // btnTodos
             // 
-            this.btnTodos.Location = new System.Drawing.Point(46, 290);
+            this.btnTodos.Location = new System.Drawing.Point(73, 290);
             this.btnTodos.Name = "btnTodos";
-            this.btnTodos.Size = new System.Drawing.Size(210, 23);
+            this.btnTodos.Size = new System.Drawing.Size(183, 23);
             this.btnTodos.TabIndex = 4;
             this.btnTodos.Text = "S02";
             this.btnTodos.UseVisualStyleBackColor = true;
@@ -152,7 +152,7 @@
             this.btnSave.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnSave.Location = new System.Drawing.Point(6, 483);
             this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(75, 26);
+            this.btnSave.Size = new System.Drawing.Size(86, 26);
             this.btnSave.TabIndex = 5;
             this.btnSave.Text = "S03";
             this.btnSave.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
@@ -228,9 +228,9 @@
             // btnBgdTrans
             // 
             this.btnBgdTrans.Enabled = false;
-            this.btnBgdTrans.Location = new System.Drawing.Point(202, 332);
+            this.btnBgdTrans.Location = new System.Drawing.Point(176, 321);
             this.btnBgdTrans.Name = "btnBgdTrans";
-            this.btnBgdTrans.Size = new System.Drawing.Size(51, 35);
+            this.btnBgdTrans.Size = new System.Drawing.Size(80, 35);
             this.btnBgdTrans.TabIndex = 29;
             this.btnBgdTrans.Text = "S18";
             this.btnBgdTrans.UseVisualStyleBackColor = true;
@@ -239,7 +239,7 @@
             // pictureBgd
             // 
             this.pictureBgd.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pictureBgd.Location = new System.Drawing.Point(161, 332);
+            this.pictureBgd.Location = new System.Drawing.Point(135, 322);
             this.pictureBgd.Name = "pictureBgd";
             this.pictureBgd.Size = new System.Drawing.Size(35, 35);
             this.pictureBgd.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -248,9 +248,9 @@
             // 
             // btnBgd
             // 
-            this.btnBgd.Location = new System.Drawing.Point(46, 332);
+            this.btnBgd.Location = new System.Drawing.Point(6, 322);
             this.btnBgd.Name = "btnBgd";
-            this.btnBgd.Size = new System.Drawing.Size(78, 35);
+            this.btnBgd.Size = new System.Drawing.Size(118, 35);
             this.btnBgd.TabIndex = 27;
             this.btnBgd.Text = "S17";
             this.btnBgd.UseVisualStyleBackColor = true;

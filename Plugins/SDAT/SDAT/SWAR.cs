@@ -16,8 +16,6 @@
  *
  * Programador: rafael1193
  * 
- * Fecha: 15/07/2011
- * 
  */
 
 using System;
@@ -25,29 +23,36 @@ using System.Text;
 
 namespace SDAT
 {
+    /// <summary>
+    /// Operations with SWAR files
+    /// </summary>
     class SWAR
     {
-        public static ArchivoSWAR LeerArchivo(string path)
+        /// <summary>
+        /// Read a SWAR file and return a SWAR structure
+        /// </summary>
+        /// <param name="path">File to read</param>
+        /// <returns>Structure of the file</returns>
+        public static sSWAR Read(string path)
         {
-            /***Lectura del archivo SWAR***/
             System.IO.FileStream fs = null;
             System.IO.BinaryReader br = null;
 
-            ArchivoSWAR swar = new ArchivoSWAR();
+            sSWAR swar = new sSWAR();
 
             try
             {
                 fs = new System.IO.FileStream(path, System.IO.FileMode.Open);
                 br = new System.IO.BinaryReader(fs);
 
-                //Leer Header
+                // Common header
                 swar.header.type = Encoding.ASCII.GetChars(br.ReadBytes(4));
                 swar.header.magic = br.ReadUInt32();
                 swar.header.nFileSize = br.ReadUInt32();
                 swar.header.nSize = br.ReadUInt16();
                 swar.header.nBlock = br.ReadUInt16();
 
-                //Leer Data
+                // DATA section
                 swar.data.type = Encoding.ASCII.GetChars(br.ReadBytes(4));
                 swar.data.nSize = br.ReadUInt32();
                 swar.data.reserved = new uint[8];
@@ -57,11 +62,11 @@ namespace SDAT
                 swar.data.nOffset = new uint[swar.data.nSample];
                 for (int i = 0; i < swar.data.nSample; i++) { swar.data.nOffset[i] = br.ReadUInt32(); }
  
-                swar.data.samples = new ArchivoSWAR.Data.Sample[swar.data.nSample];
+                swar.data.samples = new sSWAR.Data.Sample[swar.data.nSample];
 
                 for (uint i = 0; i < swar.data.nSample; i++)
                 {
-                    //Leer Info
+                    // INFO structure
                     swar.data.samples[i].info.nWaveType = br.ReadByte();
                     swar.data.samples[i].info.bLoop = br.ReadByte();
                     swar.data.samples[i].info.nSampleRate = br.ReadUInt16();
@@ -69,17 +74,17 @@ namespace SDAT
                     swar.data.samples[i].info.nLoopOffset = br.ReadUInt16();
                     swar.data.samples[i].info.nNonLoopLen = br.ReadUInt32();
 
-                    //Calcular tamaño de data
+                    // Calculation of data size
                     if (i < swar.data.nOffset.Length - 1)
                     {
-                        swar.data.samples[i].data = new byte[swar.data.nOffset[i + 1] - swar.data.nOffset[i] - /*tamaño de SWAVInfo ->*/12];
+                        swar.data.samples[i].data = new byte[swar.data.nOffset[i + 1] - swar.data.nOffset[i] - /*SWAVInfo size ->*/12];
                     }
                     else
                     {
-                        swar.data.samples[i].data = new byte[br.BaseStream.Length - swar.data.nOffset[i] - /*tamaño de SWAVInfo ->*/12];
+                        swar.data.samples[i].data = new byte[br.BaseStream.Length - swar.data.nOffset[i] - /*SWAVInfo size ->*/12];
                     }
 
-                    //Leer data
+                    // Read DATA
                     for (uint j = 0; j < swar.data.samples[i].data.Length; j++)
                     {
                         swar.data.samples[i].data[j] = br.ReadByte();
@@ -100,13 +105,18 @@ namespace SDAT
             return swar;
         }
 
-        public static SWAV.ArchivoSWAV[] ConvertirASWAV(ArchivoSWAR swar)
+        /// <summary>
+        /// Decompress the SWAR file in SWAV files.
+        /// </summary>
+        /// <param name="swar">SWAR structure to decompress</param>
+        /// <returns>All the SWAV that are in it</returns>
+        public static sSWAV[] ConvertToSWAV(sSWAR swar)
         {
-            SWAV.ArchivoSWAV[] swav = new SWAV.ArchivoSWAV[swar.data.samples.Length];
+            sSWAV[] swav = new sSWAV[swar.data.samples.Length];
 
             for (int i = 0; i < swav.Length; i++)
             {
-                swav[i] = new SWAV.ArchivoSWAV();
+                swav[i] = new sSWAV();
 
                 swav[i].data.data = swar.data.samples[i].data;
                 swav[i].data.info = swar.data.samples[i].info;
@@ -122,41 +132,37 @@ namespace SDAT
 
             return swav;
         }
-
-        public struct ArchivoSWAR
-        {
-            public Header header;
-            public Data data;
-            public struct Header
-            {
-                public char[] type;   // 'SWAR'
-                public uint magic;	// 0x0100feff
-                public uint nFileSize;	// Size of this SWAR file
-                public ushort nSize;	// Size of this structure = 16
-                public ushort nBlock;	// Number of Blocks = 1
-            }
-            public struct Data
-            {
-                public char[] type;		// 'DATA'
-                public uint nSize;		// Size of this structure
-                public uint[] reserved;	// 8 reserved 0s, for use in runtime
-                public uint nSample;		// Number of Samples
-                public uint[] nOffset;	// array of offsets of samples
-                public Sample[] samples;
-
-                public struct Sample
-                {
-                    public SWAV.ArchivoSWAV.Data.SWAVInfo info;
-                    public byte[] data;
-                }
-            }
-
-
-
-
-        }
     }
 
+    /// <summary>
+    /// Structure of a SWAR file
+    /// </summary>
+    public struct sSWAR
+    {
+        public Header header;
+        public Data data;
+        public struct Header
+        {
+            public char[] type;   // 'SWAR'
+            public uint magic;	// 0x0100feff
+            public uint nFileSize;	// Size of this SWAR file
+            public ushort nSize;	// Size of this structure = 16
+            public ushort nBlock;	// Number of Blocks = 1
+        }
+        public struct Data
+        {
+            public char[] type;		// 'DATA'
+            public uint nSize;		// Size of this structure
+            public uint[] reserved;	// 8 reserved 0s, for use in runtime
+            public uint nSample;		// Number of Samples
+            public uint[] nOffset;	// array of offsets of samples
+            public Sample[] samples;
 
-
+            public struct Sample
+            {
+                public sSWAV.Data.SWAVInfo info;
+                public byte[] data;
+            }
+        }
+    }
 }

@@ -163,8 +163,7 @@ namespace Tinke
             List<byte> resul = new List<byte>();
 
             for (int i = 0; i < tiles.Length; i++)
-                for (int j = 0; j < 64; j++)
-                    resul.Add(tiles[i][j]);
+                resul.AddRange(tiles[i]);
 
             return resul.ToArray();
         }

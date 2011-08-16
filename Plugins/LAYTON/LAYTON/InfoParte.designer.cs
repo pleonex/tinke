@@ -58,7 +58,7 @@
             // 
             // txtAltoP
             // 
-            this.txtAltoP.Location = new System.Drawing.Point(250, 30);
+            this.txtAltoP.Location = new System.Drawing.Point(249, 27);
             this.txtAltoP.Name = "txtAltoP";
             this.txtAltoP.Size = new System.Drawing.Size(75, 20);
             this.txtAltoP.TabIndex = 42;
@@ -75,7 +75,7 @@
             // lblAltoP
             // 
             this.lblAltoP.AutoSize = true;
-            this.lblAltoP.Location = new System.Drawing.Point(182, 34);
+            this.lblAltoP.Location = new System.Drawing.Point(182, 30);
             this.lblAltoP.Name = "lblAltoP";
             this.lblAltoP.Size = new System.Drawing.Size(26, 13);
             this.lblAltoP.TabIndex = 41;
@@ -108,7 +108,7 @@
             // 
             // txtPosY
             // 
-            this.txtPosY.Location = new System.Drawing.Point(249, 56);
+            this.txtPosY.Location = new System.Drawing.Point(249, 53);
             this.txtPosY.Name = "txtPosY";
             this.txtPosY.Size = new System.Drawing.Size(75, 20);
             this.txtPosY.TabIndex = 44;
@@ -123,7 +123,7 @@
             // lblPosY
             // 
             this.lblPosY.AutoSize = true;
-            this.lblPosY.Location = new System.Drawing.Point(182, 58);
+            this.lblPosY.Location = new System.Drawing.Point(182, 56);
             this.lblPosY.Name = "lblPosY";
             this.lblPosY.Size = new System.Drawing.Size(26, 13);
             this.lblPosY.TabIndex = 46;
@@ -132,7 +132,7 @@
             // lblPosX
             // 
             this.lblPosX.AutoSize = true;
-            this.lblPosX.Location = new System.Drawing.Point(3, 59);
+            this.lblPosX.Location = new System.Drawing.Point(3, 58);
             this.lblPosX.Name = "lblPosX";
             this.lblPosX.Size = new System.Drawing.Size(26, 13);
             this.lblPosX.TabIndex = 47;

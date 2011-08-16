@@ -9,14 +9,10 @@ namespace Compresion
     public static class LZSS
     {
         static int MAX_OUTSIZE = 0x200000;
-        const int N = 4096, F = 18;
-        const byte THRESHOLD = 2;
-        const int NIL = N;
         static bool showAlways = true;
 
         const int LZ77_TAG = 0x10, LZSS_TAG = 0x11, RLE_TAG = 0x30, HUFF_TAG = 0x20, NONE_TAG = 0x00;
 
-        #region tag 0x11 LZSS
         public static void Decompress11LZS(string filein, string fileout)
         {
             /*  Data header (32bit)
@@ -47,9 +43,10 @@ namespace Compresion
                             Bit 12-23          Disp
                       
              */
+            System.Xml.Linq.XElement xml = Basico.ObtenerTraduccion("Compression");
             FileStream fstr = new FileStream(filein, FileMode.Open);
             if (fstr.Length > int.MaxValue)
-                throw new Exception("Filer larger than 2GB cannot be LZSS-compressed files.");
+                throw new Exception(xml.Element("S00").Value);
             BinaryReader br = new BinaryReader(fstr);
 
             int decomp_size = 0, curr_size = 0;
@@ -64,20 +61,20 @@ namespace Compresion
             {
                 br.BaseStream.Seek(0x4, SeekOrigin.Begin);
                 if (br.ReadByte() != LZSS_TAG)
-                    throw new InvalidDataException(String.Format("File {0:s} is not a valid LZSS-11 file", filein));
+                    throw new InvalidDataException(String.Format(xml.Element("S0E").Value, filein));
             }
             for (i = 0; i < 3; i++)
                 decomp_size += br.ReadByte() << (i * 8);
             if (decomp_size > MAX_OUTSIZE)
-                throw new Exception(String.Format("{0:s} will be larger than 0x{1:x} (0x{2:x}) and will not be decompressed.", filein, MAX_OUTSIZE, decomp_size));
+                throw new Exception(String.Format(xml.Element("S02").Value, filein, MAX_OUTSIZE, decomp_size));
             else if (decomp_size == 0)
                 for (i = 0; i < 4; i++)
                     decomp_size += br.ReadByte() << (i * 8);
             if (decomp_size > MAX_OUTSIZE << 8)
-                throw new Exception(String.Format("{0:s} will be larger than 0x{1:x} (0x{2:x}) and will not be decompressed.", filein, MAX_OUTSIZE, decomp_size));
+                throw new Exception(String.Format(xml.Element("S02").Value, filein, MAX_OUTSIZE, decomp_size));
 
             if (showAlways)
-                Console.WriteLine("Decompressing {0:s}. (outsize: 0x{1:x})", filein, decomp_size);
+                Console.WriteLine(xml.Element("S03").Value, filein, decomp_size);
 
 
             byte[] outdata = new byte[decomp_size];
@@ -94,7 +91,7 @@ namespace Compresion
                     if (flag)
                     {
                         try { b1 = br.ReadByte(); }
-                        catch (EndOfStreamException) { throw new Exception("Incomplete data"); }
+                        catch (EndOfStreamException) { throw new Exception(xml.Element("S04").Value); }
 
                         switch (b1 >> 4)
                         {
@@ -107,13 +104,13 @@ namespace Compresion
 
                                 len = b1 << 4;
                                 try { bt = br.ReadByte(); }
-                                catch (EndOfStreamException) { throw new Exception("Incomplete data"); }
+                                catch (EndOfStreamException) { throw new Exception(xml.Element("S04").Value); }
                                 len |= bt >> 4;
                                 len += 0x11;
 
                                 disp = (bt & 0x0F) << 8;
                                 try { b2 = br.ReadByte(); }
-                                catch (EndOfStreamException) { throw new Exception("Incomplete data"); }
+                                catch (EndOfStreamException) { throw new Exception(xml.Element("S04").Value); }
                                 disp |= b2;
                                 break;
                             #endregion
@@ -127,7 +124,7 @@ namespace Compresion
                                 // 10 04 92 3F => disp = 0x23F, len = 0x149 + 0x11 = 0x15A
 
                                 try { bt = br.ReadByte(); b2 = br.ReadByte(); b3 = br.ReadByte(); }
-                                catch (EndOfStreamException) { throw new Exception("Incomplete data"); }
+                                catch (EndOfStreamException) { throw new Exception(xml.Element("S04").Value); }
 
                                 len = (b1 & 0xF) << 12; // len = b000
                                 len |= bt << 4; // len = bcd0
@@ -149,14 +146,14 @@ namespace Compresion
 
                                 disp = (b1 & 0x0F) << 8;
                                 try { b2 = br.ReadByte(); }
-                                catch (EndOfStreamException) { throw new Exception("Incomplete data"); }
+                                catch (EndOfStreamException) { throw new Exception(xml.Element("S04").Value); }
                                 disp |= b2;
                                 break;
                             #endregion
                         }
 
                         if (disp > curr_size)
-                            throw new Exception("Cannot go back more than already written");
+                            throw new Exception(xml.Element("S05").Value);
 
                         cdest = curr_size;
 
@@ -165,20 +162,16 @@ namespace Compresion
 
                         if (curr_size > decomp_size)
                         {
-                            //throw new Exception(String.Format("File {0:s} is not a valid LZ77 file; actual output size > output size in header", filein));
-                            //Console.WriteLine(String.Format("File {0:s} is not a valid LZ77 file; actual output size > output size in header; {1:x} > {2:x}.", filein, curr_size, decomp_size));
                             break;
                         }
                     }
                     else
                     {
                         try { outdata[curr_size++] = br.ReadByte(); }
-                        catch (EndOfStreamException) { break; }// throw new Exception("Incomplete data"); }
+                        catch (EndOfStreamException) { break; }
 
                         if (curr_size > decomp_size)
                         {
-                            //throw new Exception(String.Format("File {0:s} is not a valid LZ77 file; actual output size > output size in header", filein));
-                            //Console.WriteLine(String.Format("File {0:s} is not a valid LZ77 file; actual output size > output size in header; {1:x} > {2:x}", filein, curr_size, decomp_size));
                             break;
                         }
                     }
@@ -189,7 +182,7 @@ namespace Compresion
             try
             {
                 while (br.ReadByte() == 0) { } // if we read a non-zero, print that there is still some data
-                Console.WriteLine("Too much data in file; current INPOS = {0:x}", br.BaseStream.Position - 1);
+                Console.WriteLine(xml.Element("S06").Value, br.BaseStream.Position - 1);
             }
             catch (EndOfStreamException) { }
 
@@ -202,9 +195,7 @@ namespace Compresion
             fstr.Close();
             fstr.Dispose();
 
-            Console.WriteLine("LZSS-11 Decompressed " + filein);
+            Console.WriteLine(xml.Element("S0F").Value, filein);
         }
-        #endregion
-
     }
 }

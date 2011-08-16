@@ -68,6 +68,13 @@
       Are you sure you want exit? All the changes will be lost.
     </S39>
     <S3A>Warning</S3A>
+    <S3B>
+      Do you want to export the uncompressed folder instead of
+      the compress file?
+    </S3B>
+    <S3C>Full file information</S3C>
+    <S3D>Type 1</S3D>
+    <S3E>Type 2</S3E>
   </Sistema>
   <RomInfo>
     <S01>Game information</S01>
@@ -128,6 +135,7 @@
     <S38>Reserved</S38>
     <S39>Invalid</S39>
     <S3A>Transparency</S3A>
+    <S3B>Edit</S3B>
   </RomInfo>
   <Autores>
     <S01>About</S01>
@@ -175,6 +183,17 @@
       <br>The new ROM will be saved in: {0}</br>
     </S0D>
     <S0E>Export log</S0E>
+    <S0F>Time log:</S0F>
+    <S10>Total time:</S10>
+    <S11>Time reading header:</S11>
+    <S12>Time starting variable from Acciones.cs:</S12>
+    <S13>Time reading FNT:</S13>
+    <S14>Time adding system files:</S14>
+    <S15>Time reading FAT:</S15>
+    <S16>Time setting ROOT:</S16>
+    <S17>Time getting format files:</S17>
+    <S18>Time creating tree files:</S18>
+    <S19>Time recognizing files:</S19>
   </Messages>
   <NCLR>
     <S01># palette:</S01>
@@ -302,4 +321,82 @@
     <S1D>Animations</S1D>
     <S1E>Double-click to the animation to see it in full size</S1E>
   </NANR>
+  <Compression>
+    <!-- LZ77 -->
+    <S00>Size is over the limit (>2GB).</S00>
+    <S01>File {0:s} is not a valid LZ77 file.</S01>
+    <S02>{0:s} will be larger than 0x{1:x} (0x{2:x}) and will not be decompressed</S02>
+    <S03>Decompressing {0:s}. Decompressed size 0x{1:x}</S03>
+    <S04>Incompleted data.</S04>
+    <S05>Cannot go back more than already written</S05>
+    <S06>Too many data in file; current INPOS = {0:x}</S06>
+    <S07>LZ77 file decompressed {0:s}</S07>
+    <!-- HUFFMAN -->
+    <S08>Invalid huffman compressed file; invalid tag {0:x}</S08>
+    <S09>Invalid size data {0:x}</S09>
+    <S0A>Incompleted data</S0A>
+    <S0B>Too many data, str={0:s}, idx={1:g}/{2:g}</S0B>
+    <S0C>First 4 bits of data should be 0 if dataSize = 4</S0C>
+    <S0D>HUFFMAN file decompressed {0:s}</S0D>
+    <!-- LZSS -->
+    <S0E>File {0:s} is not a valid LZSS-11 compressed file.</S0E>
+    <S0F>LZSS-11 file decompressed {0:s}</S0F>
+    <!-- RLE -->
+    <S10>File {0:s} is not a valid RLE compressed file.</S10>
+    <S11>RLE file decompressed {0:s}</S11>
+    <!-- NONE -->
+    <S12>File {0:s} is not a valid NONE file, it does not have the NONE-tag as first byte</S12>
+    <S13>File {0:s} is not a valid NONE file, the decompression size shold be the file size - 4</S13>
+    <S14>NONE file decompressed {0:s}</S14>
+    <!-- Basico -->
+    <S15>The file couldn't been decompressed correctly {0:s}</S15>
+  </Compression>
+  <EditRomInfo>
+    <S00>Header and banner editor</S00>
+    <S01>Save</S01>
+    <S02>Cancelr</S02>
+    <S03>Header</S03>
+    <S04>Banner</S04>
+    <S05>Change icon</S05>
+    <S06>Version:</S06>
+    <S07>Game titles:</S07>
+    <S08>Japanese</S08>
+    <S09>English</S09>
+    <S0A>French</S0A>
+    <S0B>German</S0B>
+    <S0C>Italian</S0C>
+    <S0D>Spanish</S0D>
+    <S0E>Reserved (28 bytes Hexadecimal):</S0E>
+    <S0F>Game title:</S0F>
+    <S10>Game code:</S10>
+    <S11>Maker code:</S11>
+    <S12>Device code:</S12>
+    <S13>Reserved (9 bytes Hexadecimal):</S13>
+    <S14>ROM version:</S14>
+    <S15>Internal flags:</S15>
+    <S16>ARM9 entry address:</S16>
+    <S17>ARM9 load address:</S17>
+    <S18>ARM7 entry address:</S18>
+    <S19>ARM7 load address:</S19>
+    <S1A>Normal card control register settings:</S1A>
+    <S1B>Secure card control register settings:</S1B>
+    <S1C>Show all maker codes</S1C>
+    <S1D>Secure transfer timeout:</S1D>
+    <S1E>Secure disable:</S1E>
+    <S1F>Reserved 3 (4 bytes Hexadecimal):</S1F>
+    <S20>Reserved 2 (56 bytes Hexadecimal):</S20>
+    <S21>ARM9 autoload:</S21>
+    <S22>ARM7 autoload:</S22>
+    <S23>Debug ROM offset:</S23>
+    <S24>Debug length:</S24>
+    <S25>Debug RAM offset:</S25>
+    <S26>
+      The image must be saved with 4bpp depth.
+      The selected image is 8bpp and can not be imported.
+    </S26>
+    <S27>Encryption seed:</S27>
+    <S28>Code</S28>
+    <S29>Company</S29>
+    <S2A>Company codes</S2A>
+  </EditRomInfo>
 </Language>

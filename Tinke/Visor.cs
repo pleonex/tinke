@@ -14,6 +14,8 @@ namespace Tinke
         public Visor()
         {
             InitializeComponent();
+
+            this.Text = Tools.Helper.ObtenerTraduccion("Sistema", "S3C");
         }
     }
 }

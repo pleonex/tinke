@@ -67,6 +67,8 @@ namespace SDAT
             this.btnStop = new System.Windows.Forms.Button();
             this.btnUncompress = new System.Windows.Forms.Button();
             this.checkLoop = new System.Windows.Forms.CheckBox();
+            this.btnImport = new System.Windows.Forms.Button();
+            this.btnCreate = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // treeFiles
@@ -128,7 +130,7 @@ namespace SDAT
             this.btnExtract.Enabled = false;
             this.btnExtract.ImageIndex = 3;
             this.btnExtract.ImageList = this.imageList;
-            this.btnExtract.Location = new System.Drawing.Point(251, 472);
+            this.btnExtract.Location = new System.Drawing.Point(251, 431);
             this.btnExtract.Name = "btnExtract";
             this.btnExtract.Size = new System.Drawing.Size(100, 35);
             this.btnExtract.TabIndex = 2;
@@ -165,7 +167,7 @@ namespace SDAT
             // btnMidi
             // 
             this.btnMidi.Enabled = false;
-            this.btnMidi.Location = new System.Drawing.Point(408, 432);
+            this.btnMidi.Location = new System.Drawing.Point(407, 390);
             this.btnMidi.Name = "btnMidi";
             this.btnMidi.Size = new System.Drawing.Size(99, 35);
             this.btnMidi.TabIndex = 5;
@@ -189,7 +191,7 @@ namespace SDAT
             this.btnUncompress.Enabled = false;
             this.btnUncompress.ImageKey = "package.png";
             this.btnUncompress.ImageList = this.imageList;
-            this.btnUncompress.Location = new System.Drawing.Point(251, 432);
+            this.btnUncompress.Location = new System.Drawing.Point(251, 391);
             this.btnUncompress.Name = "btnUncompress";
             this.btnUncompress.Size = new System.Drawing.Size(100, 34);
             this.btnUncompress.TabIndex = 7;
@@ -202,12 +204,36 @@ namespace SDAT
             // 
             this.checkLoop.AutoSize = true;
             this.checkLoop.Enabled = false;
-            this.checkLoop.Location = new System.Drawing.Point(252, 409);
+            this.checkLoop.Location = new System.Drawing.Point(251, 368);
             this.checkLoop.Name = "checkLoop";
             this.checkLoop.Size = new System.Drawing.Size(45, 17);
             this.checkLoop.TabIndex = 8;
             this.checkLoop.Text = "S06";
             this.checkLoop.UseVisualStyleBackColor = true;
+            // 
+            // btnImport
+            // 
+            this.btnImport.Enabled = false;
+            this.btnImport.Image = global::SDAT.Properties.Resources.sound_add;
+            this.btnImport.Location = new System.Drawing.Point(407, 431);
+            this.btnImport.Name = "btnImport";
+            this.btnImport.Size = new System.Drawing.Size(99, 35);
+            this.btnImport.TabIndex = 9;
+            this.btnImport.Text = "S0B";
+            this.btnImport.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnImport.UseVisualStyleBackColor = true;
+            this.btnImport.Click += new System.EventHandler(this.btnImport_Click);
+            // 
+            // btnCreate
+            // 
+            this.btnCreate.Enabled = false;
+            this.btnCreate.Location = new System.Drawing.Point(251, 472);
+            this.btnCreate.Name = "btnCreate";
+            this.btnCreate.Size = new System.Drawing.Size(100, 34);
+            this.btnCreate.TabIndex = 10;
+            this.btnCreate.Text = "S0C";
+            this.btnCreate.UseVisualStyleBackColor = true;
+            this.btnCreate.Click += new System.EventHandler(this.btnCreate_Click);
             // 
             // iSDAT
             // 
@@ -215,6 +241,8 @@ namespace SDAT
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Transparent;
             this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.Controls.Add(this.btnCreate);
+            this.Controls.Add(this.btnImport);
             this.Controls.Add(this.checkLoop);
             this.Controls.Add(this.btnUncompress);
             this.Controls.Add(this.btnStop);
@@ -245,5 +273,7 @@ namespace SDAT
         private System.Windows.Forms.Button btnStop;
         private System.Windows.Forms.Button btnUncompress;
         private System.Windows.Forms.CheckBox checkLoop;
+        private System.Windows.Forms.Button btnImport;
+        private System.Windows.Forms.Button btnCreate;
     }
 }

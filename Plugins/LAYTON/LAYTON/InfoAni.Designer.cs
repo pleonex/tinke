@@ -48,6 +48,7 @@
             // 
             // pictureBox1
             // 
+            this.pictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pictureBox1.Location = new System.Drawing.Point(5, 295);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(256, 215);
@@ -68,7 +69,7 @@
             this.btnSave.Image = global::LAYTON.Properties.Resources.picture_save;
             this.btnSave.Location = new System.Drawing.Point(268, 434);
             this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(89, 34);
+            this.btnSave.Size = new System.Drawing.Size(117, 34);
             this.btnSave.TabIndex = 5;
             this.btnSave.Text = "S03";
             this.btnSave.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
@@ -80,7 +81,7 @@
             this.btnSaveAni.Image = global::LAYTON.Properties.Resources.picture_go;
             this.btnSaveAni.Location = new System.Drawing.Point(268, 474);
             this.btnSaveAni.Name = "btnSaveAni";
-            this.btnSaveAni.Size = new System.Drawing.Size(89, 34);
+            this.btnSaveAni.Size = new System.Drawing.Size(117, 34);
             this.btnSaveAni.TabIndex = 6;
             this.btnSaveAni.Text = "S04";
             this.btnSaveAni.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;

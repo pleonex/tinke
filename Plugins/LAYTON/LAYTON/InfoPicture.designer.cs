@@ -59,10 +59,10 @@
             // 
             // txtNImgs
             // 
-            this.txtNImgs.Location = new System.Drawing.Point(234, 19);
+            this.txtNImgs.Location = new System.Drawing.Point(277, 19);
             this.txtNImgs.Name = "txtNImgs";
             this.txtNImgs.ReadOnly = true;
-            this.txtNImgs.Size = new System.Drawing.Size(100, 20);
+            this.txtNImgs.Size = new System.Drawing.Size(80, 20);
             this.txtNImgs.TabIndex = 42;
             // 
             // groupBox1
@@ -100,10 +100,10 @@
             // 
             // txtTipo
             // 
-            this.txtTipo.Location = new System.Drawing.Point(43, 19);
+            this.txtTipo.Location = new System.Drawing.Point(81, 19);
             this.txtTipo.Name = "txtTipo";
             this.txtTipo.ReadOnly = true;
-            this.txtTipo.Size = new System.Drawing.Size(100, 20);
+            this.txtTipo.Size = new System.Drawing.Size(80, 20);
             this.txtTipo.TabIndex = 44;
             // 
             // InfoPicture

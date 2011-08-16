@@ -125,7 +125,7 @@ namespace Tinke
             0,
             0,
             0});
-            this.numericWidth.Location = new System.Drawing.Point(50, 269);
+            this.numericWidth.Location = new System.Drawing.Point(65, 269);
             this.numericWidth.Maximum = new decimal(new int[] {
             65536,
             0,
@@ -157,7 +157,7 @@ namespace Tinke
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(143, 271);
+            this.label2.Location = new System.Drawing.Point(129, 271);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(26, 13);
             this.label2.TabIndex = 3;
@@ -237,7 +237,7 @@ namespace Tinke
             this.btnBgdTrans.Enabled = false;
             this.btnBgdTrans.Location = new System.Drawing.Point(158, 347);
             this.btnBgdTrans.Name = "btnBgdTrans";
-            this.btnBgdTrans.Size = new System.Drawing.Size(50, 35);
+            this.btnBgdTrans.Size = new System.Drawing.Size(78, 35);
             this.btnBgdTrans.TabIndex = 22;
             this.btnBgdTrans.Text = "S20";
             this.btnBgdTrans.UseVisualStyleBackColor = true;
@@ -257,7 +257,7 @@ namespace Tinke
             // 
             this.btnBgd.Location = new System.Drawing.Point(9, 347);
             this.btnBgd.Name = "btnBgd";
-            this.btnBgd.Size = new System.Drawing.Size(75, 35);
+            this.btnBgd.Size = new System.Drawing.Size(102, 35);
             this.btnBgd.TabIndex = 20;
             this.btnBgd.Text = "S1F";
             this.btnBgd.UseVisualStyleBackColor = true;
@@ -333,16 +333,16 @@ namespace Tinke
             this.comboBox1.Items.AddRange(new object[] {
             "S16",
             "S17"});
-            this.comboBox1.Location = new System.Drawing.Point(115, 295);
+            this.comboBox1.Location = new System.Drawing.Point(117, 295);
             this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(121, 21);
+            this.comboBox1.Size = new System.Drawing.Size(119, 21);
             this.comboBox1.TabIndex = 10;
             this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(143, 245);
+            this.label4.Location = new System.Drawing.Point(129, 245);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(31, 13);
             this.label4.TabIndex = 9;
@@ -353,7 +353,7 @@ namespace Tinke
             this.btnSave.Image = global::Tinke.Properties.Resources.picture_save;
             this.btnSave.Location = new System.Drawing.Point(9, 474);
             this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(79, 32);
+            this.btnSave.Size = new System.Drawing.Size(96, 32);
             this.btnSave.TabIndex = 6;
             this.btnSave.Text = "S15";
             this.btnSave.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
@@ -383,7 +383,7 @@ namespace Tinke
             // 
             // numericStart
             // 
-            this.numericStart.Location = new System.Drawing.Point(50, 243);
+            this.numericStart.Location = new System.Drawing.Point(65, 243);
             this.numericStart.Maximum = new decimal(new int[] {
             65535,
             0,

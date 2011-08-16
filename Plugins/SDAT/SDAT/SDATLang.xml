@@ -13,7 +13,13 @@
       <S08>Extraer</S08>
       <S09>Guardar MIDI</S09>
       <S0A>Guardar WAV</S0A>
+      <S0B>Importar</S0B>
+      <S0C>Guardar SDAT</S0C>
     </iSDAT>
+    <Messages>
+      <S00>Lectura de archivos SDAT completa</S00>
+      <S01>Archivos totales: <b>{0}</b></S01>
+    </Messages>
   </Español>
   <English>
     <iSDAT>
@@ -28,7 +34,13 @@
       <S08>Extract</S08>
       <S09>Save MIDI</S09>
       <S0A>Save WAV</S0A>
-    </iSDAT>    
+      <S0B>Import</S0B>
+      <S0C>Save SDAT</S0C>
+    </iSDAT>
+    <Messages>
+      <S00>SDAT reading completed</S00>
+      <S01>Files: <b>{0}</b></S01>
+    </Messages>
   </English>
   <Français>
     <iSDAT>
@@ -43,6 +55,12 @@
       <S08>Extraire</S08>
       <S09>Sauver MIDI</S09>
       <S0A>Sauver WAV</S0A>
+      <S0B>Importer</S0B>
+      <S0C>Sauver SDAT</S0C>
     </iSDAT>
+    <Messages>
+      <S00>SDAT reading completed</S00>
+      <S01>Files: <b>{0}</b></S01>
+    </Messages>
   </Français>
 </Language>

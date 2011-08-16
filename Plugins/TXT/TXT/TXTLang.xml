@@ -18,6 +18,9 @@
       <S09>Mensaje:</S09>
       <S0A>Sí</S0A>
       <S0B>No</S0B>
+      <S0C>Detectado archivo de texto <b>MESGbmg1</b>. Analizando...</S0C>
+      <S0D>Contiene {0} mensajes.</S0D>
+      <S0E>Datos desconocidos {0}, {1}</S0E>
     </BMG>
   </Español>
   <English>
@@ -38,6 +41,9 @@
       <S09>Message:</S09>
       <S0A>Yes</S0A>
       <S0B>No</S0B>
+      <S0C>File text <b>MESGbmg1</b> detected.</S0C>
+      <S0D>There are {0} messages.</S0D>
+      <S0E>Unknown data: {0}, {1}</S0E>
     </BMG>
   </English>
   <Français>
@@ -58,6 +64,9 @@
       <S09>Message :</S09>
       <S0A>Oui</S0A>
       <S0B>Non</S0B>
+      <S0C>File text <b>MESGbmg1</b> detected.</S0C>
+      <S0D>There are {0} messages.</S0D>
+      <S0E>Unknown data: {0}, {1}</S0E>
     </BMG>
   </Français>
 </Language>

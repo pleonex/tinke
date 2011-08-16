@@ -41,7 +41,7 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "Visor";
-            this.Text = "Información completa de archivos";
+            this.Text = "S3C";
             this.ResumeLayout(false);
 
         }
