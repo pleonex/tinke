@@ -1,0 +1,65 @@
+#summary Juegos testeados con el programa
+#labels Juego
+
+Lista con los juegos más compatibles ( >75% ) probados con la última versión de Tinke. Divididos en aquellos que tienen un plugin específicos y los que no.
+
+=Plugins=
+
+[*]Profesor Layton - La villa misteriosa `[`LAYTON1`]` (A5FP, A5FE)
+
+ Carpeta ani -> Imágenes completas con animaciones `*`.arc y `*`.arj
+ 
+ Carpeta bg -> Imágenes completas `*`.arc
+ 
+ Compresión -> `*`.pcm (contiene archivos de texto)
+
+
+[*]Kirby Squeak Squad `[`KIRBY DRO`]` (AKWE)
+
+ Imágenes completas -> `*`.bin
+ 
+[*]Itsu Demo Doko Demo Dekiru Igo `[`AI IGO DS`]` (AIIJ)
+
+ Paleta -> `*`.ancl
+ 
+ Tiles -> `*`.ancg, `*`.atex
+ 
+ Map -> `*`.ansc
+ 
+ Imágenes compeltas -> `*`.bin, `*`.r00
+ 
+ 
+[*]Last Window The Secret of Cape West `[`LASTWINDOW`]` (YLUP)
+
+ Compresión -> `*`.pack
+ 
+ 
+ =Sin plugin=
+ 
+ [*]Cake Mania 2 `[``]` (CAKX)
+ 
+  *100%* compatible.
+ 
+ [*]Cake Mania 3 `[`COOKINGMAMA3`]` (B3CP)
+ 
+  *99%* comaptible. Excepto fuentes NFTR e imágenes RAMN, RCMN
+  
+ [*]ActionLoop `[``]` ()
+ 
+  *100%* compatible.
+  
+ [*]I did it mum! Speeling `[`SPELLJRE`]` (BSJP)
+ 
+  *96%* compatible. Excepto NFTR
+  
+ [*]Dropcast `[`DROPCAST`]` (CDPP)
+ 
+  *95%* compatbile. Excepto vídeos y fuentes NFTR
+  
+ [*]FastFood Panic `[`FASTFOOD`]` (CFJP)
+ 
+  *99%* compatible. Excepto fuentes NFTR
+  
+ [*]Maths play `[`MATHS PLAY`]` (AECP)
+ 
+  *98%* compatible. Excepto fuentes NFTR
