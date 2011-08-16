@@ -226,7 +226,6 @@ namespace SDAT
             // 
             // btnCreate
             // 
-            this.btnCreate.Enabled = false;
             this.btnCreate.Location = new System.Drawing.Point(251, 472);
             this.btnCreate.Name = "btnCreate";
             this.btnCreate.Size = new System.Drawing.Size(100, 34);

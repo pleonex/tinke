@@ -2,11 +2,13 @@
 *** Import BitMaP images and convert it to NCLR,NCGR,NSCR files
 *** Header and banner editor
 *** WAV to STRM converter
+* Added option to save modified SDAT files
 * New methods and functions in IPluginHost interface
-* Add new file format in "Open As..." -> Extract FAT (files with offsets at the beggining)
-* Add new file format in "Open As..." -> Text
+* Added new file format in "Open As..." -> Extract FAT (files with offsets at the beggining)
+* Added new file format in "Open As..." -> Text
 * Fixed problem saving roms without arm9 overlay
 * Improved french translation (by Vix33)
+* Fixed problem with the priority in NCER files.
 * Fixed minor problems.
 
 0.7.3 (Contest release):

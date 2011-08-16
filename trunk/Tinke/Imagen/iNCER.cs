@@ -15,8 +15,6 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  *
  * Programador: pleoNeX
- * Programa utilizado: Microsoft Visual C# 2010 Express
- * Fecha: 18/02/2011
  * 
  */
 using System;
@@ -161,6 +159,7 @@ namespace Tinke
             ven.ShowIcon = false;
             ven.MaximizeBox = false;
             ven.MaximumSize = new System.Drawing.Size(1024, 700);
+            ven.Location = new Point(20, 20);
             ven.Show();
         }
 
@@ -220,6 +219,7 @@ namespace Tinke
                 tile, paleta, checkEntorno.Checked, checkCelda.Checked, checkNumber.Checked, checkTransparencia.Checked,
                 checkImagen.Checked);
 
+            // Zooms
             float scale = trackZoom.Value / 100f;
             int wSize = (int)(imgBox.Image.Width * scale);
             int hSize = (int)(imgBox.Image.Height * scale);
