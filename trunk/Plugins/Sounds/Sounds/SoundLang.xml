@@ -1,0 +1,90 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Language>
+  <Español>
+    <SoundControl>
+      <S00>Campo</S00>
+      <S01>Valor</S01>
+      <S02>Exportar</S02>
+      <S03>Importar</S03>
+      <S04>Activar loop</S04>
+      <S05>¿Guardar también el archivo de loop?</S05>
+      <S06>Chunk ID</S06>
+      <S07>Tamaño</S07>
+      <S08>Indicador loop</S08>
+      <S09>Posición del loop</S09>
+      <S0A>Formato</S0A>
+      <S0B>Chunk ID</S0B>
+      <S0C>Tamaño</S0C>
+      <S0D>Formato de audio</S0D>
+      <S0E>Canales</S0E>
+      <S0F>Sample rate</S0F>
+      <S10>Byte rate</S10>
+      <S11>Block align</S11>
+      <S12>Bits per sample</S12>
+      <S13>Chunk ID</S13>
+      <S14>Tamaño</S14>
+    </SoundControl>
+    <Messages>
+      <S00>Convirtiendo archivos de audio</S00>
+      <S01>Espera</S01>
+    </Messages>
+  </Español>
+  <English>
+    <SoundControl>
+      <S00>Property</S00>
+      <S01>Value</S01>
+      <S02>Export</S02>
+      <S03>Import</S03>
+      <S04>Enable loop</S04>
+      <S05>Do you want to save the loop file also?</S05>
+      <S06>Chunk ID</S06>
+      <S07>Chunk size</S07>
+      <S08>Loop flag</S08>
+      <S09>Loop offset</S09>
+      <S0A>Format</S0A>
+      <S0B>Chunk ID</S0B>
+      <S0C>Chunk size</S0C>
+      <S0D>Audio format</S0D>
+      <S0E>Channels</S0E>
+      <S0F>Sample rate</S0F>
+      <S10>Byte rate</S10>
+      <S11>Block align</S11>
+      <S12>Bits per sample</S12>
+      <S13>Chunk ID</S13>
+      <S14>Chunk size</S14>
+    </SoundControl>
+    <Messages>
+      <S00>Converting sound file</S00>
+      <S01>Wait</S01>
+    </Messages>
+  </English>
+  <Français>
+    <SoundControl>
+      <S00>Property</S00>
+      <S01>Value</S01>
+      <S02>Export</S02>
+      <S03>Import</S03>
+      <S04>Enable loop</S04>
+      <S05>Do you want to save the loop file also?</S05>
+      <S06>Chunk ID</S06>
+      <S07>Chunk size</S07>
+      <S08>Loop flag</S08>
+      <S09>Loop offset</S09>
+      <S0A>Format</S0A>
+      <S0B>Chunk ID</S0B>
+      <S0C>Chunk size</S0C>
+      <S0D>Audio format</S0D>
+      <S0E>Channels</S0E>
+      <S0F>Sample rate</S0F>
+      <S10>Byte rate</S10>
+      <S11>Block align</S11>
+      <S12>Bits per sample</S12>
+      <S13>Chunk ID</S13>
+      <S14>Chunk size</S14>
+    </SoundControl>
+    <Messages>
+      <S00>Converting sound file</S00>
+      <S01>Wait</S01>
+    </Messages>
+  </Français>
+</Language>

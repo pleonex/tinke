@@ -55,11 +55,11 @@
     <S34>Script</S34>
     <S35>
       Êtes-vous sûr à propos de la décompression de TOUT les fichiers
-      depuis ce dossier ? Cela prendra un long moment...
+      depuis cette archive ? Cela prendra un long moment...
     </S35>
     <S36>
       La décompression est un échec.
-      Êtes-vous sûr qu'il s'agisse d'un fichier compressé ?
+      Êtes-vous sûr qu'il s'agisse d'un archive compressée ?
     </S36>
     <S37>Il y a une erreur en sauvegardant les préférences de l'utilisateur.</S37>
     <S38>Il y a une erreur en chargeant les préférences de l'utilisateur.</S38>
@@ -69,10 +69,10 @@
     </S39>
     <S3A>Attention</S3A>
     <S3B>
-      Do you want to export the uncompressed folder instead of
-      the compress file?
+	  Voulez-vous exporter le dossier décompressé au lieu de
+      l'archive compressée ?
     </S3B>
-    <S3C>Full file information</S3C>
+    <S3C>Information complète de l'archive</S3C>
     <S3D>Type 1</S3D>
     <S3E>Type 2</S3E>
   </Sistema>
@@ -135,7 +135,7 @@
     <S38>Réservé</S38>
     <S39>Non valide</S39>
     <S3A>Transparence</S3A>
-    <S3B>Edit</S3B>
+    <S3B>Éditer</S3B>
   </RomInfo>
   <Autores>
     <S01>À propos de</S01>
@@ -179,18 +179,23 @@
     <S0D>
       <br>La nouvelle ROM a été sauvegardée dans : {0}</br>
     </S0D>
-    <S0E>Exporter registre</S0E>
-    <S0F>Time log:</S0F>
-    <S10>Total time:</S10>
-    <S11>Time reading header:</S11>
-    <S12>Time starting variable from Acciones.cs:</S12>
-    <S13>Time reading FNT:</S13>
-    <S14>Time adding system files:</S14>
-    <S15>Time reading FAT:</S15>
-    <S16>Time setting ROOT:</S16>
-    <S17>Time getting format files:</S17>
-    <S18>Time creating tree files:</S18>
-    <S19>Time recognizing files:</S19>
+    <S0E>Exporter le registre</S0E>
+    <S0F>Temps du registre :</S0F>
+    <S10>Temps total :</S10>
+    <S11>Temps de lecture de l'en-tête :</S11>
+    <S12>Temps de démarrage des variables depuis Acciones.cs :</S12>
+    <S13>Temps de lecture du FNT :</S13>
+    <S14>Temps d'ajout des fichiers du système :</S14>
+    <S15>Temps de lecture du FAT :</S15>
+    <S16>Temps de configuration du ROOT :</S16>
+    <S17>Temps d'obtention du format des fichiers :</S17>
+    <S18>Temps de la création de l'arborescence des fichiers :</S18>
+    <S19>Temps de reconnaissance des fichiers :</S19>
+    <S1A>Compressed file</S1A>
+    <S1B>To see this file you must double click on a palette file first</S1B>
+    <S1C>To see this file you must double click on a palette and tile file</S1C>
+    <S1D>By the moment common compression don't show information.</S1D>
+    <S1E>To see this file you must double click on a palette, tile and cell file</S1E>
   </Messages>
   <NCLR>
     <S01>Nombre de la palette :</S01>
@@ -323,39 +328,39 @@
   </NANR>
   <Compression>
     <!-- LZ77 -->
-    <S00>Size is over the limit (>2GB).</S00>
-    <S01>File {0:s} is not a valid LZ77 file.</S01>
-    <S02>{0:s} will be larger than 0x{1:x} (0x{2:x}) and will not be decompressed</S02>
-    <S03>Decompressing {0:s}. Decompressed size 0x{1:x}</S03>
-    <S04>Incompleted data.</S04>
-    <S05>Cannot go back more than already written</S05>
-    <S06>Too many data in file; current INPOS = {0:x}</S06>
-    <S07>LZ77 file decompressed {0:s}</S07>
+    <S00>La taille dépasse la limite (>2GB).</S00>
+    <S01>L'archive {0:s} n'est pas une archive LZ77 valide.</S01>
+    <S02>L'archive {0:s} excède la taille limite 0x{1:x} (0x{2:x}) et ne sera pas décompressée.</S02>
+    <S03>Décompression de {0:s}. Taille décompressée 0x{1:x}</S03>
+    <S04>Données incomplètes.</S04>
+    <S05>Ne peut pas revenir en arrière car les données sont déjà écrites.</S05>
+    <S06>Trop de données dans l'archive ; INPOS actuelle = {0:x}</S06>
+    <S07>Archive LZ77 décompressée {0:s}</S07>
     <!-- HUFFMAN -->
-    <S08>Invalid huffman compressed file; invalid tag {0:x}</S08>
-    <S09>Invalid size data {0:x}</S09>
-    <S0A>Incompleted data</S0A>
-    <S0B>Too many data, str={0:s}, idx={1:g}/{2:g}</S0B>
-    <S0C>First 4 bits of data should be 0 if dataSize = 4</S0C>
-    <S0D>HUFFMAN file decompressed {0:s}</S0D>
+    <S08>Archive compressée huffman invalide ; tag invalide {0:x}</S08>
+    <S09>Taille des données invalide {0:x}</S09>
+    <S0A>Données incomplètes</S0A>
+    <S0B>Trop de données, str={0:s}, idx={1:g}/{2:g}</S0B>
+    <S0C>Les 4 premiers bits de données devrait avoir 0 si dataSize = 4</S0C>
+    <S0D>Archive HUFFMAN décompressée {0:s}</S0D>
     <!-- LZSS -->
-    <S0E>File {0:s} is not a valid LZSS-11 compressed file.</S0E>
-    <S0F>LZSS-11 file decompressed {0:s}</S0F>
+    <S0E>L'archive {0:s} n'est pas une archive LZSS-11 compressée valide.</S0E>
+    <S0F>Archive LZSS-11 décompressée {0:s}</S0F>
     <!-- RLE -->
-    <S10>File {0:s} is not a valid RLE compressed file.</S10>
-    <S11>RLE file decompressed {0:s}</S11>
+    <S10>L'archive {0:s} n'est pas une archive RLE compressée valide.</S10>
+    <S11>Archive RLE décompressée {0:s}</S11>
     <!-- NONE -->
-    <S12>File {0:s} is not a valid NONE file, it does not have the NONE-tag as first byte</S12>
-    <S13>File {0:s} is not a valid NONE file, the decompression size shold be the file size - 4</S13>
-    <S14>NONE file decompressed {0:s}</S14>
+    <S12>L'archive {0:s} n'est pas une archive NONE valide, elle n'a pas le tag NONE dans les premiers octets</S12>
+    <S13>L'archive {0:s} n'est pas une archive NONE valide, la taille de décompression devrait avoir la taille de l'archive - 4</S13>
+    <S14>Archive NONE décompressée {0:s}</S14>
     <!-- Basico -->
-    <S15>The file couldn't been decompressed correctly {0:s}</S15>
+    <S15>L'archive ne pourrait pas être décompressée correctement {0:s}</S15>
   </Compression>
   <EditRomInfo>
-    <S00>Header and banner editor</S00>
-    <S01>Save</S01>
-    <S02>Cancel</S02>
-    <S03>Header</S03>
+    <S00>En-tête et éditeur de bannière</S00>
+    <S01>Sauvegarder</S01>
+    <S02>Annuler</S02>
+    <S03>En-tête (Header)</S03>
     <S04>Bannière</S04>
     <S05>Changer icone</S05>
     <S06>Version :</S06>
@@ -366,12 +371,12 @@
     <S0B>Allemand</S0B>
     <S0C>Italien</S0C>
     <S0D>Espagnol</S0D>
-    <S0E>Réservé (28 bytes Hexadecimal):</S0E>
+    <S0E>Réservé (28 octets Hexadécimal) :</S0E>
     <S0F>Titre du jeu :</S0F>
     <S10>Code du jeu :</S10>
     <S11>Code du créateur :</S11>
     <S12>Code de console :</S12>
-    <S13>Réservé (9 bytes Hexadecimal) :</S13>
+    <S13>Réservé (9 octets Hexadécimal) :</S13>
     <S14>Version de la ROM :</S14>
     <S15>Indicateurs internes :</S15>
     <S16>Adresse entrée ARM9 :</S16>
@@ -383,20 +388,20 @@
     <S1C>Show all maker codes</S1C>
     <S1D>Délai de transfert sécurisé :</S1D>
     <S1E>Sécurité désactivée :</S1E>
-    <S1F>Réservé 3 (4 bytes Hexadecimal) :</S1F>
-    <S20>Réservé 2 (56 bytes Hexadecimal) :</S20>
+    <S1F>Réservé 3 (4 octets Hexadécimal) :</S1F>
+    <S20>Réservé 2 (56 octets Hexadécimal) :</S20>
     <S21>Auto-charger ARM9 :</S21>
     <S22>Auto-charger ARM7 :</S22>
     <S23>Offset de debug de la ROM :</S23>
     <S24>Taille de debug :</S24>
     <S25>Offset de la RAM de debug :</S25>
     <S26>
-      The image must be saved with 4bpp depth.
-      The selected image is 8bpp and can not be imported.
+      L'image doit être sauvegardée avec 4bpp en profondeur.
+      L'image sélectionnée est de 8bpp et ne peut pas être importée.
     </S26>
-    <S27>Encryption seed:</S27>
+    <S27>Amorce de cryptage :</S27>
     <S28>Code</S28>
-    <S29>Company</S29>
-    <S2A>Company codes</S2A>
+    <S29>Compagnie</S29>
+    <S2A>Codes de la Compagnie</S2A>
   </EditRomInfo>
 </Language>

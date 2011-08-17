@@ -15,8 +15,6 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  *
  * Programador: pleoNeX
- * Programa utilizado: Microsoft Visual C# 2010 Express
- * Fecha: 18/02/2011
  * 
  */
 using System;
@@ -27,11 +25,13 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using System.IO;
+using System.Xml.Linq;
 using PluginInterface;
 
-namespace Tinke
+namespace TOTTEMPEST
 {
-    public partial class iNCGR : UserControl
+    public partial class ImageControl : UserControl
     {
         NCLR paleta;
         NCGR tile;
@@ -44,64 +44,33 @@ namespace Tinke
         bool stopUpdating;
         bool isMap;
 
-        public iNCGR()
+        public ImageControl()
         {
             InitializeComponent();
-            ReadLanguage();
         }
-        public iNCGR(NCGR tile, NCLR paleta, IPluginHost pluginHost)
+        public ImageControl(IPluginHost pluginHost, bool isMap)
         {
             InitializeComponent();
+
+            this.pluginHost = pluginHost;
             ReadLanguage();
 
-            this.isMap = false;
-            this.paleta = paleta;
-            this.tile = tile;
-            this.pluginHost = pluginHost;
-            pic.Image = Imagen_NCGR.Crear_Imagen(tile, paleta, 0);
-            this.numericWidth.Value = pic.Image.Width;
-            this.numericHeight.Value = pic.Image.Height;
-            this.comboDepth.Text = (tile.rahc.depth == ColorDepth.Depth4Bit ? "4 bpp" : "8 bpp");
-            oldDepth = comboDepth.Text;
-            switch (tile.orden)
+            this.isMap = isMap;
+            this.paleta = pluginHost.Get_NCLR();
+            this.tile = pluginHost.Get_NCGR();
+
+            if (isMap)
             {
-                case Orden_Tiles.No_Tiles:
-                    oldTiles = 0;
-                    comboBox1.SelectedIndex = 0;
-                    break;
-                case Orden_Tiles.Horizontal:
-                    oldTiles = 1;
-                    comboBox1.SelectedIndex = 1;
-                    break;
-                //case Orden_Tiles.Vertical:  NOT SUPPORTED
-                //    oldTiles = 2;
-                //    comboBox1.SelectedIndex = 2;
-                //    break;
+                this.map = pluginHost.Get_NSCR();
+                NCGR newTile = tile;
+                newTile.rahc.tileData = pluginHost.Transformar_NSCR(map, tile.rahc.tileData);
+                newTile.rahc.nTilesX = (ushort)(map.section.width / 8);
+                newTile.rahc.nTilesY = (ushort)(map.section.height / 8);
+                pic.Image = pluginHost.Bitmap_NCGR(newTile, paleta, 0);
             }
-            this.comboDepth.SelectedIndexChanged += new EventHandler(comboDepth_SelectedIndexChanged);
-            this.numericWidth.ValueChanged += new EventHandler(numericSize_ValueChanged);
-            this.numericHeight.ValueChanged += new EventHandler(numericSize_ValueChanged);
-            this.numericStart.ValueChanged += new EventHandler(numericStart_ValueChanged);
-
-            Info();
-        }
-        public iNCGR(NCGR tile, NCLR paleta, NSCR map, IPluginHost pluginHost)
-        {
-            InitializeComponent();
-            ReadLanguage();
-
-            this.isMap = true;
-            this.paleta = paleta;
-            this.tile = tile;
-            this.map = map;
-            this.pluginHost = pluginHost;
-
-            NCGR newTile = tile;
-            newTile.rahc.tileData = pluginHost.Transformar_NSCR(map, tile.rahc.tileData);
-            newTile.rahc.nTilesX = (ushort)(map.section.width / 8);
-            newTile.rahc.nTilesY = (ushort)(map.section.height / 8);
-            pic.Image = Imagen_NCGR.Crear_Imagen(newTile, paleta, 0);
-
+            else
+                pic.Image = pluginHost.Bitmap_NCGR(tile, paleta, 0);
+            
             this.numericWidth.Value = pic.Image.Width;
             this.numericHeight.Value = pic.Image.Height;
             this.comboDepth.Text = (tile.rahc.depth == ColorDepth.Depth4Bit ? "4 bpp" : "8 bpp");
@@ -145,13 +114,13 @@ namespace Tinke
 
             if (comboDepth.Text == "4 bpp")
             {
-                byte[] temp = Convertir.Bit8ToBit4(Convertir.TilesToBytes(tile.rahc.tileData.tiles));
-                tile.rahc.tileData.tiles = Convertir.BytesToTiles(temp);
+                byte[] temp = pluginHost.Bit8ToBit4(pluginHost.TilesToBytes(tile.rahc.tileData.tiles));
+                tile.rahc.tileData.tiles = pluginHost.BytesToTiles(temp);
             }
             else
             {
-                byte[] temp = Convertir.Bit4ToBit8(Convertir.TilesToBytes(tile.rahc.tileData.tiles));
-                tile.rahc.tileData.tiles = Convertir.BytesToTiles(temp);
+                byte[] temp = pluginHost.Bit4ToBit8(pluginHost.TilesToBytes(tile.rahc.tileData.tiles));
+                tile.rahc.tileData.tiles = pluginHost.BytesToTiles(temp);
             }
 
             UpdateImage();
@@ -165,7 +134,7 @@ namespace Tinke
             {
                 case 0:
                     tile.orden = Orden_Tiles.No_Tiles;
-                    tile.rahc.tileData.tiles[0] = Convertir.TilesToBytes(tile.rahc.tileData.tiles);
+                    tile.rahc.tileData.tiles[0] = pluginHost.TilesToBytes(tile.rahc.tileData.tiles);
                     numericHeight.Minimum = 0;
                     numericWidth.Minimum = 0;
                     numericWidth.Increment = 1;
@@ -173,7 +142,7 @@ namespace Tinke
                     break;
                 case 1:
                     tile.orden = Orden_Tiles.Horizontal;
-                    tile.rahc.tileData.tiles = Convertir.BytesToTiles(tile.rahc.tileData.tiles[0]);
+                    tile.rahc.tileData.tiles = pluginHost.BytesToTiles(tile.rahc.tileData.tiles[0]);
                     numericHeight.Minimum = 8;
                     numericWidth.Minimum = 8;
                     numericWidth.Increment = 8;
@@ -207,15 +176,17 @@ namespace Tinke
             {
                 NCGR newTile = tile;
                 newTile.rahc.tileData = pluginHost.Transformar_NSCR(map, tile.rahc.tileData);
-                pic.Image = Imagen_NCGR.Crear_Imagen(newTile, paleta, startTile);
+                pic.Image = pluginHost.Bitmap_NCGR(newTile, paleta, startTile);
             }
             else
-                pic.Image = Imagen_NCGR.Crear_Imagen(tile, paleta, startTile);
+                pic.Image = pluginHost.Bitmap_NCGR(tile, paleta, startTile);
         }
 
         private void ReadLanguage()
         {
-            System.Xml.Linq.XElement xml = Tools.Helper.ObtenerTraduccion("NCGR");
+            XElement xml = XElement.Load(Application.StartupPath + Path.DirectorySeparatorChar + "Plugins" +
+                Path.DirectorySeparatorChar + "TottempestLang.xml");
+            xml = xml.Element(pluginHost.Get_Language()).Element("iNCGR");
 
             label5.Text = xml.Element("S01").Value;
             groupProp.Text = xml.Element("S02").Value;
@@ -271,40 +242,59 @@ namespace Tinke
             o.Multiselect = false;
             if (o.ShowDialog() == DialogResult.OK)
             {
-                NCLR newPalette = Imagen_NCLR.BitmapToPalette(o.FileName);
+                NCLR newPalette;
+                NCGR newTile;
+
+                if (new String(pluginHost.Get_NCLR().cabecera.id) == "NBM ")
+                {
+                    paleta = pluginHost.BitmapToPalette(o.FileName);
+                    pluginHost.Set_NCLR(paleta);
+                    newTile = pluginHost.BitmapToTile(o.FileName, Orden_Tiles.No_Tiles);
+                    newTile.id = tile.id;
+                    tile = newTile;
+
+                    String nbmFile = Path.GetTempFileName() + ".nbm";
+                    NBM.Write(paleta, tile, nbmFile, pluginHost);
+                    pluginHost.ChangeFile((int)tile.id, nbmFile);
+
+                    goto End;
+                }
+
+                newPalette = pluginHost.BitmapToPalette(o.FileName);
                 newPalette.id = paleta.id;
                 paleta = newPalette;
 
                 pluginHost.Set_NCLR(paleta);
-                String paletteFile = System.IO.Path.GetTempFileName();
-                Imagen_NCLR.Escribir(paleta, paletteFile);
+                String paletteFile = Path.GetTempFileName() + ".apa";
+                APA.Write(paleta, paletteFile, pluginHost);
                 pluginHost.ChangeFile((int)paleta.id, paletteFile);
 
-                NCGR newTile = Imagen_NCGR.BitmapToTile(o.FileName, (comboBox1.SelectedIndex == 0 ? Orden_Tiles.No_Tiles : Orden_Tiles.Horizontal));
+                newTile = pluginHost.BitmapToTile(o.FileName, (comboBox1.SelectedIndex == 0 ? Orden_Tiles.No_Tiles : Orden_Tiles.Horizontal));
                 newTile.id = tile.id;
                 tile = newTile;
 
                 pluginHost.Set_NCGR(tile);
-                String tileFile = System.IO.Path.GetTempFileName();
-                Imagen_NCGR.Write(tile, tileFile);
+                String tileFile = System.IO.Path.GetTempFileName() + ".ana";
+                ANA.Write(tile, tileFile, pluginHost);
                 pluginHost.ChangeFile((int)tile.id, tileFile);
 
                 if (isMap)
                 {
                     NSCR newMap;
                     if (tile.orden == Orden_Tiles.Horizontal)
-                        newMap = Imagen_NSCR.Create_BasicMap(tile.rahc.nTiles, tile.rahc.nTilesX * 8, tile.rahc.nTilesY * 8);
+                        newMap = pluginHost.Create_BasicMap(tile.rahc.nTiles, tile.rahc.nTilesX * 8, tile.rahc.nTilesY * 8);
                     else
-                        newMap = Imagen_NSCR.Create_BasicMap(tile.rahc.nTiles, tile.rahc.nTilesX, tile.rahc.nTilesY);
+                        newMap = pluginHost.Create_BasicMap(tile.rahc.nTiles, tile.rahc.nTilesX, tile.rahc.nTilesY);
                     newMap.id = map.id;
                     map = newMap;
 
                     pluginHost.Set_NSCR(map);
-                    String mapFile = System.IO.Path.GetTempFileName();
-                    Imagen_NSCR.Write(map, mapFile);
+                    String mapFile = System.IO.Path.GetTempFileName() + ".asc";
+                    ASC.Write(map, mapFile, pluginHost);
                     pluginHost.ChangeFile((int)map.id, mapFile);
                 }
 
+            End:
                 stopUpdating = true;
                 if (tile.orden == Orden_Tiles.No_Tiles)
                 {
@@ -340,24 +330,28 @@ namespace Tinke
         {
             SaveFileDialog o = new SaveFileDialog();
             o.AddExtension = true;
-            o.DefaultExt = "png";
-            o.Filter = "PNG (*.png)|*.png";
+            o.DefaultExt = "bmp";
+            o.Filter = "BitMaP (*.bmp)|*.bmp";
             o.OverwritePrompt = true;
             if (o.ShowDialog() == DialogResult.OK)
-                pic.Image.Save(o.FileName);
+                pic.Image.Save(o.FileName, System.Drawing.Imaging.ImageFormat.Bmp);
             o.Dispose();
         }
         private void pic_DoubleClick(object sender, EventArgs e)
         {
+            XElement xml = XElement.Load(Application.StartupPath + Path.DirectorySeparatorChar + "Plugins" +
+                Path.DirectorySeparatorChar + "TottempestLang.xml");
+            xml = xml.Element(pluginHost.Get_Language()).Element("iNCGR");
+
             Form ven = new Form();
             PictureBox pcBox = new PictureBox();
             pcBox.Image = pic.Image;
             pcBox.SizeMode = PictureBoxSizeMode.AutoSize;
-            pcBox.BackColor = pictureBgd.BackColor; ;
+            pcBox.BackColor = pictureBgd.BackColor;
 
             ven.Controls.Add(pcBox);
             ven.BackColor = SystemColors.GradientInactiveCaption;
-            ven.Text = Tools.Helper.ObtenerTraduccion("NCGR","S19");
+            ven.Text = xml.Element("S19").Value;
             ven.AutoScroll = true;
             ven.MaximumSize = new Size(1024, 700);
             ven.ShowIcon = false;

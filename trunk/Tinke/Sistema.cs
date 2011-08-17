@@ -266,7 +266,7 @@ namespace Tinke
 
             if (accion is Acciones)
             {
-                if (accion.IsNewRom)
+                if (accion.IsNewRom & accion.ROMFile != "")
                 {
                     if (MessageBox.Show(Tools.Helper.ObtenerTraduccion("Sistema", "S39"), Tools.Helper.ObtenerTraduccion("Sistema", "S3A"),
                         MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == System.Windows.Forms.DialogResult.Cancel)

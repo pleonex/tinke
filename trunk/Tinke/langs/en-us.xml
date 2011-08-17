@@ -194,6 +194,11 @@
     <S17>Time getting format files:</S17>
     <S18>Time creating tree files:</S18>
     <S19>Time recognizing files:</S19>
+    <S1A>Compressed file</S1A>
+    <S1B>To see this file you must double click on a palette file first</S1B>
+    <S1C>To see this file you must double click on a palette and tile file</S1C>
+    <S1D>By the moment common compression don't show information.</S1D>
+    <S1E>To see this file you must double click on a palette, tile and cell file</S1E>
   </Messages>
   <NCLR>
     <S01># palette:</S01>

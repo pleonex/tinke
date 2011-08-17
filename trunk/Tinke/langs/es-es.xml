@@ -198,6 +198,20 @@
     <S17>Tiempo en obtener los formatos:</S17>
     <S18>Tiempo en jerarquizar el árbol:</S18>
     <S19>Tiempo en obtener el porcentaje de archivos soportados:</S19>
+    <S1A>Archivos comprimidos</S1A>
+    <S1B>
+      Para ver este archivo necesitas guardar la información (doble click sobre el archivo)
+      de una paleta
+    </S1B>
+    <S1C>
+      Para ver este archivo necesitas guardar la información (doble click sobre el archivo)
+      de una paleta y una imagen (tiles)
+    </S1C>
+    <S1D>Por el momento compresiones normales no devuelven información.</S1D>
+    <S1E>
+      Para ver este archivo necesitas guardar la información (doble click sobre el archivo)
+      de una paleta, una imagen (tiles) y una archivo de celdas
+    </S1E>
   </Messages>
   <NCLR>
     <S01>Nº de paleta:</S01>
@@ -401,7 +415,7 @@
       La imagen se debe guardar con profundidad 4bpp.
       La imagen importada en 8bpp y por tanto no se puede importar.
     </S26>
-    <S27>Encryption seed:</S27>
+    <S27>Semilla de encriptación:</S27>
     <S28>Código</S28>
     <S29>Compañía</S29>
     <S2A>Códigos de las compañías</S2A>

@@ -15,8 +15,6 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  *
  * Programador: pleoNeX
- * Programa utilizado: Microsoft Visual C# 2010 Express
- * Fecha: 18/02/2011
  * 
  */
 using System;
@@ -27,11 +25,13 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using System.IO;
+using System.Xml.Linq;
 using PluginInterface;
 
-namespace Tinke
+namespace TOTTEMPEST
 {
-    public partial class iNCLR : UserControl
+    public partial class PaletteControl : UserControl
     {
         NCLR paleta;
         Bitmap[] paletas;
@@ -40,33 +40,35 @@ namespace Tinke
         Byte[] data;
         ColorDepth oldDepth;
 
-        public iNCLR()
+        public PaletteControl()
         {
             InitializeComponent();
-            LeerIdioma();
         }
-        public iNCLR(NCLR paleta, IPluginHost pluginHost)
+        public PaletteControl(IPluginHost pluginHost)
         {
             InitializeComponent();
+
+            this.pluginHost = pluginHost;
             LeerIdioma();
 
-            this.paleta = paleta;
-            this.pluginHost = pluginHost;
+            this.paleta = pluginHost.Get_NCLR();
             ShowInfo();
 
-            paletas = Imagen_NCLR.Mostrar(paleta);
+            paletas = pluginHost.Bitmaps_NCLR(paleta);
             paletaBox.Image = paletas[0];
             nPaleta.Maximum = paletas.Length;
             nPaleta.Minimum = 1;
             nPaleta.Value = 1;
 
-            data = Convertir.ColorToBGR555(paleta.pltt.paletas[0].colores);
+            data = pluginHost.ColorToBGR555(paleta.pltt.paletas[0].colores);
             oldDepth = paleta.pltt.profundidad;
         }
 
         private void LeerIdioma()
         {
-            System.Xml.Linq.XElement xml = Tools.Helper.ObtenerTraduccion("NCLR");
+            XElement xml = XElement.Load(Application.StartupPath + Path.DirectorySeparatorChar + "Plugins" +
+                Path.DirectorySeparatorChar + "TottempestLang.xml");
+            xml = xml.Element(pluginHost.Get_Language()).Element("iNCLR");
 
             label1.Text = xml.Element("S01").Value;
             groupProp.Text = xml.Element("S02").Value;
@@ -102,13 +104,16 @@ namespace Tinke
         private void nPaleta_ValueChanged(object sender, EventArgs e)
         {
             paletaBox.Image = paletas[(int)nPaleta.Value - 1];
-            data = Convertir.ColorToBGR555(paleta.pltt.paletas[(int)nPaleta.Value - 1].colores);
+            data = pluginHost.ColorToBGR555(paleta.pltt.paletas[(int)nPaleta.Value - 1].colores);
             numericStartByte.Value = 0;
         }
 
         private void btnShow_Click(object sender, EventArgs e)
         {
-            string trad = Tools.Helper.ObtenerTraduccion("NCLR").Element("S0C").Value;
+            XElement xml = XElement.Load(Application.StartupPath + Path.DirectorySeparatorChar + "Plugins" +
+                            Path.DirectorySeparatorChar + "TottempestLang.xml");
+            xml = xml.Element(pluginHost.Get_Language()).Element("iNCLR");
+            string trad = xml.Element("S0C").Value;
             Form ven = new Form();
             int xMax = 6 * 170;
             int x = 0;
@@ -151,12 +156,12 @@ namespace Tinke
             SaveFileDialog o = new SaveFileDialog();
             o.AddExtension = true;
             o.CheckPathExists = true;
-            o.DefaultExt = ".png";
-            o.Filter = "Portable Network Graphics (*.png)|*.png";
+            o.DefaultExt = ".bmp";
+            o.Filter = "BitMaP (*.bmp)|*.bmp";
             o.OverwritePrompt = true;
 
             if (o.ShowDialog() == DialogResult.OK)
-                paletaBox.Image.Save(o.FileName);
+                paletaBox.Image.Save(o.FileName, System.Drawing.Imaging.ImageFormat.Bmp);
         }
 
         private void paletaBox_MouseClick(object sender, MouseEventArgs e)
@@ -177,22 +182,23 @@ namespace Tinke
             o.Multiselect = false;
             if (o.ShowDialog() == DialogResult.OK)
             {
-                NCLR newPalette = Imagen_NCLR.BitmapToPalette(o.FileName);
+                NCLR newPalette = pluginHost.BitmapToPalette(o.FileName);
                 newPalette.id = paleta.id;
                 paleta = newPalette;
 
                 pluginHost.Set_NCLR(paleta);
                 String paletteFile = System.IO.Path.GetTempFileName();
-                Imagen_NCLR.Escribir(paleta, paletteFile);
+                APA.Write(paleta, paletteFile, pluginHost);
                 pluginHost.ChangeFile((int)paleta.id, paletteFile);
 
+
                 ShowInfo();
-                paletas = Imagen_NCLR.Mostrar(paleta);
+                paletas = pluginHost.Bitmaps_NCLR(paleta);
                 paletaBox.Image = paletas[0];
                 nPaleta.Maximum = paletas.Length;
                 nPaleta.Minimum = 1;
                 nPaleta.Value = 1;
-                data = Convertir.ColorToBGR555(paleta.pltt.paletas[0].colores);
+                data = pluginHost.ColorToBGR555(paleta.pltt.paletas[0].colores);
                 oldDepth = paleta.pltt.profundidad;
             }
         }
@@ -202,11 +208,11 @@ namespace Tinke
             Byte[] temp = new Byte[data.Length - (int)numericStartByte.Value];
             Array.Copy(data, (int)numericStartByte.Value, temp, 0, temp.Length);
 
-            paleta.pltt.paletas[(int)nPaleta.Value - 1].colores = Convertir.BGR555(temp);
+            paleta.pltt.paletas[(int)nPaleta.Value - 1].colores = pluginHost.BGR555(temp);
             pluginHost.Set_NCLR(paleta);
 
             ShowInfo();
-            paletas = Imagen_NCLR.Mostrar(paleta);
+            paletas = pluginHost.Bitmaps_NCLR(paleta);
             paletaBox.Image = paletas[0];
             nPaleta.Maximum = paleta.pltt.paletas.Length;
             nPaleta.Minimum = 1;
@@ -219,32 +225,32 @@ namespace Tinke
 
             if (oldDepth == ColorDepth.Depth4Bit) // Convert to 8bpp
             {
-                paleta.pltt = Convertir.Palette_4bppTo8bpp(paleta.pltt);
+                paleta.pltt = pluginHost.Palette_4bppTo8bpp(paleta.pltt);
                 pluginHost.Set_NCLR(paleta);
 
                 ShowInfo();
-                paletas = Imagen_NCLR.Mostrar(paleta);
+                paletas = pluginHost.Bitmaps_NCLR(paleta);
                 paletaBox.Image = paletas[0];
                 nPaleta.Maximum = 1;
                 nPaleta.Minimum = 1;
                 nPaleta.Value = 1;
 
-                data = Convertir.ColorToBGR555(paleta.pltt.paletas[0].colores);
+                data = pluginHost.ColorToBGR555(paleta.pltt.paletas[0].colores);
                 oldDepth = ColorDepth.Depth8Bit;
             }
             else  // Convert to 4bpp
             {
-                paleta.pltt = Convertir.Palette_8bppTo4bpp(paleta.pltt);
+                paleta.pltt = pluginHost.Palette_8bppTo4bpp(paleta.pltt);
                 pluginHost.Set_NCLR(paleta);
 
                 ShowInfo();
-                paletas = Imagen_NCLR.Mostrar(paleta);
+                paletas = pluginHost.Bitmaps_NCLR(paleta);
                 paletaBox.Image = paletas[0];
                 nPaleta.Maximum = paleta.pltt.paletas.Length;
                 nPaleta.Minimum = 1;
                 nPaleta.Value = 1;
 
-                data = Convertir.ColorToBGR555(paleta.pltt.paletas[0].colores);
+                data = pluginHost.ColorToBGR555(paleta.pltt.paletas[0].colores);
                 oldDepth = ColorDepth.Depth4Bit;
             }
 
