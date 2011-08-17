@@ -51,10 +51,10 @@ namespace SDAT
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(iSDAT));
-            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("S02");
-            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("S03");
-            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem("S04");
-            System.Windows.Forms.ListViewItem listViewItem4 = new System.Windows.Forms.ListViewItem("S05");
+            System.Windows.Forms.ListViewItem listViewItem17 = new System.Windows.Forms.ListViewItem("S02");
+            System.Windows.Forms.ListViewItem listViewItem18 = new System.Windows.Forms.ListViewItem("S03");
+            System.Windows.Forms.ListViewItem listViewItem19 = new System.Windows.Forms.ListViewItem("S04");
+            System.Windows.Forms.ListViewItem listViewItem20 = new System.Windows.Forms.ListViewItem("S05");
             this.treeFiles = new System.Windows.Forms.TreeView();
             this.imageList = new System.Windows.Forms.ImageList(this.components);
             this.listProp = new System.Windows.Forms.ListView();
@@ -69,6 +69,7 @@ namespace SDAT
             this.checkLoop = new System.Windows.Forms.CheckBox();
             this.btnImport = new System.Windows.Forms.Button();
             this.btnCreate = new System.Windows.Forms.Button();
+            this.btnChangeFile = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // treeFiles
@@ -104,10 +105,10 @@ namespace SDAT
             this.columnCampo,
             this.columnValor});
             this.listProp.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem1,
-            listViewItem2,
-            listViewItem3,
-            listViewItem4});
+            listViewItem17,
+            listViewItem18,
+            listViewItem19,
+            listViewItem20});
             this.listProp.Location = new System.Drawing.Point(251, 3);
             this.listProp.Name = "listProp";
             this.listProp.Size = new System.Drawing.Size(256, 104);
@@ -144,7 +145,7 @@ namespace SDAT
             this.btnReproducir.Enabled = false;
             this.btnReproducir.ImageIndex = 5;
             this.btnReproducir.ImageList = this.imageList;
-            this.btnReproducir.Location = new System.Drawing.Point(357, 432);
+            this.btnReproducir.Location = new System.Drawing.Point(357, 392);
             this.btnReproducir.Name = "btnReproducir";
             this.btnReproducir.Size = new System.Drawing.Size(45, 34);
             this.btnReproducir.TabIndex = 3;
@@ -179,7 +180,7 @@ namespace SDAT
             // 
             this.btnStop.ImageIndex = 6;
             this.btnStop.ImageList = this.imageList;
-            this.btnStop.Location = new System.Drawing.Point(357, 472);
+            this.btnStop.Location = new System.Drawing.Point(357, 432);
             this.btnStop.Name = "btnStop";
             this.btnStop.Size = new System.Drawing.Size(45, 34);
             this.btnStop.TabIndex = 6;
@@ -204,7 +205,7 @@ namespace SDAT
             // 
             this.checkLoop.AutoSize = true;
             this.checkLoop.Enabled = false;
-            this.checkLoop.Location = new System.Drawing.Point(251, 368);
+            this.checkLoop.Location = new System.Drawing.Point(251, 327);
             this.checkLoop.Name = "checkLoop";
             this.checkLoop.Size = new System.Drawing.Size(45, 17);
             this.checkLoop.TabIndex = 8;
@@ -234,12 +235,25 @@ namespace SDAT
             this.btnCreate.UseVisualStyleBackColor = true;
             this.btnCreate.Click += new System.EventHandler(this.btnCreate_Click);
             // 
+            // btnChangeFile
+            // 
+            this.btnChangeFile.Enabled = false;
+            this.btnChangeFile.Location = new System.Drawing.Point(251, 350);
+            this.btnChangeFile.Name = "btnChangeFile";
+            this.btnChangeFile.Size = new System.Drawing.Size(100, 34);
+            this.btnChangeFile.TabIndex = 11;
+            this.btnChangeFile.Text = "S0D";
+            this.btnChangeFile.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnChangeFile.UseVisualStyleBackColor = true;
+            this.btnChangeFile.Click += new System.EventHandler(this.btnChangeFile_Click);
+            // 
             // iSDAT
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Transparent;
             this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.Controls.Add(this.btnChangeFile);
             this.Controls.Add(this.btnCreate);
             this.Controls.Add(this.btnImport);
             this.Controls.Add(this.checkLoop);
@@ -274,5 +288,6 @@ namespace SDAT
         private System.Windows.Forms.CheckBox checkLoop;
         private System.Windows.Forms.Button btnImport;
         private System.Windows.Forms.Button btnCreate;
+        private System.Windows.Forms.Button btnChangeFile;
     }
 }

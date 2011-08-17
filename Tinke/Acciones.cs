@@ -248,7 +248,7 @@ namespace Tinke
                 }
 
                 if (ext[0] == LZ77_TAG || ext[0] == LZSS_TAG || ext[0] == RLE_TAG || ext[0] == HUFF_TAG)
-                    MessageBox.Show("Archivo comprimido", "Datos del archivo",  MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show(Tools.Helper.ObtenerTraduccion("Messages", "S1A"), "",  MessageBoxButtons.OK, MessageBoxIcon.Information);
 
             }
             catch (Exception e)
@@ -407,8 +407,7 @@ namespace Tinke
                     }
                     else
                     {
-                        MessageBox.Show("Para ver este archivo necesitas guardar la información (doble click sobre el archivo)" +
-                            " de una paleta");
+                        MessageBox.Show(Tools.Helper.ObtenerTraduccion("Messages", "S1B"));
                         return new Control();
                     }
                 }
@@ -427,8 +426,7 @@ namespace Tinke
                     }
                     else
                     {
-                        MessageBox.Show("Para ver este archivo necesitas guardar la información (doble click sobre el archivo)" +
-                            " de una paleta y una imagen (tiles)");
+                        MessageBox.Show(Tools.Helper.ObtenerTraduccion("Messages", "S1C"));
                         return new Control();
                     }
                 }
@@ -1569,7 +1567,7 @@ namespace Tinke
                 if (ext[0] == LZ77_TAG || ext[0] == LZSS_TAG || ext[0] == RLE_TAG || ext[0] == HUFF_TAG)
                 {
                     File.Delete(tempFile);
-                    MessageBox.Show("Por el momento compresiones normales no devuelven información.");
+                    MessageBox.Show(Tools.Helper.ObtenerTraduccion("Messages", "S1D"));
                     return new Control();
                 }
             }
@@ -1610,8 +1608,7 @@ namespace Tinke
                     }
                     else
                     {
-                        MessageBox.Show("Para ver este archivo necesitas guardar la información (doble click sobre el archivo)" +
-                            " de una paleta");
+                        MessageBox.Show(Tools.Helper.ObtenerTraduccion("Messages", "S1B"));
                         return new Control();
                     }
                 }
@@ -1627,8 +1624,7 @@ namespace Tinke
                     }
                     else
                     {
-                        MessageBox.Show("Para ver este archivo necesitas guardar la información (doble click sobre el archivo)" +
-                            " de una paleta y una imagen (tiles)");
+                        MessageBox.Show(Tools.Helper.ObtenerTraduccion("Messages", "S1C"));
                         return new Control();
                     }
                 }
@@ -1646,8 +1642,7 @@ namespace Tinke
                     }
                     else
                     {
-                        MessageBox.Show("Para ver este archivo necesitas guardar la información (doble click sobre el archivo)" +
-                            " de una paleta y una imagen (tiles)");
+                        MessageBox.Show(Tools.Helper.ObtenerTraduccion("Messages", "S1C"));
                         return new Control();
                     }
                 }
@@ -1666,8 +1661,7 @@ namespace Tinke
                     }
                     else
                     {
-                        MessageBox.Show("Para ver este archivo necesitas guardar la información (doble click sobre el archivo)" +
-                            " de una paleta, una imagen (tiles) y una archivo de celdas");
+                        MessageBox.Show(Tools.Helper.ObtenerTraduccion("Messages", "S1E"));
                         return new Control();
                     }
                 }
@@ -1716,7 +1710,7 @@ namespace Tinke
                 if (ext[0] == LZ77_TAG || ext[0] == LZSS_TAG || ext[0] == RLE_TAG || ext[0] == HUFF_TAG)
                 {
                     File.Delete(archivo);
-                    MessageBox.Show("Por el momento compresiones normales no devuelven información.");
+                    MessageBox.Show(Tools.Helper.ObtenerTraduccion("Messages", "S1D"));
                     return new Control();
                 }
             }
@@ -1757,8 +1751,7 @@ namespace Tinke
                     }
                     else
                     {
-                        MessageBox.Show("Para ver este archivo necesitas guardar la información (doble click sobre el archivo)" +
-                            " de una paleta");
+                        MessageBox.Show(Tools.Helper.ObtenerTraduccion("Messages", "S1B"));
                         return new Control();
                     }
                 }
@@ -1774,8 +1767,7 @@ namespace Tinke
                     }
                     else
                     {
-                        MessageBox.Show("Para ver este archivo necesitas guardar la información (doble click sobre el archivo)" +
-                            " de una paleta y una imagen (tiles)");
+                        MessageBox.Show(Tools.Helper.ObtenerTraduccion("Messages", "S1C"));
                         return new Control();
                     }
                 }
@@ -1793,8 +1785,7 @@ namespace Tinke
                     }
                     else
                     {
-                        MessageBox.Show("Para ver este archivo necesitas guardar la información (doble click sobre el archivo)" +
-                            " de una paleta y una imagen (tiles)");
+                        MessageBox.Show(Tools.Helper.ObtenerTraduccion("Messages", "S1C"));
                         return new Control();
                     }
                 }
@@ -1813,8 +1804,7 @@ namespace Tinke
                     }
                     else
                     {
-                        MessageBox.Show("Para ver este archivo necesitas guardar la información (doble click sobre el archivo)" +
-                            " de una paleta, una imagen (tiles) y una archivo de celdas");
+                        MessageBox.Show(Tools.Helper.ObtenerTraduccion("Messages", "S1E"));
                         return new Control();
                     }
                 }

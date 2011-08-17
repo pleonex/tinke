@@ -245,11 +245,8 @@ namespace Tinke
 
             for (int i = 0; i < bits8.Length; i++)
             {
-                string nByte = String.Format("{0:X}", bits8[i]);
-                if (nByte.Length == 1)
-                    nByte = '0' + nByte;
-                bits4.Add((byte)Convert.ToInt32(nByte[0].ToString(), 16));
-                bits4.Add((byte)Convert.ToInt32(nByte[1].ToString(), 16));
+                bits4.Add((byte)(bits8[i] & 0x0F));
+                bits4.Add((byte)((bits8[i] & 0xF0) >> 4));
             }
 
             return bits4.ToArray();

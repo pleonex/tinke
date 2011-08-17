@@ -84,6 +84,7 @@ namespace SDAT
             btnWav.Text = xml.Element("S0A").Value;
             btnImport.Text = xml.Element("S0B").Value;
             btnCreate.Text = xml.Element("S0C").Value;
+            btnChangeFile.Text = xml.Element("S0D").Value;
         }
 
         #region System folder administration
@@ -148,6 +149,7 @@ namespace SDAT
             btnMidi.Enabled = false;
             btnImport.Enabled = false;
             btnUncompress.Enabled = false;
+            btnChangeFile.Enabled = true;
             if (listProp.Items[0].SubItems.Count == 2)
                 for (int i = 0; i < listProp.Items.Count; i++)
                     listProp.Items[i].SubItems.RemoveAt(1);
@@ -172,6 +174,8 @@ namespace SDAT
                 {
                     btnUncompress.Enabled = true;
                 }
+                else if (fileSelect.type == FormatSound.SWAV)
+                    btnChangeFile.Enabled = false;
                 if (fileSelect.type == FormatSound.STRM)
                 {
                     checkLoop.Enabled = true;
@@ -188,6 +192,7 @@ namespace SDAT
                 listProp.Items[3].SubItems.Add("");
 
                 btnExtract.Enabled = true;
+                btnChangeFile.Enabled = false;
             }
         }
 
@@ -475,6 +480,24 @@ namespace SDAT
             if (!File.Exists(fileout))
                 return;
             ChangeFile((int)selectedFile.id, fileout);
+        }
+        private void btnChangeFile_Click(object sender, EventArgs e)
+        {
+            Sound selectedFile = SearchFile();
+
+            OpenFileDialog o = new OpenFileDialog();
+            o.CheckFileExists = true;
+            o.AddExtension = true;
+            o.DefaultExt = "strm";
+            o.Filter = "STRM (*.strm)|*.strm|" +
+                "SSEQ (*.sseq)|*.sseq|" +
+                "SSAR (*.ssar)|*.ssar|" +
+                "SBNK (*.sbnk)|*.sbnk|" +
+                "SWAR (*.swar)|*.swar";
+            if (o.ShowDialog() != DialogResult.OK)
+                return;
+
+            ChangeFile((int)selectedFile.id, o.FileName);
         }
 
         private void btnWav_Click(object sender, EventArgs e)

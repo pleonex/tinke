@@ -15,6 +15,7 @@
       <S0A>Guardar WAV</S0A>
       <S0B>Importar</S0B>
       <S0C>Guardar SDAT</S0C>
+      <S0D>Cambiar archivo</S0D>
     </iSDAT>
     <Messages>
       <S00>Lectura de archivos SDAT completa</S00>
@@ -36,6 +37,7 @@
       <S0A>Save WAV</S0A>
       <S0B>Import</S0B>
       <S0C>Save SDAT</S0C>
+      <S0D>Change file</S0D>
     </iSDAT>
     <Messages>
       <S00>SDAT reading completed</S00>
@@ -57,6 +59,7 @@
       <S0A>Sauver WAV</S0A>
       <S0B>Importer</S0B>
       <S0C>Sauver SDAT</S0C>
+      <S0D>Change file</S0D>
     </iSDAT>
     <Messages>
       <S00>SDAT reading completed</S00>

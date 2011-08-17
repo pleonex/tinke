@@ -203,7 +203,7 @@ namespace SDAT
             strm.head.id = "HEAD".ToArray();
             strm.head.size = 0x50;
             strm.head.waveType = 1;
-            strm.head.loop = 0;
+            strm.head.loop = 1;
             strm.head.channels = wav.wave.fmt.numChannels;
             strm.head.sampleRate = (ushort)wav.wave.fmt.sampleRate;
             strm.head.time = (ushort)(1.0 / strm.head.sampleRate * 1.6756991e+7 / 32);
