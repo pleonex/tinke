@@ -1,0 +1,121 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Drawing;
+using System.Data;
+using System.Text;
+using System.Windows.Forms;
+using PluginInterface;
+
+namespace DSDecmp
+{
+    public partial class CompressionControl : UserControl
+    {
+        int id; // ID of the file to change (the compressed file)
+        IPluginHost pluginHost;
+        FormatsType format;
+
+        string nullString;
+
+        public CompressionControl()
+        {
+            InitializeComponent();
+        }
+        public CompressionControl(int id, FormatsType format, IPluginHost pluginHost)
+        {
+            InitializeComponent();
+
+            this.pluginHost = pluginHost;
+            this.id = id;
+            this.format = format;
+            ReadLanguage();
+
+            txtBoxOlderCompress.Text = Enum.GetName(typeof(FormatsType), format);
+            comboFormat.Text = txtBoxOlderCompress.Text;
+            txtBoxNewCompress.Text = nullString;
+        }
+        private void ReadLanguage()
+        {
+            try
+            {
+                System.Xml.Linq.XElement xml = Main.Get_Traduction();
+
+                label1.Text = xml.Element("S15").Value;
+                label2.Text = xml.Element("S12").Value;
+                label3.Text = xml.Element("S13").Value;
+                nullString = xml.Element("S14").Value;
+                checkLookAhead.Text = xml.Element("S16").Value;
+                btnCompress.Text = xml.Element("S17").Value;
+                btnSearchCompression.Text = xml.Element("S18").Value;
+            }
+            catch
+            {
+                throw new Exception("There was an error in the XML file of language.");
+            }
+        }
+
+        private void comboFormat_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            format = (FormatsType)Enum.Parse(typeof(FormatsType), comboFormat.Text);
+
+            if (format == FormatsType.LZ10 || format == FormatsType.LZ11 || format == FormatsType.LZOVL)
+                checkLookAhead.Enabled = true;
+            else
+                checkLookAhead.Enabled = false;
+        }
+        private void checkLookAhead_CheckedChanged(object sender, EventArgs e)
+        {
+            switch (format)
+            {
+                case FormatsType.LZOVL:
+                    Formats.LZOvl.LookAhead = checkLookAhead.Checked;
+                    break;
+                case FormatsType.LZ10:
+                    Formats.Nitro.LZ10.LookAhead = checkLookAhead.Checked;
+                    break;
+                case FormatsType.LZ11:
+                    Formats.Nitro.LZ11.LookAhead = checkLookAhead.Checked;
+                    break;
+            }
+        }
+
+        private void btnCompress_Click(object sender, EventArgs e)
+        {
+            Archivo decompressedFile = pluginHost.Get_DecompressedFiles(id).files[0];
+            String filein = decompressedFile.path;
+            String fileout = System.IO.Path.GetTempFileName();
+
+            try
+            {
+                Main.Compress(filein, fileout, format);
+                pluginHost.ChangeFile(id, fileout);
+                txtBoxNewCompress.Text = Enum.GetName(typeof(FormatsType), format);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                Console.WriteLine(ex.Message);
+                txtBoxNewCompress.Text = nullString;
+            }
+        }
+        private void btnSearchCompression_Click(object sender, EventArgs e)
+        {
+            Archivo decompressedFile = pluginHost.Get_DecompressedFiles(id).files[0];
+            String filein = decompressedFile.path;
+            String fileout = System.IO.Path.GetTempFileName();
+
+            try
+            {
+                Main.Compress(filein, fileout, FormatsType.NDS);
+                pluginHost.ChangeFile(id, fileout);
+                txtBoxNewCompress.Text = Enum.GetName(typeof(FormatsType), format);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                Console.WriteLine(ex.Message);
+                txtBoxNewCompress.Text = nullString;
+            }
+        }
+    }
+}

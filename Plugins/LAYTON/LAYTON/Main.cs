@@ -53,7 +53,6 @@ namespace LAYTON
 
         public void Leer(string archivo, int id)
         {
-            throw new NotImplementedException();
         }
         public Control Show_Info(string archivo, int id)
         {

@@ -101,48 +101,54 @@ namespace Tinke.Tools
 
         public static XElement ObtenerTraduccion(string arbol)
         {
-            XElement xml = XElement.Load(System.Windows.Forms.Application.StartupPath + Path.DirectorySeparatorChar + "Tinke.xml");
-            string idioma = xml.Element("Options").Element("Language").Value;
-            xml = null;
-
-            foreach (string langFile in Directory.GetFiles(System.Windows.Forms.Application.StartupPath + Path.DirectorySeparatorChar + "langs"))
+            XElement tree = null;
+            try
             {
-                if (!langFile.EndsWith(".xml"))
-                    continue;
+                XElement xml = XElement.Load(System.Windows.Forms.Application.StartupPath + Path.DirectorySeparatorChar + "Tinke.xml");
+                string idioma = xml.Element("Options").Element("Language").Value;
+                xml = null;
 
-                xml = XElement.Load(langFile);
-                if (xml.Attribute("name").Value == idioma)
-                    break;
+                foreach (string langFile in Directory.GetFiles(System.Windows.Forms.Application.StartupPath + Path.DirectorySeparatorChar + "langs"))
+                {
+                    if (!langFile.EndsWith(".xml"))
+                        continue;
+
+                    xml = XElement.Load(langFile);
+                    if (xml.Attribute("name").Value == idioma)
+                        break;
+                }
+
+                tree = xml.Element(arbol);
             }
+            catch { throw new Exception("There was an error in the XML file of language."); }
 
-            return xml.Element(arbol);
+            return tree;
         }
         public static String ObtenerTraduccion(string arbol, string codigo)
         {
-            XElement xml = XElement.Load(System.Windows.Forms.Application.StartupPath + Path.DirectorySeparatorChar + "Tinke.xml");
-            string idioma = xml.Element("Options").Element("Language").Value;
-            xml = null;
+            String message = "";
 
-            foreach (string langFile in Directory.GetFiles(System.Windows.Forms.Application.StartupPath + Path.DirectorySeparatorChar + "langs"))
+            try
             {
-                if (!langFile.EndsWith(".xml"))
-                    continue;
+                XElement xml = XElement.Load(System.Windows.Forms.Application.StartupPath + Path.DirectorySeparatorChar + "Tinke.xml");
+                string idioma = xml.Element("Options").Element("Language").Value;
+                xml = null;
 
-                xml = XElement.Load(langFile);
-                if (xml.Attribute("name").Value == idioma)
-                    break;
+                foreach (string langFile in Directory.GetFiles(System.Windows.Forms.Application.StartupPath + Path.DirectorySeparatorChar + "langs"))
+                {
+                    if (!langFile.EndsWith(".xml"))
+                        continue;
+
+                    xml = XElement.Load(langFile);
+                    if (xml.Attribute("name").Value == idioma)
+                        break;
+                }
+                
+                message = xml.Element(arbol).Element(codigo).Value;
             }
-            xml = xml.Element(arbol);
+            catch { throw new Exception("There was an error in the XML language file."); }
 
-            string res;
-            try { res = xml.Element(codigo).Value; }
-            catch 
-            {
-                System.Windows.Forms.MessageBox.Show("The translate language is incomplete");
-                throw new NotImplementedException("The translate language is incomplete");
-            }
-
-            return res;
+            return message;
         }
 
     }

@@ -43,6 +43,7 @@ namespace TXT
 
             txtBox.Text = txtBox.Text.Replace("\n", "\r\n");
             txtBox.Text = txtBox.Text.Replace("\\n", "\r\n");
+            txtBox.Text = txtBox.Text.Replace("\0", "\\0");
 
             LeerIdioma();
         }
@@ -51,7 +52,9 @@ namespace TXT
         {
             string tempFile = Path.GetTempFileName();
 
-            text = Encoding.GetEncoding(comboEncod.Text).GetBytes(txtBox.Text);
+            string textSave = txtBox.Text;
+            textSave = textSave.Replace("\\0", "\0");
+            text = Encoding.GetEncoding(comboEncod.Text).GetBytes(textSave);
             File.WriteAllBytes(tempFile, text);
             pluginHost.ChangeFile(id, tempFile);
         }
@@ -76,6 +79,9 @@ namespace TXT
         private void comboEncod_SelectedIndexChanged(object sender, EventArgs e)
         {
             txtBox.Text = Descodificar(Encoding.GetEncoding(comboEncod.Text));
+            txtBox.Text = txtBox.Text.Replace("\n", "\r\n");
+            txtBox.Text = txtBox.Text.Replace("\\n", "\r\n");
+            txtBox.Text = txtBox.Text.Replace("\0", "\\0");
         }
 
         private void checkWordWrap_CheckedChanged(object sender, EventArgs e)

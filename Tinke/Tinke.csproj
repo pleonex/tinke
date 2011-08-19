@@ -187,6 +187,12 @@
     <Compile Include="Imagen\iNCLR.Designer.cs">
       <DependentUpon>iNCLR.cs</DependentUpon>
     </Compile>
+    <Compile Include="Imagen\MapOptions.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Imagen\MapOptions.Designer.cs">
+      <DependentUpon>MapOptions.cs</DependentUpon>
+    </Compile>
     <Compile Include="Imagen\NANR.cs" />
     <Compile Include="RomInfo.cs">
       <SubType>Form</SubType>
@@ -258,6 +264,9 @@
     <EmbeddedResource Include="Imagen\iNCLR.resx">
       <DependentUpon>iNCLR.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Imagen\MapOptions.resx">
+      <DependentUpon>MapOptions.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="RomInfo.resx">
       <DependentUpon>RomInfo.cs</DependentUpon>
     </EmbeddedResource>
@@ -298,9 +307,9 @@
       <Project>{736010D3-F72F-4C56-B8D2-2EDD1B8F3A87}</Project>
       <Name>PluginInterface</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Plugins\Compresiones\Compresiones\Compresiones.csproj">
-      <Project>{9E3890FC-D750-454D-800A-A911E7D7D71C}</Project>
-      <Name>Compresiones</Name>
+    <ProjectReference Include="..\Plugins\DSDecmp\DSDecmp\DSDecmp.csproj">
+      <Project>{E6F419F9-D6B5-4BE7-99BB-97C48C927FF3}</Project>
+      <Name>DSDecmp</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

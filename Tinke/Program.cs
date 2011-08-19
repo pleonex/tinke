@@ -15,8 +15,6 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  *
  * Programador: pleoNeX
- * Programa utilizado: Microsoft Visual C# 2010 Express
- * Fecha: 18/02/2011
  * 
  */
 using System;
@@ -37,7 +35,7 @@ namespace Tinke
         static void Main(string[] args)
         {
             #region Comprobación de archivos necesarios
-            string[] archivos = new string[] { "PluginInterface.dll", "Compresion.dll" };
+            string[] archivos = new string[] { "PluginInterface.dll", "DSDecmp.dll" };
             string faltan = "";
             for (int i = 0; i < archivos.Length; i++)
             {
@@ -47,8 +45,7 @@ namespace Tinke
             }
             if (faltan != "")
             {
-                MessageBox.Show("Los siguientes archivos faltan\n" + faltan + "\n\nPor favor descargue el programa de nuevo" +
-                    " desde: http://code.google.com/p/tinke", "Faltan archivos necesarios", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(Tools.Helper.ObtenerTraduccion("Messages", "S1F"), "", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
             #endregion

@@ -118,7 +118,7 @@
     <S27>Taille d'overlay ARM7</S27>
     <S28>Ajustements de contrôle normales</S28>
     <S29>Ajustements de sécurité normales</S29>
-    <S2A>Offset de l'icône de bannière</S2A>
+    <S2A>Offset de l'icone de bannière</S2A>
     <S2B>Secteur de sécurité CRC</S2B>
     <S2C>Délai de transfert sécurisé</S2C>
     <S2D>Auto-charger ARM9</S2D>
@@ -128,7 +128,7 @@
     <S31>Taille de l'Entête</S31>
     <S32>Réservé</S32>
     <S33>CRC du logo de Nintendo</S33>
-    <S34>CRC de l'Entête</S34>
+    <S34>CRC de l'En-tête</S34>
     <S35>Offset de debug de la ROM</S35>
     <S36>Taille de debug</S36>
     <S37>Offset de la RAM de debug</S37>
@@ -157,6 +157,8 @@
     <S02>Chargement du jeu...</S02>
     <S03>Extraction des fichiers...</S03>
     <S04>Décompression des fichiers...</S04>
+    <S05>Creating new ROM...</S05>
+    <S06>Saving new ROM...</S06>
   </Espera>
   <Messages>
     <S01>Erreur</S01>
@@ -173,7 +175,7 @@
       Prêt pour sauver la nouvelle ROM...<br>Écriture des sections :</br>
     </S08>
     <S09> {0} octets écrits avec succès.</S09>
-    <S0A>Entête...</S0A>
+    <S0A>En-tête...</S0A>
     <S0B>Fichiers...</S0B>
     <S0C> {0} fichiers écrits avec succès.</S0C>
     <S0D>
@@ -191,11 +193,18 @@
     <S17>Temps d'obtention du format des fichiers :</S17>
     <S18>Temps de la création de l'arborescence des fichiers :</S18>
     <S19>Temps de reconnaissance des fichiers :</S19>
-    <S1A>Compressed file</S1A>
-    <S1B>To see this file you must double click on a palette file first</S1B>
-    <S1C>To see this file you must double click on a palette and tile file</S1C>
-    <S1D>By the moment common compression don't show information.</S1D>
-    <S1E>To see this file you must double click on a palette, tile and cell file</S1E>
+    <S1A>Archive compressée</S1A>
+    <S1B>Pour voir cette archive vous devez double-cliquer en premier sur une archive palette</S1B>
+    <S1C>Pour voir cette archive vous devez double-cliquer sur une archive palette et tuile</S1C>
+    <S1D>Pour le moment la compression normale ne montre pas d'information.</S1D>
+    <S1E>Pour voir cette archive vous devez double-cliquer sur une archive palette, tuile et cellule</S1E>
+    <S1F>
+      The program need the following files:
+      {0}
+
+      Please, download the program from the web page:
+      http://code.google.com/p/tinke
+    </S1F>
   </Messages>
   <NCLR>
     <S01>Nombre de la palette :</S01>
@@ -221,7 +230,7 @@
   </NCLR>
   <NCGR>
     <S01>
-      Faites un double clique sur l'image pour la voir en
+      Faites un double-clic sur l'image pour la voir en
       taille réelle.
     </S01>
     <S02>Propriétés</S02>
@@ -257,6 +266,17 @@
     <S20>Supprimer</S20>
     <S21>Importer</S21>
   </NCGR>
+  <NSCR>
+    <S00>Map options</S00>
+    <S01>Map width:</S01>
+    <S02>Map height:</S02>
+    <S03>Fill image</S03>
+    <S04>Start tile:</S04>
+    <S05>Fill with tile:</S05>
+    <S06>Accept</S06>
+    <S07>Image width :</S07>
+    <S08>Image height :</S08>
+  </NSCR>
   <NCER>
     <S01>Banques :</S01>
     <S02>Montrer toutes les banques</S02>
@@ -278,7 +298,7 @@
     <S12>Transparence</S12>
     <S13>Montrer numéros</S13>
     <S14>Cellules</S14>
-    <S15>Faites un double clique sur l'image pour la voir en taille réelle.</S15>
+    <S15>Faites un double-clic sur l'image pour la voir en taille réelle.</S15>
     <S16>Zoom</S16>
     <S17>Couleur du fond</S17>
     <S18>Supprimer</S18>
@@ -324,38 +344,82 @@
     <S1B>Numéro de cellule</S1B>
     <S1C>Enregistrer</S1C>
     <S1D>Animations</S1D>
-    <S1E>Faites un double clique sur l'image pour la voir en taille réelle.</S1E>
+    <S1E>Faites un double-clic sur l'image pour la voir en taille réelle.</S1E>
   </NANR>
-  <Compression>
-    <!-- LZ77 -->
-    <S00>La taille dépasse la limite (>2GB).</S00>
-    <S01>L'archive {0:s} n'est pas une archive LZ77 valide.</S01>
-    <S02>L'archive {0:s} excède la taille limite 0x{1:x} (0x{2:x}) et ne sera pas décompressée.</S02>
-    <S03>Décompression de {0:s}. Taille décompressée 0x{1:x}</S03>
-    <S04>Données incomplètes.</S04>
-    <S05>Ne peut pas revenir en arrière car les données sont déjà écrites.</S05>
-    <S06>Trop de données dans l'archive ; INPOS actuelle = {0:x}</S06>
-    <S07>Archive LZ77 décompressée {0:s}</S07>
-    <!-- HUFFMAN -->
-    <S08>Archive compressée huffman invalide ; tag invalide {0:x}</S08>
-    <S09>Taille des données invalide {0:x}</S09>
-    <S0A>Données incomplètes</S0A>
-    <S0B>Trop de données, str={0:s}, idx={1:g}/{2:g}</S0B>
-    <S0C>Les 4 premiers bits de données devrait avoir 0 si dataSize = 4</S0C>
-    <S0D>Archive HUFFMAN décompressée {0:s}</S0D>
-    <!-- LZSS -->
-    <S0E>L'archive {0:s} n'est pas une archive LZSS-11 compressée valide.</S0E>
-    <S0F>Archive LZSS-11 décompressée {0:s}</S0F>
+  <DSDecmp>
+    <!-- LZ10 -->
+    <S00>
+      The provided stream is not a valid LZ-0x10 compressed stream.
+      Invalid type 0x{0}
+    </S00>
+    <S01>
+      Cannot go back more than already written.
+      DISP = 0x{0}, #written bytes = 0x{1} at 0x{2}
+    </S01>
+    <S02>disp is too large</S02>
+    <!-- LZ11 -->
+    <S03>
+      The provided stream is not a valid LZ-0x11 compressed stream.
+      Invalid type 0x{1}
+    </S03>
+    <S04>
+      Cannot go back more than already written. DISP = {0},
+      #written bytes = 0x{1} before 0x{2} with indicator 0x{3}
+    </S04>
+    <!-- Huffman -->
+    <S05>
+      The provided stream is not a valid Huffman compressed stream.
+      Invalid type 0x{0}; unknown block size.
+    </S05>
+    <S06>The stream is too short to contain a Huffman tree.</S06>
+    <S07>The Huffman tree is too large for the given input stream.</S07>
+    <S08>Unknown block size {0}</S08>
+    <S09>Unhandled blocksize {0}</S09>
+    <S0A>Reference to an undefined node in the huffman tree.</S0A>
     <!-- RLE -->
-    <S10>L'archive {0:s} n'est pas une archive RLE compressée valide.</S10>
-    <S11>Archive RLE décompressée {0:s}</S11>
-    <!-- NONE -->
-    <S12>L'archive {0:s} n'est pas une archive NONE valide, elle n'a pas le tag NONE dans les premiers octets</S12>
-    <S13>L'archive {0:s} n'est pas une archive NONE valide, la taille de décompression devrait avoir la taille de l'archive - 4</S13>
-    <S14>Archive NONE décompressée {0:s}</S14>
-    <!-- Basico -->
-    <S15>L'archive ne pourrait pas être décompressée correctement {0:s}</S15>
-  </Compression>
+    <S0B>
+      The provided stream is not a valid RLE compressed stream.
+      Invalid type 0x{0}
+    </S0B>
+    <S0C>
+      The given stream is not a valid RLE stream;
+      the output length does not match the provided plaintext length.
+    </S0C>
+    <!-- LZOvl -->
+    <S0D>
+      Cannot go back more than already written;
+      attempt to go back 0x{0} when only 0x{1}
+      bytes have been written.
+    </S0D>
+    <!-- Exceptions -->
+    <S0E>
+      The compression ratio is not high enough to fit the input
+      in a single compressed file.
+    </S0E>
+    <S0F>
+      The input contains more data than necessary.
+      Only used 0x{0} of 0x{1} bytes
+    </S0F>
+    <S10>
+      The end of the stream was reached before the
+      given amount of data was read.
+    </S10>
+    <S11>Not enough data avalible; 0x{0} of {1} bytes written.</S11>
+    <!-- CompressionControl -->
+    <S12>Original compressed file: </S12>
+    <S13>New compression:</S13>
+    <S14>None</S14>
+    <S15>Compression type:</S15>
+    <S16>Use "Look ahead" methods</S16>
+    <S17>Compress</S17>
+    <S18>Compress with the best compression</S18>
+    <!-- Main -->
+    <S19>{0} - compressed {1} to {2}</S19>
+    <S1A>The file could not be compressed in any format.</S1A>
+    <S1B>Could not decompress {0}; no matching compression method found.</S1B>
+    <S1C>{0} - decompressed {1} to {2}</S1C>
+    <S1D>Could not decompress using the {0}; {1}</S1D>
+  </DSDecmp>
   <EditRomInfo>
     <S00>En-tête et éditeur de bannière</S00>
     <S01>Sauvegarder</S01>
@@ -385,7 +449,7 @@
     <S19>Adresse chargée ARM7 :</S19>
     <S1A>Ajustements de contrôle normales :</S1A>
     <S1B>Ajustements de sécurité normales :</S1B>
-    <S1C>Show all maker codes</S1C>
+    <S1C>Montrer tous les codes du créateur</S1C>
     <S1D>Délai de transfert sécurisé :</S1D>
     <S1E>Sécurité désactivée :</S1E>
     <S1F>Réservé 3 (4 octets Hexadécimal) :</S1F>

@@ -12,6 +12,7 @@ namespace NARC
     {
         IPluginHost pluginHost;
         string tempFolder;
+        ARC narc;
 
         public void Inicializar(IPluginHost pluginHost)
         {
@@ -33,7 +34,7 @@ namespace NARC
         {
             if (archivo.ToUpper().EndsWith("UTILITY.BIN"))
             {
-                new Utility(pluginHost).Leer(archivo, idArchivo);
+                narc = new Utility(pluginHost).Leer(archivo, idArchivo);
                 return;
             }
 
@@ -51,6 +52,7 @@ namespace NARC
             }
 
             ARC arc = new ARC();
+            arc.file_id = idArchivo;
             BinaryReader br = new BinaryReader(System.IO.File.OpenRead(archivo));
 
             // Lee cabecera genérica e inicial:
@@ -153,6 +155,7 @@ namespace NARC
             br.Close();
 
             pluginHost.Set_Files(root);
+            narc = arc;
         }
         public Carpeta Jerarquizar_Carpetas(List<BTNF_MainEntry> entries, int idFolder, string nameFolder)
         {
@@ -199,13 +202,26 @@ namespace NARC
 
         public Control Show_Info(string archivo, int id)
         {
-            throw new NotImplementedException();
+            Leer(archivo, id);
+
+            if (new String(narc.id) == "NARC")
+            {
+                narc.file = Path.GetTempFileName();
+                File.Copy(archivo, narc.file, true);
+
+                return new iNARC(narc, pluginHost);
+            }
+
+            return new Control();
         }
     }
 
     #region Estructuras
     public struct ARC
     {
+        public int file_id;
+        public string file;
+
         public char[] id;           // Always NARC = 0x4E415243
         public UInt16 id_endian;    // Si 0xFFFE hay que darle la vuelta al id
         public UInt16 constant;     // Always 0x0100
