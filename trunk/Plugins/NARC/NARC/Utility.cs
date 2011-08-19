@@ -17,7 +17,7 @@ namespace NARC
             this.pluginHost = pluginHost;
         }
 
-        public void Leer(string archivo, int idArchivo)
+        public ARC Leer(string archivo, int idArchivo)
         {
             tempFolder = pluginHost.Get_TempFolder();
             // Determinamos la subcarpeta donde guardar los archivos descomprimidos.
@@ -33,6 +33,7 @@ namespace NARC
             }
 
             ARC arc = new ARC();
+            arc.file_id = idArchivo;
             BinaryReader br = new BinaryReader(System.IO.File.OpenRead(archivo));
 
             uint fntOffset = br.ReadUInt32();
@@ -112,6 +113,7 @@ namespace NARC
             br.Close();
 
             pluginHost.Set_Files(root);
+            return arc;
         }
         public Carpeta Jerarquizar_Carpetas(List<BTNF_MainEntry> entries, int idFolder, string nameFolder)
         {

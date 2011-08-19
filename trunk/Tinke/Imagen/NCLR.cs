@@ -17,7 +17,7 @@ namespace Tinke
             nclr.id = (uint)id;
 
             BinaryReader br = new BinaryReader(File.OpenRead(file));
-            Console.WriteLine(Tools.Helper.ObtenerTraduccion("NCLR","S0D"));
+            Console.WriteLine(Tools.Helper.ObtenerTraduccion("NCLR", "S0D"));
 
             nclr.cabecera.id = br.ReadChars(4);
             nclr.cabecera.endianess = br.ReadUInt16();
@@ -47,16 +47,17 @@ namespace Tinke
             br.ReadUInt16();
             pltt.unknown1 = br.ReadUInt32();
             pltt.tamañoPaletas = br.ReadUInt32();
-            pltt.nColores = br.ReadUInt32();
-            if (pltt.profundidad == ColorDepth.Depth8Bit) pltt.nColores = pltt.tamañoPaletas / 2;
+            uint colors_startOffset = br.ReadUInt32();
+            pltt.nColores = (pltt.profundidad == ColorDepth.Depth4Bit) ? 0x10 : pltt.tamañoPaletas / 2;
 
             pltt.paletas = new NTFP[pltt.tamañoPaletas / (pltt.nColores * 2)];
-            if (pltt.tamañoPaletas > pltt.tamaño || pltt.tamañoPaletas == 0x00) 
+            if (pltt.tamañoPaletas > pltt.tamaño || pltt.tamañoPaletas == 0x00)
                 pltt.paletas = new NTFP[pltt.tamaño / (pltt.nColores * 2)];
 
             Console.WriteLine("\t" + pltt.paletas.Length + ' ' + Tools.Helper.ObtenerTraduccion("NCLR", "S0F") +
                 ' ' + pltt.nColores + ' ' + Tools.Helper.ObtenerTraduccion("NCLR", "S10"));
 
+            br.BaseStream.Position = 0x18 + colors_startOffset;
             for (int i = 0; i < pltt.paletas.Length; i++)
                 pltt.paletas[i] = Paleta_NTFP(ref br, pltt.nColores);
 
@@ -65,12 +66,12 @@ namespace Tinke
         public static NTFP Paleta_NTFP(ref BinaryReader br, UInt32 colores)
         {
             NTFP ntfp = new NTFP();
-            
+
             ntfp.colores = Convertir.BGR555(br.ReadBytes((int)colores * 2));
-            
+
             return ntfp;
         }
-        
+
         /// <summary>
         /// Lee un archivo que incluye una paleta raw, es deicr, sólo contiene colores.
         /// La información adicional es inventada.
@@ -121,7 +122,7 @@ namespace Tinke
             bw.Write((ushort)0x00);
             bw.Write((uint)0x00);
             bw.Write(paleta.pltt.tamañoPaletas);
-            bw.Write(paleta.pltt.nColores);
+            bw.Write(0x10); // Colors start offset from 0x14
             for (int i = 0; i < paleta.pltt.paletas.Length; i++)
                 bw.Write(Convertir.ColorToBGR555(paleta.pltt.paletas[i].colores));
 
@@ -134,7 +135,7 @@ namespace Tinke
             BinaryReader br = new BinaryReader(File.OpenRead(bitmap));
             if (new String(br.ReadChars(2)) != "BM")
                 throw new NotSupportedException("Archivo no soportado, no es BITMAP");
-            
+
             paleta.cabecera.id = "RLCN".ToCharArray();
             paleta.cabecera.endianess = 0xFEFF;
             paleta.cabecera.constant = 0x0100;
@@ -174,6 +175,67 @@ namespace Tinke
             return paleta;
         }
 
+        public static NCLR Read_WinPal(string file, ColorDepth depth)
+        {
+            BinaryReader br = new BinaryReader(File.OpenRead(file));
+            NCLR palette = new NCLR();
+
+            palette.cabecera.id = br.ReadChars(4);  // RIFF
+            palette.cabecera.file_size = br.ReadUInt32();
+            palette.pltt.ID = br.ReadChars(4);  // PAL
+            br.ReadChars(4);    // data
+            br.ReadUInt32();   // unknown, always 0x00
+            br.ReadUInt16();   // unknown, always 0x0300
+            palette.pltt.nColores = br.ReadUInt16();
+            palette.pltt.profundidad = depth;
+            uint num_color_per_palette = (depth == ColorDepth.Depth4Bit ? 0x10 : palette.pltt.nColores);
+            palette.pltt.tamañoPaletas = num_color_per_palette * 2;
+
+            palette.pltt.paletas = new NTFP[(depth == ColorDepth.Depth4Bit ? palette.pltt.nColores / 0x10 : 1)];
+            for (int i = 0; i < palette.pltt.paletas.Length; i++)
+            {
+                palette.pltt.paletas[i].colores = new Color[num_color_per_palette];
+                for (int j = 0; j < num_color_per_palette; j++)
+                {
+                    Color newColor = Color.FromArgb(br.ReadByte(), br.ReadByte(), br.ReadByte());
+                    br.ReadByte(); // always 0x00
+                    palette.pltt.paletas[i].colores[j] = newColor;
+                }
+            }
+
+            br.Close();
+            return palette;
+        }
+        public static void Write_WinPal(string fileout, NCLR palette)
+        {
+            if (File.Exists(fileout))
+                File.Delete(fileout);
+            BinaryWriter bw = new BinaryWriter(File.OpenWrite(fileout));
+            int num_colors = 0;
+            for (int i = 0; i < palette.pltt.paletas.Length; i++)
+                num_colors += palette.pltt.paletas[i].colores.Length;
+
+            bw.Write(new char[] { 'R', 'I', 'F', 'F' });
+            bw.Write((uint)(0x10 + num_colors * 4));
+            bw.Write(new char[] { 'P', 'A', 'L', ' ' });
+            bw.Write(new char[] { 'd', 'a', 't', 'a' });
+            bw.Write((uint)0x00);
+            bw.Write((ushort)0x300);
+            bw.Write((ushort)(num_colors));
+            for (int i = 0; i < palette.pltt.paletas.Length; i++)
+            {
+                for (int j = 0; j < palette.pltt.paletas[i].colores.Length; j++)
+                {
+                    bw.Write(palette.pltt.paletas[i].colores[j].R);
+                    bw.Write(palette.pltt.paletas[i].colores[j].G);
+                    bw.Write(palette.pltt.paletas[i].colores[j].B);
+                    bw.Write((byte)0x00);
+                    bw.Flush();
+                }
+            }
+
+            bw.Close();
+        }
 
         public static Bitmap[] Mostrar(string file)
         {

@@ -60,31 +60,30 @@
   </English>
   <Français>
     <SoundControl>
-      <S00>Property</S00>
-      <S01>Value</S01>
-      <S02>Export</S02>
-      <S03>Import</S03>
-      <S04>Enable loop</S04>
-      <S05>Do you want to save the loop file also?</S05>
-      <S06>Chunk ID</S06>
-      <S07>Chunk size</S07>
-      <S08>Loop flag</S08>
-      <S09>Loop offset</S09>
+      <S00>Champ</S00>
+      <S01>Données</S01>
+      <S02>Exporter</S02>
+      <S03>Importer</S03>
+      <S04>Activer la boucle</S04>
+      <S05>Voulez-vous également sauvegarder l'archive en boucle ?</S05>
+      <S06>ID du fragment</S06>      <S07>Taille du fragment</S07>
+      <S08>Indicateur de boucle</S08>
+      <S09>Offset de la boucle</S09>
       <S0A>Format</S0A>
-      <S0B>Chunk ID</S0B>
-      <S0C>Chunk size</S0C>
-      <S0D>Audio format</S0D>
-      <S0E>Channels</S0E>
-      <S0F>Sample rate</S0F>
-      <S10>Byte rate</S10>
-      <S11>Block align</S11>
-      <S12>Bits per sample</S12>
-      <S13>Chunk ID</S13>
-      <S14>Chunk size</S14>
+      <S0B>ID du fragment</S0B>
+      <S0C>Taille du fragment</S0C>
+      <S0D>Format audio</S0D>
+      <S0E>Canaux</S0E>
+      <S0F>Taux d'échantillon</S0F>
+      <S10>Taux d'octet</S10>
+      <S11>Alignement du bloc</S11>
+      <S12>Bits par échantillon</S12>
+      <S13>ID du fragment</S13>
+      <S14>Taille du fragment</S14>
     </SoundControl>
     <Messages>
-      <S00>Converting sound file</S00>
-      <S01>Wait</S01>
+      <S00>Conversion de l'archive en boucle</S00>
+      <S01>Patientez</S01>
     </Messages>
   </Français>
 </Language>

@@ -36,8 +36,11 @@ namespace LAYTON
         public Control Show_Info()
         {
             // Los archivos tienen compresión LZ77, descomprimimos primero.
-            string temp = archivo + "nn"; // Para que no sea detectado como narc
-            File.Copy(archivo, temp);
+            string temp = archivo + "nn";
+            Byte[] compressFile = new Byte[(new FileInfo(archivo).Length) - 4];
+            Array.Copy(File.ReadAllBytes(archivo), 4, compressFile, 0, compressFile.Length); ;
+            File.WriteAllBytes(temp, compressFile);
+
             pluginHost.Descomprimir(temp);
             archivo = pluginHost.Get_Files().files[0].path;
             File.Delete(temp);

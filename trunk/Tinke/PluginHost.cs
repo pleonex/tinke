@@ -106,6 +106,8 @@ namespace Tinke
             extraidos = new Carpeta();
             return devuelta;
         }
+        public event Func<int, Carpeta> event_GetDecompressedFiles;
+        public Carpeta Get_DecompressedFiles(int id) { return event_GetDecompressedFiles(id); }
         public string Get_TempFolder()
         {
             return tempFolder;
@@ -116,35 +118,21 @@ namespace Tinke
             return xml.Element("Options").Element("Language").Value;
         }
 
-        public event Action<string, byte> DescomprimirEvent;
+        public event Action<string> DescomprimirEvent;
         public void Descomprimir(string archivo)
         {
-            DescomprimirEvent(archivo, 0x00);
+            DescomprimirEvent(archivo);
         }
         public void Descomprimir(byte[] datos)
         {
         	string temp = System.IO.Path.GetTempFileName();
         	System.IO.File.WriteAllBytes(temp, datos);
-        	DescomprimirEvent(temp, 0x00);
-        	System.IO.File.Delete(temp);
-        }
-        public void Descomprimir(byte[] datos, byte tag)
-        {
-        	string temp = System.IO.Path.GetTempFileName();
-        	System.IO.File.WriteAllBytes(temp, datos);
-        	DescomprimirEvent(temp, tag);
+        	DescomprimirEvent(temp);
         	System.IO.File.Delete(temp);
         }
 
         public event Action<int, string> ChangeFile_Event;
-        public void ChangeFile(int id, string newFile)
-        {
-            ChangeFile_Event(id, newFile);
-        }
-
-        public void Write_NCLR(NCLR nclr, string fileout) { Imagen_NCLR.Escribir(nclr, fileout); }
-        public void Write_NCGR(NCGR ncgr, string fileout) { Imagen_NCGR.Write(ncgr, fileout); }
-        public void Write_NSCR(NSCR nscr, string fileout) { Imagen_NSCR.Write(nscr, fileout); }
+        public void ChangeFile(int id, string newFile) { ChangeFile_Event(id, newFile); }
 
         public NCLR BitmapToPalette(string bitmap) { return Imagen_NCLR.BitmapToPalette(bitmap); }
         public NCGR BitmapToTile(string bitmap, Orden_Tiles tileOrder) { return Imagen_NCGR.BitmapToTile(bitmap, tileOrder); }

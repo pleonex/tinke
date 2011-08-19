@@ -59,11 +59,11 @@
       <S0A>Sauver WAV</S0A>
       <S0B>Importer</S0B>
       <S0C>Sauver SDAT</S0C>
-      <S0D>Change file</S0D>
+      <S0D>Changer d'archive</S0D>
     </iSDAT>
     <Messages>
-      <S00>SDAT reading completed</S00>
-      <S01>Files: <b>{0}</b></S01>
+      <S00>Lecture des archives SDAT terminée</S00>
+      <S01>Archives : <b>{0}</b></S01>
     </Messages>
   </Français>
 </Language>

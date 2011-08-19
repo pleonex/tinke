@@ -15,8 +15,6 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  *
  * Programador: pleoNeX
- * Programa utilizado: Microsoft Visual C# 2010 Express
- * Fecha: 18/02/2011
  * 
  */
 using System;
@@ -1273,6 +1271,10 @@ namespace Tinke
              * Files...
             */
 
+            Thread espera = new Thread(ThreadEspera);
+            if (!isMono)
+                espera.Start("S05");
+
             #region Preparativos
             // Copia para no modificar el originial
             List<Archivo> origianlFiles = new List<Archivo>();
@@ -1281,26 +1283,21 @@ namespace Tinke
             // Quitamos archivos especiales que no cuentan en la ROM
             int id = accion.Search_File("fnt.bin").files[0].id;
             accion.Remove_File("fnt.bin", accion.Root);
-            accion.Recursivo_BajarID(id, accion.Root);
 
             id = accion.Search_File("fat.bin").files[0].id;
             accion.Remove_File("fat.bin", accion.Root);
-            accion.Recursivo_BajarID(id, accion.Root);
 
             id = accion.Search_File("arm9.bin").files[0].id;
             accion.Remove_File("arm9.bin", accion.Root);
-            accion.Recursivo_BajarID(id, accion.Root);
 
             id = accion.Search_File("arm7.bin").files[0].id;
             accion.Remove_File("arm7.bin", accion.Root);
-            accion.Recursivo_BajarID(id, accion.Root);
             
             Carpeta y9 = accion.Search_File("y9.bin");
             if (y9.files.Count > 0)
             {
                 id = y9.files[0].id;
                 accion.Remove_File("y9.bin", accion.Root);
-                accion.Recursivo_BajarID(id, accion.Root);
             }
 
             Carpeta y7 = accion.Search_File("y7.bin");
@@ -1308,7 +1305,6 @@ namespace Tinke
             {
                 id = y7.files[0].id;
                 accion.Remove_File("y7.bin", accion.Root);
-                accion.Recursivo_BajarID(id, accion.Root);
             }
 
             // Obtenemos el último ID de archivo sin los especiales
@@ -1418,7 +1414,10 @@ namespace Tinke
             Nitro.NDS.EscribirArchivos(files, accion.ROMFile, accion.Root, (int)romInfo.Cabecera.FATsize / 0x08);
             Console.Write("<br>");
             #endregion
-            
+
+            if (!isMono)
+                espera.Abort();
+
             // Obtenemos el nuevo archivo para guardar
             SaveFileDialog o = new SaveFileDialog();
             o.AddExtension = true;
@@ -1427,6 +1426,10 @@ namespace Tinke
             o.OverwritePrompt = true;
             if (o.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
+                espera = new Thread(ThreadEspera);
+                if (!isMono)
+                    espera.Start("S06");
+
                 Console.WriteLine(Tools.Helper.ObtenerTraduccion("Messages", "S0D"), o.FileName);
                 bw = new BinaryWriter(new FileStream(o.FileName, FileMode.Create));
 
@@ -1470,6 +1473,9 @@ namespace Tinke
 
             debug.Añadir_Texto(sb.ToString());
             sb.Length = 0;
+
+            if (!isMono)
+                espera.Abort();
         }
         private void btnImport_Click(object sender, EventArgs e)
         {
@@ -1497,6 +1503,8 @@ namespace Tinke
                     newFile.path = o.FileName;
                 newFile.formato = selectedFile.formato;
                 newFile.size = (uint)new FileInfo(o.FileName).Length;
+                if ((String)newFile.tag == "Descomprimido")
+                    newFile.tag = String.Format("{0:X}", newFile.size).PadLeft(8, '0') + newFile.path;
 
                 accion.Change_File(accion.IDSelect, newFile, accion.Root);
             }

@@ -160,6 +160,8 @@
     <S02>Loading the file system...</S02>
     <S03>Extracting files...</S03>
     <S04>Uncompressing files...</S04>
+    <S05>Creating new ROM...</S05>
+    <S06>Saving new ROM...</S06>
   </Espera>
   <Messages>
     <S01>Error</S01>
@@ -199,6 +201,13 @@
     <S1C>To see this file you must double click on a palette and tile file</S1C>
     <S1D>By the moment common compression don't show information.</S1D>
     <S1E>To see this file you must double click on a palette, tile and cell file</S1E>
+    <S1F>
+      The program need the following files:
+      {0}
+
+      Please, download the program from the web page:
+      http://code.google.com/p/tinke
+    </S1F>
   </Messages>
   <NCLR>
     <S01># palette:</S01>
@@ -257,6 +266,17 @@
     <S20>Remove</S20>
     <S21>Import</S21>
   </NCGR>
+  <NSCR>
+    <S00>Map options</S00>
+    <S01>Map width:</S01>
+    <S02>Map height:</S02>
+    <S03>Fill image</S03>
+    <S04>Start tile:</S04>
+    <S05>Fill with tile:</S05>
+    <S06>Accept</S06>
+    <S07>Width image:</S07>
+    <S08>Height image:</S08>
+  </NSCR>
   <NCER>
     <S01>Bank:</S01>
     <S02>Show all banks</S02>
@@ -326,36 +346,80 @@
     <S1D>Animations</S1D>
     <S1E>Double-click to the animation to see it in full size</S1E>
   </NANR>
-  <Compression>
-    <!-- LZ77 -->
-    <S00>Size is over the limit (>2GB).</S00>
-    <S01>File {0:s} is not a valid LZ77 file.</S01>
-    <S02>{0:s} will be larger than 0x{1:x} (0x{2:x}) and will not be decompressed</S02>
-    <S03>Decompressing {0:s}. Decompressed size 0x{1:x}</S03>
-    <S04>Incompleted data.</S04>
-    <S05>Cannot go back more than already written</S05>
-    <S06>Too many data in file; current INPOS = {0:x}</S06>
-    <S07>LZ77 file decompressed {0:s}</S07>
-    <!-- HUFFMAN -->
-    <S08>Invalid huffman compressed file; invalid tag {0:x}</S08>
-    <S09>Invalid size data {0:x}</S09>
-    <S0A>Incompleted data</S0A>
-    <S0B>Too many data, str={0:s}, idx={1:g}/{2:g}</S0B>
-    <S0C>First 4 bits of data should be 0 if dataSize = 4</S0C>
-    <S0D>HUFFMAN file decompressed {0:s}</S0D>
-    <!-- LZSS -->
-    <S0E>File {0:s} is not a valid LZSS-11 compressed file.</S0E>
-    <S0F>LZSS-11 file decompressed {0:s}</S0F>
+  <DSDecmp>
+    <!-- LZ10 -->
+    <S00>
+      The provided stream is not a valid LZ-0x10 compressed stream.
+      Invalid type 0x{0}
+    </S00>
+    <S01>
+      Cannot go back more than already written.
+      DISP = 0x{0}, #written bytes = 0x{1} at 0x{2}
+    </S01>
+    <S02>disp is too large</S02>
+    <!-- LZ11 -->
+    <S03>
+      The provided stream is not a valid LZ-0x11 compressed stream.
+      Invalid type 0x{1}
+    </S03>
+    <S04>
+      Cannot go back more than already written. DISP = {0},
+      #written bytes = 0x{1} before 0x{2} with indicator 0x{3}
+    </S04>
+    <!-- Huffman -->
+    <S05>
+      The provided stream is not a valid Huffman compressed stream.
+      Invalid type 0x{0}; unknown block size.
+    </S05>
+    <S06>The stream is too short to contain a Huffman tree.</S06>
+    <S07>The Huffman tree is too large for the given input stream.</S07>
+    <S08>Unknown block size {0}</S08>
+    <S09>Unhandled blocksize {0}</S09>
+    <S0A>Reference to an undefined node in the huffman tree.</S0A>
     <!-- RLE -->
-    <S10>File {0:s} is not a valid RLE compressed file.</S10>
-    <S11>RLE file decompressed {0:s}</S11>
-    <!-- NONE -->
-    <S12>File {0:s} is not a valid NONE file, it does not have the NONE-tag as first byte</S12>
-    <S13>File {0:s} is not a valid NONE file, the decompression size shold be the file size - 4</S13>
-    <S14>NONE file decompressed {0:s}</S14>
-    <!-- Basico -->
-    <S15>The file couldn't been decompressed correctly {0:s}</S15>
-  </Compression>
+    <S0B>
+      The provided stream is not a valid RLE compressed stream.
+      Invalid type 0x{0}
+    </S0B>
+    <S0C>
+      The given stream is not a valid RLE stream;
+      the output length does not match the provided plaintext length.
+    </S0C>
+    <!-- LZOvl -->
+    <S0D>
+      Cannot go back more than already written;
+      attempt to go back 0x{0} when only 0x{1}
+      bytes have been written.
+    </S0D>
+    <!-- Exceptions -->
+    <S0E>
+      The compression ratio is not high enough to fit the input
+      in a single compressed file.
+    </S0E>
+    <S0F>
+      The input contains more data than necessary.
+      Only used 0x{0} of 0x{1} bytes
+    </S0F>
+    <S10>
+      The end of the stream was reached before the
+      given amount of data was read.
+    </S10>
+    <S11>Not enough data avalible; 0x{0} of {1} bytes written.</S11>
+    <!-- CompressionControl -->
+    <S12>Original compressed file: </S12>
+    <S13>New compression:</S13>
+    <S14>None</S14>
+    <S15>Compression type:</S15>
+    <S16>Use "Look ahead" methods</S16>
+    <S17>Compress</S17>
+    <S18>Compress with the best compression</S18>
+    <!-- Main -->
+    <S19>{0} - compressed {1} to {2}</S19>
+    <S1A>The file could not be compressed in any format.</S1A>
+    <S1B>Could not decompress {0}; no matching compression method found.</S1B>
+    <S1C>{0} - decompressed {1} to {2}</S1C>
+    <S1D>Could not decompress using the {0}; {1}</S1D>
+  </DSDecmp>
   <EditRomInfo>
     <S00>Header and banner editor</S00>
     <S01>Save</S01>

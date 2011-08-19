@@ -292,10 +292,29 @@ namespace Tinke
                 if (isMap)
                 {
                     NSCR newMap;
+
+                    int width, heigth;
                     if (tile.orden == Orden_Tiles.Horizontal)
-                        newMap = Imagen_NSCR.Create_BasicMap(tile.rahc.nTiles, tile.rahc.nTilesX * 8, tile.rahc.nTilesY * 8);
+                    {
+                        width = tile.rahc.nTilesX * 8;
+                        heigth = tile.rahc.nTilesY * 8;
+                    }
                     else
-                        newMap = Imagen_NSCR.Create_BasicMap(tile.rahc.nTiles, tile.rahc.nTilesX, tile.rahc.nTilesY);
+                    {
+                        width = tile.rahc.nTilesX;
+                        heigth = tile.rahc.nTilesY;
+                    }
+
+                    MapOptions mapOptions = new MapOptions(width, heigth);
+                    mapOptions.ShowDialog();
+                    width = mapOptions.ImagenWidth;
+                    heigth = mapOptions.ImageHeight;
+
+                    if (mapOptions.FillTiles)
+                        newMap = Imagen_NSCR.Create_BasicMap(width, heigth, mapOptions.StartFillTiles, mapOptions.FillTilesWith);
+                    else
+                        newMap = Imagen_NSCR.Create_BasicMap(tile.rahc.nTiles, width, heigth);
+
                     newMap.id = map.id;
                     map = newMap;
 
@@ -319,8 +338,16 @@ namespace Tinke
                 }
                 else
                 {
-                    numericWidth.Value = tile.rahc.nTilesX * 8;
-                    numericHeight.Value = tile.rahc.nTilesY * 8;
+                    if (isMap)
+                    {
+                        numericWidth.Value = map.section.width;
+                        numericHeight.Value = map.section.height;
+                    }
+                    else
+                    {
+                        numericWidth.Value = tile.rahc.nTilesX * 8;
+                        numericHeight.Value = tile.rahc.nTilesY * 8;
+                    }
                     numericHeight.Minimum = 8;
                     numericWidth.Minimum = 8;
                     numericWidth.Increment = 8;
@@ -357,7 +384,7 @@ namespace Tinke
 
             ven.Controls.Add(pcBox);
             ven.BackColor = SystemColors.GradientInactiveCaption;
-            ven.Text = Tools.Helper.ObtenerTraduccion("NCGR","S19");
+            ven.Text = Tools.Helper.ObtenerTraduccion("NCGR", "S19");
             ven.AutoScroll = true;
             ven.MaximumSize = new Size(1024, 700);
             ven.ShowIcon = false;

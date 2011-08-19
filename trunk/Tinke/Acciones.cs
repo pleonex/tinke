@@ -15,8 +15,6 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  *
  * Programador: pleoNeX
- * Programa utilizado: Microsoft Visual C# 2010 Express
- * Fecha: 18/02/2011
  * 
  */
 using System;
@@ -57,10 +55,12 @@ namespace Tinke
 
             formatList = new List<IPlugin>();
             pluginHost = new PluginHost();
-            pluginHost.DescomprimirEvent += new Action<string, byte>(pluginHost_DescomprimirEvent);
+            pluginHost.DescomprimirEvent += new Action<string>(pluginHost_DescomprimirEvent);
             pluginHost.ChangeFile_Event += new Action<int, string>(pluginHost_ChangeFile_Event);
+            pluginHost.event_GetDecompressedFiles += new Func<int, Carpeta>(pluginHost_event_GetDecompressedFiles);
             Cargar_Plugins();
         }
+
         public void Cargar_Plugins()
         {
             if (!Directory.Exists(Application.StartupPath + Path.DirectorySeparatorChar + "Plugins"))
@@ -246,10 +246,6 @@ namespace Tinke
                         return;
                     }
                 }
-
-                if (ext[0] == LZ77_TAG || ext[0] == LZSS_TAG || ext[0] == RLE_TAG || ext[0] == HUFF_TAG)
-                    MessageBox.Show(Tools.Helper.ObtenerTraduccion("Messages", "S1A"), "",  MessageBoxButtons.OK, MessageBoxIcon.Information);
-
             }
             catch (Exception e)
             {
@@ -266,27 +262,35 @@ namespace Tinke
                 {
                     pluginHost.Set_NCLR(Imagen_NCLR.Leer(tempFile, idSelect));
                     File.Delete(tempFile);
+                    return;
                 }
                 if (selectFile.name.EndsWith(".NCGR") || new String(Encoding.ASCII.GetChars(ext)) == "NCGR" || new String(Encoding.ASCII.GetChars(ext)) == "RGCN")
                 {
                     pluginHost.Set_NCGR(Imagen_NCGR.Leer(tempFile, idSelect));
                     File.Delete(tempFile);
+                    return;
                 }
                 else if (selectFile.name.EndsWith(".NSCR") || new String(Encoding.ASCII.GetChars(ext)) == "NSCR" || new String(Encoding.ASCII.GetChars(ext)) == "RCSN")
                 {
                     pluginHost.Set_NSCR(Imagen_NSCR.Leer(tempFile, idSelect));
                     File.Delete(tempFile);
+                    return;
                 }
                 else if (selectFile.name.EndsWith(".NCER") || new String(Encoding.ASCII.GetChars(ext)) == "NCER" || new String(Encoding.ASCII.GetChars(ext)) == "RECN")
                 {
                     pluginHost.Set_NCER(Imagen_NCER.Leer(tempFile, idSelect));
                     File.Delete(tempFile);
+                    return;
                 }
                 else if (selectFile.name.EndsWith(".NANR") || new String(Encoding.ASCII.GetChars(ext)) == "NANR" || new String(Encoding.ASCII.GetChars(ext)) == "RNAN")
                 {
                     pluginHost.Set_NANR(Imagen_NANR.Leer(tempFile, idSelect));
                     File.Delete(tempFile);
+                    return;
                 }
+
+                if (DSDecmp.Main.Get_Format(tempFile) != DSDecmp.FormatsType.Invalid)
+                    MessageBox.Show(Tools.Helper.ObtenerTraduccion("Messages", "S1A"), "", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception e)
             {
@@ -623,8 +627,20 @@ namespace Tinke
 
 
             if (currFolder.folders is List<Carpeta>)
-                foreach (Carpeta subFolder in currFolder.folders)
-                    Change_File(id, fileChanged, subFolder);
+            {
+                for (int i = 0; i < currFolder.folders.Count; i++)
+                {
+                    if (currFolder.folders[i].id == id) // It's a decompressed file
+                    {
+                        Carpeta newFolder = currFolder.folders[i];
+                        newFolder.tag = fileChanged.tag;
+                        currFolder.folders[i] = newFolder;
+                        isNewRom = true;
+                    }
+                    else
+                        Change_File(id, fileChanged, currFolder.folders[i]);
+                }
+            }
         }
         void pluginHost_ChangeFile_Event(int id, string newFilePath)
         {
@@ -642,6 +658,9 @@ namespace Tinke
                 newFile.path = newFilePath;
             newFile.formato = oldFile.formato;
             newFile.size = (uint)new FileInfo(newFilePath).Length;
+            newFile.tag = oldFile.tag;
+            if ((String)newFile.tag == "Descomprimido")
+                newFile.tag = String.Format("{0:X}", newFile.size).PadLeft(8, '0') + newFile.path;
 
             Change_File(id, newFile, root);
         }
@@ -708,11 +727,15 @@ namespace Tinke
         {
             return Recursivo_Carpeta(name, root);
         }
-
         public Carpeta Select_Folder()
         {
             return Recursivo_Carpeta(idSelect, root);
         }
+        public Carpeta Search_Folder(int id)
+        {
+            return Recursivo_Carpeta(id, root);
+        }
+
         private Archivo Recursivo_Archivo(int id, Carpeta currFolder)
         {
             if (currFolder.id == id) // Archivos descomprimidos
@@ -1066,9 +1089,14 @@ namespace Tinke
                 currFile.name == "ARM9.BIN" || currFile.name == "ARM7.BIN" || currFile.name == "Y9.BIN" || currFile.name == "Y7.BIN")
                 return Formato.Sistema;
 
-            if (ext[0] == LZ77_TAG || ext[0] == LZSS_TAG || ext[0] == RLE_TAG || ext[0] == HUFF_TAG ||
-                new String(System.Text.Encoding.ASCII.GetChars(ext)) == "LZ77")
+            String tempFile = Path.GetTempFileName();
+            Save_File(currFile, tempFile);
+            if (DSDecmp.Main.Get_Format(tempFile) != DSDecmp.FormatsType.Invalid)
+            {
+                File.Delete(tempFile);
                 return Formato.Comprimido;
+            }
+            File.Delete(tempFile);
 
             return Formato.Desconocido;
         }
@@ -1114,9 +1142,14 @@ namespace Tinke
                 currFile.name == "ARM9.BIN" || currFile.name == "ARM7.BIN" || currFile.name == "Y9.BIN" || currFile.name == "Y7.BIN")
                 return Formato.Sistema;
 
-            if (ext[0] == LZ77_TAG || ext[0] == LZSS_TAG || ext[0] == RLE_TAG || ext[0] == HUFF_TAG ||
-                new String(System.Text.Encoding.ASCII.GetChars(ext)) == "LZ77")
+            String tempFile = Path.GetTempFileName();
+            Save_File(currFile, tempFile);
+            if (DSDecmp.Main.Get_Format(tempFile) != DSDecmp.FormatsType.Invalid)
+            {
+                File.Delete(tempFile);
                 return Formato.Comprimido;
+            }
+            File.Delete(tempFile);
 
             return Formato.Desconocido;
         }
@@ -1163,8 +1196,7 @@ namespace Tinke
                 name == "ARM9.BIN" || name == "ARM7.BIN")
                 return Formato.Sistema;
 
-            if (ext[0] == LZ77_TAG || ext[0] == LZSS_TAG || ext[0] == RLE_TAG || ext[0] == HUFF_TAG ||
-                new String(System.Text.Encoding.ASCII.GetChars(ext)) == "LZ77")
+            if (DSDecmp.Main.Get_Format(file) != DSDecmp.FormatsType.Invalid)
                 return Formato.Comprimido;
 
             return Formato.Desconocido;
@@ -1223,12 +1255,12 @@ namespace Tinke
                     }
                 }
 
-                if (ext[0] == LZ77_TAG || ext[0] == LZSS_TAG || ext[0] == RLE_TAG || ext[0] == HUFF_TAG ||
-                    new String(System.Text.Encoding.ASCII.GetChars(ext)) == "LZ77")
+                DSDecmp.FormatsType compressFormat = DSDecmp.Main.Get_Format(tempFile);
+                if (compressFormat != DSDecmp.FormatsType.Invalid)
                 {
                     FileInfo info = new FileInfo(tempFile);
                     String uncompFile = info.DirectoryName + Path.DirectorySeparatorChar + "un_" + info.Name;
-                    Compresion.Basico.Decompress(tempFile, uncompFile);
+                    DSDecmp.Main.Decompress(tempFile, uncompFile, compressFormat);
                     if (!File.Exists(uncompFile))
                         throw new Exception(Tools.Helper.ObtenerTraduccion("Sistema", "S36"));
 
@@ -1441,7 +1473,7 @@ namespace Tinke
         /// </summary>
         /// <param name="archivo">Archivo a descomprimir</param>
         /// <returns>Ruta de la carpeta donde se encuentran los archivos descomprimidos</returns>
-        void pluginHost_DescomprimirEvent(string arg, byte tag)
+        void pluginHost_DescomprimirEvent(string arg)
         {
             BinaryReader br = new BinaryReader(File.OpenRead(arg));
             byte[] ext = br.ReadBytes(4);
@@ -1460,23 +1492,10 @@ namespace Tinke
                 // Si no hay plugins disponibles, se descomprime con el método normal
                 FileInfo info = new FileInfo(arg);
                 Directory.CreateDirectory(info.DirectoryName + Path.DirectorySeparatorChar + "un");
-                switch (tag) {
-                	case LZ77_TAG:
-                		Compresion.LZ77.DecompressLZ77(arg, info.DirectoryName + Path.DirectorySeparatorChar + "un" + Path.DirectorySeparatorChar + info.Name);
-                		break;
-                	case LZSS_TAG:
-                		Compresion.LZSS.Decompress11LZS(arg, info.DirectoryName + Path.DirectorySeparatorChar + "un" + Path.DirectorySeparatorChar + info.Name);
-                		break;
-                	case HUFF_TAG:
-                		Compresion.Huffman.DecompressHuffman(arg, info.DirectoryName + Path.DirectorySeparatorChar + "un" + Path.DirectorySeparatorChar + info.Name);
-                		break;
-                	case RLE_TAG :
-                		Compresion.RLE.DecompressRLE(arg, info.DirectoryName + Path.DirectorySeparatorChar + "un" + Path.DirectorySeparatorChar + info.Name);
-                		break;
-                	default:
-                		Compresion.Basico.Decompress(arg, info.DirectoryName + Path.DirectorySeparatorChar + "un" + Path.DirectorySeparatorChar + info.Name);
-                		break;
-                }
+                
+                DSDecmp.FormatsType compressFormat = DSDecmp.Main.Get_Format(arg);
+                DSDecmp.Main.Decompress(arg, info.DirectoryName + Path.DirectorySeparatorChar + "un" + Path.DirectorySeparatorChar +  info.Name);
+
                 Archivo file = new Archivo();
                 file.name = new FileInfo(arg).Name;
                 file.path = info.DirectoryName + Path.DirectorySeparatorChar + "un" + Path.DirectorySeparatorChar + info.Name;
@@ -1494,11 +1513,71 @@ namespace Tinke
         Continuar:
             return;
         }
+        Carpeta pluginHost_event_GetDecompressedFiles(int id)
+        {
+            Carpeta compresFile = Search_Folder(id);
+
+            Carpeta decompressedFiles = new Carpeta();
+            decompressedFiles.files = new List<Archivo>();
+            decompressedFiles.folders = new List<Carpeta>();
+            decompressedFiles.id = 0xF000; // Null value
+
+            Get_DecompressedFiles(compresFile, decompressedFiles);
+            Get_LowestID(decompressedFiles, ref decompressedFiles.id);
+
+            return decompressedFiles;
+        }
+        void Get_DecompressedFiles(Carpeta currFolder, Carpeta decompressedFiles)
+        {
+            if (currFolder.files is List<Archivo>)
+            {
+                foreach (Archivo archivo in currFolder.files)
+                {
+                    decompressedFiles.files.Add(archivo);
+                }
+            }
+
+
+            if (currFolder.folders is List<Carpeta>)
+            {
+                foreach (Carpeta subFolder in currFolder.folders)
+                {
+                    Carpeta currDecompressed = new Carpeta();
+                    currDecompressed.files = new List<Archivo>();
+                    currDecompressed.folders = new List<Carpeta>();
+                    currDecompressed.id = subFolder.id;
+                    currDecompressed.name = subFolder.name;
+
+                    if ((String)subFolder.tag != "")
+                    {
+                        Archivo file = Search_File(subFolder.id);
+                        decompressedFiles.files.Add(file);
+                    }
+                    else
+                    {
+                        Get_DecompressedFiles(subFolder, currDecompressed);
+                        decompressedFiles.folders.Add(currDecompressed);
+                    }
+                }
+            }
+        }
+        void Get_LowestID(Carpeta currFolder, ref ushort id)
+        {
+            if (currFolder.files is List<Archivo>)
+                foreach (Archivo archivo in currFolder.files)
+                    if (archivo.id < id)
+                        id = archivo.id;
+
+
+            if (currFolder.folders is List<Carpeta>)
+                foreach (Carpeta subFolder in currFolder.folders)
+                    Get_LowestID(subFolder, ref id);
+        }
 
         public void Save_File(int id, string outFile)
         {
             // Guardamos el archivo fuera del sistema de ROM
-            Archivo selectFile = Select_File();
+            Archivo selectFile = Search_File(id);
 
             if (selectFile.offset != 0x0)
             {
@@ -1513,6 +1592,23 @@ namespace Tinke
                 File.Copy(selectFile.path, outFile, true);
             }
         }
+        public void Save_File(Archivo currfile, string outFile)
+        {
+            // Guardamos el archivo fuera del sistema de ROM
+            if (currfile.offset != 0x0)
+            {
+                BinaryReader br = new BinaryReader(File.OpenRead(file));
+                br.BaseStream.Position = currfile.offset;
+                File.WriteAllBytes(outFile, br.ReadBytes((int)currfile.size));
+                br.Close();
+            }
+            else
+            {
+                FileInfo info = new FileInfo(currfile.path);
+                File.Copy(currfile.path, outFile, true);
+            }
+        }
+
 
         public Control See_File()
         {
@@ -1562,13 +1658,6 @@ namespace Tinke
                         File.Delete(tempFile);
                         return resultado;
                     }
-                }
-
-                if (ext[0] == LZ77_TAG || ext[0] == LZSS_TAG || ext[0] == RLE_TAG || ext[0] == HUFF_TAG)
-                {
-                    File.Delete(tempFile);
-                    MessageBox.Show(Tools.Helper.ObtenerTraduccion("Messages", "S1D"));
-                    return new Control();
                 }
             }
             catch (Exception e)
@@ -1665,6 +1754,14 @@ namespace Tinke
                         return new Control();
                     }
                 }
+
+                DSDecmp.FormatsType compressFormat = DSDecmp.Main.Get_Format(tempFile);
+                if (compressFormat != DSDecmp.FormatsType.Invalid)
+                {
+                    Control resultado = new DSDecmp.CompressionControl(idSelect, compressFormat, pluginHost);
+                    File.Delete(tempFile);
+                    return resultado;
+                }
             }
             catch (Exception e)
             {
@@ -1705,13 +1802,6 @@ namespace Tinke
                         File.Delete(archivo);
                         return resultado;
                     }
-                }
-
-                if (ext[0] == LZ77_TAG || ext[0] == LZSS_TAG || ext[0] == RLE_TAG || ext[0] == HUFF_TAG)
-                {
-                    File.Delete(archivo);
-                    MessageBox.Show(Tools.Helper.ObtenerTraduccion("Messages", "S1D"));
-                    return new Control();
                 }
             }
             catch (Exception e)
@@ -1807,6 +1897,14 @@ namespace Tinke
                         MessageBox.Show(Tools.Helper.ObtenerTraduccion("Messages", "S1E"));
                         return new Control();
                     }
+                }
+
+                DSDecmp.FormatsType compressFormat = DSDecmp.Main.Get_Format(archivo);
+                if (compressFormat != DSDecmp.FormatsType.Invalid)
+                {
+                    Control resultado = new DSDecmp.CompressionControl(idSelect, compressFormat, pluginHost);
+                    File.Delete(archivo);
+                    return resultado;
                 }
             }
             catch (Exception e)

@@ -1,9 +1,15 @@
 0.7.5
+*** Improved the plugin of Nitro compression (DSDecmp proyect by Barubary)
 *** Sound plugin added with SADL audio support
-*** Plugin game TOTTEMPEST (Tales Of The Tempest) added with format support: APA, ANA, ASC and BNM
+*** Added control to compress NARC files
+*** Added control to compress Nitro compress format files
+* Added support to japanese file names (it fixes the error opening some NDS games)
+* Added control with options of new maps
 * Added button in SDAT plugin to change files
 * Fixed problem with the import (wav to strm) methods in SDAT plugin
-* Improved the french translation (by Valioukha)
+* Improved the french translation
+* Added import and export palettes files to Windows palettes
+* Fixed problems saving new NCLR files
 * Fixed minors problems
 
 0.7.4 (public release):

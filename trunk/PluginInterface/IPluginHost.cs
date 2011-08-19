@@ -76,26 +76,20 @@ namespace PluginInterface
         // Para descomprimir archivos
         void Set_Files(Carpeta archivos);
         Carpeta Get_Files();
+        Carpeta Get_DecompressedFiles(int id); // Get all the files and folder that have been decompressed (to compress them)
 
         string Get_Language();
         string Get_TempFolder();
 
-        event Action<string, byte>  DescomprimirEvent;
         void Descomprimir(string archivo);
         void Descomprimir(byte[] datos);
-        void Descomprimir(byte[] datos, byte tag);
 
-        event Action<int, string> ChangeFile_Event;
         /// <summary>
         /// Change the content of a file
         /// </summary>
         /// <param name="id">The id of the file to change</param>
         /// <param name="newFile">The path where the new file is</param>
         void ChangeFile(int id, string newFile);
-
-        void Write_NCLR(NCLR nclr, string fileout);
-        void Write_NCGR(NCGR ncgr, string fileout);
-        void Write_NSCR(NSCR nscr, string fileout);
 
         NCLR BitmapToPalette(string bitmap);
         NCGR BitmapToTile(string bitmap, Orden_Tiles tileOrder);

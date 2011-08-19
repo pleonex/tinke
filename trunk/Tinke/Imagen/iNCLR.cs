@@ -63,7 +63,6 @@ namespace Tinke
             data = Convertir.ColorToBGR555(paleta.pltt.paletas[0].colores);
             oldDepth = paleta.pltt.profundidad;
         }
-
         private void LeerIdioma()
         {
             System.Xml.Linq.XElement xml = Tools.Helper.ObtenerTraduccion("NCLR");
@@ -99,13 +98,130 @@ namespace Tinke
             listProp.Items[4].SubItems.Add(paleta.pltt.tamañoPaletas.ToString());
         }
 
+        private void numericStartByte_ValueChanged(object sender, EventArgs e)
+        {
+            Byte[] temp = new Byte[data.Length - (int)numericStartByte.Value];
+            Array.Copy(data, (int)numericStartByte.Value, temp, 0, temp.Length);
+
+            paleta.pltt.paletas[(int)nPaleta.Value - 1].colores = Convertir.BGR555(temp);
+            pluginHost.Set_NCLR(paleta);
+
+            ShowInfo();
+            paletas = Imagen_NCLR.Mostrar(paleta);
+            paletaBox.Image = paletas[0];
+            nPaleta.Maximum = paleta.pltt.paletas.Length;
+            nPaleta.Minimum = 1;
+            nPaleta.Value = 1;
+        }
         private void nPaleta_ValueChanged(object sender, EventArgs e)
         {
             paletaBox.Image = paletas[(int)nPaleta.Value - 1];
             data = Convertir.ColorToBGR555(paleta.pltt.paletas[(int)nPaleta.Value - 1].colores);
             numericStartByte.Value = 0;
         }
+        private void btnConverter_Click(object sender, EventArgs e)
+        {
+            numericStartByte.Value = 0;
 
+            if (oldDepth == ColorDepth.Depth4Bit) // Convert to 8bpp
+            {
+                paleta.pltt = Convertir.Palette_4bppTo8bpp(paleta.pltt);
+                pluginHost.Set_NCLR(paleta);
+
+                ShowInfo();
+                paletas = Imagen_NCLR.Mostrar(paleta);
+                paletaBox.Image = paletas[0];
+                nPaleta.Maximum = 1;
+                nPaleta.Minimum = 1;
+                nPaleta.Value = 1;
+
+                data = Convertir.ColorToBGR555(paleta.pltt.paletas[0].colores);
+                oldDepth = ColorDepth.Depth8Bit;
+            }
+            else  // Convert to 4bpp
+            {
+                paleta.pltt = Convertir.Palette_8bppTo4bpp(paleta.pltt);
+                pluginHost.Set_NCLR(paleta);
+
+                ShowInfo();
+                paletas = Imagen_NCLR.Mostrar(paleta);
+                paletaBox.Image = paletas[0];
+                nPaleta.Maximum = paleta.pltt.paletas.Length;
+                nPaleta.Minimum = 1;
+                nPaleta.Value = 1;
+
+                data = Convertir.ColorToBGR555(paleta.pltt.paletas[0].colores);
+                oldDepth = ColorDepth.Depth4Bit;
+            }
+
+        }
+
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog o = new SaveFileDialog();
+            o.AddExtension = true;
+            o.CheckPathExists = true;
+            o.DefaultExt = ".png";
+            o.Filter = "Portable Network Graphics (*.png)|*.png|"
+                + "Window palette (*.pal)|*.pal";
+            o.OverwritePrompt = true;
+
+            if (o.ShowDialog() != DialogResult.OK)
+                return;
+
+            if (o.FilterIndex == 1)
+                paletaBox.Image.Save(o.FileName);
+            else if (o.FilterIndex == 2)
+                Imagen_NCLR.Write_WinPal(o.FileName, paleta);
+        }
+        private void btnImport_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog o = new OpenFileDialog();
+            o.CheckFileExists = true;
+            o.DefaultExt = "bmp";
+            o.Filter = "BitMaP (*.bmp)|*.bmp|" +
+                "Windows palette (*.pal)|*.pal";
+            o.Multiselect = false;
+            if (o.ShowDialog() == DialogResult.OK)
+            {
+                String paletteFile = System.IO.Path.GetTempFileName();
+                NCLR newPalette;
+                if (o.FilterIndex == 1)
+                {
+                    newPalette = Imagen_NCLR.BitmapToPalette(o.FileName);
+                    newPalette.id = paleta.id;
+                    paleta = newPalette;
+                }
+                else if (o.FilterIndex == 2)
+                {
+                    newPalette = Imagen_NCLR.Read_WinPal(o.FileName, paleta.pltt.profundidad);
+                    newPalette.id = paleta.id;
+                    paleta = newPalette;
+                }
+
+                pluginHost.Set_NCLR(paleta);
+                Imagen_NCLR.Escribir(paleta, paletteFile);
+                pluginHost.ChangeFile((int)paleta.id, paletteFile);
+
+                ShowInfo();
+                paletas = Imagen_NCLR.Mostrar(paleta);
+                paletaBox.Image = paletas[0];
+                nPaleta.Maximum = paletas.Length;
+                nPaleta.Minimum = 1;
+                nPaleta.Value = 1;
+                data = Convertir.ColorToBGR555(paleta.pltt.paletas[0].colores);
+                oldDepth = paleta.pltt.profundidad;
+            }
+        }
+
+        private void paletaBox_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (paletaBox.Image is Image)
+            {
+                Color color = ((Bitmap)paletaBox.Image).GetPixel(e.X, e.Y);
+                lblRGB.Text = "RGB: " + color.R + ", " + color.G + ", " + color.B;
+            }
+        }
         private void btnShow_Click(object sender, EventArgs e)
         {
             string trad = Tools.Helper.ObtenerTraduccion("NCLR").Element("S0C").Value;
@@ -144,110 +260,6 @@ namespace Tinke
             ven.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             ven.MaximizeBox = false;
             ven.Show();
-        }
-
-        private void btnSave_Click(object sender, EventArgs e)
-        {
-            SaveFileDialog o = new SaveFileDialog();
-            o.AddExtension = true;
-            o.CheckPathExists = true;
-            o.DefaultExt = ".png";
-            o.Filter = "Portable Network Graphics (*.png)|*.png";
-            o.OverwritePrompt = true;
-
-            if (o.ShowDialog() == DialogResult.OK)
-                paletaBox.Image.Save(o.FileName);
-        }
-
-        private void paletaBox_MouseClick(object sender, MouseEventArgs e)
-        {
-            if (paletaBox.Image is Image)
-            {
-                Color color = ((Bitmap)paletaBox.Image).GetPixel(e.X, e.Y);
-                lblRGB.Text = "RGB: " + color.R + ", " + color.G + ", " + color.B;
-            }
-        }
-
-        private void btnImport_Click(object sender, EventArgs e)
-        {
-            OpenFileDialog o = new OpenFileDialog();
-            o.CheckFileExists = true;
-            o.DefaultExt = "bmp";
-            o.Filter = "BitMaP (*.bmp)|*.bmp";
-            o.Multiselect = false;
-            if (o.ShowDialog() == DialogResult.OK)
-            {
-                NCLR newPalette = Imagen_NCLR.BitmapToPalette(o.FileName);
-                newPalette.id = paleta.id;
-                paleta = newPalette;
-
-                pluginHost.Set_NCLR(paleta);
-                String paletteFile = System.IO.Path.GetTempFileName();
-                Imagen_NCLR.Escribir(paleta, paletteFile);
-                pluginHost.ChangeFile((int)paleta.id, paletteFile);
-
-                ShowInfo();
-                paletas = Imagen_NCLR.Mostrar(paleta);
-                paletaBox.Image = paletas[0];
-                nPaleta.Maximum = paletas.Length;
-                nPaleta.Minimum = 1;
-                nPaleta.Value = 1;
-                data = Convertir.ColorToBGR555(paleta.pltt.paletas[0].colores);
-                oldDepth = paleta.pltt.profundidad;
-            }
-        }
-
-        private void numericStartByte_ValueChanged(object sender, EventArgs e)
-        {
-            Byte[] temp = new Byte[data.Length - (int)numericStartByte.Value];
-            Array.Copy(data, (int)numericStartByte.Value, temp, 0, temp.Length);
-
-            paleta.pltt.paletas[(int)nPaleta.Value - 1].colores = Convertir.BGR555(temp);
-            pluginHost.Set_NCLR(paleta);
-
-            ShowInfo();
-            paletas = Imagen_NCLR.Mostrar(paleta);
-            paletaBox.Image = paletas[0];
-            nPaleta.Maximum = paleta.pltt.paletas.Length;
-            nPaleta.Minimum = 1;
-            nPaleta.Value = 1;
-        }
-
-        private void btnConverter_Click(object sender, EventArgs e)
-        {
-            numericStartByte.Value = 0;
-
-            if (oldDepth == ColorDepth.Depth4Bit) // Convert to 8bpp
-            {
-                paleta.pltt = Convertir.Palette_4bppTo8bpp(paleta.pltt);
-                pluginHost.Set_NCLR(paleta);
-
-                ShowInfo();
-                paletas = Imagen_NCLR.Mostrar(paleta);
-                paletaBox.Image = paletas[0];
-                nPaleta.Maximum = 1;
-                nPaleta.Minimum = 1;
-                nPaleta.Value = 1;
-
-                data = Convertir.ColorToBGR555(paleta.pltt.paletas[0].colores);
-                oldDepth = ColorDepth.Depth8Bit;
-            }
-            else  // Convert to 4bpp
-            {
-                paleta.pltt = Convertir.Palette_8bppTo4bpp(paleta.pltt);
-                pluginHost.Set_NCLR(paleta);
-
-                ShowInfo();
-                paletas = Imagen_NCLR.Mostrar(paleta);
-                paletaBox.Image = paletas[0];
-                nPaleta.Maximum = paleta.pltt.paletas.Length;
-                nPaleta.Minimum = 1;
-                nPaleta.Value = 1;
-
-                data = Convertir.ColorToBGR555(paleta.pltt.paletas[0].colores);
-                oldDepth = ColorDepth.Depth4Bit;
-            }
-
         }
     }
 }

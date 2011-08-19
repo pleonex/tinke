@@ -164,6 +164,8 @@
     <S02>Cargando datos del juego...</S02>
     <S03>Extrayendo archivos...</S03>
     <S04>Descomprimiendo carpetas...</S04>
+    <S05>Creando nueva ROM...</S05>
+    <S06>Guardando nueva ROM...</S06>
   </Espera>
   <Messages>
     <S01>Error</S01>
@@ -212,6 +214,13 @@
       Para ver este archivo necesitas guardar la información (doble click sobre el archivo)
       de una paleta, una imagen (tiles) y una archivo de celdas
     </S1E>
+    <S1F>
+      Los siguientes archivos faltan
+      {0}
+      
+      Por favor descargue el programa de nuevo desde:
+      http://code.google.com/p/tinke
+    </S1F>
   </Messages>
   <NCLR>
     <S01>Nº de paleta:</S01>
@@ -273,6 +282,17 @@
     <S20>Quitar</S20>
     <S21>Importar</S21>
   </NCGR>
+  <NSCR>
+    <S00>Opciones del archivo Map</S00>
+    <S01>Ancho del map:</S01>
+    <S02>Alto del map:</S02>
+    <S03>Rellenar imagen</S03>
+    <S04>Tile de inicio:</S04>
+    <S05>Tile de relleno:</S05>
+    <S06>Aceptar</S06>
+    <S07>Ancho imagen:</S07>
+    <S08>Alto imagen:</S08>
+  </NSCR>
   <NCER>
     <S01>Banco:</S01>
     <S02>Mostrar todas los bancos</S02>
@@ -342,36 +362,80 @@
     <S1D>Animaciones</S1D>
     <S1E>Haz doble click en la animación para verla a tamaño real.</S1E>
   </NANR>
-  <Compression>
-    <!-- LZ77-->
-    <S00>Tamaño máximo excedido (>2GB).</S00>
-    <S01>El archivo {0:s} no tiene una compresión LZ77 válida.</S01>
-    <S02>El archivo {0:s} excede el tamaño máximo 0x{1:x} (0x{2:x}) y no puede ser descomprimido.</S02>
-    <S03>Descomprimiendo {0:s}. Tamaño descomprimido 0x{1:x}</S03>
-    <S04>Datos incompletos.</S04>
-    <S05>No se puede retroceder más. Fallo al descomprimir.</S05>
-    <S06>Demasiados datos en el archivo. Posición actual = {0:x}</S06>
-    <S07>Archivo LZ77 descomprimido {0:s}</S07>
-    <!-- HUFFMAN -->
-    <S08>Archivo con compresión huffman inválida, Tag {0:x}</S08>
-    <S09>Tamaño de datos no soportado {0:x}</S09>
-    <S0A>Faltan datos</S0A>
-    <S0B>Hay demasiados datos; str={0:s}, idx={1:g}/{2:g}</S0B>
-    <S0C>Los primeros 4 bits de datos deberían ser 0 si dataSize = 4</S0C>
-    <S0D>Archivo HUFFMAN descomprimido {0:s}</S0D>
-    <!-- LZSS -->
-    <S0E>El archivo {0:s} no tiene una compresión LZSS-11 válida.</S0E>
-    <S0F>Archivo LZSS-11 descomprimido {0:s}</S0F>
+  <DSDecmp>
+    <!-- LZ10 -->
+    <S00>
+      El archivo provisto no es un archivo LZ-0x10 comprimido válido.
+      Indicador inválido 0x{0}
+    </S00>
+    <S01>
+      No se puede retroceder más de lo escrito.
+      DISP = 0x{0}, #bytes escritos = 0x{1} en 0x{2}
+    </S01>
+    <S02>disp es demasiado largo</S02>
+    <!-- LZ11 -->
+    <S03>
+      El archivo provisto no es un archivo LZ-0x11 comprimido válido.
+      Indicador inválido 0x{0}
+    </S03>
+    <S04>
+      No se puede retroceder más de lo escrito. DISP = {0},
+      #bytes escritos = 0x{1} antes 0x{2} con el indicador 0x{3}
+    </S04>
+    <!-- Huffman -->
+    <S05>
+      El archivo provisto no es un archivo Huffman comprimido válido.
+      Indicador inválido 0x{0}; tamaño de block desconocido.
+    </S05>
+    <S06>No hay suficientes datos para contener una árbol Huffman.</S06>
+    <S07>El árbol Huffman es demasiado largo para el archivo dado.</S07>
+    <S08>Tamaño de bloque desconocido {0}</S08>
+    <S09>Tamaño de bloque no soportado {0}</S09>
+    <S0A>Referencia a un nodo no definido en el árbol huffman.</S0A>
     <!-- RLE -->
-    <S10>El archivo {0:s} no tiene una compresión RLE válida.</S10>
-    <S11>Archivo RLE descomprimido {0:s}</S11>
-    <!-- NONE -->
-    <S12>El archivo {0:s} no tiene tag válido como primer byte</S12>
-    <S13>El archivo {0:s} no es un archivo NONE válido, el tamaño descomprimido debería ser "tamaño del archivo - 4"</S13>
-    <S14>Archivo NONE descomprimido {0:s}</S14>
-    <!-- Basico -->
-    <S15>El archivo no pudo ser descomprimido correctamente {0:s}</S15>
-  </Compression>
+    <S0B>
+      El archivo provisto no es un archivo RLE comprimido válido.
+      Indicador inválido 0x{0}
+    </S0B>
+    <S0C>
+      El archivo dado no es un archivo RLE válido;
+      la longitud de salida no concuerda con la previseta.
+    </S0C>
+    <!-- LZOvl -->
+    <S0D>
+      No se puede retroceder más de lo escrito;
+      intento de retroceder 0x{0} cuando sólo 0x{1}
+      bytes habían sido escritos.
+    </S0D>
+    <!-- Exceptions -->
+    <S0E>
+      El radio de compresión no es lo suficientemente alto para meter la entrada en un
+      solo archivo comprimido.
+    </S0E>
+    <S0F>
+      La entrada contiene más datos de los necesarios.
+      Sólo se ha usado 0x{0} de 0x{1} bytes.
+    </S0F>
+    <S10>
+      Se ha alcanzado el final del archivo antes de ser
+      leído todos los datos necesarios.
+    </S10>
+    <S11>No hay suficientes datos disponibles; 0x{0} de {1} bytes escritos.</S11>
+    <!-- CompressionControl -->
+    <S12>Compresión del archivo de origen:</S12>
+    <S13>Nueva compresión:</S13>
+    <S14>Ninguna</S14>
+    <S15>Tipo de compresión:</S15>
+    <S16>Usar método "Look ahead"</S16>
+    <S17>Comprimir</S17>
+    <S18>Comprimir con la mejor compresión</S18>
+    <!-- Main -->
+    <S19>{0} - Archivo {1} comprimido a {2}</S19>
+    <S1A>El archivo no pudo ser comprimido en ningún formato.</S1A>
+    <S1B>No se pudo descomprimir {0}; no se ha encontrado ninguna compresión válida.</S1B>
+    <S1C>{0} - Archivo {1} descomprimido a {2}</S1C>
+    <S1D>No se pudo descomprimir usando el formato {0}; {1}</S1D>
+  </DSDecmp>
   <EditRomInfo>
     <S00>Editar cabecera y banner del juego</S00>
     <S01>Aceptar</S01>
