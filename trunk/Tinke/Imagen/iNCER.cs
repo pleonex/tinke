@@ -35,18 +35,21 @@ namespace Tinke
         NCGR tile;
         NCLR paleta;
 
+        IPluginHost pluginHost;
+
         public iNCER()
         {
             InitializeComponent();
             LeerIdioma();
         }
-        public iNCER(NCER ncer, NCGR tile, NCLR paleta)
+        public iNCER(NCER ncer, NCGR tile, NCLR paleta, IPluginHost pluginHost)
         {
             InitializeComponent();
             LeerIdioma();
             this.ncer = ncer;
             this.tile = tile;
             this.paleta = paleta;
+            this.pluginHost = pluginHost;
 
             ShowInfo();
 
@@ -112,12 +115,12 @@ namespace Tinke
             SaveFileDialog o = new SaveFileDialog();
             o.AddExtension = true;
             o.CheckPathExists = true;
-            o.DefaultExt = ".png";
-            o.Filter = "Imagen Portable Network Graphics (*.png)|*.png";
+            o.DefaultExt = ".bmp";
+            o.Filter = "BitMaP (*.bmp)|*.bmp";
             o.OverwritePrompt = true;
 
             if (o.ShowDialog() == DialogResult.OK)
-                ActualizarImagen().Save(o.FileName);
+                ActualizarFullImagen().Save(o.FileName, System.Drawing.Imaging.ImageFormat.Bmp);
         }
 
         private void btnTodos_Click(object sender, EventArgs e)
@@ -133,7 +136,7 @@ namespace Tinke
                 pic.Size = new Size(256, 256);
                 pic.Location = new Point(x, y);
                 pic.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-                pic.Image = Imagen_NCER.Obtener_Imagen(ncer.cebk.banks[i], ncer.cebk.block_size, tile, paleta, 
+                pic.Image = Imagen_NCER.Obtener_Imagen(ncer.cebk.banks[i], ncer.cebk.block_size, tile, paleta,
                     checkEntorno.Checked, checkCelda.Checked, checkNumber.Checked,
                     checkTransparencia.Checked, checkImagen.Checked);
                 Label lbl = new Label();
@@ -151,7 +154,7 @@ namespace Tinke
                 }
             }
 
-            ven.Text = Tools.Helper.ObtenerTraduccion("NCER","S14");
+            ven.Text = Tools.Helper.ObtenerTraduccion("NCER", "S14");
             ven.BackColor = SystemColors.GradientInactiveCaption;
             ven.AutoScroll = true;
             ven.AutoSize = true;
@@ -250,5 +253,50 @@ namespace Tinke
             return imagen;
         }
 
+        private void btnImport_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog o = new OpenFileDialog();
+            o.CheckFileExists = true;
+            o.DefaultExt = "bmp";
+            o.Filter = "BitMaP (*.bmp)|*.bmp";
+
+            o.Multiselect = false;
+            if (o.ShowDialog() == DialogResult.OK)
+            {
+                #region Set new palette
+                String paletteFile = System.IO.Path.GetTempFileName();
+                NCLR newPalette = Imagen_NCLR.BitmapToPalette(o.FileName);
+                newPalette.id = paleta.id;
+                paleta = newPalette;
+
+                pluginHost.Set_NCLR(paleta);
+                Imagen_NCLR.Escribir(paleta, paletteFile);
+                pluginHost.ChangeFile((int)paleta.id, paletteFile);
+                #endregion
+
+                #region Set new tiles
+                if (Image.FromFile(o.FileName).Size != new Size(512, 512))
+                    throw new NotSupportedException();
+
+                NCGR bitmap = Imagen_NCGR.BitmapToTile(o.FileName, Orden_Tiles.No_Tiles);
+
+                for (int i = 0; i < ncer.cebk.banks[comboCelda.SelectedIndex].cells.Length; i++)
+                {
+                    tile.rahc.tileData.tiles = Imagen_NCER.Change_ImageCell(
+                        ncer.cebk.banks[comboCelda.SelectedIndex].cells[i],
+                        ncer.cebk.block_size,
+                        bitmap,
+                        tile);
+                }
+
+                pluginHost.Set_NCGR(tile);
+                String tileFile = System.IO.Path.GetTempFileName();
+                Imagen_NCGR.Write(tile, tileFile);
+                pluginHost.ChangeFile((int)tile.id, tileFile);
+                #endregion
+
+                ActualizarImagen();
+            }
+        }
     }
 }

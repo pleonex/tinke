@@ -81,7 +81,7 @@ namespace PluginInterface
         public UInt32 unknown3;         // Constante siempre 0x18 (24)
         public NTFT tileData;
 
-        public UInt16 nTiles;       // Campo propio para operaciones más fáciles, resultado de nTilesX * nTilesY ó size_Tiledata / 64
+        public UInt32 nTiles;       // Campo propio para operaciones más fáciles, resultado de nTilesX * nTilesY ó size_Tiledata / 64
     }
     public struct SOPC
     {
@@ -164,6 +164,7 @@ namespace PluginInterface
         public byte priority;
         public bool xFlip;
         public bool yFlip;
+        public ushort num_cell;
     }
     #endregion // CER
     #region NANR

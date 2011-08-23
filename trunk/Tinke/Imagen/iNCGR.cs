@@ -313,7 +313,7 @@ namespace Tinke
                     if (mapOptions.FillTiles)
                         newMap = Imagen_NSCR.Create_BasicMap(width, heigth, mapOptions.StartFillTiles, mapOptions.FillTilesWith);
                     else
-                        newMap = Imagen_NSCR.Create_BasicMap(tile.rahc.nTiles, width, heigth);
+                        newMap = Imagen_NSCR.Create_BasicMap((int)tile.rahc.nTiles, width, heigth);
 
                     newMap.id = map.id;
                     map = newMap;
@@ -367,11 +367,30 @@ namespace Tinke
         {
             SaveFileDialog o = new SaveFileDialog();
             o.AddExtension = true;
-            o.DefaultExt = "png";
-            o.Filter = "PNG (*.png)|*.png";
+            o.DefaultExt = "bmp";
+            o.Filter = "BitMaP (*.bmp)|*.bmp";
             o.OverwritePrompt = true;
             if (o.ShowDialog() == DialogResult.OK)
-                pic.Image.Save(o.FileName);
+            {
+                // In this way the palette of the bitmap image has a few colours
+                /*Bitmap savedImage = (Bitmap)pic.Image;
+
+                if (tile.rahc.depth == ColorDepth.Depth4Bit)
+                {
+                    savedImage = (Bitmap)savedImage.Clone(
+                        new Rectangle(0, 0, pic.Image.Width, pic.Image.Height),
+                        System.Drawing.Imaging.PixelFormat.Format4bppIndexed);
+                }
+                else
+                {
+                    savedImage = (Bitmap)savedImage.Clone(
+                        new Rectangle(0, 0, pic.Image.Width, pic.Image.Height),
+                        System.Drawing.Imaging.PixelFormat.Format8bppIndexed);
+                }
+
+                savedImage.Save(o.FileName, System.Drawing.Imaging.ImageFormat.Bmp);*/
+                pic.Image.Save(o.FileName, System.Drawing.Imaging.ImageFormat.Bmp);
+            }
             o.Dispose();
         }
         private void pic_DoubleClick(object sender, EventArgs e)

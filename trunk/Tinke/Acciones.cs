@@ -352,7 +352,7 @@ namespace Tinke
         }
         public Control Set_PicturesSaved(Formato formato)
         {
-        	#region Guardamos el archivo fuera del sistema de ROM
+            #region Guardamos el archivo fuera del sistema de ROM
             Archivo selectFile = Select_File();
             string tempFile;
             BinaryReader br;
@@ -381,9 +381,9 @@ namespace Tinke
             byte[] ext = br.ReadBytes(4);
 
             br.Close();
-			#endregion
-			
-			#region Formatos comunes
+            #endregion
+
+            #region Formatos comunes
             try
             {
                 if (formato == Formato.Paleta)
@@ -395,7 +395,7 @@ namespace Tinke
                     iNCLR control = new iNCLR(paleta, pluginHost);
                     control.btnImport.Enabled = false;
                     return control;
-                }               
+                }
                 else if (formato == Formato.Imagen)
                 {
                     NCGR tile = Imagen_NCGR.Leer_Basico(tempFile, idSelect);
@@ -448,7 +448,7 @@ namespace Tinke
             return new Control();
 
         }
-        
+
         private Carpeta Add_ID(Carpeta currFolder)
         {
             if (currFolder.files is List<Archivo>)
@@ -782,7 +782,7 @@ namespace Tinke
 
             if (currFolder.folders is List<Carpeta>)
                 foreach (Carpeta subFolder in currFolder.folders)
-                     Recursivo_Archivo(name, subFolder, carpeta);
+                    Recursivo_Archivo(name, subFolder, carpeta);
 
         }
         private void Recursivo_Archivo(Formato formato, Carpeta currFolder, Carpeta carpeta)
@@ -1210,7 +1210,7 @@ namespace Tinke
         {
             // Guardamos el archivo para descomprimir fuera del sistema de ROM
             Archivo selectFile = Search_File(id);
-            string tempFile; 
+            string tempFile;
             BinaryReader br;
             byte[] ext;
 
@@ -1228,7 +1228,7 @@ namespace Tinke
                 FileInfo info = new FileInfo(selectFile.path);
                 File.Copy(selectFile.path, info.DirectoryName + Path.DirectorySeparatorChar + "temp_" + info.Name, true);
                 tempFile = info.DirectoryName + Path.DirectorySeparatorChar + "temp_" + info.Name;
-                br = new BinaryReader(File.OpenRead(tempFile));             
+                br = new BinaryReader(File.OpenRead(tempFile));
             }
 
             ext = br.ReadBytes(4);
@@ -1240,7 +1240,7 @@ namespace Tinke
             {
                 if (gamePlugin is IGamePlugin)
                 {
-                    if (gamePlugin.Get_Formato(selectFile.name, ext, idSelect) != Formato.Desconocido)
+                    if (gamePlugin.Get_Formato(selectFile.name, ext, idSelect) == Formato.Comprimido)
                     {
                         gamePlugin.Leer(tempFile, idSelect);
                         goto Continuar;
@@ -1248,7 +1248,7 @@ namespace Tinke
                 }
                 foreach (IPlugin plugin in formatList)
                 {
-                    if (plugin.Get_Formato(selectFile.name, ext) != Formato.Desconocido)
+                    if (plugin.Get_Formato(selectFile.name, ext) == Formato.Comprimido)
                     {
                         plugin.Leer(tempFile, id);
                         goto Continuar;
@@ -1475,6 +1475,7 @@ namespace Tinke
         /// <returns>Ruta de la carpeta donde se encuentran los archivos descomprimidos</returns>
         void pluginHost_DescomprimirEvent(string arg)
         {
+
             BinaryReader br = new BinaryReader(File.OpenRead(arg));
             byte[] ext = br.ReadBytes(4);
             br.Close();
@@ -1483,26 +1484,31 @@ namespace Tinke
             {
                 foreach (IPlugin plugin in formatList)
                 {
-                    if (plugin.Get_Formato(new FileInfo(arg).Name, ext) != Formato.Desconocido)
+                    if (plugin.Get_Formato(new FileInfo(arg).Name, ext) == Formato.Comprimido)
                     {
                         plugin.Leer(arg, -1);
                         goto Continuar;
                     }
                 }
                 // Si no hay plugins disponibles, se descomprime con el método normal
-                FileInfo info = new FileInfo(arg);
-                Directory.CreateDirectory(info.DirectoryName + Path.DirectorySeparatorChar + "un");
-                
-                DSDecmp.FormatsType compressFormat = DSDecmp.Main.Get_Format(arg);
-                DSDecmp.Main.Decompress(arg, info.DirectoryName + Path.DirectorySeparatorChar + "un" + Path.DirectorySeparatorChar +  info.Name);
-
-                Archivo file = new Archivo();
-                file.name = new FileInfo(arg).Name;
-                file.path = info.DirectoryName + Path.DirectorySeparatorChar + "un" + Path.DirectorySeparatorChar + info.Name;
-                file.size = (uint)new FileInfo(info.DirectoryName + Path.DirectorySeparatorChar + "un" + Path.DirectorySeparatorChar + info.Name).Length;
                 Carpeta carpeta = new Carpeta();
-                carpeta.files = new List<Archivo>();
-                carpeta.files.Add(file);
+                FileInfo info = new FileInfo(arg);
+                String dec_file = info.DirectoryName + Path.DirectorySeparatorChar + "un" + Path.DirectorySeparatorChar + info.Name;
+
+                Directory.CreateDirectory(info.DirectoryName + Path.DirectorySeparatorChar + "un");
+
+                DSDecmp.FormatsType compressFormat = DSDecmp.Main.Get_Format(arg);
+                DSDecmp.Main.Decompress(arg, dec_file);
+
+                if (File.Exists(dec_file))
+                {
+                    Archivo file = new Archivo();
+                    file.name = new FileInfo(arg).Name;
+                    file.path = dec_file;
+                    file.size = (uint)new FileInfo(dec_file).Length;
+                    carpeta.files = new List<Archivo>();
+                    carpeta.files.Add(file);
+                }
                 pluginHost.Set_Files(carpeta);
             }
             catch (Exception e)
@@ -1724,7 +1730,7 @@ namespace Tinke
 
                     if (pluginHost.Get_NCGR().cabecera.file_size != 0x00 && pluginHost.Get_NCLR().cabecera.file_size != 0x00)
                     {
-                        iNCER control = new iNCER(pluginHost.Get_NCER(), pluginHost.Get_NCGR(), pluginHost.Get_NCLR());
+                        iNCER control = new iNCER(pluginHost.Get_NCER(), pluginHost.Get_NCGR(), pluginHost.Get_NCLR(), pluginHost);
                         control.Dock = DockStyle.Fill;
 
                         return control;
@@ -1868,7 +1874,7 @@ namespace Tinke
 
                     if (pluginHost.Get_NCGR().cabecera.file_size != 0x00 && pluginHost.Get_NCLR().cabecera.file_size != 0x00)
                     {
-                        iNCER control = new iNCER(pluginHost.Get_NCER(), pluginHost.Get_NCGR(), pluginHost.Get_NCLR());
+                        iNCER control = new iNCER(pluginHost.Get_NCER(), pluginHost.Get_NCGR(), pluginHost.Get_NCLR(), pluginHost);
                         control.Dock = DockStyle.Fill;
 
                         return control;

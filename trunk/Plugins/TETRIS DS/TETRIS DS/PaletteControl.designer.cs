@@ -1,6 +1,6 @@
-﻿namespace Tinke
+﻿namespace TETRIS_DS
 {
-    partial class iNCLR
+    partial class PaletteControl
     {
         /// <summary> 
         /// Required designer variable.
@@ -133,7 +133,6 @@
             // 
             // btnSave
             // 
-            this.btnSave.Image = global::Tinke.Properties.Resources.picture_save;
             this.btnSave.Location = new System.Drawing.Point(245, 166);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(95, 30);
@@ -198,17 +197,12 @@
             // numericStartByte
             // 
             this.numericStartByte.Location = new System.Drawing.Point(160, 22);
-            this.numericStartByte.Maximum = new decimal(new int[] {
-            65535,
-            0,
-            0,
-            0});
             this.numericStartByte.Name = "numericStartByte";
             this.numericStartByte.Size = new System.Drawing.Size(95, 20);
             this.numericStartByte.TabIndex = 0;
             this.numericStartByte.ValueChanged += new System.EventHandler(this.numericStartByte_ValueChanged);
             // 
-            // iNCLR
+            // PaletteControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -222,7 +216,7 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.nPaleta);
             this.Controls.Add(this.paletaBox);
-            this.Name = "iNCLR";
+            this.Name = "PaletteControl";
             this.Size = new System.Drawing.Size(512, 512);
             ((System.ComponentModel.ISupportInitialize)(this.paletaBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.nPaleta)).EndInit();

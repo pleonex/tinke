@@ -292,7 +292,6 @@ namespace Tinke
             return tile;
         }
 
-
         public static Bitmap Crear_Imagen(NCGR tile, NCLR paleta)
         {
             if (tile.rahc.nTilesX == 0xFFFF)        // En caso de que no venga la información hacemos la imagen de 256x256

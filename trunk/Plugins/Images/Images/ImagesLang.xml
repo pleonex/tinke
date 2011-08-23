@@ -125,7 +125,10 @@
       <S10>couleurs.</S10>
     </NCLR>
     <NCGR>
-      <S01>Faites un double-clic sur l'image pour la voir en taille réelle.</S01>
+      <S01>
+        Faites un double-clic sur l'image pour la voir en
+        taille réelle.
+	  </S01>
       <S02>Propriétés</S02>
       <S03>Position</S03>
       <S04>Champ</S04>

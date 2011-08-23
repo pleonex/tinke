@@ -59,6 +59,7 @@
             this.label7 = new System.Windows.Forms.Label();
             this.lblZoom = new System.Windows.Forms.Label();
             this.trackZoom = new System.Windows.Forms.TrackBar();
+            this.btnImport = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.imgBox)).BeginInit();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBgd)).BeginInit();
@@ -299,12 +300,23 @@
             this.trackZoom.Value = 100;
             this.trackZoom.Scroll += new System.EventHandler(this.trackZoom_Scroll);
             // 
+            // btnImport
+            // 
+            this.btnImport.Location = new System.Drawing.Point(416, 463);
+            this.btnImport.Name = "btnImport";
+            this.btnImport.Size = new System.Drawing.Size(90, 40);
+            this.btnImport.TabIndex = 30;
+            this.btnImport.Text = "Importar";
+            this.btnImport.UseVisualStyleBackColor = true;
+            this.btnImport.Click += new System.EventHandler(this.btnImport_Click);
+            // 
             // iNCER
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Transparent;
             this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.Controls.Add(this.btnImport);
             this.Controls.Add(this.btnBgdTrans);
             this.Controls.Add(this.pictureBgd);
             this.Controls.Add(this.btnBgd);
@@ -359,5 +371,6 @@
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label lblZoom;
         private System.Windows.Forms.TrackBar trackZoom;
+        private System.Windows.Forms.Button btnImport;
     }
 }
