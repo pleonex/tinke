@@ -36,6 +36,7 @@ namespace Sounds
             ReadLanguage();
 
             this.sound = sound;
+
             wavFile = Path.GetTempFileName();
             WAV.Write(sound, wavFile);
 

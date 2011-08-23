@@ -1,4 +1,10 @@
-0.7.5
+0.7.6
+*** Import images from NCER files
+* Fixed problems with No_Tiled images
+* Support for the game (*.arc, *.plz)
+* Fixed problem with NCER files
+
+0.7.5 (public release)
 *** Improved the plugin of Nitro compression (DSDecmp proyect by Barubary)
 *** Sound plugin added with SADL audio support
 *** Added control to compress NARC files

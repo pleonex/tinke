@@ -63,7 +63,7 @@ namespace Images
 			ncgr.rahc.tileData = new NTFT();
 			ncgr.rahc.tileData.nPaleta = new byte[ncgr.rahc.nTiles];
 			ncgr.rahc.tileData.tiles = new byte[1][];
-            ncgr.rahc.tileData.tiles[0] = br.ReadBytes(ncgr.rahc.nTiles);
+            ncgr.rahc.tileData.tiles[0] = br.ReadBytes((int)ncgr.rahc.nTiles);
 
 			for (int i = 0; i < ncgr.rahc.nTiles; i++)
 			{

@@ -175,6 +175,8 @@ namespace Tinke
             return paleta;
         }
 
+
+
         public static NCLR Read_WinPal(string file, ColorDepth depth)
         {
             BinaryReader br = new BinaryReader(File.OpenRead(file));

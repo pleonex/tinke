@@ -767,7 +767,11 @@ namespace Tinke
                 return;
             }
 
+            Thread espera = new System.Threading.Thread(ThreadEspera);
+            if (!isMono)
+                espera.Start("S04");
             uncompress = accion.Extract();
+
             if (!(uncompress.files is List<Archivo>) && !(uncompress.folders is List<Carpeta>)) // En caso de que falle la extracción
             {
                 MessageBox.Show(Tools.Helper.ObtenerTraduccion("Sistema", "S36"));
@@ -795,6 +799,9 @@ namespace Tinke
 
             debug.Añadir_Texto(sb.ToString());
             sb.Length = 0;
+
+            if (!isMono)
+                espera.Abort();
         }
         private void UncompressFolder()
         {

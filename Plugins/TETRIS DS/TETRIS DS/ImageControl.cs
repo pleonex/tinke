@@ -29,7 +29,7 @@ using System.IO;
 using System.Xml.Linq;
 using PluginInterface;
 
-namespace TOTTEMPEST
+namespace TETRIS_DS
 {
     public partial class ImageControl : UserControl
     {
@@ -53,8 +53,9 @@ namespace TOTTEMPEST
             InitializeComponent();
 
             this.pluginHost = pluginHost;
-            ReadLanguage();
+            //ReadLanguage();
 
+            stopUpdating = true;
             this.isMap = isMap;
             this.paleta = pluginHost.Get_NCLR();
             this.tile = pluginHost.Get_NCGR();
@@ -73,8 +74,8 @@ namespace TOTTEMPEST
             
             this.numericWidth.Value = pic.Image.Width;
             this.numericHeight.Value = pic.Image.Height;
-            this.comboDepth.Text = (tile.rahc.depth == ColorDepth.Depth4Bit ? "4 bpp" : "8 bpp");
             oldDepth = comboDepth.Text;
+            this.comboDepth.Text = (tile.rahc.depth == ColorDepth.Depth4Bit ? "4 bpp" : "8 bpp");
             switch (tile.orden)
             {
                 case Orden_Tiles.No_Tiles:
@@ -93,6 +94,7 @@ namespace TOTTEMPEST
             this.numericStart.ValueChanged += new EventHandler(numericStart_ValueChanged);
 
             Info();
+            stopUpdating = false;
         }
 
         private void numericStart_ValueChanged(object sender, EventArgs e)
@@ -115,12 +117,24 @@ namespace TOTTEMPEST
             if (comboDepth.Text == "4 bpp")
             {
                 byte[] temp = pluginHost.Bit8ToBit4(pluginHost.TilesToBytes(tile.rahc.tileData.tiles));
-                tile.rahc.tileData.tiles = pluginHost.BytesToTiles(temp);
+                if (tile.orden != Orden_Tiles.No_Tiles)
+                    tile.rahc.tileData.tiles = pluginHost.BytesToTiles(temp);
+                else
+                {
+                    tile.rahc.tileData.tiles = new Byte[1][];
+                    tile.rahc.tileData.tiles[0] = temp;
+                }
             }
             else
             {
                 byte[] temp = pluginHost.Bit4ToBit8(pluginHost.TilesToBytes(tile.rahc.tileData.tiles));
-                tile.rahc.tileData.tiles = pluginHost.BytesToTiles(temp);
+                if (tile.orden != Orden_Tiles.No_Tiles)
+                    tile.rahc.tileData.tiles = pluginHost.BytesToTiles(temp);
+                else
+                {
+                    tile.rahc.tileData.tiles = new Byte[1][];
+                    tile.rahc.tileData.tiles[0] = temp;
+                }
             }
 
             UpdateImage();
@@ -254,7 +268,7 @@ namespace TOTTEMPEST
                     tile = newTile;
 
                     String nbmFile = Path.GetTempFileName() + ".nbm";
-                    NBM.Write(paleta, tile, nbmFile, pluginHost);
+                    //NBM.Write(paleta, tile, nbmFile, pluginHost);
                     pluginHost.ChangeFile((int)tile.id, nbmFile);
 
                     goto End;
@@ -266,7 +280,7 @@ namespace TOTTEMPEST
 
                 pluginHost.Set_NCLR(paleta);
                 String paletteFile = Path.GetTempFileName() + ".apa";
-                APA.Write(paleta, paletteFile, pluginHost);
+                //APA.Write(paleta, paletteFile, pluginHost);
                 pluginHost.ChangeFile((int)paleta.id, paletteFile);
 
                 newTile = pluginHost.BitmapToTile(o.FileName, (comboBox1.SelectedIndex == 0 ? Orden_Tiles.No_Tiles : Orden_Tiles.Horizontal));
@@ -275,7 +289,7 @@ namespace TOTTEMPEST
 
                 pluginHost.Set_NCGR(tile);
                 String tileFile = System.IO.Path.GetTempFileName() + ".ana";
-                ANA.Write(tile, tileFile, pluginHost);
+                //ANA.Write(tile, tileFile, pluginHost);
                 pluginHost.ChangeFile((int)tile.id, tileFile);
 
                 if (isMap)
@@ -290,7 +304,7 @@ namespace TOTTEMPEST
 
                     pluginHost.Set_NSCR(map);
                     String mapFile = System.IO.Path.GetTempFileName() + ".asc";
-                    ASC.Write(map, mapFile, pluginHost);
+                    //ASC.Write(map, mapFile, pluginHost);
                     pluginHost.ChangeFile((int)map.id, mapFile);
                 }
 

@@ -27,6 +27,7 @@
     <Messages>
       <S00>Convirtiendo archivos de audio</S00>
       <S01>Espera</S01>
+      <S02>Guardando el nuevo archivo WAV</S02>
     </Messages>
   </Español>
   <English>
@@ -56,6 +57,7 @@
     <Messages>
       <S00>Converting sound file</S00>
       <S01>Wait</S01>
+      <S02>Saving new WAV file</S02>
     </Messages>
   </English>
   <Français>
@@ -66,7 +68,8 @@
       <S03>Importer</S03>
       <S04>Activer la boucle</S04>
       <S05>Voulez-vous également sauvegarder l'archive en boucle ?</S05>
-      <S06>ID du fragment</S06>      <S07>Taille du fragment</S07>
+      <S06>ID du fragment</S06>
+      <S07>Taille du fragment</S07>
       <S08>Indicateur de boucle</S08>
       <S09>Offset de la boucle</S09>
       <S0A>Format</S0A>
@@ -84,6 +87,7 @@
     <Messages>
       <S00>Conversion de l'archive en boucle</S00>
       <S01>Patientez</S01>
+      <S02>Saving new WAV file</S02>
     </Messages>
   </Français>
 </Language>

@@ -1,0 +1,412 @@
+--- trunk/Tinke/langs/fr-fr.xml
+
++++ trunk/Tinke/langs/fr-fr.xml
+
+@@ -1,4 +1,4 @@
+
+-﻿<?xml version="1.0" encoding="utf-8"?>
+
++ <?xml version="1.0" encoding="utf-8"?>
+
+ <Language name="Français">
+
+   <Sistema>
+
+     <S01>Ouvrir archive(s)</S01>
+
+@@ -157,8 +157,8 @@
+
+     <S02>Chargement du jeu...</S02>
+
+     <S03>Extraction des fichiers...</S03>
+
+     <S04>Décompression des fichiers...</S04>
+
+-    <S05>Creating new ROM...</S05>
+
+-    <S06>Saving new ROM...</S06>
+
++    <S05>Création d'une nouvelle ROM...</S05>
+
++    <S06>Sauvegarde d'une nouvelle ROM...</S06>
+
+   </Espera>
+
+   <Messages>
+
+     <S01>Erreur</S01>
+
+@@ -199,10 +199,10 @@
+
+     <S1D>Pour le moment la compression normale ne montre pas d'information.</S1D>
+
+     <S1E>Pour voir cette archive vous devez double-cliquer sur une archive palette, tuile et cellule</S1E>
+
+     <S1F>
+
+-      The program need the following files:
+
++      Le programme necessite les fichiers suivants :
+
+       {0}
+
+ 
+
+-      Please, download the program from the web page:
+
++      Veuillez télécharger le programme depuis la page web :
+
+       http://code.google.com/p/tinke
+
+     </S1F>
+
+   </Messages>
+
+@@ -220,7 +220,7 @@
+
+     <S0B>Montrer toutes les palettes</S0B>
+
+     <S0C>Palette</S0C>
+
+     <S0D>Analyser la palette NCLR</S0D>
+
+-    <S0E>Nombre étrange de sections ? : </S0E>
+
++    <S0E>Nombre étrange de sections ? :</S0E>
+
+     <S0F>palettes trouvées</S0F>
+
+     <S10>couleurs.</S10>
+
+     <S11>Modifier</S11>
+
+@@ -267,15 +267,15 @@
+
+     <S21>Importer</S21>
+
+   </NCGR>
+
+   <NSCR>
+
+-    <S00>Map options</S00>
+
+-    <S01>Map width:</S01>
+
+-    <S02>Map height:</S02>
+
+-    <S03>Fill image</S03>
+
+-    <S04>Start tile:</S04>
+
+-    <S05>Fill with tile:</S05>
+
+-    <S06>Accept</S06>
+
+-    <S07>Image width :</S07>
+
+-    <S08>Image height :</S08>
+
++    <S00>Options de map</S00>
+
++    <S01>Longeur de map :</S01>
+
++    <S02>Hauteur de map :</S02>
+
++    <S03>Remplir l'image</S03>
+
++    <S04>Début de tuile :</S04>
+
++    <S05>Remplir avec une tuile :</S05>
+
++    <S06>Accepter</S06>
+
++    <S07>Longeur d'image :</S07>
+
++    <S08>Hauteur d'image :</S08>
+
+   </NSCR>
+
+   <NCER>
+
+     <S01>Banques :</S01>
+
+@@ -298,7 +298,10 @@
+
+     <S12>Transparence</S12>
+
+     <S13>Montrer numéros</S13>
+
+     <S14>Cellules</S14>
+
+-    <S15>Faites un double-clic sur l'image pour la voir en taille réelle.</S15>
+
++    <S15>
+
++      Faites un double-clic sur l'image pour la voir en
+
++      taille réelle.
+
++    </S15>
+
+     <S16>Zoom</S16>
+
+     <S17>Couleur du fond</S17>
+
+     <S18>Supprimer</S18>
+
+@@ -344,81 +347,84 @@
+
+     <S1B>Numéro de cellule</S1B>
+
+     <S1C>Enregistrer</S1C>
+
+     <S1D>Animations</S1D>
+
+-    <S1E>Faites un double-clic sur l'image pour la voir en taille réelle.</S1E>
+
++    <S1E>
+
++      Faites un double-clic sur l'image pour la voir en
+
++      taille réelle.
+
++    </S1E>
+
+   </NANR>
+
+   <DSDecmp>
+
+     <!-- LZ10 -->
+
+     <S00>
+
+-      The provided stream is not a valid LZ-0x10 compressed stream.
+
+-      Invalid type 0x{0}
+
++      L'archive fournie n'est pas une archive valide compressée de type LZ-0x10.
+
++      Type invalide 0x{0}
+
+     </S00>
+
+     <S01>
+
+-      Cannot go back more than already written.
+
+-      DISP = 0x{0}, #written bytes = 0x{1} at 0x{2}
+
++      Ne peut pas revenir en arrière car les données sont déjà écrites.
+
++      DISP = 0x{0}, #octets écrits = 0x{1} à 0x{2}
+
+     </S01>
+
+-    <S02>disp is too large</S02>
+
++    <S02>disp est trop grand</S02>
+
+     <!-- LZ11 -->
+
+     <S03>
+
+-      The provided stream is not a valid LZ-0x11 compressed stream.
+
+-      Invalid type 0x{1}
+
++      L'archive fournie n'est pas une archive valide compressée de type LZ-0x11.
+
++      Type invalide 0x{1}
+
+     </S03>
+
+     <S04>
+
+-      Cannot go back more than already written. DISP = {0},
+
+-      #written bytes = 0x{1} before 0x{2} with indicator 0x{3}
+
++      Ne peut pas revenir en arrière car les données sont déjà écrites. DISP = {0},
+
++      #octets écrits = 0x{1} avant 0x{2} avec l'indicateur 0x{3}
+
+     </S04>
+
+     <!-- Huffman -->
+
+     <S05>
+
+-      The provided stream is not a valid Huffman compressed stream.
+
+-      Invalid type 0x{0}; unknown block size.
+
++      L'archive fournie n'est pas une archive valide compressée de type Huffman.
+
++      Type invalide 0x{0} ; taille du bloc inconnue.
+
+     </S05>
+
+-    <S06>The stream is too short to contain a Huffman tree.</S06>
+
+-    <S07>The Huffman tree is too large for the given input stream.</S07>
+
+-    <S08>Unknown block size {0}</S08>
+
+-    <S09>Unhandled blocksize {0}</S09>
+
+-    <S0A>Reference to an undefined node in the huffman tree.</S0A>
+
++    <S06>L'archive est trop courte pour contenir une arborescence Huffman.</S06>
+
++    <S07>L'arborescence Huffman est trop grande pour l'archive entrée donnée.</S07>
+
++    <S08>Taille du bloc inconnue {0}</S08>
+
++    <S09>Taille du bloc non supportée {0}</S09>
+
++    <S0A>Référence à un noeud non défini dans l'arborescence Huffman.</S0A>
+
+     <!-- RLE -->
+
+     <S0B>
+
+-      The provided stream is not a valid RLE compressed stream.
+
+-      Invalid type 0x{0}
+
++      L'archive fournie n'est pas une archive valide compressée de type RLE.
+
++      Type invalide 0x{0}
+
+     </S0B>
+
+     <S0C>
+
+-      The given stream is not a valid RLE stream;
+
+-      the output length does not match the provided plaintext length.
+
++      L'archive donnée n'est pas une archive valide de type RLE ;
+
++      la longueur de sortie ne correspond pas avec la longueur du texte en clair fournie.
+
+     </S0C>
+
+     <!-- LZOvl -->
+
+     <S0D>
+
+-      Cannot go back more than already written;
+
+-      attempt to go back 0x{0} when only 0x{1}
+
+-      bytes have been written.
+
++      Ne peut pas revenir en arrière car les données sont déjà écrites ;
+
++      tentative de retour en arrière 0x{0} quand seulement 0x{1}
+
++      octets ont été écrits.
+
+     </S0D>
+
+     <!-- Exceptions -->
+
+     <S0E>
+
+-      The compression ratio is not high enough to fit the input
+
+-      in a single compressed file.
+
++      Le taux de compression n'est pas assez élevé pour adapter à l'entrée
+
++      dans une seule archive compressée.
+
+     </S0E>
+
+     <S0F>
+
+-      The input contains more data than necessary.
+
+-      Only used 0x{0} of 0x{1} bytes
+
++      L'entrée contient plus de données que nécessaires.
+
++      Uniquement 0x{0} des 0x{1} octets utilisés.
+
+     </S0F>
+
+     <S10>
+
+-      The end of the stream was reached before the
+
+-      given amount of data was read.
+
++      La fin de l'archive a été atteinte avant que
+
++      la quantité indiquée de données ait été lue.
+
+     </S10>
+
+-    <S11>Not enough data avalible; 0x{0} of {1} bytes written.</S11>
+
++    <S11>Pas assez de données disponibles ; 0x{0} des {1} octets écrits.</S11>
+
+     <!-- CompressionControl -->
+
+-    <S12>Original compressed file: </S12>
+
+-    <S13>New compression:</S13>
+
+-    <S14>None</S14>
+
+-    <S15>Compression type:</S15>
+
+-    <S16>Use "Look ahead" methods</S16>
+
+-    <S17>Compress</S17>
+
+-    <S18>Compress with the best compression</S18>
+
++    <S12>Compression de l'archive d'origine :</S12>
+
++    <S13>Nouvelle compression :</S13>
+
++    <S14>Aucune</S14>
+
++    <S15>Type de compression :</S15>
+
++    <S16>Utiliser la méthode "Lecture anticipée"</S16>
+
++    <S17>Compresser</S17>
+
++    <S18>Compresser avec la meilleure compression</S18>
+
+     <!-- Main -->
+
+-    <S19>{0} - compressed {1} to {2}</S19>
+
+-    <S1A>The file could not be compressed in any format.</S1A>
+
+-    <S1B>Could not decompress {0}; no matching compression method found.</S1B>
+
+-    <S1C>{0} - decompressed {1} to {2}</S1C>
+
+-    <S1D>Could not decompress using the {0}; {1}</S1D>
+
++    <S19>{0} - archive {1} compressée en {2}</S19>
+
++    <S1A>L'archive ne peut pas être compressée dans tout format.</S1A>
+
++    <S1B>Ne peut pas décompresser {0} ; aucune méthode de compression correspondante trouvée.</S1B>
+
++    <S1C>{0} - archive {1} décompressée en {2}</S1C>
+
++    <S1D>Ne peut pas décompresser en utilisant le format {0} ; {1}</S1D>
+
+   </DSDecmp>
+
+   <EditRomInfo>
+
+     <S00>En-tête et éditeur de bannière</S00>
+

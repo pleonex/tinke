@@ -41,6 +41,7 @@ namespace LAYTON
                 txtin = txtin.Replace("<`a>", "à");
                 txtin = txtin.Replace("<'a>", "á");
                 txtin = txtin.Replace("<:a>", "ä");
+                txtin = txtin.Replace("<^a>", "â");
                 txtin = txtin.Replace("<`e>", "è");
                 txtin = txtin.Replace("<'e>", "é");
                 txtin = txtin.Replace("<^e>", "ê");
@@ -60,10 +61,12 @@ namespace LAYTON
                 txtin = txtin.Replace("<:u>", "ü");
                 txtin = txtin.Replace("<,c>", "ç");
                 txtin = txtin.Replace("<~n>", "ñ");
+                txtin = txtin.Replace("<-n>", "ñ");
                 //txtin = txtin.Replace("<ss>", ""); Desconocida la equivalencia
                 txtin = txtin.Replace("<`A>", "À");
                 txtin = txtin.Replace("<'A>", "Á");
                 txtin = txtin.Replace("<~A>", "Ã");
+                txtin = txtin.Replace("<-A>", "Ã");
                 txtin = txtin.Replace("<^A>", "Â");
                 txtin = txtin.Replace("<:A>", "Ä");
                 txtin = txtin.Replace("<`E>", "È");
@@ -85,6 +88,7 @@ namespace LAYTON
                 txtin = txtin.Replace("<:U>", "Ü");
                 txtin = txtin.Replace("<,C>", "Ç");
                 txtin = txtin.Replace("<~N>", "Ñ");
+                txtin = txtin.Replace("<-N>", "Ñ");
                 txtin = txtin.Replace("<^!>", "¡");
                 txtin = txtin.Replace("<^?>", "¿");
                 //txtin = txtin.Replace("<a>", ""); Desconocida la equivalencia
