@@ -164,6 +164,9 @@ namespace Tinke
                 Byte[] color = br.ReadBytes(4);
                 paleta.pltt.paletas[0].colores[i] = Color.FromArgb(color[2], color[1], color[0]);
             }
+            // Get the colors with BGR555 encoding (not all colours from bitmap are allowed)
+            byte[] temp = Convertir.ColorToBGR555(paleta.pltt.paletas[0].colores);
+            paleta.pltt.paletas[0].colores = Convertir.BGR555(temp);
 
             paleta.pltt.ID = "TTLP".ToCharArray();
             paleta.pltt.tamañoPaletas = paleta.pltt.nColores * 2;

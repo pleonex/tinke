@@ -31,7 +31,21 @@ namespace TETRIS_DS
         public static void Read(string file, int id, IPluginHost pluginHost)
         {
             pluginHost.Descomprimir(file);
-            string dec_file = pluginHost.Get_Files().files[0].path;
+            string dec_file;
+            Carpeta dec_folder = pluginHost.Get_Files();
+
+            if (dec_folder.files is List<Archivo>)
+                dec_file = dec_folder.files[0].path;
+            else
+            {
+                string tempFile = Path.GetTempFileName();
+                Byte[] compressFile = new Byte[(new FileInfo(file).Length) - 0x08];
+                Array.Copy(File.ReadAllBytes(file), 0x08, compressFile, 0, compressFile.Length); ;
+                File.WriteAllBytes(tempFile, compressFile);
+
+                pluginHost.Descomprimir(tempFile);
+                dec_file = pluginHost.Get_Files().files[0].path;
+            }
 
             uint file_size = (uint)new FileInfo(dec_file).Length;
             BinaryReader br = new BinaryReader(File.OpenRead(dec_file));

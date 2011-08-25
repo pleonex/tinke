@@ -83,6 +83,7 @@ namespace Tinke
         public Byte[][] BytesToTiles_NoChanged(byte[] bytes, int tilesX, int tilesY) { return Convertir.BytesToTiles_NoChanged(bytes, tilesX, tilesY); }
         public TTLP Palette_4bppTo8bpp(TTLP palette) { return Convertir.Palette_4bppTo8bpp(palette); }
         public TTLP Palette_8bppTo4bpp(TTLP palette) { return Convertir.Palette_8bppTo4bpp(palette); }
+        public void Change_Color(ref byte[][] tiles, int oldIndex, int newIndex) { Convertir.Change_Color(ref tiles, oldIndex, newIndex); }
 
         public Bitmap[] Bitmaps_NCLR(string archivo) { return Imagen_NCLR.Mostrar(archivo); }
         public Bitmap[] Bitmaps_NCLR(NCLR nclr) { return Imagen_NCLR.Mostrar(nclr); }
@@ -93,6 +94,9 @@ namespace Tinke
         public Size Tamaño_NCER(byte byte1, byte byte2) { return Imagen_NCER.Obtener_Tamaño(byte1, byte2); }
         public Bitmap Bitmap_NCER(Bank banco, uint blockSize, NCGR ncgr, NCLR nclr, bool entorno, bool celda, bool numero, bool transparencia, bool imagen) 
             { return Imagen_NCER.Obtener_Imagen(banco, blockSize, ncgr, nclr, entorno, celda, numero, transparencia, imagen); }
+        public Bitmap Bitmap_NCER(Bank banco, uint blockSize, NCGR tile, NCLR paleta, bool entorno, bool celda, bool numero, bool transparencia,
+            bool image, int maxWidth, int maxHeight) { return Imagen_NCER.Obtener_Imagen(banco, blockSize, tile, paleta, entorno, celda, numero, transparencia, image, maxWidth, maxHeight); }
+
         public void Crear_APNG(string salida, Bitmap[] frames, int delay, int loops) { Tools.APNG.Crear_APNG(frames, salida, delay, loops); }
         public void Crear_APNG(string salida, String[] frames, int delay, int loops) { Tools.APNG.Crear_APNG(frames, salida, delay, loops); }
 
@@ -130,6 +134,7 @@ namespace Tinke
         	DescomprimirEvent(temp);
         	System.IO.File.Delete(temp);
         }
+        public void Compress(string filein, string fileout, FormatCompress format) { DSDecmp.Main.Compress(filein, fileout, format); }
 
         public event Action<int, string> ChangeFile_Event;
         public void ChangeFile(int id, string newFile) { ChangeFile_Event(id, newFile); }

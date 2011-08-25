@@ -214,6 +214,18 @@ namespace Tinke
 
             return tiles.ToArray();
         }
+
+        public static void Change_Color(ref byte[][] tiles, int oldIndex, int newIndex)
+        {
+            for (int i = 0; i < tiles.Length; i++)
+            {
+                for (int j = 0; j < tiles[i].Length; j++)
+                {
+                    if (tiles[i][j] == oldIndex)
+                        tiles[i][j] = (byte)newIndex;
+                }
+            }
+        }
         #endregion
 
         /// <summary>

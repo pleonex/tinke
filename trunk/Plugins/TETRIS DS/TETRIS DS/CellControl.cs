@@ -24,12 +24,14 @@ using System.Drawing;
 using System.Data;
 using System.Linq;
 using System.Text;
+using System.IO;
+using System.Xml.Linq;
 using System.Windows.Forms;
 using PluginInterface;
 
-namespace Tinke
+namespace TETRIS_DS
 {
-    public partial class iNCER : UserControl
+    public partial class CellControl : UserControl
     {
         NCER ncer;
         NCGR tile;
@@ -37,34 +39,36 @@ namespace Tinke
 
         IPluginHost pluginHost;
 
-        public iNCER()
+        public CellControl()
         {
             InitializeComponent();
             LeerIdioma();
         }
-        public iNCER(NCER ncer, NCGR tile, NCLR paleta, IPluginHost pluginHost)
+        public CellControl(IPluginHost pluginHost)
         {
             InitializeComponent();
-            LeerIdioma();
-            this.ncer = ncer;
-            this.tile = tile;
-            this.paleta = paleta;
+
+            this.ncer = pluginHost.Get_NCER();
+            this.tile = pluginHost.Get_NCGR();
+            this.paleta = pluginHost.Get_NCLR();
             this.pluginHost = pluginHost;
 
+            LeerIdioma();
             ShowInfo();
 
             for (ushort i = 0; i < ncer.cebk.nBanks; i++)
-                comboCelda.Items.Add(ncer.labl.names[i]);
+                comboCelda.Items.Add(i.ToString());
             comboCelda.SelectedIndex = 0;
-
-            ActualizarImagen();
+            numericUpDown1.Value = ncer.cebk.block_size;
         }
 
         private void LeerIdioma()
         {
             try
             {
-                System.Xml.Linq.XElement xml = Tools.Helper.ObtenerTraduccion("NCER");
+                XElement xml = XElement.Load(Application.StartupPath + Path.DirectorySeparatorChar + "Plugins" +
+                    Path.DirectorySeparatorChar + "TETRISDSLang.xml");
+                xml = xml.Element(pluginHost.Get_Language()).Element("CellControl");
 
                 label1.Text = xml.Element("S01").Value;
                 btnTodos.Text = xml.Element("S02").Value;
@@ -89,9 +93,9 @@ namespace Tinke
                 lblZoom.Text = xml.Element("S16").Value;
                 btnBgd.Text = xml.Element("S17").Value;
                 btnBgdTrans.Text = xml.Element("S18").Value;
-                btnImport.Text = xml.Element("S24").Value;
+                label3.Text = xml.Element("S0B").Value;
             }
-            catch { throw new Exception("There was an error reading the XML language file."); }
+            catch { throw new Exception("There was an error reading the XML file of language."); } 
         }
 
         private void ShowInfo()
@@ -141,7 +145,7 @@ namespace Tinke
                 pic.Size = new Size(256, 256);
                 pic.Location = new Point(x, y);
                 pic.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-                pic.Image = Imagen_NCER.Obtener_Imagen(ncer.cebk.banks[i], ncer.cebk.block_size, tile, paleta,
+                pic.Image = pluginHost.Bitmap_NCER(ncer.cebk.banks[i], ncer.cebk.block_size, tile, paleta,
                     checkEntorno.Checked, checkCelda.Checked, checkNumber.Checked,
                     checkTransparencia.Checked, checkImagen.Checked);
                 Label lbl = new Label();
@@ -159,7 +163,7 @@ namespace Tinke
                 }
             }
 
-            ven.Text = Tools.Helper.ObtenerTraduccion("NCER", "S14");
+            //ven.Text = Tools.Helper.ObtenerTraduccion("NCER", "S14");
             ven.BackColor = SystemColors.GradientInactiveCaption;
             ven.AutoScroll = true;
             ven.AutoSize = true;
@@ -184,7 +188,7 @@ namespace Tinke
             ventana.AutoScroll = true;
             ventana.MaximumSize = new Size(1024, 700);
             ventana.ShowIcon = false;
-            ventana.Text = Tools.Helper.ObtenerTraduccion("NCER", "S14");
+            //ventana.Text = Tools.Helper.ObtenerTraduccion("NCER", "S14");
             ventana.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             ventana.MaximizeBox = false;
 
@@ -223,7 +227,7 @@ namespace Tinke
         private Image ActualizarImagen()
         {
             // Devolvemos la imagen a su estado inicial
-            imgBox.Image = Imagen_NCER.Obtener_Imagen(ncer.cebk.banks[comboCelda.SelectedIndex], ncer.cebk.block_size,
+            imgBox.Image = pluginHost.Bitmap_NCER(ncer.cebk.banks[comboCelda.SelectedIndex], ncer.cebk.block_size,
                 tile, paleta, checkEntorno.Checked, checkCelda.Checked, checkNumber.Checked, checkTransparencia.Checked,
                 checkImagen.Checked);
 
@@ -243,7 +247,7 @@ namespace Tinke
         private Image ActualizarFullImagen()
         {
             // Devolvemos la imagen a su estado inicial
-            Image original = Imagen_NCER.Obtener_Imagen(ncer.cebk.banks[comboCelda.SelectedIndex], ncer.cebk.block_size,
+            Image original = pluginHost.Bitmap_NCER(ncer.cebk.banks[comboCelda.SelectedIndex], ncer.cebk.block_size,
                 tile, paleta, checkEntorno.Checked, checkCelda.Checked, checkNumber.Checked, checkTransparencia.Checked,
                 checkImagen.Checked, 512, 512);
 
@@ -268,10 +272,11 @@ namespace Tinke
             o.Multiselect = false;
             if (o.ShowDialog() == DialogResult.OK)
             {
-                #region Set new palette
+                /*#region Set new palette
                 String paletteFile = System.IO.Path.GetTempFileName();
                 NCLR newPalette = Imagen_NCLR.BitmapToPalette(o.FileName);
-                paleta.pltt.paletas[ncer.cebk.banks[comboCelda.SelectedIndex].cells[0].nPalette].colores = newPalette.pltt.paletas[0].colores;
+                newPalette.id = paleta.id;
+                paleta = newPalette;
 
                 pluginHost.Set_NCLR(paleta);
                 Imagen_NCLR.Escribir(paleta, paletteFile);
@@ -299,8 +304,14 @@ namespace Tinke
                 pluginHost.ChangeFile((int)tile.id, tileFile);
                 #endregion
 
-                ActualizarImagen();
+                ActualizarImagen();*/
             }
+        }
+
+        private void numericUpDown1_ValueChanged(object sender, EventArgs e)
+        {
+            ncer.cebk.block_size = (uint)numericUpDown1.Value;
+            ActualizarImagen();
         }
     }
 }

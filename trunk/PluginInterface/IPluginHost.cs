@@ -53,6 +53,7 @@ namespace PluginInterface
         Byte[][] BytesToTiles_NoChanged(byte[] bytes, int tilesX, int tilesY);
         TTLP Palette_4bppTo8bpp(TTLP palette);
         TTLP Palette_8bppTo4bpp(TTLP palette);
+        void Change_Color(ref byte[][] tiles, int oldIndex, int newIndex);
 
         Bitmap[] Bitmaps_NCLR(string archivo);
         Bitmap[] Bitmaps_NCLR(NCLR nclr);
@@ -63,6 +64,8 @@ namespace PluginInterface
         Size Tamaño_NCER(byte byte1, byte byte2);
         Bitmap Bitmap_NCER(Bank banco, uint blockSize, NCGR ncgr, NCLR nclr, bool entorno, bool celda,
             bool numero, bool transparencia, bool imagen);
+        Bitmap Bitmap_NCER(Bank banco, uint blockSize, NCGR tile, NCLR paleta,
+            bool entorno, bool celda, bool numero, bool transparencia, bool image, int maxWidth, int maxHeight);
         /// <summary>
         /// Save an animation in a APNG file (Firefox supported)
         /// </summary>
@@ -83,6 +86,7 @@ namespace PluginInterface
 
         void Descomprimir(string archivo);
         void Descomprimir(byte[] datos);
+        void Compress(string filein, string fileout, FormatCompress format);
 
         /// <summary>
         /// Change the content of a file

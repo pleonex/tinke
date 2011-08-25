@@ -51,7 +51,7 @@ namespace Images
             nscr.id = (uint)id;
 
             // Lee cabecera genérica
-            nscr.cabecera.id = "NSCR".ToCharArray();
+            nscr.cabecera.id = "NBFS".ToCharArray();
             nscr.cabecera.endianess = 0xFEFF;
             nscr.cabecera.constant = 0x0100;
             nscr.cabecera.file_size = file_size;

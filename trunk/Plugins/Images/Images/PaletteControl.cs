@@ -29,7 +29,7 @@ using System.IO;
 using System.Xml.Linq;
 using PluginInterface;
 
-namespace TOTTEMPEST
+namespace Images
 {
     public partial class PaletteControl : UserControl
     {
@@ -69,8 +69,8 @@ namespace TOTTEMPEST
             try
             {
                 XElement xml = XElement.Load(Application.StartupPath + Path.DirectorySeparatorChar + "Plugins" +
-                    Path.DirectorySeparatorChar + "TottempestLang.xml");
-                xml = xml.Element(pluginHost.Get_Language()).Element("iNCLR");
+                    Path.DirectorySeparatorChar + "TETRISDSLang.xml");
+                xml = xml.Element(pluginHost.Get_Language()).Element("PaletteControl");
 
                 label1.Text = xml.Element("S01").Value;
                 groupProp.Text = xml.Element("S02").Value;
@@ -187,12 +187,13 @@ namespace TOTTEMPEST
             if (o.ShowDialog() == DialogResult.OK)
             {
                 NCLR newPalette = pluginHost.BitmapToPalette(o.FileName);
+                String paletteFile = System.IO.Path.GetTempFileName() + new String(paleta.cabecera.id);
                 newPalette.id = paleta.id;
+                newPalette.cabecera.id = paleta.cabecera.id;
                 paleta = newPalette;
 
                 pluginHost.Set_NCLR(paleta);
-                String paletteFile = System.IO.Path.GetTempFileName();
-                APA.Write(paleta, paletteFile, pluginHost);
+                Write_Palette(paletteFile, paleta, pluginHost);
                 pluginHost.ChangeFile((int)paleta.id, paletteFile);
 
 
@@ -205,6 +206,16 @@ namespace TOTTEMPEST
                 data = pluginHost.ColorToBGR555(paleta.pltt.paletas[0].colores);
                 oldDepth = paleta.pltt.profundidad;
             }
+        }
+        public static void Write_Palette(string fileout, NCLR palette, IPluginHost pluginHost)
+        {
+            BinaryWriter bw = new BinaryWriter(File.OpenWrite(fileout));
+
+            for (int i = 0; i < palette.pltt.paletas.Length; i++)
+                bw.Write(pluginHost.ColorToBGR555(palette.pltt.paletas[i].colores));
+
+            bw.Flush();
+            bw.Close();
         }
 
         private void numericStartByte_ValueChanged(object sender, EventArgs e)

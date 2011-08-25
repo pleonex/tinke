@@ -34,6 +34,12 @@
       <S1B>Color de fondo</S1B>
       <S1C>Quitar</S1C>
       <S1D>Transparencia</S1D>
+      <S1E>Zoom</S1E>
+      <S1F>Color de fondo</S1F>
+      <S20>Quitar</S20>
+      <S21>Importar</S21>
+      <S22>Seleccionar color transparente</S22>
+      <S23>¿Seleccionar color haciendo click en la imagen?</S23>
     </NCGR>
     <NCLR>
       <S01>Nº de paleta:</S01>
@@ -52,6 +58,10 @@
       <S0E>No hay secciones o hay de más ¿?: </S0E>
       <S0F>paletas encontradas</S0F>
       <S10>colores.</S10>
+      <S11>Modificar</S11>
+      <S12>Byte de inicio:</S12>
+      <S13>Importar</S13>
+      <S14>Cambiar de profundidad</S14>
     </NCLR>
   </Español>
   <English>
@@ -72,6 +82,10 @@
       <S0E>Strange number of sections ¿?: </S0E>
       <S0F>palettes found</S0F>
       <S10>colors.</S10>
+      <S11>Modify</S11>
+      <S12>Start byte:</S12>
+      <S13>Import</S13>
+      <S14>Change the depth</S14>
     </NCLR>
     <NCGR>
       <S01>Double-click to see the full image.</S01>
@@ -103,6 +117,12 @@
       <S1B>Background colour</S1B>
       <S1C>Remove</S1C>
       <S1D>Transparency</S1D>
+      <S1E>Zoom</S1E>
+      <S1F>Background colour</S1F>
+      <S20>Remove</S20>
+      <S21>Import</S21>
+      <S22>Set transparent color</S22>
+      <S23>Choose color doing click on the image?</S23>
     </NCGR>
   </English>
   <Français>
@@ -123,6 +143,10 @@
       <S0E>Nombre étrange de sections ? :</S0E>
       <S0F>palettes trouvées</S0F>
       <S10>couleurs.</S10>
+      <S11>Modifier</S11>
+      <S12>Octet de départ :</S12>
+      <S13>Importer</S13>
+      <S14>Changer la profondeur</S14>
     </NCLR>
     <NCGR>
       <S01>
@@ -157,6 +181,12 @@
       <S1B>Couleur du fond</S1B>
       <S1C>Supprimer</S1C>
       <S1D>Transparence</S1D>
+      <S1E>Zoom</S1E>
+      <S1F>Couleur du fond</S1F>
+      <S20>Supprimer</S20>
+      <S21>Importer</S21>
+      <S22>Set transparent color</S22>
+      <S23>Choose color doing click on the image?</S23>
     </NCGR>
   </Français>
 </Language>

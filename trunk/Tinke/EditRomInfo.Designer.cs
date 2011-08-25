@@ -163,7 +163,7 @@
             this.groupHeader.Controls.Add(this.lblGameTitle);
             this.groupHeader.Location = new System.Drawing.Point(1, 12);
             this.groupHeader.Name = "groupHeader";
-            this.groupHeader.Size = new System.Drawing.Size(589, 448);
+            this.groupHeader.Size = new System.Drawing.Size(603, 448);
             this.groupHeader.TabIndex = 2;
             this.groupHeader.TabStop = false;
             this.groupHeader.Text = "S03";
@@ -171,7 +171,7 @@
             // lblEncryptionSeed
             // 
             this.lblEncryptionSeed.AutoSize = true;
-            this.lblEncryptionSeed.Location = new System.Drawing.Point(282, 343);
+            this.lblEncryptionSeed.Location = new System.Drawing.Point(295, 342);
             this.lblEncryptionSeed.Name = "lblEncryptionSeed";
             this.lblEncryptionSeed.Size = new System.Drawing.Size(26, 13);
             this.lblEncryptionSeed.TabIndex = 46;
@@ -180,7 +180,7 @@
             // numericEncryptionSeed
             // 
             this.numericEncryptionSeed.Hexadecimal = true;
-            this.numericEncryptionSeed.Location = new System.Drawing.Point(472, 340);
+            this.numericEncryptionSeed.Location = new System.Drawing.Point(487, 340);
             this.numericEncryptionSeed.Maximum = new decimal(new int[] {
             255,
             0,
@@ -194,7 +194,7 @@
             // lblDebugRamAddress
             // 
             this.lblDebugRamAddress.AutoSize = true;
-            this.lblDebugRamAddress.Location = new System.Drawing.Point(280, 317);
+            this.lblDebugRamAddress.Location = new System.Drawing.Point(295, 317);
             this.lblDebugRamAddress.Name = "lblDebugRamAddress";
             this.lblDebugRamAddress.Size = new System.Drawing.Size(26, 13);
             this.lblDebugRamAddress.TabIndex = 44;
@@ -203,7 +203,7 @@
             // numericDebugRamAddress
             // 
             this.numericDebugRamAddress.Hexadecimal = true;
-            this.numericDebugRamAddress.Location = new System.Drawing.Point(472, 314);
+            this.numericDebugRamAddress.Location = new System.Drawing.Point(487, 314);
             this.numericDebugRamAddress.Maximum = new decimal(new int[] {
             -1,
             0,
@@ -217,7 +217,7 @@
             // lblDebugSize
             // 
             this.lblDebugSize.AutoSize = true;
-            this.lblDebugSize.Location = new System.Drawing.Point(280, 291);
+            this.lblDebugSize.Location = new System.Drawing.Point(295, 291);
             this.lblDebugSize.Name = "lblDebugSize";
             this.lblDebugSize.Size = new System.Drawing.Size(26, 13);
             this.lblDebugSize.TabIndex = 42;
@@ -226,7 +226,7 @@
             // numericDebugSize
             // 
             this.numericDebugSize.Hexadecimal = true;
-            this.numericDebugSize.Location = new System.Drawing.Point(472, 288);
+            this.numericDebugSize.Location = new System.Drawing.Point(487, 288);
             this.numericDebugSize.Maximum = new decimal(new int[] {
             -1,
             0,
@@ -240,7 +240,7 @@
             // lblDebugRomOffset
             // 
             this.lblDebugRomOffset.AutoSize = true;
-            this.lblDebugRomOffset.Location = new System.Drawing.Point(280, 265);
+            this.lblDebugRomOffset.Location = new System.Drawing.Point(295, 265);
             this.lblDebugRomOffset.Name = "lblDebugRomOffset";
             this.lblDebugRomOffset.Size = new System.Drawing.Size(26, 13);
             this.lblDebugRomOffset.TabIndex = 40;
@@ -249,7 +249,7 @@
             // numericDebugRomOffset
             // 
             this.numericDebugRomOffset.Hexadecimal = true;
-            this.numericDebugRomOffset.Location = new System.Drawing.Point(472, 262);
+            this.numericDebugRomOffset.Location = new System.Drawing.Point(487, 262);
             this.numericDebugRomOffset.Maximum = new decimal(new int[] {
             -1,
             0,
@@ -263,7 +263,7 @@
             // lblArm7Autoload
             // 
             this.lblArm7Autoload.AutoSize = true;
-            this.lblArm7Autoload.Location = new System.Drawing.Point(282, 112);
+            this.lblArm7Autoload.Location = new System.Drawing.Point(297, 112);
             this.lblArm7Autoload.Name = "lblArm7Autoload";
             this.lblArm7Autoload.Size = new System.Drawing.Size(26, 13);
             this.lblArm7Autoload.TabIndex = 38;
@@ -272,7 +272,7 @@
             // numericArm7Autoload
             // 
             this.numericArm7Autoload.Hexadecimal = true;
-            this.numericArm7Autoload.Location = new System.Drawing.Point(472, 109);
+            this.numericArm7Autoload.Location = new System.Drawing.Point(487, 109);
             this.numericArm7Autoload.Maximum = new decimal(new int[] {
             -1,
             0,
@@ -286,7 +286,7 @@
             // lblArm9Autoload
             // 
             this.lblArm9Autoload.AutoSize = true;
-            this.lblArm9Autoload.Location = new System.Drawing.Point(282, 86);
+            this.lblArm9Autoload.Location = new System.Drawing.Point(297, 86);
             this.lblArm9Autoload.Name = "lblArm9Autoload";
             this.lblArm9Autoload.Size = new System.Drawing.Size(26, 13);
             this.lblArm9Autoload.TabIndex = 36;
@@ -295,7 +295,7 @@
             // numericArm9Autoload
             // 
             this.numericArm9Autoload.Hexadecimal = true;
-            this.numericArm9Autoload.Location = new System.Drawing.Point(472, 83);
+            this.numericArm9Autoload.Location = new System.Drawing.Point(487, 83);
             this.numericArm9Autoload.Maximum = new decimal(new int[] {
             -1,
             0,
@@ -309,7 +309,7 @@
             // txtReserved2
             // 
             this.txtReserved2.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
-            this.txtReserved2.Location = new System.Drawing.Point(284, 160);
+            this.txtReserved2.Location = new System.Drawing.Point(299, 160);
             this.txtReserved2.MaxLength = 112;
             this.txtReserved2.Multiline = true;
             this.txtReserved2.Name = "txtReserved2";
@@ -320,7 +320,7 @@
             // lblReserved2
             // 
             this.lblReserved2.AutoSize = true;
-            this.lblReserved2.Location = new System.Drawing.Point(281, 140);
+            this.lblReserved2.Location = new System.Drawing.Point(296, 140);
             this.lblReserved2.Name = "lblReserved2";
             this.lblReserved2.Size = new System.Drawing.Size(26, 13);
             this.lblReserved2.TabIndex = 33;
@@ -329,7 +329,7 @@
             // lblReserved3
             // 
             this.lblReserved3.AutoSize = true;
-            this.lblReserved3.Location = new System.Drawing.Point(281, 237);
+            this.lblReserved3.Location = new System.Drawing.Point(296, 237);
             this.lblReserved3.Name = "lblReserved3";
             this.lblReserved3.Size = new System.Drawing.Size(26, 13);
             this.lblReserved3.TabIndex = 32;
@@ -338,7 +338,7 @@
             // numericReserved3
             // 
             this.numericReserved3.Hexadecimal = true;
-            this.numericReserved3.Location = new System.Drawing.Point(472, 234);
+            this.numericReserved3.Location = new System.Drawing.Point(487, 234);
             this.numericReserved3.Maximum = new decimal(new int[] {
             -1,
             0,
@@ -352,7 +352,7 @@
             // lblSecureDisable
             // 
             this.lblSecureDisable.AutoSize = true;
-            this.lblSecureDisable.Location = new System.Drawing.Point(281, 60);
+            this.lblSecureDisable.Location = new System.Drawing.Point(296, 60);
             this.lblSecureDisable.Name = "lblSecureDisable";
             this.lblSecureDisable.Size = new System.Drawing.Size(27, 13);
             this.lblSecureDisable.TabIndex = 30;
@@ -361,7 +361,7 @@
             // numericSecureDisable
             // 
             this.numericSecureDisable.Hexadecimal = true;
-            this.numericSecureDisable.Location = new System.Drawing.Point(472, 57);
+            this.numericSecureDisable.Location = new System.Drawing.Point(487, 57);
             this.numericSecureDisable.Maximum = new decimal(new int[] {
             -1,
             2147483647,
@@ -375,7 +375,7 @@
             // lblRomTimeout
             // 
             this.lblRomTimeout.AutoSize = true;
-            this.lblRomTimeout.Location = new System.Drawing.Point(281, 34);
+            this.lblRomTimeout.Location = new System.Drawing.Point(296, 34);
             this.lblRomTimeout.Name = "lblRomTimeout";
             this.lblRomTimeout.Size = new System.Drawing.Size(28, 13);
             this.lblRomTimeout.TabIndex = 28;
@@ -384,7 +384,7 @@
             // numericRomTimeout
             // 
             this.numericRomTimeout.Hexadecimal = true;
-            this.numericRomTimeout.Location = new System.Drawing.Point(472, 31);
+            this.numericRomTimeout.Location = new System.Drawing.Point(487, 31);
             this.numericRomTimeout.Maximum = new decimal(new int[] {
             65535,
             0,
@@ -417,7 +417,7 @@
             // numericFlagsInit
             // 
             this.numericFlagsInit.Hexadecimal = true;
-            this.numericFlagsInit.Location = new System.Drawing.Point(175, 391);
+            this.numericFlagsInit.Location = new System.Drawing.Point(190, 392);
             this.numericFlagsInit.Maximum = new decimal(new int[] {
             -1,
             0,
@@ -440,7 +440,7 @@
             // numericFlagsRead
             // 
             this.numericFlagsRead.Hexadecimal = true;
-            this.numericFlagsRead.Location = new System.Drawing.Point(175, 365);
+            this.numericFlagsRead.Location = new System.Drawing.Point(190, 366);
             this.numericFlagsRead.Maximum = new decimal(new int[] {
             -1,
             0,
@@ -463,7 +463,7 @@
             // numericArm7Ram
             // 
             this.numericArm7Ram.Hexadecimal = true;
-            this.numericArm7Ram.Location = new System.Drawing.Point(175, 339);
+            this.numericArm7Ram.Location = new System.Drawing.Point(190, 340);
             this.numericArm7Ram.Maximum = new decimal(new int[] {
             -1,
             0,
@@ -486,7 +486,7 @@
             // numericArm7Entry
             // 
             this.numericArm7Entry.Hexadecimal = true;
-            this.numericArm7Entry.Location = new System.Drawing.Point(175, 313);
+            this.numericArm7Entry.Location = new System.Drawing.Point(190, 314);
             this.numericArm7Entry.Maximum = new decimal(new int[] {
             -1,
             0,
@@ -509,7 +509,7 @@
             // numericArm9Ram
             // 
             this.numericArm9Ram.Hexadecimal = true;
-            this.numericArm9Ram.Location = new System.Drawing.Point(175, 287);
+            this.numericArm9Ram.Location = new System.Drawing.Point(190, 288);
             this.numericArm9Ram.Maximum = new decimal(new int[] {
             -1,
             0,
@@ -532,7 +532,7 @@
             // numericArm9Entry
             // 
             this.numericArm9Entry.Hexadecimal = true;
-            this.numericArm9Entry.Location = new System.Drawing.Point(175, 261);
+            this.numericArm9Entry.Location = new System.Drawing.Point(190, 262);
             this.numericArm9Entry.Maximum = new decimal(new int[] {
             -1,
             0,
@@ -555,7 +555,7 @@
             // numericInternalFlag
             // 
             this.numericInternalFlag.Hexadecimal = true;
-            this.numericInternalFlag.Location = new System.Drawing.Point(175, 235);
+            this.numericInternalFlag.Location = new System.Drawing.Point(190, 236);
             this.numericInternalFlag.Maximum = new decimal(new int[] {
             255,
             0,
@@ -569,7 +569,7 @@
             // numericROMVer
             // 
             this.numericROMVer.Hexadecimal = true;
-            this.numericROMVer.Location = new System.Drawing.Point(175, 208);
+            this.numericROMVer.Location = new System.Drawing.Point(190, 209);
             this.numericROMVer.Maximum = new decimal(new int[] {
             255,
             0,
@@ -592,11 +592,11 @@
             // txtReserved
             // 
             this.txtReserved.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
-            this.txtReserved.Location = new System.Drawing.Point(9, 158);
+            this.txtReserved.Location = new System.Drawing.Point(11, 159);
             this.txtReserved.MaxLength = 18;
             this.txtReserved.Multiline = true;
             this.txtReserved.Name = "txtReserved";
-            this.txtReserved.Size = new System.Drawing.Size(266, 37);
+            this.txtReserved.Size = new System.Drawing.Size(279, 37);
             this.txtReserved.TabIndex = 9;
             this.txtReserved.Leave += new System.EventHandler(this.txtReserved_Leave);
             // 
@@ -621,7 +621,7 @@
             // numericUnitCode
             // 
             this.numericUnitCode.Hexadecimal = true;
-            this.numericUnitCode.Location = new System.Drawing.Point(175, 110);
+            this.numericUnitCode.Location = new System.Drawing.Point(190, 111);
             this.numericUnitCode.Maximum = new decimal(new int[] {
             255,
             0,
@@ -644,7 +644,7 @@
             // txtMakerCode
             // 
             this.txtMakerCode.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
-            this.txtMakerCode.Location = new System.Drawing.Point(175, 84);
+            this.txtMakerCode.Location = new System.Drawing.Point(190, 85);
             this.txtMakerCode.MaxLength = 2;
             this.txtMakerCode.Name = "txtMakerCode";
             this.txtMakerCode.Size = new System.Drawing.Size(100, 20);
@@ -663,7 +663,7 @@
             // txtGameCode
             // 
             this.txtGameCode.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
-            this.txtGameCode.Location = new System.Drawing.Point(175, 58);
+            this.txtGameCode.Location = new System.Drawing.Point(190, 59);
             this.txtGameCode.MaxLength = 4;
             this.txtGameCode.Name = "txtGameCode";
             this.txtGameCode.Size = new System.Drawing.Size(100, 20);
@@ -673,7 +673,7 @@
             // txtGameTitle
             // 
             this.txtGameTitle.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
-            this.txtGameTitle.Location = new System.Drawing.Point(175, 31);
+            this.txtGameTitle.Location = new System.Drawing.Point(190, 32);
             this.txtGameTitle.MaxLength = 12;
             this.txtGameTitle.Name = "txtGameTitle";
             this.txtGameTitle.Size = new System.Drawing.Size(100, 20);
@@ -700,7 +700,7 @@
             this.groupBanner.Controls.Add(this.lblBanVer);
             this.groupBanner.Controls.Add(this.btnImage);
             this.groupBanner.Controls.Add(this.txtImage);
-            this.groupBanner.Location = new System.Drawing.Point(596, 12);
+            this.groupBanner.Location = new System.Drawing.Point(610, 12);
             this.groupBanner.Name = "groupBanner";
             this.groupBanner.Size = new System.Drawing.Size(198, 337);
             this.groupBanner.TabIndex = 3;
@@ -811,7 +811,7 @@
             // 
             this.btnSave.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.btnSave.Image = global::Tinke.Properties.Resources.accept;
-            this.btnSave.Location = new System.Drawing.Point(692, 430);
+            this.btnSave.Location = new System.Drawing.Point(706, 430);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(90, 30);
             this.btnSave.TabIndex = 0;
@@ -824,7 +824,7 @@
             // 
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.btnCancel.Image = global::Tinke.Properties.Resources.cancel;
-            this.btnCancel.Location = new System.Drawing.Point(596, 430);
+            this.btnCancel.Location = new System.Drawing.Point(610, 430);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(90, 30);
             this.btnCancel.TabIndex = 1;
@@ -837,7 +837,7 @@
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
             this.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
-            this.ClientSize = new System.Drawing.Size(794, 472);
+            this.ClientSize = new System.Drawing.Size(808, 472);
             this.Controls.Add(this.groupBanner);
             this.Controls.Add(this.groupHeader);
             this.Controls.Add(this.btnCancel);

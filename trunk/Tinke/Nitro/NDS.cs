@@ -411,6 +411,7 @@ namespace Tinke.Nitro
             diccionario.Add("GR", "GSP");
             diccionario.Add("GT", "505 Games");
             diccionario.Add("GQ", "Engine Software");
+            diccionario.Add("GY", "The Game Factory");
             diccionario.Add("H3", "Zen");
             diccionario.Add("H4", "SNK PLAYMORE");
             diccionario.Add("HF", "Level 5");

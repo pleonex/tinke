@@ -281,6 +281,7 @@
     <S1F>Color de fondo</S1F>
     <S20>Quitar</S20>
     <S21>Importar</S21>
+    <S22>Seleccionar color transparente</S22>
   </NCGR>
   <NSCR>
     <S00>Opciones del archivo Map</S00>
@@ -329,6 +330,7 @@
     <S21>Número de paleta</S21>
     <S22>Tile offset original</S22>
     <S23>Tile offset modificado</S23>
+    <S24>Importar</S24>
   </NCER>
   <NANR>
     <S01>Intervalo:</S01>
@@ -484,4 +486,12 @@
     <S29>Compañía</S29>
     <S2A>Códigos de las compañías</S2A>
   </EditRomInfo>
+  <Dialog>
+    <S00>Elije el modo de selección de color</S00>
+    <S01>Aceptar</S01>
+    <S02>Hacer click sobre el color en la imagen</S02>
+    <S03>Elegir color a partir de valores RGB</S03>
+    <S04>Introduce offset</S04>
+    <S05>Introduce el offset de inicio de lectura del archivo</S05>
+  </Dialog>
 </Language>

@@ -49,31 +49,35 @@ namespace Sounds
         }
         private void ReadLanguage()
         {
-            XElement xml = XElement.Load(Application.StartupPath + Path.DirectorySeparatorChar + "Plugins" +
-                Path.DirectorySeparatorChar + "SoundLang.xml");
-            xml = xml.Element(pluginHost.Get_Language()).Element("SoundControl");
+            try
+            {
+                XElement xml = XElement.Load(Application.StartupPath + Path.DirectorySeparatorChar + "Plugins" +
+                    Path.DirectorySeparatorChar + "SoundLang.xml");
+                xml = xml.Element(pluginHost.Get_Language()).Element("SoundControl");
 
-            columnProper.Text = xml.Element("S00").Value;
-            columnValue.Text = xml.Element("S01").Value;
-            btnExport.Text = xml.Element("S02").Value;
-            btnImport.Text = xml.Element("S03").Value;
-            checkLoop.Text = xml.Element("S04").Value;
+                columnProper.Text = xml.Element("S00").Value;
+                columnValue.Text = xml.Element("S01").Value;
+                btnExport.Text = xml.Element("S02").Value;
+                btnImport.Text = xml.Element("S03").Value;
+                checkLoop.Text = xml.Element("S04").Value;
 
-            listProp.Items[0].Text = xml.Element("S06").Value;
-            listProp.Items[1].Text = xml.Element("S07").Value;
-            listProp.Items[2].Text = xml.Element("S08").Value;
-            listProp.Items[3].Text = xml.Element("S09").Value;
-            listProp.Items[4].Text = xml.Element("S0A").Value;
-            listProp.Items[5].Text = xml.Element("S0B").Value;
-            listProp.Items[6].Text = xml.Element("S0C").Value;
-            listProp.Items[7].Text = xml.Element("S0D").Value;
-            listProp.Items[8].Text = xml.Element("S0E").Value;
-            listProp.Items[9].Text = xml.Element("S0F").Value;
-            listProp.Items[10].Text = xml.Element("S10").Value;
-            listProp.Items[11].Text = xml.Element("S11").Value;
-            listProp.Items[12].Text = xml.Element("S12").Value;
-            listProp.Items[13].Text = xml.Element("S13").Value;
-            listProp.Items[14].Text = xml.Element("S14").Value;
+                listProp.Items[0].Text = xml.Element("S06").Value;
+                listProp.Items[1].Text = xml.Element("S07").Value;
+                listProp.Items[2].Text = xml.Element("S08").Value;
+                listProp.Items[3].Text = xml.Element("S09").Value;
+                listProp.Items[4].Text = xml.Element("S0A").Value;
+                listProp.Items[5].Text = xml.Element("S0B").Value;
+                listProp.Items[6].Text = xml.Element("S0C").Value;
+                listProp.Items[7].Text = xml.Element("S0D").Value;
+                listProp.Items[8].Text = xml.Element("S0E").Value;
+                listProp.Items[9].Text = xml.Element("S0F").Value;
+                listProp.Items[10].Text = xml.Element("S10").Value;
+                listProp.Items[11].Text = xml.Element("S11").Value;
+                listProp.Items[12].Text = xml.Element("S12").Value;
+                listProp.Items[13].Text = xml.Element("S13").Value;
+                listProp.Items[14].Text = xml.Element("S14").Value;
+            }
+            catch { throw new Exception("There was an error reading the XML file of language."); } 
         }
 
         private void Information()

@@ -184,39 +184,43 @@ namespace TOTTEMPEST
 
         private void ReadLanguage()
         {
-            XElement xml = XElement.Load(Application.StartupPath + Path.DirectorySeparatorChar + "Plugins" +
-                Path.DirectorySeparatorChar + "TottempestLang.xml");
-            xml = xml.Element(pluginHost.Get_Language()).Element("iNCGR");
+            try
+            {
+                XElement xml = XElement.Load(Application.StartupPath + Path.DirectorySeparatorChar + "Plugins" +
+                    Path.DirectorySeparatorChar + "TottempestLang.xml");
+                xml = xml.Element(pluginHost.Get_Language()).Element("iNCGR");
 
-            label5.Text = xml.Element("S01").Value;
-            groupProp.Text = xml.Element("S02").Value;
-            columnPos.Text = xml.Element("S03").Value;
-            columnCampo.Text = xml.Element("S04").Value;
-            columnValor.Text = xml.Element("S05").Value;
-            listInfo.Items[0].SubItems[1].Text = xml.Element("S06").Value;
-            listInfo.Items[1].SubItems[1].Text = xml.Element("S07").Value;
-            listInfo.Items[2].SubItems[1].Text = xml.Element("S08").Value;
-            listInfo.Items[3].SubItems[1].Text = xml.Element("S09").Value;
-            listInfo.Items[4].SubItems[1].Text = xml.Element("S0A").Value;
-            listInfo.Items[5].SubItems[1].Text = xml.Element("S0B").Value;
-            listInfo.Items[6].SubItems[1].Text = xml.Element("S0C").Value;
-            listInfo.Items[7].SubItems[1].Text = xml.Element("S0D").Value;
-            listInfo.Items[8].SubItems[1].Text = xml.Element("S0E").Value;
-            listInfo.Items[9].SubItems[1].Text = xml.Element("S0F").Value;
-            listInfo.Items[10].SubItems[1].Text = xml.Element("S10").Value;
-            label3.Text = xml.Element("S11").Value;
-            label1.Text = xml.Element("S12").Value;
-            label2.Text = xml.Element("S13").Value;
-            label6.Text = xml.Element("S14").Value;
-            btnSave.Text = xml.Element("S15").Value;
-            comboBox1.Items[0] = xml.Element("S16").Value;
-            comboBox1.Items[1] = xml.Element("S17").Value;
-            //comboBox1.Items[2] = xml.Element("S18").Value;
-            checkTransparency.Text = xml.Element("S1C").Value;
-            lblZoom.Text = xml.Element("S1E").Value;
-            btnBgd.Text = xml.Element("S1F").Value;
-            btnBgdTrans.Text = xml.Element("S20").Value;
-            btnImport.Text = xml.Element("S21").Value;
+                label5.Text = xml.Element("S01").Value;
+                groupProp.Text = xml.Element("S02").Value;
+                columnPos.Text = xml.Element("S03").Value;
+                columnCampo.Text = xml.Element("S04").Value;
+                columnValor.Text = xml.Element("S05").Value;
+                listInfo.Items[0].SubItems[1].Text = xml.Element("S06").Value;
+                listInfo.Items[1].SubItems[1].Text = xml.Element("S07").Value;
+                listInfo.Items[2].SubItems[1].Text = xml.Element("S08").Value;
+                listInfo.Items[3].SubItems[1].Text = xml.Element("S09").Value;
+                listInfo.Items[4].SubItems[1].Text = xml.Element("S0A").Value;
+                listInfo.Items[5].SubItems[1].Text = xml.Element("S0B").Value;
+                listInfo.Items[6].SubItems[1].Text = xml.Element("S0C").Value;
+                listInfo.Items[7].SubItems[1].Text = xml.Element("S0D").Value;
+                listInfo.Items[8].SubItems[1].Text = xml.Element("S0E").Value;
+                listInfo.Items[9].SubItems[1].Text = xml.Element("S0F").Value;
+                listInfo.Items[10].SubItems[1].Text = xml.Element("S10").Value;
+                label3.Text = xml.Element("S11").Value;
+                label1.Text = xml.Element("S12").Value;
+                label2.Text = xml.Element("S13").Value;
+                label6.Text = xml.Element("S14").Value;
+                btnSave.Text = xml.Element("S15").Value;
+                comboBox1.Items[0] = xml.Element("S16").Value;
+                comboBox1.Items[1] = xml.Element("S17").Value;
+                //comboBox1.Items[2] = xml.Element("S18").Value;
+                checkTransparency.Text = xml.Element("S1C").Value;
+                lblZoom.Text = xml.Element("S1E").Value;
+                btnBgd.Text = xml.Element("S1F").Value;
+                btnBgdTrans.Text = xml.Element("S20").Value;
+                btnImport.Text = xml.Element("S21").Value;
+            }
+            catch { throw new Exception("There was an error reading the XML file of language."); } 
         }
         private void Info()
         {

@@ -21,12 +21,16 @@ namespace Sounds
         {
             InitializeComponent();
 
-            XElement xml = XElement.Load(Application.StartupPath + Path.DirectorySeparatorChar + "Plugins" +
-    Path.DirectorySeparatorChar + "SoundLang.xml");
-            xml = xml.Element(lang).Element("Messages");
+            try
+            {
+                XElement xml = XElement.Load(Application.StartupPath + Path.DirectorySeparatorChar + "Plugins" +
+                    Path.DirectorySeparatorChar + "SoundLang.xml");
+                xml = xml.Element(lang).Element("Messages");
 
-            this.Text = xml.Element("S01").Value;
-            lblText.Text = xml.Element("S00").Value;
+                this.Text = xml.Element("S01").Value;
+                lblText.Text = xml.Element("S00").Value;
+            }
+            catch { throw new Exception("There was an error reading the XML file of language."); } 
         }
     }
 }

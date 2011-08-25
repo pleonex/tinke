@@ -24,9 +24,14 @@ namespace LAYTON
         }
         private void LeerIdioma()
         {
-            System.Xml.Linq.XElement xml = System.Xml.Linq.XElement.Load(Application.StartupPath + "\\Plugins\\LaytonLang.xml");
-            xml = xml.Element(pluginHost.Get_Language()).Element("InfoAni");
-            btnSave.Text = xml.Element("S03").Value;
+            try
+            {
+                System.Xml.Linq.XElement xml = System.Xml.Linq.XElement.Load(Application.StartupPath + "\\Plugins\\LaytonLang.xml");
+                xml = xml.Element(pluginHost.Get_Language()).Element("InfoAni");
+                btnSave.Text = xml.Element("S03").Value;
+            }
+            catch { throw new Exception("There was an error reading the XML file of language."); } 
+
         }
 
         private void btnSave_Click(object sender, EventArgs e)

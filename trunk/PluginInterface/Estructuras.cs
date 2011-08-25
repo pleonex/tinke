@@ -248,6 +248,19 @@ namespace PluginInterface
         Sistema,
         Script
     }
+    public enum FormatCompress // From DSDecmp
+    {
+        LZOVL, // keep this as the first one, as only the end of a file may be LZ-ovl-compressed (and overlay files are oftenly double-compressed)
+        LZ10,
+        LZ11,
+        HUFF4,
+        HUFF8,
+        RLE,
+        HUFF,
+        NDS,
+        GBA,
+        Invalid
+    }
     public enum Orden_Tiles
     {
         No_Tiles,

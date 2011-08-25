@@ -737,6 +737,8 @@ namespace Tinke
             }
             else
             {
+                for (int i = 0; i < panelObj.Controls.Count; i++)
+                    panelObj.Controls[i].Dispose();
                 panelObj.Controls.Clear();
                 Control control = accion.See_File();
                 if (control.Size.Height != 0 && control.Size.Width != 0) // Si no sería nulo
@@ -772,15 +774,16 @@ namespace Tinke
                 espera.Start("S04");
             uncompress = accion.Extract();
 
-            if (!(uncompress.files is List<Archivo>) && !(uncompress.folders is List<Carpeta>)) // En caso de que falle la extracción
+            if (!(uncompress.files is List<Archivo>) || !(uncompress.folders is List<Carpeta>)) // En caso de que falle la extracción
             {
+                if (!isMono)
+                    espera.Abort();
                 MessageBox.Show(Tools.Helper.ObtenerTraduccion("Sistema", "S36"));
                 return;
             }
 
             toolStripOpenAs.Enabled = false;
 
-            Set_Formato(accion.Root);
             Get_SupportedFiles();
 
             TreeNode selected = treeSystem.SelectedNode;
@@ -796,6 +799,7 @@ namespace Tinke
 
             treeSystem.SelectedNode.Nodes.AddRange((TreeNode[])nodos);
             treeSystem.SelectedNode.Expand();
+            treeSystem.Focus();
 
             debug.Añadir_Texto(sb.ToString());
             sb.Length = 0;
@@ -814,7 +818,6 @@ namespace Tinke
                 espera.Start("S04");
 
             Recursivo_UncompressFolder(accion.Select_Folder());
-            Set_Formato(accion.Root);
             Get_SupportedFiles();
             treeSystem.Nodes.Clear();
             treeSystem.Nodes.Add(Jerarquizar_Nodos(accion.Root));
@@ -1107,7 +1110,57 @@ namespace Tinke
         }
         private void s2AToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            btnUncompress_Click(btnDescomprimir, e);
+            Dialog.SelectOffset dialog = new Dialog.SelectOffset();
+            if (dialog.ShowDialog() != System.Windows.Forms.DialogResult.OK)
+                return;
+
+            #region Save the new file
+            
+            String currFile = Path.GetTempFileName();
+            accion.Save_File(accion.IDSelect, currFile);
+
+            string tempFile = Path.GetTempPath() + Path.DirectorySeparatorChar + accion.Select_File().name;
+            Byte[] compressFile = new Byte[(new FileInfo(currFile).Length) - dialog.Offset];
+            Array.Copy(File.ReadAllBytes(currFile), dialog.Offset, compressFile, 0, compressFile.Length); ;
+            File.WriteAllBytes(tempFile, compressFile);
+            #endregion
+
+            Thread espera = new System.Threading.Thread(ThreadEspera);
+            if (!isMono)
+                espera.Start("S04");
+            Carpeta uncompress = accion.Extract(tempFile, accion.IDSelect);
+
+            if (!(uncompress.files is List<Archivo>) || !(uncompress.folders is List<Carpeta>)) // En caso de que falle la extracción
+            {
+                if (!isMono)
+                    espera.Abort();
+                MessageBox.Show(Tools.Helper.ObtenerTraduccion("Sistema", "S36"));
+                return;
+            }
+
+            toolStripOpenAs.Enabled = false;
+            Get_SupportedFiles();
+
+            TreeNode selected = treeSystem.SelectedNode;
+            CarpetaANodo(uncompress, ref selected);
+            selected.ImageIndex = accion.ImageFormatFile(Formato.Comprimido);
+            selected.SelectedImageIndex = accion.ImageFormatFile(Formato.Comprimido);
+
+            // Agregamos los nodos al árbol
+            TreeNode[] nodos = new TreeNode[selected.Nodes.Count]; selected.Nodes.CopyTo(nodos, 0);
+            treeSystem.SelectedNode.Tag = selected.Tag;
+            accion.IDSelect = Convert.ToInt32(selected.Tag);
+            selected.Nodes.Clear();
+
+            treeSystem.SelectedNode.Nodes.AddRange((TreeNode[])nodos);
+            treeSystem.SelectedNode.Expand();
+            treeSystem.Focus();
+
+            debug.Añadir_Texto(sb.ToString());
+            sb.Length = 0;
+
+            if (!isMono)
+                espera.Abort();
         }
         private void toolStripFAT1_Click(object sender, EventArgs e)
         {
@@ -1120,7 +1173,6 @@ namespace Tinke
 
             toolStripOpenAs.Enabled = false;
 
-            Set_Formato(accion.Root);
             Get_SupportedFiles();
 
             TreeNode selected = treeSystem.SelectedNode;
@@ -1149,7 +1201,6 @@ namespace Tinke
 
             toolStripOpenAs.Enabled = false;
 
-            Set_Formato(accion.Root);
             Get_SupportedFiles();
 
             TreeNode selected = treeSystem.SelectedNode;

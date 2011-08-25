@@ -52,7 +52,14 @@
     <Compile Include="ImageControl.designer.cs">
       <DependentUpon>ImageControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="CellControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="iNCER.designer.cs">
+      <DependentUpon>CellControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="Main.cs" />
+    <Compile Include="OBJS.cs" />
     <Compile Include="PaletteControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -64,12 +71,20 @@
     <Compile Include="SLZ.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="CellControl.resx">
+      <DependentUpon>CellControl.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="ImageControl.resx">
       <DependentUpon>ImageControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="PaletteControl.resx">
       <DependentUpon>PaletteControl.cs</DependentUpon>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="TETRISDSLang.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

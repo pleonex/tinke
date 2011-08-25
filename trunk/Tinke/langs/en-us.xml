@@ -265,6 +265,7 @@
     <S1F>Background colour</S1F>
     <S20>Remove</S20>
     <S21>Import</S21>
+    <S22>Set transparent color</S22>
   </NCGR>
   <NSCR>
     <S00>Map options</S00>
@@ -313,6 +314,7 @@
     <S21>Palette number</S21>
     <S22>Original tile offset</S22>
     <S23>Fixed tile offset</S23>
+    <S24>Import</S24>
   </NCER>
   <NANR>
     <S01>Interval:</S01>
@@ -468,4 +470,12 @@
     <S29>Company</S29>
     <S2A>Company codes</S2A>
   </EditRomInfo>
+  <Dialog>
+    <S00>Choose the selection mode</S00>
+    <S01>Accept</S01>
+    <S02>Click on a color of the image</S02>
+    <S03>Choose color from RGB values</S03>
+    <S04>Choose the offset</S04>
+    <S05>Write the offset where the reading will start</S05>
+  </Dialog>
 </Language>

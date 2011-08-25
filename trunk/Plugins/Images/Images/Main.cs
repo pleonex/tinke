@@ -55,7 +55,7 @@ namespace Images
                 return Formato.Imagen;
             else if (nombre.EndsWith(".NTFP") && ext != "BLDT")
                 return Formato.Paleta;
-            else if (nombre.EndsWith(".PLT"))
+            else if (nombre.EndsWith(".PLT") || nombre.EndsWith(".PAL") || nombre.EndsWith(".PLTT"))
                 return Formato.Paleta;
             else if (nombre.EndsWith(".CHAR") || nombre.EndsWith(".CHR"))
                 return Formato.Imagen;
@@ -69,7 +69,7 @@ namespace Images
             {
                 new nbfp(pluginHost, archivo, id).Leer();
                 
-                iNCLR control = new iNCLR(pluginHost, pluginHost.Get_NCLR());
+                PaletteControl control = new PaletteControl(pluginHost);
                 return control;
             }
 			if (archivo.ToUpper().EndsWith(".NBFC"))
@@ -78,7 +78,7 @@ namespace Images
 
 				if (pluginHost.Get_NCLR().cabecera.file_size != 0x00)
 				{
-                    iNCGR control = new iNCGR(pluginHost, pluginHost.Get_NCGR(), pluginHost.Get_NCLR());
+                    ImageControl control = new ImageControl(pluginHost, false);
                     return control;
 				}
 			}
@@ -92,7 +92,7 @@ namespace Images
 					NCGR tile = pluginHost.Get_NCGR();
 					tile.rahc.tileData = pluginHost.Transformar_NSCR(pluginHost.Get_NSCR(), tile.rahc.tileData);
 					
-					iNCGR control = new iNCGR(pluginHost, tile, pluginHost.Get_NCLR());
+					ImageControl control = new ImageControl(pluginHost, true);
 					return control;
 				}
 			}
@@ -103,7 +103,7 @@ namespace Images
 
                 if (pluginHost.Get_NCLR().cabecera.file_size != 0x00)
                 {
-                    iNCGR control = new iNCGR(pluginHost, pluginHost.Get_NCGR(), pluginHost.Get_NCLR());
+                    ImageControl control = new ImageControl(pluginHost, false);
                     return control;
                 }
             }
@@ -111,7 +111,7 @@ namespace Images
             {
                 new ntfp(pluginHost, archivo, id).Leer();
 
-                iNCLR control = new iNCLR(pluginHost, pluginHost.Get_NCLR());
+                PaletteControl control = new PaletteControl(pluginHost);
                 return control;
             }
 
@@ -121,21 +121,20 @@ namespace Images
 
                 if (pluginHost.Get_NCLR().cabecera.file_size != 0x00)
                 {
-                    iNCGR control = new iNCGR(pluginHost, pluginHost.Get_NCGR(), pluginHost.Get_NCLR());
+                    ImageControl control = new ImageControl(pluginHost, false);
                     return control;
                 }
             }
-            if (archivo.ToUpper().EndsWith(".PLT"))
+            if (archivo.ToUpper().EndsWith(".PLT") || archivo.ToUpper().EndsWith(".PAL") || archivo.ToUpper().EndsWith(".PLTT"))
             {
                 new PLT(pluginHost, archivo, id).Leer();
 
-                iNCLR control = new iNCLR(pluginHost, pluginHost.Get_NCLR());
+                PaletteControl control = new PaletteControl(pluginHost);
                 return control;
             }
 			
 			return new Control();
-		}
-		
+		}		
 		public void Leer(string archivo, int id)
 		{
 			if (archivo.ToUpper().EndsWith(".NBFP"))
@@ -148,7 +147,7 @@ namespace Images
                 new ntfp(pluginHost, archivo, id).Leer();
             if (archivo.ToUpper().EndsWith(".NTFT"))
                 new ntft(pluginHost, archivo, id).Leer();
-            if (archivo.ToUpper().EndsWith(".PLT"))
+            if (archivo.ToUpper().EndsWith(".PLT") || archivo.ToUpper().EndsWith(".PAL") || archivo.ToUpper().EndsWith(".PLTT"))
                 new PLT(pluginHost, archivo, id).Leer();
             if (archivo.ToUpper().EndsWith(".CHAR") || archivo.ToUpper().EndsWith(".CHR"))
                 new CHAR(pluginHost, archivo, id).Leer();

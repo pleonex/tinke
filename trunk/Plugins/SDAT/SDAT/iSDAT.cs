@@ -65,26 +65,44 @@ namespace SDAT
             lastFileID++;
             lastFolderID++;
         }
+        protected override void Dispose(bool disposing)
+        {
+            if (loop is Thread)
+                if (loop.ThreadState == ThreadState.Running)
+                    loop.Abort();
+
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
+
         private void ReadLanguage()
         {
-            System.Xml.Linq.XElement xml = System.Xml.Linq.XElement.Load(Application.StartupPath + "\\Plugins\\SDATLang.xml");
-            xml = xml.Element(pluginHost.Get_Language());
-            xml = xml.Element("iSDAT");
+            try
+            {
+                System.Xml.Linq.XElement xml = System.Xml.Linq.XElement.Load(Application.StartupPath + "\\Plugins\\SDATLang.xml");
+                xml = xml.Element(pluginHost.Get_Language());
+                xml = xml.Element("iSDAT");
 
-            columnCampo.Text = xml.Element("S00").Value;
-            columnValor.Text = xml.Element("S01").Value;
-            listProp.Items[0].Text = xml.Element("S02").Value;
-            listProp.Items[1].Text = xml.Element("S03").Value;
-            listProp.Items[2].Text = xml.Element("S04").Value;
-            listProp.Items[3].Text = xml.Element("S05").Value;
-            checkLoop.Text = xml.Element("S06").Value;
-            btnUncompress.Text = xml.Element("S07").Value;
-            btnExtract.Text = xml.Element("S08").Value;
-            btnMidi.Text = xml.Element("S09").Value;
-            btnWav.Text = xml.Element("S0A").Value;
-            btnImport.Text = xml.Element("S0B").Value;
-            btnCreate.Text = xml.Element("S0C").Value;
-            btnChangeFile.Text = xml.Element("S0D").Value;
+                columnCampo.Text = xml.Element("S00").Value;
+                columnValor.Text = xml.Element("S01").Value;
+                listProp.Items[0].Text = xml.Element("S02").Value;
+                listProp.Items[1].Text = xml.Element("S03").Value;
+                listProp.Items[2].Text = xml.Element("S04").Value;
+                listProp.Items[3].Text = xml.Element("S05").Value;
+                checkLoop.Text = xml.Element("S06").Value;
+                btnUncompress.Text = xml.Element("S07").Value;
+                btnExtract.Text = xml.Element("S08").Value;
+                btnMidi.Text = xml.Element("S09").Value;
+                btnWav.Text = xml.Element("S0A").Value;
+                btnImport.Text = xml.Element("S0B").Value;
+                btnCreate.Text = xml.Element("S0C").Value;
+                btnChangeFile.Text = xml.Element("S0D").Value;
+            }
+            catch { throw new Exception("There was an error reading the XML file of language."); } 
         }
 
         #region System folder administration

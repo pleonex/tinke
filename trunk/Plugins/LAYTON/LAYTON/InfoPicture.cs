@@ -27,14 +27,18 @@ namespace LAYTON
         }
         public void LeerIdioma()
         {
-            System.Xml.Linq.XElement xml = System.Xml.Linq.XElement.Load(Application.StartupPath + "\\Plugins\\LaytonLang.xml");
-            xml = xml.Element(idioma).Element("InfoPicture");
+            try
+            {
+                System.Xml.Linq.XElement xml = System.Xml.Linq.XElement.Load(Application.StartupPath + "\\Plugins\\LaytonLang.xml");
+                xml = xml.Element(idioma).Element("InfoPicture");
 
-            groupImage.Text = xml.Element("S01").Value;
-            lblTipo.Text = xml.Element("S02").Value;
-            lblNImgs.Text = xml.Element("S03").Value;
-            groupBox1.Text = xml.Element("S04").Value;
-            pestaña = xml.Element("S05").Value;
+                groupImage.Text = xml.Element("S01").Value;
+                lblTipo.Text = xml.Element("S02").Value;
+                lblNImgs.Text = xml.Element("S03").Value;
+                groupBox1.Text = xml.Element("S04").Value;
+                pestaña = xml.Element("S05").Value;
+            }
+            catch { throw new Exception("There was an error reading the XML file of language."); }
         }
 
         public string Idioma

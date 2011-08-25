@@ -39,10 +39,12 @@ namespace TETRIS_DS
             ncgr.cabecera.file_size = file_size;
 
             ncgr.orden = Orden_Tiles.Horizontal;
-            ncgr.rahc.nTiles = (file_size / 0x40);
-            ncgr.rahc.depth = System.Windows.Forms.ColorDepth.Depth8Bit;
+            ncgr.rahc.nTiles = (file_size / 0x20);
+            ncgr.rahc.depth = System.Windows.Forms.ColorDepth.Depth4Bit;
             ncgr.rahc.nTilesX = 0x0020;
             ncgr.rahc.nTilesY = (ushort)(ncgr.rahc.nTiles / ncgr.rahc.nTilesX);
+            if (ncgr.rahc.nTilesY == 0x00)
+                ncgr.rahc.nTilesY = 0x01;
             ncgr.rahc.tiledFlag = 0x00000001;
             ncgr.rahc.size_section = file_size;
             ncgr.rahc.tileData = new NTFT();
@@ -51,7 +53,7 @@ namespace TETRIS_DS
 
             for (int i = 0; i < ncgr.rahc.nTiles; i++)
             {
-                ncgr.rahc.tileData.tiles[i] = br.ReadBytes(0x40);
+                ncgr.rahc.tileData.tiles[i] = pluginHost.Bit8ToBit4(br.ReadBytes(0x20));
                 ncgr.rahc.tileData.nPaleta[i] = 0;
             }
 

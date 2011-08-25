@@ -1,4 +1,4 @@
-﻿namespace Tinke
+﻿namespace Tinke.Dialog
 {
     partial class MapOptions
     {

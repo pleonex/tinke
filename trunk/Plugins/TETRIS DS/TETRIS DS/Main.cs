@@ -35,6 +35,10 @@ namespace TETRIS_DS
                 return Formato.Paleta;
             else if (nombre.ToUpper().EndsWith(".CLZ") || nombre.ToUpper().EndsWith(".CHR"))
                 return Formato.Imagen;
+            else if (nombre.ToUpper().EndsWith(".OBJS"))
+                return Formato.Celdas;
+            else if (nombre.ToUpper().EndsWith(".SRL"))
+                return Formato.Sistema;
 
             return Formato.Desconocido;
         }
@@ -51,6 +55,8 @@ namespace TETRIS_DS
                 PLZ.Read(archivo, id, pluginHost);
             else if (archivo.ToUpper().EndsWith(".CLZ") || archivo.ToUpper().EndsWith(".CHR"))
                 CLZ.Read(archivo, id, pluginHost);
+            else if (archivo.ToUpper().EndsWith(".OBJS"))
+                OBJS.Read(archivo, pluginHost);
         }
         public System.Windows.Forms.Control Show_Info(string archivo, int id)
         {
@@ -67,6 +73,8 @@ namespace TETRIS_DS
                 return new PaletteControl(pluginHost);
             else if (archivo.ToUpper().EndsWith(".BDZ") || archivo.ToUpper().EndsWith(".BLZ"))
                 return new ImageControl(pluginHost, false);
+            else if (archivo.ToUpper().EndsWith(".OBJS"))
+                return new CellControl(pluginHost);
 
             return new System.Windows.Forms.Control();
         }
