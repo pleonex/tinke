@@ -154,7 +154,7 @@ namespace Tinke
             bw.Write(tile.rahc.unknown1);
             bw.Write(tile.rahc.unknown2);
             bw.Write(tile.rahc.tiledFlag);
-            bw.Write((uint)(tile.rahc.depth == ColorDepth.Depth4Bit ? tile.rahc.size_tiledata * 2 : tile.rahc.size_tiledata));
+            bw.Write((uint)(tile.rahc.depth == ColorDepth.Depth4Bit ? tile.rahc.size_tiledata / 2 : tile.rahc.size_tiledata));
             bw.Write(tile.rahc.unknown3);
             for (int i = 0; i < tile.rahc.tileData.tiles.Length; i++)
                 if (tile.rahc.depth == ColorDepth.Depth4Bit)
@@ -408,6 +408,9 @@ namespace Tinke
         private static Bitmap Horizontal(NCGR tile, NCLR paleta, int startTile, int tilesX, int tilesY)
         {
             Bitmap imagen = new Bitmap(tilesX * 8, tilesY * 8);
+
+            tile.rahc.tileData.tiles = Convertir.BytesToTiles(Convertir.TilesToBytes(tile.rahc.tileData.tiles, startTile));
+            startTile = 0;
 
             for (int ht = 0; ht < tilesY; ht++)
             {

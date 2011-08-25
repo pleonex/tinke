@@ -49,9 +49,9 @@ namespace Images
                 return Formato.Paleta;
             else if (nombre.EndsWith(".NBFC"))
                 return Formato.Imagen;
-            else if (nombre.EndsWith(".NBFS"))
+            else if (nombre.EndsWith(".NBFS") || nombre.EndsWith(".MAP"))
                 return Formato.Map;
-            else if (nombre.EndsWith(".NTFT") && ext != "CMPR" && ext != "BLDT")
+            else if (nombre.EndsWith(".NTFT") && ext != "CMPR" && ext != "BLDT" || nombre.EndsWith(".RAW"))
                 return Formato.Imagen;
             else if (nombre.EndsWith(".NTFP") && ext != "BLDT")
                 return Formato.Paleta;
@@ -72,7 +72,7 @@ namespace Images
                 PaletteControl control = new PaletteControl(pluginHost);
                 return control;
             }
-			if (archivo.ToUpper().EndsWith(".NBFC"))
+            if (archivo.ToUpper().EndsWith(".NBFC") || archivo.ToUpper().EndsWith(".RAW"))
 			{
 				new nbfc(pluginHost, archivo, id).Leer();
 
@@ -83,7 +83,7 @@ namespace Images
 				}
 			}
 
-			if (archivo.ToUpper().EndsWith(".NBFS"))
+			if (archivo.ToUpper().EndsWith(".NBFS") || archivo.ToUpper().EndsWith(".MAP"))
 			{
 				new nbfs(pluginHost, archivo, id).Leer();
 				
@@ -139,9 +139,9 @@ namespace Images
 		{
 			if (archivo.ToUpper().EndsWith(".NBFP"))
 				new nbfp(pluginHost, archivo, id).Leer();
-			if (archivo.ToUpper().EndsWith(".NBFC"))
+            if (archivo.ToUpper().EndsWith(".NBFC") || archivo.ToUpper().EndsWith(".RAW"))
 				new nbfc(pluginHost, archivo, id).Leer();
-			if (archivo.ToUpper().EndsWith(".NBFS"))
+			if (archivo.ToUpper().EndsWith(".NBFS") ||archivo.ToUpper().EndsWith(".MAP"))
 				new nbfs(pluginHost, archivo, id).Leer();
             if (archivo.ToUpper().EndsWith(".NTFP"))
                 new ntfp(pluginHost, archivo, id).Leer();

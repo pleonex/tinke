@@ -327,7 +327,7 @@ namespace Tinke
                         if (tile.orden == Orden_Tiles.No_Tiles)
                             celdas[i] = Imagen_NCGR.Crear_Imagen(tile, paleta, (int)tileOffset * 64, banco.cells[i].width, banco.cells[i].height);
                         else
-                            celdas[i] = Imagen_NCGR.Crear_Imagen(tile, paleta, (int)tileOffset, banco.cells[i].width / 8, banco.cells[i].height / 8);
+                            celdas[i] = Imagen_NCGR.Crear_Imagen(tile, paleta, (int)tileOffset * 64, banco.cells[i].width / 8, banco.cells[i].height / 8);
                     }
                     else
                     {
@@ -400,7 +400,7 @@ namespace Tinke
                         if (tile.orden == Orden_Tiles.No_Tiles)
                             celdas[i] = Imagen_NCGR.Crear_Imagen(tile, paleta, (int)tileOffset * 64, banco.cells[i].width, banco.cells[i].height);
                         else
-                            celdas[i] = Imagen_NCGR.Crear_Imagen(tile, paleta, (int)tileOffset, banco.cells[i].width / 8, banco.cells[i].height / 8);
+                            celdas[i] = Imagen_NCGR.Crear_Imagen(tile, paleta, (int)tileOffset * 64, banco.cells[i].width / 8, banco.cells[i].height / 8);
                     }
                     else
                     {
@@ -506,5 +506,61 @@ namespace Tinke
 
             return result.ToArray();
         }
+        public static Byte[][] Change_ColorCell(Cell cell, uint blockSize, NCGR image, int oldIndex, int newIndex)
+        {
+            List<Byte[]> result = new List<byte[]>();
+            List<Byte> temp = new List<byte>();
+
+            if (image.orden == Orden_Tiles.Horizontal)
+            {
+                uint tileOffset = (image.rahc.depth == System.Windows.Forms.ColorDepth.Depth4Bit ? cell.tileOffset * 2 : cell.tileOffset);
+                tileOffset *= (blockSize != 0x00 ? blockSize : 1);
+
+                for (int i = 0; i < image.rahc.tileData.tiles.Length; i++)
+                {
+                    if (i >= tileOffset && i < (int)(tileOffset + (cell.width * cell.height) / 0x40))
+                    {
+                        Byte[] tile = new Byte[64];
+                        for (int j = 0; j < 64; j++)
+                            if (image.rahc.tileData.tiles[i][j] == oldIndex)
+                                tile[j] = (byte)newIndex;
+                            else if (image.rahc.tileData.tiles[i][j] == newIndex)
+                                tile[j] = (byte)oldIndex;
+                            else
+                                tile[j] = image.rahc.tileData.tiles[i][j];
+
+                        result.Add(tile);
+                    }
+                    else
+                        result.Add(image.rahc.tileData.tiles[i]);
+
+                }
+            }
+            else if (image.orden == Orden_Tiles.No_Tiles)
+            {
+                uint tileOffset = (image.rahc.depth == System.Windows.Forms.ColorDepth.Depth4Bit ? cell.tileOffset * 2 : cell.tileOffset) * 0x40;
+                tileOffset *= (blockSize != 0x00 ? blockSize : 1);
+
+                for (int i = 0; i < image.rahc.tileData.tiles[0].Length; i++)
+                {
+                    if (i >= tileOffset && i < (int)(tileOffset + cell.width * cell.height))
+                    {
+                        if (image.rahc.tileData.tiles[0][i] == oldIndex)
+                            temp.Add((byte)newIndex);
+                        else if (image.rahc.tileData.tiles[0][i] == newIndex)
+                            temp.Add((byte)oldIndex);
+                        else
+                            temp.Add(image.rahc.tileData.tiles[0][i]);
+                    }
+                    else
+                        temp.Add(image.rahc.tileData.tiles[0][i]);
+
+                }
+                result.Add(temp.ToArray());
+            }
+
+            return result.ToArray();
+        }
+
     }
 }

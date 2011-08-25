@@ -36,6 +36,7 @@ namespace Tinke
         NCLR paleta;
 
         IPluginHost pluginHost;
+        bool selectColor;
 
         public iNCER()
         {
@@ -302,5 +303,67 @@ namespace Tinke
                 ActualizarImagen();
             }
         }
+        private void btnSetTrans_Click(object sender, EventArgs e)
+        {
+            Dialog.SelectModeColor dialog = new Dialog.SelectModeColor();
+            if (dialog.ShowDialog() != DialogResult.OK)
+                return;
+
+            if (dialog.IsOption2)
+            {
+                ColorDialog o = new ColorDialog();
+                o.AllowFullOpen = true;
+                o.AnyColor = true;
+                o.FullOpen = true;
+                if (o.ShowDialog() == DialogResult.OK)
+                    Change_TransparencyColor(o.Color);
+                o.Dispose();
+            }
+            else
+                selectColor = true;
+        }
+        private void imgBox_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (selectColor && imgBox.Image is Image)
+            {
+                Color color = ((Bitmap)imgBox.Image).GetPixel(e.X, e.Y);
+                Change_TransparencyColor(color);
+            }
+        }
+        private void Change_TransparencyColor(Color color)
+        {
+            int colorIndex = 0;
+            int paletteIndex = ncer.cebk.banks[comboCelda.SelectedIndex].cells[0].nPalette;
+
+            for (int i = 0; i < paleta.pltt.paletas[paletteIndex].colores.Length; i++)
+            {
+                if (paleta.pltt.paletas[paletteIndex].colores[i] == color)
+                {
+                    paleta.pltt.paletas[paletteIndex].colores[i] = paleta.pltt.paletas[0].colores[0];
+                    paleta.pltt.paletas[paletteIndex].colores[0] = color;
+                    colorIndex = i;
+                    break;
+                }
+            }
+
+            pluginHost.Set_NCLR(paleta);
+            String paletteFile = System.IO.Path.GetTempFileName();
+            Imagen_NCLR.Escribir(paleta, paletteFile);
+            pluginHost.ChangeFile((int)paleta.id, paletteFile);
+
+            for (int i = 0; i < ncer.cebk.banks[comboCelda.SelectedIndex].cells.Length; i++)
+            {
+                tile.rahc.tileData.tiles = Imagen_NCER.Change_ColorCell(ncer.cebk.banks[comboCelda.SelectedIndex].cells[i],
+                    ncer.cebk.block_size, tile, colorIndex, 0);
+            }
+            pluginHost.Set_NCGR(tile);
+            String tileFile = System.IO.Path.GetTempFileName();
+            Imagen_NCGR.Write(tile, tileFile);
+            pluginHost.ChangeFile((int)tile.id, tileFile);
+
+            ActualizarImagen();
+            checkTransparencia.Checked = true;
+        }
+
     }
 }

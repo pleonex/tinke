@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Language>
   <Español>
-    <NCGR>
+    <ImageControl>
       <S01>
         Haga doble click en la imagen para verla a 
         tamaño real.
@@ -40,8 +40,8 @@
       <S21>Importar</S21>
       <S22>Seleccionar color transparente</S22>
       <S23>¿Seleccionar color haciendo click en la imagen?</S23>
-    </NCGR>
-    <NCLR>
+    </ImageControl>
+    <PaletteControl>
       <S01>Nº de paleta:</S01>
       <S02>Propiedades</S02>
       <S03>Campo</S03>
@@ -62,10 +62,10 @@
       <S12>Byte de inicio:</S12>
       <S13>Importar</S13>
       <S14>Cambiar de profundidad</S14>
-    </NCLR>
+    </PaletteControl>
   </Español>
   <English>
-    <NCLR>
+    <PaletteControl>
       <S01># palette:</S01>
       <S02>Properties</S02>
       <S03>Property</S03>
@@ -86,8 +86,8 @@
       <S12>Start byte:</S12>
       <S13>Import</S13>
       <S14>Change the depth</S14>
-    </NCLR>
-    <NCGR>
+    </PaletteControl>
+    <ImageControl>
       <S01>Double-click to see the full image.</S01>
       <S02>Properties</S02>
       <S03>Offset</S03>
@@ -123,10 +123,10 @@
       <S21>Import</S21>
       <S22>Set transparent color</S22>
       <S23>Choose color doing click on the image?</S23>
-    </NCGR>
+    </ImageControl>
   </English>
   <Français>
-    <NCLR>
+    <PaletteControl>
       <S01>Numéro de palette :</S01>
       <S02>Propriétés</S02>
       <S03>Champ</S03>
@@ -147,12 +147,12 @@
       <S12>Octet de départ :</S12>
       <S13>Importer</S13>
       <S14>Changer la profondeur</S14>
-    </NCLR>
-    <NCGR>
+    </PaletteControl>
+    <ImageControl>
       <S01>
         Faites un double-clic sur l'image pour la voir en
         taille réelle.
-	  </S01>
+      </S01>
       <S02>Propriétés</S02>
       <S03>Position</S03>
       <S04>Champ</S04>
@@ -187,6 +187,6 @@
       <S21>Importer</S21>
       <S22>Set transparent color</S22>
       <S23>Choose color doing click on the image?</S23>
-    </NCGR>
+    </ImageControl>
   </Français>
 </Language>

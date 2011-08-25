@@ -70,6 +70,7 @@ namespace SDAT
             if (loop is Thread)
                 if (loop.ThreadState == ThreadState.Running)
                     loop.Abort();
+            
 
             if (disposing && (components != null))
             {

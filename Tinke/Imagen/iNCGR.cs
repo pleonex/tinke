@@ -538,8 +538,8 @@ namespace Tinke
             Imagen_NCGR.Write(tile, tileFile);
             pluginHost.ChangeFile((int)tile.id, tileFile);
 
-            checkTransparency.Checked = true;
             UpdateImage();
+            checkTransparency.Checked = true;
         }
     }
 }

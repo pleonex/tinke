@@ -158,14 +158,16 @@ namespace Tinke
         /// </summary>
         /// <param name="tiles">Tiles para convertir</param>
         /// <returns>Array de bytes</returns>
-        public static byte[] TilesToBytes(byte[][] tiles)
+        public static byte[] TilesToBytes(byte[][] tiles, int startByte = 0)
         {
             List<byte> resul = new List<byte>();
 
             for (int i = 0; i < tiles.Length; i++)
                 resul.AddRange(tiles[i]);
 
-            return resul.ToArray();
+            Byte[] bytes = new Byte[resul.Count - startByte];
+            Array.Copy(resul.ToArray(), startByte, bytes, 0, bytes.Length);
+            return bytes;
         }
         /// <summary>
         /// Convierte una array de bytes en otra de tiles
@@ -223,6 +225,8 @@ namespace Tinke
                 {
                     if (tiles[i][j] == oldIndex)
                         tiles[i][j] = (byte)newIndex;
+                    else if (tiles[i][j] == newIndex)
+                        tiles[i][j] = (byte)oldIndex;
                 }
             }
         }
