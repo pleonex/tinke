@@ -87,6 +87,7 @@ namespace Tinke
             this.label2 = new System.Windows.Forms.Label();
             this.numericHeight = new System.Windows.Forms.NumericUpDown();
             this.groupProp = new System.Windows.Forms.GroupBox();
+            this.btnSetTrans = new System.Windows.Forms.Button();
             this.btnImport = new System.Windows.Forms.Button();
             this.btnBgdTrans = new System.Windows.Forms.Button();
             this.pictureBgd = new System.Windows.Forms.PictureBox();
@@ -125,7 +126,7 @@ namespace Tinke
             0,
             0,
             0});
-            this.numericWidth.Location = new System.Drawing.Point(65, 269);
+            this.numericWidth.Location = new System.Drawing.Point(65, 236);
             this.numericWidth.Maximum = new decimal(new int[] {
             65536,
             0,
@@ -148,7 +149,7 @@ namespace Tinke
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(7, 271);
+            this.label1.Location = new System.Drawing.Point(7, 238);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(26, 13);
             this.label1.TabIndex = 2;
@@ -157,7 +158,7 @@ namespace Tinke
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(129, 271);
+            this.label2.Location = new System.Drawing.Point(129, 238);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(26, 13);
             this.label2.TabIndex = 3;
@@ -170,7 +171,7 @@ namespace Tinke
             0,
             0,
             0});
-            this.numericHeight.Location = new System.Drawing.Point(182, 269);
+            this.numericHeight.Location = new System.Drawing.Point(182, 236);
             this.numericHeight.Maximum = new decimal(new int[] {
             65536,
             0,
@@ -192,6 +193,7 @@ namespace Tinke
             // 
             // groupProp
             // 
+            this.groupProp.Controls.Add(this.btnSetTrans);
             this.groupProp.Controls.Add(this.btnImport);
             this.groupProp.Controls.Add(this.btnBgdTrans);
             this.groupProp.Controls.Add(this.pictureBgd);
@@ -220,6 +222,17 @@ namespace Tinke
             this.groupProp.TabStop = false;
             this.groupProp.Text = "S02";
             // 
+            // btnSetTrans
+            // 
+            this.btnSetTrans.Location = new System.Drawing.Point(7, 356);
+            this.btnSetTrans.Name = "btnSetTrans";
+            this.btnSetTrans.Size = new System.Drawing.Size(150, 30);
+            this.btnSetTrans.TabIndex = 24;
+            this.btnSetTrans.Text = "S22";
+            this.btnSetTrans.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnSetTrans.UseVisualStyleBackColor = true;
+            this.btnSetTrans.Click += new System.EventHandler(this.btnSetTrans_Click);
+            // 
             // btnImport
             // 
             this.btnImport.Image = global::Tinke.Properties.Resources.picture_go;
@@ -235,7 +248,7 @@ namespace Tinke
             // btnBgdTrans
             // 
             this.btnBgdTrans.Enabled = false;
-            this.btnBgdTrans.Location = new System.Drawing.Point(158, 347);
+            this.btnBgdTrans.Location = new System.Drawing.Point(156, 292);
             this.btnBgdTrans.Name = "btnBgdTrans";
             this.btnBgdTrans.Size = new System.Drawing.Size(78, 35);
             this.btnBgdTrans.TabIndex = 22;
@@ -246,7 +259,7 @@ namespace Tinke
             // pictureBgd
             // 
             this.pictureBgd.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pictureBgd.Location = new System.Drawing.Point(117, 347);
+            this.pictureBgd.Location = new System.Drawing.Point(115, 292);
             this.pictureBgd.Name = "pictureBgd";
             this.pictureBgd.Size = new System.Drawing.Size(35, 35);
             this.pictureBgd.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -255,7 +268,7 @@ namespace Tinke
             // 
             // btnBgd
             // 
-            this.btnBgd.Location = new System.Drawing.Point(9, 347);
+            this.btnBgd.Location = new System.Drawing.Point(7, 292);
             this.btnBgd.Name = "btnBgd";
             this.btnBgd.Size = new System.Drawing.Size(102, 35);
             this.btnBgd.TabIndex = 20;
@@ -266,7 +279,7 @@ namespace Tinke
             // checkTransparency
             // 
             this.checkTransparency.AutoSize = true;
-            this.checkTransparency.Location = new System.Drawing.Point(9, 324);
+            this.checkTransparency.Location = new System.Drawing.Point(9, 333);
             this.checkTransparency.Name = "checkTransparency";
             this.checkTransparency.Size = new System.Drawing.Size(46, 17);
             this.checkTransparency.TabIndex = 19;
@@ -320,7 +333,7 @@ namespace Tinke
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(7, 298);
+            this.label6.Location = new System.Drawing.Point(7, 265);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(26, 13);
             this.label6.TabIndex = 11;
@@ -333,7 +346,7 @@ namespace Tinke
             this.comboBox1.Items.AddRange(new object[] {
             "S16",
             "S17"});
-            this.comboBox1.Location = new System.Drawing.Point(117, 295);
+            this.comboBox1.Location = new System.Drawing.Point(117, 262);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(119, 21);
             this.comboBox1.TabIndex = 10;
@@ -342,7 +355,7 @@ namespace Tinke
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(129, 245);
+            this.label4.Location = new System.Drawing.Point(129, 212);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(31, 13);
             this.label4.TabIndex = 9;
@@ -367,7 +380,7 @@ namespace Tinke
             this.comboDepth.Items.AddRange(new object[] {
             "4 bpp",
             "8 bpp"});
-            this.comboDepth.Location = new System.Drawing.Point(182, 242);
+            this.comboDepth.Location = new System.Drawing.Point(182, 209);
             this.comboDepth.Name = "comboDepth";
             this.comboDepth.Size = new System.Drawing.Size(54, 21);
             this.comboDepth.TabIndex = 8;
@@ -375,7 +388,7 @@ namespace Tinke
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(7, 245);
+            this.label3.Location = new System.Drawing.Point(7, 212);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(26, 13);
             this.label3.TabIndex = 7;
@@ -383,7 +396,7 @@ namespace Tinke
             // 
             // numericStart
             // 
-            this.numericStart.Location = new System.Drawing.Point(65, 243);
+            this.numericStart.Location = new System.Drawing.Point(65, 210);
             this.numericStart.Maximum = new decimal(new int[] {
             65535,
             0,
@@ -414,7 +427,7 @@ namespace Tinke
             listViewItem11});
             this.listInfo.Location = new System.Drawing.Point(7, 20);
             this.listInfo.Name = "listInfo";
-            this.listInfo.Size = new System.Drawing.Size(229, 216);
+            this.listInfo.Size = new System.Drawing.Size(229, 181);
             this.listInfo.TabIndex = 5;
             this.listInfo.UseCompatibleStateImageBehavior = false;
             this.listInfo.View = System.Windows.Forms.View.Details;
@@ -455,6 +468,7 @@ namespace Tinke
             this.pic.TabIndex = 0;
             this.pic.TabStop = false;
             this.pic.DoubleClick += new System.EventHandler(this.pic_DoubleClick);
+            this.pic.MouseClick += new System.Windows.Forms.MouseEventHandler(this.pic_MouseClick);
             // 
             // iNCGR
             // 
@@ -508,5 +522,6 @@ namespace Tinke
         private System.Windows.Forms.Button btnBgd;
         private System.Windows.Forms.Button btnBgdTrans;
         internal System.Windows.Forms.Button btnImport;
+        private System.Windows.Forms.Button btnSetTrans;
     }
 }

@@ -13,7 +13,7 @@ namespace DSDecmp
     {
         int id; // ID of the file to change (the compressed file)
         IPluginHost pluginHost;
-        FormatsType format;
+        FormatCompress format;
 
         string nullString;
 
@@ -21,7 +21,7 @@ namespace DSDecmp
         {
             InitializeComponent();
         }
-        public CompressionControl(int id, FormatsType format, IPluginHost pluginHost)
+        public CompressionControl(int id, FormatCompress format, IPluginHost pluginHost)
         {
             InitializeComponent();
 
@@ -30,7 +30,7 @@ namespace DSDecmp
             this.format = format;
             ReadLanguage();
 
-            txtBoxOlderCompress.Text = Enum.GetName(typeof(FormatsType), format);
+            txtBoxOlderCompress.Text = Enum.GetName(typeof(FormatCompress), format);
             comboFormat.Text = txtBoxOlderCompress.Text;
             txtBoxNewCompress.Text = nullString;
         }
@@ -56,9 +56,9 @@ namespace DSDecmp
 
         private void comboFormat_SelectedIndexChanged(object sender, EventArgs e)
         {
-            format = (FormatsType)Enum.Parse(typeof(FormatsType), comboFormat.Text);
+            format = (FormatCompress)Enum.Parse(typeof(FormatCompress), comboFormat.Text);
 
-            if (format == FormatsType.LZ10 || format == FormatsType.LZ11 || format == FormatsType.LZOVL)
+            if (format == FormatCompress.LZ10 || format == FormatCompress.LZ11 || format == FormatCompress.LZOVL)
                 checkLookAhead.Enabled = true;
             else
                 checkLookAhead.Enabled = false;
@@ -67,13 +67,13 @@ namespace DSDecmp
         {
             switch (format)
             {
-                case FormatsType.LZOVL:
+                case FormatCompress.LZOVL:
                     Formats.LZOvl.LookAhead = checkLookAhead.Checked;
                     break;
-                case FormatsType.LZ10:
+                case FormatCompress.LZ10:
                     Formats.Nitro.LZ10.LookAhead = checkLookAhead.Checked;
                     break;
-                case FormatsType.LZ11:
+                case FormatCompress.LZ11:
                     Formats.Nitro.LZ11.LookAhead = checkLookAhead.Checked;
                     break;
             }
@@ -89,7 +89,7 @@ namespace DSDecmp
             {
                 Main.Compress(filein, fileout, format);
                 pluginHost.ChangeFile(id, fileout);
-                txtBoxNewCompress.Text = Enum.GetName(typeof(FormatsType), format);
+                txtBoxNewCompress.Text = Enum.GetName(typeof(FormatCompress), format);
             }
             catch (Exception ex)
             {
@@ -106,9 +106,9 @@ namespace DSDecmp
 
             try
             {
-                Main.Compress(filein, fileout, FormatsType.NDS);
+                Main.Compress(filein, fileout, FormatCompress.NDS);
                 pluginHost.ChangeFile(id, fileout);
-                txtBoxNewCompress.Text = Enum.GetName(typeof(FormatsType), format);
+                txtBoxNewCompress.Text = Enum.GetName(typeof(FormatCompress), format);
             }
             catch (Exception ex)
             {

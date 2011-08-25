@@ -5,24 +5,25 @@ using DSDecmp.Formats.Nitro;
 using DSDecmp.Formats;
 using System.IO;
 using System.Xml.Linq;
+using PluginInterface;
 
 namespace DSDecmp
 {
     public static class Main
     {
-        public static FormatsType Get_Format(string input)
+        public static FormatCompress Get_Format(string input)
         {
             CompressionFormat fmt = null;
 
-            foreach (FormatsType f in Enum.GetValues(typeof(FormatsType)))
+            foreach (FormatCompress f in Enum.GetValues(typeof(FormatCompress)))
             {
                 switch (f)
                 {
-                    case FormatsType.LZOVL: fmt = new LZOvl(); break;
-                    case FormatsType.LZ10: fmt = new LZ10(); break;
-                    case FormatsType.LZ11: fmt = new LZ11(); break;
-                    case FormatsType.RLE: fmt = new RLE(); break;
-                    case FormatsType.HUFF: fmt = new Huffman(); break;
+                    case FormatCompress.LZOVL: fmt = new LZOvl(); break;
+                    case FormatCompress.LZ10: fmt = new LZ10(); break;
+                    case FormatCompress.LZ11: fmt = new LZ11(); break;
+                    case FormatCompress.RLE: fmt = new RLE(); break;
+                    case FormatCompress.HUFF: fmt = new Huffman(); break;
                 }
 
                 if (fmt == null)
@@ -32,15 +33,15 @@ namespace DSDecmp
                     return f;
             }
 
-            return FormatsType.Invalid;
+            return FormatCompress.Invalid;
         }
 
         #region compression methods
-        public static void Compress(string input, string output, FormatsType format)
+        public static void Compress(string input, string output, FormatCompress format)
         {
             // compress the input
             MemoryStream compressedData = new MemoryStream();
-            FormatsType compressedFormat;
+            FormatCompress compressedFormat;
             int outsize = DoCompress(input, compressedData, format, out compressedFormat);
             if (outsize < 0)
                 return;
@@ -52,25 +53,25 @@ namespace DSDecmp
             }
         }
 
-        public static int DoCompress(string infile, MemoryStream output, FormatsType format, out FormatsType actualFormat)
+        public static int DoCompress(string infile, MemoryStream output, FormatCompress format, out FormatCompress actualFormat)
         {
             CompressionFormat fmt = null;
             switch (format)
             {
-                case FormatsType.LZ10: fmt = new LZ10(); break;
-                case FormatsType.LZ11: fmt = new LZ11(); break;
-                case FormatsType.LZOVL: fmt = new LZOvl(); break;
-                case FormatsType.RLE: fmt = new RLE(); break;
-                case FormatsType.HUFF4: Huffman.CompressBlockSize = Huffman.BlockSize.FOURBIT; fmt = new Huffman(); break;
-                case FormatsType.HUFF8: Huffman.CompressBlockSize = Huffman.BlockSize.EIGHTBIT; fmt = new Huffman(); break;
-                case FormatsType.HUFF:
+                case FormatCompress.LZ10: fmt = new LZ10(); break;
+                case FormatCompress.LZ11: fmt = new LZ11(); break;
+                case FormatCompress.LZOVL: fmt = new LZOvl(); break;
+                case FormatCompress.RLE: fmt = new RLE(); break;
+                case FormatCompress.HUFF4: Huffman.CompressBlockSize = Huffman.BlockSize.FOURBIT; fmt = new Huffman(); break;
+                case FormatCompress.HUFF8: Huffman.CompressBlockSize = Huffman.BlockSize.EIGHTBIT; fmt = new Huffman(); break;
+                case FormatCompress.HUFF:
                     return CompressHuff(infile, output, out actualFormat);
-                case FormatsType.GBA:
+                case FormatCompress.GBA:
                     return CompressGBA(infile, output, out actualFormat);
-                case FormatsType.NDS:
+                case FormatCompress.NDS:
                     return CompressNDS(infile, output, out actualFormat);
                 default:
-                    actualFormat = FormatsType.Invalid;
+                    actualFormat = FormatCompress.Invalid;
                     return -1;
             }
             actualFormat = format;
@@ -90,20 +91,20 @@ namespace DSDecmp
             }
         }
 
-        private static int CompressHuff(string infile, MemoryStream output, out FormatsType actualFormat)
+        private static int CompressHuff(string infile, MemoryStream output, out FormatCompress actualFormat)
         {
-            return CompressBest(infile, output, out actualFormat, FormatsType.HUFF4, FormatsType.HUFF8);
+            return CompressBest(infile, output, out actualFormat, FormatCompress.HUFF4, FormatCompress.HUFF8);
         }
-        private static int CompressGBA(string infile, MemoryStream output, out FormatsType actualFormat)
+        private static int CompressGBA(string infile, MemoryStream output, out FormatCompress actualFormat)
         {
-            return CompressBest(infile, output, out actualFormat, FormatsType.HUFF4, FormatsType.HUFF8, FormatsType.LZ10, FormatsType.RLE);
+            return CompressBest(infile, output, out actualFormat, FormatCompress.HUFF4, FormatCompress.HUFF8, FormatCompress.LZ10, FormatCompress.RLE);
         }
-        private static int CompressNDS(string infile, MemoryStream output, out FormatsType actualFormat)
+        private static int CompressNDS(string infile, MemoryStream output, out FormatCompress actualFormat)
         {
-            return CompressBest(infile, output, out actualFormat, FormatsType.HUFF4, FormatsType.HUFF8, FormatsType.LZ10, FormatsType.LZ11, FormatsType.RLE);
+            return CompressBest(infile, output, out actualFormat, FormatCompress.HUFF4, FormatCompress.HUFF8, FormatCompress.LZ10, FormatCompress.LZ11, FormatCompress.RLE);
         }
 
-        private static int CompressBest(string infile, MemoryStream output, out FormatsType actualFormat, params FormatsType[] formats)
+        private static int CompressBest(string infile, MemoryStream output, out FormatCompress actualFormat, params FormatCompress[] formats)
         {
             // only read the input data once from the file.
             byte[] inputData;
@@ -115,8 +116,8 @@ namespace DSDecmp
 
             MemoryStream bestOutput = null;
             int minCompSize = int.MaxValue;
-            actualFormat = FormatsType.GBA;
-            foreach (FormatsType format in formats)
+            actualFormat = FormatCompress.GBA;
+            foreach (FormatCompress format in formats)
             {
                 #region compress the file in each format, and save the best one
 
@@ -124,12 +125,12 @@ namespace DSDecmp
                 CompressionFormat realFormat = null;
                 switch (format)
                 {
-                    case FormatsType.HUFF4: Huffman.CompressBlockSize = Huffman.BlockSize.FOURBIT; realFormat = new Huffman(); break;
-                    case FormatsType.HUFF8: Huffman.CompressBlockSize = Huffman.BlockSize.EIGHTBIT; realFormat = new Huffman(); break;
-                    case FormatsType.LZ10: realFormat = new LZ10(); break;
-                    case FormatsType.LZ11: realFormat = new LZ11(); break;
-                    case FormatsType.LZOVL: realFormat = new LZOvl(); break;
-                    case FormatsType.RLE: realFormat = new RLE(); break;
+                    case FormatCompress.HUFF4: Huffman.CompressBlockSize = Huffman.BlockSize.FOURBIT; realFormat = new Huffman(); break;
+                    case FormatCompress.HUFF8: Huffman.CompressBlockSize = Huffman.BlockSize.EIGHTBIT; realFormat = new Huffman(); break;
+                    case FormatCompress.LZ10: realFormat = new LZ10(); break;
+                    case FormatCompress.LZ11: realFormat = new LZ11(); break;
+                    case FormatCompress.LZOVL: realFormat = new LZOvl(); break;
+                    case FormatCompress.RLE: realFormat = new RLE(); break;
                 }
 
                 int currentOutSize;
@@ -182,9 +183,9 @@ namespace DSDecmp
 
             MemoryStream decompressedData = new MemoryStream();
             long decSize = -1;
-            FormatsType usedFormat = FormatsType.NDS;
+            FormatCompress usedFormat = FormatCompress.NDS;
             // just try all formats, and stop once one has been found that can decompress it.
-            foreach (FormatsType f in Enum.GetValues(typeof(FormatsType)))
+            foreach (FormatCompress f in Enum.GetValues(typeof(FormatCompress)))
             {
                 using (MemoryStream inStream = new MemoryStream(inData))
                 {
@@ -210,7 +211,7 @@ namespace DSDecmp
             }
 
         }
-        public static void Decompress(string input, string output, FormatsType format)
+        public static void Decompress(string input, string output, FormatCompress format)
         {
             byte[] inData;
             using (FileStream inStream = File.OpenRead(input))
@@ -240,20 +241,20 @@ namespace DSDecmp
             }
 
         }
-        private static long Decompress(MemoryStream inputStream, MemoryStream output, FormatsType format)
+        private static long Decompress(MemoryStream inputStream, MemoryStream output, FormatCompress format)
         {
             CompressionFormat realFormat = null;
             switch (format)
             {
-                case FormatsType.HUFF:
+                case FormatCompress.HUFF:
                     realFormat = new Huffman(); break;
-                case FormatsType.LZ10:
+                case FormatCompress.LZ10:
                     realFormat = new LZ10(); break;
-                case FormatsType.LZ11:
+                case FormatCompress.LZ11:
                     realFormat = new LZ11(); break;
-                case FormatsType.LZOVL:
+                case FormatCompress.LZOVL:
                     realFormat = new LZOvl(); break;
-                case FormatsType.RLE:
+                case FormatCompress.RLE:
                     realFormat = new RLE(); break;
                 default:
                     return -1;
@@ -327,22 +328,5 @@ namespace DSDecmp
 
             return tree;
         }
-    }
-
-    /// <summary>
-    /// The formats allowed when compressing a file.
-    /// </summary>
-    public enum FormatsType
-    {
-        LZOVL, // keep this as the first one, as only the end of a file may be LZ-ovl-compressed (and overlay files are oftenly double-compressed)
-        LZ10,
-        LZ11,
-        HUFF4,
-        HUFF8,
-        RLE,
-        HUFF,
-        NDS,
-        GBA,
-        Invalid
     }
 }

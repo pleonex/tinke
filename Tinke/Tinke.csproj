@@ -151,6 +151,18 @@
     <Compile Include="Debug.Designer.cs">
       <DependentUpon>Debug.cs</DependentUpon>
     </Compile>
+    <Compile Include="Dialog\SelectModeColor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialog\SelectModeColor.Designer.cs">
+      <DependentUpon>SelectModeColor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Dialog\SelectOffset.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialog\SelectOffset.Designer.cs">
+      <DependentUpon>SelectOffset.cs</DependentUpon>
+    </Compile>
     <Compile Include="EditRomInfo.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -187,10 +199,10 @@
     <Compile Include="Imagen\iNCLR.Designer.cs">
       <DependentUpon>iNCLR.cs</DependentUpon>
     </Compile>
-    <Compile Include="Imagen\MapOptions.cs">
+    <Compile Include="Dialog\MapOptions.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Imagen\MapOptions.Designer.cs">
+    <Compile Include="Dialog\MapOptions.Designer.cs">
       <DependentUpon>MapOptions.cs</DependentUpon>
     </Compile>
     <Compile Include="Imagen\NANR.cs" />
@@ -246,6 +258,12 @@
     <EmbeddedResource Include="Debug.resx">
       <DependentUpon>Debug.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Dialog\SelectModeColor.resx">
+      <DependentUpon>SelectModeColor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialog\SelectOffset.resx">
+      <DependentUpon>SelectOffset.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="EditRomInfo.resx">
       <DependentUpon>EditRomInfo.cs</DependentUpon>
     </EmbeddedResource>
@@ -264,7 +282,7 @@
     <EmbeddedResource Include="Imagen\iNCLR.resx">
       <DependentUpon>iNCLR.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Imagen\MapOptions.resx">
+    <EmbeddedResource Include="Dialog\MapOptions.resx">
       <DependentUpon>MapOptions.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="RomInfo.resx">

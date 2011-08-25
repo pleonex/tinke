@@ -28,9 +28,13 @@ namespace LAYTON
         }
         private void LeerIdioma()
         {
-            System.Xml.Linq.XElement xml = System.Xml.Linq.XElement.Load(Application.StartupPath + "\\Plugins\\LaytonLang.xml");
-            xml = xml.Element(pluginHost.Get_Language()).Element("Text");
-            btnSave.Text = xml.Element("S00").Value;
+            try
+            {
+                System.Xml.Linq.XElement xml = System.Xml.Linq.XElement.Load(Application.StartupPath + "\\Plugins\\LaytonLang.xml");
+                xml = xml.Element(pluginHost.Get_Language()).Element("Text");
+                btnSave.Text = xml.Element("S00").Value;
+            }
+            catch { throw new Exception("There was an error reading the XML file of language."); }
         }
 
         private string Convertir_Especiales(string txtin, bool convertir)

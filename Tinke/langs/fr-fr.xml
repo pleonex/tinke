@@ -69,7 +69,7 @@
     </S39>
     <S3A>Attention</S3A>
     <S3B>
-	  Voulez-vous exporter le dossier décompressé au lieu de
+      Voulez-vous exporter le dossier décompressé au lieu de
       l'archive compressée ?
     </S3B>
     <S3C>Information complète de l'archive</S3C>
@@ -265,6 +265,7 @@
     <S1F>Couleur du fond</S1F>
     <S20>Supprimer</S20>
     <S21>Importer</S21>
+    <S22>Set transparent color</S22>
   </NCGR>
   <NSCR>
     <S00>Options de map</S00>
@@ -299,9 +300,9 @@
     <S13>Montrer numéros</S13>
     <S14>Cellules</S14>
     <S15>
-	  Faites un double-clic sur l'image pour la voir
-	  en taille réelle.
-	</S15>
+      Faites un double-clic sur l'image pour la voir
+      en taille réelle.
+    </S15>
     <S16>Zoom</S16>
     <S17>Couleur du fond</S17>
     <S18>Supprimer</S18>
@@ -316,6 +317,7 @@
     <S21>Numéro de palette</S21>
     <S22>Offset tuile originale</S22>
     <S23>Offset tuile fixée</S23>
+    <S24>Import</S24>
   </NCER>
   <NANR>
     <S01>Intervalle :</S01>
@@ -348,9 +350,9 @@
     <S1C>Enregistrer</S1C>
     <S1D>Animations</S1D>
     <S1E>
-	  Faites un double-clic sur l'image pour la voir en
-	  taille réelle.
-	</S1E>
+      Faites un double-clic sur l'image pour la voir en
+      taille réelle.
+    </S1E>
   </NANR>
   <DSDecmp>
     <!-- LZ10 -->
@@ -474,4 +476,12 @@
     <S29>Compagnie</S29>
     <S2A>Codes de la Compagnie</S2A>
   </EditRomInfo>
+  <Dialog>
+    <S00>Choose the selection mode</S00>
+    <S01>Accept</S01>
+    <S02>Click on a color of the image</S02>
+    <S03>Choose color from RGB values</S03>
+    <S04>Choose the offset</S04>
+    <S05>Write the offset where the reading will start</S05>
+  </Dialog>
 </Language>

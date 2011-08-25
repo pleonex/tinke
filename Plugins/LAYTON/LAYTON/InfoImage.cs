@@ -25,17 +25,21 @@ namespace LAYTON
             InitializeComponent();
             this.idioma = idioma;
 
-            System.Xml.Linq.XElement xml = System.Xml.Linq.XElement.Load(Application.StartupPath + "\\Plugins\\LaytonLang.xml");
-            xml = xml.Element(idioma).Element("InfoImage");
+            try
+            {
+                System.Xml.Linq.XElement xml = System.Xml.Linq.XElement.Load(Application.StartupPath + "\\Plugins\\LaytonLang.xml");
+                xml = xml.Element(idioma).Element("InfoImage");
 
-            lblImgs.Text = xml.Element("S01").Value;
-            lblTamanoImg.Text = xml.Element("S02").Value;
-            lblAncho.Text = xml.Element("S03").Value;
-            lblAlto.Text = xml.Element("S04").Value;
-            lblNPartes.Text = xml.Element("S05").Value;
-            lblName.Text = xml.Element("S06").Value;
-            groupBox1.Text = xml.Element("S07").Value;
-            pestaña = xml.Element("S08").Value;
+                lblImgs.Text = xml.Element("S01").Value;
+                lblTamanoImg.Text = xml.Element("S02").Value;
+                lblAncho.Text = xml.Element("S03").Value;
+                lblAlto.Text = xml.Element("S04").Value;
+                lblNPartes.Text = xml.Element("S05").Value;
+                lblName.Text = xml.Element("S06").Value;
+                groupBox1.Text = xml.Element("S07").Value;
+                pestaña = xml.Element("S08").Value;
+            }
+            catch { throw new Exception("There was an error reading the XML file of language."); } 
         }
 
         #region Propiedades

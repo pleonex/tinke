@@ -1,8 +1,12 @@
 0.7.6
 *** Import images from NCER files
+* Add support for the game TETRIS DS
 * Fixed problems with No_Tiled images
 * Support for the game (*.arc, *.plz)
 * Fixed problem with NCER files
+* Improved decompress methods
+* Command to set a new transparent color
+* Improved Images plugin and TGA support
 
 0.7.5 (public release)
 *** Improved the plugin of Nitro compression (DSDecmp proyect by Barubary)

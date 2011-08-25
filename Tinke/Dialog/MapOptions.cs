@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
-namespace Tinke
+namespace Tinke.Dialog
 {
     public partial class MapOptions : Form
     {

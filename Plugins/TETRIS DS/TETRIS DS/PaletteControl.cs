@@ -66,25 +66,29 @@ namespace TETRIS_DS
 
         private void LeerIdioma()
         {
-            XElement xml = XElement.Load(Application.StartupPath + Path.DirectorySeparatorChar + "Plugins" +
-                Path.DirectorySeparatorChar + "TottempestLang.xml");
-            xml = xml.Element(pluginHost.Get_Language()).Element("iNCLR");
+            try
+            {
+                XElement xml = XElement.Load(Application.StartupPath + Path.DirectorySeparatorChar + "Plugins" +
+                    Path.DirectorySeparatorChar + "TETRISDSLang.xml");
+                xml = xml.Element(pluginHost.Get_Language()).Element("PaletteControl");
 
-            label1.Text = xml.Element("S01").Value;
-            groupProp.Text = xml.Element("S02").Value;
-            columnName.Text = xml.Element("S03").Value;
-            columnValor.Text = xml.Element("S04").Value;
-            listProp.Items[0].Text = xml.Element("S05").Value;
-            listProp.Items[1].Text = xml.Element("S06").Value;
-            listProp.Items[2].Text = xml.Element("S07").Value;
-            listProp.Items[3].Text = xml.Element("S08").Value;
-            listProp.Items[4].Text = xml.Element("S09").Value;
-            btnSave.Text = xml.Element("S0A").Value;
-            btnShow.Text = xml.Element("S0B").Value;
-            groupModificar.Text = xml.Element("S11").Value;
-            label2.Text = xml.Element("S12").Value;
-            btnImport.Text = xml.Element("S13").Value;
-            btnConverter.Text = xml.Element("S14").Value;
+                label1.Text = xml.Element("S01").Value;
+                groupProp.Text = xml.Element("S02").Value;
+                columnName.Text = xml.Element("S03").Value;
+                columnValor.Text = xml.Element("S04").Value;
+                listProp.Items[0].Text = xml.Element("S05").Value;
+                listProp.Items[1].Text = xml.Element("S06").Value;
+                listProp.Items[2].Text = xml.Element("S07").Value;
+                listProp.Items[3].Text = xml.Element("S08").Value;
+                listProp.Items[4].Text = xml.Element("S09").Value;
+                btnSave.Text = xml.Element("S0A").Value;
+                btnShow.Text = xml.Element("S0B").Value;
+                groupModificar.Text = xml.Element("S11").Value;
+                label2.Text = xml.Element("S12").Value;
+                btnImport.Text = xml.Element("S13").Value;
+                btnConverter.Text = xml.Element("S14").Value;
+            }
+            catch { throw new Exception("There was an error reading the XML file of language."); } 
         }
 
         private void ShowInfo()

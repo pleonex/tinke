@@ -61,13 +61,17 @@ namespace TXT
 
         private void LeerIdioma()
         {
-            System.Xml.Linq.XElement xml = System.Xml.Linq.XElement.Load(Application.StartupPath + "\\Plugins\\TXTLang.xml");
-            xml = xml.Element(pluginHost.Get_Language());
-            xml = xml.Element("TXT");
+            try
+            {
+                System.Xml.Linq.XElement xml = System.Xml.Linq.XElement.Load(Application.StartupPath + "\\Plugins\\TXTLang.xml");
+                xml = xml.Element(pluginHost.Get_Language());
+                xml = xml.Element("TXT");
 
-            btnSave.Text = xml.Element("S00").Value;
-            label1.Text = xml.Element("S01").Value;
-            checkWordWrap.Text = xml.Element("S02").Value;
+                btnSave.Text = xml.Element("S00").Value;
+                label1.Text = xml.Element("S01").Value;
+                checkWordWrap.Text = xml.Element("S02").Value;
+            }
+            catch { throw new Exception("There was an error reading the XML file of language."); } 
         }
 
         private String Descodificar(Encoding encoding)

@@ -1,0 +1,267 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Language>
+  <Español>
+    <PaletteControl>
+      <S01>Nº de paleta:</S01>
+      <S02>Propiedades</S02>
+      <S03>Campo</S03>
+      <S04>Valor</S04>
+      <S05>Número de paletas</S05>
+      <S06>Profundidad del color</S06>
+      <S07>Padding</S07>
+      <S08>Nº de colores por paleta</S08>
+      <S09>Tamaño de paleta</S09>
+      <S0A>Guardar</S0A>
+      <S0B>Mostrar todas las paletas</S0B>
+      <S0C>Paleta</S0C>
+      <S0D>Analizando paleta NCLR:</S0D>
+      <S0E>No hay secciones o hay de más ¿?: </S0E>
+      <S0F>paletas encontradas</S0F>
+      <S10>colores.</S10>
+      <S11>Modificar</S11>
+      <S12>Byte de inicio:</S12>
+      <S13>Importar</S13>
+      <S14>Cambiar de profundidad</S14>
+    </PaletteControl>
+    <ImageControl>
+      <S01>
+        Haga doble click en la imagen para verla a
+        tamaño real.
+      </S01>
+      <S02>Propiedades</S02>
+      <S03>Posición</S03>
+      <S04>Campo</S04>
+      <S05>Valor</S05>
+      <S06>Desconocido</S06>
+      <S07>Nº secciones</S07>
+      <S08>ID Sección 1</S08>
+      <S09>Tamaño</S09>
+      <S0A>Tiles Y</S0A>
+      <S0B>Tiles X</S0B>
+      <S0C>Formato</S0C>
+      <S0D>Desconocido</S0D>
+      <S0E>Desconocido</S0E>
+      <S0F>Tamaño píxels datos</S0F>
+      <S10>Desconocido</S10>
+      <S11>Inicio:</S11>
+      <S12>Ancho:</S12>
+      <S13>Alto:</S13>
+      <S14>Orden de tiles:</S14>
+      <S15>Guardar</S15>
+      <S16>Sin tiles</S16>
+      <S17>Horizontal</S17>
+      <S18>Vertical</S18>
+      <S19>Imagen a tamaño real</S19>
+      <S1A>Dividir imágenes</S1A>
+      <S1B>Imagen</S1B>
+      <S1C>Transparencia</S1C>
+      <S1D>Restaurar</S1D>
+      <S1E>Zoom</S1E>
+      <S1F>Color de fondo</S1F>
+      <S20>Quitar</S20>
+      <S21>Importar</S21>
+    </ImageControl>
+    <CellControl>
+      <S01>Banco:</S01>
+      <S02>Mostrar todas los bancos</S02>
+      <S03>Guardar</S03>
+      <S04>Propiedades</S04>
+      <S05>Campo</S05>
+      <S06>Valor</S06>
+      <S07>Sección</S07>
+      <S08>Número de bancos</S08>
+      <S09>Tipo de bancos</S09>
+      <S0A>Constante</S0A>
+      <S0B>Tamaño bloque</S0B>
+      <S0C>Desconocido 1</S0C>
+      <S0D>Desconocido 2</S0D>
+      <S0E>Desconocido (Sección UEXT)</S0E>
+      <S0F>Mostrar entorno</S0F>
+      <S10>Mostrar celdas</S10>
+      <S11>Mostrar imagen</S11>
+      <S12>Transparencia</S12>
+      <S13>Mostrar números</S13>
+      <S14>Celdas</S14>
+      <S15>Haga doble click en la imagen para verla a tamaño real.</S15>
+      <S16>Zoom</S16>
+      <S17>Color de fondo</S17>
+      <S18>Quitar</S18>
+    </CellControl>
+  </Español>
+  <English>
+    <PaletteControl>
+      <S01># palette:</S01>
+      <S02>Properties</S02>
+      <S03>Property</S03>
+      <S04>Content</S04>
+      <S05># palettes</S05>
+      <S06>Depth</S06>
+      <S07>Padding</S07>
+      <S08>Colors per palette</S08>
+      <S09>Palette length</S09>
+      <S0A>Save</S0A>
+      <S0B>Show all palettes</S0B>
+      <S0C>Palette</S0C>
+      <S0D>Analyzing NCLR palette:</S0D>
+      <S0E>Strange number of sections ¿?: </S0E>
+      <S0F>palettes found</S0F>
+      <S10>colors.</S10>
+      <S11>Modify</S11>
+      <S12>Start byte:</S12>
+      <S13>Import</S13>
+      <S14>Change the depth</S14>
+    </PaletteControl>
+    <ImageControl>
+      <S01>Double-click to see the full image.</S01>
+      <S02>Properties</S02>
+      <S03>Offset</S03>
+      <S04>Property</S04>
+      <S05>Content</S05>
+      <S06>Unknown</S06>
+      <S07>Number of sections</S07>
+      <S08>ID Section 1</S08>
+      <S09>Lenght</S09>
+      <S0A>Tiles Y</S0A>
+      <S0B>Tiles X</S0B>
+      <S0C>Tile form</S0C>
+      <S0D>Unknown</S0D>
+      <S0E>Unknown</S0E>
+      <S0F>Length of pixels data</S0F>
+      <S10>Unknown</S10>
+      <S11>Offset:</S11>
+      <S12>Width:</S12>
+      <S13>Height:</S13>
+      <S14>Image pattern:</S14>
+      <S15>Save</S15>
+      <S16>No tiled</S16>
+      <S17>Horizontal</S17>
+      <S18>Vertical</S18>
+      <S19>Full size image</S19>
+      <S1A>Divide images</S1A>
+      <S1B>Image</S1B>
+      <S1C>Transparency</S1C>
+      <S1D>Restore</S1D>
+      <S1E>Zoom</S1E>
+      <S1F>Background colour</S1F>
+      <S20>Remove</S20>
+      <S21>Import</S21>
+    </ImageControl>
+    <CellControl>
+      <S01>Bank:</S01>
+      <S02>Show all banks</S02>
+      <S03>Save</S03>
+      <S04>Properties</S04>
+      <S05>Property</S05>
+      <S06>Content</S06>
+      <S07>Section</S07>
+      <S08>Number of banks</S08>
+      <S09>Type of banks</S09>
+      <S0A>Constant</S0A>
+      <S0B>Block size</S0B>
+      <S0C>Unknown 1</S0C>
+      <S0D>Unknown 2</S0D>
+      <S0E>Unknown (Section UEXT)</S0E>
+      <S0F>Show guides</S0F>
+      <S10>Show cells</S10>
+      <S11>Show image</S11>
+      <S12>Transparency</S12>
+      <S13>Show numbers</S13>
+      <S14>Cells</S14>
+      <S15>Double-click to the image to see it in full size.</S15>
+      <S16>Zoom</S16>
+      <S17>Background colour</S17>
+      <S18>Remove</S18>
+    </CellControl>
+  </English>
+  <Français>
+    <PaletteControl>
+      <S01>Nombre de la palette :</S01>
+      <S02>Propriétés</S02>
+      <S03>Champ</S03>
+      <S04>Valeur</S04>
+      <S05>Nombre de palettes</S05>
+      <S06>Profondeur des couleurs</S06>
+      <S07>Padding</S07>
+      <S08>Nombre de couleurs par palette</S08>
+      <S09>Taille de la palette</S09>
+      <S0A>Sauvegarder</S0A>
+      <S0B>Montrer toutes les palettes</S0B>
+      <S0C>Palette</S0C>
+      <S0D>Analyser la palette NCLR</S0D>
+      <S0E>Nombre étrange de sections ? : </S0E>
+      <S0F>palettes trouvées</S0F>
+      <S10>couleurs.</S10>
+      <S11>Modifier</S11>
+      <S12>Octet de départ :</S12>
+      <S13>Importer</S13>
+      <S14>Changer la profondeur</S14>
+    </PaletteControl>
+    <ImageControl>
+      <S01>
+        Faites un double-clic sur l'image pour la voir en
+        taille réelle.
+      </S01>
+      <S02>Propriétés</S02>
+      <S03>Position</S03>
+      <S04>Champ</S04>
+      <S05>Valeur</S05>
+      <S06>Inconnu</S06>
+      <S07>Nombre de sections</S07>
+      <S08>ID Section 1</S08>
+      <S09>Taille</S09>
+      <S0A>Tuiles Y</S0A>
+      <S0B>Tuiles X</S0B>
+      <S0C>Format</S0C>
+      <S0D>Inconnu</S0D>
+      <S0E>Inconnu</S0E>
+      <S0F>Taille données de pixels</S0F>
+      <S10>Inconnu</S10>
+      <S11>Début :</S11>
+      <S12>Longueur :</S12>
+      <S13>Hauteur :</S13>
+      <S14>Ordre des tuiles :</S14>
+      <S15>Sauvegarder</S15>
+      <S16>Aucune tuile</S16>
+      <S17>Horizontal</S17>
+      <S18>Vertical</S18>
+      <S19>Image en taille réelle</S19>
+      <S1A>Images divisées</S1A>
+      <S1B>Image</S1B>
+      <S1C>Transparence</S1C>
+      <S1D>Restaurer</S1D>
+      <S1E>Zoom</S1E>
+      <S1F>Couleur du fond</S1F>
+      <S20>Supprimer</S20>
+      <S21>Importer</S21>
+    </ImageControl>
+    <CellControl>
+      <S01>Banques :</S01>
+      <S02>Montrer toutes les banques</S02>
+      <S03>Enregistrer</S03>
+      <S04>Propriétés</S04>
+      <S05>Champ</S05>
+      <S06>Valeur</S06>
+      <S07>Section</S07>
+      <S08>Numéro des banques</S08>
+      <S09>Type des banques</S09>
+      <S0A>Constante</S0A>
+      <S0B>Taille du bloc</S0B>
+      <S0C>Inconnu 1</S0C>
+      <S0D>Inconnu 2</S0D>
+      <S0E>Inconnu (Section Uext)</S0E>
+      <S0F>Montrer environnement</S0F>
+      <S10>Montrer cellules</S10>
+      <S11>Montrer image</S11>
+      <S12>Transparence</S12>
+      <S13>Montrer numéros</S13>
+      <S14>Cellules</S14>
+      <S15>
+        Faites un double-clic sur l'image pour la voir
+        en taille réelle.
+      </S15>
+      <S16>Zoom</S16>
+      <S17>Couleur du fond</S17>
+      <S18>Supprimer</S18>
+    </CellControl>
+  </Français>
+</Language>

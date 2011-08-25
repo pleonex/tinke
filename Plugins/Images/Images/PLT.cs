@@ -48,7 +48,7 @@ namespace Images
 			NCLR nclr = new NCLR();
             nclr.id = (uint)id;
 			// Ponemos una cabecera genérica
-			nclr.cabecera.id = "NCLR".ToCharArray();
+			nclr.cabecera.id = "PLT".ToCharArray();
 			nclr.cabecera.constant = 0x0100;
 			nclr.cabecera.file_size = file_size;
 			nclr.cabecera.header_size = 0x10;
