@@ -1,11 +1,12 @@
 0.7.6
 *** Import images from NCER files
+* Interface to decompress FAT files (files with offsets)
 * Add support for the game TETRIS DS
 * Fixed problems with No_Tiled images
-* Support for the game (*.arc, *.plz)
+* Support for the game LAYTON2 (*.arc, *.plz)
 * Fixed problem with NCER files
 * Improved decompress methods
-* Command to set a new transparent color
+* Command to set a new transparent color in NCGR and NCER files
 * Improved Images plugin and TGA support
 
 0.7.5 (public release)

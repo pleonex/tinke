@@ -64,7 +64,7 @@ namespace Tinke
             {
                 File.WriteAllText(Application.StartupPath + Path.DirectorySeparatorChar + "Tinke.xml", "<?xml version=\"1.0\" encoding=\"utf-8\"?>" +
                                  "\n<Tinke>\n  <Options>" +
-                                 "\n    <Language>Español</Language>" + 
+                                 "\n    <Language>Español</Language>" +
                                  "\n    <InstantSearch>True</InstantSearch>" +
                                  "\n    <WindowDebug>True</WindowDebug>" +
                                  "\n    <WindowInformation>True</WindowInformation>" +
@@ -137,6 +137,7 @@ namespace Tinke
 
             if (!isMono)
                 espera.Abort();
+
 
             debug = new Debug();
             LoadPreferences();
@@ -356,8 +357,6 @@ namespace Tinke
             btnSaveROM.Text = xml.Element("S33").Value;
             toolStripMenuComprimido.Text = xml.Element("S2A").Value;
             toolStripAbrirTexto.Text = xml.Element("S26").Value;
-            toolStripFAT1.Text = xml.Element("S3D").Value;
-            toolStripFAT2.Text = xml.Element("S3E").Value;
         }
         private void ToolStripLang_Click(Object sender, EventArgs e)
         {
@@ -591,8 +590,12 @@ namespace Tinke
 
         private void ThreadEspera(Object name)
         {
-            Espera espera = new Espera((string)name, false);
-            espera.ShowDialog();
+            try
+            {
+                Espera espera = new Espera((string)name, false);
+                espera.ShowDialog();
+            }
+            catch { }
         }
 
         private void treeSystem_AfterSelect(object sender, TreeViewEventArgs e)
@@ -623,7 +626,7 @@ namespace Tinke
                 Archivo selectFile = accion.Select_File();
 
                 listFile.Items[0].SubItems.Add(selectFile.name);
-                listFile.Items[1].SubItems.Add("0x" + String.Format("{0:X}" , selectFile.id));
+                listFile.Items[1].SubItems.Add("0x" + String.Format("{0:X}", selectFile.id));
                 listFile.Items[2].SubItems.Add("0x" + String.Format("{0:X}", selectFile.offset));
                 listFile.Items[3].SubItems.Add(selectFile.size.ToString());
                 #region Obtener tipo de archivo traducido
@@ -665,7 +668,7 @@ namespace Tinke
                     case Formato.Desconocido:
                         listFile.Items[4].SubItems.Add(Tools.Helper.ObtenerTraduccion("Sistema", "S2B"));
                         break;
-                    case Formato.Sistema :
+                    case Formato.Sistema:
                         listFile.Items[4].SubItems.Add(Tools.Helper.ObtenerTraduccion("Sistema", "S31"));
                         break;
                     case Formato.Script:
@@ -716,7 +719,7 @@ namespace Tinke
         private void btnHex_Click(object sender, EventArgs e)
         {
             Archivo file = accion.Select_File();
-            
+
             VisorHex hex;
             if (file.offset != 0x0)
                 hex = new VisorHex(accion.ROMFile, file.offset, file.size);
@@ -751,8 +754,8 @@ namespace Tinke
                     if (btnDesplazar.Text == "<<<<<")
                         btnDesplazar.PerformClick();
             }
-                debug.Añadir_Texto(sb.ToString());
-                sb.Length = 0;
+            debug.Añadir_Texto(sb.ToString());
+            sb.Length = 0;
         }
         private void btnUncompress_Click(object sender, EventArgs e)
         {
@@ -769,15 +772,10 @@ namespace Tinke
                 return;
             }
 
-            Thread espera = new System.Threading.Thread(ThreadEspera);
-            if (!isMono)
-                espera.Start("S04");
             uncompress = accion.Extract();
 
-            if (!(uncompress.files is List<Archivo>) || !(uncompress.folders is List<Carpeta>)) // En caso de que falle la extracción
+            if (!(uncompress.files is List<Archivo>) && !(uncompress.folders is List<Carpeta>)) // En caso de que falle la extracción
             {
-                if (!isMono)
-                    espera.Abort();
                 MessageBox.Show(Tools.Helper.ObtenerTraduccion("Sistema", "S36"));
                 return;
             }
@@ -803,9 +801,6 @@ namespace Tinke
 
             debug.Añadir_Texto(sb.ToString());
             sb.Length = 0;
-
-            if (!isMono)
-                espera.Abort();
         }
         private void UncompressFolder()
         {
@@ -825,6 +820,7 @@ namespace Tinke
 
             if (!isMono)
                 espera.Abort();
+
         }
         private void Recursivo_UncompressFolder(Carpeta currFolder)
         {
@@ -922,6 +918,7 @@ namespace Tinke
                 RecursivoExtractFolder(folderSelect, o.SelectedPath + '\\' + folderSelect.name);
                 if (!isMono)
                     espera.Abort();
+
             }
 
         }
@@ -1098,11 +1095,11 @@ namespace Tinke
         }
         private void toolAbrirComoItemPaleta_Click(object sender, EventArgs e)
         {
-        	AbrirComo(Formato.Paleta);
-        }   
+            AbrirComo(Formato.Paleta);
+        }
         private void toolAbrirComoItemTile_Click(object sender, EventArgs e)
         {
-        	AbrirComo(Formato.Imagen);
+            AbrirComo(Formato.Imagen);
         }
         private void toolAbrirComoItemScreen_Click(object sender, EventArgs e)
         {
@@ -1115,7 +1112,7 @@ namespace Tinke
                 return;
 
             #region Save the new file
-            
+
             String currFile = Path.GetTempFileName();
             accion.Save_File(accion.IDSelect, currFile);
 
@@ -1125,15 +1122,10 @@ namespace Tinke
             File.WriteAllBytes(tempFile, compressFile);
             #endregion
 
-            Thread espera = new System.Threading.Thread(ThreadEspera);
-            if (!isMono)
-                espera.Start("S04");
             Carpeta uncompress = accion.Extract(tempFile, accion.IDSelect);
 
-            if (!(uncompress.files is List<Archivo>) || !(uncompress.folders is List<Carpeta>)) // En caso de que falle la extracción
+            if (!(uncompress.files is List<Archivo>) && !(uncompress.folders is List<Carpeta>)) // En caso de que falle la extracción
             {
-                if (!isMono)
-                    espera.Abort();
                 MessageBox.Show(Tools.Helper.ObtenerTraduccion("Sistema", "S36"));
                 return;
             }
@@ -1158,68 +1150,50 @@ namespace Tinke
 
             debug.Añadir_Texto(sb.ToString());
             sb.Length = 0;
-
-            if (!isMono)
-                espera.Abort();
-        }
-        private void toolStripFAT1_Click(object sender, EventArgs e)
-        {
-            Carpeta uncompress = accion.Extract_FAT();
-            if (!(uncompress.files is List<Archivo>)) // En caso de que falle la extracción
-            {
-                MessageBox.Show(Tools.Helper.ObtenerTraduccion("Sistema", "S36"));
-                return;
-            }
-
-            toolStripOpenAs.Enabled = false;
-
-            Get_SupportedFiles();
-
-            TreeNode selected = treeSystem.SelectedNode;
-            CarpetaANodo(uncompress, ref selected);
-            selected.ImageIndex = accion.ImageFormatFile(Formato.Comprimido);
-            selected.SelectedImageIndex = accion.ImageFormatFile(Formato.Comprimido);
-
-            // Agregamos los nodos al árbol
-            TreeNode[] nodos = new TreeNode[selected.Nodes.Count]; selected.Nodes.CopyTo(nodos, 0);
-            treeSystem.SelectedNode.Tag = selected.Tag;
-            accion.IDSelect = Convert.ToInt32(selected.Tag);
-            selected.Nodes.Clear();
-
-            treeSystem.SelectedNode.Nodes.AddRange((TreeNode[])nodos);
-            treeSystem.SelectedNode.Expand();
-
-        }
-        private void toolStripFAT2_Click(object sender, EventArgs e)
-        {
-            Carpeta uncompress = accion.Extract_FAT2();
-            if (!(uncompress.files is List<Archivo>)) // En caso de que falle la extracción
-            {
-                MessageBox.Show(Tools.Helper.ObtenerTraduccion("Sistema", "S36"));
-                return;
-            }
-
-            toolStripOpenAs.Enabled = false;
-
-            Get_SupportedFiles();
-
-            TreeNode selected = treeSystem.SelectedNode;
-            CarpetaANodo(uncompress, ref selected);
-            selected.ImageIndex = accion.ImageFormatFile(Formato.Comprimido);
-            selected.SelectedImageIndex = accion.ImageFormatFile(Formato.Comprimido);
-
-            // Agregamos los nodos al árbol
-            TreeNode[] nodos = new TreeNode[selected.Nodes.Count]; selected.Nodes.CopyTo(nodos, 0);
-            treeSystem.SelectedNode.Tag = selected.Tag;
-            accion.IDSelect = Convert.ToInt32(selected.Tag);
-            selected.Nodes.Clear();
-
-            treeSystem.SelectedNode.Nodes.AddRange((TreeNode[])nodos);
-            treeSystem.SelectedNode.Expand();
         }
         private void toolStripAbrirTexto_Click(object sender, EventArgs e)
         {
             AbrirComo(Formato.Texto);
+        }
+        private void toolStripAbrirFat_Click(object sender, EventArgs e)
+        {
+            string fileToRead = Path.GetTempFileName();
+            accion.Save_File(accion.Select_File(), fileToRead);
+
+            Dialog.FATExtract dialog = new Dialog.FATExtract(fileToRead);
+            dialog.TempFolder = accion.TempFolder;
+            dialog.ShowDialog();
+            Carpeta uncompress = dialog.Files;
+            dialog.Dispose();
+
+            File.Delete(fileToRead);
+
+            if (!(uncompress.files is List<Archivo>) || dialog.DialogResult != System.Windows.Forms.DialogResult.OK)
+            {
+                MessageBox.Show(Tools.Helper.ObtenerTraduccion("Sistema", "S36"));
+                return;
+            }
+
+            accion.Add_Files(ref uncompress, accion.IDSelect);
+
+            #region Add files to the treeList
+            toolStripOpenAs.Enabled = false;
+            Get_SupportedFiles();
+
+            TreeNode selected = treeSystem.SelectedNode;
+            CarpetaANodo(uncompress, ref selected);
+            selected.ImageIndex = accion.ImageFormatFile(Formato.Comprimido);
+            selected.SelectedImageIndex = accion.ImageFormatFile(Formato.Comprimido);
+
+            // Agregamos los nodos al árbol
+            TreeNode[] nodos = new TreeNode[selected.Nodes.Count]; selected.Nodes.CopyTo(nodos, 0);
+            treeSystem.SelectedNode.Tag = selected.Tag;
+            accion.IDSelect = Convert.ToInt32(selected.Tag);
+            selected.Nodes.Clear();
+
+            treeSystem.SelectedNode.Nodes.AddRange((TreeNode[])nodos);
+            treeSystem.SelectedNode.Expand();
+            #endregion
         }
 
         private void linkAboutBox_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -1228,7 +1202,6 @@ namespace Tinke
             Autores ven = new Autores();
             ven.ShowDialog();
         }
-
 
         private void btnSearch_Click(object sender, EventArgs e)
         {
@@ -1302,7 +1275,6 @@ namespace Tinke
                 btnSearch.PerformClick();
         }
 
-
         private void btnSaveROM_Click(object sender, EventArgs e)
         {
             /* Una ROM se compone por las siguientes secciones:
@@ -1350,7 +1322,7 @@ namespace Tinke
 
             id = accion.Search_File("arm7.bin").files[0].id;
             accion.Remove_File("arm7.bin", accion.Root);
-            
+
             Carpeta y9 = accion.Search_File("y9.bin");
             if (y9.files.Count > 0)
             {
@@ -1377,7 +1349,7 @@ namespace Tinke
             Console.WriteLine(Tools.Helper.ObtenerTraduccion("Messages", "S08"));
             Nitro.Estructuras.ROMHeader cabecera = romInfo.Cabecera;
 
-            
+
             // Escribimos el ARM9 Binary
             string arm9Binary = Path.GetTempFileName();
             string overlays9 = Path.GetTempFileName();
@@ -1476,6 +1448,7 @@ namespace Tinke
             if (!isMono)
                 espera.Abort();
 
+
             // Obtenemos el nuevo archivo para guardar
             SaveFileDialog o = new SaveFileDialog();
             o.AddExtension = true;
@@ -1517,7 +1490,7 @@ namespace Tinke
             //accion.LastFileID++; accion.LastFolderID++;
             accion.Search_Folder("ftc").files.Clear(); ;
             accion.Search_Folder("ftc").files.AddRange(origianlFiles);
-            
+
             // Borramos archivos ya innecesarios
             File.Delete(header);
             File.Delete(arm9Binary);
@@ -1534,10 +1507,11 @@ namespace Tinke
 
             if (!isMono)
                 espera.Abort();
+
         }
         private void btnImport_Click(object sender, EventArgs e)
         {
-            if (accion.IDSelect >= 0xF000) 
+            if (accion.IDSelect >= 0xF000)
                 return;
 
             // Se cambian un archivo por otro

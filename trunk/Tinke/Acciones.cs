@@ -194,7 +194,10 @@ namespace Tinke
                     return 1;
             }
         }
-
+        public String TempFolder
+        {
+            get { return pluginHost.Get_TempFolder(); }
+        }
 
         public void Set_Data()
         {
@@ -1375,145 +1378,6 @@ namespace Tinke
 
             Carpeta desc = pluginHost.Get_Files();
             Add_Files(ref desc, id);    // Añadimos los archivos descomprimidos al árbol de archivos
-            return desc;
-        }
-        public Carpeta Extract_FAT()
-        {
-            #region Guardamos el archivo fuera del sistema de ROM
-            Archivo selectFile = Select_File();
-            string tempFile;
-            BinaryReader br;
-
-            if (selectFile.offset != 0x0)
-            {
-                tempFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + selectFile.name;
-                br = new BinaryReader(File.OpenRead(file));
-                br.BaseStream.Position = selectFile.offset;
-
-                BinaryWriter bw = new BinaryWriter(new FileStream(tempFile, FileMode.Create));
-                bw.Write(br.ReadBytes((int)selectFile.size));
-                bw.Flush();
-                bw.Close();
-
-                br.BaseStream.Position = selectFile.offset;
-            }
-            else
-            {
-                FileInfo info = new FileInfo(selectFile.path);
-                File.Copy(selectFile.path, info.DirectoryName + Path.DirectorySeparatorChar + "temp_" + info.Name, true);
-                tempFile = info.DirectoryName + Path.DirectorySeparatorChar + "temp_" + info.Name;
-                br = new BinaryReader(File.OpenRead(tempFile));
-            }
-
-            byte[] ext = br.ReadBytes(4);
-
-            br.Close();
-            #endregion
-
-            Carpeta desc = new Carpeta();
-            desc.files = new List<Archivo>();
-            desc.name = "root";
-
-            br = new BinaryReader(File.OpenRead(tempFile));
-            uint currOffset = br.ReadUInt32();
-            int nFiles = ((int)currOffset / 0x04) - 1;
-
-            for (int i = 0; i < nFiles; i++)
-            {
-                uint nextOffset = br.ReadUInt32();
-                long pos = br.BaseStream.Position;
-                br.BaseStream.Position = currOffset;
-
-                String currTempFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + Path.GetRandomFileName();
-                File.WriteAllBytes(currTempFile, br.ReadBytes((int)(nextOffset - currOffset)));
-
-                Archivo currFile = new Archivo();
-                currFile.name = "file " + i.ToString();
-                currFile.offset = 0x00;
-                currFile.path = currTempFile;
-                currFile.size = nextOffset - currOffset;
-                desc.files.Add(currFile);
-
-                currOffset = nextOffset;
-                br.BaseStream.Position = pos;
-            }
-            br.Close();
-
-            File.Delete(tempFile);
-            Add_Files(ref desc, idSelect);    // Añadimos los archivos descomprimidos al árbol de archivos
-            return desc;
-        }
-        public Carpeta Extract_FAT2() // BETA (hay errores)
-        {
-            int start = 0x0c;
-
-            #region Guardamos el archivo fuera del sistema de ROM
-            Archivo selectFile = Select_File();
-            string tempFile;
-            BinaryReader br;
-
-            if (selectFile.offset != 0x0)
-            {
-                tempFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + selectFile.name;
-                br = new BinaryReader(File.OpenRead(file));
-                br.BaseStream.Position = selectFile.offset;
-
-                BinaryWriter bw = new BinaryWriter(new FileStream(tempFile, FileMode.Create));
-                bw.Write(br.ReadBytes((int)selectFile.size));
-                bw.Flush();
-                bw.Close();
-
-                br.BaseStream.Position = selectFile.offset;
-            }
-            else
-            {
-                FileInfo info = new FileInfo(selectFile.path);
-                File.Copy(selectFile.path, info.DirectoryName + Path.DirectorySeparatorChar + "temp_" + info.Name, true);
-                tempFile = info.DirectoryName + Path.DirectorySeparatorChar + "temp_" + info.Name;
-                br = new BinaryReader(File.OpenRead(tempFile));
-            }
-
-            byte[] ext = br.ReadBytes(4);
-
-            br.Close();
-            #endregion
-
-            Carpeta desc = new Carpeta();
-            desc.files = new List<Archivo>();
-            desc.name = "root";
-
-            br = new BinaryReader(File.OpenRead(tempFile));
-            br.BaseStream.Position = start;
-            uint endOffset, startOffset = br.ReadUInt32();
-            int nFiles = (int)(startOffset - start) / 0x08;
-            br.BaseStream.Position = start;
-
-            for (int i = 0; i < nFiles; i++)
-            {
-                startOffset = br.ReadUInt32();
-                endOffset = br.ReadUInt32();
-                if (startOffset > endOffset || endOffset > br.BaseStream.Length)
-                    continue;
-
-                long pos = br.BaseStream.Position;
-                br.BaseStream.Position = startOffset;
-
-                String currTempFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + Path.GetRandomFileName();
-                File.WriteAllBytes(currTempFile, br.ReadBytes((int)(endOffset - startOffset)));
-
-                Archivo currFile = new Archivo();
-                currFile.name = "file " + i.ToString();
-                currFile.offset = 0x00;
-                currFile.path = currTempFile;
-                currFile.size = endOffset - startOffset;
-                desc.files.Add(currFile);
-
-                br.BaseStream.Position = pos;
-            }
-            br.Close();
-
-            File.Delete(tempFile);
-            Add_Files(ref desc, idSelect);    // Añadimos los archivos descomprimidos al árbol de archivos
             return desc;
         }
         private void Recursivo_EliminarArchivosNulos(Carpeta carpeta)

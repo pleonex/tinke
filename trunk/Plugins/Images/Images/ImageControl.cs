@@ -211,7 +211,7 @@ namespace Images
             try
             {
                 XElement xml = XElement.Load(Application.StartupPath + Path.DirectorySeparatorChar + "Plugins" +
-                    Path.DirectorySeparatorChar + "TETRISDSLang.xml");
+                    Path.DirectorySeparatorChar + "ImagesLang.xml");
                 xml = xml.Element(pluginHost.Get_Language()).Element("ImageControl");
 
                 label5.Text = xml.Element("S01").Value;

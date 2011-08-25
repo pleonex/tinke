@@ -151,6 +151,12 @@
     <Compile Include="Debug.Designer.cs">
       <DependentUpon>Debug.cs</DependentUpon>
     </Compile>
+    <Compile Include="Dialog\FATExtract.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialog\FATExtract.Designer.cs">
+      <DependentUpon>FATExtract.cs</DependentUpon>
+    </Compile>
     <Compile Include="Dialog\SelectModeColor.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -257,6 +263,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Debug.resx">
       <DependentUpon>Debug.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialog\FATExtract.resx">
+      <DependentUpon>FATExtract.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Dialog\SelectModeColor.resx">
       <DependentUpon>SelectModeColor.cs</DependentUpon>
