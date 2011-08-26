@@ -388,6 +388,7 @@ namespace Tinke.Nitro
             diccionario.Add("4F", "Eidos");
             diccionario.Add("4Q", "Disney Interactive Studios");
             diccionario.Add("52", "Activision");
+            diccionario.Add("54", "ROCKSTAR GAMES");
             diccionario.Add("5D", "Midway");
             diccionario.Add("5G", "Majesco Entertainment");
             diccionario.Add("64", "LucasArts Entertainment");
@@ -415,6 +416,7 @@ namespace Tinke.Nitro
             diccionario.Add("H3", "Zen");
             diccionario.Add("H4", "SNK PLAYMORE");
             diccionario.Add("HF", "Level 5");
+            diccionario.Add("HG", "Graffiti Entertainment");
             diccionario.Add("HM", "HMH - INTERACTIVE");
             diccionario.Add("LR", "Asylum Entertainment");
             diccionario.Add("KJ", "Gamebridge");

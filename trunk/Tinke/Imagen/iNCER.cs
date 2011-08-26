@@ -91,6 +91,7 @@ namespace Tinke
                 btnBgd.Text = xml.Element("S17").Value;
                 btnBgdTrans.Text = xml.Element("S18").Value;
                 btnImport.Text = xml.Element("S24").Value;
+                btnSetTrans.Text = xml.Element("S25").Value;
             }
             catch { throw new Exception("There was an error reading the XML language file."); }
         }

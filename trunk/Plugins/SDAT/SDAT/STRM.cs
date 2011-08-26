@@ -130,6 +130,41 @@ namespace SDAT
                 if (fs != null) fs.Close();
             }
         }
+        /// <summary>
+        /// Get the information of the structure in an string array
+        /// </summary>
+        /// <param name="strm">Structure to show</param>
+        /// <returns>Information</returns>
+        public static Dictionary<String, String> Information(sSTRM strm)
+        {
+            Dictionary<String, String> info = new Dictionary<string, string>();
+            info.Add("/bSection", "Standar header");
+            info.Add("Type", new String(strm.cabecera.id));
+            info.Add("Magic", strm.cabecera.constant.ToString());
+            info.Add("File size", strm.cabecera.fileSize.ToString());
+
+            info.Add("/bSection 1", new String(strm.head.id));
+            info.Add("Size 1", strm.head.size.ToString());
+            info.Add("Wave type", strm.head.waveType.ToString());
+            info.Add("Loop flag", strm.head.loop.ToString());
+            info.Add("Loop offset", "0x" + strm.head.loopOffset.ToString("x"));
+            info.Add("Channels", strm.head.channels.ToString());
+            info.Add("Sample rate", strm.head.sampleRate.ToString());
+            info.Add("Time", strm.head.time.ToString());
+            info.Add("Samples", strm.head.nSamples.ToString());
+            info.Add("Data offset", "0x" + strm.head.dataOffset.ToString("x"));
+            info.Add("Number of blocks", strm.head.nBlocks.ToString());
+            info.Add("Block length", strm.head.blockLen.ToString());
+            info.Add("Samples per block", strm.head.blockSample.ToString());
+            info.Add("Last block length", strm.head.lastBlocklen.ToString());
+            info.Add("Samples per last block", strm.head.lastBlockSample.ToString());
+            //info.Add("Reserved", BitConverter.ToString(strm.head.reserved));
+
+            info.Add("/bSection 2", new string(strm.data.id));
+            info.Add("Size 2", strm.data.size.ToString());
+
+            return info;
+        }
 
         /// <summary>
         /// Convert a STRM structure to a WAV structure
@@ -189,7 +224,7 @@ namespace SDAT
         /// </summary>
         /// <param name="wav">WAV structure to convert</param>
         /// <returns>STRM structure converted</returns>
-        public static sSTRM ConvertToSTRM(sWAV wav)
+        public static sSTRM ConvertToSTRM(sWAV wav, int blockSize = 0x200, int waveType = 1)
         {
             if (wav.wave.fmt.audioFormat != WaveFormat.WAVE_FORMAT_PCM)
                 throw new NotSupportedException();
@@ -202,7 +237,7 @@ namespace SDAT
 
             strm.head.id = "HEAD".ToArray();
             strm.head.size = 0x50;
-            strm.head.waveType = 1;
+            strm.head.waveType = (byte)waveType;
             strm.head.loop = 1;
             strm.head.channels = wav.wave.fmt.numChannels;
             strm.head.sampleRate = (ushort)wav.wave.fmt.sampleRate;
@@ -216,8 +251,8 @@ namespace SDAT
             {
                 strm.data.leftChannel = DivideChannels(wav.wave.data.data, true, 0);
                 strm.data.rightChannel = DivideChannels(wav.wave.data.data, false, 0);
-                byte[][] leftBlock = CreateBlocks(strm.data.leftChannel);
-                byte[][] rigthBlock = CreateBlocks(strm.data.rightChannel);
+                byte[][] leftBlock = CreateBlocks(strm.data.leftChannel, blockSize);
+                byte[][] rigthBlock = CreateBlocks(strm.data.rightChannel, blockSize);
                 strm.data.data = MergeBlocks(leftBlock, rigthBlock);
 
                 strm.head.blockLen = (uint)leftBlock[0].Length;
@@ -229,7 +264,7 @@ namespace SDAT
             }
             else
             {
-                byte[][] blocks = CreateBlocks(wav.wave.data.data);
+                byte[][] blocks = CreateBlocks(wav.wave.data.data, blockSize);
                 strm.head.blockLen = (uint)blocks[0].Length;
                 strm.head.blockSample = strm.head.blockLen / 2;
                 strm.head.lastBlocklen = (uint)blocks[blocks.Length - 1].Length;
@@ -388,22 +423,22 @@ namespace SDAT
         /// </summary>
         /// <param name="channel">Channel audio data</param>
         /// <returns>Block data</returns>
-        static byte[][] CreateBlocks(byte[] channel)
+        static byte[][] CreateBlocks(byte[] channel, int blockSize)
         {
             List<Byte[]> blocks = new List<Byte[]>();
 
-            int nBlocks = channel.Length / 0x200;
-            int lastBlockLength = channel.Length % 0x200;
+            int nBlocks = channel.Length / blockSize;
+            int lastBlockLength = channel.Length % blockSize;
 
-            Byte[] block = new Byte[0x200]; 
+            Byte[] block = new Byte[blockSize]; 
             for (int i = 0; i < nBlocks; i++)
             {
-                block = new Byte[0x200];
-                Array.Copy(channel, i * 0x200, block, 0, 0x200);
+                block = new Byte[blockSize];
+                Array.Copy(channel, i * blockSize, block, 0, blockSize);
                 blocks.Add(block);
             }
             block = new Byte[lastBlockLength];
-            Array.Copy(channel, nBlocks * 0x200, block, 0, lastBlockLength);
+            Array.Copy(channel, nBlocks * blockSize, block, 0, lastBlockLength);
             blocks.Add(block);
 
             return blocks.ToArray();

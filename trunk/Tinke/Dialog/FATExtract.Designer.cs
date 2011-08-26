@@ -98,7 +98,7 @@ namespace Tinke.Dialog
             this.groupOptions.Size = new System.Drawing.Size(492, 297);
             this.groupOptions.TabIndex = 0;
             this.groupOptions.TabStop = false;
-            this.groupOptions.Text = "Opciones";
+            this.groupOptions.Text = "S07";
             // 
             // groupOffset
             // 
@@ -115,16 +115,16 @@ namespace Tinke.Dialog
             this.groupOffset.Size = new System.Drawing.Size(477, 186);
             this.groupOffset.TabIndex = 1;
             this.groupOffset.TabStop = false;
-            this.groupOffset.Text = "Offset";
+            this.groupOffset.Text = "S0E";
             // 
             // label6
             // 
             this.label6.AutoSize = true;
             this.label6.Location = new System.Drawing.Point(6, 48);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(78, 13);
+            this.label6.Size = new System.Drawing.Size(26, 13);
             this.label6.TabIndex = 7;
-            this.label6.Text = "Tamaño offset:";
+            this.label6.Text = "S10";
             // 
             // numericOffsetLen
             // 
@@ -149,9 +149,9 @@ namespace Tinke.Dialog
             this.checkOffsetBigEndian.AutoSize = true;
             this.checkOffsetBigEndian.Location = new System.Drawing.Point(186, 23);
             this.checkOffsetBigEndian.Name = "checkOffsetBigEndian";
-            this.checkOffsetBigEndian.Size = new System.Drawing.Size(77, 17);
+            this.checkOffsetBigEndian.Size = new System.Drawing.Size(45, 17);
             this.checkOffsetBigEndian.TabIndex = 5;
-            this.checkOffsetBigEndian.Text = "Big Endian";
+            this.checkOffsetBigEndian.Text = "S11";
             this.checkOffsetBigEndian.UseVisualStyleBackColor = true;
             // 
             // btnOffsetCalculate
@@ -160,7 +160,7 @@ namespace Tinke.Dialog
             this.btnOffsetCalculate.Name = "btnOffsetCalculate";
             this.btnOffsetCalculate.Size = new System.Drawing.Size(126, 35);
             this.btnOffsetCalculate.TabIndex = 4;
-            this.btnOffsetCalculate.Text = "Leer offset";
+            this.btnOffsetCalculate.Text = "S1A";
             this.btnOffsetCalculate.UseVisualStyleBackColor = true;
             this.btnOffsetCalculate.Click += new System.EventHandler(this.btnOffsetCalculate_Click);
             // 
@@ -174,7 +174,7 @@ namespace Tinke.Dialog
             this.groupOffsetRelative.Size = new System.Drawing.Size(256, 74);
             this.groupOffsetRelative.TabIndex = 1;
             this.groupOffsetRelative.TabStop = false;
-            this.groupOffsetRelative.Text = "Offset relativo a";
+            this.groupOffsetRelative.Text = "S17";
             // 
             // numericRelativeOffset
             // 
@@ -194,9 +194,9 @@ namespace Tinke.Dialog
             this.radioRelativeFirstFile.AutoSize = true;
             this.radioRelativeFirstFile.Location = new System.Drawing.Point(6, 51);
             this.radioRelativeFirstFile.Name = "radioRelativeFirstFile";
-            this.radioRelativeFirstFile.Size = new System.Drawing.Size(92, 17);
+            this.radioRelativeFirstFile.Size = new System.Drawing.Size(44, 17);
             this.radioRelativeFirstFile.TabIndex = 2;
-            this.radioRelativeFirstFile.Text = "Primer archivo";
+            this.radioRelativeFirstFile.Text = "S19";
             this.radioRelativeFirstFile.UseVisualStyleBackColor = true;
             this.radioRelativeFirstFile.CheckedChanged += new System.EventHandler(this.radioRelativeFirstFile_CheckedChanged);
             // 
@@ -206,10 +206,10 @@ namespace Tinke.Dialog
             this.radioRelativeOffset.Checked = true;
             this.radioRelativeOffset.Location = new System.Drawing.Point(6, 27);
             this.radioRelativeOffset.Name = "radioRelativeOffset";
-            this.radioRelativeOffset.Size = new System.Drawing.Size(56, 17);
+            this.radioRelativeOffset.Size = new System.Drawing.Size(44, 17);
             this.radioRelativeOffset.TabIndex = 0;
             this.radioRelativeOffset.TabStop = true;
-            this.radioRelativeOffset.Text = "Offset:";
+            this.radioRelativeOffset.Text = "S18";
             this.radioRelativeOffset.UseVisualStyleBackColor = true;
             // 
             // groupOffsetType
@@ -223,17 +223,17 @@ namespace Tinke.Dialog
             this.groupOffsetType.Size = new System.Drawing.Size(200, 120);
             this.groupOffsetType.TabIndex = 2;
             this.groupOffsetType.TabStop = false;
-            this.groupOffsetType.Text = "Tipo de offset";
+            this.groupOffsetType.Text = "S12";
             // 
             // radioOffsetEnd
             // 
             this.radioOffsetEnd.AutoSize = true;
             this.radioOffsetEnd.Location = new System.Drawing.Point(23, 94);
             this.radioOffsetEnd.Name = "radioOffsetEnd";
-            this.radioOffsetEnd.Size = new System.Drawing.Size(73, 17);
+            this.radioOffsetEnd.Size = new System.Drawing.Size(44, 17);
             this.radioOffsetEnd.TabIndex = 3;
             this.radioOffsetEnd.TabStop = true;
-            this.radioOffsetEnd.Text = "End offset";
+            this.radioOffsetEnd.Text = "S16";
             this.radioOffsetEnd.UseVisualStyleBackColor = true;
             // 
             // radioOffsetStartEnd
@@ -241,9 +241,9 @@ namespace Tinke.Dialog
             this.radioOffsetStartEnd.AutoSize = true;
             this.radioOffsetStartEnd.Location = new System.Drawing.Point(23, 48);
             this.radioOffsetStartEnd.Name = "radioOffsetStartEnd";
-            this.radioOffsetStartEnd.Size = new System.Drawing.Size(135, 17);
+            this.radioOffsetStartEnd.Size = new System.Drawing.Size(44, 17);
             this.radioOffsetStartEnd.TabIndex = 1;
-            this.radioOffsetStartEnd.Text = "Start offset / End offset";
+            this.radioOffsetStartEnd.Text = "S14";
             this.radioOffsetStartEnd.UseVisualStyleBackColor = true;
             // 
             // radioOffsetStartSize
@@ -251,9 +251,9 @@ namespace Tinke.Dialog
             this.radioOffsetStartSize.AutoSize = true;
             this.radioOffsetStartSize.Location = new System.Drawing.Point(23, 71);
             this.radioOffsetStartSize.Name = "radioOffsetStartSize";
-            this.radioOffsetStartSize.Size = new System.Drawing.Size(107, 17);
+            this.radioOffsetStartSize.Size = new System.Drawing.Size(44, 17);
             this.radioOffsetStartSize.TabIndex = 2;
-            this.radioOffsetStartSize.Text = "Start offset / Size";
+            this.radioOffsetStartSize.Text = "S15";
             this.radioOffsetStartSize.UseVisualStyleBackColor = true;
             // 
             // radioOffsetStart
@@ -262,10 +262,10 @@ namespace Tinke.Dialog
             this.radioOffsetStart.Checked = true;
             this.radioOffsetStart.Location = new System.Drawing.Point(23, 24);
             this.radioOffsetStart.Name = "radioOffsetStart";
-            this.radioOffsetStart.Size = new System.Drawing.Size(76, 17);
+            this.radioOffsetStart.Size = new System.Drawing.Size(44, 17);
             this.radioOffsetStart.TabIndex = 0;
             this.radioOffsetStart.TabStop = true;
-            this.radioOffsetStart.Text = "Start offset";
+            this.radioOffsetStart.Text = "S13";
             this.radioOffsetStart.UseVisualStyleBackColor = true;
             // 
             // label4
@@ -273,9 +273,9 @@ namespace Tinke.Dialog
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(6, 22);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(92, 13);
+            this.label4.Size = new System.Drawing.Size(26, 13);
             this.label4.TabIndex = 3;
-            this.label4.Text = "Posición de inicio:";
+            this.label4.Text = "S0F";
             // 
             // numericOffsetStart
             // 
@@ -310,16 +310,16 @@ namespace Tinke.Dialog
             this.groupNumFiles.Size = new System.Drawing.Size(477, 80);
             this.groupNumFiles.TabIndex = 0;
             this.groupNumFiles.TabStop = false;
-            this.groupNumFiles.Text = "Número de archivos";
+            this.groupNumFiles.Text = "S08";
             // 
             // label7
             // 
             this.label7.AutoSize = true;
             this.label7.Location = new System.Drawing.Point(194, 46);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(105, 13);
+            this.label7.Size = new System.Drawing.Size(27, 13);
             this.label7.TabIndex = 7;
-            this.label7.Text = "Número de archivos:";
+            this.label7.Text = "S0C";
             // 
             // numericNumFiles
             // 
@@ -339,18 +339,18 @@ namespace Tinke.Dialog
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(6, 46);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(75, 13);
+            this.label3.Size = new System.Drawing.Size(27, 13);
             this.label3.TabIndex = 5;
-            this.label3.Text = "Tamaño valor:";
+            this.label3.Text = "S0A";
             // 
             // checkNumBigEndian
             // 
             this.checkNumBigEndian.AutoSize = true;
             this.checkNumBigEndian.Location = new System.Drawing.Point(197, 19);
             this.checkNumBigEndian.Name = "checkNumBigEndian";
-            this.checkNumBigEndian.Size = new System.Drawing.Size(77, 17);
+            this.checkNumBigEndian.Size = new System.Drawing.Size(46, 17);
             this.checkNumBigEndian.TabIndex = 2;
-            this.checkNumBigEndian.Text = "Big Endian";
+            this.checkNumBigEndian.Text = "S0B";
             this.checkNumBigEndian.UseVisualStyleBackColor = true;
             // 
             // numericNumOffset
@@ -373,7 +373,7 @@ namespace Tinke.Dialog
             this.btnNumCalculate.Name = "btnNumCalculate";
             this.btnNumCalculate.Size = new System.Drawing.Size(100, 23);
             this.btnNumCalculate.TabIndex = 3;
-            this.btnNumCalculate.Text = "Calcular";
+            this.btnNumCalculate.Text = "S0D";
             this.btnNumCalculate.UseVisualStyleBackColor = true;
             this.btnNumCalculate.Click += new System.EventHandler(this.btnNumCalculate_Click);
             // 
@@ -382,9 +382,9 @@ namespace Tinke.Dialog
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(6, 20);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(88, 13);
+            this.label2.Size = new System.Drawing.Size(26, 13);
             this.label2.TabIndex = 4;
-            this.label2.Text = "Leer en posición:";
+            this.label2.Text = "S09";
             // 
             // numericNumLen
             // 
@@ -418,7 +418,7 @@ namespace Tinke.Dialog
             this.btnAccept.Name = "btnAccept";
             this.btnAccept.Size = new System.Drawing.Size(90, 40);
             this.btnAccept.TabIndex = 4;
-            this.btnAccept.Text = "Aceptar";
+            this.btnAccept.Text = "S1C";
             this.btnAccept.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnAccept.UseVisualStyleBackColor = true;
             this.btnAccept.Click += new System.EventHandler(this.btnAccept_Click);
@@ -434,11 +434,13 @@ namespace Tinke.Dialog
             // 
             // btnHex
             // 
+            this.btnHex.Image = global::Tinke.Properties.Resources.calculator;
             this.btnHex.Location = new System.Drawing.Point(512, 319);
             this.btnHex.Name = "btnHex";
             this.btnHex.Size = new System.Drawing.Size(192, 31);
             this.btnHex.TabIndex = 3;
-            this.btnHex.Text = "Visor hexadecimal";
+            this.btnHex.Text = "S1B";
+            this.btnHex.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnHex.UseVisualStyleBackColor = true;
             this.btnHex.Click += new System.EventHandler(this.btnHex_Click);
             // 
@@ -458,7 +460,7 @@ namespace Tinke.Dialog
             this.Name = "FATExtract";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
-            this.Text = "Extraer archivos";
+            this.Text = "S06";
             this.groupOptions.ResumeLayout(false);
             this.groupOffset.ResumeLayout(false);
             this.groupOffset.PerformLayout();
