@@ -26,17 +26,21 @@ namespace Tinke.Dialog
         }
         private void ReadLanguage()
         {
-            System.Xml.Linq.XElement xml = Tools.Helper.ObtenerTraduccion("NSCR");
+            try
+            {
+                System.Xml.Linq.XElement xml = Tools.Helper.ObtenerTraduccion("NSCR");
 
-            this.Text = xml.Element("S00").Value;
-            label1.Text = xml.Element("S01").Value;
-            label2.Text = xml.Element("S02").Value;
-            checkFillTile.Text = xml.Element("S03").Value;
-            label3.Text = xml.Element("S04").Value;
-            label4.Text = xml.Element("S05").Value;
-            btnOk.Text = xml.Element("S06").Value;
-            label5.Text = xml.Element("S07").Value;
-            label6.Text = xml.Element("S08").Value;
+                this.Text = xml.Element("S00").Value;
+                label1.Text = xml.Element("S01").Value;
+                label2.Text = xml.Element("S02").Value;
+                checkFillTile.Text = xml.Element("S03").Value;
+                label3.Text = xml.Element("S04").Value;
+                label4.Text = xml.Element("S05").Value;
+                btnOk.Text = xml.Element("S06").Value;
+                label5.Text = xml.Element("S07").Value;
+                label6.Text = xml.Element("S08").Value;
+            }
+            catch { throw new NotImplementedException("There was an error reading the language file"); }
         }
 
         public int ImagenWidth

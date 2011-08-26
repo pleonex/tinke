@@ -42,7 +42,6 @@ namespace TXT
             }
 
             txtBox.Text = txtBox.Text.Replace("\n", "\r\n");
-            txtBox.Text = txtBox.Text.Replace("\\n", "\r\n");
             txtBox.Text = txtBox.Text.Replace("\0", "\\0");
 
             LeerIdioma();
@@ -78,14 +77,13 @@ namespace TXT
         {
             String texto = new String(encoding.GetChars(text));
             texto = texto.Replace("\n", "\r\n");
+            texto = texto.Replace("\0", "\\0");
+
             return texto;
         }
         private void comboEncod_SelectedIndexChanged(object sender, EventArgs e)
         {
             txtBox.Text = Descodificar(Encoding.GetEncoding(comboEncod.Text));
-            txtBox.Text = txtBox.Text.Replace("\n", "\r\n");
-            txtBox.Text = txtBox.Text.Replace("\\n", "\r\n");
-            txtBox.Text = txtBox.Text.Replace("\0", "\\0");
         }
 
         private void checkWordWrap_CheckedChanged(object sender, EventArgs e)

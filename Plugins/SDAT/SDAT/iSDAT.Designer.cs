@@ -28,6 +28,18 @@ namespace SDAT
         /// </summary>
         private System.ComponentModel.IContainer components = null;
 
+        protected override void Dispose(bool disposing)
+        {
+            if (bgdWorker.IsBusy)
+                bgdWorker.CancelAsync();
+            bgdWorker.Dispose();
+
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
 
         #region Component Designer generated code
 
@@ -39,25 +51,27 @@ namespace SDAT
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(iSDAT));
-            System.Windows.Forms.ListViewItem listViewItem17 = new System.Windows.Forms.ListViewItem("S02");
-            System.Windows.Forms.ListViewItem listViewItem18 = new System.Windows.Forms.ListViewItem("S03");
-            System.Windows.Forms.ListViewItem listViewItem19 = new System.Windows.Forms.ListViewItem("S04");
-            System.Windows.Forms.ListViewItem listViewItem20 = new System.Windows.Forms.ListViewItem("S05");
+            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("S02");
+            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("S03");
+            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem("S04");
+            System.Windows.Forms.ListViewItem listViewItem4 = new System.Windows.Forms.ListViewItem("S05");
+            System.Windows.Forms.ListViewItem listViewItem5 = new System.Windows.Forms.ListViewItem("S06");
             this.treeFiles = new System.Windows.Forms.TreeView();
             this.imageList = new System.Windows.Forms.ImageList(this.components);
             this.listProp = new System.Windows.Forms.ListView();
             this.columnCampo = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnValor = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.btnExtract = new System.Windows.Forms.Button();
-            this.btnReproducir = new System.Windows.Forms.Button();
             this.btnWav = new System.Windows.Forms.Button();
             this.btnMidi = new System.Windows.Forms.Button();
-            this.btnStop = new System.Windows.Forms.Button();
-            this.btnUncompress = new System.Windows.Forms.Button();
             this.checkLoop = new System.Windows.Forms.CheckBox();
-            this.btnImport = new System.Windows.Forms.Button();
             this.btnCreate = new System.Windows.Forms.Button();
             this.btnChangeFile = new System.Windows.Forms.Button();
+            this.btnInfo = new System.Windows.Forms.Button();
+            this.btnImport = new System.Windows.Forms.Button();
+            this.btnUncompress = new System.Windows.Forms.Button();
+            this.btnStop = new System.Windows.Forms.Button();
+            this.btnReproducir = new System.Windows.Forms.Button();
+            this.btnExtract = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // treeFiles
@@ -93,13 +107,14 @@ namespace SDAT
             this.columnCampo,
             this.columnValor});
             this.listProp.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem17,
-            listViewItem18,
-            listViewItem19,
-            listViewItem20});
+            listViewItem1,
+            listViewItem2,
+            listViewItem3,
+            listViewItem4,
+            listViewItem5});
             this.listProp.Location = new System.Drawing.Point(251, 3);
             this.listProp.Name = "listProp";
-            this.listProp.Size = new System.Drawing.Size(256, 104);
+            this.listProp.Size = new System.Drawing.Size(256, 116);
             this.listProp.TabIndex = 1;
             this.listProp.UseCompatibleStateImageBehavior = false;
             this.listProp.View = System.Windows.Forms.View.Details;
@@ -113,32 +128,6 @@ namespace SDAT
             // 
             this.columnValor.Text = "S01";
             this.columnValor.Width = 121;
-            // 
-            // btnExtract
-            // 
-            this.btnExtract.Enabled = false;
-            this.btnExtract.ImageIndex = 3;
-            this.btnExtract.ImageList = this.imageList;
-            this.btnExtract.Location = new System.Drawing.Point(251, 431);
-            this.btnExtract.Name = "btnExtract";
-            this.btnExtract.Size = new System.Drawing.Size(100, 35);
-            this.btnExtract.TabIndex = 2;
-            this.btnExtract.Text = "S08";
-            this.btnExtract.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.btnExtract.UseVisualStyleBackColor = true;
-            this.btnExtract.Click += new System.EventHandler(this.btnExtract_Click);
-            // 
-            // btnReproducir
-            // 
-            this.btnReproducir.Enabled = false;
-            this.btnReproducir.ImageIndex = 5;
-            this.btnReproducir.ImageList = this.imageList;
-            this.btnReproducir.Location = new System.Drawing.Point(357, 392);
-            this.btnReproducir.Name = "btnReproducir";
-            this.btnReproducir.Size = new System.Drawing.Size(45, 34);
-            this.btnReproducir.TabIndex = 3;
-            this.btnReproducir.UseVisualStyleBackColor = true;
-            this.btnReproducir.Click += new System.EventHandler(this.btnReproducir_Click);
             // 
             // btnWav
             // 
@@ -156,38 +145,13 @@ namespace SDAT
             // btnMidi
             // 
             this.btnMidi.Enabled = false;
-            this.btnMidi.Location = new System.Drawing.Point(407, 390);
+            this.btnMidi.Location = new System.Drawing.Point(408, 349);
             this.btnMidi.Name = "btnMidi";
             this.btnMidi.Size = new System.Drawing.Size(99, 35);
             this.btnMidi.TabIndex = 5;
             this.btnMidi.Text = "S09";
             this.btnMidi.UseVisualStyleBackColor = true;
             this.btnMidi.Visible = false;
-            // 
-            // btnStop
-            // 
-            this.btnStop.ImageIndex = 6;
-            this.btnStop.ImageList = this.imageList;
-            this.btnStop.Location = new System.Drawing.Point(357, 432);
-            this.btnStop.Name = "btnStop";
-            this.btnStop.Size = new System.Drawing.Size(45, 34);
-            this.btnStop.TabIndex = 6;
-            this.btnStop.UseVisualStyleBackColor = true;
-            this.btnStop.Click += new System.EventHandler(this.btnStop_Click);
-            // 
-            // btnUncompress
-            // 
-            this.btnUncompress.Enabled = false;
-            this.btnUncompress.ImageKey = "package.png";
-            this.btnUncompress.ImageList = this.imageList;
-            this.btnUncompress.Location = new System.Drawing.Point(251, 391);
-            this.btnUncompress.Name = "btnUncompress";
-            this.btnUncompress.Size = new System.Drawing.Size(100, 34);
-            this.btnUncompress.TabIndex = 7;
-            this.btnUncompress.Text = "S07";
-            this.btnUncompress.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.btnUncompress.UseVisualStyleBackColor = true;
-            this.btnUncompress.Click += new System.EventHandler(this.btnUncompress_Click);
             // 
             // checkLoop
             // 
@@ -199,19 +163,6 @@ namespace SDAT
             this.checkLoop.TabIndex = 8;
             this.checkLoop.Text = "S06";
             this.checkLoop.UseVisualStyleBackColor = true;
-            // 
-            // btnImport
-            // 
-            this.btnImport.Enabled = false;
-            this.btnImport.Image = global::SDAT.Properties.Resources.sound_add;
-            this.btnImport.Location = new System.Drawing.Point(407, 431);
-            this.btnImport.Name = "btnImport";
-            this.btnImport.Size = new System.Drawing.Size(99, 35);
-            this.btnImport.TabIndex = 9;
-            this.btnImport.Text = "S0B";
-            this.btnImport.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.btnImport.UseVisualStyleBackColor = true;
-            this.btnImport.Click += new System.EventHandler(this.btnImport_Click);
             // 
             // btnCreate
             // 
@@ -235,12 +186,90 @@ namespace SDAT
             this.btnChangeFile.UseVisualStyleBackColor = true;
             this.btnChangeFile.Click += new System.EventHandler(this.btnChangeFile_Click);
             // 
+            // btnInfo
+            // 
+            this.btnInfo.Enabled = false;
+            this.btnInfo.Image = global::SDAT.Properties.Resources.information;
+            this.btnInfo.Location = new System.Drawing.Point(408, 391);
+            this.btnInfo.Name = "btnInfo";
+            this.btnInfo.Size = new System.Drawing.Size(99, 34);
+            this.btnInfo.TabIndex = 12;
+            this.btnInfo.Text = "S0E";
+            this.btnInfo.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnInfo.UseVisualStyleBackColor = true;
+            this.btnInfo.Click += new System.EventHandler(this.btnInfo_Click);
+            // 
+            // btnImport
+            // 
+            this.btnImport.Enabled = false;
+            this.btnImport.Image = global::SDAT.Properties.Resources.sound_add;
+            this.btnImport.Location = new System.Drawing.Point(407, 431);
+            this.btnImport.Name = "btnImport";
+            this.btnImport.Size = new System.Drawing.Size(99, 35);
+            this.btnImport.TabIndex = 9;
+            this.btnImport.Text = "S0B";
+            this.btnImport.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnImport.UseVisualStyleBackColor = true;
+            this.btnImport.Click += new System.EventHandler(this.btnImport_Click);
+            // 
+            // btnUncompress
+            // 
+            this.btnUncompress.Enabled = false;
+            this.btnUncompress.ImageKey = "package.png";
+            this.btnUncompress.ImageList = this.imageList;
+            this.btnUncompress.Location = new System.Drawing.Point(251, 391);
+            this.btnUncompress.Name = "btnUncompress";
+            this.btnUncompress.Size = new System.Drawing.Size(100, 34);
+            this.btnUncompress.TabIndex = 7;
+            this.btnUncompress.Text = "S07";
+            this.btnUncompress.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnUncompress.UseVisualStyleBackColor = true;
+            this.btnUncompress.Click += new System.EventHandler(this.btnUncompress_Click);
+            // 
+            // btnStop
+            // 
+            this.btnStop.ImageIndex = 6;
+            this.btnStop.ImageList = this.imageList;
+            this.btnStop.Location = new System.Drawing.Point(357, 432);
+            this.btnStop.Name = "btnStop";
+            this.btnStop.Size = new System.Drawing.Size(45, 34);
+            this.btnStop.TabIndex = 6;
+            this.btnStop.UseVisualStyleBackColor = true;
+            this.btnStop.Click += new System.EventHandler(this.btnStop_Click);
+            // 
+            // btnReproducir
+            // 
+            this.btnReproducir.Enabled = false;
+            this.btnReproducir.ImageIndex = 5;
+            this.btnReproducir.ImageList = this.imageList;
+            this.btnReproducir.Location = new System.Drawing.Point(357, 392);
+            this.btnReproducir.Name = "btnReproducir";
+            this.btnReproducir.Size = new System.Drawing.Size(45, 34);
+            this.btnReproducir.TabIndex = 3;
+            this.btnReproducir.UseVisualStyleBackColor = true;
+            this.btnReproducir.Click += new System.EventHandler(this.btnReproducir_Click);
+            // 
+            // btnExtract
+            // 
+            this.btnExtract.Enabled = false;
+            this.btnExtract.ImageIndex = 3;
+            this.btnExtract.ImageList = this.imageList;
+            this.btnExtract.Location = new System.Drawing.Point(251, 431);
+            this.btnExtract.Name = "btnExtract";
+            this.btnExtract.Size = new System.Drawing.Size(100, 35);
+            this.btnExtract.TabIndex = 2;
+            this.btnExtract.Text = "S08";
+            this.btnExtract.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnExtract.UseVisualStyleBackColor = true;
+            this.btnExtract.Click += new System.EventHandler(this.btnExtract_Click);
+            // 
             // iSDAT
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Transparent;
             this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.Controls.Add(this.btnInfo);
             this.Controls.Add(this.btnChangeFile);
             this.Controls.Add(this.btnCreate);
             this.Controls.Add(this.btnImport);
@@ -277,5 +306,6 @@ namespace SDAT
         private System.Windows.Forms.Button btnImport;
         private System.Windows.Forms.Button btnCreate;
         private System.Windows.Forms.Button btnChangeFile;
+        private System.Windows.Forms.Button btnInfo;
     }
 }

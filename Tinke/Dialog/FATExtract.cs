@@ -26,6 +26,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Windows.Forms;
+using System.Xml.Linq;
 using PluginInterface;
 
 namespace Tinke.Dialog
@@ -39,18 +40,47 @@ namespace Tinke.Dialog
         public FATExtract(string file)
         {
             InitializeComponent();
+            ReadLanguage();
 
             this.file = file;
             fat = new FAT();
 
-            Read_All();
+            Read_NumFiles();
+        }
+        private void ReadLanguage()
+        {
+            try
+            {
+                XElement xml = Tools.Helper.ObtenerTraduccion("Dialog");
+
+                this.Text = xml.Element("S06").Value;
+                groupOptions.Text = xml.Element("S07").Value;
+                groupNumFiles.Text = xml.Element("S08").Value;
+                label2.Text = xml.Element("S09").Value;
+                label3.Text = xml.Element("S0A").Value;
+                checkNumBigEndian.Text = xml.Element("S0B").Value;
+                label7.Text = xml.Element("S0C").Value;
+                btnNumCalculate.Text = xml.Element("S0D").Value;
+                groupOffset.Text = xml.Element("S0E").Value;
+                label4.Text = xml.Element("S0F").Value;
+                label6.Text = xml.Element("S10").Value;
+                checkOffsetBigEndian.Text = xml.Element("S11").Value;
+                groupOffsetType.Text = xml.Element("S12").Value;
+                radioOffsetStart.Text = xml.Element("S13").Value;
+                radioOffsetStartEnd.Text = xml.Element("S14").Value;
+                radioOffsetStartSize.Text = xml.Element("S15").Value;
+                radioOffsetEnd.Text = xml.Element("S16").Value;
+                groupOffsetRelative.Text = xml.Element("S17").Value;
+                radioRelativeOffset.Text = xml.Element("S18").Value;
+                radioRelativeFirstFile.Text = xml.Element("S19").Value;
+                btnOffsetCalculate.Text = xml.Element("S1A").Value;
+                btnHex.Text = xml.Element("S1B").Value;
+                btnAccept.Text = xml.Element("S1C").Value;
+            }
+            catch { throw new NotImplementedException("There was an error reading the language file"); }
         }
 
         #region Read values
-        private void Read_All()
-        {
-            Read_NumFiles();
-        }
         private void Read_NumFiles()
         {
             BinaryReader br = new BinaryReader(File.OpenRead(file));

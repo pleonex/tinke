@@ -20,6 +20,8 @@
 
 using System;
 using System.Text;
+using System.Collections.Generic;
+using System.IO;
 
 namespace SDAT
 {
@@ -103,6 +105,64 @@ namespace SDAT
             }
 
             return swar;
+        }
+        public static void Write(sSWAV[] sounds, string fileout)
+        {
+            BinaryWriter bw = new BinaryWriter(File.OpenWrite(fileout));
+            uint file_size = (uint)(0x10 + 0x10 + 0x04 * sounds.Length);
+            for (int i = 0; i < sounds.Length; i++)
+                file_size += (uint)sounds[i].data.data.Length + 0x0A;
+
+            bw.Write(new char[] { 'S', 'W', 'A', 'R' });
+            bw.Write((uint)0x0100FEFF);
+            bw.Write(file_size);
+            bw.Write((ushort)0x10);
+            bw.Write((ushort)0x01);
+
+            bw.Write(new char[] { 'D', 'A', 'T', 'A' });
+            bw.Write((uint)(file_size - 0x10));
+            for (int i = 0; i < 8; i++)
+                bw.Write((uint)0x00);
+            bw.Write((uint)sounds.Length);
+
+            // Write offset
+            uint currOffset = (uint)(0x3C + 0x04 * sounds.Length);
+            for (int i = 0; i < sounds.Length; i++)
+            {
+                bw.Write(currOffset);
+                currOffset += (uint)sounds[i].data.data.Length + 0x0A;
+            }
+
+            // Write data
+            for (int i = 0; i < sounds.Length; i++)
+            {
+                bw.Write(sounds[i].data.info.nWaveType);
+                bw.Write(sounds[i].data.info.bLoop);
+                bw.Write(sounds[i].data.info.nSampleRate);
+                bw.Write(sounds[i].data.info.nTime);
+                bw.Write(sounds[i].data.info.nLoopOffset);
+                bw.Write(sounds[i].data.info.nNonLoopLen);
+                bw.Write(sounds[i].data.data);
+            }
+
+            bw.Flush();
+            bw.Close();
+        }
+
+        public static Dictionary<String, String> Information(sSWAR swar)
+        {
+            Dictionary<String, String> info = new Dictionary<string, string>();
+
+            info.Add("/bSection", "Standar header");
+            info.Add("Type", new String(swar.header.type));
+            info.Add("Magic", "0x" + swar.header.magic.ToString("x"));
+            info.Add("File size", swar.header.nFileSize.ToString());
+
+            info.Add("/bSection 1", new String(swar.data.type));
+            info.Add("Size", swar.data.nSize.ToString());
+            info.Add("Number of samples", swar.data.nSample.ToString());
+
+            return info;
         }
 
         /// <summary>

@@ -279,7 +279,7 @@
     <S1F>Color de fondo</S1F>
     <S20>Quitar</S20>
     <S21>Importar</S21>
-    <S22>Seleccionar color transparente</S22>
+    <S22>Seleccionar color de transparencia</S22>
   </NCGR>
   <NSCR>
     <S00>Opciones del archivo Map</S00>
@@ -329,6 +329,7 @@
     <S22>Tile offset original</S22>
     <S23>Tile offset modificado</S23>
     <S24>Importar</S24>
+    <S25>Seleccionar color de transparencia</S25>
   </NCER>
   <NANR>
     <S01>Intervalo:</S01>
@@ -485,11 +486,37 @@
     <S2A>Códigos de las compañías</S2A>
   </EditRomInfo>
   <Dialog>
+    <!-- Select Mode Color-->
     <S00>Elije el modo de selección de color</S00>
     <S01>Aceptar</S01>
     <S02>Hacer click sobre el color en la imagen</S02>
     <S03>Elegir color a partir de valores RGB</S03>
+    <!-- Select offset -->
     <S04>Introduce offset</S04>
     <S05>Introduce el offset de inicio de lectura del archivo</S05>
+    <!-- FAT Extract -->
+    <S06>Extaer archivos</S06>
+    <S07>Opciones</S07>
+    <S08>Número de archivos</S08>
+    <S09>Leer en posición:</S09>
+    <S0A>Tamaño del valor:</S0A>
+    <S0B>Big Endian</S0B>
+    <S0C>Número de archivos:</S0C>
+    <S0D>Calcular</S0D>
+    <S0E>Offset</S0E>
+    <S0F>Posición de inicio:</S0F>
+    <S10>Tamaño del valor:</S10>
+    <S11>Big Endian</S11>
+    <S12>Tipo de offset</S12>
+    <S13>Start offset</S13>
+    <S14>Start offset / End offset</S14>
+    <S15>Start offset / Size</S15>
+    <S16>End offset</S16>
+    <S17>Offset relativo a</S17>
+    <S18>Offset:</S18>
+    <S19>Primer archivo</S19>
+    <S1A>Leer offset</S1A>
+    <S1B>Visor hexadecimal</S1B>
+    <S1C>Aceptar</S1C>
   </Dialog>
 </Language>

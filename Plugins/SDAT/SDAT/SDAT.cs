@@ -70,7 +70,7 @@ namespace SDAT
             if (new String(br.ReadChars(4)) == "SWAV")
             {
                 sdat.files.root.id = 0x0F000;
-                sdat.files.root.name = "SDAT";
+                sdat.files.root.name = "SWAV";
                 sdat.files.root.files = new List<Sound>();
                 Sound swavFile = new Sound();
                 swavFile.id = 0x00;
@@ -404,27 +404,27 @@ namespace SDAT
             sseq = new Folder();
             sseq.files = new List<Sound>();
             sseq.name = "SSEQ";
-            sseq.id = 0x0F01;
+            sseq.id = 0x0F001;
 
             ssar = new Folder();
             ssar.files = new List<Sound>();
             ssar.name = "SSAR";
-            ssar.id = 0x0F02;
+            ssar.id = 0x0F002;
 
             sbnk = new Folder();
             sbnk.files = new List<Sound>();
             sbnk.name = "SBNK";
-            sbnk.id = 0x0F03;
+            sbnk.id = 0x0F003;
 
             swar = new Folder();
             swar.files = new List<Sound>();
             swar.name = "SWAR";
-            swar.id = 0x0F05;
+            swar.id = 0x0F005;
 
             strm = new Folder();
             strm.files = new List<Sound>();
             strm.name = "STRM";
-            strm.id = 0x0F06;
+            strm.id = 0x0F006;
             #endregion
 
             BinaryReader br = new BinaryReader(new FileStream (archivo, FileMode.Open));
@@ -613,6 +613,7 @@ namespace SDAT
         public uint id;
         public List<Sound> files;
         public List<Folder> folders;
+        public object tag;
     }
     public struct Sound
     {
@@ -623,6 +624,7 @@ namespace SDAT
         public FormatSound type;
         public uint internalID;
         public string path;
+        public object tag;
     }
     public enum FormatSound
     {

@@ -16,10 +16,20 @@
       <S0B>Importar</S0B>
       <S0C>Guardar SDAT</S0C>
       <S0D>Cambiar archivo</S0D>
+      <S0E>Información</S0E>
+      <S0F>Selecciona la carpeta donde se guardarán los archivos</S0F>
+      <S10>
+        ¿Desea extraer la carpeta descomprimida en lugar
+        del archivo comprimido?
+      </S10>
+      <S11>Ruta</S11>
+      <S12>Comprimir</S12>
     </iSDAT>
     <Messages>
       <S00>Lectura de archivos SDAT completa</S00>
-      <S01>Archivos totales: <b>{0}</b></S01>
+      <S01>
+        Archivos totales: <b>{0}</b>
+      </S01>
     </Messages>
   </Español>
   <English>
@@ -38,10 +48,20 @@
       <S0B>Import</S0B>
       <S0C>Save SDAT</S0C>
       <S0D>Change file</S0D>
+      <S0E>Information</S0E>
+      <S0F>Select the folder to save the files</S0F>
+      <S10>
+        Do you want to extract the decompressed folder instead of
+        the compressed files?
+      </S10>
+      <S11>Path</S11>
+      <S12>Pack</S12>
     </iSDAT>
     <Messages>
       <S00>SDAT reading completed</S00>
-      <S01>Files: <b>{0}</b></S01>
+      <S01>
+        Files: <b>{0}</b>
+      </S01>
     </Messages>
   </English>
   <Français>
@@ -60,10 +80,20 @@
       <S0B>Importer</S0B>
       <S0C>Sauver SDAT</S0C>
       <S0D>Changer d'archive</S0D>
+      <S0E>Information</S0E>
+      <S0F>Select the folder to save the files</S0F>
+      <S10>
+        Do you want to extract the decompressed folder instead of
+        the compressed files?
+      </S10>
+      <S11>Path</S11>
+      <S12>Pack</S12>
     </iSDAT>
     <Messages>
       <S00>Lecture des archives SDAT terminée</S00>
-      <S01>Archives : <b>{0}</b></S01>
+      <S01>
+        Archives : <b>{0}</b>
+      </S01>
     </Messages>
   </Français>
 </Language>

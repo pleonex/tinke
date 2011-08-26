@@ -316,6 +316,7 @@
     <S22>Offset tuile originale</S22>
     <S23>Offset tuile fixée</S23>
     <S24>Import</S24>
+    <S25>Set transparency colour</S25>
   </NCER>
   <NANR>
     <S01>Intervalle :</S01>
@@ -475,11 +476,37 @@
     <S2A>Codes de la Compagnie</S2A>
   </EditRomInfo>
   <Dialog>
+    <!-- Select Mode Color -->
     <S00>Choose the selection mode</S00>
     <S01>Accept</S01>
     <S02>Click on a color of the image</S02>
     <S03>Choose color from RGB values</S03>
+    <!-- Select offset -->
     <S04>Choose the offset</S04>
     <S05>Write the offset where the reading will start</S05>
+    <!-- FAT Extract -->
+    <S06>Extract files</S06>
+    <S07>Options</S07>
+    <S08>Number of files</S08>
+    <S09>Read at:</S09>
+    <S0A>Value length:</S0A>
+    <S0B>Big Endian</S0B>
+    <S0C>Number of files:</S0C>
+    <S0D>Calculate</S0D>
+    <S0E>Offset</S0E>
+    <S0F>Start offset:</S0F>
+    <S10>Value length:</S10>
+    <S11>Big Endian</S11>
+    <S12>Type offset</S12>
+    <S13>Start offset</S13>
+    <S14>Start offset / End offset</S14>
+    <S15>Start offset / Size</S15>
+    <S16>End offset</S16>
+    <S17>Relative offset at</S17>
+    <S18>Offset:</S18>
+    <S19>First file</S19>
+    <S1A>Read offsets</S1A>
+    <S1B>Hexadecimal</S1B>
+    <S1C>Accept</S1C>
   </Dialog>
 </Language>

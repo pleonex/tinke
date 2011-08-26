@@ -20,12 +20,13 @@
 
 using System;
 using System.Text;
+using System.Collections.Generic;
 
 namespace SDAT
 {
     class SWAV
     {
-        public static sSWAV LeerArchivo(string path)
+        public static sSWAV Read(string path)
         {
             /***Lectura del archivo SWAV***/
             System.IO.FileStream fs = null;
@@ -62,7 +63,7 @@ namespace SDAT
                 for (uint i = 0; i < tamañoDatos; i++)
                 {
                     swav.data.data[i] = br.ReadByte();
-                    
+
                 }
             }
             catch (Exception ex)
@@ -77,8 +78,7 @@ namespace SDAT
 
             return swav;
         }
-
-        public static void EscribirArchivo(sSWAV swav, string path)
+        public static void Write(sSWAV swav, string path)
         {
             System.IO.FileStream fs = null;
             System.IO.BinaryWriter bw = null;
@@ -121,27 +121,97 @@ namespace SDAT
             }
         }
 
-        public static sWAV ConvertirAWAV(sSWAV swav)
+        public static Dictionary<String, String> Information(sSWAV swav)
+        {
+            Dictionary<String, String> info = new Dictionary<string, string>();
+
+            info.Add("/bSection", "Standar header");
+            info.Add("Type", new String(swav.header.type));
+            info.Add("Magic", "0x" + swav.header.magic.ToString("x"));
+            info.Add("File size", swav.header.nFileSize.ToString());
+
+            info.Add("/bSection 1", "SWAV Info");
+            info.Add("Wave type", swav.data.info.nWaveType.ToString());
+            info.Add("Loop flag", swav.data.info.bLoop.ToString());
+            info.Add("Loop offset", "0x" + swav.data.info.nLoopOffset.ToString("x"));
+            info.Add("Non loop length", "0x" + swav.data.info.nNonLoopLen.ToString("x"));
+            info.Add("Sample rate", swav.data.info.nSampleRate.ToString());
+            info.Add("Time", swav.data.info.nTime.ToString());
+
+            info.Add("/bSection 2", new String(swav.data.type));
+            info.Add("Size", swav.data.nSize.ToString());
+
+            return info;
+        }
+
+        public static sWAV ConvertToWAV(sSWAV swav, bool loop)
         {
             sWAV wav = new sWAV();
 
-
-            if (swav.data.info.nWaveType == 0)
+            if (swav.data.info.nWaveType == 0) // 8 Bits per sample, PCM-8
             {
                 swav.data.data = PCM8(swav.data.data);
+                if (loop)
+                {
+                    Byte[] data = new Byte[(int)swav.data.info.nNonLoopLen];
+                    Array.Copy(swav.data.data, swav.data.info.nLoopOffset, data, 0, data.Length);
+                    swav.data.data = data;
+                }
+
                 wav = WAV.Create_WAV(1, swav.data.info.nSampleRate, 8, swav.data.data);
             }
-            else if (swav.data.info.nWaveType == 1)
+            else if (swav.data.info.nWaveType == 1) // 16 Bits per sample, PCM-16
             {
+                if (loop)
+                {
+                    Byte[] data = new Byte[(int)swav.data.info.nNonLoopLen * 2];
+                    Array.Copy(swav.data.data, swav.data.info.nLoopOffset * 2, data, 0, data.Length);
+                    swav.data.data = data;
+                }
+
                 wav = WAV.Create_WAV(1, swav.data.info.nSampleRate, 16, swav.data.data);
             }
-            else if (swav.data.info.nWaveType >= 2)
+            else if (swav.data.info.nWaveType >= 2) // 16 Bits per sample, IMA-ADPCM
             {
                 swav.data.data = Compression_ADPCM.Decompress_ADPCM(swav.data.data);
-                wav = WAV.Create_WAV(1, 33000, 16, swav.data.data);
+                if (loop)
+                {
+                    Byte[] data = new Byte[swav.data.data.Length - ((int)swav.data.info.nLoopOffset * 2)];
+                    Array.Copy(swav.data.data, swav.data.info.nLoopOffset * 2, data, 0, data.Length);
+                    swav.data.data = data;
+                }
+
+                wav = WAV.Create_WAV(1, swav.data.info.nSampleRate, 16, swav.data.data);
             }
             return wav;
         }
+        public static sSWAV ConvertToSWAV(sWAV wav, int waveType = 1)
+        {
+            if (wav.wave.fmt.audioFormat != WaveFormat.WAVE_FORMAT_PCM)
+                throw new NotSupportedException();
+
+            sSWAV swav = new sSWAV();
+            swav.header.type = "SWAV".ToCharArray();
+            swav.header.magic = 0x0100FEFF;
+            swav.header.nSize = 0x10;
+            swav.header.nBlock = 0x01;
+
+            swav.data.type = "DATA".ToCharArray();
+            swav.data.info.nWaveType = (byte)waveType;
+            swav.data.info.bLoop = 1;
+            swav.data.info.nSampleRate = (ushort)wav.wave.fmt.sampleRate;
+            swav.data.info.nTime = (ushort)(1.0 / swav.data.info.nSampleRate * 1.6756991e+7 / 32);
+            swav.data.info.nLoopOffset = 0x01;
+
+            swav.data.data = wav.wave.data.data;
+
+            swav.data.nSize = (uint)swav.data.data.Length + 0x0A;
+            swav.data.info.nNonLoopLen = (uint)swav.data.data.Length;
+            swav.header.nFileSize = swav.data.nSize + swav.header.nSize;
+
+            return swav;
+        }
+
         static byte[] PCM8(byte[] data)
         {
             byte[] resul = new byte[data.Length];

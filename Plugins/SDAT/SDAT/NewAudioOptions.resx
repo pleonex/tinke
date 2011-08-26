@@ -117,15 +117,29 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="sound_add" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\sound_add.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="information" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\information.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="accept" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\accept.png;System.Drawing.Bitmap, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        AAABAAEAEBAAAAAAIABoBAAAFgAAACgAAAAQAAAAIAAAAAEAIAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAA
+        AAD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP//
+        /wD///8A////AP///wD///8A////AJdUNSOUUzR9klI024pQNPOITzTziVA124lQNX2EUDYj////AP//
+        /wD///8A////AP///wD///8A////AJ9WNFOZVTTmsoBX/9W3k//bw6b/2sOm/9K0kP+relL/hk805ohQ
+        NVP///8A////AP///wD///8A////AKdiNFOfVTP0y6d9/9i7n//DnHf/topi/7SGYP++lnL/0bOX/8Wj
+        d/+ETzX0iVA1U////wD///8A////AK9wNSKraTXlz6qB/9q8ov++kWb/uoxi/7eJX/+zhF7/sYNd/7CD
+        XP/Nqo3/xqV5/4lQNOWJUDUi////AP///wC4eDV+v5Fe/+DCqP/Flmz/wpFp/+HLuP/+/fz////+/+rc
+        0P+0hV7/s4Ve/9S1mf+ue1b/j1E1fv///wD///8AvH4129u8nP/VrYn/x5hs/8OVaf/Bk2f/7d/T//r3
+        9P+7i2P/uYpj/7iKYv/FnXj/0riT/5BRNdv///8A////AL9+Nfbjx6//0KJ2/8WZa//El2r/xJZp/+7g
+        1P/79/T/v5Bm/76PZf++j2T/vpJp/9/Gqv+SUDT2////AP///wDFhTv25Mmw/9Cjev/MnXH/x5ps/8WY
+        a//////////+/8OWaf/BlGj/wpRo/8OYbf/fxav/lVM09v///wD///8Ay45B2+C8n//bs5P/z6B1/82e
+        cv/LnHH/3b+j/92/ov/FmWv/xZlr/8SYa//Rq4X/2LqX/55WNdv///8A////AM6RR37NnGj/58u0/9Sl
+        ev/QoHf/z550//v49f/7+PX/y55x/8udcf/NoXf/38Cl/7mKW/+kXDR+////AP///wDSk0wizo5H5dmy
+        jP/myrP/1ql9/9Glef/ixKj/4cOo/9Cidv/RpHf/3b2i/9Cshf+rZjXlqWU1Iv///wD///8A////ANSW
+        TVPPjUf02bKM/+bNuP/gup3/16uF/9apgv/Zs5H/4cKr/9Suhv+xazX0sW81U////wD///8A////AP//
+        /wD///8A1pdPU9GRSebQoGr/4L+g/+PFrv/jxa7/37yf/8iXYv+9fTXmvH41U////wD///8A////AP//
+        /wD///8A////AP///wDYmFIj1JZNfdKSTNvNjEXzy4tB88mLQNvHi0B9xYc9I////wD///8A////AP//
+        /wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP//
+        /wD///8A//8AAPAPAADgBwAAwAMAAIABAACAAQAAgAEAAIABAACAAQAAgAEAAIABAACAAQAAwAMAAOAH
+        AADwDwAA//8AAA==
+</value>
   </data>
 </root>
