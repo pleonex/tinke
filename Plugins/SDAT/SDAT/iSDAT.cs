@@ -193,7 +193,10 @@ namespace SDAT
                 else if (fileSelect.type == FormatSound.SWAR)
                 {
                     btnUncompress.Enabled = true;
-                    btnUncompress.Text = xml.Element("S07").Value;
+                    if ((String)fileSelect.tag == "Descomprimido")
+                        btnUncompress.Text = xml.Element("S12").Value;
+                    else
+                        btnUncompress.Text = xml.Element("S07").Value;
                     btnInfo.Enabled = true;
                 }
             }
@@ -627,7 +630,11 @@ namespace SDAT
             String filein = o.FileName;
             sWAV wav = WAV.Read(filein);
 
+            sSWAV oldSwav = SWAV.Read(SaveFile());
             NewAudioOptions dialog = new NewAudioOptions(pluginHost, (selectedFile.type == FormatSound.SWAV ? true : false));
+            dialog.Loop = (oldSwav.data.info.bLoop != 1 ? false : true);
+            dialog.LoopOffset = oldSwav.data.info.nLoopOffset;
+            dialog.LoopLength = (int)oldSwav.data.info.nNonLoopLen;
             if (dialog.ShowDialog() != DialogResult.OK)
                 return;
 
@@ -914,6 +921,19 @@ namespace SDAT
                     bw.Write((uint)0x00);
                     currOffset += sdat.files.root.folders[i].files[j].size;
                 }
+
+                if (sdat.files.root.folders[i].folders is List<Folder>)
+                {
+                    for (int j = 0; j < sdat.files.root.folders[i].folders.Count; j++) // Unpacked files (SWAR and SSAR
+                    {
+                        Sound currSound = SearchFile((int)sdat.files.root.folders[i].folders[j].id, sdat.files.root);
+                        bw.Write(currOffset);
+                        bw.Write(currSound.size);
+                        bw.Write((uint)0x00);
+                        bw.Write((uint)0x00);
+                        currOffset += currSound.size;
+                    }
+                }
             }
 
             bw.Flush();
@@ -938,6 +958,25 @@ namespace SDAT
                         br.BaseStream.Position = sdat.files.root.folders[i].files[j].offset;
                         bw.Write(br.ReadBytes((int)sdat.files.root.folders[i].files[j].size));
                         bw.Flush();
+                    }
+                }
+
+                if (sdat.files.root.folders[i].folders is List<Folder>)
+                {
+                    for (int j = 0; j < sdat.files.root.folders[i].folders.Count; j++)
+                    {
+                        Sound currSound = SearchFile((int)sdat.files.root.folders[i].folders[j].id, sdat.files.root);
+                        if (currSound.offset == 0x00)
+                        {
+                            bw.Write(File.ReadAllBytes(currSound.path));
+                            bw.Flush();
+                        }
+                        else
+                        {
+                            br.BaseStream.Position = currSound.offset;
+                            bw.Write(br.ReadBytes((int)currSound.size));
+                            bw.Flush();
+                        }
                     }
                 }
             }

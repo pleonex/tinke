@@ -14,6 +14,12 @@ namespace SDAT
     {
         IPluginHost pluginHost;
 
+        bool loopFlag;
+        int loopOffset;
+        int loopLength;
+        int compressFormat;
+        int blockLength;
+
         public NewAudioOptions()
         {
             InitializeComponent();
@@ -35,37 +41,55 @@ namespace SDAT
         private void checkLoop_CheckedChanged(object sender, EventArgs e)
         {
             groupLoop.Enabled = checkLoop.Checked;
+            loopFlag = checkLoop.Checked;
         }
 
         public int Compression
         {
-            get { return comboEncoding.SelectedIndex; }
-            set { comboEncoding.SelectedIndex = value; }
+            get { return compressFormat; }
+            set { comboEncoding.SelectedIndex = value; compressFormat = value; }
         }
         public bool Loop
         {
-            get { return checkLoop.Checked; }
-            set { checkLoop.Checked = value; }
+            get { return loopFlag; }
+            set { checkLoop.Checked = value; loopFlag = value; }
         }
         public int LoopOffset
         {
-            get { return (int)numericLoopOffset.Value; }
-            set { numericLoopOffset.Value = value; }
+            get { return loopOffset; }
+            set { numericLoopOffset.Value = value; loopOffset = value; }
         }
         public int LoopLength
         {
-            get { return (int)numericLoopLength.Value; }
-            set { numericLoopLength.Value = value; }
+            get { return loopLength; }
+            set { numericLoopLength.Value = value; loopLength = value; }
         }
         public int BlockSize
         {
-            get { return (int)numericBlockLen.Value; }
-            set { numericBlockLen.Value = value; }
+            get { return blockLength; }
+            set { numericBlockLen.Value = value; blockLength = value; }
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        private void comboEncoding_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            compressFormat = comboEncoding.SelectedIndex;
+        }
+        private void numericLoopOffset_ValueChanged(object sender, EventArgs e)
+        {
+            loopOffset = (int)numericLoopOffset.Value;
+        }
+        private void numericLoopLength_ValueChanged(object sender, EventArgs e)
+        {
+            loopLength = (int)numericLoopLength.Value;
+        }
+        private void numericBlockLen_ValueChanged(object sender, EventArgs e)
+        {
+            blockLength = (int)numericBlockLen.Value;
         }
     }
 }
