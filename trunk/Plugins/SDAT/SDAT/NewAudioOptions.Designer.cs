@@ -34,15 +34,15 @@
             this.btnAccept = new System.Windows.Forms.Button();
             this.checkLoop = new System.Windows.Forms.CheckBox();
             this.groupLoop = new System.Windows.Forms.GroupBox();
-            this.numericLoopOffset = new System.Windows.Forms.NumericUpDown();
-            this.numericLoopLength = new System.Windows.Forms.NumericUpDown();
-            this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.numericLoopLength = new System.Windows.Forms.NumericUpDown();
+            this.numericLoopOffset = new System.Windows.Forms.NumericUpDown();
             this.numericBlockLen = new System.Windows.Forms.NumericUpDown();
             this.label4 = new System.Windows.Forms.Label();
             this.groupLoop.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericLoopOffset)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericLoopLength)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericLoopOffset)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericBlockLen)).BeginInit();
             this.SuspendLayout();
             // 
@@ -59,6 +59,7 @@
             this.comboEncoding.Name = "comboEncoding";
             this.comboEncoding.Size = new System.Drawing.Size(130, 21);
             this.comboEncoding.TabIndex = 0;
+            this.comboEncoding.SelectedIndexChanged += new System.EventHandler(this.comboEncoding_SelectedIndexChanged);
             // 
             // label1
             // 
@@ -107,18 +108,23 @@
             this.groupLoop.TabStop = false;
             this.groupLoop.Text = "Opciones de loop";
             // 
-            // numericLoopOffset
+            // label3
             // 
-            this.numericLoopOffset.Hexadecimal = true;
-            this.numericLoopOffset.Location = new System.Drawing.Point(136, 30);
-            this.numericLoopOffset.Maximum = new decimal(new int[] {
-            -1,
-            0,
-            0,
-            0});
-            this.numericLoopOffset.Name = "numericLoopOffset";
-            this.numericLoopOffset.Size = new System.Drawing.Size(92, 20);
-            this.numericLoopOffset.TabIndex = 0;
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(6, 58);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(66, 13);
+            this.label3.TabIndex = 3;
+            this.label3.Text = "Loop length:";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(6, 32);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(86, 13);
+            this.label2.TabIndex = 2;
+            this.label2.Text = "Loop start offset:";
             // 
             // numericLoopLength
             // 
@@ -132,24 +138,21 @@
             this.numericLoopLength.Name = "numericLoopLength";
             this.numericLoopLength.Size = new System.Drawing.Size(92, 20);
             this.numericLoopLength.TabIndex = 1;
+            this.numericLoopLength.ValueChanged += new System.EventHandler(this.numericLoopLength_ValueChanged);
             // 
-            // label2
+            // numericLoopOffset
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(6, 32);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(86, 13);
-            this.label2.TabIndex = 2;
-            this.label2.Text = "Loop start offset:";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(6, 58);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(66, 13);
-            this.label3.TabIndex = 3;
-            this.label3.Text = "Loop length:";
+            this.numericLoopOffset.Hexadecimal = true;
+            this.numericLoopOffset.Location = new System.Drawing.Point(136, 30);
+            this.numericLoopOffset.Maximum = new decimal(new int[] {
+            -1,
+            0,
+            0,
+            0});
+            this.numericLoopOffset.Name = "numericLoopOffset";
+            this.numericLoopOffset.Size = new System.Drawing.Size(92, 20);
+            this.numericLoopOffset.TabIndex = 0;
+            this.numericLoopOffset.ValueChanged += new System.EventHandler(this.numericLoopOffset_ValueChanged);
             // 
             // numericBlockLen
             // 
@@ -162,6 +165,7 @@
             this.numericBlockLen.Name = "numericBlockLen";
             this.numericBlockLen.Size = new System.Drawing.Size(90, 20);
             this.numericBlockLen.TabIndex = 5;
+            this.numericBlockLen.ValueChanged += new System.EventHandler(this.numericBlockLen_ValueChanged);
             // 
             // label4
             // 
@@ -193,8 +197,8 @@
             this.Text = "Opciones del nuevo archivo de audio";
             this.groupLoop.ResumeLayout(false);
             this.groupLoop.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericLoopOffset)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericLoopLength)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericLoopOffset)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericBlockLen)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
