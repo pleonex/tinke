@@ -86,6 +86,7 @@ namespace SDAT
             this.treeFiles.Size = new System.Drawing.Size(245, 510);
             this.treeFiles.TabIndex = 0;
             this.treeFiles.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeFiles_AfterSelect);
+            this.treeFiles.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.treeFiles_MouseDoubleClick);
             // 
             // imageList
             // 

@@ -72,6 +72,7 @@
             // 
             // btnAccept
             // 
+            this.btnAccept.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.btnAccept.Image = global::SDAT.Properties.Resources.accept;
             this.btnAccept.Location = new System.Drawing.Point(160, 223);
             this.btnAccept.Name = "btnAccept";

@@ -1,5 +1,6 @@
 0.8.0
 *** Support to font files NFTR (only view)
+* Fixed important errors in SDAT plugin
 
 0.7.7
 *** Interface to decompress FAT files (files with offsets)

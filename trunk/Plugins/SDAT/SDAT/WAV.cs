@@ -21,6 +21,7 @@
 using System;
 using System.IO;
 using System.Text;
+using System.Collections.Generic;
 
 namespace SDAT
 {
@@ -52,7 +53,15 @@ namespace SDAT
             wav.wave.fmt.byteRate = br.ReadUInt32();
             wav.wave.fmt.blockAlign = br.ReadUInt16();
             wav.wave.fmt.bitsPerSample = br.ReadUInt16();
+            br.BaseStream.Position = 0x14 + wav.wave.fmt.chunkSize;
+            String dataID = new String(br.ReadChars(4));
+            while (dataID != "data")
+            {
+                br.BaseStream.Position += br.ReadUInt32() + 0x04;
+                dataID = new String(br.ReadChars(4));
+            }
             // data sub-chunk
+            br.BaseStream.Position -= 4;
             wav.wave.data.chunkID = br.ReadChars(4);
             wav.wave.data.chunkSize = br.ReadUInt32();
             wav.wave.data.data = br.ReadBytes((int)wav.wave.data.chunkSize - 0x08);
@@ -135,6 +144,34 @@ namespace SDAT
             wav.chunkSize = (uint)(0x24 + data.Length);
 
             return wav;
+        }
+        public static Byte[] ConvertToMono(byte[] data, int numChannels, int bitsPerSample)
+        {
+            List<Byte> mono = new List<byte>();
+            int sample_size = numChannels * bitsPerSample / 8;
+
+            for (int i = 0; i < data.Length; i += bitsPerSample / 8)
+            {
+                int rChannel, lChannel;
+
+                switch (bitsPerSample)
+                {
+                    case 8:
+                        rChannel = data[i];
+                        i += 1;
+                        lChannel = data[i];
+                        mono.Add((byte)((sbyte)rChannel + (sbyte)lChannel));
+                        break;
+                    case 16:
+                        rChannel = BitConverter.ToInt16(data, i);
+                        i += 2;
+                        lChannel = BitConverter.ToInt16(data, i);
+                        mono.AddRange(BitConverter.GetBytes((short)((short)rChannel + (short)lChannel)));
+                        break;
+                }
+            }
+
+            return mono.ToArray();
         }
     }
 

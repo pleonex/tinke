@@ -199,11 +199,20 @@ namespace SDAT
             swav.data.type = "DATA".ToCharArray();
             swav.data.info.nWaveType = (byte)waveType;
             swav.data.info.bLoop = 1;
-            swav.data.info.nSampleRate = (ushort)wav.wave.fmt.sampleRate;
+            if (wav.wave.fmt.bitsPerSample == 0x10)
+                swav.data.info.nSampleRate = (ushort)wav.wave.fmt.sampleRate;
+            else if (wav.wave.fmt.bitsPerSample == 0x08)
+                swav.data.info.nSampleRate = (ushort)(wav.wave.fmt.sampleRate / 2);
             swav.data.info.nTime = (ushort)(1.0 / swav.data.info.nSampleRate * 1.6756991e+7 / 32);
             swav.data.info.nLoopOffset = 0x01;
 
-            swav.data.data = wav.wave.data.data;
+            if (wav.wave.fmt.numChannels > 1)
+                wav.wave.data.data = WAV.ConvertToMono(wav.wave.data.data, wav.wave.fmt.numChannels, wav.wave.fmt.bitsPerSample);
+
+            if (wav.wave.fmt.bitsPerSample == 0x10)
+                swav.data.data = wav.wave.data.data;
+            else if (wav.wave.fmt.bitsPerSample == 0x08)
+                swav.data.data = PCM8(wav.wave.data.data);
 
             swav.data.nSize = (uint)swav.data.data.Length + 0x0A;
             swav.data.info.nNonLoopLen = (uint)swav.data.data.Length;
