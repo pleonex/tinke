@@ -267,11 +267,11 @@ namespace SDAT
             if (carpeta.id == id)
                 return carpeta;
 
-            if (carpeta.folders is List<Folder>)   
+            if (carpeta.folders is List<Folder>)
             {
                 foreach (Folder subFolder in carpeta.folders)
                 {
-                    if (subFolder.id == id) 
+                    if (subFolder.id == id)
                         return subFolder;
 
                     Folder folder = SearchFolder(id, subFolder);
@@ -437,8 +437,19 @@ namespace SDAT
 
 
             if (currFolder.folders is List<Folder>)
-                foreach (Folder subFolder in currFolder.folders)
-                    ChangeFile(id, fileChanged, subFolder);
+            {
+                for (int i = 0; i < currFolder.folders.Count; i++)
+                {
+                    if (currFolder.folders[i].id == id) // It's a decompressed file
+                    {
+                        Folder newFolder = currFolder.folders[i];
+                        newFolder.tag = fileChanged.tag;
+                        currFolder.folders[i] = newFolder;
+                    }
+                    else
+                        ChangeFile(id, fileChanged, currFolder.folders[i]);
+                }
+            }
         }
         public void ChangeFile(int id, string newFilePath)
         {
@@ -450,6 +461,9 @@ namespace SDAT
             newFile.path = newFilePath;
             newFile.type = oldFile.type;
             newFile.size = (uint)new FileInfo(newFilePath).Length;
+            newFile.tag = oldFile.tag;
+            if ((String)newFile.tag == "Descomprimido")
+                newFile.tag = String.Format("{0:X}", newFile.size).PadLeft(8, '0') + newFile.path;
 
             ChangeFile(id, newFile, sdat.files.root);
 
@@ -492,7 +506,7 @@ namespace SDAT
                 {
                     if (currFile.offset == 0x00)
                     {
-                        File.Copy(currFile.path, fileDialog.FileName);
+                        File.Copy(currFile.path, fileDialog.FileName, true);
                         return;
                     }
 
@@ -645,7 +659,7 @@ namespace SDAT
 
                     strm.head.loop = (byte)(dialog.Loop ? 0x01 : 0x00);
                     strm.head.loopOffset = (uint)dialog.LoopOffset;
-                    
+
                     STRM.Write(strm, fileout);
                     break;
 
@@ -759,6 +773,11 @@ namespace SDAT
                 MessageBox.Show(ex.Message);
                 Console.WriteLine(ex.Message);
             }
+        }
+        private void treeFiles_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            if (btnReproducir.Enabled == true)
+                btnReproducir.PerformClick();
         }
         private void btnStop_Click(object sender, EventArgs e)
         {
@@ -911,29 +930,14 @@ namespace SDAT
             bw.Write(sdat.fat.header.size);
             bw.Write(sdat.fat.header.nRecords);
 
-            for (int i = 0; i < sdat.files.root.folders.Count; i++)
+            for (int i = 0; i < sdat.files.header.nSounds; i++)
             {
-                for (int j = 0; j < sdat.files.root.folders[i].files.Count; j++)
-                {
-                    bw.Write(currOffset);
-                    bw.Write(sdat.files.root.folders[i].files[j].size);
-                    bw.Write((uint)0x00);
-                    bw.Write((uint)0x00);
-                    currOffset += sdat.files.root.folders[i].files[j].size;
-                }
-
-                if (sdat.files.root.folders[i].folders is List<Folder>)
-                {
-                    for (int j = 0; j < sdat.files.root.folders[i].folders.Count; j++) // Unpacked files (SWAR and SSAR
-                    {
-                        Sound currSound = SearchFile((int)sdat.files.root.folders[i].folders[j].id, sdat.files.root);
-                        bw.Write(currOffset);
-                        bw.Write(currSound.size);
-                        bw.Write((uint)0x00);
-                        bw.Write((uint)0x00);
-                        currOffset += currSound.size;
-                    }
-                }
+                Sound currSound = SearchFile(i, sdat.files.root);
+                bw.Write(currOffset);
+                bw.Write(currSound.size);
+                bw.Write((uint)0x00);
+                bw.Write((uint)0x00);
+                currOffset += currSound.size;
             }
 
             bw.Flush();
@@ -944,40 +948,19 @@ namespace SDAT
             BinaryWriter bw = new BinaryWriter(File.OpenWrite(fileout));
             BinaryReader br = new BinaryReader(File.OpenRead(sdat.archivo));
 
-            for (int i = 0; i < sdat.files.root.folders.Count; i++)
+            for (int i = 0; i < sdat.files.header.nSounds; i++)
             {
-                for (int j = 0; j < sdat.files.root.folders[i].files.Count; j++)
+                Sound currSound = SearchFile(i, sdat.files.root);
+                if (currSound.offset == 0x00)
                 {
-                    if (sdat.files.root.folders[i].files[j].offset == 0x00)
-                    {
-                        bw.Write(File.ReadAllBytes(sdat.files.root.folders[i].files[j].path));
-                        bw.Flush();
-                    }
-                    else
-                    {
-                        br.BaseStream.Position = sdat.files.root.folders[i].files[j].offset;
-                        bw.Write(br.ReadBytes((int)sdat.files.root.folders[i].files[j].size));
-                        bw.Flush();
-                    }
+                    bw.Write(File.ReadAllBytes(currSound.path));
+                    bw.Flush();
                 }
-
-                if (sdat.files.root.folders[i].folders is List<Folder>)
+                else
                 {
-                    for (int j = 0; j < sdat.files.root.folders[i].folders.Count; j++)
-                    {
-                        Sound currSound = SearchFile((int)sdat.files.root.folders[i].folders[j].id, sdat.files.root);
-                        if (currSound.offset == 0x00)
-                        {
-                            bw.Write(File.ReadAllBytes(currSound.path));
-                            bw.Flush();
-                        }
-                        else
-                        {
-                            br.BaseStream.Position = currSound.offset;
-                            bw.Write(br.ReadBytes((int)currSound.size));
-                            bw.Flush();
-                        }
-                    }
+                    br.BaseStream.Position = currSound.offset;
+                    bw.Write(br.ReadBytes((int)currSound.size));
+                    bw.Flush();
                 }
             }
 
@@ -1053,5 +1036,6 @@ namespace SDAT
             ven.Text = btnInfo.Text;
             ven.Show();
         }
+
     }
 }

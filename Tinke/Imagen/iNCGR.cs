@@ -230,8 +230,9 @@ namespace Tinke
             if (isMap)
             {
                 NCGR newTile = tile;
-                newTile.rahc.tileData = pluginHost.Transformar_NSCR(map, tile.rahc.tileData);
-                pic.Image = Imagen_NCGR.Crear_Imagen(newTile, paleta, startTile);
+                newTile.rahc.tileData.tiles = Convertir.BytesToTiles(Convertir.TilesToBytes(newTile.rahc.tileData.tiles, startTile));
+                newTile.rahc.tileData = pluginHost.Transformar_NSCR(map, newTile.rahc.tileData);
+                pic.Image = Imagen_NCGR.Crear_Imagen(newTile, paleta, 0);
             }
             else
                 pic.Image = Imagen_NCGR.Crear_Imagen(tile, paleta, startTile);

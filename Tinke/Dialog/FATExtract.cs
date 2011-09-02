@@ -185,11 +185,9 @@ namespace Tinke.Dialog
                         if (i + 1 == fat.num_files)
                             nextOffset = (uint)br.BaseStream.Length;
                         else if (checkOffsetBigEndian.Checked)
-                            nextOffset = BitConverter.ToUInt32(br.ReadBytes((int)numericOffsetLen.Value).Reverse().ToArray(), 0) + 
-                                (uint)numericRelativeOffset.Value;
+                            nextOffset = BitConverter.ToUInt32(br.ReadBytes((int)numericOffsetLen.Value).Reverse().ToArray(), 0);
                         else
-                            nextOffset = BitConverter.ToUInt32(br.ReadBytes((int)numericOffsetLen.Value), 0) +
-                                (uint)numericRelativeOffset.Value;
+                            nextOffset = BitConverter.ToUInt32(br.ReadBytes((int)numericOffsetLen.Value), 0);
 
                         currFile.size = nextOffset - currFile.offset;
                         br.BaseStream.Position -= (long)numericOffsetLen.Value;

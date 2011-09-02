@@ -1162,7 +1162,9 @@ namespace Tinke
 
             Dialog.FATExtract dialog = new Dialog.FATExtract(fileToRead);
             dialog.TempFolder = accion.TempFolder;
-            dialog.ShowDialog();
+            if (dialog.ShowDialog() != System.Windows.Forms.DialogResult.OK)
+                return;
+
             Carpeta uncompress = dialog.Files;
             dialog.Dispose();
 
@@ -1435,6 +1437,14 @@ namespace Tinke
 
 
             // Escribimos cabecera
+            // Get Header CRC
+            string tempHeader = Path.GetTempFileName();
+            Nitro.NDS.EscribirCabecera(tempHeader, cabecera, accion.ROMFile);
+            BinaryReader brHeader = new BinaryReader(File.OpenRead(tempHeader));
+            cabecera.headerCRC16 = (ushort)Tools.CRC16.Calcular(brHeader.ReadBytes(0x15E));
+            brHeader.Close();
+            File.Delete(tempHeader);
+            // Write file
             string header = Path.GetTempFileName();
             Nitro.NDS.EscribirCabecera(header, cabecera, accion.ROMFile);
 
