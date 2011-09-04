@@ -32,10 +32,9 @@ namespace Fonts
                 comboBox1.Items.Add("Char " + i.ToString());
 
             picFont.Image = NFTR.Get_Chars(font, 250);
-            picChar.Size = new System.Drawing.Size(font.plgc.tile_width * 10, font.plgc.tile_height * 10);
 
-            //Create_Controls();
             Fill_CharTile();
+            //Create_Controls();
         }
 
         private void Create_Controls()
@@ -45,7 +44,6 @@ namespace Fonts
             for (int i = 0; i < font.plgc.tiles.Length; i++)
             {
                 CharControl control = new CharControl(
-                     CharView.Image,
                      (from k in charTile where int.Equals(k.Value, i) select k.Key).FirstOrDefault(),
                      font.hdwc.info[i],
                      font.plgc.tiles[i],
@@ -87,18 +85,33 @@ namespace Fonts
 
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            picChar.Image = NFTR.Get_Char(font, comboBox1.SelectedIndex, 10);
+            panelCharEdit.Controls.Clear();
+            panelCharEdit.Controls.Add(new CharControl(
+                (from k in charTile where int.Equals(k.Value, comboBox1.SelectedIndex) select k.Key).FirstOrDefault(),
+                font.hdwc.info[comboBox1.SelectedIndex],
+                font.plgc.tiles[comboBox1.SelectedIndex],
+                font.plgc.depth,
+                font.plgc.tile_width,
+                font.plgc.tile_height));
         }
 
         private void txtBox_TextChanged(object sender, EventArgs e)
         {
             Bitmap image = new Bitmap(picText.Width, picText.Height);
             Graphics graphic = Graphics.FromImage(image);
+            graphic.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
 
             int width = 0;
             int height = 0;
             for (int i = 0; i < txtBox.Text.Length; i++)
             {
+                if (txtBox.Text[i] == '\n')
+                {
+                    width = 0;
+                    height += font.plgc.tile_height;
+                    continue;
+                }
+
                 byte[] codes = Encoding.GetEncoding("shift-jis").GetBytes( new char[] { txtBox.Text[i] } ).Reverse().ToArray();
                 int charCode = (codes.Length == 2 ? BitConverter.ToUInt16(codes, 0) : codes[0]);
 
@@ -121,6 +134,21 @@ namespace Fonts
             }
 
             picText.Image = image;
+        }
+
+        private void btnApply_Click(object sender, EventArgs e)
+        {
+            CharControl charControl = (CharControl)panelCharEdit.Controls[0];
+            font.hdwc.info[comboBox1.SelectedIndex] = charControl.TileInfo;
+            font.plgc.tiles[comboBox1.SelectedIndex] = charControl.Tiles;
+            picFont.Image = NFTR.Get_Chars(font, 250);
+        }
+
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            String fontFile = System.IO.Path.GetTempFileName();
+            NFTR.Write(font, fontFile);
+            pluginHost.ChangeFile(font.id, fontFile);
         }
 
     }

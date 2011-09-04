@@ -302,61 +302,66 @@ namespace Tinke
         }
         private void LeerIdioma()
         {
-            XElement xml = Tools.Helper.ObtenerTraduccion("Sistema");
+            try
+            {
+                XElement xml = Tools.Helper.ObtenerTraduccion("Sistema");
 
-            toolStripOpen.Text = xml.Element("S01").Value;
-            toolStripInfoRom.Text = xml.Element("S02").Value;
-            toolStripDebug.Text = xml.Element("S03").Value;
-            toolStripVentana.Text = xml.Element("S04").Value;
-            toolStripPlugin.Text = xml.Element("S05").Value;
-            recargarPluginsToolStripMenuItem.Text = xml.Element("S06").Value;
-            toolStripLanguage.Text = xml.Element("S1E").Value;
-            columnHeader1.Text = xml.Element("S07").Value;
-            columnHeader2.Text = xml.Element("S08").Value;
-            listFile.Items[0].Text = xml.Element("S09").Value;
-            listFile.Items[1].Text = xml.Element("S0A").Value;
-            listFile.Items[2].Text = xml.Element("S0B").Value;
-            listFile.Items[3].Text = xml.Element("S0C").Value;
-            listFile.Items[4].Text = xml.Element("S0D").Value;
-            listFile.Items[5].Text = xml.Element("S0E").Value;
-            linkAboutBox.Text = xml.Element("S0F").Value;
-            toolStripDeleteChain.Text = xml.Element("S10").Value;
-            borrarPaletaToolStripMenuItem.Text = xml.Element("S11").Value;
-            borrarTileToolStripMenuItem.Text = xml.Element("S12").Value;
-            borrarScreenToolStripMenuItem.Text = xml.Element("S13").Value;
-            borrarCeldasToolStripMenuItem.Text = xml.Element("S14").Value;
-            borrarAnimaciónToolStripMenuItem.Text = xml.Element("S15").Value;
-            s10ToolStripMenuItem.Text = xml.Element("S10").Value;
-            toolStripOpenAs.Text = xml.Element("S16").Value;
-            toolStripMenuItem1.Text = xml.Element("S17").Value;
-            toolStripMenuItem2.Text = xml.Element("S18").Value;
-            toolStripMenuItem3.Text = xml.Element("S19").Value;
-            btnDescomprimir.Text = xml.Element("S1A").Value;
-            btnExtraer.Text = xml.Element("S1B").Value;
-            btnSee.Text = xml.Element("S1C").Value;
-            btnHex.Text = xml.Element("S1D").Value;
-            checkSearch.Text = xml.Element("S2E").Value;
-            toolTipSearch.ToolTipTitle = xml.Element("S2F").Value;
+                toolStripOpen.Text = xml.Element("S01").Value;
+                toolStripInfoRom.Text = xml.Element("S02").Value;
+                toolStripDebug.Text = xml.Element("S03").Value;
+                toolStripVentana.Text = xml.Element("S04").Value;
+                toolStripPlugin.Text = xml.Element("S05").Value;
+                recargarPluginsToolStripMenuItem.Text = xml.Element("S06").Value;
+                toolStripLanguage.Text = xml.Element("S1E").Value;
+                columnHeader1.Text = xml.Element("S07").Value;
+                columnHeader2.Text = xml.Element("S08").Value;
+                listFile.Items[0].Text = xml.Element("S09").Value;
+                listFile.Items[1].Text = xml.Element("S0A").Value;
+                listFile.Items[2].Text = xml.Element("S0B").Value;
+                listFile.Items[3].Text = xml.Element("S0C").Value;
+                listFile.Items[4].Text = xml.Element("S0D").Value;
+                listFile.Items[5].Text = xml.Element("S0E").Value;
+                linkAboutBox.Text = xml.Element("S0F").Value;
+                toolStripDeleteChain.Text = xml.Element("S10").Value;
+                borrarPaletaToolStripMenuItem.Text = xml.Element("S11").Value;
+                borrarTileToolStripMenuItem.Text = xml.Element("S12").Value;
+                borrarScreenToolStripMenuItem.Text = xml.Element("S13").Value;
+                borrarCeldasToolStripMenuItem.Text = xml.Element("S14").Value;
+                borrarAnimaciónToolStripMenuItem.Text = xml.Element("S15").Value;
+                s10ToolStripMenuItem.Text = xml.Element("S10").Value;
+                toolStripOpenAs.Text = xml.Element("S16").Value;
+                toolStripMenuItem1.Text = xml.Element("S17").Value;
+                toolStripMenuItem2.Text = xml.Element("S18").Value;
+                toolStripMenuItem3.Text = xml.Element("S19").Value;
+                btnDescomprimir.Text = xml.Element("S1A").Value;
+                btnExtraer.Text = xml.Element("S1B").Value;
+                btnSee.Text = xml.Element("S1C").Value;
+                btnHex.Text = xml.Element("S1D").Value;
+                checkSearch.Text = xml.Element("S2E").Value;
+                toolTipSearch.ToolTipTitle = xml.Element("S2F").Value;
 
-            toolTipSearch.SetToolTip(txtSearch,
-                "<Ani> -> " + xml.Element("S24").Value +
-                "\n<Cell> -> " + xml.Element("S23").Value +
-                "\n<Map> -> " + xml.Element("S22").Value +
-                "\n<Image> -> " + xml.Element("S21").Value +
-                "\n<FullImage> -> " + xml.Element("S25").Value +
-                "\n<Palette> -> " + xml.Element("S20").Value +
-                "\n<Text> -> " + xml.Element("S26").Value +
-                "\n<Video> -> " + xml.Element("S27").Value +
-                "\n<Sound> -> " + xml.Element("S28").Value +
-                "\n<Font> -> " + xml.Element("S29").Value +
-                "\n<Compress> -> " + xml.Element("S2A").Value +
-                "\n<Script> -> " + xml.Element("S34").Value +
-                "\n<Unknown> -> " + xml.Element("S2B").Value
-                );
-            btnImport.Text = xml.Element("S32").Value;
-            btnSaveROM.Text = xml.Element("S33").Value;
-            toolStripMenuComprimido.Text = xml.Element("S2A").Value;
-            toolStripAbrirTexto.Text = xml.Element("S26").Value;
+                toolTipSearch.SetToolTip(txtSearch,
+                    "<Ani> -> " + xml.Element("S24").Value +
+                    "\n<Cell> -> " + xml.Element("S23").Value +
+                    "\n<Map> -> " + xml.Element("S22").Value +
+                    "\n<Image> -> " + xml.Element("S21").Value +
+                    "\n<FullImage> -> " + xml.Element("S25").Value +
+                    "\n<Palette> -> " + xml.Element("S20").Value +
+                    "\n<Text> -> " + xml.Element("S26").Value +
+                    "\n<Video> -> " + xml.Element("S27").Value +
+                    "\n<Sound> -> " + xml.Element("S28").Value +
+                    "\n<Font> -> " + xml.Element("S29").Value +
+                    "\n<Compress> -> " + xml.Element("S2A").Value +
+                    "\n<Script> -> " + xml.Element("S34").Value +
+                    "\n<Unknown> -> " + xml.Element("S2B").Value
+                    );
+                btnImport.Text = xml.Element("S32").Value;
+                btnSaveROM.Text = xml.Element("S33").Value;
+                toolStripMenuComprimido.Text = xml.Element("S2A").Value;
+                toolStripAbrirTexto.Text = xml.Element("S26").Value;
+                toolStripAbrirFat.Text = xml.Element("S3D").Value;
+            }
+            catch { throw new NotSupportedException("There was an error reading the language file"); }
         }
         private void ToolStripLang_Click(Object sender, EventArgs e)
         {
@@ -963,6 +968,12 @@ namespace Tinke
         {
             if (e.KeyCode == Keys.Space && treeSystem.Focused)
                 btnSee.PerformClick();
+            else if (e.KeyCode == Keys.P && toolStripOpenAs.Enabled && treeSystem.Focused)
+                toolStripMenuItem1.PerformClick();
+            else if (e.KeyCode == Keys.T && toolStripOpenAs.Enabled && treeSystem.Focused)
+                toolStripMenuItem2.PerformClick();
+            else if (e.KeyCode == Keys.M && toolStripOpenAs.Enabled && treeSystem.Focused)
+                toolStripMenuItem3.PerformClick();
         }
 
         private void toolStripInfoRom_Click(object sender, EventArgs e)
@@ -1243,6 +1254,8 @@ namespace Tinke
                 resul = accion.Search_File(Formato.Script);
             else if (txtSearch.Text == "<Unknown>")
                 resul = accion.Search_File(Formato.Desconocido);
+            else if (txtSearch.Text.StartsWith("Length: ") && txtSearch.Text.Length > 8)
+                resul = accion.Search_FileLength(Convert.ToInt32(txtSearch.Text.Substring(7)));
             else
                 resul = accion.Search_File(txtSearch.Text);
 

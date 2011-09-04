@@ -29,31 +29,161 @@
         private void InitializeComponent()
         {
             this.picFont = new System.Windows.Forms.PictureBox();
+            this.numericWidth = new System.Windows.Forms.NumericUpDown();
+            this.numericLength = new System.Windows.Forms.NumericUpDown();
+            this.numericStart = new System.Windows.Forms.NumericUpDown();
+            this.trackPalette = new System.Windows.Forms.TrackBar();
+            this.picPaletteColour = new System.Windows.Forms.PictureBox();
+            this.txtCharCode = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.picFont)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericWidth)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericLength)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericStart)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackPalette)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picPaletteColour)).BeginInit();
             this.SuspendLayout();
             // 
             // picFont
             // 
-            this.picFont.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.picFont.BackColor = System.Drawing.Color.Moccasin;
             this.picFont.Location = new System.Drawing.Point(0, 0);
             this.picFont.Name = "picFont";
-            this.picFont.Size = new System.Drawing.Size(100, 50);
+            this.picFont.Size = new System.Drawing.Size(243, 200);
             this.picFont.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.picFont.TabIndex = 0;
             this.picFont.TabStop = false;
+            this.picFont.MouseClick += new System.Windows.Forms.MouseEventHandler(this.picFont_MouseClick);
+            // 
+            // numericWidth
+            // 
+            this.numericWidth.Location = new System.Drawing.Point(55, 207);
+            this.numericWidth.Maximum = new decimal(new int[] {
+            65535,
+            0,
+            0,
+            0});
+            this.numericWidth.Name = "numericWidth";
+            this.numericWidth.Size = new System.Drawing.Size(50, 20);
+            this.numericWidth.TabIndex = 1;
+            this.numericWidth.ValueChanged += new System.EventHandler(this.numericWidth_ValueChanged);
+            // 
+            // numericLength
+            // 
+            this.numericLength.Location = new System.Drawing.Point(55, 234);
+            this.numericLength.Maximum = new decimal(new int[] {
+            65535,
+            0,
+            0,
+            0});
+            this.numericLength.Name = "numericLength";
+            this.numericLength.Size = new System.Drawing.Size(50, 20);
+            this.numericLength.TabIndex = 2;
+            this.numericLength.ValueChanged += new System.EventHandler(this.numericLength_ValueChanged);
+            // 
+            // numericStart
+            // 
+            this.numericStart.Location = new System.Drawing.Point(190, 206);
+            this.numericStart.Maximum = new decimal(new int[] {
+            65535,
+            0,
+            0,
+            0});
+            this.numericStart.Name = "numericStart";
+            this.numericStart.Size = new System.Drawing.Size(50, 20);
+            this.numericStart.TabIndex = 3;
+            this.numericStart.ValueChanged += new System.EventHandler(this.numericStart_ValueChanged);
+            // 
+            // trackPalette
+            // 
+            this.trackPalette.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
+            this.trackPalette.Location = new System.Drawing.Point(55, 260);
+            this.trackPalette.Name = "trackPalette";
+            this.trackPalette.Size = new System.Drawing.Size(104, 45);
+            this.trackPalette.TabIndex = 5;
+            this.trackPalette.Scroll += new System.EventHandler(this.trackPalette_Scroll);
+            // 
+            // picPaletteColour
+            // 
+            this.picPaletteColour.Location = new System.Drawing.Point(4, 260);
+            this.picPaletteColour.Name = "picPaletteColour";
+            this.picPaletteColour.Size = new System.Drawing.Size(45, 45);
+            this.picPaletteColour.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.picPaletteColour.TabIndex = 6;
+            this.picPaletteColour.TabStop = false;
+            // 
+            // txtCharCode
+            // 
+            this.txtCharCode.Location = new System.Drawing.Point(190, 233);
+            this.txtCharCode.Name = "txtCharCode";
+            this.txtCharCode.ReadOnly = true;
+            this.txtCharCode.Size = new System.Drawing.Size(49, 20);
+            this.txtCharCode.TabIndex = 7;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(3, 209);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(38, 13);
+            this.label1.TabIndex = 8;
+            this.label1.Text = "Width:";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(3, 236);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(43, 13);
+            this.label2.TabIndex = 9;
+            this.label2.Text = "Length:";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(113, 209);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(32, 13);
+            this.label3.TabIndex = 10;
+            this.label3.Text = "Start:";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(113, 236);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(59, 13);
+            this.label4.TabIndex = 11;
+            this.label4.Text = "Char code:";
             // 
             // CharControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.AutoSize = true;
-            this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.BackColor = System.Drawing.Color.Transparent;
             this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.txtCharCode);
+            this.Controls.Add(this.picPaletteColour);
+            this.Controls.Add(this.trackPalette);
+            this.Controls.Add(this.numericStart);
+            this.Controls.Add(this.numericLength);
+            this.Controls.Add(this.numericWidth);
             this.Controls.Add(this.picFont);
             this.Name = "CharControl";
-            this.Size = new System.Drawing.Size(100, 50);
+            this.Size = new System.Drawing.Size(243, 311);
             ((System.ComponentModel.ISupportInitialize)(this.picFont)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericWidth)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericLength)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericStart)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackPalette)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picPaletteColour)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -62,5 +192,15 @@
         #endregion
 
         private System.Windows.Forms.PictureBox picFont;
+        private System.Windows.Forms.NumericUpDown numericWidth;
+        private System.Windows.Forms.NumericUpDown numericLength;
+        private System.Windows.Forms.NumericUpDown numericStart;
+        private System.Windows.Forms.TrackBar trackPalette;
+        private System.Windows.Forms.PictureBox picPaletteColour;
+        private System.Windows.Forms.TextBox txtCharCode;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label4;
     }
 }
