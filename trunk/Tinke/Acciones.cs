@@ -750,6 +750,13 @@ namespace Tinke
             Recursivo_Archivo(formato, root, carpeta);
             return carpeta;
         }
+        public Carpeta Search_FileLength(int length)
+        {
+            Carpeta carpeta = new Carpeta();
+            carpeta.files = new List<Archivo>();
+            Recursivo_Archivo(length, root, carpeta);
+            return carpeta;
+        }
         public Carpeta Search_Folder(string name)
         {
             return Recursivo_Carpeta(name, root);
@@ -798,6 +805,19 @@ namespace Tinke
             }
 
             return new Archivo();
+        }
+        private void Recursivo_Archivo(int length, Carpeta currFolder, Carpeta carpeta)
+        {
+            if (currFolder.files is List<Archivo>)
+                foreach (Archivo archivo in currFolder.files)
+                    if (archivo.size == length)
+                        carpeta.files.Add(archivo);
+
+
+            if (currFolder.folders is List<Carpeta>)
+                foreach (Carpeta subFolder in currFolder.folders)
+                    Recursivo_Archivo(length, subFolder, carpeta);
+
         }
         private void Recursivo_Archivo(string name, Carpeta currFolder, Carpeta carpeta)
         {

@@ -59,7 +59,7 @@ namespace Fonts
 
             font.plgc.tiles = new Byte[(font.plgc.block_size - 0x10) / font.plgc.tile_length][];
             for (int i = 0; i < font.plgc.tiles.Length; i++)
-                font.plgc.tiles[i] = br.ReadBytes(font.plgc.tile_length);
+                font.plgc.tiles[i] = BytesToBits(br.ReadBytes(font.plgc.tile_length));
 
             Console.WriteLine("<b>Section: {0}</b>", new String(font.plgc.type));
             Console.WriteLine("Block size: 0x{0}", font.plgc.block_size.ToString("x"));
@@ -170,6 +170,94 @@ namespace Fonts
             br.Close();
             return font;
         }
+        public static void Write(sNFTR font, string fileout)
+        {
+            BinaryWriter bw = new BinaryWriter(File.OpenWrite(fileout));
+
+            // Write the generic header
+            bw.Write(font.header.type);
+            bw.Write(font.header.endianess);
+            bw.Write(font.header.unknown);
+            bw.Write(font.header.file_size);
+            bw.Write(font.header.block_size);
+            bw.Write(font.header.num_blocks);
+
+            // Write the FINF section
+            bw.Write(font.fnif.type);
+            bw.Write(font.fnif.block_size);
+            bw.Write(font.fnif.unknown1);
+            bw.Write(font.fnif.unknown2);
+            bw.Write(font.fnif.offset_plgc);
+            bw.Write(font.fnif.offset_hdwc);
+            bw.Write(font.fnif.offset_pamc);
+            if (font.fnif.block_size == 0x20)
+                bw.Write(font.fnif.unknown3);
+
+            // Write the PLGC section
+            bw.Write(font.plgc.type);
+            bw.Write(font.plgc.block_size);
+            bw.Write(font.plgc.tile_width);
+            bw.Write(font.plgc.tile_height);
+            bw.Write(font.plgc.tile_length);
+            bw.Write(font.plgc.unknown);
+            bw.Write(font.plgc.depth);
+            for (int i = 0; i < font.plgc.tiles.Length; i++)
+                bw.Write(BitsToBytes(font.plgc.tiles[i]));
+
+            // Write HDWC section
+            bw.Write(font.hdwc.type);
+            bw.Write(font.hdwc.block_size);
+            bw.Write(font.hdwc.fist_code);
+            bw.Write(font.hdwc.last_code);
+            bw.Write(font.hdwc.unknown1);
+            for (int i = 0; i < font.hdwc.info.Count; i++)
+            {
+                bw.Write(font.hdwc.info[i].pixel_start);
+                bw.Write(font.hdwc.info[i].pixel_width);
+                bw.Write(font.hdwc.info[i].pixel_length);
+            }
+
+            // Write the PAMC section
+            for (int i = 0; i < font.pamc.Count; i++)
+            {
+                bw.Write(font.pamc[i].type);
+                bw.Write(font.pamc[i].block_size);
+                bw.Write(font.pamc[i].first_char);
+                bw.Write(font.pamc[i].last_char);
+                bw.Write(font.pamc[i].type_section);
+                uint next_section = (uint)(bw.BaseStream.Position - 0x10 + font.pamc[i].block_size) + 0x08;
+                bw.Write(font.pamc[i].next_section);
+
+                switch (font.pamc[i].type_section)
+                {
+                    case 0:
+                        sNFTR.PAMC.Type0 type0 = (sNFTR.PAMC.Type0)font.pamc[i].info;
+                        bw.Write(type0.fist_char_code);
+                        break;
+                    case 1:
+                        sNFTR.PAMC.Type1 type1 = (sNFTR.PAMC.Type1)font.pamc[i].info;
+                        for (int j = 0; j < type1.char_code.Length; j++)
+                            bw.Write(type1.char_code[j]);
+                        break;
+                    case 2:
+                        sNFTR.PAMC.Type2 type2 = (sNFTR.PAMC.Type2)font.pamc[i].info;
+                        bw.Write(type2.num_chars);
+                        for (int j = 0; j < type2.num_chars; j++)
+                        {
+                            bw.Write(type2.chars_code[j]);
+                            bw.Write(type2.chars[j]);
+                        }
+                        break;
+                }
+
+                int relleno = (int)(next_section - 0x08 - bw.BaseStream.Position);
+                for (int r = 0; r < relleno; r++)
+                    bw.Write((byte)0x00);
+            }
+
+            bw.Flush();
+            bw.Close();
+        }
 
         public static Bitmap Get_Char(sNFTR font, int id, int zoom = 1)
         {
@@ -181,16 +269,19 @@ namespace Fonts
             {
                 int colorIndex = 255 - (i * (255 / (palette.Length - 1)));
                 palette[i] = Color.FromArgb(colorIndex, 0, 0, 0);
+                //palette[i] = Color.FromArgb(255, colorIndex, colorIndex, colorIndex);
             }
             palette = palette.Reverse().ToArray();
 
             int bits = Convert.ToByte(new String('1', font.plgc.depth), 2);
-            for (int i = 0; i < font.plgc.tiles[id].Length; i++)
+            for (int i = 0; i < font.plgc.tiles[id].Length; i += font.plgc.depth)
             {
-                for (int j = 8 - font.plgc.depth; j >= 0; j -= font.plgc.depth)
+                Byte byteFromBits = 0;
+                for (int b = 0; b < font.plgc.depth; b++)
                 {
-                    tileData.Add((byte)((font.plgc.tiles[id][i] >> j) & bits));
+                    byteFromBits += (byte)(font.plgc.tiles[id][i + b] << b);
                 }
+                tileData.Add(byteFromBits);
             }
 
             for (int h = 0; h < image.Height / zoom; h++)
@@ -199,18 +290,22 @@ namespace Fonts
                 {
                     for (int hzoom = 0; hzoom < zoom; hzoom++)
                         for (int wzoom = 0; wzoom < zoom; wzoom++)
-                            image.SetPixel(
-                                w * zoom + wzoom,
-                                h * zoom + hzoom,
-                                (palette[tileData[w + h * image.Width / zoom]]));
+                            try
+                            {
+                                image.SetPixel(
+                                    w * zoom + wzoom,
+                                    h * zoom + hzoom,
+                                    (palette[tileData[w + h * image.Width / zoom]]));
+                            }
+                            catch { break; }
                 }
             }
-
+            image.MakeTransparent(Color.FromArgb(255, 255, 255));
             return image;
         }
         public static Bitmap Get_Char(byte[] tiles, int depth, int width, int height, int zoom = 1)
         {
-            Bitmap image = new Bitmap(width * zoom, height * zoom);
+            Bitmap image = new Bitmap(width * zoom + 1, height * zoom + 1);
             List<Byte> tileData = new List<byte>();
 
             Color[] palette = new Color[(int)Math.Pow(2, depth)];
@@ -222,24 +317,27 @@ namespace Fonts
             palette = palette.Reverse().ToArray();
 
             int bits = Convert.ToByte(new String('1', depth), 2);
-            for (int i = 0; i < tiles.Length; i++)
+            for (int i = 0; i < tiles.Length; i += depth)
             {
-                for (int j = 8 - depth; j >= 0; j -= depth)
+                Byte byteFromBits = 0;
+                for (int b = 0; b < depth; b++)
                 {
-                    tileData.Add((byte)((tiles[i] >> j) & bits));
+                    byteFromBits += (byte)(tiles[i + b] << b);
                 }
+                tileData.Add(byteFromBits);
             }
 
-            for (int h = 0; h < image.Height / zoom; h++)
+
+            for (int h = 0; h < height; h++)
             {
-                for (int w = 0; w < image.Width / zoom; w++)
+                for (int w = 0; w < width; w++)
                 {
                     for (int hzoom = 0; hzoom < zoom; hzoom++)
                         for (int wzoom = 0; wzoom < zoom; wzoom++)
                             image.SetPixel(
                                 w * zoom + wzoom,
                                 h * zoom + hzoom,
-                                (palette[tileData[w + h * image.Width / zoom]]));
+                                (palette[tileData[w + h * width]]));
                 }
             }
 
@@ -249,7 +347,7 @@ namespace Fonts
         {
             int char_x = maxWidth / font.plgc.tile_width;
             int char_y = (font.plgc.tiles.Length / char_x) + 1;
-            Bitmap image = new Bitmap(char_x * font.plgc.tile_width, char_y * font.plgc.tile_height);
+            Bitmap image = new Bitmap(char_x * font.plgc.tile_width + 1, char_y * font.plgc.tile_height + 1);
             Graphics graphic = Graphics.FromImage(image);
 
             int w, h;
@@ -267,6 +365,34 @@ namespace Fonts
             }
 
             return image;
+        }
+
+        public static Byte[] BytesToBits(Byte[] bytes)
+        {
+            List<Byte> bits = new List<byte>();
+
+            for (int i = 0; i < bytes.Length; i++)
+                for (int j = 7; j >= 0; j--)
+                    bits.Add((byte)((bytes[i] >> j) & 1));
+
+            return bits.ToArray();
+        }
+        public static Byte[] BitsToBytes(Byte[] bits)
+        {
+            List<Byte> bytes = new List<byte>();
+
+            for (int i = 0; i < bits.Length; i += 8)
+            {
+                Byte newByte = 0;
+                int b = 0;
+                for (int j = 7; j >= 0; j--, b++)
+                {
+                    newByte += (byte)(bits[i + b] << j);
+                }
+                bytes.Add(newByte);
+            }
+
+            return bytes.ToArray();
         }
     }
 

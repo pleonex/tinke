@@ -748,11 +748,13 @@ namespace SDAT
                 {
                     case FormatSound.SWAV:
                         WAV.Write(SWAV.ConvertToWAV(SWAV.Read(sound), false), wavFile);
-                        WAV.Write(SWAV.ConvertToWAV(SWAV.Read(sound), true), loopFile);
+                        if (checkLoop.Checked)
+                            WAV.Write(SWAV.ConvertToWAV(SWAV.Read(sound), true), loopFile);
                         break;
                     case FormatSound.STRM:
                         WAV.Write(STRM.ConvertToWAV(STRM.Read(sound), false), wavFile);
-                        WAV.Write(STRM.ConvertToWAV(STRM.Read(sound), true), loopFile);
+                        if (checkLoop.Checked)
+                            WAV.Write(STRM.ConvertToWAV(STRM.Read(sound), true), loopFile);
                         break;
                 }
 

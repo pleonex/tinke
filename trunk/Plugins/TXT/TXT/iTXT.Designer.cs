@@ -75,9 +75,9 @@
             this.comboEncod.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboEncod.FormattingEnabled = true;
             this.comboEncod.Items.AddRange(new object[] {
+            "shift-jis",
             "utf-7",
             "unicode",
-            "shift-jis",
             "utf-32",
             "utf-8",
             "ascii"});

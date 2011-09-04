@@ -30,12 +30,13 @@
         {
             this.picFont = new System.Windows.Forms.PictureBox();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
-            this.picChar = new System.Windows.Forms.PictureBox();
             this.txtBox = new System.Windows.Forms.TextBox();
             this.picText = new System.Windows.Forms.PictureBox();
             this.panelPicImage = new System.Windows.Forms.Panel();
+            this.btnApply = new System.Windows.Forms.Button();
+            this.panelCharEdit = new System.Windows.Forms.Panel();
+            this.btnSave = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.picFont)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picChar)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picText)).BeginInit();
             this.panelPicImage.SuspendLayout();
             this.SuspendLayout();
@@ -44,10 +45,11 @@
             // 
             this.picFont.BackColor = System.Drawing.Color.Moccasin;
             this.picFont.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.picFont.Dock = System.Windows.Forms.DockStyle.Fill;
             this.picFont.Location = new System.Drawing.Point(0, 0);
             this.picFont.MaximumSize = new System.Drawing.Size(256, 512);
             this.picFont.Name = "picFont";
-            this.picFont.Size = new System.Drawing.Size(256, 256);
+            this.picFont.Size = new System.Drawing.Size(256, 307);
             this.picFont.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.picFont.TabIndex = 0;
             this.picFont.TabStop = false;
@@ -62,19 +64,9 @@
             this.comboBox1.TabIndex = 1;
             this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
             // 
-            // picChar
-            // 
-            this.picChar.BackColor = System.Drawing.Color.Moccasin;
-            this.picChar.Location = new System.Drawing.Point(266, 31);
-            this.picChar.Name = "picChar";
-            this.picChar.Size = new System.Drawing.Size(243, 93);
-            this.picChar.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.picChar.TabIndex = 2;
-            this.picChar.TabStop = false;
-            // 
             // txtBox
             // 
-            this.txtBox.Location = new System.Drawing.Point(4, 301);
+            this.txtBox.Location = new System.Drawing.Point(4, 344);
             this.txtBox.Multiline = true;
             this.txtBox.Name = "txtBox";
             this.txtBox.Size = new System.Drawing.Size(505, 49);
@@ -83,9 +75,10 @@
             // 
             // picText
             // 
-            this.picText.Location = new System.Drawing.Point(4, 357);
+            this.picText.BackColor = System.Drawing.SystemColors.Control;
+            this.picText.Location = new System.Drawing.Point(4, 399);
             this.picText.Name = "picText";
-            this.picText.Size = new System.Drawing.Size(505, 143);
+            this.picText.Size = new System.Drawing.Size(505, 101);
             this.picText.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.picText.TabIndex = 4;
             this.picText.TabStop = false;
@@ -95,24 +88,54 @@
             this.panelPicImage.AutoScroll = true;
             this.panelPicImage.Controls.Add(this.picFont);
             this.panelPicImage.Location = new System.Drawing.Point(4, 31);
-            this.panelPicImage.MaximumSize = new System.Drawing.Size(256, 256);
+            this.panelPicImage.MaximumSize = new System.Drawing.Size(258, 307);
             this.panelPicImage.Name = "panelPicImage";
-            this.panelPicImage.Size = new System.Drawing.Size(256, 256);
+            this.panelPicImage.Size = new System.Drawing.Size(258, 307);
             this.panelPicImage.TabIndex = 5;
+            // 
+            // btnApply
+            // 
+            this.btnApply.Location = new System.Drawing.Point(430, 291);
+            this.btnApply.Name = "btnApply";
+            this.btnApply.Size = new System.Drawing.Size(75, 46);
+            this.btnApply.TabIndex = 1;
+            this.btnApply.Text = "Apply changes";
+            this.btnApply.UseVisualStyleBackColor = true;
+            this.btnApply.Click += new System.EventHandler(this.btnApply_Click);
+            // 
+            // panelCharEdit
+            // 
+            this.panelCharEdit.Location = new System.Drawing.Point(266, 31);
+            this.panelCharEdit.Name = "panelCharEdit";
+            this.panelCharEdit.Size = new System.Drawing.Size(243, 307);
+            this.panelCharEdit.TabIndex = 7;
+            // 
+            // btnSave
+            // 
+            this.btnSave.Image = global::Fonts.Properties.Resources.disk;
+            this.btnSave.Location = new System.Drawing.Point(4, 2);
+            this.btnSave.Name = "btnSave";
+            this.btnSave.Size = new System.Drawing.Size(116, 26);
+            this.btnSave.TabIndex = 8;
+            this.btnSave.Text = "Save new font";
+            this.btnSave.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnSave.UseVisualStyleBackColor = true;
+            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
             // 
             // FontControl
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
             this.BackColor = System.Drawing.Color.Transparent;
+            this.Controls.Add(this.btnSave);
+            this.Controls.Add(this.btnApply);
+            this.Controls.Add(this.panelCharEdit);
             this.Controls.Add(this.panelPicImage);
             this.Controls.Add(this.picText);
             this.Controls.Add(this.txtBox);
-            this.Controls.Add(this.picChar);
             this.Controls.Add(this.comboBox1);
             this.Name = "FontControl";
             this.Size = new System.Drawing.Size(512, 512);
             ((System.ComponentModel.ISupportInitialize)(this.picFont)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picChar)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picText)).EndInit();
             this.panelPicImage.ResumeLayout(false);
             this.panelPicImage.PerformLayout();
@@ -125,9 +148,11 @@
 
         private System.Windows.Forms.PictureBox picFont;
         private System.Windows.Forms.ComboBox comboBox1;
-        private System.Windows.Forms.PictureBox picChar;
         private System.Windows.Forms.TextBox txtBox;
         private System.Windows.Forms.PictureBox picText;
         private System.Windows.Forms.Panel panelPicImage;
+        private System.Windows.Forms.Button btnApply;
+        private System.Windows.Forms.Panel panelCharEdit;
+        private System.Windows.Forms.Button btnSave;
     }
 }
