@@ -193,13 +193,13 @@ namespace Tinke
             bw.Close();
         }
 
-        public static NTFT Modificar_Tile(NSCR nscr, NTFT tiles)
+        public static NTFT Modificar_Tile(NSCR nscr, NTFT tiles, int startInfo = 0)
         {
             NTFT ntft = new NTFT();
             List<Byte[]> bytes = new List<byte[]>();
             List<Byte> nPltt = new List<Byte>();
             
-            for (int i = 0; i < nscr.section.mapData.Length; i++)
+            for (int i = startInfo; i < nscr.section.mapData.Length; i++)
             {
                 Byte[] currTile;
 

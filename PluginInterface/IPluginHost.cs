@@ -60,7 +60,7 @@ namespace PluginInterface
         Bitmap Bitmap_NCGR(NCGR ncgr, NCLR nclr);
         Bitmap Bitmap_NCGR(NCGR ncgr, NCLR nclr, int startTile);
         Bitmap Bitmap_NCGR(NCGR ncgr, NCLR nclr, int startTile, int tilesX, int tilesY);
-        NTFT Transformar_NSCR(NSCR nscr, NTFT ntft);
+        NTFT Transformar_NSCR(NSCR nscr, NTFT ntft, int startOffset = 0);
         Size Tamaño_NCER(byte byte1, byte byte2);
         Bitmap Bitmap_NCER(Bank banco, uint blockSize, NCGR ncgr, NCLR nclr, bool entorno, bool celda,
             bool numero, bool transparencia, bool imagen);
@@ -80,6 +80,7 @@ namespace PluginInterface
         void Set_Files(Carpeta archivos);
         Carpeta Get_Files();
         Carpeta Get_DecompressedFiles(int id); // Get all the files and folder that have been decompressed (to compress them)
+        String Search_File(int id); // Search file by id
 
         string Get_Language();
         string Get_TempFolder();

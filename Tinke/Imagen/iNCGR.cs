@@ -108,6 +108,7 @@ namespace Tinke
             this.numericHeight.Value = pic.Image.Height;
             this.comboDepth.Text = (tile.rahc.depth == ColorDepth.Depth4Bit ? "4 bpp" : "8 bpp");
             oldDepth = comboDepth.Text;
+            this.numericStart.Increment = 2;
             switch (tile.orden)
             {
                 case Orden_Tiles.No_Tiles:
@@ -230,8 +231,7 @@ namespace Tinke
             if (isMap)
             {
                 NCGR newTile = tile;
-                newTile.rahc.tileData.tiles = Convertir.BytesToTiles(Convertir.TilesToBytes(newTile.rahc.tileData.tiles, startTile));
-                newTile.rahc.tileData = pluginHost.Transformar_NSCR(map, newTile.rahc.tileData);
+                newTile.rahc.tileData = pluginHost.Transformar_NSCR(map, newTile.rahc.tileData, startTile);
                 pic.Image = Imagen_NCGR.Crear_Imagen(newTile, paleta, 0);
             }
             else

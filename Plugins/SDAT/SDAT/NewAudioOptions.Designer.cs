@@ -40,10 +40,13 @@
             this.numericLoopOffset = new System.Windows.Forms.NumericUpDown();
             this.numericBlockLen = new System.Windows.Forms.NumericUpDown();
             this.label4 = new System.Windows.Forms.Label();
+            this.numericVolume = new System.Windows.Forms.NumericUpDown();
+            this.label5 = new System.Windows.Forms.Label();
             this.groupLoop.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericLoopLength)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericLoopOffset)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericBlockLen)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericVolume)).BeginInit();
             this.SuspendLayout();
             // 
             // comboEncoding
@@ -74,7 +77,7 @@
             // 
             this.btnAccept.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.btnAccept.Image = global::SDAT.Properties.Resources.accept;
-            this.btnAccept.Location = new System.Drawing.Point(160, 223);
+            this.btnAccept.Location = new System.Drawing.Point(160, 275);
             this.btnAccept.Name = "btnAccept";
             this.btnAccept.Size = new System.Drawing.Size(90, 40);
             this.btnAccept.TabIndex = 2;
@@ -177,11 +180,50 @@
             this.label4.TabIndex = 6;
             this.label4.Text = "Tamaño de bloque:";
             // 
+            // numericVolume
+            // 
+            this.numericVolume.Increment = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.numericVolume.Location = new System.Drawing.Point(152, 213);
+            this.numericVolume.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.numericVolume.Minimum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            -2147483648});
+            this.numericVolume.Name = "numericVolume";
+            this.numericVolume.Size = new System.Drawing.Size(90, 20);
+            this.numericVolume.TabIndex = 7;
+            this.numericVolume.Value = new decimal(new int[] {
+            150,
+            0,
+            0,
+            0});
+            this.numericVolume.ValueChanged += new System.EventHandler(this.numericVolume_ValueChanged);
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(22, 215);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(62, 13);
+            this.label5.TabIndex = 8;
+            this.label5.Text = "Volume (%):";
+            // 
             // NewAudioOptions
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
             this.BackColor = System.Drawing.SystemColors.GradientActiveCaption;
-            this.ClientSize = new System.Drawing.Size(262, 275);
+            this.ClientSize = new System.Drawing.Size(262, 327);
+            this.Controls.Add(this.label5);
+            this.Controls.Add(this.numericVolume);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.numericBlockLen);
             this.Controls.Add(this.groupLoop);
@@ -201,6 +243,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericLoopLength)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericLoopOffset)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericBlockLen)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericVolume)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -219,5 +262,7 @@
         private System.Windows.Forms.NumericUpDown numericLoopOffset;
         private System.Windows.Forms.NumericUpDown numericBlockLen;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.NumericUpDown numericVolume;
+        private System.Windows.Forms.Label label5;
     }
 }

@@ -664,7 +664,7 @@ namespace SDAT
                     break;
 
                 case FormatSound.SWAV:
-                    sSWAV swav = SWAV.ConvertToSWAV(wav);
+                    sSWAV swav = SWAV.ConvertToSWAV(wav, dialog.Volume);
 
                     swav.data.info.bLoop = (byte)(dialog.Loop ? 0x01 : 0x00);
                     swav.data.info.nLoopOffset = (ushort)dialog.LoopOffset;

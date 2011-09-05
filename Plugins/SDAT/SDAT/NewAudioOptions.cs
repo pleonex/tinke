@@ -19,6 +19,7 @@ namespace SDAT
         int loopLength;
         int compressFormat;
         int blockLength;
+        int volume;
 
         public NewAudioOptions()
         {
@@ -32,6 +33,7 @@ namespace SDAT
             ReadLanguage();
             numericLoopLength.Enabled = isSWAV;
             numericBlockLen.Enabled = !isSWAV;
+            numericVolume.Enabled = isSWAV;
         }
         private void ReadLanguage()
         {
@@ -69,6 +71,11 @@ namespace SDAT
             get { return blockLength; }
             set { numericBlockLen.Value = value; blockLength = value; }
         }
+        public int Volume
+        {
+            get { return volume; }
+            set { numericVolume.Value = value; volume = value; }
+        }
 
         private void button1_Click(object sender, EventArgs e)
         {
@@ -90,6 +97,10 @@ namespace SDAT
         private void numericBlockLen_ValueChanged(object sender, EventArgs e)
         {
             blockLength = (int)numericBlockLen.Value;
+        }
+        private void numericVolume_ValueChanged(object sender, EventArgs e)
+        {
+            volume = (int)numericVolume.Value;
         }
     }
 }
