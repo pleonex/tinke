@@ -185,7 +185,7 @@ namespace SDAT
             }
             return wav;
         }
-        public static sSWAV ConvertToSWAV(sWAV wav, int waveType = 1)
+        public static sSWAV ConvertToSWAV(sWAV wav, int volume = 150, int waveType = 1)
         {
             if (wav.wave.fmt.audioFormat != WaveFormat.WAVE_FORMAT_PCM)
                 throw new NotSupportedException();
@@ -209,6 +209,7 @@ namespace SDAT
             if (wav.wave.fmt.numChannels > 1)
                 wav.wave.data.data = WAV.ConvertToMono(wav.wave.data.data, wav.wave.fmt.numChannels, wav.wave.fmt.bitsPerSample);
 
+            wav.wave.data.data = ChangeVolume(wav.wave.data.data, volume, wav.wave.fmt.bitsPerSample);
             if (wav.wave.fmt.bitsPerSample == 0x10)
                 swav.data.data = wav.wave.data.data;
             else if (wav.wave.fmt.bitsPerSample == 0x08)
@@ -219,6 +220,33 @@ namespace SDAT
             swav.header.nFileSize = swav.data.nSize + swav.header.nSize;
 
             return swav;
+        }
+
+        public static Byte[] ChangeVolume(Byte[] data, int volume, int bps)
+        {
+            List<Byte> result = new List<byte>();
+
+            for (int i = 0; i < data.Length; i += bps / 8)
+            {
+                int sample, p;
+                switch (bps)
+                {
+                    case 8:
+                        sample = (SByte)data[i];
+                        p = sample * volume / 100;
+                        sample += p;
+                        result.Add((byte)sample);
+                        break;
+                    case 16:
+                        sample = BitConverter.ToInt16(data, i);
+                        p = sample * volume / 100;
+                        sample += p;
+                        result.AddRange(BitConverter.GetBytes((short)sample));
+                        break;
+                }
+            }
+
+            return result.ToArray();
         }
 
         static byte[] PCM8(byte[] data)

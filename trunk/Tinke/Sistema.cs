@@ -974,6 +974,8 @@ namespace Tinke
                 toolStripMenuItem2.PerformClick();
             else if (e.KeyCode == Keys.M && toolStripOpenAs.Enabled && treeSystem.Focused)
                 toolStripMenuItem3.PerformClick();
+            else if (e.KeyCode == Keys.D && btnDescomprimir.Enabled && treeSystem.Focused)
+                btnDescomprimir.PerformClick();
         }
 
         private void toolStripInfoRom_Click(object sender, EventArgs e)

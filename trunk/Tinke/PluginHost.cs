@@ -87,7 +87,7 @@ namespace Tinke
 
         public Bitmap[] Bitmaps_NCLR(string archivo) { return Imagen_NCLR.Mostrar(archivo); }
         public Bitmap[] Bitmaps_NCLR(NCLR nclr) { return Imagen_NCLR.Mostrar(nclr); }
-        public NTFT Transformar_NSCR(NSCR nscr, NTFT ntft) { return Imagen_NSCR.Modificar_Tile(nscr, ntft); }
+        public NTFT Transformar_NSCR(NSCR nscr, NTFT ntft, int startOffset = 0) { return Imagen_NSCR.Modificar_Tile(nscr, ntft, startOffset); }
         public Bitmap Bitmap_NCGR(NCGR ncgr, NCLR nclr) { return Imagen_NCGR.Crear_Imagen(ncgr, nclr); }
         public Bitmap Bitmap_NCGR(NCGR ncgr, NCLR nclr, int startTile) { return Imagen_NCGR.Crear_Imagen(ncgr, nclr, startTile); }
         public Bitmap Bitmap_NCGR(NCGR ncgr, NCLR nclr, int startTile, int tilesX, int tilesY) { return Imagen_NCGR.Crear_Imagen(ncgr, nclr, startTile, tilesX, tilesY); }
@@ -112,6 +112,9 @@ namespace Tinke
         }
         public event Func<int, Carpeta> event_GetDecompressedFiles;
         public Carpeta Get_DecompressedFiles(int id) { return event_GetDecompressedFiles(id); }
+        public event Func<int, String> event_SearchFile;
+        public String Search_File(int id) { return event_SearchFile(id); }
+
         public string Get_TempFolder()
         {
             return tempFolder;

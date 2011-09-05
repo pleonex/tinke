@@ -1,6 +1,9 @@
 0.8.0
-*** Support to font files NFTR (only view)
+*** Support to font files NFTR (edit and view)
+*** Support to write Game plugins in other languages
 * Fixed important errors in SDAT plugin
+* Add change volume to imported WAV to SWAV audio
+* New hotkeys (T to "Open as->Tile", P to "Open as->Palette", M to "Open as->Map", D to decompress)
 
 0.7.7
 *** Interface to decompress FAT files (files with offsets)

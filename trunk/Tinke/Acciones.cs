@@ -58,6 +58,7 @@ namespace Tinke
             pluginHost.DescomprimirEvent += new Action<string>(pluginHost_DescomprimirEvent);
             pluginHost.ChangeFile_Event += new Action<int, string>(pluginHost_ChangeFile_Event);
             pluginHost.event_GetDecompressedFiles += new Func<int, Carpeta>(pluginHost_event_GetDecompressedFiles);
+            pluginHost.event_SearchFile += new Func<int, String>(Save_File);
             Cargar_Plugins();
         }
 
@@ -1255,7 +1256,7 @@ namespace Tinke
         }
         public Carpeta Extract(int id)
         {
-            // Guardamos el archivo para descomprimir fuera del sistema de ROM
+            #region Save the file
             Archivo selectFile = Search_File(id);
             string tempFile;
             BinaryReader br;
@@ -1277,9 +1278,9 @@ namespace Tinke
                 tempFile = info.DirectoryName + Path.DirectorySeparatorChar + "temp_" + info.Name;
                 br = new BinaryReader(File.OpenRead(tempFile));
             }
+            #endregion
 
             ext = br.ReadBytes(4);
-
             br.Close();
 
             #region Búsqueda y llamada a plugin
@@ -1547,6 +1548,26 @@ namespace Tinke
                 FileInfo info = new FileInfo(selectFile.path);
                 File.Copy(selectFile.path, outFile, true);
             }
+        }
+        public String Save_File(int id)
+        {
+            Archivo selectFile = Search_File(id);
+            String outFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + id + selectFile.name;
+
+            if (selectFile.offset != 0x0)
+            {
+                BinaryReader br = new BinaryReader(File.OpenRead(file));
+                br.BaseStream.Position = selectFile.offset;
+                File.WriteAllBytes(outFile, br.ReadBytes((int)selectFile.size));
+                br.Close();
+            }
+            else
+            {
+                FileInfo info = new FileInfo(selectFile.path);
+                File.Copy(selectFile.path, outFile, true);
+            }
+
+            return outFile;
         }
         public void Save_File(Archivo currfile, string outFile)
         {
