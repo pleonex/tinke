@@ -204,6 +204,11 @@
       Veuillez télécharger le programme depuis la page web :
       http://code.google.com/p/tinke
     </S1F>
+    <S20>
+      Error loading the file: {0}.
+      The assembly can not be obtained. Error:
+      {1}
+    </S20>
   </Messages>
   <NCLR>
     <S01>Nombre de la palette :</S01>
@@ -264,7 +269,7 @@
     <S1F>Couleur du fond</S1F>
     <S20>Supprimer</S20>
     <S21>Importer</S21>
-    <S22>Set transparent color</S22>
+    <S22>Fixer la couleur transparente</S22>
   </NCGR>
   <NSCR>
     <S00>Options de map</S00>
@@ -316,8 +321,8 @@
     <S21>Numéro de palette</S21>
     <S22>Offset tuile originale</S22>
     <S23>Offset tuile fixée</S23>
-    <S24>Import</S24>
-    <S25>Set transparency colour</S25>
+    <S24>Importer</S24>
+    <S25>Fixer la couleur de transparence</S25>
   </NCER>
   <NANR>
     <S01>Intervalle :</S01>
@@ -478,36 +483,36 @@
   </EditRomInfo>
   <Dialog>
     <!-- Select Mode Color -->
-    <S00>Choose the selection mode</S00>
-    <S01>Accept</S01>
-    <S02>Click on a color of the image</S02>
-    <S03>Choose color from RGB values</S03>
+    <S00>Choisissez le mode de sélection</S00>
+    <S01>Accepter</S01>
+    <S02>Cliquer sur une couleur de l'image</S02>
+    <S03>Choisir la couleur depuis les valeurs RGB</S03>
     <!-- Select offset -->
-    <S04>Choose the offset</S04>
-    <S05>Write the offset where the reading will start</S05>
+    <S04>Choisissez l'offset</S04>
+    <S05>Écrire l'offset où la lecture débutera</S05>
     <!-- FAT Extract -->
-    <S06>Extract files</S06>
+    <S06>Extraire les archives</S06>
     <S07>Options</S07>
-    <S08>Number of files</S08>
-    <S09>Read at:</S09>
-    <S0A>Value length:</S0A>
+    <S08>Numéro des archives</S08>
+    <S09>Lire à :</S09>
+    <S0A>Longueur de la valeur :</S0A>
     <S0B>Big Endian</S0B>
-    <S0C>Number of files:</S0C>
-    <S0D>Calculate</S0D>
+    <S0C>Numéro des archives :</S0C>
+    <S0D>Calculer</S0D>
     <S0E>Offset</S0E>
-    <S0F>Start offset:</S0F>
-    <S10>Value length:</S10>
+    <S0F>Début de l'offset :</S0F>
+    <S10>Longueur de la valeur :</S10>
     <S11>Big Endian</S11>
-    <S12>Type offset</S12>
-    <S13>Start offset</S13>
-    <S14>Start offset / End offset</S14>
-    <S15>Start offset / Size</S15>
-    <S16>End offset</S16>
-    <S17>Relative offset at</S17>
-    <S18>Offset:</S18>
-    <S19>First file</S19>
-    <S1A>Read offsets</S1A>
-    <S1B>Hexadecimal</S1B>
-    <S1C>Accept</S1C>
+    <S12>Type d'offset</S12>
+    <S13>Début de l'offset</S13>
+    <S14>Début de l'offset / Fin de l'offset</S14>
+    <S15>Début de l'offset / Taille</S15>
+    <S16>Fin de l'offset</S16>
+    <S17>Offset relatif à</S17>
+    <S18>Offset :</S18>
+    <S19>Première archive</S19>
+    <S1A>Lire les offsets</S1A>
+    <S1B>Hexadécimal</S1B>
+    <S1C>Accepter</S1C>
   </Dialog>
 </Language>

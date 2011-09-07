@@ -43,6 +43,8 @@ namespace Tinke
         int filesSupported;
         int nFiles;
         bool isMono;
+        Keys keyDown;
+        
 
         public Sistema()
         {
@@ -702,6 +704,15 @@ namespace Tinke
                     toolStripOpenAs.Enabled = false;
                     btnDescomprimir.Enabled = true;
                 }
+
+                if (keyDown != Keys.F1)
+                {
+                    if (ad == 2)
+                        MessageBox.Show("Test");
+                    KeyEventArgs eventKey = new KeyEventArgs(keyDown);
+                    keyDown = Keys.F1;
+                    this.OnKeyDown(eventKey);
+                }
             }
             else
             {
@@ -777,6 +788,10 @@ namespace Tinke
                 return;
             }
 
+            Thread wait = new Thread(ThreadEspera);
+            if (!isMono)
+                wait.Start("S04");
+
             uncompress = accion.Extract();
 
             if (!(uncompress.files is List<Archivo>) && !(uncompress.folders is List<Carpeta>)) // En caso de que falle la extracción
@@ -806,6 +821,9 @@ namespace Tinke
 
             debug.Añadir_Texto(sb.ToString());
             sb.Length = 0;
+
+            if (!isMono)
+                wait.Abort();
         }
         private void UncompressFolder()
         {
@@ -964,18 +982,47 @@ namespace Tinke
                 sb.Length = 0;
             }
         }
+        static int ad = 0;
+        private void Sistema_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == keyDown)
+                return;
+
+            if (e.KeyCode == Keys.Space && treeSystem.Focused)
+            {
+                btnSee.PerformClick();
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyCode == Keys.P && toolStripOpenAs.Enabled && treeSystem.Focused)
+            {
+                toolStripMenuItem1.PerformClick();
+                e.SuppressKeyPress = true;
+                keyDown = e.KeyCode;
+                ad++;
+            }
+            else if (e.KeyCode == Keys.T && toolStripOpenAs.Enabled && treeSystem.Focused)
+            {
+                toolStripMenuItem2.PerformClick();
+                e.SuppressKeyPress = true;
+                keyDown = e.KeyCode;
+            }
+            else if (e.KeyCode == Keys.M && toolStripOpenAs.Enabled && treeSystem.Focused)
+            {
+                toolStripMenuItem3.PerformClick();
+                e.SuppressKeyPress = true;
+                keyDown = e.KeyCode;
+            }
+            else if (e.KeyCode == Keys.D && btnDescomprimir.Enabled && treeSystem.Focused)
+            {
+                btnDescomprimir.PerformClick();
+                e.SuppressKeyPress = true;
+                keyDown = e.KeyCode;
+            }
+
+        }
         private void Sistema_KeyUp(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Space && treeSystem.Focused)
-                btnSee.PerformClick();
-            else if (e.KeyCode == Keys.P && toolStripOpenAs.Enabled && treeSystem.Focused)
-                toolStripMenuItem1.PerformClick();
-            else if (e.KeyCode == Keys.T && toolStripOpenAs.Enabled && treeSystem.Focused)
-                toolStripMenuItem2.PerformClick();
-            else if (e.KeyCode == Keys.M && toolStripOpenAs.Enabled && treeSystem.Focused)
-                toolStripMenuItem3.PerformClick();
-            else if (e.KeyCode == Keys.D && btnDescomprimir.Enabled && treeSystem.Focused)
-                btnDescomprimir.PerformClick();
+            keyDown = Keys.Escape;
         }
 
         private void toolStripInfoRom_Click(object sender, EventArgs e)

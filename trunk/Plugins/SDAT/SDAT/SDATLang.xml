@@ -81,13 +81,13 @@
       <S0C>Sauver SDAT</S0C>
       <S0D>Changer d'archive</S0D>
       <S0E>Information</S0E>
-      <S0F>Select the folder to save the files</S0F>
+      <S0F>Sélectionnez le dossier pour sauvegarder les archives</S0F>
       <S10>
-        Do you want to extract the decompressed folder instead of
-        the compressed files?
+        Voulez-vous extraire le dossier décompressé au lieu
+        des archives compressées ?
       </S10>
-      <S11>Path</S11>
-      <S12>Pack</S12>
+      <S11>Chemin</S11>
+      <S12>Compresser</S12>
     </iSDAT>
     <Messages>
       <S00>Lecture des archives SDAT terminée</S00>

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Windows.Forms;
 using PluginInterface;
 
 namespace NotManagedNetPlugins
@@ -11,11 +12,11 @@ namespace NotManagedNetPlugins
     {
         #region Plugins to load
         [DllImport("LufiaCurseSinistrals.dll")]
-        public unsafe static extern bool XIsCompatible(char* gameCode);
-        [DllImport("LufiaCurseSinistrals.dll")]
-        public unsafe static extern char* XGetFormat(char* filePath, int id);
-        [DllImport("LufiaCurseSinistrals.dll")]
-        public unsafe static extern char** XDecompress(char* file1, char* file2, char* file3, int id, int* num_files);
+        public static extern bool XIsCompatible(string GameCode);
+        [DllImport("LufiaCurseSinistrals.dll", CharSet = CharSet.Ansi, ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+        public unsafe static extern System.IntPtr XGetFormat(string filePath, int id);
+        [DllImport("LufiaCurseSinistrals.dll", CharSet = CharSet.Ansi, ExactSpelling = true, CallingConvention = CallingConvention.Cdecl)]
+        public unsafe static extern bool XDecompress(string file1, string file2, string file3, string id, int* num_files);
         #endregion
 
         IPluginHost pluginHost;
@@ -28,59 +29,51 @@ namespace NotManagedNetPlugins
             this.gameCode = gameCode;
         }
 
-        public unsafe bool EsCompatible()
+        public bool EsCompatible()
         {
-            fixed (char* gameCodeP = gameCode)
+            if (File.Exists(Application.StartupPath + Path.DirectorySeparatorChar + "Plugins" + Path.DirectorySeparatorChar +
+                "LufiaCurseSinistrals.dll"))
             {
-                if (File.Exists("LufiaCurseSinistrals.dll"))
+                if (XIsCompatible(gameCode))
                 {
-                    if (XIsCompatible(gameCodeP))
-                    {
-                        pluginLoaded = 0;
-                        return true;
-                    }
+                    pluginLoaded = 0;
+                    return true;
                 }
             }
 
             return false;
         }
 
-        public unsafe Formato Get_Formato(string nombre, byte[] magic, int id)
+        public Formato Get_Formato(string nombre, byte[] magic, int id)
         {
-            fixed (char* filePath = nombre)
+            switch (pluginLoaded)
             {
-                switch (pluginLoaded)
-                {
-                    case 0:
-                        return StringToFormat(new String(XGetFormat(filePath, id)));
-                }
+                case 0:
+                    IntPtr p = XGetFormat(nombre, id);
+                    string c = Marshal.PtrToStringAnsi(p);
+                    return StringToFormat(c);
             }
 
             return Formato.Desconocido;
         }
-        
+
         public unsafe void Leer(string archivo, int id)
         {
-            fixed (char* filePath = archivo.ToCharArray())
+            switch (pluginLoaded)
             {
-                switch (pluginLoaded)
-                {
-                    case 0:
-                        if (id == 0x15)
-                        {
-                            fixed (char* file2 = pluginHost.Search_File(0x16), file3 = pluginHost.Search_File(0x17))
-                            {
-                                int num;
-                                char** decompressedFiles = XDecompress(filePath, file2, file3, id, &num);
-                                Carpeta decompressedFolder = Get_DecompressedFiles(decompressedFiles, num);
-                                pluginHost.Set_Files(decompressedFolder);
-                            }
-                        }
-                        break;
-                }
+                case 0:
+                    if (id == 0x15)
+                    {
+                        int num = 0;
+                        bool b = XDecompress(archivo, pluginHost.Search_File(0x16), pluginHost.Search_File(0x17), id.ToString(), &num);
+                        String txtfile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + "tinke_file_list.txt";
+                        Carpeta decompressedFolder = Get_DecompressedFiles(txtfile, num);
+                        pluginHost.Set_Files(decompressedFolder);
+                    }
+                    break;
             }
         }
-        public unsafe System.Windows.Forms.Control Show_Info(string archivo, int id)
+        public System.Windows.Forms.Control Show_Info(string archivo, int id)
         {
             return new System.Windows.Forms.Control();
         }
@@ -121,23 +114,78 @@ namespace NotManagedNetPlugins
                     return Formato.Desconocido;
             }
         }
-        public unsafe Carpeta Get_DecompressedFiles(char** filesP, int num)
+        public Carpeta Get_DecompressedFiles(string txtFile, int num)
         {
-            String[] files = new string[num];
+            String[] files = File.ReadAllLines(txtFile);
             Carpeta decompressed = new Carpeta();
             decompressed.files = new List<Archivo>();
-            for (int i = 0; i < num; i++)
+
+            String currFolder = files[0].Substring((pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar).Length);
+            currFolder = currFolder.Substring(0, currFolder.IndexOf(Path.DirectorySeparatorChar));
+            String relativePath = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + currFolder;
+            currFolder = "";
+            for (int i = 0; i < files.Length; i++)
             {
-                files[i] = new String(filesP[i]);
-                Archivo newFile = new Archivo();
-                newFile.name = Path.GetFileName(files[i]);
-                newFile.offset = 0x00;
-                newFile.path = files[i];
-                newFile.size = (uint)new FileInfo(files[i]).Length;
-                decompressed.files.Add(newFile);
+                decompressed = Recursive_GetDirectories(files[i], decompressed, currFolder, relativePath);
             }
 
             return decompressed;
+        }
+        public Carpeta Recursive_GetDirectories(string file, Carpeta currFolder, string pathFolder, string relativePath)
+        {
+            String directoryPath = new FileInfo(file).DirectoryName;
+            if (directoryPath.Replace(relativePath, "") == pathFolder)
+            {
+                Archivo newFile = new Archivo();
+                newFile.name = Path.GetFileName(file);
+                newFile.offset = 0x00;
+                newFile.path = file;
+                newFile.size = (uint)new FileInfo(file).Length;
+
+                if (!(currFolder.files is List<Archivo>))
+                    currFolder.files = new List<Archivo>();
+                currFolder.files.Add(newFile);
+                return currFolder;
+            }
+            else
+            {
+                Carpeta newFolder = new Carpeta(); ;
+                if (currFolder.folders is List<Carpeta>)
+                {
+                    string folderName = file.Replace(relativePath + pathFolder, "");
+                    folderName = folderName.Substring(1, folderName.Substring(2).IndexOf(Path.DirectorySeparatorChar) + 1);
+
+                    int i;
+                    for (i = 0; i < currFolder.folders.Count; i++)
+                    {
+                        if (currFolder.folders[i].name == folderName)
+                        {
+                            newFolder = currFolder.folders[i];
+                            break;
+                        }
+                    }
+
+                    if (!(newFolder.name is String))
+                        goto Create_Folder;
+
+                    pathFolder += Path.DirectorySeparatorChar + newFolder.name;
+                    newFolder = Recursive_GetDirectories(file, newFolder, pathFolder, relativePath);
+                    currFolder.folders[i] = newFolder;
+
+                    return currFolder;
+                }
+
+            Create_Folder:
+                newFolder.name = file.Replace(relativePath + pathFolder, "");
+                newFolder.name = newFolder.name.Substring(1, newFolder.name.Substring(2).IndexOf(Path.DirectorySeparatorChar) + 1);
+                if (!(currFolder.folders is List<Carpeta>))
+                    currFolder.folders = new List<Carpeta>();
+
+                pathFolder += Path.DirectorySeparatorChar + newFolder.name;
+                newFolder = Recursive_GetDirectories(file, newFolder, pathFolder, relativePath);
+                currFolder.folders.Add(newFolder);
+                return currFolder;
+            }
         }
     }
 }

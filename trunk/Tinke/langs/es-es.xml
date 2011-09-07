@@ -216,10 +216,15 @@
     <S1F>
       Los siguientes archivos faltan
       {0}
-      
+
       Por favor descargue el programa de nuevo desde:
       http://code.google.com/p/tinke
     </S1F>
+    <S20>
+      Error al cargar el archivo: {0}.
+      No se pudo obtener el ensamblado. Error:
+      {1}
+    </S20>
   </Messages>
   <NCLR>
     <S01>Nº de paleta:</S01>
