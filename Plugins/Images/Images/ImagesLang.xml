@@ -185,8 +185,8 @@
       <S1F>Couleur du fond</S1F>
       <S20>Supprimer</S20>
       <S21>Importer</S21>
-      <S22>Set transparent color</S22>
-      <S23>Choose color doing click on the image?</S23>
+      <S22>Fixer la couleur transparente</S22>
+      <S23>Choisir la couleur en fesant un clic sur l'image ?</S23>
     </ImageControl>
   </Français>
 </Language>

@@ -207,6 +207,11 @@
       Please, download the program from the web page:
       http://code.google.com/p/tinke
     </S1F>
+    <S20>
+      Error loading the file: {0}.
+      The assembly can not be obtained. Error:
+      {1}
+    </S20>
   </Messages>
   <NCLR>
     <S01># palette:</S01>

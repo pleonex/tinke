@@ -75,7 +75,7 @@ namespace Tinke
                     if (fileName.EndsWith("PluginInterface.dll"))
                         continue;
 
-
+                    
                     Assembly assembly = Assembly.LoadFile(fileName);
                     foreach (Type pluginType in assembly.GetTypes())
                     {
@@ -108,9 +108,11 @@ namespace Tinke
                 }
                 catch (Exception e)
                 {
-                    MessageBox.Show("Fallo al cargar el plugin: " + fileName + "\nEstá obsoleto.");
-                    Console.WriteLine("Fallo al cargar el plugin: " + fileName);
-                    Console.WriteLine(e.Message);
+                    if (e is BadImageFormatException) // The DLL is written in other language
+                        continue;
+
+                    MessageBox.Show(String.Format(Tools.Helper.ObtenerTraduccion("Messages", "S20"), fileName, e.Message));
+                    Console.WriteLine(String.Format(Tools.Helper.ObtenerTraduccion("Messages", "S20"), fileName, e.Message));
                     continue;
                 }
 

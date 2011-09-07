@@ -16,6 +16,8 @@ namespace Tinke.Dialog
         {
             InitializeComponent();
             ReadLanguage();
+
+            numericOffset.Select(0, 1);
         }
         private void ReadLanguage()
         {

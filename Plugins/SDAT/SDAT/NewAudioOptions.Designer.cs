@@ -202,7 +202,7 @@
             this.numericVolume.Size = new System.Drawing.Size(90, 20);
             this.numericVolume.TabIndex = 7;
             this.numericVolume.Value = new decimal(new int[] {
-            150,
+            185,
             0,
             0,
             0});
@@ -213,9 +213,9 @@
             this.label5.AutoSize = true;
             this.label5.Location = new System.Drawing.Point(22, 215);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(62, 13);
+            this.label5.Size = new System.Drawing.Size(129, 13);
             this.label5.TabIndex = 8;
-            this.label5.Text = "Volume (%):";
+            this.label5.Text = "Volume (0 to not change):";
             // 
             // NewAudioOptions
             // 
