@@ -312,7 +312,7 @@ namespace Tinke.Nitro
                 if (currFile.name.StartsWith("overlay")) // Los overlays no van en esta sección
                     continue;
 
-                if (currFile.offset != 0x00)
+                if (currFile.offset != 0x00 && currFile.packFile == romFile)
                 {
                     br.BaseStream.Position = currFile.offset;
                     bw.Write(br.ReadBytes((int)currFile.size));
@@ -320,7 +320,16 @@ namespace Tinke.Nitro
                 }
                 else // El archivo es modificado y no está en la ROM
                 {
-                    bw.Write(File.ReadAllBytes(currFile.path));
+                    if (currFile.offset != 0x00)
+                    {
+                        BinaryReader br2 = new BinaryReader(File.OpenRead(currFile.packFile));
+                        br2.BaseStream.Position = currFile.offset;
+                        bw.Write(br.ReadBytes((int)currFile.size));
+                        br2.Close();
+                    }
+                    else
+                        bw.Write(File.ReadAllBytes(currFile.path));
+
                     bw.Flush();
                 }
             }
@@ -337,11 +346,17 @@ namespace Tinke.Nitro
                 Archivo folderFile = new Archivo();
                 folderFile.name = currFolder.name;
                 folderFile.id = currFolder.id;
-                if (((String)currFolder.tag).Length != 16)
+                if (((String)currFolder.tag)[0] != 'O')
+                {
                     folderFile.path = ((string)currFolder.tag).Substring(8);
+                    folderFile.size = Convert.ToUInt32(((String)currFolder.tag).Substring(0, 8), 16);
+                }
                 else
-                    folderFile.offset = Convert.ToUInt32(((String)currFolder.tag).Substring(8), 16);
-                folderFile.size = Convert.ToUInt32(((String)currFolder.tag).Substring(0, 8), 16);
+                {
+                    folderFile.size = Convert.ToUInt32(((String)currFolder.tag).Substring(1, 8), 16);
+                    folderFile.offset = Convert.ToUInt32(((String)currFolder.tag).Substring(9, 8), 16);
+                    folderFile.packFile = ((string)currFolder.tag).Substring(17);
+                }
 
                 return folderFile;
             }

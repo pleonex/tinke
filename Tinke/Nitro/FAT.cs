@@ -20,7 +20,7 @@ namespace Tinke.Nitro
             {
                 UInt32 currOffset = br.ReadUInt32();
                 UInt32 currSize = br.ReadUInt32() - currOffset;
-                Asignar_Archivo(i, currOffset, currSize, root);
+                Asignar_Archivo(i, currOffset, currSize, file, root);
             }
 
             return root;
@@ -46,7 +46,7 @@ namespace Tinke.Nitro
                 else if (currFile.name.StartsWith("overlay7"))
                 {
                     bw.Write(offsetOverlay7);
-                    offsetOverlay9 += currFile.size;
+                    offsetOverlay7 += currFile.size;
                     bw.Write(offsetOverlay7);
                     continue;
                 }
@@ -68,11 +68,17 @@ namespace Tinke.Nitro
                 Archivo folderFile = new Archivo();
                 folderFile.name = currFolder.name;
                 folderFile.id = currFolder.id;
-                if (((String)currFolder.tag).Length != 16)
+                if (((String)currFolder.tag)[0] != 'O')
+                {
                     folderFile.path = ((string)currFolder.tag).Substring(8);
+                    folderFile.size = Convert.ToUInt32(((String)currFolder.tag).Substring(0, 8), 16);
+                }
                 else
-                    folderFile.offset = Convert.ToUInt32(((String)currFolder.tag).Substring(8), 16);
-                folderFile.size = Convert.ToUInt32(((String)currFolder.tag).Substring(0, 8), 16);
+                {
+                    folderFile.size = Convert.ToUInt32(((String)currFolder.tag).Substring(1, 8), 16);
+                    folderFile.offset = Convert.ToUInt32(((String)currFolder.tag).Substring(9, 8), 16);
+                    folderFile.packFile = ((string)currFolder.tag).Substring(17);
+                }
 
                 return folderFile;
             }
@@ -116,7 +122,7 @@ namespace Tinke.Nitro
             return new Archivo();
         }
 
-        private static void Asignar_Archivo(int id, UInt32 offset, UInt32 size, Carpeta currFolder)
+        private static void Asignar_Archivo(int id, UInt32 offset, UInt32 size, String romFile, Carpeta currFolder)
         {
             if (currFolder.files is List<Archivo>)
             {
@@ -127,6 +133,7 @@ namespace Tinke.Nitro
                         Archivo newFile = currFolder.files[i];
                         newFile.offset = offset;
                         newFile.size = size;
+                        newFile.packFile = romFile;
                         currFolder.files.RemoveAt(i);
                         currFolder.files.Insert(i, newFile);
                         return;
@@ -136,7 +143,7 @@ namespace Tinke.Nitro
 
             if (currFolder.folders is List<Carpeta>)
                 foreach (Carpeta subFolder in currFolder.folders)
-                    Asignar_Archivo(id, offset, size, subFolder);
+                    Asignar_Archivo(id, offset, size, romFile, subFolder);
         }
 
     }

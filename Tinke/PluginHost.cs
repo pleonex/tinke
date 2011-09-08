@@ -54,7 +54,7 @@ namespace Tinke
                 }
             }
         }
-        ~PluginHost()
+        public void Dispose()
         {
             try { System.IO.Directory.Delete(tempFolder, true); }
             catch { MessageBox.Show("No se pudo eliminar la carpeta temporal."); }

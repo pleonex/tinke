@@ -168,6 +168,7 @@ namespace Tinke.Dialog
                 {
                     Archivo currFile = new Archivo();
                     currFile.name = "File " + i.ToString();
+                    currFile.packFile = file;
 
                     // Gets the offset and size
                     if (radioOffsetStart.Checked)
@@ -291,24 +292,6 @@ namespace Tinke.Dialog
             {
                 if (DialogResult != System.Windows.Forms.DialogResult.OK)
                     return new Carpeta();
-
-                // Save all extracted files
-                BinaryReader br = new BinaryReader(File.OpenRead(file));
-                for (int i = 0; i < fat.num_files; i++)
-                {
-                    Archivo currFile = fat.files[i];
-                    if (folder == "")
-                        currFile.path = Path.GetTempFileName();
-                    else
-                        currFile.path = folder + Path.DirectorySeparatorChar + currFile.name;
-                    currFile.offset = 0x00;
-
-                    br.BaseStream.Position = fat.files[i].offset;
-                    File.WriteAllBytes(currFile.path, br.ReadBytes((int)currFile.size));
-
-                    fat.files[i] = currFile;
-                }
-                br.Close();
 
                 Carpeta newFolder = new Carpeta();
                 newFolder.files = new List<Archivo>();

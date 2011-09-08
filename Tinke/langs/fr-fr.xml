@@ -73,7 +73,7 @@
       l'archive compressée ?
     </S3B>
     <S3C>Information complète de l'archive</S3C>
-    <S3D>Pack</S3D>
+    <S3D>Compresser</S3D>
   </Sistema>
   <RomInfo>
     <S01>Informations de la ROM</S01>
@@ -205,8 +205,8 @@
       http://code.google.com/p/tinke
     </S1F>
     <S20>
-      Error loading the file: {0}.
-      The assembly can not be obtained. Error:
+      Erreur de chargement de l'archive : {0}.
+      L'assemblage ne peut pas être obtenu. Erreur :
       {1}
     </S20>
   </Messages>
