@@ -35,6 +35,34 @@ namespace DSDecmp
 
             return FormatCompress.Invalid;
         }
+        public static FormatCompress Get_Format(FileStream input, bool arm9)
+        {
+            CompressionFormat fmt = null;
+
+            foreach (FormatCompress f in Enum.GetValues(typeof(FormatCompress)))
+            {
+                switch (f)
+                {
+                    case FormatCompress.LZOVL: fmt = new LZOvl(); break;
+                    case FormatCompress.LZ10: fmt = new LZ10(); break;
+                    case FormatCompress.LZ11: fmt = new LZ11(); break;
+                    case FormatCompress.RLE: fmt = new RLE(); break;
+                    case FormatCompress.HUFF: fmt = new Huffman(); break;
+                }
+
+                if (fmt == null)
+                    continue;
+
+                long fLength = input.Length;
+                if (arm9)
+                    fLength -= 0xC;
+
+                if (fmt.Supports(input, fLength))
+                    return f;
+            }
+
+            return FormatCompress.Invalid;
+        }
 
         #region compression methods
         public static void Compress(string input, string output, FormatCompress format)

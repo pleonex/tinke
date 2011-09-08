@@ -212,6 +212,7 @@
       The assembly can not be obtained. Error:
       {1}
     </S20>
+    <S21>Time reading external files:</S21>
   </Messages>
   <NCLR>
     <S01># palette:</S01>

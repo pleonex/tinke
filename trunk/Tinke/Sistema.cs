@@ -102,9 +102,6 @@ namespace Tinke
         }
         void Sistema_Load(object sender, EventArgs e)
         {
-            //SplashScreen splash = new SplashScreen(); // Splash Screen del concurso de Scene Beta
-            //splash.ShowDialog();
-
             // Iniciamos la lectura del archivo.
             string[] filesToRead = new string[1];
             OpenFileDialog o = new OpenFileDialog();
@@ -129,16 +126,18 @@ namespace Tinke
             }
 
             Thread espera = new System.Threading.Thread(ThreadEspera);
-            //if (!isMono)
-            //    espera.Start("S02");
+            if (!isMono)
+                espera.Start("S02");
 
             if (filesToRead.Length == 1 && Path.GetFileName(filesToRead[0]).ToUpper().EndsWith(".NDS")) // Si se ha seleccionado un juego de la NDS
                 ReadGame(filesToRead[0]);
+            else if (filesToRead.Length == 1 && Directory.Exists(filesToRead[0]))
+                ReadFolder(filesToRead[0]);
             else
                 ReadFiles(filesToRead);
 
-            //if (!isMono)
-            //    espera.Abort();
+            if (!isMono)
+                espera.Abort();
 
 
             debug = new Debug();
@@ -203,7 +202,7 @@ namespace Tinke
             toolStripInfoRom.Enabled = false;
             btnSaveROM.Enabled = false;
 
-            romInfo = new RomInfo(); // Para que se formen errores...
+            romInfo = new RomInfo(); // Para que no se formen errores...
             DateTime startTime = DateTime.Now;
 
             accion = new Acciones("", "NO GAME");
@@ -238,15 +237,56 @@ namespace Tinke
             Get_SupportedFiles();
             DateTime t6 = DateTime.Now;
 
-            DateTime finalTime = DateTime.Now;
-            Console.Write("<br><u>Cálculo de tiempos:</u><ul><font size=\"2\" face=\"consolas\">");
-            Console.WriteLine("<li>Tiempo {0}: {1}</li>", "total", (finalTime - startTime).ToString());
-            Console.WriteLine("<li>Tiempo {0}: {1}</li>", "inicializar Acciones", (t1 - startTime).ToString());
-            Console.WriteLine("<li>Tiempo {0}: {1}</li>", "en crear nodo principal", (t2 - t1).ToString());
-            Console.WriteLine("<li>Tiempo {0}: {1}</li>", "en asignar ROOT", (t3 - t2).ToString());
-            Console.WriteLine("<li>Tiempo {0}: {1}</li>", "en obtener los formatos", (t4 - t3).ToString());
-            Console.WriteLine("<li>Tiempo {0}: {1}</li>", "en jerarquizar el árbol", (t5 - t4).ToString());
-            Console.WriteLine("<li>Tiempo {0}: {1}</li>", "obtener el porcentaje de archivos soportados", (t6 - t5).ToString());
+            XElement xml = Tools.Helper.ObtenerTraduccion("Messages");
+            Console.Write("<br><u>" + xml.Element("S0F").Value + "</u><ul><font size=\"2\" face=\"consolas\">");
+            Console.WriteLine("<li>" + xml.Element("S10").Value + (t6 - startTime).ToString() + "</li>");
+            Console.WriteLine("<li>" + xml.Element("S12").Value + (t1 - startTime).ToString() + "</li>");
+            Console.WriteLine("<li>" + xml.Element("S21").Value + (t2 - t1).ToString() + "</li>");
+            Console.WriteLine("<li>" + xml.Element("S16").Value + (t3 - t2).ToString() + "</li>");
+            Console.WriteLine("<li>" + xml.Element("S17").Value + (t4 - t3).ToString() + "</li>");
+            Console.WriteLine("<li>" + xml.Element("S18").Value + (t5 - t4).ToString() + "</li>");
+            Console.WriteLine("<li>" + xml.Element("S19").Value + (t6 - t5).ToString() + "</li>");
+            Console.Write("</font></ul><br>");
+        }
+        private void ReadFolder(string folder)
+        {
+            toolStripInfoRom.Enabled = false;
+            btnSaveROM.Enabled = false;
+
+            romInfo = new RomInfo(); // Para que no se formen errores...
+            DateTime startTime = DateTime.Now;
+
+            accion = new Acciones("", "NO GAME");
+            DateTime t1 = DateTime.Now;
+
+            // Obtenemos el sistema de archivos
+            Carpeta root = new Carpeta();
+            root.name = "root";
+            root.id = 0xF000;
+            root = accion.Recursive_GetDirectories(folder, root);
+            DateTime t2 = DateTime.Now;
+
+            accion.Root = root;
+            DateTime t3 = DateTime.Now;
+
+            Set_Formato(root);
+            DateTime t4 = DateTime.Now;
+            treeSystem.Nodes.Add(Jerarquizar_Nodos(root)); // Mostramos el árbol
+            DateTime t5 = DateTime.Now;
+            treeSystem.Nodes[0].Expand();
+
+            Get_SupportedFiles();
+            DateTime t6 = DateTime.Now;
+
+            XElement xml = Tools.Helper.ObtenerTraduccion("Messages");
+            Console.Write("<br><u>" + xml.Element("S0F").Value + "</u><ul><font size=\"2\" face=\"consolas\">");
+            Console.WriteLine("<li>" + xml.Element("S10").Value + (t6 - startTime).ToString() + "</li>");
+            Console.WriteLine("<li>" + xml.Element("S12").Value + (t1 - startTime).ToString() + "</li>");
+            Console.WriteLine("<li>" + xml.Element("S21").Value + (t2 - t1).ToString() + "</li>");
+            Console.WriteLine("<li>" + xml.Element("S16").Value + (t3 - t2).ToString() + "</li>");
+            Console.WriteLine("<li>" + xml.Element("S17").Value + (t4 - t3).ToString() + "</li>");
+            Console.WriteLine("<li>" + xml.Element("S18").Value + (t5 - t4).ToString() + "</li>");
+            Console.WriteLine("<li>" + xml.Element("S19").Value + (t6 - t5).ToString() + "</li>");
             Console.Write("</font></ul><br>");
         }
         private void Sistema_FormClosing(object sender, FormClosingEventArgs e)
@@ -800,6 +840,7 @@ namespace Tinke
 
             if (!(uncompress.files is List<Archivo>) && !(uncompress.folders is List<Carpeta>)) // En caso de que falle la extracción
             {
+                keyDown = Keys.Escape;
                 MessageBox.Show(Tools.Helper.ObtenerTraduccion("Sistema", "S36"));
                 return;
             }
@@ -1251,6 +1292,7 @@ namespace Tinke
 
             TreeNode selected = treeSystem.SelectedNode;
             CarpetaANodo(uncompress, ref selected);
+
             selected.ImageIndex = accion.ImageFormatFile(Formato.Comprimido);
             selected.SelectedImageIndex = accion.ImageFormatFile(Formato.Comprimido);
 
@@ -1266,6 +1308,9 @@ namespace Tinke
 
             if (!isMono)
                 wait.Abort();
+
+            debug.Añadir_Texto(sb.ToString());
+            sb.Length = 0;
         }
 
         private void linkAboutBox_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

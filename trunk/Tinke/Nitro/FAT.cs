@@ -23,6 +23,7 @@ namespace Tinke.Nitro
                 Asignar_Archivo(i, currOffset, currSize, file, root);
             }
 
+            br.Close();
             return root;
         }
         public static void EscribirFAT(string salida, Carpeta root, int nFiles, uint offsetFAT, uint offsetOverlay9,

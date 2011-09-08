@@ -225,6 +225,7 @@
       No se pudo obtener el ensamblado. Error:
       {1}
     </S20>
+    <S21>Tiempo en leer archivos exteriores:</S21>
   </Messages>
   <NCLR>
     <S01>Nº de paleta:</S01>
