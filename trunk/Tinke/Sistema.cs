@@ -44,7 +44,7 @@ namespace Tinke
         int nFiles;
         bool isMono;
         Keys keyDown;
-        
+
 
         public Sistema()
         {
@@ -98,7 +98,7 @@ namespace Tinke
             LeerIdioma();
             #endregion
             this.Load += new EventHandler(Sistema_Load);
-
+            keyDown = Keys.Escape;
         }
         void Sistema_Load(object sender, EventArgs e)
         {
@@ -129,16 +129,16 @@ namespace Tinke
             }
 
             Thread espera = new System.Threading.Thread(ThreadEspera);
-            if (!isMono)
-                espera.Start("S02");
+            //if (!isMono)
+            //    espera.Start("S02");
 
             if (filesToRead.Length == 1 && Path.GetFileName(filesToRead[0]).ToUpper().EndsWith(".NDS")) // Si se ha seleccionado un juego de la NDS
                 ReadGame(filesToRead[0]);
             else
                 ReadFiles(filesToRead);
 
-            if (!isMono)
-                espera.Abort();
+            //if (!isMono)
+            //    espera.Abort();
 
 
             debug = new Debug();
@@ -271,8 +271,12 @@ namespace Tinke
                 {
                     if (MessageBox.Show(Tools.Helper.ObtenerTraduccion("Sistema", "S39"), Tools.Helper.ObtenerTraduccion("Sistema", "S3A"),
                         MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == System.Windows.Forms.DialogResult.Cancel)
+                    {
                         e.Cancel = true;
+                        return;
+                    }
                 }
+                accion.Dispose();
             }
         }
 
@@ -408,6 +412,7 @@ namespace Tinke
             fnt.name = "fnt.bin";
             fnt.offset = romInfo.Cabecera.fileNameTableOffset;
             fnt.size = romInfo.Cabecera.fileNameTableSize;
+            fnt.packFile = accion.ROMFile;
             fnt.id = (ushort)accion.LastFileID;
             accion.LastFileID++;
             ftc.files.Add(fnt);
@@ -416,6 +421,7 @@ namespace Tinke
             fat.name = "fat.bin";
             fat.offset = romInfo.Cabecera.FAToffset;
             fat.size = romInfo.Cabecera.FATsize;
+            fat.packFile = accion.ROMFile;
             fat.id = (ushort)accion.LastFileID;
             accion.LastFileID++;
             ftc.files.Add(fat);
@@ -424,6 +430,7 @@ namespace Tinke
             arm9.name = "arm9.bin";
             arm9.offset = romInfo.Cabecera.ARM9romOffset;
             arm9.size = romInfo.Cabecera.ARM9size;
+            arm9.packFile = accion.ROMFile;
             arm9.id = (ushort)accion.LastFileID;
             accion.LastFileID++;
             ftc.files.Add(arm9);
@@ -432,6 +439,7 @@ namespace Tinke
             arm7.name = "arm7.bin";
             arm7.offset = romInfo.Cabecera.ARM7romOffset;
             arm7.size = romInfo.Cabecera.ARM7size;
+            arm7.packFile = accion.ROMFile;
             arm7.id = (ushort)accion.LastFileID;
             accion.LastFileID++;
             ftc.files.Add(arm7);
@@ -442,6 +450,7 @@ namespace Tinke
                 y9.name = "y9.bin";
                 y9.offset = romInfo.Cabecera.ARM9overlayOffset;
                 y9.size = romInfo.Cabecera.ARM9overlaySize;
+                y9.packFile = accion.ROMFile;
                 y9.id = (ushort)accion.LastFileID;
                 accion.LastFileID++;
                 ftc.files.Add(y9);
@@ -453,6 +462,7 @@ namespace Tinke
                 y7.name = "y7.bin";
                 y7.offset = romInfo.Cabecera.ARM7overlayOffset;
                 y7.size = romInfo.Cabecera.ARM7overlaySize;
+                y7.packFile = accion.ROMFile;
                 y7.id = (ushort)accion.LastFileID;
                 accion.LastFileID++;
                 ftc.files.Add(y7);
@@ -705,12 +715,10 @@ namespace Tinke
                     btnDescomprimir.Enabled = true;
                 }
 
-                if (keyDown != Keys.F1)
+                if (keyDown != Keys.Escape)
                 {
-                    if (ad == 2)
-                        MessageBox.Show("Test");
                     KeyEventArgs eventKey = new KeyEventArgs(keyDown);
-                    keyDown = Keys.F1;
+                    keyDown = Keys.Escape;
                     this.OnKeyDown(eventKey);
                 }
             }
@@ -738,7 +746,7 @@ namespace Tinke
 
             VisorHex hex;
             if (file.offset != 0x0)
-                hex = new VisorHex(accion.ROMFile, file.offset, file.size);
+                hex = new VisorHex(file.packFile, file.offset, file.size);
             else
                 hex = new VisorHex(file.path, 0, file.size);
 
@@ -788,10 +796,6 @@ namespace Tinke
                 return;
             }
 
-            Thread wait = new Thread(ThreadEspera);
-            if (!isMono)
-                wait.Start("S04");
-
             uncompress = accion.Extract();
 
             if (!(uncompress.files is List<Archivo>) && !(uncompress.folders is List<Carpeta>)) // En caso de que falle la extracción
@@ -821,9 +825,6 @@ namespace Tinke
 
             debug.Añadir_Texto(sb.ToString());
             sb.Length = 0;
-
-            if (!isMono)
-                wait.Abort();
         }
         private void UncompressFolder()
         {
@@ -892,7 +893,7 @@ namespace Tinke
             {
                 if (fileSelect.offset != 0x0)
                 {
-                    BinaryReader br = new BinaryReader(File.OpenRead(accion.ROMFile));
+                    BinaryReader br = new BinaryReader(File.OpenRead(fileSelect.packFile));
                     br.BaseStream.Position = fileSelect.offset;
                     File.WriteAllBytes(o.FileName, br.ReadBytes((int)fileSelect.size));
                     br.Close();
@@ -952,7 +953,7 @@ namespace Tinke
                 {
                     if (archivo.offset != 0x0)
                     {
-                        BinaryReader br = new BinaryReader(File.OpenRead(accion.ROMFile));
+                        BinaryReader br = new BinaryReader(File.OpenRead(archivo.packFile));
                         br.BaseStream.Position = archivo.offset;
                         File.WriteAllBytes(path + '\\' + archivo.name, br.ReadBytes((int)archivo.size));
                         br.Close();
@@ -982,7 +983,6 @@ namespace Tinke
                 sb.Length = 0;
             }
         }
-        static int ad = 0;
         private void Sistema_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == keyDown)
@@ -998,7 +998,6 @@ namespace Tinke
                 toolStripMenuItem1.PerformClick();
                 e.SuppressKeyPress = true;
                 keyDown = e.KeyCode;
-                ad++;
             }
             else if (e.KeyCode == Keys.T && toolStripOpenAs.Enabled && treeSystem.Focused)
             {
@@ -1012,9 +1011,11 @@ namespace Tinke
                 e.SuppressKeyPress = true;
                 keyDown = e.KeyCode;
             }
-            else if (e.KeyCode == Keys.D && btnDescomprimir.Enabled && treeSystem.Focused)
+            else if (e.KeyCode == Keys.D && treeSystem.Focused)
             {
-                btnDescomprimir.PerformClick();
+                if (btnDescomprimir.Enabled)
+                    btnDescomprimir.PerformClick();
+
                 e.SuppressKeyPress = true;
                 keyDown = e.KeyCode;
             }
@@ -1022,7 +1023,8 @@ namespace Tinke
         }
         private void Sistema_KeyUp(object sender, KeyEventArgs e)
         {
-            keyDown = Keys.Escape;
+            if (e.KeyCode == Keys.P || e.KeyCode == Keys.T || e.KeyCode == Keys.M || e.KeyCode == Keys.D)
+                keyDown = Keys.Escape;
         }
 
         private void toolStripInfoRom_Click(object sender, EventArgs e)
@@ -1225,13 +1227,18 @@ namespace Tinke
             if (dialog.ShowDialog() != System.Windows.Forms.DialogResult.OK)
                 return;
 
+            Thread wait = new Thread(ThreadEspera);
+            if (!isMono)
+                wait.Start("S04");
+
             Carpeta uncompress = dialog.Files;
             dialog.Dispose();
 
-            File.Delete(fileToRead);
-
             if (!(uncompress.files is List<Archivo>) || dialog.DialogResult != System.Windows.Forms.DialogResult.OK)
             {
+                if (!isMono)
+                    wait.Abort();
+
                 MessageBox.Show(Tools.Helper.ObtenerTraduccion("Sistema", "S36"));
                 return;
             }
@@ -1256,6 +1263,9 @@ namespace Tinke
             treeSystem.SelectedNode.Nodes.AddRange((TreeNode[])nodos);
             treeSystem.SelectedNode.Expand();
             #endregion
+
+            if (!isMono)
+                wait.Abort();
         }
 
         private void linkAboutBox_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

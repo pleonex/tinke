@@ -7,7 +7,8 @@ namespace PluginInterface
 {
     public struct Archivo
         {
-            public UInt32 offset;           // Offset dentro de la ROM 
+            public UInt32 offset;           // Offset inside of a pack file
+            public string packFile;
             public UInt32 size;             // Tamaño definido por la resta del offset inicial y el offset final
             public string name;             // Nombre dado en la FNT
             public UInt16 id;               // ID único de cada archivo.

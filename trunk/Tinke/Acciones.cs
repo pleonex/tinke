@@ -61,6 +61,10 @@ namespace Tinke
             pluginHost.event_SearchFile += new Func<int, String>(Save_File);
             Cargar_Plugins();
         }
+        public void Dispose()
+        {
+            pluginHost.Dispose();
+        }
 
         public void Cargar_Plugins()
         {
@@ -75,7 +79,7 @@ namespace Tinke
                     if (fileName.EndsWith("PluginInterface.dll"))
                         continue;
 
-                    
+
                     Assembly assembly = Assembly.LoadFile(fileName);
                     foreach (Type pluginType in assembly.GetTypes())
                     {
@@ -212,7 +216,7 @@ namespace Tinke
             if (selectFile.offset != 0x0)
             {
                 tempFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + selectFile.name;
-                br = new BinaryReader(File.OpenRead(file));
+                br = new BinaryReader(File.OpenRead(selectFile.packFile));
                 br.BaseStream.Position = selectFile.offset;
 
                 File.WriteAllBytes(tempFile, br.ReadBytes((int)selectFile.size));
@@ -366,7 +370,7 @@ namespace Tinke
             if (selectFile.offset != 0x0)
             {
                 tempFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + selectFile.name;
-                br = new BinaryReader(File.OpenRead(file));
+                br = new BinaryReader(File.OpenRead(selectFile.packFile));
                 br.BaseStream.Position = selectFile.offset;
 
                 BinaryWriter bw = new BinaryWriter(new FileStream(tempFile, FileMode.Create));
@@ -462,7 +466,7 @@ namespace Tinke
                 for (int i = 0; i < carpeta.files.Count; i++)
                 {
                     Archivo newFile = carpeta.files[i];
-                    newFile.formato = Get_Formato(newFile.path);
+                    newFile.formato = Get_Formato(newFile, -1);
                     carpeta.files[i] = newFile;
                 }
             }
@@ -515,8 +519,8 @@ namespace Tinke
             // Archivo convertido a medias a carpeta ;)
             files.id = file.id;
             if (file.offset != 0x00) // es medio archivo :)
-                files.tag = String.Format("{0:X}", file.size).PadLeft(8, '0') +
-                    String.Format("{0:X}", file.offset).PadLeft(8, '0');
+                files.tag = "O" + String.Format("{0:X}", file.size).PadLeft(8, '0') +
+                    String.Format("{0:X}", file.offset).PadLeft(8, '0') + file.packFile;
             else
                 files.tag = String.Format("{0:X}", file.size).PadLeft(8, '0') +
                                 file.path;
@@ -603,8 +607,8 @@ namespace Tinke
                         newFolder.name = currFolder.files[i].name;
                         newFolder.id = currFolder.files[i].id;
                         if (currFolder.files[i].offset != 0x00) // es medio archivo :)
-                            newFolder.tag = String.Format("{0:X}", currFolder.files[i].size).PadLeft(8, '0') +
-                                String.Format("{0:X}", currFolder.files[i].offset).PadLeft(8, '0');
+                            newFolder.tag = "O" + String.Format("{0:X}", currFolder.files[i].size).PadLeft(8, '0') +
+                                String.Format("{0:X}", currFolder.files[i].offset).PadLeft(8, '0') + currFolder.files[i].packFile;
                         else
                             newFolder.tag = String.Format("{0:X}", currFolder.files[i].size).PadLeft(8, '0') +
                                             currFolder.files[i].path;
@@ -780,11 +784,17 @@ namespace Tinke
                 Archivo folderFile = new Archivo();
                 folderFile.name = currFolder.name;
                 folderFile.id = currFolder.id;
-                if (((String)currFolder.tag).Length != 16)
+                if (((String)currFolder.tag)[0] != 'O')
+                {
                     folderFile.path = ((string)currFolder.tag).Substring(8);
+                    folderFile.size = Convert.ToUInt32(((String)currFolder.tag).Substring(0, 8), 16);
+                }
                 else
-                    folderFile.offset = Convert.ToUInt32(((String)currFolder.tag).Substring(8), 16);
-                folderFile.size = Convert.ToUInt32(((String)currFolder.tag).Substring(0, 8), 16);
+                {
+                    folderFile.size = Convert.ToUInt32(((String)currFolder.tag).Substring(1, 8), 16);
+                    folderFile.offset = Convert.ToUInt32(((String)currFolder.tag).Substring(9, 8), 16);
+                    folderFile.packFile = ((string)currFolder.tag).Substring(17);
+                }
                 folderFile.formato = Get_Formato(folderFile, folderFile.id);
                 folderFile.tag = "Descomprimido"; // Tag para indicar que ya ha sido procesado
 
@@ -1001,15 +1011,19 @@ namespace Tinke
             if (currFile.size == 0x00)
                 return null;
 
-            BinaryReader br;
-            if (currFile.offset != 0x0)
-            {
-                br = new BinaryReader(File.OpenRead(file));
-                br.BaseStream.Position = currFile.offset;
-            }
-            else    // En caso de que el archivo haya sido extraído y no esté en la ROM
-                br = new BinaryReader(File.OpenRead(currFile.path));
+            BinaryReader br = new BinaryReader(File.OpenRead(file));
 
+            try
+            {
+                if (currFile.offset != 0x0)
+                {
+                    br = new BinaryReader(File.OpenRead(currFile.packFile));
+                    br.BaseStream.Position = currFile.offset;
+                }
+                else    // En caso de que el archivo haya sido extraído y no esté en la ROM
+                    br = new BinaryReader(File.OpenRead(currFile.path));
+            }
+            catch { MessageBox.Show("Test"); }
             if (br.BaseStream.Length == 0x00)
                 return null;
 
@@ -1029,7 +1043,7 @@ namespace Tinke
             BinaryReader br;
             if (currFile.offset != 0x0)
             {
-                br = new BinaryReader(File.OpenRead(file));
+                br = new BinaryReader(File.OpenRead(currFile.packFile));
                 br.BaseStream.Position = currFile.offset;
             }
             else    // En caso de que el archivo haya sido extraído y no esté en la ROM
@@ -1055,7 +1069,7 @@ namespace Tinke
             BinaryReader br;
             if (currFile.offset != 0x0)
             {
-                br = new BinaryReader(File.OpenRead(file));
+                br = new BinaryReader(File.OpenRead(currFile.packFile));
                 br.BaseStream.Position = currFile.offset;
             }
             else    // En caso de que el archivo haya sido extraído y no esté en la ROM
@@ -1100,6 +1114,9 @@ namespace Tinke
         {
             Formato tipo = Formato.Desconocido;
             Archivo currFile = Search_File(id);
+            if (currFile.size == 0x00)
+                return Formato.Desconocido;
+
             byte[] ext = Get_MagicID(id);
 
             #region Búsqueda y llamada de plugin
@@ -1152,6 +1169,9 @@ namespace Tinke
         }
         public Formato Get_Formato(Archivo currFile, int id)
         {
+            if (currFile.size == 0x00)
+                return Formato.Desconocido;
+
             Formato tipo = Formato.Desconocido;
             byte[] ext = Get_MagicID(currFile);
 
@@ -1205,6 +1225,9 @@ namespace Tinke
         }
         public Formato Get_Formato(string file)
         {
+            if (new FileInfo(file).Length == 0x00)
+                return Formato.Desconocido;
+
             Formato tipo = Formato.Desconocido;
             string name = new FileInfo(file).Name;
             byte[] ext = Get_MagicID(file);
@@ -1267,7 +1290,7 @@ namespace Tinke
             if (selectFile.offset != 0x0)
             {
                 tempFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + selectFile.name;
-                br = new BinaryReader(File.OpenRead(file));
+                br = new BinaryReader(File.OpenRead(selectFile.packFile));
                 br.BaseStream.Position = selectFile.offset;
                 File.WriteAllBytes(tempFile, br.ReadBytes((int)selectFile.size));
 
@@ -1397,7 +1420,7 @@ namespace Tinke
                 return new Carpeta();
             }
 
-            Continuar:
+        Continuar:
 
             Carpeta desc = pluginHost.Get_Files();
             Add_Files(ref desc, id);    // Añadimos los archivos descomprimidos al árbol de archivos
@@ -1507,7 +1530,7 @@ namespace Tinke
                     currDecompressed.id = subFolder.id;
                     currDecompressed.name = subFolder.name;
 
-                    if ((String)subFolder.tag != "")
+                    if ((String)subFolder.tag != "") // Decompressed file
                     {
                         Archivo file = Search_File(subFolder.id);
                         decompressedFiles.files.Add(file);
@@ -1540,7 +1563,8 @@ namespace Tinke
 
             if (selectFile.offset != 0x0)
             {
-                BinaryReader br = new BinaryReader(File.OpenRead(file));
+                BinaryReader br;
+                br = new BinaryReader(File.OpenRead(selectFile.packFile));
                 br.BaseStream.Position = selectFile.offset;
                 File.WriteAllBytes(outFile, br.ReadBytes((int)selectFile.size));
                 br.Close();
@@ -1558,7 +1582,7 @@ namespace Tinke
 
             if (selectFile.offset != 0x0)
             {
-                BinaryReader br = new BinaryReader(File.OpenRead(file));
+                BinaryReader br = new BinaryReader(File.OpenRead(selectFile.packFile));
                 br.BaseStream.Position = selectFile.offset;
                 File.WriteAllBytes(outFile, br.ReadBytes((int)selectFile.size));
                 br.Close();
@@ -1576,7 +1600,7 @@ namespace Tinke
             // Guardamos el archivo fuera del sistema de ROM
             if (currfile.offset != 0x0)
             {
-                BinaryReader br = new BinaryReader(File.OpenRead(file));
+                BinaryReader br = new BinaryReader(File.OpenRead(currfile.packFile));
                 br.BaseStream.Position = currfile.offset;
                 File.WriteAllBytes(outFile, br.ReadBytes((int)currfile.size));
                 br.Close();
@@ -1599,7 +1623,7 @@ namespace Tinke
             if (selectFile.offset != 0x0)
             {
                 tempFile = pluginHost.Get_TempFolder() + '\\' + selectFile.name;
-                br = new BinaryReader(File.OpenRead(file));
+                br = new BinaryReader(File.OpenRead(selectFile.packFile));
                 br.BaseStream.Position = selectFile.offset;
 
                 File.WriteAllBytes(tempFile, br.ReadBytes((int)selectFile.size));

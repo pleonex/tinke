@@ -65,10 +65,19 @@ namespace NotManagedNetPlugins
                     if (id == 0x15)
                     {
                         int num = 0;
+                        DateTime t1 = DateTime.Now;
                         bool b = XDecompress(archivo, pluginHost.Search_File(0x16), pluginHost.Search_File(0x17), id.ToString(), &num);
+
+                        DateTime t2 = DateTime.Now;
                         String txtfile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + "tinke_file_list.txt";
                         Carpeta decompressedFolder = Get_DecompressedFiles(txtfile, num);
+                        DateTime t3 = DateTime.Now;
+
                         pluginHost.Set_Files(decompressedFolder);
+
+                        Console.WriteLine("Unpacking files {0}", (t2 - t1).ToString());
+                        Console.WriteLine("Reading new files {0}", (t3 - t2).ToString());
+                        Console.WriteLine("Total time {0}", (t3 - t1).ToString());
                     }
                     break;
             }
@@ -124,13 +133,54 @@ namespace NotManagedNetPlugins
             currFolder = currFolder.Substring(0, currFolder.IndexOf(Path.DirectorySeparatorChar));
             String relativePath = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + currFolder;
             currFolder = "";
-            for (int i = 0; i < files.Length; i++)
-            {
-                decompressed = Recursive_GetDirectories(files[i], decompressed, currFolder, relativePath);
-            }
+
+            decompressed = Recursive_GetDirectories(relativePath, decompressed);
 
             return decompressed;
         }
+
+        /// <summary>
+        /// Get a "Carpeta" variable with all files and folders from the main folder path.
+        /// </summary>
+        /// <param name="folderPath">Folder to read</param>
+        /// <param name="currFolder">Empty folder</param>
+        /// <returns></returns>
+        public Carpeta Recursive_GetDirectories(string folderPath, Carpeta currFolder)
+        {
+            foreach (string file in Directory.GetFiles(folderPath))
+            {
+                Archivo newFile = new Archivo();
+                newFile.name = Path.GetFileName(file);
+                newFile.offset = 0x00;
+                newFile.path = file;
+                newFile.size = (uint)new FileInfo(file).Length;
+
+                if (!(currFolder.files is List<Archivo>))
+                    currFolder.files = new List<Archivo>();
+                currFolder.files.Add(newFile);
+            }
+
+            foreach (string folder in Directory.GetDirectories(folderPath))
+            {
+                Carpeta newFolder = new Carpeta();
+                newFolder.name = new DirectoryInfo(folder).Name;
+                newFolder = Recursive_GetDirectories(folder, newFolder);
+
+                if (!(currFolder.folders is List<Carpeta>))
+                    currFolder.folders = new List<Carpeta>();
+                currFolder.folders.Add(newFolder);
+            }
+
+            return currFolder;
+        }
+        /// <summary>
+        /// Include a file in a "Carpeta" variable.
+        /// </summary>
+        /// <param name="file">Path of the file to include</param>
+        /// <param name="currFolder">Root "Carpeta" variable to include it</param>
+        /// <param name="pathFolder">Empty string</param>
+        /// <param name="relativePath">Path of the first folder where all files and folders are.</param>
+        /// <returns></returns>
         public Carpeta Recursive_GetDirectories(string file, Carpeta currFolder, string pathFolder, string relativePath)
         {
             String directoryPath = new FileInfo(file).DirectoryName;
