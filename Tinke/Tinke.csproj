@@ -237,12 +237,6 @@
     <Compile Include="Nitro\Overlay.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SplashScreen.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="SplashScreen.Designer.cs">
-      <DependentUpon>SplashScreen.cs</DependentUpon>
-    </Compile>
     <Compile Include="Tools\APNG.cs" />
     <Compile Include="Tools\CRC.cs" />
     <Compile Include="Tools\Helper.cs" />
@@ -310,9 +304,6 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <EmbeddedResource Include="SplashScreen.resx">
-      <DependentUpon>SplashScreen.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Visor.resx">
       <DependentUpon>Visor.cs</DependentUpon>
     </EmbeddedResource>

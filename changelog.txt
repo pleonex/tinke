@@ -1,22 +1,29 @@
-0.8.0
-*** Support to font files NFTR (edit and view)
-*** Support to write Game plugins in other languages
+0.8.0 (public release) rev90
+*** Support for font files NFTR (edit and view)
+*** Support to write Game plugins in other languages (like C/C++)
+*** Improved the speed of the program, now the program it's so much faster opening roms and files.
 * Fixed important errors in SDAT plugin
-* Add change volume to imported WAV to SWAV audio
+* Add "change volume" to imported WAV to SWAV audio
 * New hotkeys (T to "Open as->Tile", P to "Open as->Palette", M to "Open as->Map", D to decompress)
+* New search term: "Length: XXXX" to search files with XXXX bytes of length
+* Improved "offset" in NSCR files.
 
 0.7.7
-*** Interface to decompress FAT files (files with offsets)
+*** Interface to unpack "big files"
 ** Improved SDAT plugin:
-   - Information dialog about sound files
+   - Information dialog about sound files (STRM, SWAV and SWAR)
    - WAV -> SWAV
+   - Play SWAV files in loop
    - Create new SWAR
    - Fixed some bugs
-* Improved decompress methods, now it's faster.
+** Improved decompress methods, now it's so much faster.
+* Improved plugin TETRIS DS
+* New option in menu "Open as..." -> Compress (you can select the start offset) 
 * Command to set a new transparent color in NCGR and NCER files
 * Improved Images plugin and TGA support
+* Improved "offset" value in files NCGR.
 
-0.7.6
+0.7.6 (public release)
 *** Import images from NCER files
 * Add support for the game TETRIS DS
 * Fixed problems with No_Tiled images

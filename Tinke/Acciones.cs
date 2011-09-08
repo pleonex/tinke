@@ -515,6 +515,7 @@ namespace Tinke
         {
             Archivo file = Search_File(id); // Archivo descomprimido
             files.name = file.name;
+
             root = FileToFolder(file.id, root);
             // Archivo convertido a medias a carpeta ;)
             files.id = file.id;
@@ -644,6 +645,35 @@ namespace Tinke
         {
             return String.Compare(f1.name, f2.name);
         }
+        public Carpeta Recursive_GetDirectories(string folderPath, Carpeta currFolder)
+        {
+            foreach (string file in Directory.GetFiles(folderPath))
+            {
+                Archivo newFile = new Archivo();
+                newFile.name = Path.GetFileName(file);
+                newFile.offset = 0x00;
+                newFile.path = file;
+                newFile.size = (uint)new FileInfo(file).Length;
+
+                if (!(currFolder.files is List<Archivo>))
+                    currFolder.files = new List<Archivo>();
+                currFolder.files.Add(newFile);
+            }
+
+            foreach (string folder in Directory.GetDirectories(folderPath))
+            {
+                Carpeta newFolder = new Carpeta();
+                newFolder.name = new DirectoryInfo(folder).Name;
+                newFolder = Recursive_GetDirectories(folder, newFolder);
+
+                if (!(currFolder.folders is List<Carpeta>))
+                    currFolder.folders = new List<Carpeta>();
+                currFolder.folders.Add(newFolder);
+            }
+
+            return currFolder;
+        }
+
 
         public void Change_File(int id, Archivo fileChanged, Carpeta currFolder)
         {
@@ -1013,17 +1043,13 @@ namespace Tinke
 
             BinaryReader br = new BinaryReader(File.OpenRead(file));
 
-            try
+            if (currFile.offset != 0x0)
             {
-                if (currFile.offset != 0x0)
-                {
-                    br = new BinaryReader(File.OpenRead(currFile.packFile));
-                    br.BaseStream.Position = currFile.offset;
-                }
-                else    // En caso de que el archivo haya sido extraído y no esté en la ROM
-                    br = new BinaryReader(File.OpenRead(currFile.path));
+                br = new BinaryReader(File.OpenRead(currFile.packFile));
+                br.BaseStream.Position = currFile.offset;
             }
-            catch { MessageBox.Show("Test"); }
+            else    // En caso de que el archivo haya sido extraído y no esté en la ROM
+                br = new BinaryReader(File.OpenRead(currFile.path));
             if (br.BaseStream.Length == 0x00)
                 return null;
 
@@ -1055,7 +1081,6 @@ namespace Tinke
             byte[] ext = null;
             try { ext = br.ReadBytes(4); }
             catch { }
-
             br.Close();
 
             return ext;
@@ -1117,7 +1142,7 @@ namespace Tinke
             if (currFile.size == 0x00)
                 return Formato.Desconocido;
 
-            byte[] ext = Get_MagicID(id);
+            byte[] ext = Get_MagicID(currFile);
 
             #region Búsqueda y llamada de plugin
             try
@@ -1156,14 +1181,22 @@ namespace Tinke
                 currFile.name == "ARM9.BIN" || currFile.name == "ARM7.BIN" || currFile.name == "Y9.BIN" || currFile.name == "Y7.BIN")
                 return Formato.Sistema;
 
-            String tempFile = Path.GetTempFileName();
-            Save_File(currFile, tempFile);
-            if (DSDecmp.Main.Get_Format(tempFile) != FormatCompress.Invalid)
+            FileStream fs;
+            if (currFile.offset != 0x00)
             {
-                File.Delete(tempFile);
+                fs = File.OpenRead(currFile.packFile);
+                fs.Position = currFile.offset;
+            }
+            else
+                fs = new FileStream(currFile.path, FileMode.Open);
+            if (DSDecmp.Main.Get_Format(fs, (currFile.name == "ARM9.BIN" ? true : false)) != FormatCompress.Invalid)
+            {
+                fs.Close();
+                fs.Dispose();
                 return Formato.Comprimido;
             }
-            File.Delete(tempFile);
+            fs.Close();
+            fs.Dispose();
 
             return Formato.Desconocido;
         }
@@ -1212,14 +1245,22 @@ namespace Tinke
                 currFile.name == "ARM9.BIN" || currFile.name == "ARM7.BIN" || currFile.name == "Y9.BIN" || currFile.name == "Y7.BIN")
                 return Formato.Sistema;
 
-            String tempFile = Path.GetTempFileName();
-            Save_File(currFile, tempFile);
-            if (DSDecmp.Main.Get_Format(tempFile) != FormatCompress.Invalid)
+            FileStream fs;
+            if (currFile.offset != 0x00)
             {
-                File.Delete(tempFile);
+                fs = new FileStream(currFile.packFile, FileMode.Open);
+                fs.Position = currFile.offset;
+            }
+            else
+                fs = new FileStream(currFile.path, FileMode.Open);
+            if (DSDecmp.Main.Get_Format(fs, (currFile.name == "ARM9.BIN" ? true : false)) != FormatCompress.Invalid)
+            {
+                fs.Close();
+                fs.Dispose();
                 return Formato.Comprimido;
             }
-            File.Delete(tempFile);
+            fs.Close();
+            fs.Dispose();
 
             return Formato.Desconocido;
         }
@@ -1607,7 +1648,6 @@ namespace Tinke
             }
             else
             {
-                FileInfo info = new FileInfo(currfile.path);
                 File.Copy(currfile.path, outFile, true);
             }
         }
