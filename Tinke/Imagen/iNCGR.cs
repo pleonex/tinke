@@ -86,6 +86,9 @@ namespace Tinke
             this.numericStart.ValueChanged += new EventHandler(numericStart_ValueChanged);
 
             Info();
+
+            if (new String(paleta.cabecera.id) != "NCLR" && new String(paleta.cabecera.id) != "RLCN")
+                btnSetTrans.Enabled = false;
         }
         public iNCGR(NCGR tile, NCLR paleta, NSCR map, IPluginHost pluginHost)
         {
@@ -127,6 +130,9 @@ namespace Tinke
             this.numericStart.ValueChanged += new EventHandler(numericStart_ValueChanged);
 
             Info();
+
+            if (new String(paleta.cabecera.id) != "NCLR" && new String(paleta.cabecera.id) != "RLCN")
+                btnSetTrans.Enabled = false;
         }
 
         private void numericStart_ValueChanged(object sender, EventArgs e)
@@ -301,6 +307,9 @@ namespace Tinke
             o.Multiselect = false;
             if (o.ShowDialog() == DialogResult.OK)
             {
+                if (new String(paleta.cabecera.id) != "NCLR" && new String(paleta.cabecera.id) != "RLCN")
+                    goto Set_Tiles;
+
                 NCLR newPalette = Imagen_NCLR.BitmapToPalette(o.FileName);
                 newPalette.id = paleta.id;
                 paleta = newPalette;
@@ -310,6 +319,7 @@ namespace Tinke
                 Imagen_NCLR.Escribir(paleta, paletteFile);
                 pluginHost.ChangeFile((int)paleta.id, paletteFile);
 
+            Set_Tiles:
                 NCGR newTile = Imagen_NCGR.BitmapToTile(o.FileName, (comboBox1.SelectedIndex == 0 ? Orden_Tiles.No_Tiles : Orden_Tiles.Horizontal));
                 newTile.id = tile.id;
                 tile = newTile;
@@ -321,6 +331,9 @@ namespace Tinke
 
                 if (isMap)
                 {
+                    if (new String(map.cabecera.id) != "NSCR" && new String(map.cabecera.id) != "RCSN")
+                        goto End;
+
                     NSCR newMap;
 
                     int width, heigth;
@@ -353,7 +366,7 @@ namespace Tinke
                     Imagen_NSCR.Write(map, mapFile);
                     pluginHost.ChangeFile((int)map.id, mapFile);
                 }
-
+            End:
                 stopUpdating = true;
                 if (tile.orden == Orden_Tiles.No_Tiles)
                 {

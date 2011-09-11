@@ -312,7 +312,7 @@ namespace Tinke.Nitro
                 if (currFile.name.StartsWith("overlay")) // Los overlays no van en esta sección
                     continue;
 
-                if (currFile.offset != 0x00 && currFile.packFile == romFile)
+                if (currFile.packFile == romFile)
                 {
                     br.BaseStream.Position = currFile.offset;
                     bw.Write(br.ReadBytes((int)currFile.size));
@@ -320,7 +320,7 @@ namespace Tinke.Nitro
                 }
                 else // El archivo es modificado y no está en la ROM
                 {
-                    if (currFile.offset != 0x00)
+                    if (currFile.packFile is String && currFile.packFile != "")
                     {
                         BinaryReader br2 = new BinaryReader(File.OpenRead(currFile.packFile));
                         br2.BaseStream.Position = currFile.offset;
@@ -433,6 +433,7 @@ namespace Tinke.Nitro
             diccionario.Add("HF", "Level 5");
             diccionario.Add("HG", "Graffiti Entertainment");
             diccionario.Add("HM", "HMH - INTERACTIVE");
+            diccionario.Add("HV", "bhv Software GmbH");
             diccionario.Add("LR", "Asylum Entertainment");
             diccionario.Add("KJ", "Gamebridge");
             diccionario.Add("KM", "Deep Silver");
@@ -452,6 +453,7 @@ namespace Tinke.Nitro
             diccionario.Add("VP", "Virgin Play");
             diccionario.Add("WP", "White Park Bay");
             diccionario.Add("WR", "Warner Bros");
+            diccionario.Add("XS", "Aksys Games");
         }
         private static void Rellenar_UnitCodes()
         {

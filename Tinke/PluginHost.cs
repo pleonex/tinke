@@ -57,7 +57,7 @@ namespace Tinke
         public void Dispose()
         {
             try { System.IO.Directory.Delete(tempFolder, true); }
-            catch { MessageBox.Show("No se pudo eliminar la carpeta temporal."); }
+            catch { MessageBox.Show(Tools.Helper.ObtenerTraduccion("Messages", "S22")); }
         }
 
         public NCLR Get_NCLR() { return paleta; }

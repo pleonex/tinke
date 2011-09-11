@@ -132,7 +132,9 @@ namespace Tinke
                 if (ncer.cebk.unknown1 != 0x00)
                 {
                     Cell ultimaCelda = Get_LastCell(ncer.cebk.banks[i]);
-                    int ultimaCeldaSize = ultimaCelda.height * ultimaCelda.width / 64 / 2;
+                    int ultimaCeldaSize = (int)(ultimaCelda.height * ultimaCelda.width / (128 * ncer.cebk.block_size));
+                    if (ultimaCeldaSize == 0)
+                        ultimaCeldaSize = 1;
                     tilePos += (uint)((ultimaCelda.tileOffset - tilePos) + ultimaCeldaSize);
                     if (ncer.cebk.unknown1 == 0x160 && i == 5) // Ni idea porqué pero funciona :)
                         tilePos -= 3;
@@ -307,6 +309,9 @@ namespace Tinke
             Image[] celdas = new Image[banco.nCells];
             for (int i = 0; i < banco.nCells; i++)
             {
+                if (banco.cells[i].width == 0x00 || banco.cells[i].height == 0x00)
+                    continue;
+
                 uint tileOffset = banco.cells[i].tileOffset;
                 if (tile.rahc.depth == System.Windows.Forms.ColorDepth.Depth4Bit)
                 {
@@ -434,7 +439,12 @@ namespace Tinke
 
         private static int Comparision_Cell(Cell c1, Cell c2)
         {
-            return c1.priority.CompareTo(c2.priority);
+            if (c1.priority < c2.priority)
+                return -1;
+            else if (c1.priority > c2.priority)
+                return 1;
+            else
+                return 0;
         }
         private static Cell Get_LastCell(Bank bank)
         {

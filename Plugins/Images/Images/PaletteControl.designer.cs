@@ -166,7 +166,6 @@
             // 
             // btnImport
             // 
-            this.btnImport.Enabled = false;
             this.btnImport.Location = new System.Drawing.Point(149, 54);
             this.btnImport.Name = "btnImport";
             this.btnImport.Size = new System.Drawing.Size(106, 30);

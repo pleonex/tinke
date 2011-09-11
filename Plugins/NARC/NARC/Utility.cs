@@ -9,7 +9,7 @@ namespace NARC
 {
     public class Utility
     {
-        string tempFolder;
+        string utilityFile;
         IPluginHost pluginHost;
 
         public Utility(IPluginHost pluginHost)
@@ -19,20 +19,9 @@ namespace NARC
 
         public ARC Leer(string archivo, int idArchivo)
         {
-            tempFolder = pluginHost.Get_TempFolder();
-            // Determinamos la subcarpeta donde guardar los archivos descomprimidos.
-            string[] subFolders = Directory.GetDirectories(tempFolder);
-            for (int n = 0; ; n++)
-            {
-                if (!subFolders.Contains<string>(tempFolder + "\\Temp" + n))
-                {
-                    tempFolder += "\\Temp" + n;
-                    Directory.CreateDirectory(tempFolder);
-                    break;
-                }
-            }
-
             ARC arc = new ARC();
+            utilityFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + idArchivo + new FileInfo(archivo).Name;
+            File.Copy(archivo, utilityFile, true);
             arc.file_id = idArchivo;
             BinaryReader br = new BinaryReader(System.IO.File.OpenRead(archivo));
 
@@ -103,12 +92,12 @@ namespace NARC
 
             // Archivos
             br.BaseStream.Position = fatOffset + fatSize;
-
-            //pos = br.BaseStream.Position;
             for (int i = 0; i < arc.btaf.nFiles; i++)
             {
                 br.BaseStream.Position = arc.btaf.entries[i].start_offset;
-                Asignar_Archivos(ref br, root, i, arc.btaf.entries[i].end_offset - arc.btaf.entries[i].start_offset);
+                Asignar_Archivos(root, i,
+                    arc.btaf.entries[i].end_offset - arc.btaf.entries[i].start_offset,
+                    arc.btaf.entries[i].start_offset);
             }
             br.Close();
 
@@ -133,7 +122,7 @@ namespace NARC
 
             return currFolder;
         }
-        public void Asignar_Archivos(ref BinaryReader br, Carpeta currFolder, int idFile, UInt32 size)
+        public void Asignar_Archivos(Carpeta currFolder, int idFile, UInt32 size, UInt32 offset)
         {
             if (currFolder.files is List<Archivo>)
             {
@@ -142,9 +131,9 @@ namespace NARC
                     if (currFolder.files[i].id == idFile)
                     {
                         Archivo newFile = currFolder.files[i];
-                        File.WriteAllBytes(tempFolder + "\\" + currFolder.files[i].name, br.ReadBytes((int)size));
-                        newFile.path = tempFolder + "\\" + currFolder.files[i].name;
                         newFile.size = size;
+                        newFile.offset = offset;
+                        newFile.packFile = utilityFile;
                         currFolder.files.RemoveAt(i);
                         currFolder.files.Insert(i, newFile);
                         return;
@@ -155,7 +144,7 @@ namespace NARC
 
             if (currFolder.folders is List<Carpeta>) // Si tiene carpetas dentro.
                 foreach (Carpeta subFolder in currFolder.folders)
-                    Asignar_Archivos(ref br, subFolder, idFile, size);
+                    Asignar_Archivos(subFolder, idFile, size, offset);
         }
     }
 }

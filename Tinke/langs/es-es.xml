@@ -75,6 +75,8 @@
     </S3B>
     <S3C>Información completa de archivos</S3C>
     <S3D>Paquete</S3D>
+    <S3E>Textura</S3E>
+    <S3F>Modelo 3D</S3F>
   </Sistema>
   <RomInfo>
     <S01>Información de la ROM</S01>
@@ -226,6 +228,7 @@
       {1}
     </S20>
     <S21>Tiempo en leer archivos exteriores:</S21>
+    <S22>No se pudo borrar la carpeta temporal</S22>
   </Messages>
   <NCLR>
     <S01>Nº de paleta:</S01>

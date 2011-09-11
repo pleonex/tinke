@@ -98,6 +98,8 @@ namespace Tinke
             LeerIdioma();
             #endregion
             this.Load += new EventHandler(Sistema_Load);
+            treeSystem.LostFocus += new EventHandler(treeSystem_LostFocus);
+            treeSystem.GotFocus += new EventHandler(treeSystem_LostFocus);
             keyDown = Keys.Escape;
         }
         void Sistema_Load(object sender, EventArgs e)
@@ -220,6 +222,7 @@ namespace Tinke
                 currFile.name = Path.GetFileName(files[i]);
                 currFile.offset = 0x00;
                 currFile.path = files[i];
+
                 currFile.size = (uint)new FileInfo(files[i]).Length;
                 root.files.Add(currFile);
             }
@@ -263,6 +266,8 @@ namespace Tinke
             Carpeta root = new Carpeta();
             root.name = "root";
             root.id = 0xF000;
+            accion.LastFileID = 0x00;
+            accion.LastFolderID = 0xF000;
             root = accion.Recursive_GetDirectories(folder, root);
             DateTime t2 = DateTime.Now;
 
@@ -399,6 +404,9 @@ namespace Tinke
                     "\n<Font> -> " + xml.Element("S29").Value +
                     "\n<Compress> -> " + xml.Element("S2A").Value +
                     "\n<Script> -> " + xml.Element("S34").Value +
+                    "\n<Pack> -> " + xml.Element("S3D").Value +
+                    "\n<Texture> -> " + xml.Element("S3E").Value +
+                    "\n<3DModel> -> " + xml.Element("S3F").Value +
                     "\n<Unknown> -> " + xml.Element("S2B").Value
                     );
                 btnImport.Text = xml.Element("S32").Value;
@@ -516,8 +524,10 @@ namespace Tinke
             TreeNode currNode = new TreeNode();
 
             if (currFolder.id < 0xF000) // Archivo descomprimido
-                currNode = new TreeNode(currFolder.name,
-                    accion.ImageFormatFile(Formato.Comprimido), accion.ImageFormatFile(Formato.Comprimido));
+            {
+                int imageIndex = accion.ImageFormatFile(accion.Get_Formato(currFolder.id));
+                currNode = new TreeNode(currFolder.name, imageIndex, imageIndex);
+            }
             else
                 currNode = new TreeNode(currFolder.name, 0, 0);
             currNode.Tag = currFolder.id;
@@ -554,8 +564,8 @@ namespace Tinke
         {
             if (carpeta.id < 0xF000)
             {
-                nodo.ImageIndex = accion.ImageFormatFile(Formato.Comprimido);
-                nodo.SelectedImageIndex = accion.ImageFormatFile(Formato.Comprimido);
+                nodo.ImageIndex = accion.ImageFormatFile(accion.Get_Formato(carpeta.id));
+                nodo.SelectedImageIndex = nodo.ImageIndex;
             }
             else
             {
@@ -731,6 +741,15 @@ namespace Tinke
                     case Formato.Script:
                         listFile.Items[4].SubItems.Add(Tools.Helper.ObtenerTraduccion("Sistema", "S34"));
                         break;
+                    case Formato.Pack:
+                        listFile.Items[4].SubItems.Add(Tools.Helper.ObtenerTraduccion("Sistema", "S3D"));
+                        break;
+                    case Formato.Texture:
+                        listFile.Items[4].SubItems.Add(Tools.Helper.ObtenerTraduccion("Sistema", "S3E"));
+                        break;
+                    case Formato.Model3D:
+                        listFile.Items[4].SubItems.Add(Tools.Helper.ObtenerTraduccion("Sistema", "S3F"));
+                        break;
                 }
                 #endregion
                 listFile.Items[5].SubItems.Add(selectFile.path);
@@ -741,7 +760,7 @@ namespace Tinke
                     btnSee.Enabled = true;
                 else
                     btnSee.Enabled = false;
-                if (selectFile.formato == Formato.Comprimido)
+                if (selectFile.formato == Formato.Comprimido || selectFile.formato == Formato.Pack)
                     btnDescomprimir.Enabled = true;
                 else
                     btnDescomprimir.Enabled = false;
@@ -785,7 +804,7 @@ namespace Tinke
             Archivo file = accion.Select_File();
 
             VisorHex hex;
-            if (file.offset != 0x0)
+            if (file.packFile is String && file.packFile != "")
                 hex = new VisorHex(file.packFile, file.offset, file.size);
             else
                 hex = new VisorHex(file.path, 0, file.size);
@@ -836,6 +855,7 @@ namespace Tinke
                 return;
             }
 
+            this.Cursor = Cursors.WaitCursor;
             uncompress = accion.Extract();
 
             if (!(uncompress.files is List<Archivo>) && !(uncompress.folders is List<Carpeta>)) // En caso de que falle la extracción
@@ -851,8 +871,8 @@ namespace Tinke
 
             TreeNode selected = treeSystem.SelectedNode;
             CarpetaANodo(uncompress, ref selected);
-            selected.ImageIndex = accion.ImageFormatFile(Formato.Comprimido);
-            selected.SelectedImageIndex = accion.ImageFormatFile(Formato.Comprimido);
+            selected.ImageIndex = accion.ImageFormatFile(accion.Select_File().formato);
+            selected.SelectedImageIndex = selected.ImageIndex;
 
             // Agregamos los nodos al árbol
             TreeNode[] nodos = new TreeNode[selected.Nodes.Count]; selected.Nodes.CopyTo(nodos, 0);
@@ -866,13 +886,11 @@ namespace Tinke
 
             debug.Añadir_Texto(sb.ToString());
             sb.Length = 0;
+            this.Cursor = Cursors.Default;
         }
         private void UncompressFolder()
         {
-            if (MessageBox.Show(Tools.Helper.ObtenerTraduccion("Sistema", "S35"), "", MessageBoxButtons.OKCancel, MessageBoxIcon.Exclamation)
-                == System.Windows.Forms.DialogResult.Cancel)
-                return;
-
+            this.Cursor = Cursors.WaitCursor;
             Thread espera = new System.Threading.Thread(ThreadEspera);
             if (!isMono)
                 espera.Start("S04");
@@ -885,7 +903,7 @@ namespace Tinke
 
             if (!isMono)
                 espera.Abort();
-
+            this.Cursor = Cursors.Default;
         }
         private void Recursivo_UncompressFolder(Carpeta currFolder)
         {
@@ -902,7 +920,7 @@ namespace Tinke
                 Archivo[] archivos = new Archivo[currFolder.files.Count];
                 currFolder.files.CopyTo(archivos);
                 foreach (Archivo archivo in archivos)
-                    if (archivo.formato == Formato.Comprimido)
+                    if (archivo.formato == Formato.Comprimido || archivo.formato == Formato.Pack)
                         accion.Extract(archivo.id);
             }
         }
@@ -932,7 +950,7 @@ namespace Tinke
             o.FileName = fileSelect.name;
             if (o.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                if (fileSelect.offset != 0x0)
+                if (fileSelect.packFile is String && fileSelect.packFile != "")
                 {
                     BinaryReader br = new BinaryReader(File.OpenRead(fileSelect.packFile));
                     br.BaseStream.Position = fileSelect.offset;
@@ -992,7 +1010,7 @@ namespace Tinke
             if (currFolder.files is List<Archivo>)
                 foreach (Archivo archivo in currFolder.files)
                 {
-                    if (archivo.offset != 0x0)
+                    if (archivo.packFile is String && archivo.packFile != "")
                     {
                         BinaryReader br = new BinaryReader(File.OpenRead(archivo.packFile));
                         br.BaseStream.Position = archivo.offset;
@@ -1031,34 +1049,34 @@ namespace Tinke
 
             if (e.KeyCode == Keys.Space && treeSystem.Focused)
             {
-                btnSee.PerformClick();
                 e.SuppressKeyPress = true;
+                btnSee.PerformClick();
             }
             else if (e.KeyCode == Keys.P && toolStripOpenAs.Enabled && treeSystem.Focused)
             {
-                toolStripMenuItem1.PerformClick();
                 e.SuppressKeyPress = true;
                 keyDown = e.KeyCode;
+                toolStripMenuItem1.PerformClick();
             }
             else if (e.KeyCode == Keys.T && toolStripOpenAs.Enabled && treeSystem.Focused)
             {
-                toolStripMenuItem2.PerformClick();
                 e.SuppressKeyPress = true;
                 keyDown = e.KeyCode;
+                toolStripMenuItem2.PerformClick();
             }
             else if (e.KeyCode == Keys.M && toolStripOpenAs.Enabled && treeSystem.Focused)
             {
-                toolStripMenuItem3.PerformClick();
                 e.SuppressKeyPress = true;
                 keyDown = e.KeyCode;
+                toolStripMenuItem3.PerformClick();
             }
             else if (e.KeyCode == Keys.D && treeSystem.Focused)
             {
-                if (btnDescomprimir.Enabled)
-                    btnDescomprimir.PerformClick();
-
                 e.SuppressKeyPress = true;
                 keyDown = e.KeyCode;
+
+                if (btnDescomprimir.Enabled)
+                    btnDescomprimir.PerformClick();
             }
 
         }
@@ -1067,6 +1085,11 @@ namespace Tinke
             if (e.KeyCode == Keys.P || e.KeyCode == Keys.T || e.KeyCode == Keys.M || e.KeyCode == Keys.D)
                 keyDown = Keys.Escape;
         }
+        void treeSystem_LostFocus(object sender, EventArgs e)
+        {
+            keyDown = Keys.Escape;
+        }
+
 
         private void toolStripInfoRom_Click(object sender, EventArgs e)
         {
@@ -1157,7 +1180,7 @@ namespace Tinke
             Archivo selectedFile = accion.Select_File();
 
             if (formato == Formato.Texto)
-                if (selectedFile.offset != 0x00)
+                if (selectedFile.packFile is String && selectedFile.packFile != "")
                     accion.Save_File(accion.IDSelect, selectedFile.path + ".txt");
                 else
                     File.Copy(selectedFile.path, selectedFile.path + ".txt", true);
@@ -1238,8 +1261,8 @@ namespace Tinke
 
             TreeNode selected = treeSystem.SelectedNode;
             CarpetaANodo(uncompress, ref selected);
-            selected.ImageIndex = accion.ImageFormatFile(Formato.Comprimido);
-            selected.SelectedImageIndex = accion.ImageFormatFile(Formato.Comprimido);
+            selected.ImageIndex = accion.ImageFormatFile(accion.Select_File().formato);
+            selected.SelectedImageIndex = selected.ImageIndex;
 
             // Agregamos los nodos al árbol
             TreeNode[] nodos = new TreeNode[selected.Nodes.Count]; selected.Nodes.CopyTo(nodos, 0);
@@ -1293,8 +1316,8 @@ namespace Tinke
             TreeNode selected = treeSystem.SelectedNode;
             CarpetaANodo(uncompress, ref selected);
 
-            selected.ImageIndex = accion.ImageFormatFile(Formato.Comprimido);
-            selected.SelectedImageIndex = accion.ImageFormatFile(Formato.Comprimido);
+            selected.ImageIndex = accion.ImageFormatFile(Formato.Pack);
+            selected.SelectedImageIndex = accion.ImageFormatFile(Formato.Pack);
 
             // Agregamos los nodos al árbol
             TreeNode[] nodos = new TreeNode[selected.Nodes.Count]; selected.Nodes.CopyTo(nodos, 0);
@@ -1356,6 +1379,12 @@ namespace Tinke
                 resul = accion.Search_File(Formato.Comprimido);
             else if (txtSearch.Text == "<Script>")
                 resul = accion.Search_File(Formato.Script);
+            else if (txtSearch.Text == "<Pack>")
+                resul = accion.Search_File(Formato.Pack);
+            else if (txtSearch.Text == "<Texture>")
+                resul = accion.Search_File(Formato.Texture);
+            else if (txtSearch.Text == "<3DModel>")
+                resul = accion.Search_File(Formato.Model3D);
             else if (txtSearch.Text == "<Unknown>")
                 resul = accion.Search_File(Formato.Desconocido);
             else if (txtSearch.Text.StartsWith("Length: ") && txtSearch.Text.Length > 8)

@@ -107,7 +107,6 @@ namespace Images
             this.columnValor = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.label5 = new System.Windows.Forms.Label();
             this.pic = new System.Windows.Forms.PictureBox();
-            this.btnSetTrans = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.numericWidth)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericHeight)).BeginInit();
             this.groupProp.SuspendLayout();
@@ -193,7 +192,6 @@ namespace Images
             // 
             // groupProp
             // 
-            this.groupProp.Controls.Add(this.btnSetTrans);
             this.groupProp.Controls.Add(this.btnImport);
             this.groupProp.Controls.Add(this.btnBgdTrans);
             this.groupProp.Controls.Add(this.pictureBgd);
@@ -224,7 +222,6 @@ namespace Images
             // 
             // btnImport
             // 
-            this.btnImport.Enabled = false;
             this.btnImport.Location = new System.Drawing.Point(157, 474);
             this.btnImport.Name = "btnImport";
             this.btnImport.Size = new System.Drawing.Size(79, 32);
@@ -459,16 +456,6 @@ namespace Images
             this.pic.TabStop = false;
             this.pic.DoubleClick += new System.EventHandler(this.pic_DoubleClick);
             // 
-            // btnSetTrans
-            // 
-            this.btnSetTrans.Location = new System.Drawing.Point(10, 315);
-            this.btnSetTrans.Name = "btnSetTrans";
-            this.btnSetTrans.Size = new System.Drawing.Size(142, 23);
-            this.btnSetTrans.TabIndex = 24;
-            this.btnSetTrans.Text = "S22";
-            this.btnSetTrans.UseVisualStyleBackColor = true;
-            this.btnSetTrans.Click += new System.EventHandler(this.btnSetTrans_Click);
-            // 
             // ImageControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -521,6 +508,5 @@ namespace Images
         private System.Windows.Forms.Button btnBgd;
         private System.Windows.Forms.Button btnBgdTrans;
         internal System.Windows.Forms.Button btnImport;
-        private System.Windows.Forms.Button btnSetTrans;
     }
 }

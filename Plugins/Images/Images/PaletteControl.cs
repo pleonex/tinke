@@ -154,20 +154,6 @@ namespace Images
             ven.MaximizeBox = false;
             ven.Show();
         }
-
-        private void btnSave_Click(object sender, EventArgs e)
-        {
-            SaveFileDialog o = new SaveFileDialog();
-            o.AddExtension = true;
-            o.CheckPathExists = true;
-            o.DefaultExt = ".bmp";
-            o.Filter = "BitMaP (*.bmp)|*.bmp";
-            o.OverwritePrompt = true;
-
-            if (o.ShowDialog() == DialogResult.OK)
-                paletaBox.Image.Save(o.FileName, System.Drawing.Imaging.ImageFormat.Bmp);
-        }
-
         private void paletaBox_MouseClick(object sender, MouseEventArgs e)
         {
             if (paletaBox.Image is Image)
@@ -177,25 +163,55 @@ namespace Images
             }
         }
 
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog o = new SaveFileDialog();
+            o.AddExtension = true;
+            o.CheckPathExists = true;
+            o.DefaultExt = ".png";
+            o.Filter = "Portable Network Graphics (*.png)|*.png|"
+                + "Window palette (*.pal)|*.pal";
+            o.OverwritePrompt = true;
+
+            if (o.ShowDialog() != DialogResult.OK)
+                return;
+
+            if (o.FilterIndex == 1)
+                paletaBox.Image.Save(o.FileName);
+            else if (o.FilterIndex == 2)
+                Write_WinPal(o.FileName, paleta);
+        }
         private void btnImport_Click(object sender, EventArgs e)
         {
             OpenFileDialog o = new OpenFileDialog();
             o.CheckFileExists = true;
             o.DefaultExt = "bmp";
-            o.Filter = "BitMaP (*.bmp)|*.bmp";
+            o.Filter = "BitMaP (*.bmp)|*.bmp|" +
+                "Windows palette (*.pal)|*.pal";
             o.Multiselect = false;
             if (o.ShowDialog() == DialogResult.OK)
             {
-                NCLR newPalette = pluginHost.BitmapToPalette(o.FileName);
-                String paletteFile = System.IO.Path.GetTempFileName() + new String(paleta.cabecera.id);
-                newPalette.id = paleta.id;
-                newPalette.cabecera.id = paleta.cabecera.id;
-                paleta = newPalette;
+                String paletteFile = System.IO.Path.GetTempFileName() + '.' + new String(paleta.cabecera.id);
+                NCLR newPalette;
+
+                if (o.FilterIndex == 1)
+                {
+                    newPalette = pluginHost.BitmapToPalette(o.FileName);
+                    newPalette.id = paleta.id;
+                    newPalette.cabecera.id = paleta.cabecera.id;
+                    paleta = newPalette;
+                }
+                else if (o.FilterIndex == 2)
+                {
+                    newPalette = Read_WinPal(o.FileName, paleta.pltt.profundidad);
+                    newPalette.id = paleta.id;
+                    newPalette.cabecera.id = paleta.cabecera.id;
+                    paleta = newPalette;
+                }
 
                 pluginHost.Set_NCLR(paleta);
                 Write_Palette(paletteFile, paleta, pluginHost);
                 pluginHost.ChangeFile((int)paleta.id, paletteFile);
-
 
                 ShowInfo();
                 paletas = pluginHost.Bitmaps_NCLR(paleta);
@@ -207,16 +223,82 @@ namespace Images
                 oldDepth = paleta.pltt.profundidad;
             }
         }
-        public static void Write_Palette(string fileout, NCLR palette, IPluginHost pluginHost)
+        private void Write_Palette(string fileout, NCLR palette, IPluginHost pluginHost)
         {
             BinaryWriter bw = new BinaryWriter(File.OpenWrite(fileout));
 
+            for (int i = 0; i < (int)numericStartByte.Value; i++)
+                bw.Write((byte)data[i]);
             for (int i = 0; i < palette.pltt.paletas.Length; i++)
                 bw.Write(pluginHost.ColorToBGR555(palette.pltt.paletas[i].colores));
+            for (int i = (int)bw.BaseStream.Length; i < data.Length; i++)
+                bw.Write((byte)data[i]);
 
             bw.Flush();
             bw.Close();
         }
+        public static NCLR Read_WinPal(string file, ColorDepth depth)
+        {
+            BinaryReader br = new BinaryReader(File.OpenRead(file));
+            NCLR palette = new NCLR();
+
+            palette.cabecera.id = br.ReadChars(4);  // RIFF
+            palette.cabecera.file_size = br.ReadUInt32();
+            palette.pltt.ID = br.ReadChars(4);  // PAL
+            br.ReadChars(4);    // data
+            br.ReadUInt32();   // unknown, always 0x00
+            br.ReadUInt16();   // unknown, always 0x0300
+            palette.pltt.nColores = br.ReadUInt16();
+            palette.pltt.profundidad = depth;
+            uint num_color_per_palette = (depth == ColorDepth.Depth4Bit ? 0x10 : palette.pltt.nColores);
+            palette.pltt.tamañoPaletas = num_color_per_palette * 2;
+
+            palette.pltt.paletas = new NTFP[(depth == ColorDepth.Depth4Bit ? palette.pltt.nColores / 0x10 : 1)];
+            for (int i = 0; i < palette.pltt.paletas.Length; i++)
+            {
+                palette.pltt.paletas[i].colores = new Color[num_color_per_palette];
+                for (int j = 0; j < num_color_per_palette; j++)
+                {
+                    Color newColor = Color.FromArgb(br.ReadByte(), br.ReadByte(), br.ReadByte());
+                    br.ReadByte(); // always 0x00
+                    palette.pltt.paletas[i].colores[j] = newColor;
+                }
+            }
+
+            br.Close();
+            return palette;
+        }
+        public static void Write_WinPal(string fileout, NCLR palette)
+        {
+            if (File.Exists(fileout))
+                File.Delete(fileout);
+            BinaryWriter bw = new BinaryWriter(File.OpenWrite(fileout));
+            int num_colors = 0;
+            for (int i = 0; i < palette.pltt.paletas.Length; i++)
+                num_colors += palette.pltt.paletas[i].colores.Length;
+
+            bw.Write(new char[] { 'R', 'I', 'F', 'F' });
+            bw.Write((uint)(0x10 + num_colors * 4));
+            bw.Write(new char[] { 'P', 'A', 'L', ' ' });
+            bw.Write(new char[] { 'd', 'a', 't', 'a' });
+            bw.Write((uint)0x00);
+            bw.Write((ushort)0x300);
+            bw.Write((ushort)(num_colors));
+            for (int i = 0; i < palette.pltt.paletas.Length; i++)
+            {
+                for (int j = 0; j < palette.pltt.paletas[i].colores.Length; j++)
+                {
+                    bw.Write(palette.pltt.paletas[i].colores[j].R);
+                    bw.Write(palette.pltt.paletas[i].colores[j].G);
+                    bw.Write(palette.pltt.paletas[i].colores[j].B);
+                    bw.Write((byte)0x00);
+                    bw.Flush();
+                }
+            }
+
+            bw.Close();
+        }
+
 
         private void numericStartByte_ValueChanged(object sender, EventArgs e)
         {
@@ -224,6 +306,8 @@ namespace Images
             Array.Copy(data, (int)numericStartByte.Value, temp, 0, temp.Length);
 
             paleta.pltt.paletas[(int)nPaleta.Value - 1].colores = pluginHost.BGR555(temp);
+            if (paleta.pltt.paletas[0].colores.Length == 0x10)
+                paleta.pltt.profundidad = ColorDepth.Depth4Bit;
             pluginHost.Set_NCLR(paleta);
 
             ShowInfo();
@@ -233,7 +317,6 @@ namespace Images
             nPaleta.Minimum = 1;
             nPaleta.Value = 1;
         }
-
         private void btnConverter_Click(object sender, EventArgs e)
         {
             numericStartByte.Value = 0;

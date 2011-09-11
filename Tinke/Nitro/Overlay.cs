@@ -59,7 +59,7 @@ namespace Tinke.Nitro
 
             for (int i = 0; i < overlays.files.Count; i++)
             {
-                if (overlays.files[i].offset != 0x00 && overlays.files[i].packFile == romFile)
+                if (overlays.files[i].packFile == romFile)
                 {
                     br.BaseStream.Position = overlays.files[i].offset;
                     bw.Write(br.ReadBytes((int)overlays.files[i].size));
@@ -67,7 +67,7 @@ namespace Tinke.Nitro
                 else // Quien sabe cuándo sucederá esto...
                 {
                     BinaryReader br2;
-                    if (overlays.files[i].offset != 0x00)
+                    if (overlays.files[i].packFile is String && overlays.files[i].packFile != "")
                     {
                         br2 = new BinaryReader(new FileStream(overlays.files[i].packFile, FileMode.Open)); // Very, very, very but very very strange case xD
                         br2.BaseStream.Position = overlays.files[i].offset;
