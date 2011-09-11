@@ -52,12 +52,12 @@ namespace Tinke
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Sistema));
-            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("S09");
-            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("S0A");
-            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem("S0B");
-            System.Windows.Forms.ListViewItem listViewItem4 = new System.Windows.Forms.ListViewItem("S0C");
-            System.Windows.Forms.ListViewItem listViewItem5 = new System.Windows.Forms.ListViewItem("S0D");
-            System.Windows.Forms.ListViewItem listViewItem6 = new System.Windows.Forms.ListViewItem("S0E");
+            System.Windows.Forms.ListViewItem listViewItem7 = new System.Windows.Forms.ListViewItem("S09");
+            System.Windows.Forms.ListViewItem listViewItem8 = new System.Windows.Forms.ListViewItem("S0A");
+            System.Windows.Forms.ListViewItem listViewItem9 = new System.Windows.Forms.ListViewItem("S0B");
+            System.Windows.Forms.ListViewItem listViewItem10 = new System.Windows.Forms.ListViewItem("S0C");
+            System.Windows.Forms.ListViewItem listViewItem11 = new System.Windows.Forms.ListViewItem("S0D");
+            System.Windows.Forms.ListViewItem listViewItem12 = new System.Windows.Forms.ListViewItem("S0E");
             this.iconos = new System.Windows.Forms.ImageList(this.components);
             this.btnExtraer = new System.Windows.Forms.Button();
             this.btnSee = new System.Windows.Forms.Button();
@@ -129,6 +129,8 @@ namespace Tinke
             this.iconos.Images.SetKeyName(18, "package_add.png");
             this.iconos.Images.SetKeyName(19, "disk.png");
             this.iconos.Images.SetKeyName(20, "page_gear.png");
+            this.iconos.Images.SetKeyName(21, "image.png");
+            this.iconos.Images.SetKeyName(22, "map.png");
             // 
             // btnExtraer
             // 
@@ -176,12 +178,12 @@ namespace Tinke
             this.columnHeader1,
             this.columnHeader2});
             this.listFile.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem1,
-            listViewItem2,
-            listViewItem3,
-            listViewItem4,
-            listViewItem5,
-            listViewItem6});
+            listViewItem7,
+            listViewItem8,
+            listViewItem9,
+            listViewItem10,
+            listViewItem11,
+            listViewItem12});
             this.listFile.Location = new System.Drawing.Point(409, 28);
             this.listFile.Name = "listFile";
             this.listFile.Size = new System.Drawing.Size(197, 202);
@@ -340,7 +342,7 @@ namespace Tinke
             this.toolStrip2.Name = "toolStrip2";
             this.toolStrip2.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
             this.toolStrip2.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.toolStrip2.Size = new System.Drawing.Size(55, 46);
+            this.toolStrip2.Size = new System.Drawing.Size(55, 65);
             this.toolStrip2.TabIndex = 11;
             this.toolStrip2.Text = "toolStrip2";
             // 
@@ -429,7 +431,7 @@ namespace Tinke
             // 
             this.toolStripMenuItem1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripMenuItem1.Image")));
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(95, 22);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
             this.toolStripMenuItem1.Text = "S17";
             this.toolStripMenuItem1.Click += new System.EventHandler(this.toolAbrirComoItemPaleta_Click);
             // 
@@ -437,7 +439,7 @@ namespace Tinke
             // 
             this.toolStripMenuItem2.Image = ((System.Drawing.Image)(resources.GetObject("toolStripMenuItem2.Image")));
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(95, 22);
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(152, 22);
             this.toolStripMenuItem2.Text = "S18";
             this.toolStripMenuItem2.Click += new System.EventHandler(this.toolAbrirComoItemTile_Click);
             // 
@@ -445,7 +447,7 @@ namespace Tinke
             // 
             this.toolStripMenuItem3.Image = ((System.Drawing.Image)(resources.GetObject("toolStripMenuItem3.Image")));
             this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(95, 22);
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(152, 22);
             this.toolStripMenuItem3.Text = "S19";
             this.toolStripMenuItem3.Click += new System.EventHandler(this.toolAbrirComoItemScreen_Click);
             // 
@@ -453,23 +455,23 @@ namespace Tinke
             // 
             this.toolStripMenuComprimido.Image = global::Tinke.Properties.Resources.package;
             this.toolStripMenuComprimido.Name = "toolStripMenuComprimido";
-            this.toolStripMenuComprimido.Size = new System.Drawing.Size(95, 22);
+            this.toolStripMenuComprimido.Size = new System.Drawing.Size(152, 22);
             this.toolStripMenuComprimido.Text = "S2A";
             this.toolStripMenuComprimido.Click += new System.EventHandler(this.s2AToolStripMenuItem_Click);
             // 
             // toolStripAbrirFat
             // 
-            this.toolStripAbrirFat.Image = global::Tinke.Properties.Resources.package;
+            this.toolStripAbrirFat.Image = global::Tinke.Properties.Resources.compress;
             this.toolStripAbrirFat.Name = "toolStripAbrirFat";
-            this.toolStripAbrirFat.Size = new System.Drawing.Size(95, 22);
-            this.toolStripAbrirFat.Text = "FAT";
+            this.toolStripAbrirFat.Size = new System.Drawing.Size(152, 22);
+            this.toolStripAbrirFat.Text = "S3D";
             this.toolStripAbrirFat.Click += new System.EventHandler(this.toolStripAbrirFat_Click);
             // 
             // toolStripAbrirTexto
             // 
             this.toolStripAbrirTexto.Image = global::Tinke.Properties.Resources.page_white_text;
             this.toolStripAbrirTexto.Name = "toolStripAbrirTexto";
-            this.toolStripAbrirTexto.Size = new System.Drawing.Size(95, 22);
+            this.toolStripAbrirTexto.Size = new System.Drawing.Size(152, 22);
             this.toolStripAbrirTexto.Text = "S26";
             this.toolStripAbrirTexto.Click += new System.EventHandler(this.toolStripAbrirTexto_Click);
             // 

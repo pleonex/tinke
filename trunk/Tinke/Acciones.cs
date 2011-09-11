@@ -187,7 +187,7 @@ namespace Tinke
                 case Formato.Texto:
                     return 4;
                 case Formato.Comprimido:
-                    return 6;
+                    return 5;
                 case Formato.Sonido:
                     return 14;
                 case Formato.Video:
@@ -196,6 +196,12 @@ namespace Tinke
                     return 20;
                 case Formato.Script:
                     return 17;
+                case Formato.Texture:
+                    return 21;
+                case Formato.Model3D:
+                    return 22;
+                case Formato.Pack:
+                    return 6;
                 case Formato.Desconocido:
                 default:
                     return 1;
@@ -213,9 +219,9 @@ namespace Tinke
             string tempFile;
             BinaryReader br;
 
-            if (selectFile.offset != 0x0)
+            if (selectFile.packFile is String && selectFile.packFile != "")
             {
-                tempFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + selectFile.name;
+                tempFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + selectFile.id + selectFile.name;
                 br = new BinaryReader(File.OpenRead(selectFile.packFile));
                 br.BaseStream.Position = selectFile.offset;
 
@@ -225,8 +231,8 @@ namespace Tinke
             else
             {
                 FileInfo info = new FileInfo(selectFile.path);
-                File.Copy(selectFile.path, info.DirectoryName + Path.DirectorySeparatorChar + "temp_" + info.Name, true);
-                tempFile = info.DirectoryName + Path.DirectorySeparatorChar + "temp_" + info.Name;
+                tempFile = info.DirectoryName + Path.DirectorySeparatorChar + "temp_" + selectFile.id + info.Name;
+                File.Copy(selectFile.path, tempFile, true);
                 br = new BinaryReader(File.OpenRead(tempFile));
             }
 
@@ -367,9 +373,9 @@ namespace Tinke
             string tempFile;
             BinaryReader br;
 
-            if (selectFile.offset != 0x0)
+            if (selectFile.packFile is String && selectFile.packFile != "")
             {
-                tempFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + selectFile.name;
+                tempFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + selectFile.id + selectFile.name;
                 br = new BinaryReader(File.OpenRead(selectFile.packFile));
                 br.BaseStream.Position = selectFile.offset;
 
@@ -383,8 +389,8 @@ namespace Tinke
             else
             {
                 FileInfo info = new FileInfo(selectFile.path);
-                File.Copy(selectFile.path, info.DirectoryName + Path.DirectorySeparatorChar + "temp_" + info.Name, true);
-                tempFile = info.DirectoryName + Path.DirectorySeparatorChar + "temp_" + info.Name;
+                tempFile = info.DirectoryName + Path.DirectorySeparatorChar + "temp_" + selectFile.id + info.Name;
+                File.Copy(selectFile.path, tempFile, true);
                 br = new BinaryReader(File.OpenRead(tempFile));
             }
 
@@ -519,7 +525,7 @@ namespace Tinke
             root = FileToFolder(file.id, root);
             // Archivo convertido a medias a carpeta ;)
             files.id = file.id;
-            if (file.offset != 0x00) // es medio archivo :)
+            if (file.packFile is String && file.packFile != "") // es medio archivo :)
                 files.tag = "O" + String.Format("{0:X}", file.size).PadLeft(8, '0') +
                     String.Format("{0:X}", file.offset).PadLeft(8, '0') + file.packFile;
             else
@@ -607,7 +613,7 @@ namespace Tinke
                         Carpeta newFolder = new Carpeta();
                         newFolder.name = currFolder.files[i].name;
                         newFolder.id = currFolder.files[i].id;
-                        if (currFolder.files[i].offset != 0x00) // es medio archivo :)
+                        if (currFolder.files[i].packFile is String && currFolder.files[i].packFile != "") // es medio archivo :)
                             newFolder.tag = "O" + String.Format("{0:X}", currFolder.files[i].size).PadLeft(8, '0') +
                                 String.Format("{0:X}", currFolder.files[i].offset).PadLeft(8, '0') + currFolder.files[i].packFile;
                         else
@@ -654,6 +660,7 @@ namespace Tinke
                 newFile.offset = 0x00;
                 newFile.path = file;
                 newFile.size = (uint)new FileInfo(file).Length;
+                newFile.id = (ushort)lastFileId++;
 
                 if (!(currFolder.files is List<Archivo>))
                     currFolder.files = new List<Archivo>();
@@ -664,6 +671,7 @@ namespace Tinke
             {
                 Carpeta newFolder = new Carpeta();
                 newFolder.name = new DirectoryInfo(folder).Name;
+                newFolder.id = (ushort)lastFolderId++;
                 newFolder = Recursive_GetDirectories(folder, newFolder);
 
                 if (!(currFolder.folders is List<Carpeta>))
@@ -1043,7 +1051,7 @@ namespace Tinke
 
             BinaryReader br = new BinaryReader(File.OpenRead(file));
 
-            if (currFile.offset != 0x0)
+            if (currFile.packFile is String && currFile.packFile != "")
             {
                 br = new BinaryReader(File.OpenRead(currFile.packFile));
                 br.BaseStream.Position = currFile.offset;
@@ -1067,7 +1075,7 @@ namespace Tinke
                 return null;
 
             BinaryReader br;
-            if (currFile.offset != 0x0)
+            if (currFile.packFile is String && currFile.packFile != "")
             {
                 br = new BinaryReader(File.OpenRead(currFile.packFile));
                 br.BaseStream.Position = currFile.offset;
@@ -1092,7 +1100,7 @@ namespace Tinke
                 return "";
 
             BinaryReader br;
-            if (currFile.offset != 0x0)
+            if (currFile.packFile is String && currFile.packFile != "")
             {
                 br = new BinaryReader(File.OpenRead(currFile.packFile));
                 br.BaseStream.Position = currFile.offset;
@@ -1182,7 +1190,7 @@ namespace Tinke
                 return Formato.Sistema;
 
             FileStream fs;
-            if (currFile.offset != 0x00)
+            if (currFile.packFile is String && currFile.packFile != "")
             {
                 fs = File.OpenRead(currFile.packFile);
                 fs.Position = currFile.offset;
@@ -1246,7 +1254,7 @@ namespace Tinke
                 return Formato.Sistema;
 
             FileStream fs;
-            if (currFile.offset != 0x00)
+            if (currFile.packFile is String && currFile.packFile != "")
             {
                 fs = new FileStream(currFile.packFile, FileMode.Open);
                 fs.Position = currFile.offset;
@@ -1307,7 +1315,7 @@ namespace Tinke
             else if (new String(Encoding.ASCII.GetChars(ext)) == "NANR" || new String(Encoding.ASCII.GetChars(ext)) == "RNAN")
                 return Formato.Animación;
             else if (name == "FNT.BIN" || name == "FAT.BIN" || name.StartsWith("OVERLAY9_") || name.StartsWith("OVERLAY7_") ||
-                name == "ARM9.BIN" || name == "ARM7.BIN")
+                name == "ARM9.BIN" || name == "ARM7.BIN" || name == "Y9.BIN" || name == "Y7.BIN")
                 return Formato.Sistema;
 
             if (DSDecmp.Main.Get_Format(file) != FormatCompress.Invalid)
@@ -1328,9 +1336,9 @@ namespace Tinke
             BinaryReader br;
             byte[] ext;
 
-            if (selectFile.offset != 0x0)
+            if (selectFile.packFile is String && selectFile.packFile != "")
             {
-                tempFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + selectFile.name;
+                tempFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + id + selectFile.name;
                 br = new BinaryReader(File.OpenRead(selectFile.packFile));
                 br.BaseStream.Position = selectFile.offset;
                 File.WriteAllBytes(tempFile, br.ReadBytes((int)selectFile.size));
@@ -1340,8 +1348,8 @@ namespace Tinke
             else
             {
                 FileInfo info = new FileInfo(selectFile.path);
-                File.Copy(selectFile.path, info.DirectoryName + Path.DirectorySeparatorChar + "temp_" + info.Name, true);
-                tempFile = info.DirectoryName + Path.DirectorySeparatorChar + "temp_" + info.Name;
+                tempFile = info.DirectoryName + Path.DirectorySeparatorChar + "temp_" + id + info.Name;
+                File.Copy(selectFile.path, tempFile, true);
                 br = new BinaryReader(File.OpenRead(tempFile));
             }
             #endregion
@@ -1352,9 +1360,11 @@ namespace Tinke
             #region Búsqueda y llamada a plugin
             try
             {
+                Formato f;
                 if (gamePlugin is IGamePlugin)
                 {
-                    if (gamePlugin.Get_Formato(selectFile.name, ext, idSelect) == Formato.Comprimido)
+                    f = gamePlugin.Get_Formato(selectFile.name, ext, idSelect);
+                    if (f == Formato.Comprimido || f == Formato.Pack)
                     {
                         gamePlugin.Leer(tempFile, idSelect);
                         goto Continuar;
@@ -1362,7 +1372,8 @@ namespace Tinke
                 }
                 foreach (IPlugin plugin in formatList)
                 {
-                    if (plugin.Get_Formato(selectFile.name, ext) == Formato.Comprimido)
+                    f = plugin.Get_Formato(selectFile.name, ext);
+                    if (f == Formato.Comprimido || f == Formato.Pack)
                     {
                         plugin.Leer(tempFile, id);
                         goto Continuar;
@@ -1402,9 +1413,6 @@ namespace Tinke
             File.Delete(tempFile);
             Carpeta desc = pluginHost.Get_Files();
 
-            // Comprobamos y eliminamos los archivos de tamaño 0 Bytes
-            //Recursivo_EliminarArchivosNulos(desc);
-
             Add_Files(ref desc, id);    // Añadimos los archivos descomprimidos al árbol de archivos
             return desc;
         }
@@ -1415,9 +1423,11 @@ namespace Tinke
 
             try
             {
+                Formato f;
                 if (gamePlugin is IGamePlugin)
                 {
-                    if (gamePlugin.Get_Formato(name, ext, idSelect) == Formato.Comprimido)
+                    f = gamePlugin.Get_Formato(name, ext, idSelect);
+                    if (f == Formato.Comprimido || f == Formato.Pack)
                     {
                         gamePlugin.Leer(compressedFile, idSelect);
                         goto Continuar;
@@ -1425,7 +1435,8 @@ namespace Tinke
                 }
                 foreach (IPlugin plugin in formatList)
                 {
-                    if (plugin.Get_Formato(name, ext) == Formato.Comprimido)
+                    f = plugin.Get_Formato(name, ext);
+                    if (f == Formato.Comprimido || f == Formato.Pack)
                     {
                         plugin.Leer(compressedFile, id);
                         goto Continuar;
@@ -1436,7 +1447,7 @@ namespace Tinke
                 if (compressFormat != FormatCompress.Invalid)
                 {
                     FileInfo info = new FileInfo(compressedFile);
-                    String uncompFile = info.DirectoryName + Path.DirectorySeparatorChar + "un_" + info.Name;
+                    String uncompFile = info.DirectoryName + Path.DirectorySeparatorChar + "un_" + id + info.Name;
 
                     DSDecmp.Main.Decompress(compressedFile, uncompFile, compressFormat);
                     if (!File.Exists(uncompFile))
@@ -1499,9 +1510,11 @@ namespace Tinke
 
             try
             {
+                Formato f;
                 foreach (IPlugin plugin in formatList)
                 {
-                    if (plugin.Get_Formato(new FileInfo(arg).Name, ext) == Formato.Comprimido)
+                    f = plugin.Get_Formato(new FileInfo(arg).Name, ext);
+                    if (f == Formato.Comprimido || f == Formato.Pack)
                     {
                         plugin.Leer(arg, -1);
                         goto Continuar;
@@ -1602,7 +1615,7 @@ namespace Tinke
             // Guardamos el archivo fuera del sistema de ROM
             Archivo selectFile = Search_File(id);
 
-            if (selectFile.offset != 0x0)
+            if (selectFile.packFile is String && selectFile.packFile != "")
             {
                 BinaryReader br;
                 br = new BinaryReader(File.OpenRead(selectFile.packFile));
@@ -1621,7 +1634,7 @@ namespace Tinke
             Archivo selectFile = Search_File(id);
             String outFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + id + selectFile.name;
 
-            if (selectFile.offset != 0x0)
+            if (selectFile.packFile is String && selectFile.packFile != "")
             {
                 BinaryReader br = new BinaryReader(File.OpenRead(selectFile.packFile));
                 br.BaseStream.Position = selectFile.offset;
@@ -1639,7 +1652,7 @@ namespace Tinke
         public void Save_File(Archivo currfile, string outFile)
         {
             // Guardamos el archivo fuera del sistema de ROM
-            if (currfile.offset != 0x0)
+            if (currfile.packFile is String && currfile.packFile != "")
             {
                 BinaryReader br = new BinaryReader(File.OpenRead(currfile.packFile));
                 br.BaseStream.Position = currfile.offset;
@@ -1660,9 +1673,9 @@ namespace Tinke
             string tempFile;
             BinaryReader br;
 
-            if (selectFile.offset != 0x0)
+            if (selectFile.packFile is String && selectFile.packFile != "")
             {
-                tempFile = pluginHost.Get_TempFolder() + '\\' + selectFile.name;
+                tempFile = pluginHost.Get_TempFolder() + '\\' + selectFile.id + selectFile.name;
                 br = new BinaryReader(File.OpenRead(selectFile.packFile));
                 br.BaseStream.Position = selectFile.offset;
 
@@ -1672,8 +1685,8 @@ namespace Tinke
             else
             {
                 FileInfo info = new FileInfo(selectFile.path);
-                File.Copy(selectFile.path, info.DirectoryName + Path.DirectorySeparatorChar + "temp_" + info.Name, true);
-                tempFile = info.DirectoryName + Path.DirectorySeparatorChar + "temp_" + info.Name;
+                tempFile = info.DirectoryName + Path.DirectorySeparatorChar + "temp_" + selectFile.id + info.Name;
+                File.Copy(selectFile.path, tempFile, true);
                 br = new BinaryReader(File.OpenRead(tempFile));
             }
 

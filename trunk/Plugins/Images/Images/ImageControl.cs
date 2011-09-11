@@ -44,8 +44,6 @@ namespace Images
         bool stopUpdating;
         bool isMap;
 
-        bool selectColor;
-
         public ImageControl()
         {
             InitializeComponent();
@@ -238,12 +236,11 @@ namespace Images
                 comboBox1.Items[0] = xml.Element("S16").Value;
                 comboBox1.Items[1] = xml.Element("S17").Value;
                 //comboBox1.Items[2] = xml.Element("S18").Value;
-                checkTransparency.Text = xml.Element("S1C").Value;
+                checkTransparency.Text = xml.Element("S1D").Value;
                 lblZoom.Text = xml.Element("S1E").Value;
                 btnBgd.Text = xml.Element("S1F").Value;
                 btnBgdTrans.Text = xml.Element("S20").Value;
                 btnImport.Text = xml.Element("S21").Value;
-                btnSetTrans.Text = xml.Element("S22").Value;
             }
             catch { throw new Exception("There was an error reading the XML file of language."); } 
         }
@@ -271,18 +268,8 @@ namespace Images
             o.Multiselect = false;
             if (o.ShowDialog() == DialogResult.OK)
             {
-                NCLR newPalette = pluginHost.BitmapToPalette(o.FileName);
-                String paletteFile = Path.GetTempFileName() + new String(paleta.cabecera.id);
-                newPalette.id = paleta.id;
-                newPalette.cabecera.id = paleta.cabecera.id;
-                paleta = newPalette;
-
-                pluginHost.Set_NCLR(paleta);
-                PaletteControl.Write_Palette(paletteFile, paleta, pluginHost);
-                pluginHost.ChangeFile((int)paleta.id, paletteFile);
-
                 NCGR newTile = pluginHost.BitmapToTile(o.FileName, (comboBox1.SelectedIndex == 0 ? Orden_Tiles.No_Tiles : Orden_Tiles.Horizontal));
-                String tileFile = System.IO.Path.GetTempFileName() + new String(tile.cabecera.id);
+                String tileFile = System.IO.Path.GetTempFileName() + '.' + new String(tile.cabecera.id);
                 newTile.id = tile.id;
                 newTile.cabecera.id = tile.cabecera.id;
                 tile = newTile;
@@ -445,62 +432,5 @@ namespace Images
             pictureBgd.BackColor = Color.Transparent;
             pic.BackColor = Color.Transparent;
         }
-
-        private void btnSetTrans_Click(object sender, EventArgs e)
-        {
-            String message = XElement.Load(Application.StartupPath + Path.DirectorySeparatorChar + "Plugins" +
-                    Path.DirectorySeparatorChar + "TETRISDSLang.xml").Element(pluginHost.Get_Language()).Element("ImageControl").Element("S23").Value;
-
-            if (MessageBox.Show(message, "",  MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
-            {
-                ColorDialog o = new ColorDialog();
-                o.AllowFullOpen = true;
-                o.AnyColor = true;
-                o.FullOpen = true;
-                if (o.ShowDialog() == DialogResult.OK)
-                    Change_TransparencyColor(o.Color);
-                o.Dispose();
-            }
-            else
-                selectColor = true;
-
-        }
-        private void pic_MouseClick(object sender, MouseEventArgs e)
-        {
-            if (selectColor && pic.Image is Image)
-            {
-                Color color = ((Bitmap)pic.Image).GetPixel(e.X, e.Y);
-                Change_TransparencyColor(color);
-            }
-        }
-        private void Change_TransparencyColor(Color color)
-        {
-            int colorIndex = 0;
-            for (int i = 0; i < paleta.pltt.paletas[0].colores.Length; i++)
-            {
-                if (paleta.pltt.paletas[0].colores[i] == color)
-                {
-                    paleta.pltt.paletas[0].colores[i] = paleta.pltt.paletas[0].colores[0];
-                    paleta.pltt.paletas[0].colores[0] = color;
-                    colorIndex = i;
-                    break;
-                }
-            }
-
-            pluginHost.Set_NCLR(paleta);
-            String paletteFile = System.IO.Path.GetTempFileName();
-            PaletteControl.Write_Palette(paletteFile, paleta, pluginHost);
-            pluginHost.ChangeFile((int)paleta.id, paletteFile);
-
-            pluginHost.Change_Color(ref tile.rahc.tileData.tiles, colorIndex, 0);
-            pluginHost.Set_NCGR(tile);
-            String tileFile = System.IO.Path.GetTempFileName();
-            Write_Tiles(tileFile, tile, pluginHost);
-            pluginHost.ChangeFile((int)tile.id, tileFile);
-
-            checkTransparency.Checked = true;
-            UpdateImage();
-        }
-
     }
 }

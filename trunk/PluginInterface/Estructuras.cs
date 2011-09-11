@@ -247,7 +247,10 @@ namespace PluginInterface
         Comprimido,
         Desconocido,
         Sistema,
-        Script
+        Script,
+        Pack,
+        Model3D,
+        Texture
     }
     public enum FormatCompress // From DSDecmp
     {

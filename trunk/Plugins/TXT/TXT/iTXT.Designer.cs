@@ -80,6 +80,7 @@
             "unicode",
             "utf-32",
             "utf-8",
+            "utf-16",
             "ascii"});
             this.comboEncod.Location = new System.Drawing.Point(82, 480);
             this.comboEncod.Name = "comboEncod";

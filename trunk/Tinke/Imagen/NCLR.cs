@@ -86,13 +86,13 @@ namespace Tinke
             NCLR nclr = new NCLR();
             nclr.id = (uint)id;
             // Ponemos una cabecera genérica
-            nclr.cabecera.id = "NCLR".ToCharArray();
+            nclr.cabecera.id = "UNKN".ToCharArray();
             nclr.cabecera.endianess = 0xFEFF;
             nclr.cabecera.constant = 0x0100;
             nclr.cabecera.file_size = file_size;
             nclr.cabecera.header_size = 0x10;
             // El archivo es PLTT raw, es decir, exclusivamente colores
-            nclr.pltt.ID = "PLTT".ToCharArray();
+            nclr.pltt.ID = "UNKN".ToCharArray();
             nclr.pltt.tamaño = file_size;
             nclr.pltt.profundidad = (file_size > 0x20) ? ColorDepth.Depth8Bit : ColorDepth.Depth4Bit;
             nclr.pltt.unknown1 = 0x00000000;

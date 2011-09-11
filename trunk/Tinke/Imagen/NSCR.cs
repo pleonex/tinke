@@ -65,7 +65,7 @@ namespace Tinke
             nscr.id = (uint)id;
 
             // Lee cabecera genérica
-            nscr.cabecera.id = "NSCR".ToCharArray();
+            nscr.cabecera.id = "UNKN".ToCharArray();
             nscr.cabecera.endianess = 0xFEFF;
             nscr.cabecera.constant = 0x0100;
             nscr.cabecera.file_size = file_size;
@@ -73,7 +73,7 @@ namespace Tinke
             nscr.cabecera.nSection = 1;
 
             // Lee primera y única sección:
-            nscr.section.id = "NSCR".ToCharArray();
+            nscr.section.id = "UNKN".ToCharArray();
             nscr.section.section_size = file_size;
             nscr.section.width = 0x0100;
             nscr.section.height = 0x00C0;

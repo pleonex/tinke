@@ -59,6 +59,9 @@ namespace Tinke
             comboCelda.SelectedIndex = 0;
 
             ActualizarImagen();
+
+            if (new String(paleta.cabecera.id) != "NCLR" && new String(paleta.cabecera.id) != "RLCN") // Not NCLR file
+                btnSetTrans.Enabled = false;
         }
 
         private void LeerIdioma()
@@ -271,6 +274,9 @@ namespace Tinke
             if (o.ShowDialog() == DialogResult.OK)
             {
                 #region Set new palette
+                if (new String(paleta.cabecera.id) != "NCLR" && new String(paleta.cabecera.id) != "RLCN") // Not NCLR file
+                    goto Set_Tiles;
+
                 String paletteFile = System.IO.Path.GetTempFileName();
                 NCLR newPalette = Imagen_NCLR.BitmapToPalette(o.FileName);
                 paleta.pltt.paletas[ncer.cebk.banks[comboCelda.SelectedIndex].cells[0].nPalette].colores = newPalette.pltt.paletas[0].colores;
@@ -281,6 +287,10 @@ namespace Tinke
                 #endregion
 
                 #region Set new tiles
+            Set_Tiles:
+                if (new String(tile.cabecera.id) != "NCGR" && new String(tile.cabecera.id) != "RGCN") // Not NCGR file
+                    goto End;
+
                 if (Image.FromFile(o.FileName).Size != new Size(512, 512))
                     throw new NotSupportedException();
 
@@ -300,7 +310,7 @@ namespace Tinke
                 Imagen_NCGR.Write(tile, tileFile);
                 pluginHost.ChangeFile((int)tile.id, tileFile);
                 #endregion
-
+            End:
                 ActualizarImagen();
             }
         }

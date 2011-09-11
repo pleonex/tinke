@@ -91,11 +91,39 @@ namespace Tinke.Dialog
             {
                 if (checkNumBigEndian.Checked)
                 {
-                    fat.num_files = BitConverter.ToUInt32(br.ReadBytes((int)numericNumLen.Value).Reverse().ToArray(), 0);
+                    switch ((int)numericNumLen.Value)
+                    {
+                        case 1:
+                            fat.num_files = br.ReadByte();
+                            break;
+                        case 2:
+                            fat.num_files = BitConverter.ToUInt16(br.ReadBytes(2).Reverse().ToArray(), 0);
+                            break;
+                        case 4:
+                            fat.num_files = BitConverter.ToUInt32(br.ReadBytes(4).Reverse().ToArray(), 0);
+                            break;
+                        case 8:
+                            fat.num_files = (uint)BitConverter.ToUInt64(br.ReadBytes(8).Reverse().ToArray(), 0);
+                            break;
+                    }
                 }
                 else
                 {
-                    fat.num_files = BitConverter.ToUInt32(br.ReadBytes((int)numericNumLen.Value), 0);
+                    switch ((int)numericNumLen.Value)
+                    {
+                        case 1:
+                            fat.num_files = br.ReadByte();
+                            break;
+                        case 2:
+                            fat.num_files = br.ReadUInt16();
+                            break;
+                        case 4:
+                            fat.num_files = br.ReadUInt32();
+                            break;
+                        case 8:
+                            fat.num_files = (uint)br.ReadUInt64();
+                            break;
+                    }
                 }
             }
             catch { fat.num_files = 0; numericNumFiles.Value = 0; }
@@ -146,7 +174,8 @@ namespace Tinke.Dialog
         }
         private void numericNumLen_ValueChanged(object sender, EventArgs e)
         {
-            Read_NumFiles();
+            if (numericNumLen.Value == 1 || numericNumLen.Value == 2 || numericNumLen.Value == 4 || numericNumLen.Value == 8)
+                Read_NumFiles();
         }
         private void btnNumCalculate_Click(object sender, EventArgs e)
         {

@@ -14,9 +14,7 @@ namespace Tinke.Nitro
             BinaryReader br = new BinaryReader(File.OpenRead(file));
             br.BaseStream.Position = offset;
 
-            int idFin = BuscarArchivo("fnt.bin", root).id; // ID del último archivo de la rom
-
-            for (int i = 0; i < idFin; i++)
+            for (int i = 0; i < size / 0x08; i++)
             {
                 UInt32 currOffset = br.ReadUInt32();
                 UInt32 currSize = br.ReadUInt32() - currOffset;

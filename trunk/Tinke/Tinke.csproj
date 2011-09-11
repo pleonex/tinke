@@ -373,6 +373,7 @@
     </Content>
     <Content Include="nintendo-ds.ico" />
     <Content Include="Nitro\MakerCodes.txt" />
+    <None Include="Resources\compress.png" />
     <None Include="Resources\picture_edit.png" />
     <None Include="Resources\image_edit.png" />
     <None Include="Resources\pencil.png" />

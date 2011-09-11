@@ -74,6 +74,8 @@
     </S3B>
     <S3C>Full file information</S3C>
     <S3D>Pack</S3D>
+    <S3E>Texture</S3E>
+    <S3F>3D Model</S3F>
   </Sistema>
   <RomInfo>
     <S01>Game information</S01>
@@ -213,6 +215,7 @@
       {1}
     </S20>
     <S21>Time reading external files:</S21>
+    <S22>The temp folder couldn't be removed</S22>
   </Messages>
   <NCLR>
     <S01># palette:</S01>

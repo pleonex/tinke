@@ -108,7 +108,7 @@ namespace Tinke
             NCGR ncgr = new NCGR();
             ncgr.id = (uint)id;
             ncgr.cabecera.endianess = 0xFEFF;
-            ncgr.cabecera.id = "NCGR".ToCharArray();
+            ncgr.cabecera.id = "UNKN".ToCharArray();
             ncgr.cabecera.nSection = 1;
             ncgr.cabecera.constant = 0x0100;
             ncgr.cabecera.file_size = file_size;
