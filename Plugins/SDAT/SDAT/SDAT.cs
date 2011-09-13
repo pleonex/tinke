@@ -380,10 +380,14 @@ namespace SDAT
 
             br.Close();
 
-            System.Xml.Linq.XElement xml = System.Xml.Linq.XElement.Load(Application.StartupPath + "\\Plugins\\SDATLang.xml");
-            xml = xml.Element(pluginHost.Get_Language()).Element("Messages");
-            Console.WriteLine(xml.Element("S00").Value);
-            Console.WriteLine(xml.Element("S01").Value, sdat.files.header.nSounds.ToString());
+            try
+            {
+                System.Xml.Linq.XElement xml = System.Xml.Linq.XElement.Load(Application.StartupPath + "\\Plugins\\SDATLang.xml");
+                xml = xml.Element(pluginHost.Get_Language()).Element("Messages");
+                Console.WriteLine(xml.Element("S00").Value);
+                Console.WriteLine(xml.Element("S01").Value, sdat.files.header.nSounds.ToString());
+            }
+            catch { throw new Exception("There was an error reading the XML file of language."); }
 
             FileSystem(ref sdat);
 

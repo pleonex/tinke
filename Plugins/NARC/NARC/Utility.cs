@@ -133,7 +133,7 @@ namespace NARC
                         Archivo newFile = currFolder.files[i];
                         newFile.size = size;
                         newFile.offset = offset;
-                        newFile.packFile = utilityFile;
+                        newFile.path = utilityFile;
                         currFolder.files.RemoveAt(i);
                         currFolder.files.Insert(i, newFile);
                         return;

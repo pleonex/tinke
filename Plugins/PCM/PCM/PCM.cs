@@ -29,20 +29,9 @@ namespace PCM
 
         public void Leer(string archivo, int id)
         {
-            string folder = pluginHost.Get_TempFolder();
-            // Determinamos la subcarpeta donde guardar los archivos descomprimidos.
-            string[] subFolders = Directory.GetDirectories(folder);
-            for (int n = 0; ; n++)
-            {
-                if (!subFolders.Contains<string>(folder + "\\Temp" + n))
-                {
-                    folder += "\\Temp" + n;
-                    Directory.CreateDirectory(folder);
-                    break;
-                }
-            }
+            String packFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + Path.GetRandomFileName();
+            File.Copy(archivo, packFile, true);
 
-            // Comprobación de si está comprimido con LZ77 o Huffman
             BinaryReader br = new BinaryReader(File.OpenRead(archivo));
             sPCM pcm = new sPCM();
 
@@ -67,15 +56,14 @@ namespace PCM
                 pcm.files[i].unknown = br.ReadUInt32();
                 pcm.files[i].data_size = br.ReadUInt32();
                 pcm.files[i].name = new String(br.ReadChars(16)).Replace("\0", "");
+                pcm.files[i].offset = (uint)br.BaseStream.Position;
 
-                BinaryWriter bw = new BinaryWriter(new FileStream(folder + '\\' + pcm.files[i].name, FileMode.Create, FileAccess.Write));
-                bw.Write(br.ReadBytes((int)pcm.files[i].data_size));
-                bw.Flush();
-                bw.Close();
+                br.BaseStream.Seek(pcm.files[i].data_size, SeekOrigin.Current);
 
                 files[i].name = pcm.files[i].name;
-                files[i].path = folder + '\\' + pcm.files[i].name;
-                files[i].size = (uint)new FileInfo(files[i].path).Length;
+                files[i].path = packFile;
+                files[i].offset = pcm.files[i].offset;
+                files[i].size = pcm.files[i].data_size;
             }
             br.Close();
 
@@ -86,7 +74,7 @@ namespace PCM
         }
         public Control Show_Info(string archivo, int id)
         {
-            throw new NotImplementedException();
+            return new Control();
         }
 
         #region Estructuras
@@ -104,6 +92,7 @@ namespace PCM
             public uint unknown;
             public uint data_size;
             public string name;
+            public uint offset;
         }
         #endregion
     }

@@ -28,7 +28,7 @@ namespace EDGEWORTH
                 Archivo newFile = new Archivo();
                 newFile.name = "File " + i.ToString();
                 newFile.offset = startOffset + 4;
-                newFile.packFile = romFile;
+                newFile.path = romFile;
                 newFile.size = br.ReadUInt32();
 
                 br.BaseStream.Position = currPos;
@@ -41,7 +41,7 @@ namespace EDGEWORTH
         public static void Write(string output, Carpeta unpackedFiles)
         {
             BinaryWriter bw = new BinaryWriter(File.OpenWrite(output));
-            
+
             // Write pointers
             bw.Write((uint)((unpackedFiles.files.Count + 1) * 4)); // Pointer table size
             uint currOffset = 0x00; // Pointer table offset
@@ -56,14 +56,8 @@ namespace EDGEWORTH
             // Write files
             for (int i = 0; i < unpackedFiles.files.Count; i++)
             {
-                BinaryReader br;
-                if (unpackedFiles.files[i].packFile is String && unpackedFiles.files[i].packFile != "")
-                {
-                    br = new BinaryReader(File.OpenRead(unpackedFiles.files[i].packFile));
-                    br.BaseStream.Position = unpackedFiles.files[i].offset;
-                }
-                else
-                    br = new BinaryReader(File.OpenRead(unpackedFiles.files[i].path));
+                BinaryReader br = new BinaryReader(File.OpenRead(unpackedFiles.files[i].path));
+                br.BaseStream.Position = unpackedFiles.files[i].offset;
 
                 bw.Write((uint)unpackedFiles.files[i].size);
                 bw.Write(br.ReadBytes((int)unpackedFiles.files[i].size));

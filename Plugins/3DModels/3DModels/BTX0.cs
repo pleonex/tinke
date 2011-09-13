@@ -15,6 +15,8 @@ namespace _3DModels
             BinaryReader br = new BinaryReader(File.OpenRead(file));
             sBTX0 btx = new sBTX0();
             btx.id = id;
+            btx.file = Path.GetTempFileName();
+            File.Copy(file, btx.file, true);
             
             // Read header
             btx.header.type = br.ReadChars(4);
@@ -76,7 +78,7 @@ namespace _3DModels
             for (int i = 0; i < tex.texInfo.num_objs; i++)
             {
                 sBTX0.Texture.TextInfo texInfo = new sBTX0.Texture.TextInfo();
-                texInfo.tex_offset = (ushort)(br.ReadUInt16() << 3);
+                texInfo.tex_offset = br.ReadUInt16();
                 texInfo.parameters = br.ReadUInt16();
                 texInfo.width2 = br.ReadByte();
                 texInfo.unknown = br.ReadByte();
@@ -87,17 +89,10 @@ namespace _3DModels
                 texInfo.format = (byte)((texInfo.parameters >> 10) & 3);
                 texInfo.height = (byte)(8 << ((texInfo.parameters >> 7) & 3));
                 texInfo.width = (byte)(8 << ((texInfo.parameters >> 4) & 3));
-                texInfo.depth = FormatTable[texInfo.format];
+                texInfo.depth = FormatDepth[texInfo.format];
                 Console.WriteLine("BTX depth: {0}", texInfo.format.ToString());
 
                 tex.texInfo.infoBlock.infoData[i] = texInfo;
-
-                // Read the texture data
-                long currPos = br.BaseStream.Position;
-                br.BaseStream.Position = btx.header.offset[0] + tex.header.textData_offset + texInfo.tex_offset;
-                int texLength = texInfo.width * texInfo.height * texInfo.depth / 8;
-                tex.texture_data[i] = br.ReadBytes(texLength);
-                br.BaseStream.Position = currPos;
             }
             tex.texInfo.names = new string[tex.texInfo.num_objs];
             for (int i = 0; i < tex.texInfo.num_objs; i++)
@@ -131,15 +126,9 @@ namespace _3DModels
             for (int i = 0; i < tex.palInfo.num_objs; i++)
             {
                 sBTX0.Texture.PalInfo palInfo = new sBTX0.Texture.PalInfo();
-                palInfo.palette_offset = (ushort)(br.ReadUInt16() << 3);
-                palInfo.unknown1 = br.ReadUInt16();
+                palInfo.palette_offset = br.ReadUInt16();
+                palInfo.unknown1 = br.ReadUInt16(); // Not used
                 tex.palInfo.infoBlock.infoData[i] = palInfo;
-
-                // Read the palette data
-                long currPos = br.BaseStream.Position;
-                br.BaseStream.Position = tex.header.paletteData_offset + btx.header.offset[0] + palInfo.palette_offset;
-                tex.palette_data[i] = br.ReadBytes((int)tex.header.paletteData_size);
-                br.BaseStream.Position = currPos;
             }
             tex.palInfo.names = new string[tex.palInfo.num_objs];
             for (int i = 0; i < tex.palInfo.num_objs; i++)
@@ -148,19 +137,71 @@ namespace _3DModels
 
             btx.texture = tex;
             #endregion
+            Write_Info(btx);
 
             br.Close();
             return btx;
         }
+        private static void Write_Info(sBTX0 btx0)
+        {
+            Console.WriteLine("<b><pre>Read BTX0 files</b>");
+            Console.WriteLine("\nTexture section\n<u>Header:</u>");
+            Console.WriteLine("Texture Info offset: 0x{0}", btx0.texture.header.textInfo_offset.ToString("x"));
+            Console.WriteLine("Texture Data offset: 0x{0}", btx0.texture.header.textData_offset.ToString("x"));
+            Console.WriteLine("Texture Data size: 0x{0}", btx0.texture.header.textData_size.ToString("x"));
+            Console.WriteLine("Compressed Texture Data offset: 0x{0}", btx0.texture.header.textCompressedData_offset.ToString("x"));
+            Console.WriteLine("Compressed Texture Data size: 0x{0}", btx0.texture.header.textCompressedData_size.ToString("x"));
+            Console.WriteLine("Compressed Info Offset: 0x{0}", btx0.texture.header.textCompressedInfo_offset.ToString("x"));
+            Console.WriteLine("Compressed Info Data offset: 0x{0}", btx0.texture.header.textCompressedInfoData_offset.ToString("x"));
+            Console.WriteLine("Palette Data offset: 0x{0}", btx0.texture.header.paletteData_offset.ToString("x"));
+            Console.WriteLine("Palette Data size: 0x{0}", btx0.texture.header.paletteData_offset.ToString("x"));
+            Console.WriteLine("Palette Info offset: 0x{0}", btx0.texture.header.paletteInfo_offset.ToString("x"));
 
-        public static byte[] FormatTable = new byte[] {
-            0, 8, 2, 4, 8, 2, 8, 16
-        };
+            Console.WriteLine("<u>Texture Information:</u>");
+            for (int i = 0; i < btx0.texture.texInfo.num_objs; i++)
+            {
+                sBTX0.Texture.TextInfo texInfo = (sBTX0.Texture.TextInfo)btx0.texture.texInfo.infoBlock.infoData[i];
+                Console.WriteLine("*Objs: {0} ({1})", i.ToString(), btx0.texture.texInfo.names[i].Trim('\x0'));
+                Console.Write("|_ Offset 0x{0}", texInfo.tex_offset.ToString("x"));
+                Console.Write(" | Size {0}x{1}", texInfo.width.ToString(), texInfo.height.ToString());
+                Console.Write(" | Format {0} ({1})", texInfo.format.ToString(), (FormatDepthName)texInfo.format);
+                Console.Write(" | Palette ID {0}", texInfo.paletteID.ToString());
+                Console.Write(" | Unknown1 {0} | Unknown2 {0} | Unknown3 {0}", texInfo.unknown.ToString(), texInfo.unknown2.ToString(), texInfo.unknown3.ToString());
+                Console.WriteLine();
+            }
+
+            Console.WriteLine("<u>Palette Information:</u>");
+            for (int i = 0; i < btx0.texture.palInfo.num_objs; i++)
+            {
+                sBTX0.Texture.PalInfo palInfo = (sBTX0.Texture.PalInfo)btx0.texture.palInfo.infoBlock.infoData[i];
+                Console.WriteLine("*Pal: {0} ({1})", i.ToString(), btx0.texture.palInfo.names[i].Trim('\x0'));
+                Console.Write("|_Offset 0x{0}", palInfo.palette_offset.ToString("x"));
+                Console.Write(" | Unknown 0x{0}", palInfo.unknown1.ToString("x"));
+                Console.WriteLine();
+            }
+            Console.WriteLine("EOF</pre>");
+        }
+
+        public enum FormatDepthName : byte
+        {
+            No_Texture = 0,
+            A3I5 = 1,
+            Color4 = 2,
+            Color16 = 3,
+            Color256 = 4,
+            Compressed_Texel4x4 = 5,
+            A5I3 = 6,
+            Direct_Texture = 7
+
+        }
+        //                                              0  1  2  3  4  5  6  7
+        public static byte[] FormatDepth = new byte[] { 0, 8, 2, 4, 8, 0, 8, 16 };
     }
 
     public struct sBTX0
     {
         public int id;
+        public string file;
         public Header header;
         public Texture texture;
 

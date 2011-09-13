@@ -59,21 +59,15 @@ namespace Tinke.Nitro
 
             for (int i = 0; i < overlays.files.Count; i++)
             {
-                if (overlays.files[i].packFile == romFile)
+                if (overlays.files[i].path == romFile)
                 {
                     br.BaseStream.Position = overlays.files[i].offset;
                     bw.Write(br.ReadBytes((int)overlays.files[i].size));
                 }
-                else // Quien sabe cuándo sucederá esto...
+                else
                 {
-                    BinaryReader br2;
-                    if (overlays.files[i].packFile is String && overlays.files[i].packFile != "")
-                    {
-                        br2 = new BinaryReader(new FileStream(overlays.files[i].packFile, FileMode.Open)); // Very, very, very but very very strange case xD
-                        br2.BaseStream.Position = overlays.files[i].offset;
-                    }
-                    else
-                        br2 = new BinaryReader(new FileStream(overlays.files[i].path, FileMode.Open));
+                    BinaryReader br2 = new BinaryReader(new FileStream(overlays.files[i].path, FileMode.Open));
+                    br2.BaseStream.Position = overlays.files[i].offset;
                     bw.Write(br2.ReadBytes((int)overlays.files[i].size));
                     br2.Close();
                 }
