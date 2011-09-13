@@ -15,7 +15,7 @@ namespace Tinke.Nitro
             Estructuras.ROMHeader nds = new Estructuras.ROMHeader();
 
             BinaryReader br = new BinaryReader(File.OpenRead(file));
-            Console.WriteLine("<b>" + 
+            Console.WriteLine("<b>" +
                 Tools.Helper.ObtenerTraduccion("Messages", "S03") + "</b> "
                 + new FileInfo(file).Name);
 
@@ -77,7 +77,7 @@ namespace Tinke.Nitro
 
             Console.WriteLine("<b>" +
                 Tools.Helper.ObtenerTraduccion("Messages", "S04")
-                + "</b><br>" + new String(nds.gameTitle).Replace("\0", "") + 
+                + "</b><br>" + new String(nds.gameTitle).Replace("\0", "") +
                 " (" + new String(nds.gameCode).Replace("\0", "") + ')');
 
             return nds;
@@ -312,7 +312,7 @@ namespace Tinke.Nitro
                 if (currFile.name.StartsWith("overlay")) // Los overlays no van en esta sección
                     continue;
 
-                if (currFile.packFile == romFile)
+                if (currFile.path == romFile)
                 {
                     br.BaseStream.Position = currFile.offset;
                     bw.Write(br.ReadBytes((int)currFile.size));
@@ -320,16 +320,11 @@ namespace Tinke.Nitro
                 }
                 else // El archivo es modificado y no está en la ROM
                 {
-                    if (currFile.packFile is String && currFile.packFile != "")
-                    {
-                        BinaryReader br2 = new BinaryReader(File.OpenRead(currFile.packFile));
-                        br2.BaseStream.Position = currFile.offset;
-                        bw.Write(br.ReadBytes((int)currFile.size));
-                        br2.Close();
-                    }
-                    else
-                        bw.Write(File.ReadAllBytes(currFile.path));
+                    BinaryReader br2 = new BinaryReader(File.OpenRead(currFile.path));
+                    br2.BaseStream.Position = currFile.offset;
+                    bw.Write(br2.ReadBytes((int)currFile.size));
 
+                    br2.Close();
                     bw.Flush();
                 }
             }
@@ -346,17 +341,9 @@ namespace Tinke.Nitro
                 Archivo folderFile = new Archivo();
                 folderFile.name = currFolder.name;
                 folderFile.id = currFolder.id;
-                if (((String)currFolder.tag)[0] != 'O')
-                {
-                    folderFile.path = ((string)currFolder.tag).Substring(8);
-                    folderFile.size = Convert.ToUInt32(((String)currFolder.tag).Substring(0, 8), 16);
-                }
-                else
-                {
-                    folderFile.size = Convert.ToUInt32(((String)currFolder.tag).Substring(1, 8), 16);
-                    folderFile.offset = Convert.ToUInt32(((String)currFolder.tag).Substring(9, 8), 16);
-                    folderFile.packFile = ((string)currFolder.tag).Substring(17);
-                }
+                folderFile.size = Convert.ToUInt32(((String)currFolder.tag).Substring(0, 8), 16);
+                folderFile.offset = Convert.ToUInt32(((String)currFolder.tag).Substring(8, 8), 16);
+                folderFile.path = ((string)currFolder.tag).Substring(16);
 
                 return folderFile;
             }

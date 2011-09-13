@@ -1,3 +1,16 @@
+0.8.1
+*** BTX0 textures supported (view only)
+** Game 999HRPERDOOR (Nine Hours, Nine Persons, Nine Doors) supported
+   - SIR0 files in folder /cha
+** Game EDGEWORTH supported
+   - Unpack and pack support to the file romfile.bin
+** Improved Image plugin: import and export palette in Window Palette format
+* Improved plugins NARC, PCM and LASTWINDOW, now the extract function is faster
+* Italian language by Otty
+* Fixed reading problem in NCER
+* Fixed hotkeys
+* Fixed important bugs
+
 0.8.0 (public release) rev90
 *** Support for font files NFTR (edit and view)
 *** Support to write Game plugins in other languages (like C/C++)

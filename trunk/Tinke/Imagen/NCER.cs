@@ -440,9 +440,9 @@ namespace Tinke
         private static int Comparision_Cell(Cell c1, Cell c2)
         {
             if (c1.priority < c2.priority)
-                return -1;
-            else if (c1.priority > c2.priority)
                 return 1;
+            else if (c1.priority > c2.priority)
+                return -1;
             else
                 return 0;
         }

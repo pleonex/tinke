@@ -197,7 +197,7 @@ namespace Tinke.Dialog
                 {
                     Archivo currFile = new Archivo();
                     currFile.name = "File " + i.ToString();
-                    currFile.packFile = file;
+                    currFile.path = file;
 
                     // Gets the offset and size
                     if (radioOffsetStart.Checked)

@@ -67,17 +67,9 @@ namespace Tinke.Nitro
                 Archivo folderFile = new Archivo();
                 folderFile.name = currFolder.name;
                 folderFile.id = currFolder.id;
-                if (((String)currFolder.tag)[0] != 'O')
-                {
-                    folderFile.path = ((string)currFolder.tag).Substring(8);
-                    folderFile.size = Convert.ToUInt32(((String)currFolder.tag).Substring(0, 8), 16);
-                }
-                else
-                {
-                    folderFile.size = Convert.ToUInt32(((String)currFolder.tag).Substring(1, 8), 16);
-                    folderFile.offset = Convert.ToUInt32(((String)currFolder.tag).Substring(9, 8), 16);
-                    folderFile.packFile = ((string)currFolder.tag).Substring(17);
-                }
+                folderFile.size = Convert.ToUInt32(((String)currFolder.tag).Substring(0, 8), 16);
+                folderFile.offset = Convert.ToUInt32(((String)currFolder.tag).Substring(8, 8), 16);
+                folderFile.path = ((string)currFolder.tag).Substring(16);
 
                 return folderFile;
             }
@@ -132,7 +124,7 @@ namespace Tinke.Nitro
                         Archivo newFile = currFolder.files[i];
                         newFile.offset = offset;
                         newFile.size = size;
-                        newFile.packFile = romFile;
+                        newFile.path = romFile;
                         currFolder.files.RemoveAt(i);
                         currFolder.files.Insert(i, newFile);
                         return;

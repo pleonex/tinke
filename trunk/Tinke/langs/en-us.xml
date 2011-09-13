@@ -160,7 +160,7 @@
     <S01>Loading...</S01>
     <S02>Loading the file system...</S02>
     <S03>Extracting files...</S03>
-    <S04>Uncompressing files...</S04>
+    <S04>Decompressing files...</S04>
     <S05>Creating new ROM...</S05>
     <S06>Saving new ROM...</S06>
   </Espera>

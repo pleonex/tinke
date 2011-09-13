@@ -11,8 +11,11 @@ namespace LASTWINDOW
     {
         public static void Leer(IPluginHost pluginHost, string archivo)
         {
+            String packFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + Path.GetRandomFileName();
+            File.Copy(archivo, packFile, true);
+
             BinaryReader br = new BinaryReader(File.OpenRead(archivo));
-            string tempFolder = pluginHost.Get_TempFolder() + '\\' + Path.GetFileNameWithoutExtension(archivo);
+            string tempFolder = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + Path.GetFileNameWithoutExtension(archivo);
             Directory.CreateDirectory(tempFolder);
 
             Carpeta descomprimidos = new Carpeta(); // Donde guardaremos los archivos descomprimidos
@@ -33,18 +36,16 @@ namespace LASTWINDOW
             }
 
             descomprimidos.files = new List<Archivo>();
-            for (int i = 0; i < pack.nFiles; i++) // Lectura de datos y escritura en archivo temporal
+            for (int i = 0; i < pack.nFiles; i++)
             {
-                pack.files[i].data = br.ReadBytes((int)pack.files[i].size);
-                File.WriteAllBytes(tempFolder + '\\' + pack.files[i].name, pack.files[i].data);
-
                 Archivo newFile = new Archivo();
                 newFile.name = pack.files[i].name;
-                newFile.offset = 0x00;
-                newFile.path = tempFolder + '\\' + newFile.name;
+                newFile.offset = (uint)br.BaseStream.Position;
+                newFile.path = packFile;
                 newFile.size = pack.files[i].size;
                 newFile.id = (ushort)i;
 
+                br.BaseStream.Seek(pack.files[i].size, SeekOrigin.Current);
                 descomprimidos.files.Add(newFile);
             }
 
@@ -64,7 +65,6 @@ namespace LASTWINDOW
         {
             public string name;
             public uint size;
-            public byte[] data;
         }
     }
 }

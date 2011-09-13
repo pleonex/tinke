@@ -1,0 +1,516 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Language name="Italiano">
+  <Sistema>
+    <S01>Apri file(s)</S01>
+    <S02>Informazioni di gioco</S02>
+    <S03>Messaggi di debug</S03>
+    <S04>Finestra</S04>
+    <S05>Plugins</S05>
+    <S06>Ricarica plugins</S06>
+    <S07>Proprietà</S07>
+    <S08>Contenuto</S08>
+    <S09>Nome</S09>
+    <S0A>ID</S0A>
+    <S0B>Offset</S0B>
+    <S0C>Dimensioni</S0C>
+    <S0D>Tipo</S0D>
+    <S0E>Percorso</S0E>
+    <S0F>About</S0F>
+    <S10>Rimuovi files caricati</S10>
+    <S11>Rimuovi palette</S11>
+    <S12>Rimuovi immagine</S12>
+    <S13>Rimuovi mappa</S13>
+    <S14>Rimuovi cells</S14>
+    <S15>Rimuovi animazione</S15>
+    <S16>Apri come...</S16>
+    <S17>Palette</S17>
+    <S18>Immagine</S18>
+    <S19>Mappa</S19>
+    <S1A>Decomprimi</S1A>
+    <S1B>Estrai</S1B>
+    <S1C>Mostra</S1C>
+    <S1D>Esadecimale</S1D>
+    <S1E>Lingue</S1E>
+    <S1F>Cartella</S1F>
+    <S20>Palette</S20>
+    <S21>Immagini</S21>
+    <S22>Mappa</S22>
+    <S23>Cells</S23>
+    <S24>Animazione</S24>
+    <S25>Immagine</S25>
+    <S26>Testi</S26>
+    <S27>Video</S27>
+    <S28>Suono</S28>
+    <S29>Font</S29>
+    <S2A>Compresso</S2A>
+    <S2B>Sconosciuto</S2B>
+    <S2C>Seleziona la cartella in cui vuoi salvare i files</S2C>
+    <S2D>Cerca</S2D>
+    <S2E>Ricerca istantanea</S2E>
+    <S2F>Cerca parola chiave:</S2F>
+    <S30>Files riconosciuti:</S30>
+    <S31>System</S31>
+    <S32>Sostituisci file</S32>
+    <S33>Salva ROM</S33>
+    <S34>Script</S34>
+    <S35>
+      Sei sicuro di voler decomprimere TUTTI i files
+      di questa cartella? Potrebbe volerci molto...
+    </S35>
+    <S36>
+      La decompressione è fallita.
+      Sei sicuro che sia un file compresso?
+    </S36>
+    <S37>Errore durante il salvataggio delle impostazioni personalizzate.</S37>
+    <S38>Errore durante il caricamento delle impostazioni personalizzate.</S38>
+    <S39>
+      Hai cambiato alcuni files ma la nuova ROM non è stata salvata.
+      Sei sicuro di voler uscire? Tutti i cambiamenti verranno persi.
+    </S39>
+    <S3A>Attenzione</S3A>
+    <S3B>
+      Vuoi esportare la cartella decompressa invece
+      dei files compressi?
+    </S3B>
+    <S3C>Informazioni sul file</S3C>
+    <S3D>Pack</S3D>
+    <S3E>Textura</S3E>
+    <S3F>Modelo 3D</S3F>
+  </Sistema>
+  <RomInfo>
+    <S01>Informazioni di gioco</S01>
+    <S02>Banner</S02>
+    <S03>Salva come...</S03>
+    <S04>Versione:</S04>
+    <S05>Riservati:</S05>
+    <S06>Giapponese</S06>
+    <S07>Inglese</S07>
+    <S08>Francese</S08>
+    <S09>Tedesco</S09>
+    <S0A>Italiano</S0A>
+    <S0B>Spagnolo</S0B>
+    <S0C>Posizione</S0C>
+    <S0D>Proprietà</S0D>
+    <S0E>Contenuto</S0E>
+    <S0F>Titolo di gioco</S0F>
+    <S10>Codice di gioco</S10>
+    <S11>Codice produttore</S11>
+    <S12>Codice dispositivo</S12>
+    <S13>Seed di criptaggio</S13>
+    <S14>Dimensione file</S14>
+    <S15>Riservati</S15>
+    <S16>Versione ROM</S16>
+    <S17>Flag interno</S17>
+    <S18>ARM9 rom offset</S18>
+    <S19>ARM9 entry address</S19>
+    <S1A>ARM9 load address</S1A>
+    <S1B>ARM9 dimensione</S1B>
+    <S1C>ARM7 rom offset</S1C>
+    <S1D>ARM7 entry address</S1D>
+    <S1E>ARM7 load address</S1E>
+    <S1F>ARM7 dimensione</S1F>
+    <S20>File Name Table (FNT) offset</S20>
+    <S21>File Name Table (FNT) dimensione</S21>
+    <S22>File Allocation Table (FAT) offset</S22>
+    <S23>File Allocation Table (FAT) dimensione</S23>
+    <S24>ARM9 overlay offset</S24>
+    <S25>ARM9 overlay dimensione</S25>
+    <S26>ARM7 overlay offset</S26>
+    <S27>ARM7 overlay dimensione</S27>
+    <S28>Normal card control register settings</S28>
+    <S29>Secure card control register settings</S29>
+    <S2A>Banner icona offset</S2A>
+    <S2B>Area protezione CRC</S2B>
+    <S2C>Protezione trasferimento timeout</S2C>
+    <S2D>ARM9 autoload</S2D>
+    <S2E>ARM7 autoload</S2E>
+    <S2F>Disabilita protezione</S2F>
+    <S30>ROM dimensione</S30>
+    <S31>Header dimensione</S31>
+    <S32>Riservato</S32>
+    <S33>Nintendo logo CRC</S33>
+    <S34>Header CRC</S34>
+    <S35>Debug ROM offset</S35>
+    <S36>Debug dimensione</S36>
+    <S37>Debug RAM offset</S37>
+    <S38>Riservato</S38>
+    <S39>Invalido</S39>
+    <S3A>Trasparenza</S3A>
+    <S3B>Modifica</S3B>
+  </RomInfo>
+  <Autores>
+    <S01>About</S01>
+    <S02>Versione</S02>
+    <S03>Fatto da:</S03>
+    <S04>Traduzione italiana di:</S04>
+    <S05>Source code:</S05>
+    <S06>
+      This program is free software under the terms of the GNU
+      General Public License version 3.
+    </S06>
+    <S07>Programma creato con l'aiuto delle seguenti pagine web.</S07>
+    <S08>Librerie per decomprimere i files</S08>
+    <S09>Informazioni sull'header rom.</S09>
+    <S0A>Informazioni sui formati dei files Nintendo.</S0A>
+    <S0B>Icone usate da questo programma.</S0B>
+    <S0C>Otty</S0C>
+    <S0D>Ringraziamenti speciali:</S0D>
+  </Autores>
+  <Espera>
+    <S01>Carico...</S01>
+    <S02>Carico i file system...</S02>
+    <S03>Estraggo i files...</S03>
+    <S04>Decomprimo i files...</S04>
+    <S05>Creazione nuova ROM...</S05>
+    <S06>Salvataggio nuova ROM...</S06>
+  </Espera>
+  <Messages>
+    <S01>Errore</S01>
+    <S02>Errore nell'apertura del gioco. Sei sicuro che sia un gioco NDS?</S02>
+    <S03>Analisi gioco:</S03>
+    <S04>Informazioni di gioco:</S04>
+    <S05>Carico programma...</S05>
+    <S06>
+      Questo file .NSCR non è compatibile con il file .NCGR selezionato.
+      Prova un altro file.
+    </S06>
+    <S07>Per favore riavvia il programma.</S07>
+    <S08>
+      Comincio a salvare la nuova ROM...<br>Sezioni scrittura:</br>
+    </S08>
+    <S09> {0} bytes scritti con successo.</S09>
+    <S0A>Header...</S0A>
+    <S0B>Files...</S0B>
+    <S0C> {0} files scritti con successo.</S0C>
+    <S0D>
+      <br>La nuova ROM sarà salvata tra: {0}</br>
+    </S0D>
+    <S0E>Esporta log</S0E>
+    <S0F>Log temporale:</S0F>
+    <S10>Tempo totale:</S10>
+    <S11>Tempo di lettura header:</S11>
+    <S12>Tempo inizializzaione variabile da Acciones.cs:</S12>
+    <S13>Tempo lettura FNT:</S13>
+    <S14>Tempo aggiunta files di sistema:</S14>
+    <S15>Tempo lettura FAT:</S15>
+    <S16>Tempo impostazione ROOT:</S16>
+    <S17>Tempo per ottenere i formati dei files:</S17>
+    <S18>Tempo creazione albero files:</S18>
+    <S19>Tempo riconoscimento files:</S19>
+    <S1A>File compresso</S1A>
+    <S1B>Per vederlo devi prima doppiocliccare su un file palette</S1B>
+    <S1C>Per vederlo devi prima doppiocliccare su una palette e su un file immagine</S1C>
+    <S1D>Al momento la compressione comune non mostra informazioni.</S1D>
+    <S1E>Per vederlo devi prima doppiocliccare su un file palette, tile e cell</S1E>
+    <S1F>
+      Il programma ha bisogno dei seguenti files:
+      {0}
+
+      Per favore, scarica il programma dalla pagina web:
+      http://code.google.com/p/tinke
+    </S1F>
+    <S20>
+      Errore nel caricamento del file: {0}.
+      L'assembly non può essere ottenuto. Errore:
+      {1}
+    </S20>
+    <S21>Tempo lettura files esterni:</S21>
+    <S22>No se pudo borrar la carpeta temporal</S22>
+  </Messages>
+  <NCLR>
+    <S01># palette:</S01>
+    <S02>Proprietà</S02>
+    <S03>Proprietà</S03>
+    <S04>Contenuto</S04>
+    <S05># palette</S05>
+    <S06>Dimensione</S06>
+    <S07>Padding</S07>
+    <S08>Colori per palette</S08>
+    <S09>Dimensione palette</S09>
+    <S0A>Salva</S0A>
+    <S0B>Mostra tutte le palette</S0B>
+    <S0C>Palette</S0C>
+    <S0D>Analisi palette NCLR:</S0D>
+    <S0E>Strano numero di sezioni¿?: </S0E>
+    <S0F>palette trovate</S0F>
+    <S10>colori.</S10>
+    <S11>Modifica</S11>
+    <S12>Byte di partenza:</S12>
+    <S13>Importa</S13>
+    <S14>Cambia la dimensione</S14>
+  </NCLR>
+  <NCGR>
+    <S01>Doppio-click per vedere l'intera immagine.</S01>
+    <S02>Proprietà</S02>
+    <S03>Offset</S03>
+    <S04>Proprietà</S04>
+    <S05>Contenuto</S05>
+    <S06>Sconosciuto</S06>
+    <S07>Numero di sezioni</S07>
+    <S08>ID Sezione 1</S08>
+    <S09>Dimensione</S09>
+    <S0A>Tiles Y</S0A>
+    <S0B>Tiles X</S0B>
+    <S0C>Forma tile</S0C>
+    <S0D>Sconosciuto</S0D>
+    <S0E>Sconosciuto</S0E>
+    <S0F>Dimensione dei dati dei pixel</S0F>
+    <S10>Sconosciuto</S10>
+    <S11>Offset:</S11>
+    <S12>Larghezza:</S12>
+    <S13>Altezza:</S13>
+    <S14>Pattern immagine:</S14>
+    <S15>Salva</S15>
+    <S16>No tiled</S16>
+    <S17>Orizzontale</S17>
+    <S18>Verticale</S18>
+    <S19>Immagine intera</S19>
+    <S1A>Dividi immagine</S1A>
+    <S1B>Immagine</S1B>
+    <S1C>Trasparenza</S1C>
+    <S1D>Ripristina</S1D>
+    <S1E>Zoom</S1E>
+    <S1F>Colore background</S1F>
+    <S20>Rimuovi</S20>
+    <S21>Importa</S21>
+    <S22>Imposta colore trasparente</S22>
+  </NCGR>
+  <NSCR>
+    <S00>Opzioni mapp</S00>
+    <S01>Larghezza mappa:</S01>
+    <S02>Altezza mappa:</S02>
+    <S03>Riempi immagine</S03>
+    <S04>Tile di partenza:</S04>
+    <S05>Riempi con tile:</S05>
+    <S06>Accetta</S06>
+    <S07>Larghezza immagine:</S07>
+    <S08>Altezza immagine:</S08>
+  </NSCR>
+  <NCER>
+    <S01>Bank:</S01>
+    <S02>Mostra tutti i bank</S02>
+    <S03>Salva</S03>
+    <S04>Proprietà</S04>
+    <S05>Proprietà</S05>
+    <S06>Conteuto</S06>
+    <S07>Sezione</S07>
+    <S08>Numero di bank</S08>
+    <S09>Tipo di bank</S09>
+    <S0A>Costante</S0A>
+    <S0B>Dimensione blocco</S0B>
+    <S0C>Sconosciuto 1</S0C>
+    <S0D>Sconosciuto 2</S0D>
+    <S0E>Sconosciuto (Sezione UEXT)</S0E>
+    <S0F>Mostra guide</S0F>
+    <S10>Mostra cells</S10>
+    <S11>Mostra immagine</S11>
+    <S12>Trasparenza</S12>
+    <S13>Mostra numeri</S13>
+    <S14>Cells</S14>
+    <S15>Doppio-click per vedere l'intera immagine.</S15>
+    <S16>Zoom</S16>
+    <S17>Colore background</S17>
+    <S18>Rimuovi</S18>
+    <S19>Numero di cells</S19>
+    <S1A>Sconosciuto 1</S1A>
+    <S1B>Offset</S1B>
+    <S1C>Cell</S1C>
+    <S1D>Posizione Y</S1D>
+    <S1E>Posizione X</S1E>
+    <S1F>Larghezza</S1F>
+    <S20>Altezza</S20>
+    <S21>Numero palette</S21>
+    <S22>Offset tile originale</S22>
+    <S23>Offset tile modificato</S23>
+    <S24>Importa</S24>
+    <S25>Imposta colore trasparente</S25>
+  </NCER>
+  <NANR>
+    <S01>Intervallo:</S01>
+    <S02>milisecondi</S02>
+    <S03>Opzioni guida</S03>
+    <S04>Mostra guide</S04>
+    <S05>Mostra cells</S05>
+    <S06>Mostra immagine</S06>
+    <S07>Transparenza</S07>
+    <S08>Mostra numeri</S08>
+    <S09>Proprietà</S09>
+    <S0A>Proprietà</S0A>
+    <S0B>Contenuto</S0B>
+    <S0C>Sezione:</S0C>
+    <S0D>Numero di animazioni</S0D>
+    <S0E>Numbero di frame</S0E>
+    <S0F>Costante</S0F>
+    <S10>Padding</S10>
+    <S11>Animazione</S11>
+    <S12>Numero di animazioni</S12>
+    <S13>Numbero di frame</S13>
+    <S14>Tipo dati</S14>
+    <S15>Sconosciuto 1</S15>
+    <S16>Sconosciuto 2</S16>
+    <S17>Sconosciuto 3</S17>
+    <S18>Frame</S18>
+    <S19>Numero</S19>
+    <S1A>Dati frame</S1A>
+    <S1B>Numero di cell</S1B>
+    <S1C>Salva</S1C>
+    <S1D>Animazione</S1D>
+    <S1E>Doppio-click per vedere l'intera animazione</S1E>
+  </NANR>
+  <DSDecmp>
+    <!-- LZ10 -->
+    <S00>
+      The provided stream is not a valid LZ-0x10 compressed stream.
+      Invalid type 0x{0}
+    </S00>
+    <S01>
+      Cannot go back more than already written.
+      DISP = 0x{0}, #written bytes = 0x{1} at 0x{2}
+    </S01>
+    <S02>disp is too large</S02>
+    <!-- LZ11 -->
+    <S03>
+      The provided stream is not a valid LZ-0x11 compressed stream.
+      Invalid type 0x{1}
+    </S03>
+    <S04>
+      Cannot go back more than already written. DISP = {0},
+      #written bytes = 0x{1} before 0x{2} with indicator 0x{3}
+    </S04>
+    <!-- Huffman -->
+    <S05>
+      The provided stream is not a valid Huffman compressed stream.
+      Invalid type 0x{0}; unknown block size.
+    </S05>
+    <S06>The stream is too short to contain a Huffman tree.</S06>
+    <S07>The Huffman tree is too large for the given input stream.</S07>
+    <S08>Sconosciuto block size {0}</S08>
+    <S09>Unhandled blocksize {0}</S09>
+    <S0A>Reference to an undefined node in the huffman tree.</S0A>
+    <!-- RLE -->
+    <S0B>
+      The provided stream is not a valid RLE compressed stream.
+      Invalid type 0x{0}
+    </S0B>
+    <S0C>
+      The given stream is not a valid RLE stream;
+      the output dimensione does not match the provided plaintext dimensione.
+    </S0C>
+    <!-- LZOvl -->
+    <S0D>
+      Cannot go back more than already written;
+      attempt to go back 0x{0} when only 0x{1}
+      bytes have been written.
+    </S0D>
+    <!-- Exceptions -->
+    <S0E>
+      The compression ratio is not high enough to fit the input
+      in a single compressed file.
+    </S0E>
+    <S0F>
+      The input contains more data than necessary.
+      Only used 0x{0} of 0x{1} bytes
+    </S0F>
+    <S10>
+      The end of the stream was reached before the
+      given amount of data was read.
+    </S10>
+    <S11>Not enough data avalible; 0x{0} of {1} bytes written.</S11>
+    <!-- CompressionControl -->
+    <S12>File compresso originale: </S12>
+    <S13>Nuova compressione:</S13>
+    <S14>Vuoto</S14>
+    <S15>Tipo compressione:</S15>
+    <S16>Usa metodo "Look ahead"</S16>
+    <S17>Comprimi</S17>
+    <S18>Usa la migliore compressione</S18>
+    <!-- Main -->
+    <S19>{0} - compresso {1} in {2}</S19>
+    <S1A>Il file non può essere compresso con alcun formato.</S1A>
+    <S1B>Impossibile decomprimere {0}; non sono stati trovati metodi di compressione equivalenti.</S1B>
+    <S1C>{0} - decompresso {1} in {2}</S1C>
+    <S1D>Impossibile decomprimere usando {0}; {1}</S1D>
+  </DSDecmp>
+  <EditRomInfo>
+    <S00>Editor Header e banner</S00>
+    <S01>Salva</S01>
+    <S02>Cancella</S02>
+    <S03>Header</S03>
+    <S04>Banner</S04>
+    <S05>Cambia icona</S05>
+    <S06>Versione:</S06>
+    <S07>Titoli di gioco:</S07>
+    <S08>Giapponese</S08>
+    <S09>Inglese</S09>
+    <S0A>Francese</S0A>
+    <S0B>Tedesco</S0B>
+    <S0C>Italiano</S0C>
+    <S0D>Spagnolo</S0D>
+    <S0E>Riservato (28 bytes Hexadecimal):</S0E>
+    <S0F>Titolo di gioco:</S0F>
+    <S10>Codice di gioco:</S10>
+    <S11>Codice produttore:</S11>
+    <S12>Codice dispositivo:</S12>
+    <S13>Riservato (9 bytes Hexadecimal):</S13>
+    <S14>ROM versione:</S14>
+    <S15>Flag interni:</S15>
+    <S16>ARM9 entry address:</S16>
+    <S17>ARM9 load address:</S17>
+    <S18>ARM7 entry address:</S18>
+    <S19>ARM7 load address:</S19>
+    <S1A>Normal card control register settings:</S1A>
+    <S1B>Secure card control register settings:</S1B>
+    <S1C>Mostra tutti i codici produttore</S1C>
+    <S1D>Secure transfer timeout:</S1D>
+    <S1E>Secure disable:</S1E>
+    <S1F>Riservato 3 (4 bytes Hexadecimal):</S1F>
+    <S20>Riservato 2 (56 bytes Hexadecimal):</S20>
+    <S21>ARM9 autoload:</S21>
+    <S22>ARM7 autoload:</S22>
+    <S23>Debug ROM offset:</S23>
+    <S24>Debug dimensione:</S24>
+    <S25>Debug RAM offset:</S25>
+    <S26>
+      L'immagine deve essere salvata a dimensione 4bpp.
+      L'immagine selezionata è 8bpp e non può essere importata.
+    </S26>
+    <S27>Seed di criptaggio:</S27>
+    <S28>Codice</S28>
+    <S29>Compagnia</S29>
+    <S2A>Codici compagnia</S2A>
+  </EditRomInfo>
+  <Dialog>
+    <!-- Select Mode Color-->
+    <S00>Scegli il metodo di selezione</S00>
+    <S01>Accetta</S01>
+    <S02>Clicca su un colore dell'immagine</S02>
+    <S03>Scegli il colore dai valori RGB</S03>
+    <!-- Select offset -->
+    <S04>Scegli l'offset</S04>
+    <S05>Scrivi l'offset dove comincerà la lettura</S05>
+    <!-- FAT Extract -->
+    <S06>Estrai files</S06>
+    <S07>Opzioni</S07>
+    <S08>Numero di files</S08>
+    <S09>Leggi a:</S09>
+    <S0A>Valore dimensioni:</S0A>
+    <S0B>Big Endian</S0B>
+    <S0C>Numero di files:</S0C>
+    <S0D>Calcola</S0D>
+    <S0E>Offset</S0E>
+    <S0F>Offset di partenza:</S0F>
+    <S10>Valore dimensioni:</S10>
+    <S11>Big Endian</S11>
+    <S12>Offset tipo</S12>
+    <S13>Offset di partenza</S13>
+    <S14>Offset di partenza / Arrivo</S14>
+    <S15>Offset di partenza / Dimensione</S15>
+    <S16>Offset di arrivo</S16>
+    <S17>Offset relativo a</S17>
+    <S18>Offset:</S18>
+    <S19>Primo file</S19>
+    <S1A>Leggi gli offset</S1A>
+    <S1B>Esadecimale</S1B>
+    <S1C>Accetta</S1C>
+  </Dialog>
+</Language>

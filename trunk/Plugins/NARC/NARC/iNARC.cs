@@ -143,15 +143,11 @@ namespace NARC
             for (int i = 0; i < narc.btaf.nFiles; i++)
             {
                 Archivo currFile = Search_File(i + decompressed.id, decompressed);
-                if (currFile.packFile is String && currFile.packFile != "")
-                {
-                    BinaryReader br = new BinaryReader(File.OpenRead(currFile.packFile));
-                    br.BaseStream.Position = currFile.offset;
-                    bw.Write(br.ReadBytes((int)currFile.size));
-                    br.Close();
-                }
-                else
-                    bw.Write(File.ReadAllBytes(currFile.path));
+                BinaryReader br = new BinaryReader(File.OpenRead(currFile.path));
+                br.BaseStream.Position = currFile.offset;
+
+                bw.Write(br.ReadBytes((int)currFile.size));
+                br.Close();
                 bw.Flush();
             }
 

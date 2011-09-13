@@ -268,7 +268,7 @@ namespace Tinke
             root.id = 0xF000;
             accion.LastFileID = 0x00;
             accion.LastFolderID = 0xF000;
-            root = accion.Recursive_GetDirectories(folder, root);
+            root = accion.Recursive_GetExternalDirectories(folder, root);
             DateTime t2 = DateTime.Now;
 
             accion.Root = root;
@@ -460,7 +460,7 @@ namespace Tinke
             fnt.name = "fnt.bin";
             fnt.offset = romInfo.Cabecera.fileNameTableOffset;
             fnt.size = romInfo.Cabecera.fileNameTableSize;
-            fnt.packFile = accion.ROMFile;
+            fnt.path = accion.ROMFile;
             fnt.id = (ushort)accion.LastFileID;
             accion.LastFileID++;
             ftc.files.Add(fnt);
@@ -469,7 +469,7 @@ namespace Tinke
             fat.name = "fat.bin";
             fat.offset = romInfo.Cabecera.FAToffset;
             fat.size = romInfo.Cabecera.FATsize;
-            fat.packFile = accion.ROMFile;
+            fat.path = accion.ROMFile;
             fat.id = (ushort)accion.LastFileID;
             accion.LastFileID++;
             ftc.files.Add(fat);
@@ -478,7 +478,7 @@ namespace Tinke
             arm9.name = "arm9.bin";
             arm9.offset = romInfo.Cabecera.ARM9romOffset;
             arm9.size = romInfo.Cabecera.ARM9size;
-            arm9.packFile = accion.ROMFile;
+            arm9.path = accion.ROMFile;
             arm9.id = (ushort)accion.LastFileID;
             accion.LastFileID++;
             ftc.files.Add(arm9);
@@ -487,7 +487,7 @@ namespace Tinke
             arm7.name = "arm7.bin";
             arm7.offset = romInfo.Cabecera.ARM7romOffset;
             arm7.size = romInfo.Cabecera.ARM7size;
-            arm7.packFile = accion.ROMFile;
+            arm7.path = accion.ROMFile;
             arm7.id = (ushort)accion.LastFileID;
             accion.LastFileID++;
             ftc.files.Add(arm7);
@@ -498,7 +498,7 @@ namespace Tinke
                 y9.name = "y9.bin";
                 y9.offset = romInfo.Cabecera.ARM9overlayOffset;
                 y9.size = romInfo.Cabecera.ARM9overlaySize;
-                y9.packFile = accion.ROMFile;
+                y9.path = accion.ROMFile;
                 y9.id = (ushort)accion.LastFileID;
                 accion.LastFileID++;
                 ftc.files.Add(y9);
@@ -510,7 +510,7 @@ namespace Tinke
                 y7.name = "y7.bin";
                 y7.offset = romInfo.Cabecera.ARM7overlayOffset;
                 y7.size = romInfo.Cabecera.ARM7overlaySize;
-                y7.packFile = accion.ROMFile;
+                y7.path = accion.ROMFile;
                 y7.id = (ushort)accion.LastFileID;
                 accion.LastFileID++;
                 ftc.files.Add(y7);
@@ -686,7 +686,6 @@ namespace Tinke
                 btnSee.Enabled = false;
                 toolStripOpenAs.Enabled = false;
                 btnDescomprimir.Enabled = true;
-                btnImport.Enabled = false;
             }
             else if (Convert.ToUInt16(e.Node.Tag) < 0xF000)
             {
@@ -764,10 +763,6 @@ namespace Tinke
                     btnDescomprimir.Enabled = true;
                 else
                     btnDescomprimir.Enabled = false;
-                if (selectFile.formato == Formato.Sistema)
-                    btnImport.Enabled = false;
-                else
-                    btnImport.Enabled = true;
                 if ((String)selectFile.tag == "Descomprimido")
                 {
                     toolStripOpenAs.Enabled = false;
@@ -796,19 +791,13 @@ namespace Tinke
                 btnSee.Enabled = false;
                 toolStripOpenAs.Enabled = false;
                 btnDescomprimir.Enabled = true;
-                btnImport.Enabled = false;
             }
         }
         private void btnHex_Click(object sender, EventArgs e)
         {
             Archivo file = accion.Select_File();
 
-            VisorHex hex;
-            if (file.packFile is String && file.packFile != "")
-                hex = new VisorHex(file.packFile, file.offset, file.size);
-            else
-                hex = new VisorHex(file.path, 0, file.size);
-
+            VisorHex hex = new VisorHex(file.path, file.offset, file.size);
             hex.Text += " - " + file.name;
             hex.Show();
         }
@@ -860,6 +849,7 @@ namespace Tinke
 
             if (!(uncompress.files is List<Archivo>) && !(uncompress.folders is List<Carpeta>)) // En caso de que falle la extracción
             {
+                this.Cursor = Cursors.Default;
                 keyDown = Keys.Escape;
                 MessageBox.Show(Tools.Helper.ObtenerTraduccion("Sistema", "S36"));
                 return;
@@ -950,15 +940,10 @@ namespace Tinke
             o.FileName = fileSelect.name;
             if (o.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                if (fileSelect.packFile is String && fileSelect.packFile != "")
-                {
-                    BinaryReader br = new BinaryReader(File.OpenRead(fileSelect.packFile));
-                    br.BaseStream.Position = fileSelect.offset;
-                    File.WriteAllBytes(o.FileName, br.ReadBytes((int)fileSelect.size));
-                    br.Close();
-                }
-                else
-                    File.Copy(fileSelect.path, o.FileName, true);
+                BinaryReader br = new BinaryReader(File.OpenRead(fileSelect.path));
+                br.BaseStream.Position = fileSelect.offset;
+                File.WriteAllBytes(o.FileName, br.ReadBytes((int)fileSelect.size));
+                br.Close();
             }
         }
         private void ExtractFolder()
@@ -993,12 +978,12 @@ namespace Tinke
             o.Description = Tools.Helper.ObtenerTraduccion("Sistema", "S2C");
             if (o.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                Directory.CreateDirectory(o.SelectedPath + '\\' + folderSelect.name);
+                Directory.CreateDirectory(o.SelectedPath + Path.DirectorySeparatorChar + folderSelect.name);
 
                 Thread espera = new System.Threading.Thread(ThreadEspera);
                 if (!isMono)
                     espera.Start("S03");
-                RecursivoExtractFolder(folderSelect, o.SelectedPath + '\\' + folderSelect.name);
+                RecursivoExtractFolder(folderSelect, o.SelectedPath + Path.DirectorySeparatorChar + folderSelect.name);
                 if (!isMono)
                     espera.Abort();
 
@@ -1010,15 +995,10 @@ namespace Tinke
             if (currFolder.files is List<Archivo>)
                 foreach (Archivo archivo in currFolder.files)
                 {
-                    if (archivo.packFile is String && archivo.packFile != "")
-                    {
-                        BinaryReader br = new BinaryReader(File.OpenRead(archivo.packFile));
-                        br.BaseStream.Position = archivo.offset;
-                        File.WriteAllBytes(path + '\\' + archivo.name, br.ReadBytes((int)archivo.size));
-                        br.Close();
-                    }
-                    else
-                        File.Copy(archivo.path, path + '\\' + archivo.name);
+                    BinaryReader br = new BinaryReader(File.OpenRead(archivo.path));
+                    br.BaseStream.Position = archivo.offset;
+                    File.WriteAllBytes(path + Path.DirectorySeparatorChar + archivo.name, br.ReadBytes((int)archivo.size));
+                    br.Close();
                 }
 
 
@@ -1027,8 +1007,8 @@ namespace Tinke
             {
                 foreach (Carpeta subFolder in currFolder.folders)
                 {
-                    Directory.CreateDirectory(path + '\\' + subFolder.name);
-                    RecursivoExtractFolder(subFolder, path + '\\' + subFolder.name);
+                    Directory.CreateDirectory(path + Path.DirectorySeparatorChar + subFolder.name);
+                    RecursivoExtractFolder(subFolder, path + Path.DirectorySeparatorChar + subFolder.name);
                 }
             }
         }
@@ -1180,10 +1160,7 @@ namespace Tinke
             Archivo selectedFile = accion.Select_File();
 
             if (formato == Formato.Texto)
-                if (selectedFile.packFile is String && selectedFile.packFile != "")
-                    accion.Save_File(accion.IDSelect, selectedFile.path + ".txt");
-                else
-                    File.Copy(selectedFile.path, selectedFile.path + ".txt", true);
+                accion.Save_File(accion.IDSelect, selectedFile.path + ".txt");
 
             if (toolStripVentana.Checked)
             {
@@ -1460,29 +1437,29 @@ namespace Tinke
 
             // Quitamos archivos especiales que no cuentan en la ROM
             int id = accion.Search_File("fnt.bin").files[0].id;
-            accion.Remove_File("fnt.bin", accion.Root);
+            accion.Remove_File(id, accion.Root);
 
             id = accion.Search_File("fat.bin").files[0].id;
-            accion.Remove_File("fat.bin", accion.Root);
+            accion.Remove_File(id, accion.Root);
 
             id = accion.Search_File("arm9.bin").files[0].id;
-            accion.Remove_File("arm9.bin", accion.Root);
+            accion.Remove_File(id, accion.Root);
 
             id = accion.Search_File("arm7.bin").files[0].id;
-            accion.Remove_File("arm7.bin", accion.Root);
+            accion.Remove_File(id, accion.Root);
 
             Carpeta y9 = accion.Search_File("y9.bin");
             if (y9.files.Count > 0)
             {
                 id = y9.files[0].id;
-                accion.Remove_File("y9.bin", accion.Root);
+                accion.Remove_File(id, accion.Root);
             }
 
             Carpeta y7 = accion.Search_File("y7.bin");
             if (y7.files.Count > 0)
             {
                 id = y7.files[0].id;
-                accion.Remove_File("y7.bin", accion.Root);
+                accion.Remove_File(id, accion.Root);
             }
 
             // Obtenemos el último ID de archivo sin los especiales
@@ -1667,34 +1644,67 @@ namespace Tinke
         }
         private void btnImport_Click(object sender, EventArgs e)
         {
-            if (accion.IDSelect >= 0xF000)
-                return;
-
-            // Se cambian un archivo por otro
             OpenFileDialog o = new OpenFileDialog();
             o.CheckFileExists = true;
             o.CheckPathExists = true;
-            o.Multiselect = false;
-            if (o.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            o.Multiselect = true;
+            if (o.ShowDialog() != System.Windows.Forms.DialogResult.OK)
+                return;
+
+            // The current selected file will be changed if they only select one file
+            if (o.FileNames.Length == 1)
             {
                 Archivo newFile = new Archivo();
-                Archivo selectedFile = accion.Select_File();
-                newFile.name = selectedFile.name;
-                newFile.id = selectedFile.id;
+                Archivo fileToBeChanged = accion.Select_File();
+                newFile.name = fileToBeChanged.name;
+                newFile.id = fileToBeChanged.id;
                 newFile.offset = 0x00;
-                if (accion.ROMFile == "") // Si no es una ROM, se cambia el contenido directamente
+                if (accion.ROMFile == "") // If the user haven't opened a rom, the file is overwritten
                 {
-                    File.Copy(o.FileName, selectedFile.path, true);
-                    newFile.path = selectedFile.path;
+                    File.Copy(o.FileNames[0], fileToBeChanged.path, true);
+                    newFile.path = fileToBeChanged.path;
                 }
                 else
-                    newFile.path = o.FileName;
-                newFile.formato = selectedFile.formato;
-                newFile.size = (uint)new FileInfo(o.FileName).Length;
+                    newFile.path = o.FileNames[0];
+                newFile.formato = fileToBeChanged.formato;
+                newFile.size = (uint)new FileInfo(o.FileNames[0]).Length;
                 if ((String)newFile.tag == "Descomprimido")
                     newFile.tag = String.Format("{0:X}", newFile.size).PadLeft(8, '0') + newFile.path;
 
-                accion.Change_File(accion.IDSelect, newFile, accion.Root);
+                accion.Change_File(fileToBeChanged.id, newFile, accion.Root);
+                return;
+            }
+
+            // If more than one file is selected, they will be changed by name
+            foreach (string currFile in o.FileNames)
+            {
+                Carpeta filesWithSameName = accion.Search_File(Path.GetFileName(currFile));
+                Archivo fileToBeChanged;
+                if (filesWithSameName.files.Count == 0)
+                    continue;
+                else if (filesWithSameName.files.Count == 1)
+                    fileToBeChanged = filesWithSameName.files[0];
+                else
+                    // TODO: Create new Dialog
+                    fileToBeChanged = new Archivo();
+
+                Archivo newFile = new Archivo();
+                newFile.name = fileToBeChanged.name;
+                newFile.id = fileToBeChanged.id;
+                newFile.offset = 0x00;
+                if (accion.ROMFile == "") // If the user haven't opened a rom, the file is overwritten
+                {
+                    File.Copy(currFile, fileToBeChanged.path, true);
+                    newFile.path = fileToBeChanged.path;
+                }
+                else
+                    newFile.path = currFile;
+                newFile.formato = fileToBeChanged.formato;
+                newFile.size = (uint)new FileInfo(currFile).Length;
+                if ((String)newFile.tag == "Descomprimido")
+                    newFile.tag = String.Format("{0:X}", newFile.size).PadLeft(8, '0') + newFile.path;
+
+                accion.Change_File(fileToBeChanged.id, newFile, accion.Root);
             }
         }
         private TreeNode[] FilesToNodes(Archivo[] files)
