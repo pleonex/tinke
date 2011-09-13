@@ -166,6 +166,11 @@ namespace Tinke
             get { return isNewRom; }
             set { isNewRom = value; }
         }
+        public String TempFolder
+        {
+            get { return pluginHost.Get_TempFolder(); }
+        }
+
         public int ImageFormatFile(Formato name)
         {
             switch (name)
@@ -207,9 +212,30 @@ namespace Tinke
                     return 1;
             }
         }
-        public String TempFolder
+        public String Get_RelativePath(int id, string relativePath, Carpeta currFolder)
         {
-            get { return pluginHost.Get_TempFolder(); }
+            if (currFolder.files is List<Archivo>)
+            {
+                for (int i = 0; i < currFolder.files.Count; i++)
+                    if (currFolder.files[i].id == id)
+                        return relativePath;
+            }
+
+            if (currFolder.folders is List<Carpeta>)
+            {
+                for (int i = 0; i < currFolder.folders.Count; i++)
+                {
+                    relativePath += '/' + currFolder.folders[i].name;
+                    String path = Get_RelativePath(id, relativePath, currFolder.folders[i]);
+
+                    if (path != "")
+                        return path;
+
+                    relativePath = relativePath.Remove(relativePath.LastIndexOf('/'));
+                }
+            }
+
+            return "";
         }
 
         public void Set_LastFileID(Carpeta currFolder)
@@ -639,6 +665,13 @@ namespace Tinke
             Recursivo_Archivo(name, root, carpeta);
             return carpeta;
         }
+        public Carpeta Search_FileName(string name)
+        {
+            Carpeta carpeta = new Carpeta();
+            carpeta.files = new List<Archivo>();
+            Recursive_FileName(name, root, carpeta);
+            return carpeta;
+        }
         public Carpeta Search_File(Formato formato)
         {
             Carpeta carpeta = new Carpeta();
@@ -674,9 +707,9 @@ namespace Tinke
                 Archivo folderFile = new Archivo();
                 folderFile.name = currFolder.name;
                 folderFile.id = currFolder.id;
-                folderFile.size = Convert.ToUInt32(((String)currFolder.tag).Substring(1, 8), 16);
-                folderFile.offset = Convert.ToUInt32(((String)currFolder.tag).Substring(9, 8), 16);
-                folderFile.path = ((string)currFolder.tag).Substring(17);
+                folderFile.size = Convert.ToUInt32(((String)currFolder.tag).Substring(0, 8), 16);
+                folderFile.offset = Convert.ToUInt32(((String)currFolder.tag).Substring(8, 8), 16);
+                folderFile.path = ((string)currFolder.tag).Substring(16);
                 folderFile.formato = Get_Formato(folderFile, folderFile.id);
                 folderFile.tag = "Descomprimido"; // Tag para indicar que ya ha sido procesado
 
@@ -746,6 +779,19 @@ namespace Tinke
             if (currFolder.folders is List<Carpeta>)
                 foreach (Carpeta subFolder in currFolder.folders)
                     Recursivo_Archivo(name, subFolder, carpeta);
+
+        }
+        private void Recursive_FileName(string name, Carpeta currFolder, Carpeta carpeta)
+        {
+            if (currFolder.files is List<Archivo>)
+                foreach (Archivo archivo in currFolder.files)
+                    if (archivo.name == name)
+                        carpeta.files.Add(archivo);
+
+
+            if (currFolder.folders is List<Carpeta>)
+                foreach (Carpeta subFolder in currFolder.folders)
+                    Recursive_FileName(name, subFolder, carpeta);
 
         }
         private void Recursivo_Archivo(Formato formato, Carpeta currFolder, Carpeta carpeta)

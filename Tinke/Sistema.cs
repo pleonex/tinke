@@ -106,11 +106,12 @@ namespace Tinke
         {
             // Iniciamos la lectura del archivo.
             string[] filesToRead = new string[1];
-            OpenFileDialog o = new OpenFileDialog();
-            o.CheckFileExists = true;
-            o.Multiselect = true;
             if (Environment.GetCommandLineArgs().Length == 1)
             {
+                OpenFileDialog o = new OpenFileDialog();
+                o.CheckFileExists = true;
+                o.Multiselect = true;
+
                 if (o.ShowDialog() != System.Windows.Forms.DialogResult.OK)
                 {
                     Application.Exit();
@@ -120,7 +121,22 @@ namespace Tinke
                 o.Dispose();
             }
             else if (Environment.GetCommandLineArgs().Length == 2)
-                filesToRead[0] = Environment.GetCommandLineArgs()[1];
+            {
+                if (Environment.GetCommandLineArgs()[1] == "-fld")
+                {
+                    FolderBrowserDialog o = new FolderBrowserDialog();
+                    o.ShowNewFolderButton = false;
+                    if (o.ShowDialog() != System.Windows.Forms.DialogResult.OK)
+                    {
+                        Application.Exit();
+                        return;
+                    }
+                    filesToRead[0] = o.SelectedPath;
+                    o.Dispose();
+                }
+                else
+                    filesToRead[0] = Environment.GetCommandLineArgs()[1];
+            }
             else if (Environment.GetCommandLineArgs().Length >= 3)
             {
                 filesToRead = new String[Environment.GetCommandLineArgs().Length - 2];
@@ -372,6 +388,7 @@ namespace Tinke
                 listFile.Items[3].Text = xml.Element("S0C").Value;
                 listFile.Items[4].Text = xml.Element("S0D").Value;
                 listFile.Items[5].Text = xml.Element("S0E").Value;
+                listFile.Items[6].Text = xml.Element("S40").Value;
                 linkAboutBox.Text = xml.Element("S0F").Value;
                 toolStripDeleteChain.Text = xml.Element("S10").Value;
                 borrarPaletaToolStripMenuItem.Text = xml.Element("S11").Value;
@@ -669,8 +686,8 @@ namespace Tinke
         {
             accion.IDSelect = Convert.ToInt32(e.Node.Tag);
             // Limpiar información anterior
-            if (listFile.Items[0].SubItems.Count == 2)
-                for (int i = 0; i < listFile.Items.Count; i++)
+            for (int i = 0; i < listFile.Items.Count; i++)
+                if (listFile.Items[i].SubItems.Count == 2)
                     listFile.Items[i].SubItems.RemoveAt(1);
 
             if (e.Node.Name == "root")
@@ -752,6 +769,7 @@ namespace Tinke
                 }
                 #endregion
                 listFile.Items[5].SubItems.Add(selectFile.path);
+                listFile.Items[6].SubItems.Add(accion.Get_RelativePath(selectFile.id, "", accion.Root));
                 btnHex.Enabled = true;
                 toolStripOpenAs.Enabled = true;
 
@@ -792,6 +810,8 @@ namespace Tinke
                 toolStripOpenAs.Enabled = false;
                 btnDescomprimir.Enabled = true;
             }
+
+            listFile.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
         }
         private void btnHex_Click(object sender, EventArgs e)
         {
@@ -1330,7 +1350,9 @@ namespace Tinke
                 return;
             }
 
-            Carpeta resul;
+            Carpeta resul = new Carpeta();
+            resul.files = new List<Archivo>();
+            resul.folders = new List<Carpeta>();
 
             if (txtSearch.Text == "<Ani>")
                 resul = accion.Search_File(Formato.Animación);
@@ -1364,8 +1386,14 @@ namespace Tinke
                 resul = accion.Search_File(Formato.Model3D);
             else if (txtSearch.Text == "<Unknown>")
                 resul = accion.Search_File(Formato.Desconocido);
-            else if (txtSearch.Text.StartsWith("Length: ") && txtSearch.Text.Length > 8)
+            else if (txtSearch.Text.StartsWith("Length: ") && txtSearch.Text.Length > 8 && txtSearch.Text.Length < 17)
                 resul = accion.Search_FileLength(Convert.ToInt32(txtSearch.Text.Substring(7)));
+            else if (txtSearch.Text.StartsWith("ID: ") && txtSearch.Text.Length > 4 && txtSearch.Text.Length < 13)
+            {
+                Archivo searchedFile = accion.Search_File(Convert.ToInt32(txtSearch.Text.Substring(4), 16));
+                if (searchedFile.name is String)
+                    resul.files.Add(searchedFile);
+            }
             else
                 resul = accion.Search_File(txtSearch.Text);
 
@@ -1678,15 +1706,28 @@ namespace Tinke
             // If more than one file is selected, they will be changed by name
             foreach (string currFile in o.FileNames)
             {
-                Carpeta filesWithSameName = accion.Search_File(Path.GetFileName(currFile));
+                Carpeta filesWithSameName = accion.Search_FileName(Path.GetFileName(currFile));
                 Archivo fileToBeChanged;
                 if (filesWithSameName.files.Count == 0)
                     continue;
                 else if (filesWithSameName.files.Count == 1)
                     fileToBeChanged = filesWithSameName.files[0];
                 else
-                    // TODO: Create new Dialog
-                    fileToBeChanged = new Archivo();
+                {
+                    // Get relative path
+                    for (int i = 0; i < filesWithSameName.files.Count; i++)
+                    {
+                        Archivo file = filesWithSameName.files[i];
+                        file.tag = accion.Get_RelativePath(filesWithSameName.files[i].id, "", accion.Root);
+                        filesWithSameName.files[i] = file;
+                    }
+
+                    Dialog.SelectFile dialog = new Dialog.SelectFile(filesWithSameName.files.ToArray());
+                    if (dialog.ShowDialog() != System.Windows.Forms.DialogResult.OK)
+                        continue;
+
+                    fileToBeChanged = dialog.SelectedFile;
+                }
 
                 Archivo newFile = new Archivo();
                 newFile.name = fileToBeChanged.name;
