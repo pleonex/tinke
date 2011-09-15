@@ -672,6 +672,13 @@ namespace Tinke
             Recursive_FileName(name, root, carpeta);
             return carpeta;
         }
+        public Carpeta Search_FileName(string name, Carpeta folder)
+        {
+            Carpeta carpeta = new Carpeta();
+            carpeta.files = new List<Archivo>();
+            Recursive_FileName(name, folder, carpeta);
+            return carpeta;
+        }
         public Carpeta Search_File(Formato formato)
         {
             Carpeta carpeta = new Carpeta();

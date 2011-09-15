@@ -222,7 +222,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(98, 490);
+            this.label2.Location = new System.Drawing.Point(98, 477);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(26, 13);
             this.label2.TabIndex = 11;
@@ -316,7 +316,7 @@
             // 
             this.btnSetTrans.Location = new System.Drawing.Point(6, 371);
             this.btnSetTrans.Name = "btnSetTrans";
-            this.btnSetTrans.Size = new System.Drawing.Size(164, 27);
+            this.btnSetTrans.Size = new System.Drawing.Size(164, 32);
             this.btnSetTrans.TabIndex = 31;
             this.btnSetTrans.Text = "S25";
             this.btnSetTrans.UseVisualStyleBackColor = true;

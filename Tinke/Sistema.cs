@@ -1706,7 +1706,12 @@ namespace Tinke
             // If more than one file is selected, they will be changed by name
             foreach (string currFile in o.FileNames)
             {
-                Carpeta filesWithSameName = accion.Search_FileName(Path.GetFileName(currFile));
+                Carpeta filesWithSameName = new Carpeta();
+                if (accion.IDSelect > 0xF000)
+                    filesWithSameName = accion.Search_FileName(Path.GetFileName(currFile), accion.Select_Folder());
+                else
+                    filesWithSameName = accion.Search_FileName(Path.GetFileName(currFile));
+
                 Archivo fileToBeChanged;
                 if (filesWithSameName.files.Count == 0)
                     continue;
