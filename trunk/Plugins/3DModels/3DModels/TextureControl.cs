@@ -15,7 +15,8 @@ namespace _3DModels
     {
         IPluginHost pluginHost;
         sBTX0 btx0;
-        static int[] PaletteSize = new int[] { 0x00, 0x200, 0x08, 0x20, 0x200, 0x00, 0x200, 0x00 };
+        //                                       0     1      2     3     4      5     6     7
+        static int[] PaletteSize = new int[] { 0x00, 0x40, 0x08, 0x20, 0x200, 0x00, 0x10, 0x00 };
 
         public TextureControl()
         {
@@ -44,40 +45,46 @@ namespace _3DModels
 
         private void UpdateTexture(int num_tex)
         {
-            sBTX0.Texture.TextInfo texInfo = (sBTX0.Texture.TextInfo)btx0.texture.texInfo.infoBlock.infoData[num_tex];
-            sBTX0.Texture.PalInfo palInfo = (sBTX0.Texture.PalInfo)btx0.texture.palInfo.infoBlock.infoData[texInfo.paletteID];
+            int num_pal;
+            bool foundPal = false;
+            for (num_pal = 0; num_pal < btx0.texture.palInfo.num_objs; num_pal++)
+            {
+                if (btx0.texture.palInfo.names[num_pal] == btx0.texture.texInfo.names[num_tex])
+                {
+                    foundPal = true;
+                    break;
+                }
+                else if (btx0.texture.palInfo.names[num_pal].Replace("_pl", "") == btx0.texture.texInfo.names[num_tex])
+                {
+                    foundPal = true;
+                    break;
+                }
+            }
+            if (!foundPal)
+            {
+                num_pal = listPalettes.SelectedIndex;
+                UpdateTexture(num_tex, num_pal);
+            }
+            else
+                listPalettes.SelectedIndex = num_pal;
 
-            BinaryReader br = new BinaryReader(File.OpenRead(btx0.file));
-            br.BaseStream.Position = texInfo.tex_offset * 8 + btx0.header.offset[0] + btx0.texture.header.textData_offset;
-            Byte[] tile_data = br.ReadBytes((int)(texInfo.width * texInfo.height * texInfo.depth / 8));
-
-            br.BaseStream.Position = btx0.header.offset[0] + btx0.texture.header.paletteData_offset;
-            br.BaseStream.Position += (texInfo.format == 2 ? palInfo.palette_offset * 8 : palInfo.palette_offset * 16);
-            Byte[] palette_data = br.ReadBytes((int)PaletteSize[texInfo.format]);
-            Color[] palette = pluginHost.BGR555(palette_data);
-            br.Close();
-
-            picTex.Image = Draw_Texture(tile_data, texInfo, palette);
-
-            NCLR nclr = new NCLR();
-            nclr.pltt.nColores = (uint)palette.Length;
-            nclr.pltt.paletas = new NTFP[1];
-            nclr.pltt.paletas[0].colores = palette;
-            picPalette.Image = pluginHost.Bitmaps_NCLR(nclr)[0];
-
-            Info(num_tex);
         }
         private void UpdateTexture(int num_tex, int num_pal)
         {
             sBTX0.Texture.TextInfo texInfo = (sBTX0.Texture.TextInfo)btx0.texture.texInfo.infoBlock.infoData[num_tex];
             sBTX0.Texture.PalInfo palInfo = (sBTX0.Texture.PalInfo)btx0.texture.palInfo.infoBlock.infoData[num_pal];
 
+            // Get texture data
             BinaryReader br = new BinaryReader(File.OpenRead(btx0.file));
-            br.BaseStream.Position = texInfo.tex_offset * 8 + btx0.header.offset[0] + btx0.texture.header.textData_offset;
+            if (texInfo.format != 5)
+                br.BaseStream.Position = texInfo.tex_offset * 8 + btx0.header.offset[0] + btx0.texture.header.textData_offset;
+            else
+                br.BaseStream.Position = btx0.header.offset[0] + btx0.texture.header.textCompressedData_offset + texInfo.tex_offset * 8;
             Byte[] tile_data = br.ReadBytes((int)(texInfo.width * texInfo.height * texInfo.depth / 8));
 
+            // Get palette data
             br.BaseStream.Position = btx0.header.offset[0] + btx0.texture.header.paletteData_offset;
-            br.BaseStream.Position += (texInfo.format == 2 ? palInfo.palette_offset * 8 : palInfo.palette_offset * 16);
+            br.BaseStream.Position += (texInfo.format == 2 ? palInfo.palette_offset * 16 : palInfo.palette_offset * 8);
             Byte[] palette_data = br.ReadBytes((int)PaletteSize[texInfo.format]);
             Color[] palette = pluginHost.BGR555(palette_data);
             br.Close();
@@ -90,12 +97,13 @@ namespace _3DModels
             nclr.pltt.paletas[0].colores = palette;
             picPalette.Image = pluginHost.Bitmaps_NCLR(nclr)[0];
 
-            Info(num_tex);
+            Info(num_tex, num_pal);
         }
-
 
         private Bitmap Draw_Texture(byte[] data, sBTX0.Texture.TextInfo info, Color[] palette)
         {
+            if (info.format == 5)
+                return Draw_CompressedTexture(data, info, palette);
 
             Bitmap imagen = new Bitmap(info.width, info.height);
             if (info.format == 3) // 16-color 4 bits
@@ -108,9 +116,9 @@ namespace _3DModels
                 for (int w = 0; w < info.width; w++)
                 {
                     Color color = Color.Black; ;
-                    if (info.format == 2 || info.format == 3 || info.format == 4)
+                    if (info.format == 2 || info.format == 3 || info.format == 4) // 2-4-8 bits per color
                         color = palette[data[w + h * info.width]];
-                    else if (info.format == 1) // A3I5
+                    else if (info.format == 1) // A3I5 8-bit
                     {
                         int colorIndex = data[w + h * info.width] & 0x1F;
                         int alpha = (data[w + h * info.width] >> 5);
@@ -120,11 +128,40 @@ namespace _3DModels
                             palette[colorIndex].G,
                             palette[colorIndex].B);
                     }
+                    else if (info.format == 6) // A5I3 8-bit
+                    {
+                        int colorIndex = data[w + h * info.width] & 0x3;
+                        int alpha = (data[w + h * info.width] >> 3);
+                        alpha *= 8;
+                        color = Color.FromArgb(alpha,
+                            palette[colorIndex].R,
+                            palette[colorIndex].G,
+                            palette[colorIndex].B);
+                    }
+                    else if (info.format == 7) // Direct texture 16-bit (not tested)
+                    {
+                        ushort byteColor = BitConverter.ToUInt16(data, (w + h * info.width) * 2);
+                        color = Color.FromArgb(
+                            (byteColor >> 15) * 255,
+                            (byteColor & 0x1F) * 8,
+                            ((byteColor >> 5) & 0x1F) * 8,
+                            ((byteColor >> 10) & 0x1F) * 8);
+                    }
 
                     imagen.SetPixel(w, h, color);
                 }
             }
+
+            if (info.color0 == 1)
+                imagen.MakeTransparent(palette[0]);
+
             return imagen;
+        }
+        private Bitmap Draw_CompressedTexture(byte[] data, sBTX0.Texture.TextInfo info, Color[] palette)
+        {
+            Bitmap image = new Bitmap(info.width, info.height);
+
+            return image;
         }
         private byte[] Bit8ToBit2(byte[] data)
         {
@@ -141,37 +178,48 @@ namespace _3DModels
             return bit2.ToArray();
         }
 
-        private void Info(int num_tex)
+        private void Info(int num_tex, int num_pal)
         {
-            for (int i = 0; i < listProp.Items.Count; i++)
+            for (int i = 1; i < 11; i++)
                 if (listProp.Items[i].SubItems.Count > 1)
                     listProp.Items[i].SubItems.RemoveAt(1);
-            
+            if (listProp.Items[12].SubItems.Count > 1)
+                listProp.Items[12].SubItems.RemoveAt(1);
+
             sBTX0.Texture.TextInfo texInfo = (sBTX0.Texture.TextInfo)btx0.texture.texInfo.infoBlock.infoData[num_tex];
-            listProp.Items[0].SubItems.Add(texInfo.width.ToString());
-            listProp.Items[1].SubItems.Add(texInfo.height.ToString());
-            listProp.Items[2].SubItems.Add(texInfo.format.ToString());
-            listProp.Items[3].SubItems.Add(texInfo.depth.ToString());
-            listProp.Items[4].SubItems.Add(texInfo.paletteID.ToString());
-            listProp.Items[5].SubItems.Add("0x" + texInfo.tex_offset.ToString("x"));
+            listProp.Items[1].SubItems.Add((texInfo.tex_offset * 8).ToString("x"));
+            listProp.Items[2].SubItems.Add(texInfo.repeat_X.ToString());
+            listProp.Items[3].SubItems.Add(texInfo.repeat_Y.ToString());
+            listProp.Items[4].SubItems.Add(texInfo.flip_X.ToString());
+            listProp.Items[5].SubItems.Add(texInfo.flip_Y.ToString());
+            listProp.Items[6].SubItems.Add(texInfo.width.ToString());
+            listProp.Items[7].SubItems.Add(texInfo.height.ToString());
+            listProp.Items[8].SubItems.Add(texInfo.format.ToString() + " (" + (TextureFormat)texInfo.format + ')');
+            listProp.Items[9].SubItems.Add(texInfo.color0.ToString());
+            listProp.Items[10].SubItems.Add(texInfo.coord_transf.ToString() + " (" + (TextureCoordTransf)texInfo.coord_transf + ')');
+
+            sBTX0.Texture.PalInfo palInfo = (sBTX0.Texture.PalInfo)btx0.texture.palInfo.infoBlock.infoData[num_pal];
+            int palOffset = palInfo.palette_offset;
+            palOffset *= (texInfo.format == 2 ? 8 : 16);
+            listProp.Items[12].SubItems.Add(palOffset.ToString("x"));
+
+            listProp.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
         }
 
-        private void btnTransRemove_Click(object sender, EventArgs e)
-        {
-            panelTex.BackColor = Color.Transparent;
-        }
         private void btnSetTransparent_Click(object sender, EventArgs e)
         {
             ColorDialog o = new ColorDialog();
             o.AllowFullOpen = true;
             o.AnyColor = true;
+            o.Color = panelTex.BackColor;
+            o.FullOpen = true;
             if (o.ShowDialog() == DialogResult.OK)
                 panelTex.BackColor = o.Color;
         }
 
         private void listTextures_SelectedIndexChanged(object sender, EventArgs e)
         {
-            UpdateTexture(listTextures.SelectedIndex, listPalettes.SelectedIndex);
+            UpdateTexture(listTextures.SelectedIndex);
         }
         private void listPalettes_SelectedIndexChanged(object sender, EventArgs e)
         {

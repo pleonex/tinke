@@ -53,7 +53,7 @@ namespace Tinke
             ncer.cebk.nBanks = br.ReadUInt16();
             ncer.cebk.tBank = br.ReadUInt16();
             ncer.cebk.constant = br.ReadUInt32();
-            ncer.cebk.block_size = br.ReadUInt32();
+            ncer.cebk.block_size = br.ReadUInt32() & 0xF;
             ncer.cebk.unknown1 = br.ReadUInt32();
             ncer.cebk.unknown2 = br.ReadUInt64();
             ncer.cebk.banks = new Bank[ncer.cebk.nBanks];
@@ -136,9 +136,10 @@ namespace Tinke
                     if (ultimaCeldaSize == 0)
                         ultimaCeldaSize = 1;
                     tilePos += (uint)((ultimaCelda.tileOffset - tilePos) + ultimaCeldaSize);
-                    if (ncer.cebk.unknown1 == 0x160 && i == 5) // Ni idea porqué pero funciona :)
+
+                    if (ncer.cebk.unknown1 == 0x160 && i == 5) // I don't know why it works
                         tilePos -= 3;
-                    if (ncer.cebk.unknown1 == 0x110 && i == 4) // (ncer.cebk.unknown1 & FC0) >> 6
+                    if (ncer.cebk.unknown1 == 0x110 && i == 4) // (ncer.cebk.unknown1 & FC0) >> 6 (maybe ?)
                         tilePos -= 7;
                 }
                 br.BaseStream.Position = posicion;
@@ -314,13 +315,9 @@ namespace Tinke
 
                 uint tileOffset = banco.cells[i].tileOffset;
                 if (tile.rahc.depth == System.Windows.Forms.ColorDepth.Depth4Bit)
-                {
                     tileOffset *= (uint)((blockSize != 0) ? blockSize * 2 : 1);
-                }
                 else
-                {
                     tileOffset *= (uint)((blockSize != 0) ? blockSize : 1);
-                }
 
                 if (image)
                 {
@@ -336,9 +333,25 @@ namespace Tinke
                     }
                     else
                     {
-                        //celdas[i] = Imagen_NCGR.Crear_Imagen(tile, paleta).Clone(new RectangleF(
-                        grafico.DrawString("No supported NCER file, block size == 0x04", SystemFonts.CaptionFont, Brushes.Black, tamaño.Width / 2, tamaño.Height / 2);
-                        goto End;
+                        int imageWidth = tile.rahc.nTilesX;
+                        int imageHeight = tile.rahc.nTilesY;
+                        if (tile.orden == Orden_Tiles.Horizontal)
+                        {
+                            imageWidth *= 8;
+                            imageHeight *= 8;
+                        }
+
+                        int posX = (int)(tileOffset % imageWidth);
+                        int posY = (int)(tileOffset / imageWidth);
+
+                        if (tile.rahc.depth == System.Windows.Forms.ColorDepth.Depth4Bit)
+                            posY *= (int)blockSize * 2;
+                        else
+                            posY *= (int)blockSize;
+                        if (posY >= imageHeight)
+                            posY = posY % imageHeight;
+
+                        celdas[i] = Imagen_NCGR.Crear_Imagen(tile, paleta).Clone(new Rectangle(posX, posY, banco.cells[i].width, banco.cells[i].height), System.Drawing.Imaging.PixelFormat.DontCare);
                     }
                     #region Rotaciones
                     if (banco.cells[i].xFlip && banco.cells[i].yFlip)
@@ -361,7 +374,6 @@ namespace Tinke
                     grafico.DrawString(banco.cells[i].num_cell.ToString(), SystemFonts.CaptionFont, Brushes.Black, tamaño.Width / 2 + banco.cells[i].xOffset,
                         tamaño.Height / 2 + banco.cells[i].yOffset);
             }
-        End:
             return imagen;
         }
         public static Bitmap Obtener_Imagen(Bank banco, uint blockSize, NCGR tile, NCLR paleta,
@@ -409,8 +421,25 @@ namespace Tinke
                     }
                     else
                     {
-                        grafico.DrawString("No supported NCER file, block size == 0x04", SystemFonts.CaptionFont, Brushes.Black, tamaño.Width / 2, tamaño.Height / 2);
-                        goto End;
+                        int imageWidth = tile.rahc.nTilesX;
+                        int imageHeight = tile.rahc.nTilesY;
+                        if (tile.orden == Orden_Tiles.Horizontal)
+                        {
+                            imageWidth *= 8;
+                            imageHeight *= 8;
+                        }
+
+                        int posX = (int)(tileOffset % imageWidth);
+                        int posY = (int)(tileOffset / imageWidth);
+
+                        if (tile.rahc.depth == System.Windows.Forms.ColorDepth.Depth4Bit)
+                            posY *= (int)blockSize * 2;
+                        else
+                            posY *= (int)blockSize;
+                        if (posY >= imageHeight)
+                            posY = posY % imageHeight;
+
+                        celdas[i] = Imagen_NCGR.Crear_Imagen(tile, paleta).Clone(new Rectangle(posX, posY, banco.cells[i].width, banco.cells[i].height), System.Drawing.Imaging.PixelFormat.DontCare);
                     }
                     #region Rotaciones
                     if (banco.cells[i].xFlip && banco.cells[i].yFlip)

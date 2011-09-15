@@ -36,6 +36,8 @@
             this.btnApply = new System.Windows.Forms.Button();
             this.panelCharEdit = new System.Windows.Forms.Panel();
             this.btnSave = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
+            this.comboEncoding = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.picFont)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picText)).BeginInit();
             this.panelPicImage.SuspendLayout();
@@ -45,14 +47,14 @@
             // 
             this.picFont.BackColor = System.Drawing.Color.Moccasin;
             this.picFont.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.picFont.Dock = System.Windows.Forms.DockStyle.Fill;
             this.picFont.Location = new System.Drawing.Point(0, 0);
-            this.picFont.MaximumSize = new System.Drawing.Size(256, 512);
+            this.picFont.MaximumSize = new System.Drawing.Size(260, 512);
             this.picFont.Name = "picFont";
-            this.picFont.Size = new System.Drawing.Size(256, 307);
+            this.picFont.Size = new System.Drawing.Size(260, 307);
             this.picFont.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.picFont.TabIndex = 0;
             this.picFont.TabStop = false;
+            this.picFont.MouseClick += new System.Windows.Forms.MouseEventHandler(this.picFont_MouseClick);
             // 
             // comboBox1
             // 
@@ -88,9 +90,9 @@
             this.panelPicImage.AutoScroll = true;
             this.panelPicImage.Controls.Add(this.picFont);
             this.panelPicImage.Location = new System.Drawing.Point(4, 31);
-            this.panelPicImage.MaximumSize = new System.Drawing.Size(258, 307);
+            this.panelPicImage.MaximumSize = new System.Drawing.Size(260, 307);
             this.panelPicImage.Name = "panelPicImage";
-            this.panelPicImage.Size = new System.Drawing.Size(258, 307);
+            this.panelPicImage.Size = new System.Drawing.Size(260, 307);
             this.panelPicImage.TabIndex = 5;
             // 
             // btnApply
@@ -122,10 +124,35 @@
             this.btnSave.UseVisualStyleBackColor = true;
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(169, 6);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(55, 13);
+            this.label1.TabIndex = 9;
+            this.label1.Text = "Encoding:";
+            // 
+            // comboEncoding
+            // 
+            this.comboEncoding.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboEncoding.FormattingEnabled = true;
+            this.comboEncoding.Items.AddRange(new object[] {
+            "shift-jis",
+            "Unicode",
+            "Unicode BigEndian"});
+            this.comboEncoding.Location = new System.Drawing.Point(230, 4);
+            this.comboEncoding.Name = "comboEncoding";
+            this.comboEncoding.Size = new System.Drawing.Size(121, 21);
+            this.comboEncoding.TabIndex = 10;
+            this.comboEncoding.SelectedIndexChanged += new System.EventHandler(this.comboEncoding_SelectedIndexChanged);
+            // 
             // FontControl
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
             this.BackColor = System.Drawing.Color.Transparent;
+            this.Controls.Add(this.comboEncoding);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.btnSave);
             this.Controls.Add(this.btnApply);
             this.Controls.Add(this.panelCharEdit);
@@ -154,5 +181,7 @@
         private System.Windows.Forms.Button btnApply;
         private System.Windows.Forms.Panel panelCharEdit;
         private System.Windows.Forms.Button btnSave;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.ComboBox comboEncoding;
     }
 }

@@ -34,24 +34,9 @@ namespace Fonts
             picFont.Image = NFTR.Get_Chars(font, 250);
 
             Fill_CharTile();
-            //Create_Controls();
-        }
 
-        private void Create_Controls()
-        {
-            chars.Clear();
-
-            for (int i = 0; i < font.plgc.tiles.Length; i++)
-            {
-                CharControl control = new CharControl(
-                     (from k in charTile where int.Equals(k.Value, i) select k.Key).FirstOrDefault(),
-                     font.hdwc.info[i],
-                     font.plgc.tiles[i],
-                     font.plgc.depth,
-                     font.plgc.tile_width,
-                     font.plgc.tile_height);
-                chars.Add(control);
-            }
+            comboBox1.SelectedIndex = 0;
+            comboEncoding.SelectedIndex = 0;
         }
         private void Fill_CharTile()
         {
@@ -95,6 +80,10 @@ namespace Fonts
                 font.plgc.tile_height));
         }
 
+        private void comboEncoding_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            txtBox_TextChanged(txtBox, null);
+        }
         private void txtBox_TextChanged(object sender, EventArgs e)
         {
             Bitmap image = new Bitmap(picText.Width, picText.Height);
@@ -112,7 +101,14 @@ namespace Fonts
                     continue;
                 }
 
-                byte[] codes = Encoding.GetEncoding("shift-jis").GetBytes( new char[] { txtBox.Text[i] } ).Reverse().ToArray();
+                byte[] codes = new byte[1];
+                if (comboEncoding.SelectedIndex == 0)
+                    codes = Encoding.GetEncoding("shift-jis").GetBytes(new char[] { txtBox.Text[i] }).Reverse().ToArray();
+                else if (comboEncoding.SelectedIndex == 1)
+                    codes = Encoding.Unicode.GetBytes(new char[] { txtBox.Text[i] });
+                else if (comboEncoding.SelectedIndex == 2)
+                    codes = Encoding.BigEndianUnicode.GetBytes(new char[] { txtBox.Text[i] });
+
                 int charCode = (codes.Length == 2 ? BitConverter.ToUInt16(codes, 0) : codes[0]);
 
                 int tileCode;
@@ -143,13 +139,22 @@ namespace Fonts
             font.plgc.tiles[comboBox1.SelectedIndex] = charControl.Tiles;
             picFont.Image = NFTR.Get_Chars(font, 250);
         }
-
         private void btnSave_Click(object sender, EventArgs e)
         {
             String fontFile = System.IO.Path.GetTempFileName();
             NFTR.Write(font, fontFile);
             pluginHost.ChangeFile(font.id, fontFile);
         }
+
+        private void picFont_MouseClick(object sender, MouseEventArgs e)
+        {
+            int charX = e.X / font.plgc.tile_width;
+            int charY = e.Y / font.plgc.tile_height;
+            int totalX = 250 / font.plgc.tile_width;
+
+            comboBox1.SelectedIndex = charX + charY * totalX;
+        }
+
 
     }
 }

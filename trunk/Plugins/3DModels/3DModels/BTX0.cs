@@ -28,6 +28,9 @@ namespace _3DModels
             for (int i = 0; i < btx.header.num_sections; i++)
                 btx.header.offset[i] = br.ReadUInt32();
 
+            if (btx.header.num_sections > 1)
+                MessageBox.Show("There are more than one section?\nPlease, report this file");
+
             #region Read texture sections
             br.BaseStream.Position = btx.header.offset[0];
             sBTX0.Texture tex = new sBTX0.Texture();
@@ -85,18 +88,23 @@ namespace _3DModels
                 texInfo.unknown2 = br.ReadByte();
                 texInfo.unknown3 = br.ReadByte();
 
-                texInfo.paletteID = (byte)(((texInfo.parameters >> 13) & 1));
-                texInfo.format = (byte)((texInfo.parameters >> 10) & 3);
-                texInfo.height = (byte)(8 << ((texInfo.parameters >> 7) & 3));
-                texInfo.width = (byte)(8 << ((texInfo.parameters >> 4) & 3));
+                texInfo.coord_transf = (byte)(texInfo.parameters & 14);
+                texInfo.color0 = (byte)((texInfo.parameters >> 13) & 1);
+                texInfo.format = (byte)((texInfo.parameters >> 10) & 7);
+                texInfo.height = (byte)(8 << ((texInfo.parameters >> 7) & 7));
+                texInfo.width = (byte)(8 << ((texInfo.parameters >> 4) & 7));
+                texInfo.flip_Y = (byte)((texInfo.parameters >> 3) & 1);
+                texInfo.flip_X = (byte)((texInfo.parameters >> 2) & 1);
+                texInfo.repeat_Y = (byte)((texInfo.parameters >> 1) & 1);
+                texInfo.repeat_X = (byte)(texInfo.parameters & 1);
+
                 texInfo.depth = FormatDepth[texInfo.format];
-                Console.WriteLine("BTX depth: {0}", texInfo.format.ToString());
 
                 tex.texInfo.infoBlock.infoData[i] = texInfo;
             }
             tex.texInfo.names = new string[tex.texInfo.num_objs];
             for (int i = 0; i < tex.texInfo.num_objs; i++)
-                tex.texInfo.names[i] = new String(br.ReadChars(0x10));
+                tex.texInfo.names[i] = new String(br.ReadChars(0x10)).Replace("\0", "");
             #endregion
 
             #region Palette Info
@@ -132,7 +140,7 @@ namespace _3DModels
             }
             tex.palInfo.names = new string[tex.palInfo.num_objs];
             for (int i = 0; i < tex.palInfo.num_objs; i++)
-                tex.palInfo.names[i] = new String(br.ReadChars(0x10));
+                tex.palInfo.names[i] = new String(br.ReadChars(0x10)).Replace("\0", "");
             #endregion            
 
             btx.texture = tex;
@@ -162,12 +170,15 @@ namespace _3DModels
             {
                 sBTX0.Texture.TextInfo texInfo = (sBTX0.Texture.TextInfo)btx0.texture.texInfo.infoBlock.infoData[i];
                 Console.WriteLine("*Objs: {0} ({1})", i.ToString(), btx0.texture.texInfo.names[i].Trim('\x0'));
-                Console.Write("|_ Offset 0x{0}", texInfo.tex_offset.ToString("x"));
-                Console.Write(" | Size {0}x{1}", texInfo.width.ToString(), texInfo.height.ToString());
-                Console.Write(" | Format {0} ({1})", texInfo.format.ToString(), (FormatDepthName)texInfo.format);
-                Console.Write(" | Palette ID {0}", texInfo.paletteID.ToString());
-                Console.Write(" | Unknown1 {0} | Unknown2 {0} | Unknown3 {0}", texInfo.unknown.ToString(), texInfo.unknown2.ToString(), texInfo.unknown3.ToString());
-                Console.WriteLine();
+                Console.WriteLine("|_ Offset 0x{0}", texInfo.tex_offset.ToString("x"));
+                Console.WriteLine("|_ Parameters 0x{0}", texInfo.parameters.ToString("x"));
+                Console.Write(" >> Repeat: X->{0}, Y->{1}", texInfo.repeat_X.ToString(), texInfo.repeat_Y.ToString());
+                Console.Write(" | Flip: X-> {0}, Y->{1}", texInfo.flip_X.ToString(), texInfo.flip_Y.ToString());
+                Console.Write(" | Size: {0}x{1}", texInfo.width.ToString(), texInfo.height.ToString());
+                Console.Write(" | Format: {0} ({1})", texInfo.format.ToString(), (TextureFormat)texInfo.format);
+                Console.Write(" | Color0: {0}", texInfo.color0.ToString());
+                Console.WriteLine(" | Coordinates Transformation Modes: {0} ({1})", texInfo.coord_transf.ToString(), (TextureCoordTransf)texInfo.coord_transf);
+                Console.WriteLine(" | Unknown1 {0} | Unknown2 {0} | Unknown3 {0}", texInfo.unknown.ToString(), texInfo.unknown2.ToString(), texInfo.unknown3.ToString());
             }
 
             Console.WriteLine("<u>Palette Information:</u>");
@@ -176,24 +187,11 @@ namespace _3DModels
                 sBTX0.Texture.PalInfo palInfo = (sBTX0.Texture.PalInfo)btx0.texture.palInfo.infoBlock.infoData[i];
                 Console.WriteLine("*Pal: {0} ({1})", i.ToString(), btx0.texture.palInfo.names[i].Trim('\x0'));
                 Console.Write("|_Offset 0x{0}", palInfo.palette_offset.ToString("x"));
-                Console.Write(" | Unknown 0x{0}", palInfo.unknown1.ToString("x"));
                 Console.WriteLine();
             }
             Console.WriteLine("EOF</pre>");
         }
 
-        public enum FormatDepthName : byte
-        {
-            No_Texture = 0,
-            A3I5 = 1,
-            Color4 = 2,
-            Color16 = 3,
-            Color256 = 4,
-            Compressed_Texel4x4 = 5,
-            A5I3 = 6,
-            Direct_Texture = 7
-
-        }
         //                                              0  1  2  3  4  5  6  7
         public static byte[] FormatDepth = new byte[] { 0, 8, 2, 4, 8, 0, 8, 16 };
     }
@@ -280,11 +278,17 @@ namespace _3DModels
                 public byte unknown2;
                 public byte unknown3;
 
+                // Parameters
+                public byte repeat_X;   // 0 = freeze; 1 = repeat
+                public byte repeat_Y;   // 0 = freeze; 1 = repeat
+                public byte flip_X;     // 0 = no; 1 = flip each 2nd texture (requires repeat)
+                public byte flip_Y;     // 0 = no; 1 = flip each 2nd texture (requires repeat)
+                public byte width;      // 8 << width
+                public byte height;     // 8 << height
+                public byte format;     // Texture format
+                public byte color0; // 0 = displayed; 1 = transparent
+                public byte coord_transf; // Texture coordination transformation mode
                 public byte depth;
-                public byte paletteID;
-                public byte format;
-                public byte height;
-                public byte width;
             }
             public struct PalInfo
             {
@@ -292,5 +296,24 @@ namespace _3DModels
                 public ushort unknown1;
             }
         }
+    }
+    public enum TextureFormat : byte
+    {
+        No_Texture = 0,
+        A3I5 = 1,
+        Color4 = 2,
+        Color16 = 3,
+        Color256 = 4,
+        Compressed_Texel4x4 = 5,
+        A5I3 = 6,
+        Direct_Texture = 7
+
+    }
+    public enum TextureCoordTransf : byte
+    {
+        Not_Transform = 0,
+        TexCoord_source = 1,
+        Normal_source = 2,
+        Vertex_source = 3
     }
 }
