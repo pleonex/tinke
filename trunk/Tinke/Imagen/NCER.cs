@@ -126,13 +126,14 @@ namespace Tinke
                 // Sort the cell using the priority value
                 List<Cell> cells = new List<Cell>();
                 cells.AddRange(ncer.cebk.banks[i].cells);
-                cells.Sort(Comparision_Cell);
+                //cells.Sort(Comparision_Cell);
                 ncer.cebk.banks[i].cells = cells.ToArray();
 
                 if (ncer.cebk.unknown1 != 0x00)
                 {
                     Cell ultimaCelda = Get_LastCell(ncer.cebk.banks[i]);
-                    int ultimaCeldaSize = (int)(ultimaCelda.height * ultimaCelda.width / (128 * ncer.cebk.block_size));
+                    int ultimaCeldaSize = (int)(ultimaCelda.height * ultimaCelda.width);
+                    ultimaCeldaSize /= (int)(128 * (ncer.cebk.block_size == 0 ? 1 : ncer.cebk.block_size));
                     if (ultimaCeldaSize == 0)
                         ultimaCeldaSize = 1;
                     tilePos += (uint)((ultimaCelda.tileOffset - tilePos) + ultimaCeldaSize);
@@ -327,7 +328,11 @@ namespace Tinke
                     if (blockSize != 4)
                     {
                         if (tile.orden == Orden_Tiles.No_Tiles)
-                            celdas[i] = Imagen_NCGR.Crear_Imagen(tile, paleta, (int)tileOffset * 64, banco.cells[i].width, banco.cells[i].height);
+                        {
+                            if (tile.rahc.depth == System.Windows.Forms.ColorDepth.Depth4Bit)
+                                tileOffset *= 2;
+                            celdas[i] = Imagen_NCGR.Crear_Imagen(tile, paleta, (int)tileOffset * 32, banco.cells[i].width, banco.cells[i].height);
+                        }
                         else
                             celdas[i] = Imagen_NCGR.Crear_Imagen(tile, paleta, (int)tileOffset * 64, banco.cells[i].width / 8, banco.cells[i].height / 8);
                     }
@@ -415,7 +420,12 @@ namespace Tinke
                     if (blockSize != 0x04)
                     {
                         if (tile.orden == Orden_Tiles.No_Tiles)
-                            celdas[i] = Imagen_NCGR.Crear_Imagen(tile, paleta, (int)tileOffset * 64, banco.cells[i].width, banco.cells[i].height);
+                        {
+                            if (tile.rahc.depth == System.Windows.Forms.ColorDepth.Depth4Bit)
+                                tileOffset *= 2;
+
+                            celdas[i] = Imagen_NCGR.Crear_Imagen(tile, paleta, (int)tileOffset * 32, banco.cells[i].width, banco.cells[i].height);
+                        }
                         else
                             celdas[i] = Imagen_NCGR.Crear_Imagen(tile, paleta, (int)tileOffset * 64, banco.cells[i].width / 8, banco.cells[i].height / 8);
                     }
@@ -462,7 +472,7 @@ namespace Tinke
                     grafico.DrawString(i.ToString(), SystemFonts.CaptionFont, Brushes.Black, tamaño.Width / 2 + banco.cells[i].xOffset,
                         tamaño.Height / 2 + banco.cells[i].yOffset);
             }
-        End:
+
             return imagen;
         }
 

@@ -77,7 +77,8 @@ namespace Fonts
                 font.plgc.tiles[comboBox1.SelectedIndex],
                 font.plgc.depth,
                 font.plgc.tile_width,
-                font.plgc.tile_height));
+                font.plgc.tile_height,
+                font.plgc.rotateMode));
         }
 
         private void comboEncoding_SelectedIndexChanged(object sender, EventArgs e)

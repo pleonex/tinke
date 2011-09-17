@@ -16,7 +16,7 @@ namespace _3DModels
         IPluginHost pluginHost;
         sBTX0 btx0;
         //                                       0     1      2     3     4      5     6     7
-        static int[] PaletteSize = new int[] { 0x00, 0x40, 0x08, 0x20, 0x200, 0x00, 0x10, 0x00 };
+        static int[] PaletteSize = new int[] { 0x00, 0x40, 0x08, 0x20, 0x200, 0x200, 0x10, 0x00 };
 
         public TextureControl()
         {
@@ -103,7 +103,7 @@ namespace _3DModels
         private Bitmap Draw_Texture(byte[] data, sBTX0.Texture.TextInfo info, Color[] palette)
         {
             if (info.format == 5)
-                return Draw_CompressedTexture(data, info, palette);
+                return Draw_CompressedTexture(data, info);
 
             Bitmap imagen = new Bitmap(info.width, info.height);
             if (info.format == 3) // 16-color 4 bits
@@ -157,11 +157,99 @@ namespace _3DModels
 
             return imagen;
         }
-        private Bitmap Draw_CompressedTexture(byte[] data, sBTX0.Texture.TextInfo info, Color[] palette)
+        private Bitmap Draw_CompressedTexture(byte[] data, sBTX0.Texture.TextInfo info)
         {
+            sBTX0.Texture.PalInfo palInfo = (sBTX0.Texture.PalInfo)btx0.texture.palInfo.infoBlock.infoData[listPalettes.SelectedIndex];
+
+
+            BinaryReader br = new BinaryReader(File.OpenRead(btx0.file));
+            br.BaseStream.Position = btx0.header.offset[0] + btx0.texture.header.textCompressedInfoData_offset + info.compressedDataStart;
+
             Bitmap image = new Bitmap(info.width, info.height);
 
+            for (int h = 0; h < info.height; h += 4)
+            {
+                for (int w = 0; w < info.width; w += 4)
+                {
+                    uint texData = BitConverter.ToUInt32(data, w + h * info.width / 4);
+
+                    // Get palette data for this block
+                    ushort pal_info = br.ReadUInt16();
+                    int pal_offset = pal_info & 0x3FFF;
+                    int pal_mode = (pal_info >> 14);
+
+                    long currPos = br.BaseStream.Position;
+                    br.BaseStream.Position = btx0.header.offset[0] + btx0.texture.header.paletteData_offset + palInfo.palette_offset * 8;
+                    br.BaseStream.Position += pal_offset * 4;
+                    if (br.BaseStream.Position >= br.BaseStream.Length)
+                        br.BaseStream.Position -= pal_offset * 4;
+
+                    Color[] palette = pluginHost.BGR555(br.ReadBytes(0x08));
+                    br.BaseStream.Position = currPos;
+
+                    for (int hTex = 0; hTex < 4; hTex++)
+                    {
+                        byte texel_row = (byte)((texData >> (hTex * 8)) & 0xFF);
+                        for (int wTex = 0; wTex < 4; wTex++)
+                        {
+                            byte texel = (byte)((texel_row >> (wTex * 2)) & 0x3);
+
+                            #region Get color from Texel and mode values
+                            Color color = Color.Black;
+                            if (palette.Length < 4)
+                                goto Draw;
+
+                            switch (pal_mode)
+                            {
+                                case 0:
+                                    if (texel == 0) color = palette[0];
+                                    else if (texel == 1) color = palette[1];
+                                    else if (texel == 2) color = palette[2];
+                                    else if (texel == 3) color = Color.FromArgb(0, 0, 0, 0);  // Transparent color
+                                    break;
+
+                                case 1:
+                                    if (texel == 0) color = palette[0];
+                                    else if (texel == 1) color = palette[1];
+                                    else if (texel == 2) color = SumColors(palette[0], palette[1], 1, 1);
+                                    else if (texel == 3) color = Color.FromArgb(0, 0, 0, 0); // Transparent color
+                                    break;
+
+                                case 2:
+                                    if (texel == 0) color = palette[0];
+                                    else if (texel == 1) color = palette[1];
+                                    else if (texel == 2) color = palette[2];
+                                    else if (texel == 3) color = palette[3];
+                                    break;
+
+                                case 3:
+                                    if (texel == 0) color = palette[0];
+                                    else if (texel == 1) color = palette[1];
+                                    else if (texel == 2) color = SumColors(palette[0], palette[1], 5, 3);
+                                    else if (texel == 3) color = SumColors(palette[0], palette[1], 3, 5);
+                                    break;
+                            }
+                            #endregion
+
+                        Draw:
+                            image.SetPixel(
+                                w + wTex,
+                                h + hTex,
+                                color);
+                        }
+                    }
+                }
+            }
+
+            br.Close();
             return image;
+        }
+        private Color SumColors(Color a, Color b, int wa, int wb)
+        {
+            return Color.FromArgb(
+                (a.R * wa + b.R * wb) / (wa + wb),
+                (a.G * wa + b.G * wb) / (wa + wb),
+                (a.B * wa + b.B * wb) / (wa + wb));
         }
         private byte[] Bit8ToBit2(byte[] data)
         {
