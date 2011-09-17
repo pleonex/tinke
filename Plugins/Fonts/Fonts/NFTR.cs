@@ -55,7 +55,10 @@ namespace Fonts
             font.plgc.tile_height = br.ReadByte();
             font.plgc.tile_length = br.ReadUInt16();
             font.plgc.unknown = br.ReadUInt16();
-            font.plgc.depth = br.ReadUInt16();
+            ushort value = br.ReadUInt16();
+            font.plgc.depth = (ushort)(value & 0xFF);
+            font.plgc.rotateMode = (byte)((value >> 8) & 0x3);
+            font.plgc.unknown2 = (byte)(value >> 10);
 
             font.plgc.tiles = new Byte[(font.plgc.block_size - 0x10) / font.plgc.tile_length][];
             for (int i = 0; i < font.plgc.tiles.Length; i++)
@@ -68,6 +71,8 @@ namespace Fonts
             Console.WriteLine("Tile length: {0}", font.plgc.tile_length.ToString());
             Console.WriteLine("Unknown: 0x{0}", font.plgc.unknown.ToString("x"));
             Console.WriteLine("Depth: {0}", font.plgc.depth.ToString());
+            Console.WriteLine("Rotate mode: {0}", font.plgc.rotateMode.ToString());
+            Console.WriteLine("Unknown 2: {0}", font.plgc.unknown2.ToString());
 
             // Character Width DH
             br.BaseStream.Position = font.fnif.offset_hdwc - 0x08;
@@ -300,10 +305,18 @@ namespace Fonts
                             catch { break; }
                 }
             }
+
+            switch (font.plgc.rotateMode)
+            {
+                case 1: image.RotateFlip(RotateFlipType.Rotate90FlipNone); break;
+                case 2: image.RotateFlip(RotateFlipType.Rotate270FlipNone); break;
+                case 3: image.RotateFlip(RotateFlipType.Rotate180FlipNone); break;
+            }
+
             image.MakeTransparent(Color.FromArgb(255, 255, 255));
             return image;
         }
-        public static Bitmap Get_Char(byte[] tiles, int depth, int width, int height, int zoom = 1)
+        public static Bitmap Get_Char(byte[] tiles, int depth, int width, int height, int rotateMode, int zoom = 1)
         {
             Bitmap image = new Bitmap(width * zoom + 1, height * zoom + 1);
             List<Byte> tileData = new List<byte>();
@@ -339,6 +352,13 @@ namespace Fonts
                                 h * zoom + hzoom,
                                 (palette[tileData[w + h * width]]));
                 }
+            }
+
+            switch (rotateMode)
+            {
+                case 1: image.RotateFlip(RotateFlipType.Rotate90FlipNone); break;
+                case 2: image.RotateFlip(RotateFlipType.Rotate270FlipNone); break;
+                case 3: image.RotateFlip(RotateFlipType.Rotate180FlipNone); break;
             }
 
             return image;
@@ -434,6 +454,8 @@ namespace Fonts
             public ushort tile_length;
             public ushort unknown;
             public ushort depth;
+            public byte rotateMode;
+            public byte unknown2;
             public byte[][] tiles; // tiles of each char
         }
         public struct HDWC // Character Width DH

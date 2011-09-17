@@ -76,8 +76,10 @@ namespace _3DModels
             // Info block
             tex.texInfo.infoBlock.header_size = br.ReadUInt16();
             tex.texInfo.infoBlock.data_size = br.ReadUInt16();
+
             tex.texInfo.infoBlock.infoData = new object[tex.texInfo.num_objs];
             tex.texture_data = new byte[tex.texInfo.num_objs][];
+            uint compressedStartOffset = 0x00;
             for (int i = 0; i < tex.texInfo.num_objs; i++)
             {
                 sBTX0.Texture.TextInfo texInfo = new sBTX0.Texture.TextInfo();
@@ -98,7 +100,17 @@ namespace _3DModels
                 texInfo.repeat_Y = (byte)((texInfo.parameters >> 1) & 1);
                 texInfo.repeat_X = (byte)(texInfo.parameters & 1);
 
+                if (texInfo.width == 0x00)
+                    texInfo.width = 256;
+                if (texInfo.height == 0x00)
+                    texInfo.height = 256;
+
                 texInfo.depth = FormatDepth[texInfo.format];
+                if (texInfo.format == 5)
+                {
+                    texInfo.compressedDataStart = compressedStartOffset;
+                    compressedStartOffset += (uint)(texInfo.width * texInfo.height / 8);
+                }
 
                 tex.texInfo.infoBlock.infoData[i] = texInfo;
             }
@@ -134,7 +146,7 @@ namespace _3DModels
             for (int i = 0; i < tex.palInfo.num_objs; i++)
             {
                 sBTX0.Texture.PalInfo palInfo = new sBTX0.Texture.PalInfo();
-                palInfo.palette_offset = br.ReadUInt16();
+                palInfo.palette_offset = (ushort)(br.ReadUInt16() & 0x1FFF);
                 palInfo.unknown1 = br.ReadUInt16(); // Not used
                 tex.palInfo.infoBlock.infoData[i] = palInfo;
             }
@@ -193,7 +205,7 @@ namespace _3DModels
         }
 
         //                                              0  1  2  3  4  5  6  7
-        public static byte[] FormatDepth = new byte[] { 0, 8, 2, 4, 8, 0, 8, 16 };
+        public static byte[] FormatDepth = new byte[] { 0, 8, 2, 4, 8, 2, 8, 16 };
     }
 
     public struct sBTX0
@@ -283,12 +295,14 @@ namespace _3DModels
                 public byte repeat_Y;   // 0 = freeze; 1 = repeat
                 public byte flip_X;     // 0 = no; 1 = flip each 2nd texture (requires repeat)
                 public byte flip_Y;     // 0 = no; 1 = flip each 2nd texture (requires repeat)
-                public byte width;      // 8 << width
-                public byte height;     // 8 << height
+                public ushort width;      // 8 << width
+                public ushort height;     // 8 << height
                 public byte format;     // Texture format
                 public byte color0; // 0 = displayed; 1 = transparent
                 public byte coord_transf; // Texture coordination transformation mode
+
                 public byte depth;
+                public uint compressedDataStart;
             }
             public struct PalInfo
             {

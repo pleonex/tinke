@@ -350,7 +350,7 @@ namespace Tinke
             {
                 if (paleta.pltt.paletas[paletteIndex].colores[i] == color)
                 {
-                    paleta.pltt.paletas[paletteIndex].colores[i] = paleta.pltt.paletas[0].colores[0];
+                    paleta.pltt.paletas[paletteIndex].colores[i] = paleta.pltt.paletas[paletteIndex].colores[0];
                     paleta.pltt.paletas[paletteIndex].colores[0] = color;
                     colorIndex = i;
                     break;

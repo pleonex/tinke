@@ -11,8 +11,10 @@
 * Improved plugin Font
   - Added support for encodings shift-jis, unicode and unicode bigendian
   - Select char from the map char image.
+  - Support for rotateMode value.
 * Fixed reading problem in NCER
 * Fixed NCER files with 0x04 as blockSize
+* Fixed problem with "Change transparency color" in NCER files
 * Fixed hotkeys
 * Fixed important bugs
 

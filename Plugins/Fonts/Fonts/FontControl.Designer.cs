@@ -48,9 +48,9 @@
             this.picFont.BackColor = System.Drawing.Color.Moccasin;
             this.picFont.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.picFont.Location = new System.Drawing.Point(0, 0);
-            this.picFont.MaximumSize = new System.Drawing.Size(260, 512);
+            this.picFont.MaximumSize = new System.Drawing.Size(263, 512);
             this.picFont.Name = "picFont";
-            this.picFont.Size = new System.Drawing.Size(260, 307);
+            this.picFont.Size = new System.Drawing.Size(263, 307);
             this.picFont.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.picFont.TabIndex = 0;
             this.picFont.TabStop = false;
@@ -89,15 +89,15 @@
             // 
             this.panelPicImage.AutoScroll = true;
             this.panelPicImage.Controls.Add(this.picFont);
-            this.panelPicImage.Location = new System.Drawing.Point(4, 31);
-            this.panelPicImage.MaximumSize = new System.Drawing.Size(260, 307);
+            this.panelPicImage.Location = new System.Drawing.Point(2, 29);
+            this.panelPicImage.MaximumSize = new System.Drawing.Size(263, 307);
             this.panelPicImage.Name = "panelPicImage";
-            this.panelPicImage.Size = new System.Drawing.Size(260, 307);
+            this.panelPicImage.Size = new System.Drawing.Size(263, 307);
             this.panelPicImage.TabIndex = 5;
             // 
             // btnApply
             // 
-            this.btnApply.Location = new System.Drawing.Point(430, 291);
+            this.btnApply.Location = new System.Drawing.Point(430, 289);
             this.btnApply.Name = "btnApply";
             this.btnApply.Size = new System.Drawing.Size(75, 46);
             this.btnApply.TabIndex = 1;
@@ -107,7 +107,7 @@
             // 
             // panelCharEdit
             // 
-            this.panelCharEdit.Location = new System.Drawing.Point(266, 31);
+            this.panelCharEdit.Location = new System.Drawing.Point(266, 29);
             this.panelCharEdit.Name = "panelCharEdit";
             this.panelCharEdit.Size = new System.Drawing.Size(243, 307);
             this.panelCharEdit.TabIndex = 7;
@@ -115,7 +115,7 @@
             // btnSave
             // 
             this.btnSave.Image = global::Fonts.Properties.Resources.disk;
-            this.btnSave.Location = new System.Drawing.Point(4, 2);
+            this.btnSave.Location = new System.Drawing.Point(0, 0);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(116, 26);
             this.btnSave.TabIndex = 8;

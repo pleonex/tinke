@@ -316,7 +316,7 @@
             // 
             this.btnSetTrans.Location = new System.Drawing.Point(6, 371);
             this.btnSetTrans.Name = "btnSetTrans";
-            this.btnSetTrans.Size = new System.Drawing.Size(164, 32);
+            this.btnSetTrans.Size = new System.Drawing.Size(208, 32);
             this.btnSetTrans.TabIndex = 31;
             this.btnSetTrans.Text = "S25";
             this.btnSetTrans.UseVisualStyleBackColor = true;

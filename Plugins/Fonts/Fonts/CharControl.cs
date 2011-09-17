@@ -19,12 +19,13 @@ namespace Fonts
         sNFTR.HDWC.Info tileInfo;
         int width;
         int height;
+        int rotateMode;
 
         public CharControl()
         {
             InitializeComponent();
         }
-        public CharControl(int charCode, sNFTR.HDWC.Info tileInfo, Byte[] tiles, int depth, int width, int height)
+        public CharControl(int charCode, sNFTR.HDWC.Info tileInfo, Byte[] tiles, int depth, int width, int height, int rotateMode)
         {
             InitializeComponent();
 
@@ -34,6 +35,7 @@ namespace Fonts
             this.depth = depth;
             this.width = width;
             this.height = height;
+            this.rotateMode = rotateMode;
 
             txtCharCode.Text = String.Format("0x{0:X}", charCode);
             numericStart.Value = tileInfo.pixel_start;
@@ -55,7 +57,7 @@ namespace Fonts
         }
         public void Draw_Char()
         {
-            Bitmap image = NFTR.Get_Char(tiles, depth, width, height, 10);
+            Bitmap image = NFTR.Get_Char(tiles, depth, width, height, rotateMode, 10);
             // Draw the grid
             Graphics graphic = Graphics.FromImage(image);
             for (int h = 0; h < height * 10; h += 10)
@@ -77,6 +79,10 @@ namespace Fonts
         public int CharHeight
         {
             get { return height; }
+        }
+        public int RotateMode
+        {
+            get { return rotateMode; }
         }
         public int Depth
         {
