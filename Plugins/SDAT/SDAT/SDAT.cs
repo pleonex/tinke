@@ -49,7 +49,6 @@ namespace SDAT
         }
         public void Leer(string archivo, int id)
         {
-            MessageBox.Show("Este archivo no guarda información.");
         }
         public Control Show_Info(string archivo, int id)
         {
@@ -382,7 +381,8 @@ namespace SDAT
 
             try
             {
-                System.Xml.Linq.XElement xml = System.Xml.Linq.XElement.Load(Application.StartupPath + "\\Plugins\\SDATLang.xml");
+                System.Xml.Linq.XElement xml = System.Xml.Linq.XElement.Load(Application.StartupPath + Path.DirectorySeparatorChar +
+                    "Plugins" + Path.DirectorySeparatorChar + "SDATLang.xml");
                 xml = xml.Element(pluginHost.Get_Language()).Element("Messages");
                 Console.WriteLine(xml.Element("S00").Value);
                 Console.WriteLine(xml.Element("S01").Value, sdat.files.header.nSounds.ToString());

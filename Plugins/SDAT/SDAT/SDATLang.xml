@@ -31,6 +31,48 @@
         Archivos totales: <b>{0}</b>
       </S01>
     </Messages>
+    <NewAudioOptions>
+      <S00>Opciones del nuevo archivo de audio</S00>
+      <S01>Codificación:</S01>
+      <S02>Activar loop</S02>
+      <S03>Opciones de loop</S03>
+      <S04>Posición de inicio:</S04>
+      <S05>Longitud:</S05>
+      <S06>Tamaño de bloque (STRM):</S06>
+      <S07>Volumen (0 para no cambiar):</S07>
+      <S08>Aceptar</S08>
+      <S09>Medida del loop</S09>
+      <S0A>Segundos</S0A>
+      <S0B>Milisegundos</S0B>
+      <S0C>Muestras</S0C>
+    </NewAudioOptions>
+    <Information>
+      <S00>/bSección</S00>
+      <S01>Cabecera genérica</S01>
+      <S02>Tipo</S02>
+      <S03>Magic</S03>
+      <S04>Tamaño del archivo</S04>
+      <S05>/bSección 1</S05>
+      <S06>Tamaño 1</S06>
+      <S07>Compresión</S07>
+      <S08>Indicador de bucle</S08>
+      <S09>Posición del bucle</S09>
+      <S0A>Canales</S0A>
+      <S0B>Frecuencia de muestreo</S0B>
+      <S0C>Tiempo</S0C>
+      <S0D>Muestras</S0D>
+      <S0E>Posición de los datos</S0E>
+      <S0F>Número de bloques</S0F>
+      <S10>Longitud del bloque</S10>
+      <S11>Muestras por bloque</S11>
+      <S12>Longitud del último bloque</S12>
+      <S13>Muestras en el último bloque</S13>
+      <S14>/bSección 2</S14>
+      <S15>Tamaño 2</S15>
+      <S16>Número de muestras</S16>
+      <S17>Información del SWAV</S17>
+      <S18>Longitud del bucle</S18>
+    </Information>
   </Español>
   <English>
     <iSDAT>
@@ -63,6 +105,48 @@
         Files: <b>{0}</b>
       </S01>
     </Messages>
+    <NewAudioOptions>
+      <S00>Audio file options</S00>
+      <S01>Compression:</S01>
+      <S02>Enable loop:</S02>
+      <S03>Loop options</S03>
+      <S04>Start offset:</S04>
+      <S05>Length:</S05>
+      <S06>Block size (STRM):</S06>
+      <S07>Volume (0 to not change):</S07>
+      <S08>Accept</S08>
+      <S09>Loop measure</S09>
+      <S0A>Seconds</S0A>
+      <S0B>Milliseconds</S0B>
+      <S0C>Samples</S0C>
+    </NewAudioOptions>
+    <Information>
+      <S00>/bSection</S00>
+      <S01>Standar header</S01>
+      <S02>Type</S02>
+      <S03>Magic</S03>
+      <S04>File size</S04>
+      <S05>/bSection 1</S05>
+      <S06>Size 1</S06>
+      <S07>Wave type</S07>
+      <S08>Loop flag</S08>
+      <S09>Loop offset</S09>
+      <S0A>Channels</S0A>
+      <S0B>Sample rate</S0B>
+      <S0C>Time</S0C>
+      <S0D>Samples</S0D>
+      <S0E>Data offset</S0E>
+      <S0F>Number of blocks</S0F>
+      <S10>Block length</S10>
+      <S11>Samples per block</S11>
+      <S12>Last block length</S12>
+      <S13>Samples per last block</S13>
+      <S14>/bSection 2</S14>
+      <S15>Size 2</S15>
+      <S16>Number of samples</S16>
+      <S17>SWAV Info</S17>
+      <S18>Non loop length</S18>
+    </Information>
   </English>
   <Français>
     <iSDAT>
@@ -95,5 +179,47 @@
         Archives : <b>{0}</b>
       </S01>
     </Messages>
+    <NewAudioOptions>
+      <S00>Audio file options</S00>
+      <S01>Compression:</S01>
+      <S02>Enable loop:</S02>
+      <S03>Loop options</S03>
+      <S04>Start offset:</S04>
+      <S05>Length:</S05>
+      <S06>Block size (STRM):</S06>
+      <S07>Volume (0 to not change):</S07>
+      <S08>Accept</S08>
+      <S09>Loop measure</S09>
+      <S0A>Seconds</S0A>
+      <S0B>Milliseconds</S0B>
+      <S0C>Samples</S0C>
+    </NewAudioOptions>
+    <Information>
+      <S00>/bSection</S00>
+      <S01>Standar header</S01>
+      <S02>Type</S02>
+      <S03>Magic</S03>
+      <S04>File size</S04>
+      <S05>/bSection 1</S05>
+      <S06>Size 1</S06>
+      <S07>Wave type</S07>
+      <S08>Loop flag</S08>
+      <S09>Loop offset</S09>
+      <S0A>Channels</S0A>
+      <S0B>Sample rate</S0B>
+      <S0C>Time</S0C>
+      <S0D>Samples</S0D>
+      <S0E>Data offset</S0E>
+      <S0F>Number of blocks</S0F>
+      <S10>Block length</S10>
+      <S11>Samples per block</S11>
+      <S12>Last block length</S12>
+      <S13>Samples per last block</S13>
+      <S14>/bSection 2</S14>
+      <S15>Size 2</S15>
+      <S16>Number of samples</S16>
+      <S17>SWAV Info</S17>
+      <S18>Non loop length</S18>
+    </Information>
   </Français>
 </Language>

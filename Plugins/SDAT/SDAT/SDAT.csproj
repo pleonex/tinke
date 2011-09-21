@@ -60,6 +60,7 @@
     <Compile Include="NewAudioOptions.Designer.cs">
       <DependentUpon>NewAudioOptions.cs</DependentUpon>
     </Compile>
+    <Compile Include="PCM.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -88,6 +89,7 @@
     <None Include="Resources\sound_add.png" />
     <None Include="Resources\information.png" />
     <None Include="Resources\accept.png" />
+    <None Include="Resources\package_add.png" />
     <Content Include="SDATLang.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

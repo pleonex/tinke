@@ -74,7 +74,8 @@ namespace SDAT
         {
             try
             {
-                System.Xml.Linq.XElement xml = System.Xml.Linq.XElement.Load(Application.StartupPath + "\\Plugins\\SDATLang.xml");
+                System.Xml.Linq.XElement xml = System.Xml.Linq.XElement.Load(Application.StartupPath + Path.DirectorySeparatorChar +
+                    "Plugins" + Path.DirectorySeparatorChar + "SDATLang.xml");
                 xml = xml.Element(pluginHost.Get_Language());
                 xml = xml.Element("iSDAT");
 
@@ -154,7 +155,8 @@ namespace SDAT
 
         private void treeFiles_AfterSelect(object sender, TreeViewEventArgs e)
         {
-            System.Xml.Linq.XElement xml = System.Xml.Linq.XElement.Load(Application.StartupPath + "\\Plugins\\SDATLang.xml");
+            System.Xml.Linq.XElement xml = System.Xml.Linq.XElement.Load(Application.StartupPath + Path.DirectorySeparatorChar +
+                "Plugins" + Path.DirectorySeparatorChar + "SDATLang.xml");
             xml = xml.Element(pluginHost.Get_Language());
             xml = xml.Element("iSDAT");
 
@@ -489,7 +491,8 @@ namespace SDAT
             {
                 if ((String)SearchFile().tag == "Descomprimido")
                 {
-                    xml = System.Xml.Linq.XElement.Load(Application.StartupPath + "\\Plugins\\SDATLang.xml");
+                    xml = System.Xml.Linq.XElement.Load(Application.StartupPath + Path.DirectorySeparatorChar +
+                        "Plugins" + Path.DirectorySeparatorChar + "SDATLang.xml");
                     xml = xml.Element(pluginHost.Get_Language());
                     xml = xml.Element("iSDAT");
 
@@ -522,7 +525,8 @@ namespace SDAT
         Folder_Extract:
             Folder currFolder = SearchFolder(id, sdat.files.root);
 
-            xml = System.Xml.Linq.XElement.Load(Application.StartupPath + "\\Plugins\\SDATLang.xml");
+            xml = System.Xml.Linq.XElement.Load(Application.StartupPath + Path.DirectorySeparatorChar +
+                "Plugins" + Path.DirectorySeparatorChar + "SDATLang.xml");
             xml = xml.Element(pluginHost.Get_Language());
             xml = xml.Element("iSDAT");
 
@@ -531,8 +535,8 @@ namespace SDAT
             o.Description = xml.Element("S0F").Value; ;
             if (o.ShowDialog() == DialogResult.OK)
             {
-                Directory.CreateDirectory(o.SelectedPath + '\\' + currFolder.name);
-                RecursivoExtractFolder(currFolder, o.SelectedPath + '\\' + currFolder.name);
+                Directory.CreateDirectory(o.SelectedPath + Path.DirectorySeparatorChar + currFolder.name);
+                RecursivoExtractFolder(currFolder, o.SelectedPath + Path.DirectorySeparatorChar + currFolder.name);
             }
         }
         private void RecursivoExtractFolder(Folder currFolder, String path)
@@ -557,7 +561,8 @@ namespace SDAT
         }
         private void btnUncompress_Click(object sender, EventArgs e)
         {
-            System.Xml.Linq.XElement xml = System.Xml.Linq.XElement.Load(Application.StartupPath + "\\Plugins\\SDATLang.xml");
+            System.Xml.Linq.XElement xml = System.Xml.Linq.XElement.Load(Application.StartupPath + Path.DirectorySeparatorChar +
+                "Plugins" + Path.DirectorySeparatorChar + "SDATLang.xml");
             xml = xml.Element(pluginHost.Get_Language());
             xml = xml.Element("iSDAT");
 
@@ -644,19 +649,20 @@ namespace SDAT
             String filein = o.FileName;
             sWAV wav = WAV.Read(filein);
 
-            sSWAV oldSwav = SWAV.Read(SaveFile());
             NewAudioOptions dialog = new NewAudioOptions(pluginHost, (selectedFile.type == FormatSound.SWAV ? true : false));
-            dialog.Loop = (oldSwav.data.info.bLoop != 1 ? false : true);
-            dialog.LoopOffset = oldSwav.data.info.nLoopOffset;
-            dialog.LoopLength = (int)oldSwav.data.info.nNonLoopLen;
-            if (dialog.ShowDialog() != DialogResult.OK)
-                return;
 
             switch (selectedFile.type)
             {
                 case FormatSound.STRM:
-                    sSTRM strm = STRM.ConvertToSTRM(wav, dialog.BlockSize);
+                    sSTRM oldStrm = STRM.Read(SaveFile());
+                    dialog.Compression = oldStrm.head.waveType;
+                    dialog.BlockSize = (int)oldStrm.head.blockLen;
+                    dialog.Loop = (oldStrm.head.loop != 0 ? true : false);
+                    dialog.LoopOffset = (int)oldStrm.head.loopOffset;
+                    if (dialog.ShowDialog() != DialogResult.OK)
+                        return;
 
+                    sSTRM strm = STRM.ConvertToSTRM(wav, dialog.Compression);
                     strm.head.loop = (byte)(dialog.Loop ? 0x01 : 0x00);
                     strm.head.loopOffset = (uint)dialog.LoopOffset;
 
@@ -664,7 +670,15 @@ namespace SDAT
                     break;
 
                 case FormatSound.SWAV:
-                    sSWAV swav = SWAV.ConvertToSWAV(wav, dialog.Volume);
+                    sSWAV oldSwav = SWAV.Read(SaveFile());
+                    dialog.Compression = oldSwav.data.info.nWaveType;
+                    dialog.Loop = (oldSwav.data.info.bLoop != 0 ? true : false);
+                    dialog.LoopLength = (int)oldSwav.data.info.nNonLoopLen;
+                    dialog.LoopOffset = (int)oldSwav.data.info.nLoopOffset;
+                    if (dialog.ShowDialog() != DialogResult.OK)
+                        return;
+
+                    sSWAV swav = SWAV.ConvertToSWAV(wav, dialog.Compression, dialog.Volume);
 
                     swav.data.info.bLoop = (byte)(dialog.Loop ? 0x01 : 0x00);
                     swav.data.info.nLoopOffset = (ushort)dialog.LoopOffset;
@@ -979,13 +993,13 @@ namespace SDAT
             switch (SearchFile().type)
             {
                 case FormatSound.STRM:
-                    info = STRM.Information(STRM.Read(SaveFile()));
+                    info = STRM.Information(STRM.Read(SaveFile()), pluginHost.Get_Language());
                     break;
                 case FormatSound.SWAV:
-                    info = SWAV.Information(SWAV.Read(SaveFile()));
+                    info = SWAV.Information(SWAV.Read(SaveFile()), pluginHost.Get_Language());
                     break;
                 case FormatSound.SWAR:
-                    info = SWAR.Information(SWAR.Read(SaveFile()));
+                    info = SWAR.Information(SWAR.Read(SaveFile()), pluginHost.Get_Language());
                     break;
 
                 case FormatSound.SSEQ:

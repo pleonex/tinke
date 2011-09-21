@@ -148,8 +148,16 @@ namespace Tinke
             // RAHC section
             bw.Write(tile.rahc.id);
             bw.Write(tile.rahc.size_section);
-            bw.Write(tile.rahc.nTilesY);
-            bw.Write(tile.rahc.nTilesX);
+            if (tile.orden == Orden_Tiles.Horizontal)
+            {
+                bw.Write(tile.rahc.nTilesY);
+                bw.Write(tile.rahc.nTilesX);
+            }
+            else
+            {
+                bw.Write((ushort)(tile.rahc.nTilesY / 8));
+                bw.Write((ushort)(tile.rahc.nTilesX / 8));
+            }
             bw.Write((uint)(tile.rahc.depth == ColorDepth.Depth4Bit ? 0x03 : 0x04));
             bw.Write(tile.rahc.unknown1);
             bw.Write(tile.rahc.unknown2);
@@ -179,7 +187,7 @@ namespace Tinke
             NCGR tile = new NCGR();
             BinaryReader br = new BinaryReader(File.OpenRead(bitmap));
             if (new String(br.ReadChars(2)) != "BM")
-                throw new NotSupportedException("Archivo no soportado, no es BITMAP");
+                throw new NotSupportedException(Tools.Helper.ObtenerTraduccion("NCGR", "S23"));
 
             tile.cabecera.id = "RGCN".ToCharArray();
             tile.cabecera.endianess = 0xFEFF;

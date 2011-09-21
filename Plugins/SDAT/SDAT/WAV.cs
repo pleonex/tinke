@@ -67,6 +67,17 @@ namespace SDAT
             wav.wave.data.data = br.ReadBytes((int)wav.wave.data.chunkSize - 0x08);
 
             br.Close();
+
+            // Convert the data to PCM16
+            if (wav.wave.fmt.audioFormat != WaveFormat.WAVE_FORMAT_PCM)
+                throw new NotSupportedException();
+
+            if (wav.wave.fmt.audioFormat == WaveFormat.WAVE_FORMAT_PCM && wav.wave.fmt.bitsPerSample == 0x08) // PCM8
+            {
+                wav.wave.fmt.bitsPerSample = 0x10;
+                wav.wave.data.data = PCM.PCM8ToPCM16(wav.wave.data.data);
+            }
+
             return wav;
         }
         /// <summary>
