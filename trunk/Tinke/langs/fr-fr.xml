@@ -75,8 +75,8 @@
     <S3C>Information complète de l'archive</S3C>
     <S3D>Compresser</S3D>
     <S3E>Texture</S3E>
-    <S3F>3D Model</S3F>
-    <S40>Relative path</S40>
+    <S3F>Modèle 3D</S3F>
+    <S40>Chemin relatif</S40>
   </Sistema>
   <RomInfo>
     <S01>Informations de la ROM</S01>
@@ -212,8 +212,8 @@
       L'assemblage ne peut pas être obtenu. Erreur :
       {1}
     </S20>
-    <S21>Time reading external files:</S21>
-    <S22>The temp folder couldn't be removed</S22>
+    <S21>Temps de lecture des archives externes :</S21>
+    <S22>Le dossier temporaire (temp) ne peut pas être supprimé</S22>
   </Messages>
   <NCLR>
     <S01>Nombre de la palette :</S01>
@@ -275,6 +275,7 @@
     <S20>Supprimer</S20>
     <S21>Importer</S21>
     <S22>Fixer la couleur transparente</S22>
+    <S23>Not supported file</S23>
   </NCGR>
   <NSCR>
     <S00>Options de map</S00>
@@ -444,7 +445,7 @@
     <S02>Annuler</S02>
     <S03>En-tête (Header)</S03>
     <S04>Bannière</S04>
-    <S05>Changer icone</S05>
+    <S05>Changer icône</S05>
     <S06>Version :</S06>
     <S07>Titres du jeu :</S07>
     <S08>Japonais</S08>

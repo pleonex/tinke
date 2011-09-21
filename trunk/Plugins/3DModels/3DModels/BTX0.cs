@@ -25,11 +25,14 @@ namespace _3DModels
             btx.header.header_size = br.ReadUInt16();
             btx.header.num_sections = br.ReadUInt16();
             btx.header.offset = new uint[btx.header.num_sections];
-            for (int i = 0; i < btx.header.num_sections; i++)
-                btx.header.offset[i] = br.ReadUInt32();
+            //for (int i = 0; i < btx.header.num_sections; i++)
+           //     btx.header.offset[i] = br.ReadUInt32();
+            if (btx.header.num_sections == 2)
+                br.ReadUInt32();
+            btx.header.offset[0] = br.ReadUInt32();
 
-            if (btx.header.num_sections > 1)
-                MessageBox.Show("There are more than one section?\nPlease, report this file");
+            //if (btx.header.num_sections > 1)
+            //    MessageBox.Show("There are more than one section?\nPlease, report this file");
 
             #region Read texture sections
             br.BaseStream.Position = btx.header.offset[0];
@@ -101,9 +104,25 @@ namespace _3DModels
                 texInfo.repeat_X = (byte)(texInfo.parameters & 1);
 
                 if (texInfo.width == 0x00)
-                    texInfo.width = 256;
+                    switch (texInfo.unknown & 0x3)
+                    {
+                        case 2:
+                            texInfo.width = 0x200;
+                            break;
+                        default:
+                            texInfo.width = 0x100;
+                            break;
+                    }
                 if (texInfo.height == 0x00)
-                    texInfo.height = 256;
+                    switch ((texInfo.unknown >> 4) & 0x3)
+                    {
+                        case 2:
+                            texInfo.height = 0x200;
+                            break;
+                        default:
+                            texInfo.height = 0x100;
+                            break;
+                    }
 
                 texInfo.depth = FormatDepth[texInfo.format];
                 if (texInfo.format == 5)
@@ -188,9 +207,9 @@ namespace _3DModels
                 Console.Write(" | Flip: X-> {0}, Y->{1}", texInfo.flip_X.ToString(), texInfo.flip_Y.ToString());
                 Console.Write(" | Size: {0}x{1}", texInfo.width.ToString(), texInfo.height.ToString());
                 Console.Write(" | Format: {0} ({1})", texInfo.format.ToString(), (TextureFormat)texInfo.format);
-                Console.Write(" | Color0: {0}", texInfo.color0.ToString());
-                Console.WriteLine(" | Coordinates Transformation Modes: {0} ({1})", texInfo.coord_transf.ToString(), (TextureCoordTransf)texInfo.coord_transf);
-                Console.WriteLine(" | Unknown1 {0} | Unknown2 {0} | Unknown3 {0}", texInfo.unknown.ToString(), texInfo.unknown2.ToString(), texInfo.unknown3.ToString());
+                Console.WriteLine(" | Color0: {0}", texInfo.color0.ToString());
+                Console.Write("    | Coordinates Transformation Modes: {0} ({1})", texInfo.coord_transf.ToString(), (TextureCoordTransf)texInfo.coord_transf);
+                Console.WriteLine(" | Unknown1 {0} | Unknown2 {1} | Unknown3 {2}", texInfo.unknown.ToString(), texInfo.unknown2.ToString(), texInfo.unknown3.ToString());
             }
 
             Console.WriteLine("<u>Palette Information:</u>");

@@ -178,6 +178,7 @@ namespace SDAT
             // btnChangeFile
             // 
             this.btnChangeFile.Enabled = false;
+            this.btnChangeFile.Image = global::SDAT.Properties.Resources.package_add;
             this.btnChangeFile.Location = new System.Drawing.Point(251, 350);
             this.btnChangeFile.Name = "btnChangeFile";
             this.btnChangeFile.Size = new System.Drawing.Size(100, 34);

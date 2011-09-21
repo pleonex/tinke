@@ -19,7 +19,7 @@ namespace _3DModels
         {
             string ext = new String(Encoding.ASCII.GetChars(magic));
 
-            if (ext == "BTX0")
+            if (ext == "BTX0" || ext == "BMD0")
                 return Formato.Texture;
 
             return Formato.Desconocido;
@@ -34,8 +34,10 @@ namespace _3DModels
             string ext = new String(br.ReadChars(4));
             br.Close();
 
-            if (ext == "BTX0")
+            if (ext == "BTX0" || ext == "BMD0")
                 return new TextureControl(pluginHost, BTX0.Read(archivo, id, pluginHost));
+            //else if (ext == "BMD0")
+            //    return new TextureControl(pluginHost, BMD0.Read(archivo, id, pluginHost));
 
             return new System.Windows.Forms.Control();
         }

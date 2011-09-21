@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.IO;
 using System.Windows.Forms;
 using PluginInterface;
 
@@ -34,10 +35,28 @@ namespace SDAT
             numericLoopLength.Enabled = isSWAV;
             numericBlockLen.Enabled = !isSWAV;
             numericVolume.Enabled = isSWAV;
+            comboEncoding.SelectedIndex = 1;
         }
         private void ReadLanguage()
         {
+            try
+            {
+                System.Xml.Linq.XElement xml = System.Xml.Linq.XElement.Load(Application.StartupPath + Path.DirectorySeparatorChar +
+                    "Plugins" + Path.DirectorySeparatorChar + "SDATLang.xml");
+                xml = xml.Element(pluginHost.Get_Language());
+                xml = xml.Element("NewAudioOptions");
 
+                this.Text = xml.Element("S00").Value;
+                label1.Text = xml.Element("S01").Value;
+                checkLoop.Text = xml.Element("S02").Value;
+                groupLoop.Text = xml.Element("S03").Value;
+                label2.Text = xml.Element("S04").Value;
+                label3.Text = xml.Element("S05").Value;
+                label4.Text = xml.Element("S06").Value;
+                label5.Text = xml.Element("S07").Value;
+                btnAccept.Text = xml.Element("S08").Value;
+            }
+            catch { throw new Exception("There was an error reading the language file"); }
         }
 
         private void checkLoop_CheckedChanged(object sender, EventArgs e)

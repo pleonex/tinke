@@ -1,5 +1,5 @@
 0.8.1
-*** BTX0 textures supported (view only)
+*** BTX0 and BMD0 textures supported (view only)
 ** Game 999HRPERDOOR (Nine Hours, Nine Persons, Nine Doors) supported
    - SIR0 files in folder /cha
 ** Game EDGEWORTH supported
@@ -12,6 +12,11 @@
   - Added support for encodings shift-jis, unicode and unicode bigendian
   - Select char from the map char image.
   - Support for rotateMode value.
+* Improved plugin SDAT
+  - Compress imported audio with PCM8, PCM16 or IMA-ADPCM
+  - Fixed problems importing new SWAV and STRM audio
+  - Improved PCM8 codification.
+* Fixed problem saving new NCGR/NCBR files
 * Fixed reading problem in NCER
 * Fixed NCER files with 0x04 as blockSize
 * Fixed problem with "Change transparency color" in NCER files

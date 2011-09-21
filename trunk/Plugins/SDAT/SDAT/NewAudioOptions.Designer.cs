@@ -52,7 +52,6 @@
             // comboEncoding
             // 
             this.comboEncoding.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboEncoding.Enabled = false;
             this.comboEncoding.FormattingEnabled = true;
             this.comboEncoding.Items.AddRange(new object[] {
             "PCM-8",
@@ -69,9 +68,9 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(13, 13);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(68, 13);
+            this.label1.Size = new System.Drawing.Size(26, 13);
             this.label1.TabIndex = 1;
-            this.label1.Text = "Codificación:";
+            this.label1.Text = "S01";
             // 
             // btnAccept
             // 
@@ -81,7 +80,7 @@
             this.btnAccept.Name = "btnAccept";
             this.btnAccept.Size = new System.Drawing.Size(90, 40);
             this.btnAccept.TabIndex = 2;
-            this.btnAccept.Text = "Aceptar";
+            this.btnAccept.Text = "S08";
             this.btnAccept.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnAccept.UseVisualStyleBackColor = true;
             this.btnAccept.Click += new System.EventHandler(this.button1_Click);
@@ -93,9 +92,9 @@
             this.checkLoop.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkLoop.Location = new System.Drawing.Point(16, 69);
             this.checkLoop.Name = "checkLoop";
-            this.checkLoop.Size = new System.Drawing.Size(82, 17);
+            this.checkLoop.Size = new System.Drawing.Size(45, 17);
             this.checkLoop.TabIndex = 3;
-            this.checkLoop.Text = "Activar loop";
+            this.checkLoop.Text = "S02";
             this.checkLoop.UseVisualStyleBackColor = true;
             this.checkLoop.CheckedChanged += new System.EventHandler(this.checkLoop_CheckedChanged);
             // 
@@ -110,65 +109,70 @@
             this.groupLoop.Size = new System.Drawing.Size(234, 88);
             this.groupLoop.TabIndex = 4;
             this.groupLoop.TabStop = false;
-            this.groupLoop.Text = "Opciones de loop";
+            this.groupLoop.Text = "S03";
             // 
             // label3
             // 
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(6, 58);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(66, 13);
+            this.label3.Size = new System.Drawing.Size(26, 13);
             this.label3.TabIndex = 3;
-            this.label3.Text = "Loop length:";
+            this.label3.Text = "S05";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(6, 32);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(86, 13);
+            this.label2.Size = new System.Drawing.Size(26, 13);
             this.label2.TabIndex = 2;
-            this.label2.Text = "Loop start offset:";
+            this.label2.Text = "S04";
             // 
             // numericLoopLength
             // 
             this.numericLoopLength.Hexadecimal = true;
-            this.numericLoopLength.Location = new System.Drawing.Point(136, 56);
+            this.numericLoopLength.Location = new System.Drawing.Point(158, 56);
             this.numericLoopLength.Maximum = new decimal(new int[] {
             -1,
             0,
             0,
             0});
             this.numericLoopLength.Name = "numericLoopLength";
-            this.numericLoopLength.Size = new System.Drawing.Size(92, 20);
+            this.numericLoopLength.Size = new System.Drawing.Size(70, 20);
             this.numericLoopLength.TabIndex = 1;
             this.numericLoopLength.ValueChanged += new System.EventHandler(this.numericLoopLength_ValueChanged);
             // 
             // numericLoopOffset
             // 
             this.numericLoopOffset.Hexadecimal = true;
-            this.numericLoopOffset.Location = new System.Drawing.Point(136, 30);
+            this.numericLoopOffset.Location = new System.Drawing.Point(158, 30);
             this.numericLoopOffset.Maximum = new decimal(new int[] {
             -1,
             0,
             0,
             0});
             this.numericLoopOffset.Name = "numericLoopOffset";
-            this.numericLoopOffset.Size = new System.Drawing.Size(92, 20);
+            this.numericLoopOffset.Size = new System.Drawing.Size(70, 20);
             this.numericLoopOffset.TabIndex = 0;
             this.numericLoopOffset.ValueChanged += new System.EventHandler(this.numericLoopOffset_ValueChanged);
             // 
             // numericBlockLen
             // 
-            this.numericBlockLen.Location = new System.Drawing.Point(152, 187);
+            this.numericBlockLen.Location = new System.Drawing.Point(174, 187);
             this.numericBlockLen.Maximum = new decimal(new int[] {
             -1,
             0,
             0,
             0});
             this.numericBlockLen.Name = "numericBlockLen";
-            this.numericBlockLen.Size = new System.Drawing.Size(90, 20);
+            this.numericBlockLen.Size = new System.Drawing.Size(70, 20);
             this.numericBlockLen.TabIndex = 5;
+            this.numericBlockLen.Value = new decimal(new int[] {
+            512,
+            0,
+            0,
+            0});
             this.numericBlockLen.ValueChanged += new System.EventHandler(this.numericBlockLen_ValueChanged);
             // 
             // label4
@@ -176,9 +180,9 @@
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(22, 189);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(99, 13);
+            this.label4.Size = new System.Drawing.Size(26, 13);
             this.label4.TabIndex = 6;
-            this.label4.Text = "Tamaño de bloque:";
+            this.label4.Text = "S06";
             // 
             // numericVolume
             // 
@@ -187,7 +191,7 @@
             0,
             0,
             0});
-            this.numericVolume.Location = new System.Drawing.Point(152, 213);
+            this.numericVolume.Location = new System.Drawing.Point(174, 213);
             this.numericVolume.Maximum = new decimal(new int[] {
             1000,
             0,
@@ -199,13 +203,9 @@
             0,
             -2147483648});
             this.numericVolume.Name = "numericVolume";
-            this.numericVolume.Size = new System.Drawing.Size(90, 20);
+            this.numericVolume.Size = new System.Drawing.Size(70, 20);
             this.numericVolume.TabIndex = 7;
-            this.numericVolume.Value = new decimal(new int[] {
-            185,
-            0,
-            0,
-            0});
+            this.numericVolume.Visible = false;
             this.numericVolume.ValueChanged += new System.EventHandler(this.numericVolume_ValueChanged);
             // 
             // label5
@@ -213,9 +213,10 @@
             this.label5.AutoSize = true;
             this.label5.Location = new System.Drawing.Point(22, 215);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(129, 13);
+            this.label5.Size = new System.Drawing.Size(26, 13);
             this.label5.TabIndex = 8;
-            this.label5.Text = "Volume (0 to not change):";
+            this.label5.Text = "S07";
+            this.label5.Visible = false;
             // 
             // NewAudioOptions
             // 
@@ -237,7 +238,7 @@
             this.MinimizeBox = false;
             this.Name = "NewAudioOptions";
             this.ShowInTaskbar = false;
-            this.Text = "Opciones del nuevo archivo de audio";
+            this.Text = "S00";
             this.groupLoop.ResumeLayout(false);
             this.groupLoop.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericLoopLength)).EndInit();

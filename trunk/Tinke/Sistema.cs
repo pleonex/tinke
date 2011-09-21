@@ -869,8 +869,11 @@ namespace Tinke
 
             if (!(uncompress.files is List<Archivo>) && !(uncompress.folders is List<Carpeta>)) // En caso de que falle la extracción
             {
+                debug.Añadir_Texto(sb.ToString());
+                sb.Length = 0;
                 this.Cursor = Cursors.Default;
                 keyDown = Keys.Escape;
+
                 MessageBox.Show(Tools.Helper.ObtenerTraduccion("Sistema", "S36"));
                 return;
             }
@@ -913,6 +916,9 @@ namespace Tinke
 
             if (!isMono)
                 espera.Abort();
+
+            debug.Añadir_Texto(sb.ToString());
+            sb.Length = 0;
             this.Cursor = Cursors.Default;
         }
         private void Recursivo_UncompressFolder(Carpeta currFolder)

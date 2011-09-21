@@ -63,7 +63,7 @@ namespace SDAT
 
                 swar.data.nOffset = new uint[swar.data.nSample];
                 for (int i = 0; i < swar.data.nSample; i++) { swar.data.nOffset[i] = br.ReadUInt32(); }
- 
+
                 swar.data.samples = new sSWAR.Data.Sample[swar.data.nSample];
 
                 for (uint i = 0; i < swar.data.nSample; i++)
@@ -149,18 +149,26 @@ namespace SDAT
             bw.Close();
         }
 
-        public static Dictionary<String, String> Information(sSWAR swar)
+        public static Dictionary<String, String> Information(sSWAR swar, string lang)
         {
             Dictionary<String, String> info = new Dictionary<string, string>();
 
-            info.Add("/bSection", "Standar header");
-            info.Add("Type", new String(swar.header.type));
-            info.Add("Magic", "0x" + swar.header.magic.ToString("x"));
-            info.Add("File size", swar.header.nFileSize.ToString());
+            try
+            {
+                System.Xml.Linq.XElement xml = System.Xml.Linq.XElement.Load(System.Windows.Forms.Application.StartupPath +
+                    Path.DirectorySeparatorChar + "Plugins" + Path.DirectorySeparatorChar + "SDATLang.xml");
+                xml = xml.Element(lang).Element("Information");
 
-            info.Add("/bSection 1", new String(swar.data.type));
-            info.Add("Size", swar.data.nSize.ToString());
-            info.Add("Number of samples", swar.data.nSample.ToString());
+                info.Add(xml.Element("S00").Value, xml.Element("S01").Value);
+                info.Add(xml.Element("S02").Value, new String(swar.header.type));
+                info.Add(xml.Element("S03").Value, "0x" + swar.header.magic.ToString("x"));
+                info.Add(xml.Element("S04").Value, swar.header.nFileSize.ToString());
+
+                info.Add(xml.Element("S05").Value, new String(swar.data.type));
+                info.Add(xml.Element("S06").Value, swar.data.nSize.ToString());
+                info.Add(xml.Element("S16").Value, swar.data.nSample.ToString());
+            }
+            catch { throw new Exception("There was an error reading the language file"); }
 
             return info;
         }

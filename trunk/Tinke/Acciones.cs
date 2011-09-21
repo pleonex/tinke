@@ -1059,8 +1059,11 @@ namespace Tinke
                 currFile.name == "ARM9.BIN" || currFile.name == "ARM7.BIN" || currFile.name == "Y9.BIN" || currFile.name == "Y7.BIN")
                 return Formato.Sistema;
 
+
             FileStream fs = File.OpenRead(currFile.path);
             fs.Position = currFile.offset;
+            if (new String(Encoding.ASCII.GetChars(ext)) == "LZ77") // LZ77
+                fs.Seek(4, SeekOrigin.Current);
             if (DSDecmp.Main.Get_Format(fs, (currFile.name == "ARM9.BIN" ? true : false)) != FormatCompress.Invalid)
             {
                 fs.Close();
@@ -1119,6 +1122,8 @@ namespace Tinke
 
             FileStream fs = new FileStream(currFile.path, FileMode.Open);
             fs.Position = currFile.offset;
+            if (new String(Encoding.ASCII.GetChars(ext)) == "LZ77") // LZ77
+                fs.Seek(4, SeekOrigin.Current);
             if (DSDecmp.Main.Get_Format(fs, (currFile.name == "ARM9.BIN" ? true : false)) != FormatCompress.Invalid)
             {
                 fs.Close();
@@ -1176,6 +1181,14 @@ namespace Tinke
                 name == "ARM9.BIN" || name == "ARM7.BIN" || name == "Y9.BIN" || name == "Y7.BIN")
                 return Formato.Sistema;
 
+            if (new String(Encoding.ASCII.GetChars(ext)) == "LZ77") // LZ77
+            {
+                string tempFile2 = Path.GetTempPath() + Path.DirectorySeparatorChar + "c_" + name;
+                Byte[] compressFile = new Byte[new FileInfo(file).Length - 4];
+                Array.Copy(File.ReadAllBytes(file), 4, compressFile, 0, compressFile.Length); ;
+                File.WriteAllBytes(tempFile2, compressFile);
+                file = tempFile2;
+            }
             if (DSDecmp.Main.Get_Format(file) != FormatCompress.Invalid)
                 return Formato.Comprimido;
 
@@ -1223,6 +1236,14 @@ namespace Tinke
                     }
                 }
 
+                if (new String(Encoding.ASCII.GetChars(ext)) == "LZ77") // LZ77
+                {
+                    string tempFile2 = Path.GetTempPath() + Path.DirectorySeparatorChar + "c_" + selectedFile.id + selectedFile.name;
+                    Byte[] compressFile = new Byte[selectedFile.size - 4];
+                    Array.Copy(File.ReadAllBytes(tempFile), 4, compressFile, 0, compressFile.Length); ;
+                    File.WriteAllBytes(tempFile2, compressFile);
+                    tempFile = tempFile2;
+                }
                 FormatCompress compressFormat = DSDecmp.Main.Get_Format(tempFile);
                 if (compressFormat != FormatCompress.Invalid)
                 {
@@ -1286,6 +1307,15 @@ namespace Tinke
                         plugin.Leer(compressedFile, id);
                         goto Continuar;
                     }
+                }
+
+                if (new String(Encoding.ASCII.GetChars(ext)) == "LZ77") // LZ77
+                {
+                    string tempFile2 = Path.GetTempPath() + Path.DirectorySeparatorChar + "c_" + id + name;
+                    Byte[] compressFile = new Byte[new FileInfo(compressedFile).Length - 4];
+                    Array.Copy(File.ReadAllBytes(compressedFile), 4, compressFile, 0, compressFile.Length); ;
+                    File.WriteAllBytes(tempFile2, compressFile);
+                    compressedFile = tempFile2;
                 }
 
                 FormatCompress compressFormat = DSDecmp.Main.Get_Format(compressedFile);
@@ -1587,6 +1617,15 @@ namespace Tinke
                     }
                 }
 
+                if (new String(Encoding.ASCII.GetChars(ext)) == "LZ77") // LZ77
+                {
+                    string tempFile2 = Path.GetTempPath() + Path.DirectorySeparatorChar + "c_" + selectFile.id + selectFile.name;
+                    Byte[] compressFile = new Byte[selectFile.size - 4];
+                    Array.Copy(File.ReadAllBytes(tempFile), 4, compressFile, 0, compressFile.Length); ;
+                    File.WriteAllBytes(tempFile2, compressFile);
+                    tempFile = tempFile2;
+                }
+
                 FormatCompress compressFormat = DSDecmp.Main.Get_Format(tempFile);
                 if (compressFormat != FormatCompress.Invalid)
                 {
@@ -1729,6 +1768,15 @@ namespace Tinke
                         MessageBox.Show(Tools.Helper.ObtenerTraduccion("Messages", "S1E"));
                         return new Control();
                     }
+                }
+
+                if (new String(Encoding.ASCII.GetChars(ext)) == "LZ77") // LZ77
+                {
+                    string tempFile2 = Path.GetTempPath() + Path.DirectorySeparatorChar + "c_" + idSelect + name;
+                    Byte[] compressFile = new Byte[new FileInfo(archivo).Length - 4];
+                    Array.Copy(File.ReadAllBytes(archivo), 4, compressFile, 0, compressFile.Length); ;
+                    File.WriteAllBytes(tempFile2, compressFile);
+                    archivo = tempFile2;
                 }
 
                 FormatCompress compressFormat = DSDecmp.Main.Get_Format(archivo);

@@ -135,33 +135,40 @@ namespace SDAT
         /// </summary>
         /// <param name="strm">Structure to show</param>
         /// <returns>Information</returns>
-        public static Dictionary<String, String> Information(sSTRM strm)
+        public static Dictionary<String, String> Information(sSTRM strm, string lang)
         {
             Dictionary<String, String> info = new Dictionary<string, string>();
-            info.Add("/bSection", "Standar header");
-            info.Add("Type", new String(strm.cabecera.id));
-            info.Add("Magic", strm.cabecera.constant.ToString());
-            info.Add("File size", strm.cabecera.fileSize.ToString());
+            try
+            {
+                System.Xml.Linq.XElement xml = System.Xml.Linq.XElement.Load(System.Windows.Forms.Application.StartupPath +
+                    Path.DirectorySeparatorChar + "Plugins" + Path.DirectorySeparatorChar + "SDATLang.xml");
+                xml = xml.Element(lang).Element("Information");
 
-            info.Add("/bSection 1", new String(strm.head.id));
-            info.Add("Size 1", strm.head.size.ToString());
-            info.Add("Wave type", strm.head.waveType.ToString());
-            info.Add("Loop flag", strm.head.loop.ToString());
-            info.Add("Loop offset", "0x" + strm.head.loopOffset.ToString("x"));
-            info.Add("Channels", strm.head.channels.ToString());
-            info.Add("Sample rate", strm.head.sampleRate.ToString());
-            info.Add("Time", strm.head.time.ToString());
-            info.Add("Samples", strm.head.nSamples.ToString());
-            info.Add("Data offset", "0x" + strm.head.dataOffset.ToString("x"));
-            info.Add("Number of blocks", strm.head.nBlocks.ToString());
-            info.Add("Block length", strm.head.blockLen.ToString());
-            info.Add("Samples per block", strm.head.blockSample.ToString());
-            info.Add("Last block length", strm.head.lastBlocklen.ToString());
-            info.Add("Samples per last block", strm.head.lastBlockSample.ToString());
-            //info.Add("Reserved", BitConverter.ToString(strm.head.reserved));
+                info.Add(xml.Element("S00").Value, xml.Element("S01").Value);
+                info.Add(xml.Element("S02").Value, new String(strm.cabecera.id));
+                info.Add(xml.Element("S03").Value, strm.cabecera.constant.ToString());
+                info.Add(xml.Element("S04").Value, strm.cabecera.fileSize.ToString());
 
-            info.Add("/bSection 2", new string(strm.data.id));
-            info.Add("Size 2", strm.data.size.ToString());
+                info.Add(xml.Element("S05").Value, new String(strm.head.id));
+                info.Add(xml.Element("S06").Value, strm.head.size.ToString());
+                info.Add(xml.Element("S07").Value, strm.head.waveType.ToString());
+                info.Add(xml.Element("S08").Value, strm.head.loop.ToString());
+                info.Add(xml.Element("S09").Value, "0x" + strm.head.loopOffset.ToString("x"));
+                info.Add(xml.Element("S0A").Value, strm.head.channels.ToString());
+                info.Add(xml.Element("S0B").Value, strm.head.sampleRate.ToString());
+                info.Add(xml.Element("S0C").Value, strm.head.time.ToString());
+                info.Add(xml.Element("S0D").Value, strm.head.nSamples.ToString());
+                info.Add(xml.Element("S0E").Value, "0x" + strm.head.dataOffset.ToString("x"));
+                info.Add(xml.Element("S0F").Value, strm.head.nBlocks.ToString());
+                info.Add(xml.Element("S10").Value, strm.head.blockLen.ToString());
+                info.Add(xml.Element("S11").Value, strm.head.blockSample.ToString());
+                info.Add(xml.Element("S12").Value, strm.head.lastBlocklen.ToString());
+                info.Add(xml.Element("S13").Value, strm.head.lastBlockSample.ToString());
+
+                info.Add(xml.Element("S14").Value, new string(strm.data.id));
+                info.Add(xml.Element("S15").Value, strm.data.size.ToString());
+            }
+            catch { throw new Exception("There was an error reading the language file"); }
 
             return info;
         }
@@ -188,8 +195,10 @@ namespace SDAT
 
                 if (loop && strm.head.waveType == 0) // 8 bits per sample
                     strm.data.data = MergeChannels(strm.data.leftChannel, strm.data.rightChannel, (int)strm.head.loopOffset);
-                else if (loop) // 16 bits per sample
+                else if (loop && strm.head.waveType == 2) // 4 bits per sample
                     strm.data.data = MergeChannels(strm.data.leftChannel, strm.data.rightChannel, (int)strm.head.loopOffset * 2);
+                else if (loop && strm.head.waveType == 1) // 16 bits per sample (NO TESTED)
+                    strm.data.data = MergeChannels(strm.data.leftChannel, strm.data.rightChannel, (int)strm.head.loopOffset);
                 else // No loop
                     strm.data.data = MergeChannels(strm.data.leftChannel, strm.data.rightChannel);
             }
@@ -205,17 +214,22 @@ namespace SDAT
                     Array.Copy(strm.data.data, strm.head.loopOffset, data, 0, data.Length);
                     strm.data.data = data;
                 }
-                else if (loop) // 16 bits per sample
+                else if (loop && strm.head.waveType == 2) // 4 bits per sample
                 {
                     Byte[] data = new Byte[strm.data.data.Length - ((int)strm.head.loopOffset * 2)];
                     Array.Copy(strm.data.data, strm.head.loopOffset * 2, data, 0, data.Length);
                     strm.data.data = data;
                 }
+                else if (loop && strm.head.waveType == 1) // 16-bits per sample (NO TESTED)
+                {
+                    Byte[] data = new Byte[strm.data.data.Length - (int)strm.head.loopOffset];
+                    Array.Copy(strm.data.data, strm.head.loopOffset, data, 0, data.Length);
+                    strm.data.data = data;
+                }
             }
 
             // Create the WAV structure from the STRM data
-            wav = WAV.Create_WAV(strm.head.channels, strm.head.sampleRate, (ushort)(strm.head.waveType == 0 ? 8 : 16),
-                                strm.data.data);
+            wav = WAV.Create_WAV(strm.head.channels, strm.head.sampleRate, 16, strm.data.data);
 
             return wav;
         }
@@ -224,10 +238,18 @@ namespace SDAT
         /// </summary>
         /// <param name="wav">WAV structure to convert</param>
         /// <returns>STRM structure converted</returns>
-        public static sSTRM ConvertToSTRM(sWAV wav, int blockSize = 0x200, int waveType = 1)
+        public static sSTRM ConvertToSTRM(sWAV wav, int waveType, int blockSize = 0x200)
         {
-            if (wav.wave.fmt.audioFormat != WaveFormat.WAVE_FORMAT_PCM)
-                throw new NotSupportedException();
+            if (blockSize <= 0)
+                blockSize = 0x200;
+
+            if (waveType == 2)
+            {
+                blockSize -= 4; // compression info
+                blockSize *= 4;  // 4-bit
+            }
+            else if (waveType == 0)
+                blockSize *= 2; // 8-bit
 
             sSTRM strm = new sSTRM();
             strm.cabecera.id = "STRM".ToArray();
@@ -247,32 +269,49 @@ namespace SDAT
             strm.head.reserved = new Byte[32];
 
             strm.data.id = "DATA".ToArray();
+            
             if (wav.wave.fmt.numChannels == 2)
             {
-                strm.data.leftChannel = DivideChannels(wav.wave.data.data, true, 0);
-                strm.data.rightChannel = DivideChannels(wav.wave.data.data, false, 0);
-                byte[][] leftBlock = CreateBlocks(strm.data.leftChannel, blockSize);
-                byte[][] rigthBlock = CreateBlocks(strm.data.rightChannel, blockSize);
+                strm.data.leftChannel = DivideChannels(wav.wave.data.data, true);
+                strm.data.rightChannel = DivideChannels(wav.wave.data.data, false);
+                byte[][] leftBlock = CreateBlocks(strm.data.leftChannel, blockSize, waveType);
+                byte[][] rigthBlock = CreateBlocks(strm.data.rightChannel, blockSize, waveType);
                 strm.data.data = MergeBlocks(leftBlock, rigthBlock);
 
                 strm.head.blockLen = (uint)leftBlock[0].Length;
-                strm.head.blockSample = strm.head.blockLen / 2;
                 strm.head.lastBlocklen = (uint)leftBlock[leftBlock.Length - 1].Length;
-                strm.head.lastBlockSample = strm.head.lastBlocklen / 2;
                 strm.head.nBlocks = (uint)leftBlock.Length;
-                strm.head.nSamples = strm.head.nBlocks * 0x100 + strm.head.lastBlockSample;
             }
             else
             {
-                byte[][] blocks = CreateBlocks(wav.wave.data.data, blockSize);
+                byte[][] blocks = CreateBlocks(wav.wave.data.data, blockSize, waveType);
+                List<byte> data = new List<byte>();
+                for (int i = 0; i < blocks.Length; i++)
+                    data.AddRange(blocks[i]);
+                strm.data.data = data.ToArray();
+
                 strm.head.blockLen = (uint)blocks[0].Length;
-                strm.head.blockSample = strm.head.blockLen / 2;
                 strm.head.lastBlocklen = (uint)blocks[blocks.Length - 1].Length;
-                strm.head.lastBlockSample = strm.head.lastBlocklen / 2;
                 strm.head.nBlocks = (uint)blocks.Length;
-                strm.head.nSamples = strm.head.nBlocks * 0x100 + strm.head.lastBlockSample;
-                strm.data.data = wav.wave.data.data;
             }
+
+            if (waveType == 2)
+            {
+                strm.head.blockSample = (strm.head.blockLen - 4) * 2;
+                strm.head.lastBlockSample = (strm.head.lastBlocklen - 4) * 2;
+            }
+            else if (waveType == 1)
+            {
+                strm.head.blockSample = strm.head.blockLen / 2;
+                strm.head.lastBlockSample = strm.head.lastBlocklen / 2;
+            }
+            else if (waveType == 0)
+            {
+                strm.head.blockSample = strm.head.blockLen;
+                strm.head.lastBlockSample = strm.head.lastBlocklen;
+            }
+            strm.head.nSamples = (strm.head.nBlocks - 1) * strm.head.blockSample + strm.head.lastBlockSample;
+
 
             strm.data.size = (uint)strm.data.data.Length + 0x08;
             strm.cabecera.fileSize = strm.data.size + strm.head.size + strm.cabecera.headerSize;
@@ -305,22 +344,22 @@ namespace SDAT
                 datos.CopyTo(i * (int)blockLen * 2 + j, blockData, 0, (int)blockLen);
 
                 if (waveType == 2)
-                    resultado.AddRange(Compression_ADPCM.DecompressBlock_ADPCM(blockData, BitConverter.ToInt16(blockData, 0), BitConverter.ToInt16(blockData, 2)));
+                    resultado.AddRange(Compression_ADPCM.Decompress(blockData, BitConverter.ToInt16(blockData, 0), BitConverter.ToInt16(blockData, 2)));
                 else if (waveType == 1)
                     resultado.AddRange(blockData);
                 else if (waveType == 0)
-                    resultado.AddRange(PCM8(blockData));
+                    resultado.AddRange(PCM.PCM8ToPCM16(blockData));
             }
             blockData = new byte[(int)lastBlockLen];
             j = (leftChannel) ? 0 : (int)lastBlockLen;
             datos.CopyTo((int)(nBlocks - 1) * (int)blockLen * 2 + j, blockData, 0, (int)lastBlockLen);
 
             if (waveType == 2)
-                resultado.AddRange(Compression_ADPCM.DecompressBlock_ADPCM(blockData, BitConverter.ToInt16(blockData, 0), BitConverter.ToInt16(blockData, 2)));
+                resultado.AddRange(Compression_ADPCM.Decompress(blockData, BitConverter.ToInt16(blockData, 0), BitConverter.ToInt16(blockData, 2)));
             else if (waveType == 1)
                 resultado.AddRange(blockData);
             else if (waveType == 0)
-                resultado.AddRange(PCM8(blockData));
+                resultado.AddRange(PCM.PCM8ToPCM16(blockData));
 
             return resultado.ToArray();
         }
@@ -370,11 +409,11 @@ namespace SDAT
                 datos.CopyTo(i * (int)blockLen, blockData, 0, (int)blockLen);
                 
                 if (waveType == 2)
-                    resultado.AddRange(Compression_ADPCM.DecompressBlock_ADPCM(blockData, BitConverter.ToInt16(blockData, 0), BitConverter.ToInt16(blockData, 2)));
+                    resultado.AddRange(Compression_ADPCM.Decompress(blockData, BitConverter.ToInt16(blockData, 0), BitConverter.ToInt16(blockData, 2)));
                 else if (waveType == 1)
                     resultado.AddRange(blockData);
                 else if (waveType == 0)
-                    resultado.AddRange(PCM8(blockData));
+                    resultado.AddRange(PCM.PCM8ToPCM16(blockData));
             }
             blockData = new byte[(int)lastBlockLen];
             datos.CopyTo((int)(nBlocks - 1) * (int)blockLen, blockData, 0, (int)lastBlockLen);
@@ -387,12 +426,12 @@ namespace SDAT
                     resultado.AddRange(blockData);
                     return resultado.ToArray();
                 }
-                resultado.AddRange(Compression_ADPCM.DecompressBlock_ADPCM(blockData, BitConverter.ToInt16(blockData, 0), BitConverter.ToInt16(blockData, 2)));
+                resultado.AddRange(Compression_ADPCM.Decompress(blockData, BitConverter.ToInt16(blockData, 0), BitConverter.ToInt16(blockData, 2)));
             }
             else if (waveType == 1)
                 resultado.AddRange(blockData);
             else if (waveType == 0)
-                resultado.AddRange(PCM8(blockData));
+                resultado.AddRange(PCM.PCM8ToPCM16(blockData));
 
             return resultado.ToArray();
         }
@@ -405,11 +444,10 @@ namespace SDAT
         /// <param name="leftChannel">If true, returns the audio data of the left channel, else the right channel</param>
         /// <param name="waveType">The wave type of the audio data (compression)</param>
         /// <returns>A channel audio data</returns>
-        static byte[] DivideChannels(byte[] data, bool leftChannel, int waveType)
+        static byte[] DivideChannels(byte[] data, bool leftChannel)
         {
             List<Byte> channel = new List<byte>();
 
-            // TODO: Add compressions (AD-PCM ,PCM-8)
             for (int i = (leftChannel ? 0 : 2); i < data.Length; i += 4)
             {
                 channel.Add(data[i]);
@@ -423,9 +461,12 @@ namespace SDAT
         /// </summary>
         /// <param name="channel">Channel audio data</param>
         /// <returns>Block data</returns>
-        static byte[][] CreateBlocks(byte[] channel, int blockSize)
+        static byte[][] CreateBlocks(byte[] channel, int blockSize, int waveType)
         {
             List<Byte[]> blocks = new List<Byte[]>();
+
+            if (waveType == 2)
+                return Compression_ADPCM.CompressBlock(channel, blockSize);
 
             int nBlocks = channel.Length / blockSize;
             int lastBlockLength = channel.Length % blockSize;
@@ -435,10 +476,16 @@ namespace SDAT
             {
                 block = new Byte[blockSize];
                 Array.Copy(channel, i * blockSize, block, 0, blockSize);
+                if (waveType == 0)
+                    block = PCM.PCM16ToPCM8(block);
+
                 blocks.Add(block);
             }
+
             block = new Byte[lastBlockLength];
             Array.Copy(channel, nBlocks * blockSize, block, 0, lastBlockLength);
+            if (waveType == 0)
+                block = PCM.PCM16ToPCM8(block);
             blocks.Add(block);
 
             return blocks.ToArray();
@@ -462,23 +509,6 @@ namespace SDAT
             return data.ToArray();
         }
         #endregion
-
-        /// <summary>
-        /// Convert PCM-8 audio data to PCM-16 audio data
-        /// </summary>
-        /// <param name="data">PCM-8 bytes</param>
-        /// <returns>PCM-16 bytes</returns>
-        static byte[] PCM8(byte[] data)
-        {
-            byte[] resul = new byte[data.Length];
-
-            for (int i = 0; i < data.Length; i++)
-            {
-                resul[i] = unchecked((byte)(data[i] ^ 0x80));
-            }
-
-            return resul;
-        }
     }
 
     /// <summary>
