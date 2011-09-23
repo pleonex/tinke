@@ -42,7 +42,7 @@ namespace _999HRPERDOOR
         public CellControl()
         {
             InitializeComponent();
-            LeerIdioma();
+            ReadLanguage();
         }
         public CellControl(IPluginHost pluginHost)
         {
@@ -53,21 +53,20 @@ namespace _999HRPERDOOR
             this.paleta = pluginHost.Get_NCLR();
             this.pluginHost = pluginHost;
 
-            LeerIdioma();
+            ReadLanguage();
             ShowInfo();
 
             for (ushort i = 0; i < ncer.cebk.nBanks; i++)
                 comboCelda.Items.Add(i.ToString());
             comboCelda.SelectedIndex = 0;
-            numericUpDown1.Value = ncer.cebk.block_size;
         }
 
-        private void LeerIdioma()
+        private void ReadLanguage()
         {
             try
             {
                 XElement xml = XElement.Load(Application.StartupPath + Path.DirectorySeparatorChar + "Plugins" +
-                    Path.DirectorySeparatorChar + "TETRISDSLang.xml");
+                    Path.DirectorySeparatorChar + "999HRPERDOORLang.xml");
                 xml = xml.Element(pluginHost.Get_Language()).Element("CellControl");
 
                 label1.Text = xml.Element("S01").Value;
@@ -93,7 +92,6 @@ namespace _999HRPERDOOR
                 lblZoom.Text = xml.Element("S16").Value;
                 btnBgd.Text = xml.Element("S17").Value;
                 btnBgdTrans.Text = xml.Element("S18").Value;
-                label3.Text = xml.Element("S0B").Value;
             }
             catch { throw new Exception("There was an error reading the XML file of language."); } 
         }
@@ -306,12 +304,6 @@ namespace _999HRPERDOOR
 
                 ActualizarImagen();*/
             }
-        }
-
-        private void numericUpDown1_ValueChanged(object sender, EventArgs e)
-        {
-            ncer.cebk.block_size = (uint)numericUpDown1.Value;
-            ActualizarImagen();
         }
     }
 }

@@ -217,7 +217,7 @@ namespace Tinke
             else if (bpp == 0x08)
                 tile.rahc.depth = System.Windows.Forms.ColorDepth.Depth8Bit;
             else
-                throw new NotSupportedException("Archivo BMP no soportado, profundidad " + bpp.ToString());
+                throw new NotSupportedException(String.Format(Tools.Helper.ObtenerTraduccion("NCGR", "S24"), bpp.ToString()));
 
             uint compresion = br.ReadUInt32();
             uint tamañoImagen = br.ReadUInt32();

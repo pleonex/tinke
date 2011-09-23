@@ -5,7 +5,7 @@ using System.Text;
 using PluginInterface;
 using System.Windows.Forms;
 
-namespace Comun
+namespace Common
 {
     public class Main : IPlugin 
     {

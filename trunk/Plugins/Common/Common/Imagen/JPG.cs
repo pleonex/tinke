@@ -7,7 +7,7 @@ using System.Windows.Forms;
 using System.Drawing;
 using System.IO;
 
-namespace Comun
+namespace Common
 {
     class JPG
     {
@@ -23,7 +23,7 @@ namespace Comun
 
         public Control Show_Info()
         {
-            return new BasicControl(archivo);
+            return new BasicControl(archivo, pluginHost);
         }
 
     }

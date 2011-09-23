@@ -28,23 +28,23 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem(new string[] {
-            "Section",
-            "Texture Info"}, -1, System.Drawing.Color.Empty, System.Drawing.Color.Empty, new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0))));
-            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("Offset (hex)");
-            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem("Repeat X");
-            System.Windows.Forms.ListViewItem listViewItem4 = new System.Windows.Forms.ListViewItem("Repeat Y");
-            System.Windows.Forms.ListViewItem listViewItem5 = new System.Windows.Forms.ListViewItem("Flip X");
-            System.Windows.Forms.ListViewItem listViewItem6 = new System.Windows.Forms.ListViewItem("Flip Y");
-            System.Windows.Forms.ListViewItem listViewItem7 = new System.Windows.Forms.ListViewItem("Width");
-            System.Windows.Forms.ListViewItem listViewItem8 = new System.Windows.Forms.ListViewItem("Height");
-            System.Windows.Forms.ListViewItem listViewItem9 = new System.Windows.Forms.ListViewItem("Format");
-            System.Windows.Forms.ListViewItem listViewItem10 = new System.Windows.Forms.ListViewItem("Color 0");
-            System.Windows.Forms.ListViewItem listViewItem11 = new System.Windows.Forms.ListViewItem("Transforms");
-            System.Windows.Forms.ListViewItem listViewItem12 = new System.Windows.Forms.ListViewItem(new string[] {
-            "Section",
-            "Palette Info"}, -1, System.Drawing.Color.Empty, System.Drawing.Color.Empty, new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0))));
-            System.Windows.Forms.ListViewItem listViewItem13 = new System.Windows.Forms.ListViewItem("Offset (0x)");
+            System.Windows.Forms.ListViewItem listViewItem40 = new System.Windows.Forms.ListViewItem(new string[] {
+            "S02",
+            "S03"}, -1, System.Drawing.Color.Empty, System.Drawing.Color.Empty, new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0))));
+            System.Windows.Forms.ListViewItem listViewItem41 = new System.Windows.Forms.ListViewItem("S04");
+            System.Windows.Forms.ListViewItem listViewItem42 = new System.Windows.Forms.ListViewItem("S05");
+            System.Windows.Forms.ListViewItem listViewItem43 = new System.Windows.Forms.ListViewItem("S06");
+            System.Windows.Forms.ListViewItem listViewItem44 = new System.Windows.Forms.ListViewItem("S07");
+            System.Windows.Forms.ListViewItem listViewItem45 = new System.Windows.Forms.ListViewItem("S08");
+            System.Windows.Forms.ListViewItem listViewItem46 = new System.Windows.Forms.ListViewItem("S09");
+            System.Windows.Forms.ListViewItem listViewItem47 = new System.Windows.Forms.ListViewItem("S0A");
+            System.Windows.Forms.ListViewItem listViewItem48 = new System.Windows.Forms.ListViewItem("S0B");
+            System.Windows.Forms.ListViewItem listViewItem49 = new System.Windows.Forms.ListViewItem("S0C");
+            System.Windows.Forms.ListViewItem listViewItem50 = new System.Windows.Forms.ListViewItem("S0D");
+            System.Windows.Forms.ListViewItem listViewItem51 = new System.Windows.Forms.ListViewItem(new string[] {
+            "S02",
+            "S0E"}, -1, System.Drawing.Color.Empty, System.Drawing.Color.Empty, new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0))));
+            System.Windows.Forms.ListViewItem listViewItem52 = new System.Windows.Forms.ListViewItem("S04");
             this.picTex = new System.Windows.Forms.PictureBox();
             this.picPalette = new System.Windows.Forms.PictureBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -88,18 +88,18 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(175, 386);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(43, 13);
+            this.label1.Size = new System.Drawing.Size(26, 13);
             this.label1.TabIndex = 3;
-            this.label1.Text = "Palette:";
+            this.label1.Text = "S10";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(175, 259);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(46, 13);
+            this.label2.Size = new System.Drawing.Size(26, 13);
             this.label2.TabIndex = 5;
-            this.label2.Text = "Texture:";
+            this.label2.Text = "S0F";
             // 
             // listProp
             // 
@@ -107,19 +107,19 @@
             this.columnProperty,
             this.columnValue});
             this.listProp.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem1,
-            listViewItem2,
-            listViewItem3,
-            listViewItem4,
-            listViewItem5,
-            listViewItem6,
-            listViewItem7,
-            listViewItem8,
-            listViewItem9,
-            listViewItem10,
-            listViewItem11,
-            listViewItem12,
-            listViewItem13});
+            listViewItem40,
+            listViewItem41,
+            listViewItem42,
+            listViewItem43,
+            listViewItem44,
+            listViewItem45,
+            listViewItem46,
+            listViewItem47,
+            listViewItem48,
+            listViewItem49,
+            listViewItem50,
+            listViewItem51,
+            listViewItem52});
             this.listProp.Location = new System.Drawing.Point(0, 259);
             this.listProp.Name = "listProp";
             this.listProp.Size = new System.Drawing.Size(169, 251);
@@ -129,21 +129,21 @@
             // 
             // columnProperty
             // 
-            this.columnProperty.Text = "Property";
+            this.columnProperty.Text = "S00";
             this.columnProperty.Width = 62;
             // 
             // columnValue
             // 
-            this.columnValue.Text = "Value";
+            this.columnValue.Text = "S01";
             this.columnValue.Width = 89;
             // 
             // btnSetTransparent
             // 
-            this.btnSetTransparent.Location = new System.Drawing.Point(363, 441);
+            this.btnSetTransparent.Location = new System.Drawing.Point(349, 441);
             this.btnSetTransparent.Name = "btnSetTransparent";
-            this.btnSetTransparent.Size = new System.Drawing.Size(146, 30);
+            this.btnSetTransparent.Size = new System.Drawing.Size(160, 30);
             this.btnSetTransparent.TabIndex = 9;
-            this.btnSetTransparent.Text = "Set transparent color";
+            this.btnSetTransparent.Text = "S12";
             this.btnSetTransparent.UseVisualStyleBackColor = true;
             this.btnSetTransparent.Click += new System.EventHandler(this.btnSetTransparent_Click);
             // 
@@ -176,11 +176,11 @@
             // btnSave
             // 
             this.btnSave.Image = global::_3DModels.Properties.Resources.disk;
-            this.btnSave.Location = new System.Drawing.Point(408, 479);
+            this.btnSave.Location = new System.Drawing.Point(349, 477);
             this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(101, 30);
+            this.btnSave.Size = new System.Drawing.Size(160, 30);
             this.btnSave.TabIndex = 2;
-            this.btnSave.Text = "Save texture";
+            this.btnSave.Text = "S13";
             this.btnSave.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnSave.UseVisualStyleBackColor = true;
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
@@ -190,9 +190,9 @@
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(346, 259);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(71, 13);
+            this.label3.Size = new System.Drawing.Size(26, 13);
             this.label3.TabIndex = 14;
-            this.label3.Text = "Palette image";
+            this.label3.Text = "S11";
             // 
             // TextureControl
             // 

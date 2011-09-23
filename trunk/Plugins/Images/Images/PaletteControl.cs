@@ -115,8 +115,8 @@ namespace Images
         private void btnShow_Click(object sender, EventArgs e)
         {
             XElement xml = XElement.Load(Application.StartupPath + Path.DirectorySeparatorChar + "Plugins" +
-                            Path.DirectorySeparatorChar + "TottempestLang.xml");
-            xml = xml.Element(pluginHost.Get_Language()).Element("iNCLR");
+                            Path.DirectorySeparatorChar + "ImagesLang.xml");
+            xml = xml.Element(pluginHost.Get_Language()).Element("PaletteControl");
             string trad = xml.Element("S0C").Value;
             Form ven = new Form();
             int xMax = 6 * 170;

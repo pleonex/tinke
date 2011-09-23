@@ -239,6 +239,8 @@
     <S12>Start byte:</S12>
     <S13>Import</S13>
     <S14>Change the depth</S14>
+    <S15>Not supported file</S15>
+    <S16>Incorrect BMP file, depth {0}</S16>
   </NCLR>
   <NCGR>
     <S01>Double-click to see the full image.</S01>
@@ -276,6 +278,7 @@
     <S21>Import</S21>
     <S22>Set transparent color</S22>
     <S23>Not supported file</S23>
+    <S24>Incorrect BMP file, depth {0}</S24>
   </NCGR>
   <NSCR>
     <S00>Map options</S00>

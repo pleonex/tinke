@@ -369,8 +369,8 @@ namespace Images
         private void pic_DoubleClick(object sender, EventArgs e)
         {
             XElement xml = XElement.Load(Application.StartupPath + Path.DirectorySeparatorChar + "Plugins" +
-                Path.DirectorySeparatorChar + "TottempestLang.xml");
-            xml = xml.Element(pluginHost.Get_Language()).Element("iNCGR");
+                Path.DirectorySeparatorChar + "ImagesLang.xml");
+            xml = xml.Element(pluginHost.Get_Language()).Element("ImageControl");
 
             Form ven = new Form();
             PictureBox pcBox = new PictureBox();

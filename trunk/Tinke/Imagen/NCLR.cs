@@ -134,7 +134,7 @@ namespace Tinke
             NCLR paleta = new NCLR();
             BinaryReader br = new BinaryReader(File.OpenRead(bitmap));
             if (new String(br.ReadChars(2)) != "BM")
-                throw new NotSupportedException("Archivo no soportado, no es BITMAP");
+                throw new NotSupportedException(Tools.Helper.ObtenerTraduccion("NCLR", "S15"));
 
             paleta.cabecera.id = "RLCN".ToCharArray();
             paleta.cabecera.endianess = 0xFEFF;
@@ -149,7 +149,7 @@ namespace Tinke
             else if (profundidad == 0x08)
                 paleta.pltt.profundidad = System.Windows.Forms.ColorDepth.Depth8Bit;
             else
-                throw new NotSupportedException("Esta imagen bitmap no contiene paleta de colores pues su profundidad es " + profundidad.ToString());
+                throw new NotSupportedException(String.Format(Tools.Helper.ObtenerTraduccion("NCLR", "S16"), profundidad.ToString()));
 
             br.BaseStream.Position += 0x10;
             paleta.pltt.nColores = br.ReadUInt32();

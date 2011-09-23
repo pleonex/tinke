@@ -252,6 +252,8 @@
     <S12>Byte de inicio:</S12>
     <S13>Importar</S13>
     <S14>Cambiar de profundidad</S14>
+    <S15>Archivo no soportado</S15>
+    <S16>Archivo BMP no soportado, profundidad {0}</S16>
   </NCLR>
   <NCGR>
     <S01>
@@ -292,6 +294,7 @@
     <S21>Importar</S21>
     <S22>Seleccionar color de transparencia</S22>
     <S23>Archivo no soportado</S23>
+    <S24>Archivo BMP no soportado, profundidad {0}</S24>
   </NCGR>
   <NSCR>
     <S00>Opciones del archivo Map</S00>

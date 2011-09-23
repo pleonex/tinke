@@ -51,7 +51,7 @@
     <S30>Fichiers reconnus :</S30>
     <S31>Système</S31>
     <S32>Changer de fichier</S32>
-    <S33>Sauver ROM</S33>
+    <S33>Créer ROM</S33>
     <S34>Script</S34>
     <S35>
       Êtes-vous sûr à propos de la décompression de TOUT les fichiers
@@ -59,7 +59,7 @@
     </S35>
     <S36>
       La décompression est un échec.
-      Êtes-vous sûr qu'il s'agisse d'un archive compressée ?
+      Êtes-vous sûr qu'il s'agisse d'une archive compressée ?
     </S36>
     <S37>Il y a une erreur en sauvegardant les préférences de l'utilisateur.</S37>
     <S38>Il y a une erreur en chargeant les préférences de l'utilisateur.</S38>
@@ -174,7 +174,7 @@
     </S06>
     <S07>Veuillez redémarrer le logiciel.</S07>
     <S08>
-      Prêt pour sauver la nouvelle ROM...<br>Écriture des sections :</br>
+      Prêt pour sauvegarder la nouvelle ROM...<br>Écriture des sections :</br>
     </S08>
     <S09> {0} octets écrits avec succès.</S09>
     <S0A>En-tête...</S0A>
@@ -201,7 +201,7 @@
     <S1D>Pour le moment la compression normale ne montre pas d'information.</S1D>
     <S1E>Pour voir cette archive vous devez double-cliquer sur une archive palette, tuile et cellule</S1E>
     <S1F>
-      Le programme necessite les fichiers suivants :
+      Le programme nécessite les fichiers suivants :
       {0}
 
       Veuillez télécharger le programme depuis la page web :
@@ -236,10 +236,12 @@
     <S12>Octet de départ :</S12>
     <S13>Importer</S13>
     <S14>Changer la profondeur</S14>
+    <S15>Not supported file</S15>
+    <S16>Incorrect BMP file, depth {0}</S16>
   </NCLR>
   <NCGR>
     <S01>
-      Faites un double-clic sur l'image pour la voir en
+      Double-cliquez sur l'image pour la voir en
       taille réelle.
     </S01>
     <S02>Propriétés</S02>
@@ -275,7 +277,8 @@
     <S20>Supprimer</S20>
     <S21>Importer</S21>
     <S22>Fixer la couleur transparente</S22>
-    <S23>Not supported file</S23>
+    <S23>Archive non supportée</S23>
+    <S24>Incorrect BMP file, depth {0}</S24>
   </NCGR>
   <NSCR>
     <S00>Options de map</S00>
@@ -310,7 +313,7 @@
     <S13>Montrer numéros</S13>
     <S14>Cellules</S14>
     <S15>
-      Faites un double-clic sur l'image pour la voir
+      Double-cliquez sur l'image pour la voir
       en taille réelle.
     </S15>
     <S16>Zoom</S16>
@@ -361,7 +364,7 @@
     <S1C>Enregistrer</S1C>
     <S1D>Animations</S1D>
     <S1E>
-      Faites un double-clic sur l'image pour la voir en
+      Double-cliquez sur l'image pour la voir en
       taille réelle.
     </S1E>
   </NANR>

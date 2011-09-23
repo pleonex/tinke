@@ -8,8 +8,8 @@
     <ProjectGuid>{F41794F8-59A7-4CC3-97D2-7EAFA922F321}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Comun</RootNamespace>
-    <AssemblyName>Comun</AssemblyName>
+    <RootNamespace>Common</RootNamespace>
+    <AssemblyName>Common</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
@@ -76,9 +76,11 @@
   <ItemGroup>
     <Compile Include="Imagen\BasicControl.cs">
       <SubType>UserControl</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
     <Compile Include="Imagen\BasicControl.Designer.cs">
       <DependentUpon>BasicControl.cs</DependentUpon>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
     <Compile Include="Imagen\BMP.cs" />
     <Compile Include="Imagen\JPG.cs" />
@@ -103,6 +105,7 @@
   <ItemGroup>
     <EmbeddedResource Include="Imagen\BasicControl.resx">
       <DependentUpon>BasicControl.cs</DependentUpon>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -117,6 +120,13 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\picture_save.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="CommonLang.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="Resources\control_play_blue.png" />
+    <None Include="Resources\control_stop_blue.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

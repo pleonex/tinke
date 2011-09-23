@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Language>
+  <Español>
+    <S00>Empaquetar archivo</S00>
+    <S01>Empaquetando...</S01>
+    <S02>Extrayendo...</S02>
+  </Español>
+  <English>
+    <S00>Pack file</S00>
+    <S01>Packing...</S01>
+    <S02>Unpacking...</S02>
+  </English>
+  <Français>
+    <S00>Pack file</S00>
+    <S01>Packing...</S01>
+    <S02>Unpacking...</S02>
+  </Français>
+</Language>

@@ -7,30 +7,48 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Windows.Forms;
+using PluginInterface;
 
-namespace Comun
+namespace Common
 {
     public partial class BasicControl : UserControl
     {
         String image;
+        IPluginHost pluginHost;
 
         public BasicControl()
         {
             InitializeComponent();
         }
-        public BasicControl(Bitmap imagen)
+        public BasicControl(Bitmap imagen, IPluginHost pluginHost)
         {
             InitializeComponent();
+            this.pluginHost = pluginHost;
+            ReadLanguage();
 
             picBox.Image = imagen;
         }
-        public BasicControl(String imagen)
+        public BasicControl(String imagen, IPluginHost pluginHost)
         {
             InitializeComponent();
+            this.pluginHost = pluginHost;
+            ReadLanguage();
 
             image = Path.GetTempFileName();
             File.Copy(imagen, image, true);
             picBox.ImageLocation = image;
+        }
+        private void ReadLanguage()
+        {
+            try
+            {
+                System.Xml.Linq.XElement xml = System.Xml.Linq.XElement.Load(Application.StartupPath + Path.DirectorySeparatorChar +
+                    "Plugins" + Path.DirectorySeparatorChar + "CommonLang.xml");
+                xml = xml.Element(pluginHost.Get_Language()).Element("BasicControl");
+
+                btnSave.Text = xml.Element("S00").Value;
+            }
+            catch { throw new NotSupportedException("There was an error reading the language file"); }
         }
 
         private void btnSave_Click(object sender, EventArgs e)

@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Language>
+  <Español>
+    <BinControl>
+      <S00>Número de imagen:</S00>
+      <S01>Ancho:</S01>
+      <S02>Alto:</S02>
+      <S03>Transparencia</S03>
+      <S04>Color de fondo</S04>
+      <S05>Eliminar fondo</S05>
+      <S06>Zoom</S06>
+      <S07>Guardar</S07>
+      <S08>
+        Haz doble click en la imagen
+        para ver en su tamaño real.
+      </S08>
+    </BinControl>
+  </Español>
+  <English>
+    <BinControl>
+      <S00>Number of image:</S00>
+      <S01>Width:</S01>
+      <S02>Height:</S02>
+      <S03>Transparency</S03>
+      <S04>Background color</S04>
+      <S05>Remove background</S05>
+      <S06>Zoom</S06>
+      <S07>Save</S07>
+      <S08>
+        Double click the image to
+        see in full size.
+      </S08>
+    </BinControl>
+  </English>
+  <Français>
+    <BinControl>
+      <S00>Number of image:</S00>
+      <S01>Width:</S01>
+      <S02>Height:</S02>
+      <S03>Transparency</S03>
+      <S04>Background color</S04>
+      <S05>Remove background</S05>
+      <S06>Zoom</S06>
+      <S07>Save</S07>
+      <S08>
+        Double click the image to
+        see in full size.
+      </S08>
+    </BinControl>
+  </Français>
+</Language>

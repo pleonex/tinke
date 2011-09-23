@@ -28,6 +28,7 @@ namespace _3DModels
 
             this.pluginHost = pluginHost;
             this.btx0 = btx0;
+            ReadLanguage();
 
             for (int i = 0; i < btx0.texture.texInfo.num_objs; i++)
                 listTextures.Items.Add(String.Format("{0}: {1}", i.ToString(), btx0.texture.texInfo.names[i]));
@@ -41,6 +42,39 @@ namespace _3DModels
             listPalettes.SelectedIndexChanged += new EventHandler(listPalettes_SelectedIndexChanged);
 
             UpdateTexture(0, 0);
+        }
+        private void ReadLanguage()
+        {
+            try
+            {
+                System.Xml.Linq.XElement xml = System.Xml.Linq.XElement.Load(Application.StartupPath + Path.DirectorySeparatorChar +
+                    "Plugins" + Path.DirectorySeparatorChar + "3DModelsLang.xml");
+                xml = xml.Element(pluginHost.Get_Language()).Element("TextureControl");
+
+                columnProperty.Text = xml.Element("S00").Value;
+                columnValue.Text = xml.Element("S01").Value;
+                listProp.Items[0].Text = xml.Element("S02").Value;
+                listProp.Items[0].SubItems[1].Text = xml.Element("S03").Value;
+                listProp.Items[1].Text = xml.Element("S04").Value;
+                listProp.Items[2].Text = xml.Element("S05").Value;
+                listProp.Items[3].Text = xml.Element("S06").Value;
+                listProp.Items[4].Text = xml.Element("S07").Value;
+                listProp.Items[5].Text = xml.Element("S08").Value;
+                listProp.Items[6].Text = xml.Element("S09").Value;
+                listProp.Items[7].Text = xml.Element("S0A").Value;
+                listProp.Items[8].Text = xml.Element("S0B").Value;
+                listProp.Items[9].Text = xml.Element("S0C").Value;
+                listProp.Items[10].Text = xml.Element("S0D").Value;
+                listProp.Items[11].Text = xml.Element("S02").Value;
+                listProp.Items[11].SubItems[1].Text = xml.Element("S0E").Value;
+                listProp.Items[12].Text = xml.Element("S04").Value;
+                label2.Text = xml.Element("S0F").Value;
+                label1.Text = xml.Element("S10").Value;
+                label3.Text = xml.Element("S11").Value;
+                btnSetTransparent.Text = xml.Element("S12").Value;
+                btnSave.Text = xml.Element("S13").Value;
+            }
+            catch { throw new NotSupportedException("There was an error reading the language file"); }
         }
 
         private void UpdateTexture(int num_tex)

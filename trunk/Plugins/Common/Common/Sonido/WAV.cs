@@ -2,27 +2,26 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.IO;
-using System.Windows.Forms;
-using System.Drawing;
 using PluginInterface;
+using System.Windows.Forms;
 
-namespace Comun
+namespace Common
 {
-    class BMP
+    class WAV
     {
         string archivo;
         IPluginHost pluginHost;
 
-        public BMP(IPluginHost pluginHost, string archivo)
+        public WAV(IPluginHost pluginHost, string archivo)
         {
             this.pluginHost = pluginHost;
             this.archivo = archivo;  
         }
 
+
         public Control Show_Info()
         {
-            return new BasicControl(archivo);
+            return new iWav(archivo, pluginHost);
         }
 
     }

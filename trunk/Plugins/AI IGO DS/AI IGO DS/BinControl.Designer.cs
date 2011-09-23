@@ -63,11 +63,11 @@
             // btnSave
             // 
             this.btnSave.Image = global::AI_IGO_DS.Properties.Resources.picture_save;
-            this.btnSave.Location = new System.Drawing.Point(426, 472);
+            this.btnSave.Location = new System.Drawing.Point(399, 472);
             this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(81, 35);
+            this.btnSave.Size = new System.Drawing.Size(108, 35);
             this.btnSave.TabIndex = 1;
-            this.btnSave.Text = "Save";
+            this.btnSave.Text = "S08";
             this.btnSave.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnSave.UseVisualStyleBackColor = true;
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
@@ -75,15 +75,15 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(321, 241);
+            this.label1.Location = new System.Drawing.Point(309, 275);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(60, 13);
+            this.label1.Size = new System.Drawing.Size(26, 13);
             this.label1.TabIndex = 2;
-            this.label1.Text = "# of image:";
+            this.label1.Text = "S00";
             // 
             // numericImage
             // 
-            this.numericImage.Location = new System.Drawing.Point(387, 239);
+            this.numericImage.Location = new System.Drawing.Point(387, 273);
             this.numericImage.Maximum = new decimal(new int[] {
             65535,
             0,
@@ -97,20 +97,20 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(321, 293);
+            this.label2.Location = new System.Drawing.Point(309, 327);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(41, 13);
+            this.label2.Size = new System.Drawing.Size(26, 13);
             this.label2.TabIndex = 9;
-            this.label2.Text = "Height:";
+            this.label2.Text = "S02";
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(321, 267);
+            this.label3.Location = new System.Drawing.Point(309, 301);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(38, 13);
+            this.label3.Size = new System.Drawing.Size(26, 13);
             this.label3.TabIndex = 8;
-            this.label3.Text = "Width:";
+            this.label3.Text = "S01";
             // 
             // numericWidth
             // 
@@ -119,7 +119,7 @@
             0,
             0,
             0});
-            this.numericWidth.Location = new System.Drawing.Point(387, 265);
+            this.numericWidth.Location = new System.Drawing.Point(387, 299);
             this.numericWidth.Maximum = new decimal(new int[] {
             65535,
             0,
@@ -147,7 +147,7 @@
             0,
             0,
             0});
-            this.numericHeight.Location = new System.Drawing.Point(387, 291);
+            this.numericHeight.Location = new System.Drawing.Point(387, 325);
             this.numericHeight.Maximum = new decimal(new int[] {
             65535,
             0,
@@ -189,49 +189,49 @@
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(450, 223);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(34, 13);
+            this.label4.Size = new System.Drawing.Size(26, 13);
             this.label4.TabIndex = 11;
-            this.label4.Text = "Zoom";
+            this.label4.Text = "S07";
             // 
             // checkTransparency
             // 
             this.checkTransparency.AutoSize = true;
-            this.checkTransparency.Location = new System.Drawing.Point(324, 317);
+            this.checkTransparency.Location = new System.Drawing.Point(312, 351);
             this.checkTransparency.Name = "checkTransparency";
-            this.checkTransparency.Size = new System.Drawing.Size(91, 17);
+            this.checkTransparency.Size = new System.Drawing.Size(45, 17);
             this.checkTransparency.TabIndex = 12;
-            this.checkTransparency.Text = "Transparency";
+            this.checkTransparency.Text = "S03";
             this.checkTransparency.UseVisualStyleBackColor = true;
             this.checkTransparency.CheckedChanged += new System.EventHandler(this.checkTransparency_CheckedChanged);
             // 
             // btnBgd
             // 
-            this.btnBgd.Location = new System.Drawing.Point(324, 340);
+            this.btnBgd.Location = new System.Drawing.Point(312, 374);
             this.btnBgd.Name = "btnBgd";
-            this.btnBgd.Size = new System.Drawing.Size(123, 31);
+            this.btnBgd.Size = new System.Drawing.Size(135, 31);
             this.btnBgd.TabIndex = 13;
-            this.btnBgd.Text = "Background color";
+            this.btnBgd.Text = "S04";
             this.btnBgd.UseVisualStyleBackColor = true;
             this.btnBgd.Click += new System.EventHandler(this.btnBgd_Click);
             // 
             // btnBgdRem
             // 
-            this.btnBgdRem.Location = new System.Drawing.Point(324, 378);
+            this.btnBgdRem.Location = new System.Drawing.Point(312, 412);
             this.btnBgdRem.Name = "btnBgdRem";
-            this.btnBgdRem.Size = new System.Drawing.Size(123, 31);
+            this.btnBgdRem.Size = new System.Drawing.Size(135, 31);
             this.btnBgdRem.TabIndex = 14;
-            this.btnBgdRem.Text = "Remove background";
+            this.btnBgdRem.Text = "S05";
             this.btnBgdRem.UseVisualStyleBackColor = true;
             this.btnBgdRem.Click += new System.EventHandler(this.btnBgdRem_Click);
             // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(293, 472);
+            this.label5.Location = new System.Drawing.Point(266, 472);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(127, 26);
+            this.label5.Size = new System.Drawing.Size(26, 13);
             this.label5.TabIndex = 15;
-            this.label5.Text = "Double click the image to\r\nsee in full size.";
+            this.label5.Text = "S08";
             // 
             // BinControl
             // 

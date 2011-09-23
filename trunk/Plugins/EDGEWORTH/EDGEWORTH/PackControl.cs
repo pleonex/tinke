@@ -13,6 +13,7 @@ namespace EDGEWORTH
     public partial class PackControl : UserControl
     {
         IPluginHost pluginHost;
+        String lang;
 
         public PackControl()
         {
@@ -22,12 +23,26 @@ namespace EDGEWORTH
         {
             InitializeComponent();
             this.pluginHost = pluginHost;
+            ReadLanguage();
+        }
+        private void ReadLanguage()
+        {
+            try
+            {
+                System.Xml.Linq.XElement xml = System.Xml.Linq.XElement.Load(Application.StartupPath + System.IO.Path.DirectorySeparatorChar +
+                    "Plugins" + System.IO.Path.DirectorySeparatorChar + "EDGEWORTHLang.xml");
+                xml = xml.Element(pluginHost.Get_Language());
+
+                btnPack.Text = xml.Element("S00").Value;
+                lang = xml.Element("S01").Value;
+            }
+            catch { throw new NotSupportedException("There was an error reading the language file"); }
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
             System.Threading.Thread waiting = new System.Threading.Thread(ThreadWait);
-            waiting.Start("Packing file...");
+            waiting.Start(lang);
 
             Carpeta unpackedFiles = pluginHost.Get_DecompressedFiles(0xE2); // This is the ID of romfile.bin
             String newRomfile = System.IO.Path.GetTempFileName();
