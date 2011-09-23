@@ -25,14 +25,11 @@ namespace _3DModels
             btx.header.header_size = br.ReadUInt16();
             btx.header.num_sections = br.ReadUInt16();
             btx.header.offset = new uint[btx.header.num_sections];
-            //for (int i = 0; i < btx.header.num_sections; i++)
-           //     btx.header.offset[i] = br.ReadUInt32();
-            if (btx.header.num_sections == 2)
-                br.ReadUInt32();
-            btx.header.offset[0] = br.ReadUInt32();
+            for (int i = 0; i < btx.header.num_sections; i++)
+                btx.header.offset[i] = br.ReadUInt32();
 
-            //if (btx.header.num_sections > 1)
-            //    MessageBox.Show("There are more than one section?\nPlease, report this file");
+            if (btx.header.num_sections > 1)
+                MessageBox.Show("There are more than one section?\nPlease, report this file");
 
             #region Read texture sections
             br.BaseStream.Position = btx.header.offset[0];
@@ -176,51 +173,60 @@ namespace _3DModels
 
             btx.texture = tex;
             #endregion
-            Write_Info(btx);
+            Write_Info(btx, pluginHost.Get_Language());
 
             br.Close();
             return btx;
         }
-        private static void Write_Info(sBTX0 btx0)
+        private static void Write_Info(sBTX0 btx0, string lang)
         {
-            Console.WriteLine("<b><pre>Read BTX0 files</b>");
-            Console.WriteLine("\nTexture section\n<u>Header:</u>");
-            Console.WriteLine("Texture Info offset: 0x{0}", btx0.texture.header.textInfo_offset.ToString("x"));
-            Console.WriteLine("Texture Data offset: 0x{0}", btx0.texture.header.textData_offset.ToString("x"));
-            Console.WriteLine("Texture Data size: 0x{0}", btx0.texture.header.textData_size.ToString("x"));
-            Console.WriteLine("Compressed Texture Data offset: 0x{0}", btx0.texture.header.textCompressedData_offset.ToString("x"));
-            Console.WriteLine("Compressed Texture Data size: 0x{0}", btx0.texture.header.textCompressedData_size.ToString("x"));
-            Console.WriteLine("Compressed Info Offset: 0x{0}", btx0.texture.header.textCompressedInfo_offset.ToString("x"));
-            Console.WriteLine("Compressed Info Data offset: 0x{0}", btx0.texture.header.textCompressedInfoData_offset.ToString("x"));
-            Console.WriteLine("Palette Data offset: 0x{0}", btx0.texture.header.paletteData_offset.ToString("x"));
-            Console.WriteLine("Palette Data size: 0x{0}", btx0.texture.header.paletteData_offset.ToString("x"));
-            Console.WriteLine("Palette Info offset: 0x{0}", btx0.texture.header.paletteInfo_offset.ToString("x"));
-
-            Console.WriteLine("<u>Texture Information:</u>");
-            for (int i = 0; i < btx0.texture.texInfo.num_objs; i++)
+            try
             {
-                sBTX0.Texture.TextInfo texInfo = (sBTX0.Texture.TextInfo)btx0.texture.texInfo.infoBlock.infoData[i];
-                Console.WriteLine("*Objs: {0} ({1})", i.ToString(), btx0.texture.texInfo.names[i].Trim('\x0'));
-                Console.WriteLine("|_ Offset 0x{0}", texInfo.tex_offset.ToString("x"));
-                Console.WriteLine("|_ Parameters 0x{0}", texInfo.parameters.ToString("x"));
-                Console.Write(" >> Repeat: X->{0}, Y->{1}", texInfo.repeat_X.ToString(), texInfo.repeat_Y.ToString());
-                Console.Write(" | Flip: X-> {0}, Y->{1}", texInfo.flip_X.ToString(), texInfo.flip_Y.ToString());
-                Console.Write(" | Size: {0}x{1}", texInfo.width.ToString(), texInfo.height.ToString());
-                Console.Write(" | Format: {0} ({1})", texInfo.format.ToString(), (TextureFormat)texInfo.format);
-                Console.WriteLine(" | Color0: {0}", texInfo.color0.ToString());
-                Console.Write("    | Coordinates Transformation Modes: {0} ({1})", texInfo.coord_transf.ToString(), (TextureCoordTransf)texInfo.coord_transf);
-                Console.WriteLine(" | Unknown1 {0} | Unknown2 {1} | Unknown3 {2}", texInfo.unknown.ToString(), texInfo.unknown2.ToString(), texInfo.unknown3.ToString());
-            }
+                System.Xml.Linq.XElement xml = System.Xml.Linq.XElement.Load(Application.StartupPath + Path.DirectorySeparatorChar +
+                    "Plugins" + Path.DirectorySeparatorChar + "3DModelsLang.xml");
+                xml = xml.Element(lang).Element("BTX0");
 
-            Console.WriteLine("<u>Palette Information:</u>");
-            for (int i = 0; i < btx0.texture.palInfo.num_objs; i++)
-            {
-                sBTX0.Texture.PalInfo palInfo = (sBTX0.Texture.PalInfo)btx0.texture.palInfo.infoBlock.infoData[i];
-                Console.WriteLine("*Pal: {0} ({1})", i.ToString(), btx0.texture.palInfo.names[i].Trim('\x0'));
-                Console.Write("|_Offset 0x{0}", palInfo.palette_offset.ToString("x"));
-                Console.WriteLine();
+                Console.WriteLine("<pre><b>" + xml.Element("S00").Value + "</b>");
+                Console.WriteLine(xml.Element("S01").Value);
+                Console.WriteLine("<u>" + xml.Element("S02").Value + "</u>");
+                Console.WriteLine(xml.Element("S03").Value, btx0.texture.header.textInfo_offset.ToString("x"));
+                Console.WriteLine(xml.Element("S04").Value, btx0.texture.header.textData_offset.ToString("x"));
+                Console.WriteLine(xml.Element("S05").Value, btx0.texture.header.textData_size.ToString("x"));
+                Console.WriteLine(xml.Element("S06").Value, btx0.texture.header.textCompressedData_offset.ToString("x"));
+                Console.WriteLine(xml.Element("S07").Value, btx0.texture.header.textCompressedData_size.ToString("x"));
+                Console.WriteLine(xml.Element("S08").Value, btx0.texture.header.textCompressedInfo_offset.ToString("x"));
+                Console.WriteLine(xml.Element("S09").Value, btx0.texture.header.textCompressedInfoData_offset.ToString("x"));
+                Console.WriteLine(xml.Element("S0A").Value, btx0.texture.header.paletteData_offset.ToString("x"));
+                Console.WriteLine(xml.Element("S0B").Value, btx0.texture.header.paletteData_offset.ToString("x"));
+                Console.WriteLine(xml.Element("S0C").Value, btx0.texture.header.paletteInfo_offset.ToString("x"));
+
+                Console.WriteLine("<u>" + xml.Element("S0D").Value + "</u>");
+                for (int i = 0; i < btx0.texture.texInfo.num_objs; i++)
+                {
+                    sBTX0.Texture.TextInfo texInfo = (sBTX0.Texture.TextInfo)btx0.texture.texInfo.infoBlock.infoData[i];
+                    Console.WriteLine(xml.Element("S0E").Value, i.ToString(), btx0.texture.texInfo.names[i].Trim('\x0'));
+                    Console.WriteLine(xml.Element("S0F").Value, texInfo.tex_offset.ToString("x"));
+                    Console.WriteLine(xml.Element("S10").Value, texInfo.parameters.ToString("x"));
+                    Console.Write(xml.Element("S11").Value, texInfo.repeat_X.ToString(), texInfo.repeat_Y.ToString());
+                    Console.Write(xml.Element("S12").Value, texInfo.flip_X.ToString(), texInfo.flip_Y.ToString());
+                    Console.Write(xml.Element("S13").Value, texInfo.width.ToString(), texInfo.height.ToString());
+                    Console.Write(xml.Element("S14").Value, texInfo.format.ToString(), (TextureFormat)texInfo.format);
+                    Console.WriteLine(xml.Element("S15").Value, texInfo.color0.ToString());
+                    Console.Write(xml.Element("S16").Value, texInfo.coord_transf.ToString(), (TextureCoordTransf)texInfo.coord_transf);
+                    Console.WriteLine(xml.Element("S17").Value, texInfo.unknown.ToString(), texInfo.unknown2.ToString(), texInfo.unknown3.ToString());
+                }
+
+                Console.WriteLine("<u>" + xml.Element("S18").Value + "</u>");
+                for (int i = 0; i < btx0.texture.palInfo.num_objs; i++)
+                {
+                    sBTX0.Texture.PalInfo palInfo = (sBTX0.Texture.PalInfo)btx0.texture.palInfo.infoBlock.infoData[i];
+                    Console.WriteLine(xml.Element("S19").Value, i.ToString(), btx0.texture.palInfo.names[i].Trim('\x0'));
+                    Console.Write(xml.Element("S1A").Value, palInfo.palette_offset.ToString("x"));
+                    Console.WriteLine();
+                }
+                Console.WriteLine(xml.Element("S1B").Value + "</pre>");
             }
-            Console.WriteLine("EOF</pre>");
+            catch { throw new NotSupportedException("There was an error reading the language file"); }
         }
 
         //                                              0  1  2  3  4  5  6  7

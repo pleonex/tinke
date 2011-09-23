@@ -1,4 +1,4 @@
-﻿namespace Comun
+﻿namespace Common
 {
     partial class BasicControl
     {
@@ -35,12 +35,12 @@
             // 
             // btnSave
             // 
-            this.btnSave.Image = global::Comun.Properties.Resources.picture_save;
-            this.btnSave.Location = new System.Drawing.Point(428, 472);
+            this.btnSave.Image = global::Common.Properties.Resources.picture_save;
+            this.btnSave.Location = new System.Drawing.Point(405, 472);
             this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(79, 35);
+            this.btnSave.Size = new System.Drawing.Size(102, 35);
             this.btnSave.TabIndex = 0;
-            this.btnSave.Text = "Save";
+            this.btnSave.Text = "S00";
             this.btnSave.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnSave.UseVisualStyleBackColor = true;
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);

@@ -197,6 +197,11 @@
             // numericStartByte
             // 
             this.numericStartByte.Location = new System.Drawing.Point(160, 22);
+            this.numericStartByte.Maximum = new decimal(new int[] {
+            -1,
+            0,
+            0,
+            0});
             this.numericStartByte.Name = "numericStartByte";
             this.numericStartByte.Size = new System.Drawing.Size(95, 20);
             this.numericStartByte.TabIndex = 0;

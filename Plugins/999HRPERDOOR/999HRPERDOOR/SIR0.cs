@@ -132,7 +132,7 @@ namespace _999HRPERDOOR
                 cells.cebk.banks[0].cells[i].height = br.ReadUInt16();
                 cells.cebk.banks[0].cells[i].xOffset = br.ReadUInt16() - 0x80;
                 cells.cebk.banks[0].cells[i].yOffset = br.ReadUInt16() - 0x80;
-                cells.cebk.banks[0].cells[i].tileOffset = (uint)(br.ReadUInt16() / 0x40);
+                cells.cebk.banks[0].cells[i].tileOffset = (uint)(br.ReadUInt16() / 0x20);
                 cells.cebk.banks[0].cells[i].num_cell = (ushort)i;
             }
 

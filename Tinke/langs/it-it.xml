@@ -239,6 +239,8 @@
     <S12>Byte di partenza:</S12>
     <S13>Importa</S13>
     <S14>Cambia la dimensione</S14>
+    <S15>Not supported file</S15>
+    <S16>Incorrect BMP file, depth {0}</S16>
   </NCLR>
   <NCGR>
     <S01>Doppio-click per vedere l'intera immagine.</S01>
@@ -276,6 +278,7 @@
     <S21>Importa</S21>
     <S22>Imposta colore trasparente</S22>
     <S23>Not supported file</S23>
+    <S24>Incorrect BMP file, depth {0}</S24>
   </NCGR>
   <NSCR>
     <S00>Opzioni mapp</S00>

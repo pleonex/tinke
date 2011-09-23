@@ -129,7 +129,7 @@ namespace Tinke.Dialog
             // numericOffsetLen
             // 
             this.numericOffsetLen.Hexadecimal = true;
-            this.numericOffsetLen.Location = new System.Drawing.Point(103, 46);
+            this.numericOffsetLen.Location = new System.Drawing.Point(111, 46);
             this.numericOffsetLen.Maximum = new decimal(new int[] {
             8,
             0,
@@ -147,7 +147,7 @@ namespace Tinke.Dialog
             // checkOffsetBigEndian
             // 
             this.checkOffsetBigEndian.AutoSize = true;
-            this.checkOffsetBigEndian.Location = new System.Drawing.Point(186, 23);
+            this.checkOffsetBigEndian.Location = new System.Drawing.Point(192, 23);
             this.checkOffsetBigEndian.Name = "checkOffsetBigEndian";
             this.checkOffsetBigEndian.Size = new System.Drawing.Size(45, 17);
             this.checkOffsetBigEndian.TabIndex = 5;
@@ -280,7 +280,7 @@ namespace Tinke.Dialog
             // numericOffsetStart
             // 
             this.numericOffsetStart.Hexadecimal = true;
-            this.numericOffsetStart.Location = new System.Drawing.Point(104, 20);
+            this.numericOffsetStart.Location = new System.Drawing.Point(111, 20);
             this.numericOffsetStart.Maximum = new decimal(new int[] {
             -1,
             0,
@@ -315,7 +315,7 @@ namespace Tinke.Dialog
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(194, 46);
+            this.label7.Location = new System.Drawing.Point(227, 46);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(27, 13);
             this.label7.TabIndex = 7;
@@ -323,7 +323,7 @@ namespace Tinke.Dialog
             // 
             // numericNumFiles
             // 
-            this.numericNumFiles.Location = new System.Drawing.Point(315, 44);
+            this.numericNumFiles.Location = new System.Drawing.Point(369, 44);
             this.numericNumFiles.Maximum = new decimal(new int[] {
             -1,
             0,
@@ -346,7 +346,7 @@ namespace Tinke.Dialog
             // checkNumBigEndian
             // 
             this.checkNumBigEndian.AutoSize = true;
-            this.checkNumBigEndian.Location = new System.Drawing.Point(197, 19);
+            this.checkNumBigEndian.Location = new System.Drawing.Point(230, 19);
             this.checkNumBigEndian.Name = "checkNumBigEndian";
             this.checkNumBigEndian.Size = new System.Drawing.Size(46, 17);
             this.checkNumBigEndian.TabIndex = 2;
@@ -356,7 +356,7 @@ namespace Tinke.Dialog
             // numericNumOffset
             // 
             this.numericNumOffset.Hexadecimal = true;
-            this.numericNumOffset.Location = new System.Drawing.Point(104, 18);
+            this.numericNumOffset.Location = new System.Drawing.Point(135, 18);
             this.numericNumOffset.Maximum = new decimal(new int[] {
             -1,
             0,
@@ -369,7 +369,7 @@ namespace Tinke.Dialog
             // 
             // btnNumCalculate
             // 
-            this.btnNumCalculate.Location = new System.Drawing.Point(315, 15);
+            this.btnNumCalculate.Location = new System.Drawing.Point(369, 15);
             this.btnNumCalculate.Name = "btnNumCalculate";
             this.btnNumCalculate.Size = new System.Drawing.Size(100, 23);
             this.btnNumCalculate.TabIndex = 3;
@@ -389,7 +389,7 @@ namespace Tinke.Dialog
             // numericNumLen
             // 
             this.numericNumLen.Hexadecimal = true;
-            this.numericNumLen.Location = new System.Drawing.Point(104, 44);
+            this.numericNumLen.Location = new System.Drawing.Point(135, 44);
             this.numericNumLen.Maximum = new decimal(new int[] {
             8,
             0,

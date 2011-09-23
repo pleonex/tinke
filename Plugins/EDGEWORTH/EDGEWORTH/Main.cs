@@ -42,8 +42,18 @@ namespace EDGEWORTH
             if (archivo.ToUpper().EndsWith("ROMFILE.BIN"))
             {
                 System.Threading.Thread waiting = new System.Threading.Thread(ThreadWait);
-                waiting.Start("Unpacking files...");
+                String lang = "";
+                try
+                {
+                    System.Xml.Linq.XElement xml = System.Xml.Linq.XElement.Load(Application.StartupPath + System.IO.Path.DirectorySeparatorChar +
+                        "Plugins" + System.IO.Path.DirectorySeparatorChar + "EDGEWORTHLang.xml");
+                    lang = xml.Element(pluginHost.Get_Language()).Element("S02").Value;
+                }
+                catch { throw new NotSupportedException("There was an error reading the language file"); }
+                waiting.Start(lang);
+
                 PACK.Read(archivo, pluginHost);
+
                 waiting.Abort();
             }
         }

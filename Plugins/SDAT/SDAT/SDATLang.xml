@@ -180,46 +180,46 @@
       </S01>
     </Messages>
     <NewAudioOptions>
-      <S00>Audio file options</S00>
-      <S01>Compression:</S01>
-      <S02>Enable loop:</S02>
-      <S03>Loop options</S03>
-      <S04>Start offset:</S04>
-      <S05>Length:</S05>
-      <S06>Block size (STRM):</S06>
-      <S07>Volume (0 to not change):</S07>
-      <S08>Accept</S08>
-      <S09>Loop measure</S09>
-      <S0A>Seconds</S0A>
-      <S0B>Milliseconds</S0B>
-      <S0C>Samples</S0C>
+      <S00>Options de l'archive sonore</S00>
+      <S01>Compression :</S01>
+      <S02>Activer la boucle :</S02>
+      <S03>Options de la boucle</S03>
+      <S04>Début de l'offset :</S04>
+      <S05>Longueur :</S05>
+      <S06>Taille du bloc (STRM) :</S06>
+      <S07>Volume (0 pour ne rien changer) :</S07>
+      <S08>Accepter</S08>
+      <S09>Mesure de la boucle</S09>
+      <S0A>Secondes</S0A>
+      <S0B>Millisecondes</S0B>
+      <S0C>Échantillons</S0C>
     </NewAudioOptions>
     <Information>
       <S00>/bSection</S00>
-      <S01>Standar header</S01>
+      <S01>En-tête Standard</S01>
       <S02>Type</S02>
       <S03>Magic</S03>
-      <S04>File size</S04>
+      <S04>Taille de l'archive</S04>
       <S05>/bSection 1</S05>
-      <S06>Size 1</S06>
-      <S07>Wave type</S07>
-      <S08>Loop flag</S08>
-      <S09>Loop offset</S09>
-      <S0A>Channels</S0A>
-      <S0B>Sample rate</S0B>
-      <S0C>Time</S0C>
-      <S0D>Samples</S0D>
-      <S0E>Data offset</S0E>
-      <S0F>Number of blocks</S0F>
-      <S10>Block length</S10>
-      <S11>Samples per block</S11>
-      <S12>Last block length</S12>
-      <S13>Samples per last block</S13>
+      <S06>Taille 1</S06>
+      <S07>Type de Wave</S07>
+      <S08>Indicateur de la boucle</S08>
+      <S09>Offset de la boucle</S09>
+      <S0A>Canaux</S0A>
+      <S0B>Taux d'échantillonage</S0B>
+      <S0C>Temps</S0C>
+      <S0D>Échantillons</S0D>
+      <S0E>Données de l'offset</S0E>
+      <S0F>Nombre de blocs</S0F>
+      <S10>Longueur du bloc</S10>
+      <S11>Échantillons par bloc</S11>
+      <S12>Longueur du dernier bloc</S12>
+      <S13>Échantillons par dernier bloc</S13>
       <S14>/bSection 2</S14>
-      <S15>Size 2</S15>
-      <S16>Number of samples</S16>
-      <S17>SWAV Info</S17>
-      <S18>Non loop length</S18>
+      <S15>Taille 2</S15>
+      <S16>Nombre d'échantillons</S16>
+      <S17>Info SWAV</S17>
+      <S18>Longueur de la boucle</S18>
     </Information>
   </Français>
 </Language>

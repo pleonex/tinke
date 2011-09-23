@@ -36,9 +36,9 @@
             this.btnPack.Image = global::EDGEWORTH.Properties.Resources.package_go;
             this.btnPack.Location = new System.Drawing.Point(3, 3);
             this.btnPack.Name = "btnPack";
-            this.btnPack.Size = new System.Drawing.Size(88, 36);
+            this.btnPack.Size = new System.Drawing.Size(112, 36);
             this.btnPack.TabIndex = 0;
-            this.btnPack.Text = "Pack file";
+            this.btnPack.Text = "S00";
             this.btnPack.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnPack.UseVisualStyleBackColor = true;
             this.btnPack.Click += new System.EventHandler(this.button1_Click);

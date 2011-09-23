@@ -1,4 +1,4 @@
-﻿namespace Comun
+﻿namespace Common
 {
     partial class iWav
     {
@@ -34,21 +34,25 @@
             // 
             // btnPlay
             // 
+            this.btnPlay.Image = global::Common.Properties.Resources.control_play_blue;
             this.btnPlay.Location = new System.Drawing.Point(3, 3);
             this.btnPlay.Name = "btnPlay";
-            this.btnPlay.Size = new System.Drawing.Size(75, 23);
+            this.btnPlay.Size = new System.Drawing.Size(108, 23);
             this.btnPlay.TabIndex = 0;
-            this.btnPlay.Text = "Play";
+            this.btnPlay.Text = "S00";
+            this.btnPlay.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnPlay.UseVisualStyleBackColor = true;
             this.btnPlay.Click += new System.EventHandler(this.btnPlay_Click);
             // 
             // btnStop
             // 
-            this.btnStop.Location = new System.Drawing.Point(86, 3);
+            this.btnStop.Image = global::Common.Properties.Resources.control_stop_blue;
+            this.btnStop.Location = new System.Drawing.Point(3, 32);
             this.btnStop.Name = "btnStop";
-            this.btnStop.Size = new System.Drawing.Size(75, 23);
+            this.btnStop.Size = new System.Drawing.Size(108, 23);
             this.btnStop.TabIndex = 1;
-            this.btnStop.Text = "Stop";
+            this.btnStop.Text = "S01";
+            this.btnStop.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnStop.UseVisualStyleBackColor = true;
             this.btnStop.Click += new System.EventHandler(this.btnStop_Click);
             // 
@@ -60,7 +64,7 @@
             this.Controls.Add(this.btnStop);
             this.Controls.Add(this.btnPlay);
             this.Name = "iWav";
-            this.Size = new System.Drawing.Size(164, 30);
+            this.Size = new System.Drawing.Size(267, 108);
             this.ResumeLayout(false);
 
         }

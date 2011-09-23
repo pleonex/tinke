@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual C# Express 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Comun", "Comun\Comun.csproj", "{F41794F8-59A7-4CC3-97D2-7EAFA922F321}"
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{F41794F8-59A7-4CC3-97D2-7EAFA922F321}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

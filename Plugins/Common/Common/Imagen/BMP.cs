@@ -7,23 +7,22 @@ using System.Windows.Forms;
 using System.Drawing;
 using PluginInterface;
 
-namespace Comun
+namespace Common
 {
-    class PNG
+    class BMP
     {
         string archivo;
         IPluginHost pluginHost;
 
-        public PNG(IPluginHost pluginHost, string archivo)
+        public BMP(IPluginHost pluginHost, string archivo)
         {
             this.pluginHost = pluginHost;
-            this.archivo = archivo;
+            this.archivo = archivo;  
         }
-
 
         public Control Show_Info()
         {
-            return new BasicControl(archivo);
+            return new BasicControl(archivo, pluginHost);
         }
 
     }

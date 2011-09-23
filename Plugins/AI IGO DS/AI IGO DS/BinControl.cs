@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Data;
 using System.Linq;
 using System.Text;
+using System.Xml.Linq;
 using System.Windows.Forms;
 using PluginInterface;
 
@@ -26,6 +27,7 @@ namespace AI_IGO_DS
             this.pluginHost = pluginHost;
             this.paleta = paleta;
             this.tiles = tiles;
+            ReadLanguage();
 
             numericImage.Maximum = tiles.Length - 1;
             numericWidth.Value = tiles[0].rahc.nTilesX * 8;
@@ -37,6 +39,7 @@ namespace AI_IGO_DS
             InitializeComponent();
 
             this.pluginHost = pluginHost;
+            ReadLanguage();
             paleta = pluginHost.Get_NCLR();
             tiles = new NCGR[] { pluginHost.Get_NCGR() };
 
@@ -52,6 +55,26 @@ namespace AI_IGO_DS
             numericWidth.Value = tiles[0].rahc.nTilesX * 8;
             numericHeight.Value = tiles[0].rahc.nTilesY * 8;
             numericImage.Maximum = 0;
+        }
+        private void ReadLanguage()
+        {
+            try
+            {
+                XElement xml = XElement.Load(Application.StartupPath + System.IO.Path.DirectorySeparatorChar + "Plugins" +
+                    System.IO.Path.DirectorySeparatorChar + "AI IGO DSLang.xml");
+                xml = xml.Element(pluginHost.Get_Language()).Element("BinControl");
+
+                label1.Text = xml.Element("S00").Value;
+                label3.Text = xml.Element("S01").Value;
+                label2.Text = xml.Element("S02").Value;
+                checkTransparency.Text = xml.Element("S03").Value;
+                btnBgd.Text = xml.Element("S04").Value;
+                btnBgdRem.Text = xml.Element("S05").Value;
+                label4.Text = xml.Element("S06").Value;
+                btnSave.Text = xml.Element("S07").Value;
+                label5.Text = xml.Element("S08").Value;
+            }
+            catch { throw new Exception("There was an error reading the XML file of language."); } 
         }
 
 

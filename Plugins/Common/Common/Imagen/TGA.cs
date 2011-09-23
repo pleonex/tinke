@@ -7,7 +7,7 @@ using System.Drawing;
 using PluginInterface;
 using System.IO;
 
-namespace Comun
+namespace Common
 {
     class TGA
     {
@@ -22,7 +22,7 @@ namespace Comun
 
         public Control Show_Info()
         {
-            return new BasicControl(Leer());
+            return new BasicControl(Leer(), pluginHost);
         }
 
         private Bitmap Leer()
