@@ -29,12 +29,12 @@ namespace _999HRPERDOOR
         IPluginHost pluginHost;
         string gameCode;
 
-        public void Inicializar(IPluginHost pluginHost, string gameCode)
+        public void Initialize(IPluginHost pluginHost, string gameCode)
         {
             this.pluginHost = pluginHost;
             this.gameCode = gameCode;
         }
-        public bool EsCompatible()
+        public bool IsCompatible()
         {
             if (gameCode == "BSKE")
                 return true;
@@ -42,15 +42,15 @@ namespace _999HRPERDOOR
             return false;
         }
 
-        public Formato Get_Formato(string nombre, byte[] magic, int id)
+        public Format Get_Format(string nombre, byte[] magic, int id)
         {
             if (id >= 0x13EF && id <= 0x1500)
-                return Formato.ImagenCompleta;
+                return Format.FullImage;
 
-            return Formato.Desconocido;
+            return Format.Unknown;
         }
 
-        public void Leer(string archivo, int id)
+        public void Read(string archivo, int id)
         {
             if (id >= 0x13EF && id <= 0x1500)
                 SIR0.Read(archivo, id, pluginHost);
@@ -59,7 +59,7 @@ namespace _999HRPERDOOR
 
         public System.Windows.Forms.Control Show_Info(string archivo, int id)
         {
-            Leer(archivo, id);
+            Read(archivo, id);
 
             if (id >= 0x13EF && id <= 0x1500)
                 return new CellControl(pluginHost);

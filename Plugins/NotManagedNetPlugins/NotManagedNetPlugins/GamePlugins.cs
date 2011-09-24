@@ -23,13 +23,13 @@ namespace NotManagedNetPlugins
         string gameCode;
         int pluginLoaded;
 
-        public void Inicializar(IPluginHost pluginHost, string gameCode)
+        public void Initialize(IPluginHost pluginHost, string gameCode)
         {
             this.pluginHost = pluginHost;
             this.gameCode = gameCode;
         }
 
-        public bool EsCompatible()
+        public bool IsCompatible()
         {
             if (File.Exists(Application.StartupPath + Path.DirectorySeparatorChar + "Plugins" + Path.DirectorySeparatorChar +
                 "LufiaCurseSinistrals.dll"))
@@ -44,7 +44,7 @@ namespace NotManagedNetPlugins
             return false;
         }
 
-        public Formato Get_Formato(string nombre, byte[] magic, int id)
+        public Format Get_Format(string nombre, byte[] magic, int id)
         {
             switch (pluginLoaded)
             {
@@ -54,10 +54,10 @@ namespace NotManagedNetPlugins
                     return StringToFormat(c);
             }
 
-            return Formato.Desconocido;
+            return Format.Unknown;
         }
 
-        public unsafe void Leer(string archivo, int id)
+        public unsafe void Read(string archivo, int id)
         {
             switch (pluginLoaded)
             {
@@ -70,7 +70,7 @@ namespace NotManagedNetPlugins
 
                         DateTime t2 = DateTime.Now;
                         String txtfile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + "tinke_file_list.txt";
-                        Carpeta decompressedFolder = Get_DecompressedFiles(txtfile, num);
+                        sFolder decompressedFolder = Get_DecompressedFiles(txtfile, num);
                         DateTime t3 = DateTime.Now;
 
                         pluginHost.Set_Files(decompressedFolder);
@@ -83,47 +83,47 @@ namespace NotManagedNetPlugins
             return new System.Windows.Forms.Control();
         }
 
-        public Formato StringToFormat(string format)
+        public Format StringToFormat(string format)
         {
             switch (format)
             {
                 case "Palette":
-                    return Formato.Paleta;
+                    return Format.Palette;
                 case "Tile":
-                    return Formato.Imagen;
+                    return Format.Tile;
                 case "Map":
-                    return Formato.Map;
+                    return Format.Map;
                 case "Cell":
-                    return Formato.Celdas;
+                    return Format.Cell;
                 case "Animation":
-                    return Formato.Animación;
+                    return Format.Animation;
                 case "FullImage":
-                    return Formato.ImagenCompleta;
+                    return Format.FullImage;
                 case "Text":
-                    return Formato.Texto;
+                    return Format.Text;
                 case "Video":
-                    return Formato.Video;
+                    return Format.Video;
                 case "Sound":
-                    return Formato.Sonido;
+                    return Format.Sound;
                 case "Font":
-                    return Formato.Fuentes;
+                    return Format.Font;
                 case "Compress":
-                    return Formato.Comprimido;
+                    return Format.Compressed;
                 case "Script":
-                    return Formato.Script;
+                    return Format.Script;
                 case "System":
-                    return Formato.Sistema;
+                    return Format.System;
                 case "Unknown":
-                    return Formato.Desconocido;
+                    return Format.Unknown;
                 default:
-                    return Formato.Desconocido;
+                    return Format.Unknown;
             }
         }
-        public Carpeta Get_DecompressedFiles(string txtFile, int num)
+        public sFolder Get_DecompressedFiles(string txtFile, int num)
         {
             String[] files = File.ReadAllLines(txtFile);
-            Carpeta decompressed = new Carpeta();
-            decompressed.files = new List<Archivo>();
+            sFolder decompressed = new sFolder();
+            decompressed.files = new List<sFile>();
 
             String currFolder = files[0].Substring((pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar).Length);
             currFolder = currFolder.Substring(0, currFolder.IndexOf(Path.DirectorySeparatorChar));
@@ -136,67 +136,67 @@ namespace NotManagedNetPlugins
         }
 
         /// <summary>
-        /// Get a "Carpeta" variable with all files and folders from the main folder path.
+        /// Get a "sFolder" variable with all files and folders from the main folder path.
         /// </summary>
         /// <param name="folderPath">Folder to read</param>
         /// <param name="currFolder">Empty folder</param>
         /// <returns></returns>
-        public Carpeta Recursive_GetDirectories(string folderPath, Carpeta currFolder)
+        public sFolder Recursive_GetDirectories(string folderPath, sFolder currFolder)
         {
             foreach (string file in Directory.GetFiles(folderPath))
             {
-                Archivo newFile = new Archivo();
+                sFile newFile = new sFile();
                 newFile.name = Path.GetFileName(file);
                 newFile.offset = 0x00;
                 newFile.path = file;
                 newFile.size = (uint)new FileInfo(file).Length;
 
-                if (!(currFolder.files is List<Archivo>))
-                    currFolder.files = new List<Archivo>();
+                if (!(currFolder.files is List<sFile>))
+                    currFolder.files = new List<sFile>();
                 currFolder.files.Add(newFile);
             }
 
             foreach (string folder in Directory.GetDirectories(folderPath))
             {
-                Carpeta newFolder = new Carpeta();
+                sFolder newFolder = new sFolder();
                 newFolder.name = new DirectoryInfo(folder).Name;
                 newFolder = Recursive_GetDirectories(folder, newFolder);
 
-                if (!(currFolder.folders is List<Carpeta>))
-                    currFolder.folders = new List<Carpeta>();
+                if (!(currFolder.folders is List<sFolder>))
+                    currFolder.folders = new List<sFolder>();
                 currFolder.folders.Add(newFolder);
             }
 
             return currFolder;
         }
         /// <summary>
-        /// Include a file in a "Carpeta" variable.
+        /// Include a file in a "sFolder" variable.
         /// </summary>
         /// <param name="file">Path of the file to include</param>
-        /// <param name="currFolder">Root "Carpeta" variable to include it</param>
+        /// <param name="currFolder">Root "sFolder" variable to include it</param>
         /// <param name="pathFolder">Empty string</param>
         /// <param name="relativePath">Path of the first folder where all files and folders are.</param>
         /// <returns></returns>
-        public Carpeta Recursive_GetDirectories(string file, Carpeta currFolder, string pathFolder, string relativePath)
+        public sFolder Recursive_GetDirectories(string file, sFolder currFolder, string pathFolder, string relativePath)
         {
             String directoryPath = new FileInfo(file).DirectoryName;
             if (directoryPath.Replace(relativePath, "") == pathFolder)
             {
-                Archivo newFile = new Archivo();
+                sFile newFile = new sFile();
                 newFile.name = Path.GetFileName(file);
                 newFile.offset = 0x00;
                 newFile.path = file;
                 newFile.size = (uint)new FileInfo(file).Length;
 
-                if (!(currFolder.files is List<Archivo>))
-                    currFolder.files = new List<Archivo>();
+                if (!(currFolder.files is List<sFile>))
+                    currFolder.files = new List<sFile>();
                 currFolder.files.Add(newFile);
                 return currFolder;
             }
             else
             {
-                Carpeta newFolder = new Carpeta(); ;
-                if (currFolder.folders is List<Carpeta>)
+                sFolder newFolder = new sFolder(); ;
+                if (currFolder.folders is List<sFolder>)
                 {
                     string folderName = file.Replace(relativePath + pathFolder, "");
                     folderName = folderName.Substring(1, folderName.Substring(2).IndexOf(Path.DirectorySeparatorChar) + 1);
@@ -224,8 +224,8 @@ namespace NotManagedNetPlugins
             Create_Folder:
                 newFolder.name = file.Replace(relativePath + pathFolder, "");
                 newFolder.name = newFolder.name.Substring(1, newFolder.name.Substring(2).IndexOf(Path.DirectorySeparatorChar) + 1);
-                if (!(currFolder.folders is List<Carpeta>))
-                    currFolder.folders = new List<Carpeta>();
+                if (!(currFolder.folders is List<sFolder>))
+                    currFolder.folders = new List<sFolder>();
 
                 pathFolder += Path.DirectorySeparatorChar + newFolder.name;
                 newFolder = Recursive_GetDirectories(file, newFolder, pathFolder, relativePath);

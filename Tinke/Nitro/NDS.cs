@@ -299,7 +299,7 @@ namespace Tinke.Nitro
             return imagen;
         }
 
-        public static void EscribirArchivos(string salida, string romFile, Carpeta root, int nFiles)
+        public static void EscribirArchivos(string salida, string romFile, sFolder root, int nFiles)
         {
             BinaryWriter bw = new BinaryWriter(new FileStream(salida, FileMode.Create));
             BinaryReader br = new BinaryReader(new FileStream(romFile, FileMode.Open));
@@ -308,7 +308,7 @@ namespace Tinke.Nitro
 
             for (int i = 0; i < nFiles; i++)
             {
-                Archivo currFile = BuscarArchivo(i, root);
+                sFile currFile = BuscarArchivo(i, root);
                 if (currFile.name.StartsWith("overlay")) // Los overlays no van en esta sección
                     continue;
 
@@ -334,11 +334,11 @@ namespace Tinke.Nitro
             br.Close();
             Console.WriteLine(Tools.Helper.ObtenerTraduccion("Messages", "S0C"), nFiles);
         }
-        private static Archivo BuscarArchivo(int id, Carpeta currFolder)
+        private static sFile BuscarArchivo(int id, sFolder currFolder)
         {
             if (currFolder.id == id) // Archivos descomprimidos
             {
-                Archivo folderFile = new Archivo();
+                sFile folderFile = new sFile();
                 folderFile.name = currFolder.name;
                 folderFile.id = currFolder.id;
                 folderFile.size = Convert.ToUInt32(((String)currFolder.tag).Substring(0, 8), 16);
@@ -348,23 +348,23 @@ namespace Tinke.Nitro
                 return folderFile;
             }
 
-            if (currFolder.files is List<Archivo>)
-                foreach (Archivo archivo in currFolder.files)
+            if (currFolder.files is List<sFile>)
+                foreach (sFile archivo in currFolder.files)
                     if (archivo.id == id)
                         return archivo;
 
 
-            if (currFolder.folders is List<Carpeta>)
+            if (currFolder.folders is List<sFolder>)
             {
-                foreach (Carpeta subFolder in currFolder.folders)
+                foreach (sFolder subFolder in currFolder.folders)
                 {
-                    Archivo currFile = BuscarArchivo(id, subFolder);
+                    sFile currFile = BuscarArchivo(id, subFolder);
                     if (currFile.name is string)
                         return currFile;
                 }
             }
 
-            return new Archivo();
+            return new sFile();
         }
 
         private static void Rellenar_MakerCodes()

@@ -36,13 +36,13 @@ namespace TOTTEMPEST
 
             // Common header
             ncgr.id = (uint)id;
-            ncgr.cabecera.id = "ANA ".ToCharArray();
-            ncgr.cabecera.nSection = 1;
-            ncgr.cabecera.constant = 0x0100;
-            ncgr.cabecera.file_size = file_size;
+            ncgr.header.id = "ANA ".ToCharArray();
+            ncgr.header.nSection = 1;
+            ncgr.header.constant = 0x0100;
+            ncgr.header.file_size = file_size;
             
             // RAHC section
-            ncgr.orden = Orden_Tiles.Horizontal;
+            ncgr.order = TileOrder.Horizontal;
             ncgr.rahc.nTiles = (ushort)br.ReadUInt16();
             ncgr.rahc.depth = (br.ReadUInt16() == 0x01 ? System.Windows.Forms.ColorDepth.Depth8Bit : System.Windows.Forms.ColorDepth.Depth4Bit);
             if (file_size - 4 == ncgr.rahc.nTiles * 0x40)
@@ -60,7 +60,7 @@ namespace TOTTEMPEST
 
             // Tile data
             ncgr.rahc.tileData = new NTFT();
-            ncgr.rahc.tileData.nPaleta = new byte[ncgr.rahc.nTiles];
+            ncgr.rahc.tileData.nPalette = new byte[ncgr.rahc.nTiles];
             ncgr.rahc.tileData.tiles = new byte[ncgr.rahc.nTiles][];
 
             for (int i = 0; i < ncgr.rahc.nTiles; i++)
@@ -69,7 +69,7 @@ namespace TOTTEMPEST
                     ncgr.rahc.tileData.tiles[i] = pluginHost.BytesTo4BitsRev(br.ReadBytes(32));
                 else
                     ncgr.rahc.tileData.tiles[i] = br.ReadBytes(64);
-                ncgr.rahc.tileData.nPaleta[i] = 0;
+                ncgr.rahc.tileData.nPalette[i] = 0;
             }
 
             br.Close();
@@ -77,7 +77,7 @@ namespace TOTTEMPEST
 
             // If the image is 8bpp, convert to 8bpp the palette (4bpp per default)
             if (ncgr.rahc.depth == System.Windows.Forms.ColorDepth.Depth8Bit &&
-                pluginHost.Get_NCLR().cabecera.file_size != 0x00)
+                pluginHost.Get_NCLR().header.file_size != 0x00)
             {
                 NCLR paleta = pluginHost.Get_NCLR();
                 paleta.pltt = pluginHost.Palette_4bppTo8bpp(paleta.pltt);

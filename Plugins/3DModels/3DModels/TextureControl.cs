@@ -126,9 +126,9 @@ namespace _3DModels
             picTex.Image = Draw_Texture(tile_data, texInfo, palette);
 
             NCLR nclr = new NCLR();
-            nclr.pltt.nColores = (uint)palette.Length;
-            nclr.pltt.paletas = new NTFP[1];
-            nclr.pltt.paletas[0].colores = palette;
+            nclr.pltt.nColors = (uint)palette.Length;
+            nclr.pltt.palettes = new NTFP[1];
+            nclr.pltt.palettes[0].colors = palette;
             picPalette.Image = pluginHost.Bitmaps_NCLR(nclr)[0];
 
             Info(num_tex, num_pal);

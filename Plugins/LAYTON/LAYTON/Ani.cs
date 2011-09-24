@@ -21,12 +21,12 @@ namespace LAYTON
             this.gameCode = gameCode;
             this.archivo = archivo;
         }
-        public Formato Get_Formato(string nombre)
+        public Format Get_Formato(string nombre)
         {
             if (nombre.EndsWith(".ARC") || nombre.EndsWith(".ARJ"))
-                return Formato.ImagenCompleta;
+                return Format.FullImage;
             else
-                return Formato.Desconocido;
+                return Format.Unknown;
         }
 
         public void Leer()
@@ -41,7 +41,7 @@ namespace LAYTON
             Array.Copy(File.ReadAllBytes(archivo), 4, compressFile, 0, compressFile.Length); ;
             File.WriteAllBytes(temp, compressFile);
 
-            pluginHost.Descomprimir(temp);
+            pluginHost.Decompress(temp);
             archivo = pluginHost.Get_Files().files[0].path;
             File.Delete(temp);
 

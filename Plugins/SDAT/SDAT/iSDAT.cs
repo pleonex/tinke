@@ -656,6 +656,7 @@ namespace SDAT
                     dialog.BlockSize = (int)oldStrm.head.blockLen;
                     dialog.Loop = (oldStrm.head.loop != 0 ? true : false);
                     dialog.LoopOffset = (int)oldStrm.head.loopOffset;
+                    dialog.SampleRate = (int)wav.wave.fmt.sampleRate;
                     if (dialog.ShowDialog() != DialogResult.OK)
                         return;
 
@@ -672,6 +673,7 @@ namespace SDAT
                     dialog.Loop = (oldSwav.data.info.bLoop != 0 ? true : false);
                     dialog.LoopLength = (int)oldSwav.data.info.nNonLoopLen;
                     dialog.LoopOffset = (int)oldSwav.data.info.nLoopOffset;
+                    dialog.SampleRate = (int)wav.wave.fmt.sampleRate;
                     if (dialog.ShowDialog() != DialogResult.OK)
                         return;
 
@@ -717,6 +719,7 @@ namespace SDAT
 
         private void btnWav_Click(object sender, EventArgs e)
         {
+            this.Cursor = Cursors.WaitCursor;
             string sound = SaveFile();
 
             SaveFileDialog o = new SaveFileDialog();
@@ -738,11 +741,13 @@ namespace SDAT
             }
 
             File.Delete(sound);
+            this.Cursor = Cursors.Default;
         }
         private void btnReproducir_Click(object sender, EventArgs e)
         {
             try
             {
+                Cursor = Cursors.WaitCursor;
                 btnStop.PerformClick();
 
                 if (File.Exists(wavFile))
@@ -786,6 +791,10 @@ namespace SDAT
             {
                 MessageBox.Show(ex.Message);
                 Console.WriteLine(ex.Message);
+            }
+            finally
+            {
+                Cursor = Cursors.Default;
             }
         }
         private void treeFiles_MouseDoubleClick(object sender, MouseEventArgs e)

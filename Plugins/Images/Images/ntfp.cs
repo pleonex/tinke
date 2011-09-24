@@ -48,20 +48,20 @@ namespace Images
             NCLR nclr = new NCLR();
             nclr.id = (uint)id;
             // Ponemos una cabecera genérica
-            nclr.cabecera.id = "NTFP".ToCharArray();
-            nclr.cabecera.constant = 0x0100;
-            nclr.cabecera.file_size = file_size;
-            nclr.cabecera.header_size = 0x10;
+            nclr.header.id = "NTFP".ToCharArray();
+            nclr.header.constant = 0x0100;
+            nclr.header.file_size = file_size;
+            nclr.header.header_size = 0x10;
             // El archivo es PLTT raw, es decir, exclusivamente colores
             nclr.pltt.ID = "PLTT".ToCharArray();
-            nclr.pltt.tamaño = file_size;
-            nclr.pltt.profundidad = (file_size > 0x20) ? System.Windows.Forms.ColorDepth.Depth8Bit : System.Windows.Forms.ColorDepth.Depth4Bit;
+            nclr.pltt.length = file_size;
+            nclr.pltt.depth = (file_size > 0x20) ? System.Windows.Forms.ColorDepth.Depth8Bit : System.Windows.Forms.ColorDepth.Depth4Bit;
             nclr.pltt.unknown1 = 0x00000000;
-            nclr.pltt.tamañoPaletas = file_size;
-            nclr.pltt.nColores = file_size / 2;
-            nclr.pltt.paletas = new NTFP[1];
+            nclr.pltt.paletteLength = file_size;
+            nclr.pltt.nColors = file_size / 2;
+            nclr.pltt.palettes = new NTFP[1];
             // Rellenamos los colores en formato BGR555
-            nclr.pltt.paletas[0].colores = pluginHost.BGR555(br.ReadBytes((int)file_size));
+            nclr.pltt.palettes[0].colors = pluginHost.BGR555(br.ReadBytes((int)file_size));
 
             br.Close();
             pluginHost.Set_NCLR(nclr);

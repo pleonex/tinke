@@ -78,35 +78,35 @@ namespace _999HRPERDOOR
 
             // Read palette
             br.BaseStream.Position = info.info3.palette_offset;
-            palette.cabecera.file_size = 0x200;
-            palette.cabecera.id = "SIR0".ToCharArray();
+            palette.header.file_size = 0x200;
+            palette.header.id = "SIR0".ToCharArray();
             palette.id = (uint)id;
             palette.pltt.ID = "SIR0".ToCharArray();
-            palette.pltt.profundidad = System.Windows.Forms.ColorDepth.Depth8Bit;
-            palette.pltt.nColores = 0x100;
-            palette.pltt.tamañoPaletas = 0x200;
-            palette.pltt.tamaño = 0x200;
-            palette.pltt.paletas = new NTFP[1];
-            palette.pltt.paletas[0].colores = pluginHost.BGR555(br.ReadBytes(0x200));
+            palette.pltt.depth = System.Windows.Forms.ColorDepth.Depth8Bit;
+            palette.pltt.nColors = 0x100;
+            palette.pltt.paletteLength = 0x200;
+            palette.pltt.length = 0x200;
+            palette.pltt.palettes = new NTFP[1];
+            palette.pltt.palettes[0].colors = pluginHost.BGR555(br.ReadBytes(0x200));
 
             // Read tiles
             br.BaseStream.Position = info.info3.tile_offset;
             tiles.id = (uint)id;
-            tiles.cabecera.id = "SIR0".ToCharArray();
+            tiles.header.id = "SIR0".ToCharArray();
             tiles.rahc.id = "SIR0".ToCharArray();
-            tiles.cabecera.file_size = info.info3.tile_size;
+            tiles.header.file_size = info.info3.tile_size;
             tiles.rahc.size_section = info.info3.tile_size;
             tiles.rahc.size_tiledata = info.info3.tile_size;
-            tiles.orden = Orden_Tiles.No_Tiles;
+            tiles.order = TileOrder.NoTiled;
             tiles.rahc.depth = System.Windows.Forms.ColorDepth.Depth8Bit;
             tiles.rahc.nTiles = info.info3.tile_size;
             tiles.rahc.nTilesX = 0x40;
             tiles.rahc.nTilesY = (ushort)(tiles.rahc.nTiles / tiles.rahc.nTilesX);
-            tiles.rahc.tileData.nPaleta = new byte[info.info3.tile_size];
+            tiles.rahc.tileData.nPalette = new byte[info.info3.tile_size];
             tiles.rahc.tileData.tiles = new byte[1][];
             tiles.rahc.tileData.tiles[0] = br.ReadBytes((int)info.info3.tile_size);
             for (int i = 0; i < info.info3.tile_size; i++)
-                tiles.rahc.tileData.nPaleta[i] = 0;
+                tiles.rahc.tileData.nPalette[i] = 0;
 
             // Read cell info
             uint cell_size;

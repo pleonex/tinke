@@ -191,11 +191,11 @@ namespace Tinke.Dialog
             {
                 // Read all offset
                 br.BaseStream.Position = (long)numericOffsetStart.Value;
-                fat.files = new List<Archivo>();
+                fat.files = new List<sFile>();
 
                 for (int i = 0; i < fat.num_files; i++)
                 {
-                    Archivo currFile = new Archivo();
+                    sFile currFile = new sFile();
                     currFile.name = "File " + i.ToString();
                     currFile.path = file;
 
@@ -315,15 +315,15 @@ namespace Tinke.Dialog
             hex.Show();
         }
 
-        public Carpeta Files
+        public sFolder Files
         {
             get
             {
                 if (DialogResult != System.Windows.Forms.DialogResult.OK)
-                    return new Carpeta();
+                    return new sFolder();
 
-                Carpeta newFolder = new Carpeta();
-                newFolder.files = new List<Archivo>();
+                sFolder newFolder = new sFolder();
+                newFolder.files = new List<sFile>();
                 newFolder.files.AddRange(fat.files);
                 return newFolder;
             }
@@ -340,7 +340,7 @@ namespace Tinke.Dialog
         public struct FAT
         {
             public uint num_files;
-            public List<Archivo> files;
+            public List<sFile> files;
         }
     }
 }

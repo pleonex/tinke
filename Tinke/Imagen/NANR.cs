@@ -37,14 +37,14 @@ namespace Tinke
             nanr.id = (uint)id;
 
             // Cabecera genérica
-            nanr.cabecera.id = br.ReadChars(4);
-            nanr.cabecera.endianess = br.ReadUInt16();
-            if (nanr.cabecera.endianess == 0xFFFE)
-                nanr.cabecera.id.Reverse<char>();
-            nanr.cabecera.constant = br.ReadUInt16();
-            nanr.cabecera.file_size = br.ReadUInt32();
-            nanr.cabecera.header_size = br.ReadUInt16();
-            nanr.cabecera.nSection = br.ReadUInt16();
+            nanr.header.id = br.ReadChars(4);
+            nanr.header.endianess = br.ReadUInt16();
+            if (nanr.header.endianess == 0xFFFE)
+                nanr.header.id.Reverse<char>();
+            nanr.header.constant = br.ReadUInt16();
+            nanr.header.file_size = br.ReadUInt32();
+            nanr.header.header_size = br.ReadUInt16();
+            nanr.header.nSection = br.ReadUInt16();
 
             #region Sección ABNK
             // Primera sección ABNK (Animation BaNK)
@@ -94,7 +94,7 @@ namespace Tinke
             #endregion
             #region Sección LABL
             // Lee la segunda LABL
-            br.BaseStream.Position = nanr.cabecera.header_size + nanr.abnk.length;
+            br.BaseStream.Position = nanr.header.header_size + nanr.abnk.length;
             List<uint> offsets = new List<uint>();
             List<String> names = new List<string>();
             nanr.labl.names = new string[nanr.abnk.nBanks];

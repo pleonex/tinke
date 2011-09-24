@@ -32,15 +32,15 @@ namespace Tinke.Nitro
             return overlays;
         }
 
-        public static Archivo[] LeerOverlaysBasico(string file, UInt32 offset, UInt32 size, bool arm9)
+        public static sFile[] LeerOverlaysBasico(string file, UInt32 offset, UInt32 size, bool arm9)
         {
-            Archivo[] overlays = new Archivo[size / 0x20];
+            sFile[] overlays = new sFile[size / 0x20];
             BinaryReader br = new BinaryReader(File.OpenRead(file));
             br.BaseStream.Position = offset;
 
             for (int i = 0; i < overlays.Length; i++)
             {
-                overlays[i] = new Archivo();
+                overlays[i] = new sFile();
                 overlays[i].name = "overlay" + (arm9 ? '9' : '7') + '_' + br.ReadUInt32();
                 br.ReadBytes(20);
                 overlays[i].id = (ushort)br.ReadUInt32();
@@ -52,7 +52,7 @@ namespace Tinke.Nitro
 
         }
 
-        public static void EscribirOverlays(string salida, Carpeta overlays, string romFile)
+        public static void EscribirOverlays(string salida, sFolder overlays, string romFile)
         {
             BinaryWriter bw = new BinaryWriter(new FileStream(salida, FileMode.Open));
             BinaryReader br = new BinaryReader(new FileStream(romFile, FileMode.Open));

@@ -35,32 +35,32 @@ namespace Images
 	{
 		IPluginHost pluginHost;
 		
-		public void Inicializar(IPluginHost pluginHost)
+		public void Initialize(IPluginHost pluginHost)
 		{
 			this.pluginHost = pluginHost;
 		}
 		
-		public Formato Get_Formato(string nombre, byte[] magic)
+		public Format Get_Format(string nombre, byte[] magic)
 		{
             nombre = nombre.ToUpper();
             string ext = new String(System.Text.Encoding.ASCII.GetChars(magic));
 
             if (nombre.EndsWith(".NBFP"))
-                return Formato.Paleta;
+                return Format.Palette;
             else if (nombre.EndsWith(".NBFC"))
-                return Formato.Imagen;
+                return Format.Tile;
             else if (nombre.EndsWith(".NBFS") || nombre.EndsWith(".MAP"))
-                return Formato.Map;
+                return Format.Map;
             else if (nombre.EndsWith(".NTFT") && ext != "CMPR" && ext != "BLDT" || nombre.EndsWith(".RAW"))
-                return Formato.Imagen;
+                return Format.Tile;
             else if (nombre.EndsWith(".NTFP") && ext != "BLDT")
-                return Formato.Paleta;
+                return Format.Palette;
             else if (nombre.EndsWith(".PLT") || nombre.EndsWith(".PAL") || nombre.EndsWith(".PLTT"))
-                return Formato.Paleta;
+                return Format.Palette;
             else if (nombre.EndsWith(".CHAR") || nombre.EndsWith(".CHR"))
-                return Formato.Imagen;
+                return Format.Tile;
 			
-			return Formato.Desconocido;
+			return Format.Unknown;
 		}
 		
 		public Control Show_Info(string archivo, int id)
@@ -76,7 +76,7 @@ namespace Images
 			{
 				new nbfc(pluginHost, archivo, id).Leer();
 
-				if (pluginHost.Get_NCLR().cabecera.file_size != 0x00)
+				if (pluginHost.Get_NCLR().header.file_size != 0x00)
 				{
                     ImageControl control = new ImageControl(pluginHost, false);
                     return control;
@@ -87,10 +87,10 @@ namespace Images
 			{
 				new nbfs(pluginHost, archivo, id).Leer();
 				
-				if (pluginHost.Get_NCLR().cabecera.file_size != 0x00 && pluginHost.Get_NCGR().cabecera.file_size != 0x00)
+				if (pluginHost.Get_NCLR().header.file_size != 0x00 && pluginHost.Get_NCGR().header.file_size != 0x00)
 				{
 					NCGR tile = pluginHost.Get_NCGR();
-					tile.rahc.tileData = pluginHost.Transformar_NSCR(pluginHost.Get_NSCR(), tile.rahc.tileData);
+					tile.rahc.tileData = pluginHost.Transform_NSCR(pluginHost.Get_NSCR(), tile.rahc.tileData);
 					
 					ImageControl control = new ImageControl(pluginHost, true);
 					return control;
@@ -101,7 +101,7 @@ namespace Images
             {
                 new ntft(pluginHost, archivo, id).Leer();
 
-                if (pluginHost.Get_NCLR().cabecera.file_size != 0x00)
+                if (pluginHost.Get_NCLR().header.file_size != 0x00)
                 {
                     ImageControl control = new ImageControl(pluginHost, false);
                     return control;
@@ -119,7 +119,7 @@ namespace Images
             {
                 new CHAR(pluginHost, archivo, id).Leer();
 
-                if (pluginHost.Get_NCLR().cabecera.file_size != 0x00)
+                if (pluginHost.Get_NCLR().header.file_size != 0x00)
                 {
                     ImageControl control = new ImageControl(pluginHost, false);
                     return control;
@@ -135,7 +135,7 @@ namespace Images
 			
 			return new Control();
 		}		
-		public void Leer(string archivo, int id)
+		public void Read(string archivo, int id)
 		{
 			if (archivo.ToUpper().EndsWith(".NBFP"))
 				new nbfp(pluginHost, archivo, id).Leer();

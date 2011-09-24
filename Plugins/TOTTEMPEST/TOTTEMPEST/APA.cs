@@ -36,21 +36,21 @@ namespace TOTTEMPEST
             NCLR nclr = new NCLR();
             nclr.id = (uint)id;
             // Common header
-            nclr.cabecera.id = "APA ".ToCharArray();
-            nclr.cabecera.constant = 0x0100;
-            nclr.cabecera.file_size = file_size;
-            nclr.cabecera.header_size = 0x10;
+            nclr.header.id = "APA ".ToCharArray();
+            nclr.header.constant = 0x0100;
+            nclr.header.file_size = file_size;
+            nclr.header.header_size = 0x10;
             // TTLP section
             nclr.pltt.ID = "PLTT".ToCharArray();
-            nclr.pltt.tamaño = file_size;
-            nclr.pltt.profundidad = System.Windows.Forms.ColorDepth.Depth4Bit;
+            nclr.pltt.length = file_size;
+            nclr.pltt.depth = System.Windows.Forms.ColorDepth.Depth4Bit;
             nclr.pltt.unknown1 = 0x00000000;
-            nclr.pltt.tamañoPaletas = 0x20;
-            nclr.pltt.nColores = 0x10;
-            nclr.pltt.paletas = new NTFP[file_size / 0x20];
+            nclr.pltt.paletteLength = 0x20;
+            nclr.pltt.nColors = 0x10;
+            nclr.pltt.palettes = new NTFP[file_size / 0x20];
             // Get colors
-            for (int i = 0; i < nclr.pltt.paletas.Length; i++)
-                nclr.pltt.paletas[i].colores = pluginHost.BGR555(br.ReadBytes((int)0x20));
+            for (int i = 0; i < nclr.pltt.palettes.Length; i++)
+                nclr.pltt.palettes[i].colors = pluginHost.BGR555(br.ReadBytes((int)0x20));
 
             br.Close();
             pluginHost.Set_NCLR(nclr);
@@ -60,8 +60,8 @@ namespace TOTTEMPEST
             BinaryWriter bw = new BinaryWriter(File.OpenWrite(fileout));
 
             // Write all the colors
-            for (int i = 0; i < palette.pltt.paletas.Length; i++)
-                bw.Write(pluginHost.ColorToBGR555(palette.pltt.paletas[i].colores));
+            for (int i = 0; i < palette.pltt.palettes.Length; i++)
+                bw.Write(pluginHost.ColorToBGR555(palette.pltt.palettes[i].colors));
 
             bw.Flush();
             bw.Close();

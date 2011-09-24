@@ -19,16 +19,16 @@ namespace Tinke
             BinaryReader br = new BinaryReader(File.OpenRead(file));
             Console.WriteLine(Tools.Helper.ObtenerTraduccion("NCLR", "S0D"));
 
-            nclr.cabecera.id = br.ReadChars(4);
-            nclr.cabecera.endianess = br.ReadUInt16();
-            if (nclr.cabecera.endianess == 0xFFFE)
-                nclr.cabecera.id.Reverse<char>();
-            nclr.cabecera.constant = br.ReadUInt16();
-            nclr.cabecera.file_size = br.ReadUInt32();
-            nclr.cabecera.header_size = br.ReadUInt16();
-            nclr.cabecera.nSection = br.ReadUInt16();
-            if (nclr.cabecera.nSection < 1 || nclr.cabecera.nSection > 2)
-                Console.WriteLine('\t' + Tools.Helper.ObtenerTraduccion("NCLR", "S0E") + nclr.cabecera.nSection.ToString());
+            nclr.header.id = br.ReadChars(4);
+            nclr.header.endianess = br.ReadUInt16();
+            if (nclr.header.endianess == 0xFFFE)
+                nclr.header.id.Reverse<char>();
+            nclr.header.constant = br.ReadUInt16();
+            nclr.header.file_size = br.ReadUInt32();
+            nclr.header.header_size = br.ReadUInt16();
+            nclr.header.nSection = br.ReadUInt16();
+            if (nclr.header.nSection < 1 || nclr.header.nSection > 2)
+                Console.WriteLine('\t' + Tools.Helper.ObtenerTraduccion("NCLR", "S0E") + nclr.header.nSection.ToString());
 
             nclr.pltt = Seccion_PLTT(ref br);
 
@@ -42,24 +42,24 @@ namespace Tinke
             long posIni = br.BaseStream.Position;
 
             pltt.ID = br.ReadChars(4);
-            pltt.tamaño = br.ReadUInt32();
-            pltt.profundidad = (br.ReadUInt16() == 0x00000003) ? ColorDepth.Depth4Bit : ColorDepth.Depth8Bit;
+            pltt.length = br.ReadUInt32();
+            pltt.depth = (br.ReadUInt16() == 0x00000003) ? ColorDepth.Depth4Bit : ColorDepth.Depth8Bit;
             br.ReadUInt16();
             pltt.unknown1 = br.ReadUInt32();
-            pltt.tamañoPaletas = br.ReadUInt32();
+            pltt.paletteLength = br.ReadUInt32();
             uint colors_startOffset = br.ReadUInt32();
-            pltt.nColores = (pltt.profundidad == ColorDepth.Depth4Bit) ? 0x10 : pltt.tamañoPaletas / 2;
+            pltt.nColors = (pltt.depth == ColorDepth.Depth4Bit) ? 0x10 : pltt.paletteLength / 2;
 
-            pltt.paletas = new NTFP[pltt.tamañoPaletas / (pltt.nColores * 2)];
-            if (pltt.tamañoPaletas > pltt.tamaño || pltt.tamañoPaletas == 0x00)
-                pltt.paletas = new NTFP[pltt.tamaño / (pltt.nColores * 2)];
+            pltt.palettes = new NTFP[pltt.paletteLength / (pltt.nColors * 2)];
+            if (pltt.paletteLength > pltt.length || pltt.paletteLength == 0x00)
+                pltt.palettes = new NTFP[pltt.length / (pltt.nColors * 2)];
 
-            Console.WriteLine("\t" + pltt.paletas.Length + ' ' + Tools.Helper.ObtenerTraduccion("NCLR", "S0F") +
-                ' ' + pltt.nColores + ' ' + Tools.Helper.ObtenerTraduccion("NCLR", "S10"));
+            Console.WriteLine("\t" + pltt.palettes.Length + ' ' + Tools.Helper.ObtenerTraduccion("NCLR", "S0F") +
+                ' ' + pltt.nColors + ' ' + Tools.Helper.ObtenerTraduccion("NCLR", "S10"));
 
             br.BaseStream.Position = 0x18 + colors_startOffset;
-            for (int i = 0; i < pltt.paletas.Length; i++)
-                pltt.paletas[i] = Paleta_NTFP(ref br, pltt.nColores);
+            for (int i = 0; i < pltt.palettes.Length; i++)
+                pltt.palettes[i] = Paleta_NTFP(ref br, pltt.nColors);
 
             return pltt;
         }
@@ -67,7 +67,7 @@ namespace Tinke
         {
             NTFP ntfp = new NTFP();
 
-            ntfp.colores = Convertir.BGR555(br.ReadBytes((int)colores * 2));
+            ntfp.colors = Convertir.BGR555(br.ReadBytes((int)colores * 2));
 
             return ntfp;
         }
@@ -86,21 +86,21 @@ namespace Tinke
             NCLR nclr = new NCLR();
             nclr.id = (uint)id;
             // Ponemos una cabecera genérica
-            nclr.cabecera.id = "UNKN".ToCharArray();
-            nclr.cabecera.endianess = 0xFEFF;
-            nclr.cabecera.constant = 0x0100;
-            nclr.cabecera.file_size = file_size;
-            nclr.cabecera.header_size = 0x10;
+            nclr.header.id = "UNKN".ToCharArray();
+            nclr.header.endianess = 0xFEFF;
+            nclr.header.constant = 0x0100;
+            nclr.header.file_size = file_size;
+            nclr.header.header_size = 0x10;
             // El archivo es PLTT raw, es decir, exclusivamente colores
             nclr.pltt.ID = "UNKN".ToCharArray();
-            nclr.pltt.tamaño = file_size;
-            nclr.pltt.profundidad = (file_size > 0x20) ? ColorDepth.Depth8Bit : ColorDepth.Depth4Bit;
+            nclr.pltt.length = file_size;
+            nclr.pltt.depth = (file_size > 0x20) ? ColorDepth.Depth8Bit : ColorDepth.Depth4Bit;
             nclr.pltt.unknown1 = 0x00000000;
-            nclr.pltt.tamañoPaletas = file_size;
-            nclr.pltt.nColores = file_size / 2;
-            nclr.pltt.paletas = new NTFP[1];
+            nclr.pltt.paletteLength = file_size;
+            nclr.pltt.nColors = file_size / 2;
+            nclr.pltt.palettes = new NTFP[1];
             // Rellenamos los colores en formato BGR555
-            nclr.pltt.paletas[0].colores = Convertir.BGR555(br.ReadBytes((int)file_size));
+            nclr.pltt.palettes[0].colors = Convertir.BGR555(br.ReadBytes((int)file_size));
 
             br.Close();
             return nclr;
@@ -110,21 +110,21 @@ namespace Tinke
         {
             BinaryWriter bw = new BinaryWriter(File.OpenWrite(fileout));
 
-            bw.Write(paleta.cabecera.id);
-            bw.Write(paleta.cabecera.endianess);
-            bw.Write(paleta.cabecera.constant);
-            bw.Write(paleta.cabecera.file_size);
-            bw.Write(paleta.cabecera.header_size);
-            bw.Write(paleta.cabecera.nSection);
+            bw.Write(paleta.header.id);
+            bw.Write(paleta.header.endianess);
+            bw.Write(paleta.header.constant);
+            bw.Write(paleta.header.file_size);
+            bw.Write(paleta.header.header_size);
+            bw.Write(paleta.header.nSection);
             bw.Write(paleta.pltt.ID);
-            bw.Write(paleta.pltt.tamaño);
-            bw.Write((ushort)(paleta.pltt.profundidad == ColorDepth.Depth4Bit ? 0x03 : 0x04));
+            bw.Write(paleta.pltt.length);
+            bw.Write((ushort)(paleta.pltt.depth == ColorDepth.Depth4Bit ? 0x03 : 0x04));
             bw.Write((ushort)0x00);
             bw.Write((uint)0x00);
-            bw.Write(paleta.pltt.tamañoPaletas);
+            bw.Write(paleta.pltt.paletteLength);
             bw.Write(0x10); // Colors start offset from 0x14
-            for (int i = 0; i < paleta.pltt.paletas.Length; i++)
-                bw.Write(Convertir.ColorToBGR555(paleta.pltt.paletas[i].colores));
+            for (int i = 0; i < paleta.pltt.palettes.Length; i++)
+                bw.Write(Convertir.ColorToBGR555(paleta.pltt.palettes[i].colors));
 
             bw.Flush();
             bw.Close();
@@ -136,43 +136,43 @@ namespace Tinke
             if (new String(br.ReadChars(2)) != "BM")
                 throw new NotSupportedException(Tools.Helper.ObtenerTraduccion("NCLR", "S15"));
 
-            paleta.cabecera.id = "RLCN".ToCharArray();
-            paleta.cabecera.endianess = 0xFEFF;
-            paleta.cabecera.constant = 0x0100;
-            paleta.cabecera.header_size = 0x10;
-            paleta.cabecera.nSection = 0x01;
+            paleta.header.id = "RLCN".ToCharArray();
+            paleta.header.endianess = 0xFEFF;
+            paleta.header.constant = 0x0100;
+            paleta.header.header_size = 0x10;
+            paleta.header.nSection = 0x01;
 
             br.BaseStream.Position = 0x1C;
             ushort profundidad = br.ReadUInt16();
             if (profundidad == 0x04)
-                paleta.pltt.profundidad = System.Windows.Forms.ColorDepth.Depth4Bit;
+                paleta.pltt.depth = System.Windows.Forms.ColorDepth.Depth4Bit;
             else if (profundidad == 0x08)
-                paleta.pltt.profundidad = System.Windows.Forms.ColorDepth.Depth8Bit;
+                paleta.pltt.depth = System.Windows.Forms.ColorDepth.Depth8Bit;
             else
                 throw new NotSupportedException(String.Format(Tools.Helper.ObtenerTraduccion("NCLR", "S16"), profundidad.ToString()));
 
             br.BaseStream.Position += 0x10;
-            paleta.pltt.nColores = br.ReadUInt32();
-            if (paleta.pltt.nColores == 0x00)
-                paleta.pltt.nColores = (uint)(profundidad == 0x04 ? 0x10 : 0x0100);
+            paleta.pltt.nColors = br.ReadUInt32();
+            if (paleta.pltt.nColors == 0x00)
+                paleta.pltt.nColors = (uint)(profundidad == 0x04 ? 0x10 : 0x0100);
 
             br.BaseStream.Position += 0x04;
-            paleta.pltt.paletas = new NTFP[1];
-            paleta.pltt.paletas[0].colores = new Color[(int)paleta.pltt.nColores];
-            for (int i = 0; i < paleta.pltt.nColores; i++)
+            paleta.pltt.palettes = new NTFP[1];
+            paleta.pltt.palettes[0].colors = new Color[(int)paleta.pltt.nColors];
+            for (int i = 0; i < paleta.pltt.nColors; i++)
             {
                 Byte[] color = br.ReadBytes(4);
-                paleta.pltt.paletas[0].colores[i] = Color.FromArgb(color[2], color[1], color[0]);
+                paleta.pltt.palettes[0].colors[i] = Color.FromArgb(color[2], color[1], color[0]);
             }
             // Get the colors with BGR555 encoding (not all colours from bitmap are allowed)
-            byte[] temp = Convertir.ColorToBGR555(paleta.pltt.paletas[0].colores);
-            paleta.pltt.paletas[0].colores = Convertir.BGR555(temp);
+            byte[] temp = Convertir.ColorToBGR555(paleta.pltt.palettes[0].colors);
+            paleta.pltt.palettes[0].colors = Convertir.BGR555(temp);
 
             paleta.pltt.ID = "TTLP".ToCharArray();
-            paleta.pltt.tamañoPaletas = paleta.pltt.nColores * 2;
+            paleta.pltt.paletteLength = paleta.pltt.nColors * 2;
             paleta.pltt.unknown1 = 0x00;
-            paleta.pltt.tamaño = paleta.pltt.tamañoPaletas + 0x18;
-            paleta.cabecera.file_size = paleta.pltt.tamaño + paleta.cabecera.header_size;
+            paleta.pltt.length = paleta.pltt.paletteLength + 0x18;
+            paleta.header.file_size = paleta.pltt.length + paleta.header.header_size;
 
             br.Close();
             return paleta;
@@ -185,26 +185,26 @@ namespace Tinke
             BinaryReader br = new BinaryReader(File.OpenRead(file));
             NCLR palette = new NCLR();
 
-            palette.cabecera.id = br.ReadChars(4);  // RIFF
-            palette.cabecera.file_size = br.ReadUInt32();
+            palette.header.id = br.ReadChars(4);  // RIFF
+            palette.header.file_size = br.ReadUInt32();
             palette.pltt.ID = br.ReadChars(4);  // PAL
             br.ReadChars(4);    // data
             br.ReadUInt32();   // unknown, always 0x00
             br.ReadUInt16();   // unknown, always 0x0300
-            palette.pltt.nColores = br.ReadUInt16();
-            palette.pltt.profundidad = depth;
-            uint num_color_per_palette = (depth == ColorDepth.Depth4Bit ? 0x10 : palette.pltt.nColores);
-            palette.pltt.tamañoPaletas = num_color_per_palette * 2;
+            palette.pltt.nColors = br.ReadUInt16();
+            palette.pltt.depth = depth;
+            uint num_color_per_palette = (depth == ColorDepth.Depth4Bit ? 0x10 : palette.pltt.nColors);
+            palette.pltt.paletteLength = num_color_per_palette * 2;
 
-            palette.pltt.paletas = new NTFP[(depth == ColorDepth.Depth4Bit ? palette.pltt.nColores / 0x10 : 1)];
-            for (int i = 0; i < palette.pltt.paletas.Length; i++)
+            palette.pltt.palettes = new NTFP[(depth == ColorDepth.Depth4Bit ? palette.pltt.nColors / 0x10 : 1)];
+            for (int i = 0; i < palette.pltt.palettes.Length; i++)
             {
-                palette.pltt.paletas[i].colores = new Color[num_color_per_palette];
+                palette.pltt.palettes[i].colors = new Color[num_color_per_palette];
                 for (int j = 0; j < num_color_per_palette; j++)
                 {
                     Color newColor = Color.FromArgb(br.ReadByte(), br.ReadByte(), br.ReadByte());
                     br.ReadByte(); // always 0x00
-                    palette.pltt.paletas[i].colores[j] = newColor;
+                    palette.pltt.palettes[i].colors[j] = newColor;
                 }
             }
 
@@ -217,8 +217,8 @@ namespace Tinke
                 File.Delete(fileout);
             BinaryWriter bw = new BinaryWriter(File.OpenWrite(fileout));
             int num_colors = 0;
-            for (int i = 0; i < palette.pltt.paletas.Length; i++)
-                num_colors += palette.pltt.paletas[i].colores.Length;
+            for (int i = 0; i < palette.pltt.palettes.Length; i++)
+                num_colors += palette.pltt.palettes[i].colors.Length;
 
             bw.Write(new char[] { 'R', 'I', 'F', 'F' });
             bw.Write((uint)(0x10 + num_colors * 4));
@@ -227,13 +227,13 @@ namespace Tinke
             bw.Write((uint)0x00);
             bw.Write((ushort)0x300);
             bw.Write((ushort)(num_colors));
-            for (int i = 0; i < palette.pltt.paletas.Length; i++)
+            for (int i = 0; i < palette.pltt.palettes.Length; i++)
             {
-                for (int j = 0; j < palette.pltt.paletas[i].colores.Length; j++)
+                for (int j = 0; j < palette.pltt.palettes[i].colors.Length; j++)
                 {
-                    bw.Write(palette.pltt.paletas[i].colores[j].R);
-                    bw.Write(palette.pltt.paletas[i].colores[j].G);
-                    bw.Write(palette.pltt.paletas[i].colores[j].B);
+                    bw.Write(palette.pltt.palettes[i].colors[j].R);
+                    bw.Write(palette.pltt.palettes[i].colors[j].G);
+                    bw.Write(palette.pltt.palettes[i].colors[j].B);
                     bw.Write((byte)0x00);
                     bw.Flush();
                 }
@@ -248,7 +248,7 @@ namespace Tinke
         }
         public static Bitmap[] Mostrar(NCLR nclr)
         {
-            Bitmap[] paletas = new Bitmap[nclr.pltt.paletas.Length];
+            Bitmap[] paletas = new Bitmap[nclr.pltt.palettes.Length];
 
             for (int p = 0; p < paletas.Length; p++)
             {
@@ -259,7 +259,7 @@ namespace Tinke
                 {
                     for (int j = 0; j < 16; j++)
                     {
-                        if (nclr.pltt.paletas[p].colores.Length == j + 16 * i)
+                        if (nclr.pltt.palettes[p].colors.Length == j + 16 * i)
                         {
                             fin = true;
                             break;
@@ -268,7 +268,7 @@ namespace Tinke
                         for (int k = 0; k < 10; k++)
                             for (int q = 0; q < 10; q++)
                                 paletas[p].SetPixel(j * 10 + q, i * 10 + k,
-                                    nclr.pltt.paletas[p].colores[j + 16 * i]);
+                                    nclr.pltt.palettes[p].colors[j + 16 * i]);
                     }
                 }
             }

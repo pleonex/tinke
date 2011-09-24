@@ -60,8 +60,8 @@ namespace TOTTEMPEST
             nPaleta.Minimum = 1;
             nPaleta.Value = 1;
 
-            data = pluginHost.ColorToBGR555(paleta.pltt.paletas[0].colores);
-            oldDepth = paleta.pltt.profundidad;
+            data = pluginHost.ColorToBGR555(paleta.pltt.palettes[0].colors);
+            oldDepth = paleta.pltt.depth;
         }
 
         private void LeerIdioma()
@@ -97,18 +97,18 @@ namespace TOTTEMPEST
                 for (int i = 0; i < listProp.Items.Count; i++)
                     listProp.Items[i].SubItems.RemoveAt(1);
 
-            listProp.Items[0].SubItems.Add(paleta.pltt.paletas.Length.ToString());
-            listProp.Items[1].SubItems.Add(paleta.pltt.profundidad == ColorDepth.Depth4Bit ?
+            listProp.Items[0].SubItems.Add(paleta.pltt.palettes.Length.ToString());
+            listProp.Items[1].SubItems.Add(paleta.pltt.depth == ColorDepth.Depth4Bit ?
                 "4-bit" : "8-bit");
             listProp.Items[2].SubItems.Add("0x" + String.Format("{0:X}", paleta.pltt.unknown1));
-            listProp.Items[3].SubItems.Add(paleta.pltt.nColores.ToString());
-            listProp.Items[4].SubItems.Add(paleta.pltt.tamañoPaletas.ToString());
+            listProp.Items[3].SubItems.Add(paleta.pltt.nColors.ToString());
+            listProp.Items[4].SubItems.Add(paleta.pltt.paletteLength.ToString());
         }
 
         private void nPaleta_ValueChanged(object sender, EventArgs e)
         {
             paletaBox.Image = paletas[(int)nPaleta.Value - 1];
-            data = pluginHost.ColorToBGR555(paleta.pltt.paletas[(int)nPaleta.Value - 1].colores);
+            data = pluginHost.ColorToBGR555(paleta.pltt.palettes[(int)nPaleta.Value - 1].colors);
             numericStartByte.Value = 0;
         }
 
@@ -202,8 +202,8 @@ namespace TOTTEMPEST
                 nPaleta.Maximum = paletas.Length;
                 nPaleta.Minimum = 1;
                 nPaleta.Value = 1;
-                data = pluginHost.ColorToBGR555(paleta.pltt.paletas[0].colores);
-                oldDepth = paleta.pltt.profundidad;
+                data = pluginHost.ColorToBGR555(paleta.pltt.palettes[0].colors);
+                oldDepth = paleta.pltt.depth;
             }
         }
 
@@ -212,13 +212,13 @@ namespace TOTTEMPEST
             Byte[] temp = new Byte[data.Length - (int)numericStartByte.Value];
             Array.Copy(data, (int)numericStartByte.Value, temp, 0, temp.Length);
 
-            paleta.pltt.paletas[(int)nPaleta.Value - 1].colores = pluginHost.BGR555(temp);
+            paleta.pltt.palettes[(int)nPaleta.Value - 1].colors = pluginHost.BGR555(temp);
             pluginHost.Set_NCLR(paleta);
 
             ShowInfo();
             paletas = pluginHost.Bitmaps_NCLR(paleta);
             paletaBox.Image = paletas[0];
-            nPaleta.Maximum = paleta.pltt.paletas.Length;
+            nPaleta.Maximum = paleta.pltt.palettes.Length;
             nPaleta.Minimum = 1;
             nPaleta.Value = 1;
         }
@@ -239,7 +239,7 @@ namespace TOTTEMPEST
                 nPaleta.Minimum = 1;
                 nPaleta.Value = 1;
 
-                data = pluginHost.ColorToBGR555(paleta.pltt.paletas[0].colores);
+                data = pluginHost.ColorToBGR555(paleta.pltt.palettes[0].colors);
                 oldDepth = ColorDepth.Depth8Bit;
             }
             else  // Convert to 4bpp
@@ -250,11 +250,11 @@ namespace TOTTEMPEST
                 ShowInfo();
                 paletas = pluginHost.Bitmaps_NCLR(paleta);
                 paletaBox.Image = paletas[0];
-                nPaleta.Maximum = paleta.pltt.paletas.Length;
+                nPaleta.Maximum = paleta.pltt.palettes.Length;
                 nPaleta.Minimum = 1;
                 nPaleta.Value = 1;
 
-                data = pluginHost.ColorToBGR555(paleta.pltt.paletas[0].colores);
+                data = pluginHost.ColorToBGR555(paleta.pltt.palettes[0].colors);
                 oldDepth = ColorDepth.Depth4Bit;
             }
 

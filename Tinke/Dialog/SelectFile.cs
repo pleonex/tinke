@@ -12,13 +12,13 @@ namespace Tinke.Dialog
 {
     public partial class SelectFile : Form
     {
-       Archivo[] files;
+       sFile[] files;
 
         public SelectFile()
         {
             InitializeComponent();
         }
-        public SelectFile(Archivo[] files)
+        public SelectFile(sFile[] files)
         {
             InitializeComponent();
 
@@ -32,7 +32,7 @@ namespace Tinke.Dialog
             }
         }
 
-        public Archivo SelectedFile
+        public sFile SelectedFile
         {
             get { return files[listFiles.SelectedIndex]; }
         }

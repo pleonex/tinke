@@ -44,7 +44,7 @@ namespace EDGEWORTH
             System.Threading.Thread waiting = new System.Threading.Thread(ThreadWait);
             waiting.Start(lang);
 
-            Carpeta unpackedFiles = pluginHost.Get_DecompressedFiles(0xE2); // This is the ID of romfile.bin
+            sFolder unpackedFiles = pluginHost.Get_DecompressedFiles(0xE2); // This is the ID of romfile.bin
             String newRomfile = System.IO.Path.GetTempFileName();
             PACK.Write(newRomfile, unpackedFiles);
             pluginHost.ChangeFile(0xE2, newRomfile);

@@ -37,7 +37,7 @@ namespace Tinke
         NCER celda;
         NANR animacion;
 
-        Carpeta extraidos;
+        sFolder extraidos;
         string tempFolder;
 
         public PluginHost()
@@ -87,31 +87,31 @@ namespace Tinke
 
         public Bitmap[] Bitmaps_NCLR(string archivo) { return Imagen_NCLR.Mostrar(archivo); }
         public Bitmap[] Bitmaps_NCLR(NCLR nclr) { return Imagen_NCLR.Mostrar(nclr); }
-        public NTFT Transformar_NSCR(NSCR nscr, NTFT ntft, int startOffset = 0) { return Imagen_NSCR.Modificar_Tile(nscr, ntft, startOffset); }
+        public NTFT Transform_NSCR(NSCR nscr, NTFT ntft, int startOffset = 0) { return Imagen_NSCR.Modificar_Tile(nscr, ntft, startOffset); }
         public Bitmap Bitmap_NCGR(NCGR ncgr, NCLR nclr) { return Imagen_NCGR.Crear_Imagen(ncgr, nclr); }
         public Bitmap Bitmap_NCGR(NCGR ncgr, NCLR nclr, int startTile) { return Imagen_NCGR.Crear_Imagen(ncgr, nclr, startTile); }
         public Bitmap Bitmap_NCGR(NCGR ncgr, NCLR nclr, int startTile, int tilesX, int tilesY) { return Imagen_NCGR.Crear_Imagen(ncgr, nclr, startTile, tilesX, tilesY); }
-        public Size Tamaño_NCER(byte byte1, byte byte2) { return Imagen_NCER.Obtener_Tamaño(byte1, byte2); }
+        public Size Size_NCER(byte byte1, byte byte2) { return Imagen_NCER.Obtener_Tamaño(byte1, byte2); }
         public Bitmap Bitmap_NCER(Bank banco, uint blockSize, NCGR ncgr, NCLR nclr, bool entorno, bool celda, bool numero, bool transparencia, bool imagen) 
             { return Imagen_NCER.Obtener_Imagen(banco, blockSize, ncgr, nclr, entorno, celda, numero, transparencia, imagen); }
         public Bitmap Bitmap_NCER(Bank banco, uint blockSize, NCGR tile, NCLR paleta, bool entorno, bool celda, bool numero, bool transparencia,
             bool image, int maxWidth, int maxHeight) { return Imagen_NCER.Obtener_Imagen(banco, blockSize, tile, paleta, entorno, celda, numero, transparencia, image, maxWidth, maxHeight); }
 
-        public void Crear_APNG(string salida, Bitmap[] frames, int delay, int loops) { Tools.APNG.Crear_APNG(frames, salida, delay, loops); }
-        public void Crear_APNG(string salida, String[] frames, int delay, int loops) { Tools.APNG.Crear_APNG(frames, salida, delay, loops); }
+        public void Create_APNG(string fileout, Bitmap[] frames, int delay, int loops) { Tools.APNG.Crear_APNG(frames, fileout, delay, loops); }
+        public void Create_APNG(string fileout, String[] frames, int delay, int loops) { Tools.APNG.Crear_APNG(frames, fileout, delay, loops); }
 
-        public void Set_Files(Carpeta archivos)
+        public void Set_Files(sFolder archivos)
         {
             extraidos = archivos;
         }
-        public Carpeta Get_Files()
+        public sFolder Get_Files()
         {
-            Carpeta devuelta = extraidos;
-            extraidos = new Carpeta();
+            sFolder devuelta = extraidos;
+            extraidos = new sFolder();
             return devuelta;
         }
-        public event Func<int, Carpeta> event_GetDecompressedFiles;
-        public Carpeta Get_DecompressedFiles(int id) { return event_GetDecompressedFiles(id); }
+        public event Func<int, sFolder> event_GetDecompressedFiles;
+        public sFolder Get_DecompressedFiles(int id) { return event_GetDecompressedFiles(id); }
         public event Func<int, String> event_SearchFile;
         public String Search_File(int id) { return event_SearchFile(id); }
 
@@ -125,16 +125,16 @@ namespace Tinke
             return xml.Element("Options").Element("Language").Value;
         }
 
-        public event Action<string> DescomprimirEvent;
-        public void Descomprimir(string archivo)
+        public event Action<string> DescompressEvent;
+        public void Decompress(string archivo)
         {
-            DescomprimirEvent(archivo);
+            DescompressEvent(archivo);
         }
-        public void Descomprimir(byte[] datos)
+        public void Decompress(byte[] data)
         {
         	string temp = System.IO.Path.GetTempFileName();
-        	System.IO.File.WriteAllBytes(temp, datos);
-        	DescomprimirEvent(temp);
+        	System.IO.File.WriteAllBytes(temp, data);
+        	DescompressEvent(temp);
         	System.IO.File.Delete(temp);
         }
         public void Compress(string filein, string fileout, FormatCompress format) { DSDecmp.Main.Compress(filein, fileout, format); }
@@ -143,7 +143,7 @@ namespace Tinke
         public void ChangeFile(int id, string newFile) { ChangeFile_Event(id, newFile); }
 
         public NCLR BitmapToPalette(string bitmap) { return Imagen_NCLR.BitmapToPalette(bitmap); }
-        public NCGR BitmapToTile(string bitmap, Orden_Tiles tileOrder) { return Imagen_NCGR.BitmapToTile(bitmap, tileOrder); }
+        public NCGR BitmapToTile(string bitmap, TileOrder tileOrder) { return Imagen_NCGR.BitmapToTile(bitmap, tileOrder); }
         public NSCR Create_BasicMap(int nTiles, int width, int height) { return Imagen_NSCR.Create_BasicMap(nTiles, width, height); }
 
     }

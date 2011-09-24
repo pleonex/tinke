@@ -60,7 +60,7 @@ namespace Tinke
 
             ActualizarImagen();
 
-            if (new String(paleta.cabecera.id) != "NCLR" && new String(paleta.cabecera.id) != "RLCN") // Not NCLR file
+            if (new String(paleta.header.id) != "NCLR" && new String(paleta.header.id) != "RLCN") // Not NCLR file
                 btnSetTrans.Enabled = false;
         }
 
@@ -274,12 +274,12 @@ namespace Tinke
             if (o.ShowDialog() == DialogResult.OK)
             {
                 #region Set new palette
-                if (new String(paleta.cabecera.id) != "NCLR" && new String(paleta.cabecera.id) != "RLCN") // Not NCLR file
+                if (new String(paleta.header.id) != "NCLR" && new String(paleta.header.id) != "RLCN") // Not NCLR file
                     goto Set_Tiles;
 
                 String paletteFile = System.IO.Path.GetTempFileName();
                 NCLR newPalette = Imagen_NCLR.BitmapToPalette(o.FileName);
-                paleta.pltt.paletas[ncer.cebk.banks[comboCelda.SelectedIndex].cells[0].nPalette].colores = newPalette.pltt.paletas[0].colores;
+                paleta.pltt.palettes[ncer.cebk.banks[comboCelda.SelectedIndex].cells[0].nPalette].colors = newPalette.pltt.palettes[0].colors;
 
                 pluginHost.Set_NCLR(paleta);
                 Imagen_NCLR.Escribir(paleta, paletteFile);
@@ -288,13 +288,13 @@ namespace Tinke
 
                 #region Set new tiles
             Set_Tiles:
-                if (new String(tile.cabecera.id) != "NCGR" && new String(tile.cabecera.id) != "RGCN") // Not NCGR file
+                if (new String(tile.header.id) != "NCGR" && new String(tile.header.id) != "RGCN") // Not NCGR file
                     goto End;
 
                 if (Image.FromFile(o.FileName).Size != new Size(512, 512))
                     throw new NotSupportedException();
 
-                NCGR bitmap = Imagen_NCGR.BitmapToTile(o.FileName, Orden_Tiles.No_Tiles);
+                NCGR bitmap = Imagen_NCGR.BitmapToTile(o.FileName, TileOrder.NoTiled);
 
                 for (int i = 0; i < ncer.cebk.banks[comboCelda.SelectedIndex].cells.Length; i++)
                 {
@@ -346,12 +346,12 @@ namespace Tinke
             int colorIndex = 0;
             int paletteIndex = ncer.cebk.banks[comboCelda.SelectedIndex].cells[0].nPalette;
 
-            for (int i = 0; i < paleta.pltt.paletas[paletteIndex].colores.Length; i++)
+            for (int i = 0; i < paleta.pltt.palettes[paletteIndex].colors.Length; i++)
             {
-                if (paleta.pltt.paletas[paletteIndex].colores[i] == color)
+                if (paleta.pltt.palettes[paletteIndex].colors[i] == color)
                 {
-                    paleta.pltt.paletas[paletteIndex].colores[i] = paleta.pltt.paletas[paletteIndex].colores[0];
-                    paleta.pltt.paletas[paletteIndex].colores[0] = color;
+                    paleta.pltt.palettes[paletteIndex].colors[i] = paleta.pltt.palettes[paletteIndex].colors[0];
+                    paleta.pltt.palettes[paletteIndex].colors[0] = color;
                     colorIndex = i;
                     break;
                 }

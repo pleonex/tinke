@@ -43,32 +43,32 @@ namespace TOTTEMPEST
 
             // Palette
             // Common header
-            nclr.cabecera.id = "NBM ".ToCharArray();
-            nclr.cabecera.constant = 0x0100;
-            nclr.cabecera.file_size = (uint)(depth == 0x01 ? 0x100 : 0x10);
-            nclr.cabecera.header_size = 0x02;
+            nclr.header.id = "NBM ".ToCharArray();
+            nclr.header.constant = 0x0100;
+            nclr.header.file_size = (uint)(depth == 0x01 ? 0x100 : 0x10);
+            nclr.header.header_size = 0x02;
             // TTLP section
             nclr.pltt.ID = "NBM ".ToCharArray();
-            nclr.pltt.tamaño = nclr.cabecera.file_size;
-            nclr.pltt.profundidad = (depth == 0x01 ? System.Windows.Forms.ColorDepth.Depth8Bit : System.Windows.Forms.ColorDepth.Depth4Bit);
+            nclr.pltt.length = nclr.header.file_size;
+            nclr.pltt.depth = (depth == 0x01 ? System.Windows.Forms.ColorDepth.Depth8Bit : System.Windows.Forms.ColorDepth.Depth4Bit);
             nclr.pltt.unknown1 = 0x00000000;
-            nclr.pltt.tamañoPaletas = (uint)(depth == 0x01 ? 0x200 : 0x20);
-            nclr.pltt.nColores = (uint)(depth == 0x01 ? 0x100 : 0x10);
-            nclr.pltt.paletas = new NTFP[1];
+            nclr.pltt.paletteLength = (uint)(depth == 0x01 ? 0x200 : 0x20);
+            nclr.pltt.nColors = (uint)(depth == 0x01 ? 0x100 : 0x10);
+            nclr.pltt.palettes = new NTFP[1];
             // Get colors
-            for (int i = 0; i < nclr.pltt.paletas.Length; i++)
-                nclr.pltt.paletas[i].colores = pluginHost.BGR555(br.ReadBytes((int)nclr.pltt.tamañoPaletas));
+            for (int i = 0; i < nclr.pltt.palettes.Length; i++)
+                nclr.pltt.palettes[i].colors = pluginHost.BGR555(br.ReadBytes((int)nclr.pltt.paletteLength));
 
             // Tiles
             // Common header
             ncgr.id = (uint)id;
-            ncgr.cabecera.id = "NBM ".ToCharArray();
-            ncgr.cabecera.nSection = 1;
-            ncgr.cabecera.constant = 0x0100;
-            ncgr.cabecera.file_size = file_size;
+            ncgr.header.id = "NBM ".ToCharArray();
+            ncgr.header.nSection = 1;
+            ncgr.header.constant = 0x0100;
+            ncgr.header.file_size = file_size;
 
             // RAHC section
-            ncgr.orden = (tileFlag == 0x00 ? Orden_Tiles.No_Tiles : Orden_Tiles.Horizontal);
+            ncgr.order = (tileFlag == 0x00 ? TileOrder.NoTiled : TileOrder.Horizontal);
             ncgr.rahc.nTiles = (ushort)(width * height / 0x40);
             ncgr.rahc.depth = (depth == 0x01 ? System.Windows.Forms.ColorDepth.Depth8Bit : System.Windows.Forms.ColorDepth.Depth4Bit);
 
@@ -80,14 +80,14 @@ namespace TOTTEMPEST
 
             // Tile data
             ncgr.rahc.tileData = new NTFT();
-            ncgr.rahc.tileData.nPaleta = new byte[1];
+            ncgr.rahc.tileData.nPalette = new byte[1];
             ncgr.rahc.tileData.tiles = new byte[1][];
 
             if (ncgr.rahc.depth == System.Windows.Forms.ColorDepth.Depth4Bit)
                 ncgr.rahc.tileData.tiles[0] = pluginHost.BytesTo4BitsRev(br.ReadBytes(width * height / 2));
             else
                 ncgr.rahc.tileData.tiles[0] = br.ReadBytes(width * height);
-            ncgr.rahc.tileData.nPaleta[0] = 0;
+            ncgr.rahc.tileData.nPalette[0] = 0;
 
             br.Close();
             pluginHost.Set_NCLR(nclr);
@@ -104,8 +104,8 @@ namespace TOTTEMPEST
             bw.Write((ushort)0x00);  // Tiled flag?, always 0x00 and no tiled
 
             // Palette section
-            bw.Write(pluginHost.ColorToBGR555(palette.pltt.paletas[0].colores));
-            if (palette.pltt.profundidad == System.Windows.Forms.ColorDepth.Depth4Bit) // If 4bpp there is an unused extra palette
+            bw.Write(pluginHost.ColorToBGR555(palette.pltt.palettes[0].colors));
+            if (palette.pltt.depth == System.Windows.Forms.ColorDepth.Depth4Bit) // If 4bpp there is an unused extra palette
                 bw.Write(extraPaletteData);
 
             // Tile section

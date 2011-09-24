@@ -92,21 +92,21 @@ namespace Tinke
             TTLP newPalette = new TTLP();
 
             newPalette.ID = palette.ID;
-            newPalette.tamaño = palette.tamaño;
+            newPalette.length = palette.length;
             newPalette.unknown1 = palette.unknown1;
 
             // Get the colours of all the palettes in BGR555 encoding
             List<Color> paletteColor = new List<Color>();
-            for (int i = 0; i < palette.paletas.Length; i++)
-                paletteColor.AddRange(palette.paletas[i].colores);
+            for (int i = 0; i < palette.palettes.Length; i++)
+                paletteColor.AddRange(palette.palettes[i].colors);
 
             // Set the colours in one palette
-            newPalette.paletas = new NTFP[1];
-            newPalette.paletas[0].colores = paletteColor.ToArray();
+            newPalette.palettes = new NTFP[1];
+            newPalette.palettes[0].colors = paletteColor.ToArray();
 
-            newPalette.nColores = (uint)newPalette.paletas[0].colores.Length;
-            newPalette.tamañoPaletas = newPalette.nColores * 2;
-            newPalette.profundidad = System.Windows.Forms.ColorDepth.Depth8Bit;
+            newPalette.nColors = (uint)newPalette.palettes[0].colors.Length;
+            newPalette.paletteLength = newPalette.nColors * 2;
+            newPalette.depth = System.Windows.Forms.ColorDepth.Depth8Bit;
 
             return newPalette;
         }
@@ -116,36 +116,36 @@ namespace Tinke
             TTLP newPalette = new TTLP();
 
             newPalette.ID = palette.ID;
-            newPalette.tamaño = palette.tamaño;
+            newPalette.length = palette.length;
             newPalette.unknown1 = palette.unknown1;
-            newPalette.nColores = 0x10;
-            newPalette.tamañoPaletas = 0x20;
-            newPalette.profundidad = System.Windows.Forms.ColorDepth.Depth4Bit;
+            newPalette.nColors = 0x10;
+            newPalette.paletteLength = 0x20;
+            newPalette.depth = System.Windows.Forms.ColorDepth.Depth4Bit;
 
-            int isExact = (int)palette.nColores % 0x10;
+            int isExact = (int)palette.nColors % 0x10;
 
             if (isExact == 0)
             {
-                newPalette.paletas = new NTFP[palette.nColores / 0x10];
-                for (int i = 0; i < newPalette.paletas.Length; i++)
+                newPalette.palettes = new NTFP[palette.nColors / 0x10];
+                for (int i = 0; i < newPalette.palettes.Length; i++)
                 {
                     Color[] tempColor = new Color[0x10];
-                    Array.Copy(palette.paletas[0].colores, i * 0x10, tempColor, 0, 0x10);
-                    newPalette.paletas[i].colores = tempColor;
+                    Array.Copy(palette.palettes[0].colors, i * 0x10, tempColor, 0, 0x10);
+                    newPalette.palettes[i].colors = tempColor;
                 }
             }
             else
             {
-                newPalette.paletas = new NTFP[(palette.nColores / 0x10) + 1];
-                for (int i = 0; i < newPalette.paletas.Length - 1; i++)
+                newPalette.palettes = new NTFP[(palette.nColors / 0x10) + 1];
+                for (int i = 0; i < newPalette.palettes.Length - 1; i++)
                 {
                     Color[] tempColor = new Color[0x10];
-                    Array.Copy(palette.paletas[0].colores, i * 0x10, tempColor, 0, 0x10);
-                    newPalette.paletas[i].colores = tempColor;
+                    Array.Copy(palette.palettes[0].colors, i * 0x10, tempColor, 0, 0x10);
+                    newPalette.palettes[i].colors = tempColor;
                 }
                 Color[] temp = new Color[isExact];
-                Array.Copy(palette.paletas[0].colores, palette.nColores / 0x10, temp, 0, isExact);
-                newPalette.paletas[newPalette.paletas.Length - 1].colores = temp;
+                Array.Copy(palette.palettes[0].colors, palette.nColors / 0x10, temp, 0, isExact);
+                newPalette.palettes[newPalette.palettes.Length - 1].colors = temp;
             }
            
             return newPalette;

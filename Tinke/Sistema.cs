@@ -179,10 +179,10 @@ namespace Tinke
             DateTime t2 = DateTime.Now;
 
             // Obtenemos el sistema de archivos
-            Carpeta root = FNT(file, romInfo.Cabecera.fileNameTableOffset, romInfo.Cabecera.fileNameTableSize);
+            sFolder root = FNT(file, romInfo.Cabecera.fileNameTableOffset, romInfo.Cabecera.fileNameTableSize);
             DateTime t3 = DateTime.Now;
-            if (!(root.folders is List<Carpeta>))
-                root.folders = new List<Carpeta>();
+            if (!(root.folders is List<sFolder>))
+                root.folders = new List<sFolder>();
             root.folders.Add(Añadir_Sistema());
             DateTime t4 = DateTime.Now;
 
@@ -227,13 +227,13 @@ namespace Tinke
             DateTime t1 = DateTime.Now;
 
             // Obtenemos el sistema de archivos
-            Carpeta root = new Carpeta();
+            sFolder root = new sFolder();
             root.name = "root";
             root.id = 0xF000;
-            root.files = new List<Archivo>();
+            root.files = new List<sFile>();
             for (int i = 0; i < files.Length; i++)
             {
-                Archivo currFile = new Archivo();
+                sFile currFile = new sFile();
                 currFile.id = (ushort)i;
                 currFile.name = Path.GetFileName(files[i]);
                 currFile.offset = 0x00;
@@ -279,7 +279,7 @@ namespace Tinke
             DateTime t1 = DateTime.Now;
 
             // Obtenemos el sistema de archivos
-            Carpeta root = new Carpeta();
+            sFolder root = new sFolder();
             root.name = "root";
             root.id = 0xF000;
             accion.LastFileID = 0x00;
@@ -444,28 +444,28 @@ namespace Tinke
             MessageBox.Show(Tools.Helper.ObtenerTraduccion("Messages", "S07"));
         }
 
-        private Carpeta FNT(string file, UInt32 offset, UInt32 size)
+        private sFolder FNT(string file, UInt32 offset, UInt32 size)
         {
-            Carpeta root = Nitro.FNT.LeerFNT(file, offset);
+            sFolder root = Nitro.FNT.LeerFNT(file, offset);
             accion.Root = root;
 
             return root;
         }
-        private Archivo[] ARMOverlay(string file, UInt32 offset, UInt32 size, bool ARM9)
+        private sFile[] ARMOverlay(string file, UInt32 offset, UInt32 size, bool ARM9)
         {
             return Nitro.Overlay.LeerOverlaysBasico(file, offset, size, ARM9);
         }
-        private Carpeta FAT(string file, UInt32 offset, UInt32 size, Carpeta root)
+        private sFolder FAT(string file, UInt32 offset, UInt32 size, sFolder root)
         {
             return Nitro.FAT.LeerFAT(file, offset, size, root);
         }
-        private Carpeta Añadir_Sistema()
+        private sFolder Añadir_Sistema()
         {
-            Carpeta ftc = new Carpeta();
+            sFolder ftc = new sFolder();
             ftc.name = "ftc";
             ftc.id = (ushort)accion.LastFolderID;
             accion.LastFolderID++;
-            ftc.files = new List<Archivo>();
+            ftc.files = new List<sFile>();
             ftc.files.AddRange(
                 ARMOverlay(accion.ROMFile, romInfo.Cabecera.ARM9overlayOffset, romInfo.Cabecera.ARM9overlaySize, true)
                 );
@@ -473,7 +473,7 @@ namespace Tinke
                 ARMOverlay(accion.ROMFile, romInfo.Cabecera.ARM7overlayOffset, romInfo.Cabecera.ARM7overlaySize, false)
                 );
 
-            Archivo fnt = new Archivo();
+            sFile fnt = new sFile();
             fnt.name = "fnt.bin";
             fnt.offset = romInfo.Cabecera.fileNameTableOffset;
             fnt.size = romInfo.Cabecera.fileNameTableSize;
@@ -482,7 +482,7 @@ namespace Tinke
             accion.LastFileID++;
             ftc.files.Add(fnt);
 
-            Archivo fat = new Archivo();
+            sFile fat = new sFile();
             fat.name = "fat.bin";
             fat.offset = romInfo.Cabecera.FAToffset;
             fat.size = romInfo.Cabecera.FATsize;
@@ -491,7 +491,7 @@ namespace Tinke
             accion.LastFileID++;
             ftc.files.Add(fat);
 
-            Archivo arm9 = new Archivo();
+            sFile arm9 = new sFile();
             arm9.name = "arm9.bin";
             arm9.offset = romInfo.Cabecera.ARM9romOffset;
             arm9.size = romInfo.Cabecera.ARM9size;
@@ -500,7 +500,7 @@ namespace Tinke
             accion.LastFileID++;
             ftc.files.Add(arm9);
 
-            Archivo arm7 = new Archivo();
+            sFile arm7 = new sFile();
             arm7.name = "arm7.bin";
             arm7.offset = romInfo.Cabecera.ARM7romOffset;
             arm7.size = romInfo.Cabecera.ARM7size;
@@ -511,7 +511,7 @@ namespace Tinke
 
             if (romInfo.Cabecera.ARM9overlaySize != 0)
             {
-                Archivo y9 = new Archivo();
+                sFile y9 = new sFile();
                 y9.name = "y9.bin";
                 y9.offset = romInfo.Cabecera.ARM9overlayOffset;
                 y9.size = romInfo.Cabecera.ARM9overlaySize;
@@ -523,7 +523,7 @@ namespace Tinke
 
             if (romInfo.Cabecera.ARM7overlaySize != 0)
             {
-                Archivo y7 = new Archivo();
+                sFile y7 = new sFile();
                 y7.name = "y7.bin";
                 y7.offset = romInfo.Cabecera.ARM7overlayOffset;
                 y7.size = romInfo.Cabecera.ARM7overlaySize;
@@ -536,7 +536,7 @@ namespace Tinke
             return ftc;
         }
 
-        private TreeNode Jerarquizar_Nodos(Carpeta currFolder)
+        private TreeNode Jerarquizar_Nodos(sFolder currFolder)
         {
             TreeNode currNode = new TreeNode();
 
@@ -551,18 +551,18 @@ namespace Tinke
             currNode.Name = currFolder.name;
 
 
-            if (currFolder.folders is List<Carpeta>)
-                foreach (Carpeta subFolder in currFolder.folders)
+            if (currFolder.folders is List<sFolder>)
+                foreach (sFolder subFolder in currFolder.folders)
                     currNode.Nodes.Add(Jerarquizar_Nodos(subFolder));
 
 
-            if (currFolder.files is List<Archivo>)
+            if (currFolder.files is List<sFile>)
             {
-                foreach (Archivo archivo in currFolder.files)
+                foreach (sFile archivo in currFolder.files)
                 {
-                    int nImage = accion.ImageFormatFile(archivo.formato);
+                    int nImage = accion.ImageFormatFile(archivo.format);
                     string ext = "";
-                    if (archivo.formato == Formato.Desconocido)
+                    if (archivo.format == Format.Unknown)
                     {
                         ext = accion.Get_MagicIDS(archivo.id);
                         if (ext != "")
@@ -577,7 +577,7 @@ namespace Tinke
 
             return currNode;
         }
-        private void CarpetaANodo(Carpeta carpeta, ref TreeNode nodo)
+        private void CarpetaANodo(sFolder carpeta, ref TreeNode nodo)
         {
             if (carpeta.id < 0xF000)
             {
@@ -592,9 +592,9 @@ namespace Tinke
             nodo.Tag = carpeta.id;
             nodo.Name = carpeta.name;
 
-            if (carpeta.folders is List<Carpeta>)
+            if (carpeta.folders is List<sFolder>)
             {
-                foreach (Carpeta subFolder in carpeta.folders)
+                foreach (sFolder subFolder in carpeta.folders)
                 {
                     TreeNode newNodo = new TreeNode(subFolder.name);
                     CarpetaANodo(subFolder, ref newNodo);
@@ -603,13 +603,13 @@ namespace Tinke
             }
 
 
-            if (carpeta.files is List<Archivo>)
+            if (carpeta.files is List<sFile>)
             {
-                foreach (Archivo archivo in carpeta.files)
+                foreach (sFile archivo in carpeta.files)
                 {
-                    int nImage = accion.ImageFormatFile(archivo.formato);
+                    int nImage = accion.ImageFormatFile(archivo.format);
                     string ext = "";
-                    if (archivo.formato == Formato.Desconocido)
+                    if (archivo.format == Format.Unknown)
                     {
                         ext = accion.Get_MagicIDS(archivo.id);
                         if (ext != "")
@@ -624,21 +624,21 @@ namespace Tinke
 
 
         }
-        private void Set_Formato(Carpeta carpeta)
+        private void Set_Formato(sFolder carpeta)
         {
-            if (carpeta.files is List<Archivo>)
+            if (carpeta.files is List<sFile>)
             {
                 for (int i = 0; i < carpeta.files.Count; i++)
                 {
-                    Archivo newFile = carpeta.files[i];
-                    newFile.formato = accion.Get_Formato(newFile.id);
+                    sFile newFile = carpeta.files[i];
+                    newFile.format = accion.Get_Formato(newFile.id);
                     carpeta.files[i] = newFile;
                 }
             }
 
 
-            if (carpeta.folders is List<Carpeta>)
-                foreach (Carpeta subFolder in carpeta.folders)
+            if (carpeta.folders is List<sFolder>)
+                foreach (sFolder subFolder in carpeta.folders)
                     Set_Formato(subFolder);
         }
         private void Get_SupportedFiles()
@@ -652,23 +652,23 @@ namespace Tinke
             else
                 lblSupport.Font = new Font("Consolas", 10, FontStyle.Regular);
         }
-        private void RecursivoSupportFile(Carpeta carpeta)
+        private void RecursivoSupportFile(sFolder carpeta)
         {
-            if (carpeta.files is List<Archivo>)
+            if (carpeta.files is List<sFile>)
             {
-                foreach (Archivo archivo in carpeta.files)
+                foreach (sFile archivo in carpeta.files)
                 {
-                    if (archivo.formato == Formato.Sistema)
+                    if (archivo.format == Format.System)
                         continue; // Evitamos archivos del sistema
 
-                    if (archivo.formato != Formato.Desconocido)
+                    if (archivo.format != Format.Unknown)
                         filesSupported++;
                     nFiles++;
                 }
             }
 
-            if (carpeta.folders is List<Carpeta>)
-                foreach (Carpeta subFolder in carpeta.folders)
+            if (carpeta.folders is List<sFolder>)
+                foreach (sFolder subFolder in carpeta.folders)
                     RecursivoSupportFile(subFolder);
         }
 
@@ -706,64 +706,64 @@ namespace Tinke
             }
             else if (Convert.ToUInt16(e.Node.Tag) < 0xF000)
             {
-                Archivo selectFile = accion.Select_File();
+                sFile selectFile = accion.Select_File();
 
                 listFile.Items[0].SubItems.Add(selectFile.name);
                 listFile.Items[1].SubItems.Add("0x" + String.Format("{0:X}", selectFile.id));
                 listFile.Items[2].SubItems.Add("0x" + String.Format("{0:X}", selectFile.offset));
                 listFile.Items[3].SubItems.Add(selectFile.size.ToString());
                 #region Obtener tipo de archivo traducido
-                switch (selectFile.formato)
+                switch (selectFile.format)
                 {
-                    case Formato.Paleta:
+                    case Format.Palette:
                         listFile.Items[4].SubItems.Add(Tools.Helper.ObtenerTraduccion("Sistema", "S20"));
                         break;
-                    case Formato.Imagen:
+                    case Format.Tile:
                         listFile.Items[4].SubItems.Add(Tools.Helper.ObtenerTraduccion("Sistema", "S21"));
                         break;
-                    case Formato.Map:
+                    case Format.Map:
                         listFile.Items[4].SubItems.Add(Tools.Helper.ObtenerTraduccion("Sistema", "S22"));
                         break;
-                    case Formato.Celdas:
+                    case Format.Cell:
                         listFile.Items[4].SubItems.Add(Tools.Helper.ObtenerTraduccion("Sistema", "S23"));
                         break;
-                    case Formato.Animación:
+                    case Format.Animation:
                         listFile.Items[4].SubItems.Add(Tools.Helper.ObtenerTraduccion("Sistema", "S24"));
                         break;
-                    case Formato.ImagenCompleta:
+                    case Format.FullImage:
                         listFile.Items[4].SubItems.Add(Tools.Helper.ObtenerTraduccion("Sistema", "S25"));
                         break;
-                    case Formato.Texto:
+                    case Format.Text:
                         listFile.Items[4].SubItems.Add(Tools.Helper.ObtenerTraduccion("Sistema", "S26"));
                         break;
-                    case Formato.Video:
+                    case Format.Video:
                         listFile.Items[4].SubItems.Add(Tools.Helper.ObtenerTraduccion("Sistema", "S27"));
                         break;
-                    case Formato.Sonido:
+                    case Format.Sound:
                         listFile.Items[4].SubItems.Add(Tools.Helper.ObtenerTraduccion("Sistema", "S28"));
                         break;
-                    case Formato.Fuentes:
+                    case Format.Font:
                         listFile.Items[4].SubItems.Add(Tools.Helper.ObtenerTraduccion("Sistema", "S29"));
                         break;
-                    case Formato.Comprimido:
+                    case Format.Compressed:
                         listFile.Items[4].SubItems.Add(Tools.Helper.ObtenerTraduccion("Sistema", "S2A"));
                         break;
-                    case Formato.Desconocido:
+                    case Format.Unknown:
                         listFile.Items[4].SubItems.Add(Tools.Helper.ObtenerTraduccion("Sistema", "S2B"));
                         break;
-                    case Formato.Sistema:
+                    case Format.System:
                         listFile.Items[4].SubItems.Add(Tools.Helper.ObtenerTraduccion("Sistema", "S31"));
                         break;
-                    case Formato.Script:
+                    case Format.Script:
                         listFile.Items[4].SubItems.Add(Tools.Helper.ObtenerTraduccion("Sistema", "S34"));
                         break;
-                    case Formato.Pack:
+                    case Format.Pack:
                         listFile.Items[4].SubItems.Add(Tools.Helper.ObtenerTraduccion("Sistema", "S3D"));
                         break;
-                    case Formato.Texture:
+                    case Format.Texture:
                         listFile.Items[4].SubItems.Add(Tools.Helper.ObtenerTraduccion("Sistema", "S3E"));
                         break;
-                    case Formato.Model3D:
+                    case Format.Model3D:
                         listFile.Items[4].SubItems.Add(Tools.Helper.ObtenerTraduccion("Sistema", "S3F"));
                         break;
                 }
@@ -773,11 +773,11 @@ namespace Tinke
                 btnHex.Enabled = true;
                 toolStripOpenAs.Enabled = true;
 
-                if (selectFile.formato != Formato.Desconocido && selectFile.formato != Formato.Sistema)
+                if (selectFile.format != Format.Unknown && selectFile.format != Format.System)
                     btnSee.Enabled = true;
                 else
                     btnSee.Enabled = false;
-                if (selectFile.formato == Formato.Comprimido || selectFile.formato == Formato.Pack)
+                if (selectFile.format == Format.Compressed || selectFile.format == Format.Pack)
                     btnDescomprimir.Enabled = true;
                 else
                     btnDescomprimir.Enabled = false;
@@ -796,7 +796,7 @@ namespace Tinke
             }
             else
             {
-                Carpeta selectFolder = accion.Select_Folder();
+                sFolder selectFolder = accion.Select_Folder();
 
                 listFile.Items[0].SubItems.Add(e.Node.Name);
                 listFile.Items[1].SubItems.Add("0x" + String.Format("{0:X}", e.Node.Tag));
@@ -815,7 +815,7 @@ namespace Tinke
         }
         private void btnHex_Click(object sender, EventArgs e)
         {
-            Archivo file = accion.Select_File();
+            sFile file = accion.Select_File();
 
             VisorHex hex = new VisorHex(file.path, file.offset, file.size);
             hex.Text += " - " + file.name;
@@ -851,7 +851,7 @@ namespace Tinke
         }
         private void btnUncompress_Click(object sender, EventArgs e)
         {
-            Carpeta uncompress;
+            sFolder uncompress;
 
             if (accion.IDSelect >= 0x0F000)
             {
@@ -867,7 +867,7 @@ namespace Tinke
             this.Cursor = Cursors.WaitCursor;
             uncompress = accion.Extract();
 
-            if (!(uncompress.files is List<Archivo>) && !(uncompress.folders is List<Carpeta>)) // En caso de que falle la extracción
+            if (!(uncompress.files is List<sFile>) && !(uncompress.folders is List<sFolder>)) // En caso de que falle la extracción
             {
                 debug.Añadir_Texto(sb.ToString());
                 sb.Length = 0;
@@ -884,7 +884,7 @@ namespace Tinke
 
             TreeNode selected = treeSystem.SelectedNode;
             CarpetaANodo(uncompress, ref selected);
-            selected.ImageIndex = accion.ImageFormatFile(accion.Select_File().formato);
+            selected.ImageIndex = accion.ImageFormatFile(accion.Select_File().format);
             selected.SelectedImageIndex = selected.ImageIndex;
 
             // Agregamos los nodos al árbol
@@ -921,22 +921,22 @@ namespace Tinke
             sb.Length = 0;
             this.Cursor = Cursors.Default;
         }
-        private void Recursivo_UncompressFolder(Carpeta currFolder)
+        private void Recursivo_UncompressFolder(sFolder currFolder)
         {
-            if (currFolder.folders is List<Carpeta>)
+            if (currFolder.folders is List<sFolder>)
             {
-                Carpeta[] carpetas = new Carpeta[currFolder.folders.Count];
+                sFolder[] carpetas = new sFolder[currFolder.folders.Count];
                 currFolder.folders.CopyTo(carpetas);
-                foreach (Carpeta subFolder in carpetas)
+                foreach (sFolder subFolder in carpetas)
                     Recursivo_UncompressFolder(subFolder);
             }
 
-            if (currFolder.files is List<Archivo>)
+            if (currFolder.files is List<sFile>)
             {
-                Archivo[] archivos = new Archivo[currFolder.files.Count];
+                sFile[] archivos = new sFile[currFolder.files.Count];
                 currFolder.files.CopyTo(archivos);
-                foreach (Archivo archivo in archivos)
-                    if (archivo.formato == Formato.Comprimido || archivo.formato == Formato.Pack)
+                foreach (sFile archivo in archivos)
+                    if (archivo.format == Format.Compressed || archivo.format == Format.Pack)
                         accion.Extract(archivo.id);
             }
         }
@@ -960,7 +960,7 @@ namespace Tinke
         }
         private void ExtractFile()
         {
-            Archivo fileSelect = accion.Select_File();
+            sFile fileSelect = accion.Select_File();
 
             SaveFileDialog o = new SaveFileDialog();
             o.FileName = fileSelect.name;
@@ -974,12 +974,12 @@ namespace Tinke
         }
         private void ExtractFolder()
         {
-            Carpeta folderSelect = accion.Select_Folder();
+            sFolder folderSelect = accion.Select_Folder();
 
             if (!(folderSelect.name is String)) // En caso que sea el resultado de una búsqueda
             {
-                folderSelect.files = new List<Archivo>();
-                folderSelect.folders = new List<Carpeta>();
+                folderSelect.files = new List<sFile>();
+                folderSelect.folders = new List<sFolder>();
                 folderSelect.name = treeSystem.SelectedNode.Name;
 
                 for (int i = 0; i < treeSystem.SelectedNode.Nodes.Count; i++)
@@ -989,8 +989,8 @@ namespace Tinke
                         folderSelect.files.Add(accion.Search_File(id));
                     else
                     {
-                        Carpeta carpeta = new Carpeta();
-                        carpeta.files = new List<Archivo>();
+                        sFolder carpeta = new sFolder();
+                        carpeta.files = new List<sFile>();
                         carpeta.name = treeSystem.SelectedNode.Nodes[i].Name;
                         for (int j = 0; j < treeSystem.SelectedNode.Nodes[i].Nodes.Count; j++)
                             carpeta.files.Add(accion.Search_File(Convert.ToUInt16(treeSystem.SelectedNode.Nodes[i].Nodes[j].Tag)));
@@ -1016,10 +1016,10 @@ namespace Tinke
             }
 
         }
-        private void RecursivoExtractFolder(Carpeta currFolder, String path)
+        private void RecursivoExtractFolder(sFolder currFolder, String path)
         {
-            if (currFolder.files is List<Archivo>)
-                foreach (Archivo archivo in currFolder.files)
+            if (currFolder.files is List<sFile>)
+                foreach (sFile archivo in currFolder.files)
                 {
                     BinaryReader br = new BinaryReader(File.OpenRead(archivo.path));
                     br.BaseStream.Position = archivo.offset;
@@ -1029,9 +1029,9 @@ namespace Tinke
 
 
 
-            if (currFolder.folders is List<Carpeta>)
+            if (currFolder.folders is List<sFolder>)
             {
-                foreach (Carpeta subFolder in currFolder.folders)
+                foreach (sFolder subFolder in currFolder.folders)
                 {
                     Directory.CreateDirectory(path + Path.DirectorySeparatorChar + subFolder.name);
                     RecursivoExtractFolder(subFolder, path + Path.DirectorySeparatorChar + subFolder.name);
@@ -1162,37 +1162,37 @@ namespace Tinke
         }
         private void borrarPaletaToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            accion.Delete_PicturesSaved(Formato.Paleta);
+            accion.Delete_PicturesSaved(Format.Palette);
         }
         private void borrarTileToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            accion.Delete_PicturesSaved(Formato.Imagen);
+            accion.Delete_PicturesSaved(Format.Tile);
         }
         private void borrarScreenToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            accion.Delete_PicturesSaved(Formato.Map);
+            accion.Delete_PicturesSaved(Format.Map);
         }
         private void borrarCeldasToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            accion.Delete_PicturesSaved(Formato.Celdas);
+            accion.Delete_PicturesSaved(Format.Cell);
         }
         private void borrarAnimaciónToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            accion.Delete_PicturesSaved(Formato.Animación);
+            accion.Delete_PicturesSaved(Format.Animation);
         }
 
-        private void AbrirComo(Formato formato)
+        private void AbrirComo(Format formato)
         {
-            Archivo selectedFile = accion.Select_File();
+            sFile selectedFile = accion.Select_File();
 
-            if (formato == Formato.Texto)
+            if (formato == Format.Text)
                 accion.Save_File(accion.IDSelect, selectedFile.path + ".txt");
 
             if (toolStripVentana.Checked)
             {
                 Visor visor = new Visor();
                 Control control;
-                if (formato == Formato.Texto)
+                if (formato == Format.Text)
                     control = accion.See_File(selectedFile.path + ".txt");
                 else
                     control = accion.Set_PicturesSaved(formato);
@@ -1204,7 +1204,7 @@ namespace Tinke
             {
                 panelObj.Controls.Clear();
                 Control control;
-                if (formato == Formato.Texto)
+                if (formato == Format.Text)
                     control = accion.See_File(selectedFile.path + ".txt");
                 else
                     control = accion.Set_PicturesSaved(formato);
@@ -1224,15 +1224,15 @@ namespace Tinke
         }
         private void toolAbrirComoItemPaleta_Click(object sender, EventArgs e)
         {
-            AbrirComo(Formato.Paleta);
+            AbrirComo(Format.Palette);
         }
         private void toolAbrirComoItemTile_Click(object sender, EventArgs e)
         {
-            AbrirComo(Formato.Imagen);
+            AbrirComo(Format.Tile);
         }
         private void toolAbrirComoItemScreen_Click(object sender, EventArgs e)
         {
-            AbrirComo(Formato.Map);
+            AbrirComo(Format.Map);
         }
         private void s2AToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -1251,9 +1251,9 @@ namespace Tinke
             File.WriteAllBytes(tempFile, compressFile);
             #endregion
 
-            Carpeta uncompress = accion.Extract(tempFile, accion.IDSelect);
+            sFolder uncompress = accion.Extract(tempFile, accion.IDSelect);
 
-            if (!(uncompress.files is List<Archivo>) && !(uncompress.folders is List<Carpeta>)) // En caso de que falle la extracción
+            if (!(uncompress.files is List<sFile>) && !(uncompress.folders is List<sFolder>)) // En caso de que falle la extracción
             {
                 MessageBox.Show(Tools.Helper.ObtenerTraduccion("Sistema", "S36"));
                 return;
@@ -1264,7 +1264,7 @@ namespace Tinke
 
             TreeNode selected = treeSystem.SelectedNode;
             CarpetaANodo(uncompress, ref selected);
-            selected.ImageIndex = accion.ImageFormatFile(accion.Select_File().formato);
+            selected.ImageIndex = accion.ImageFormatFile(accion.Select_File().format);
             selected.SelectedImageIndex = selected.ImageIndex;
 
             // Agregamos los nodos al árbol
@@ -1282,7 +1282,7 @@ namespace Tinke
         }
         private void toolStripAbrirTexto_Click(object sender, EventArgs e)
         {
-            AbrirComo(Formato.Texto);
+            AbrirComo(Format.Text);
         }
         private void toolStripAbrirFat_Click(object sender, EventArgs e)
         {
@@ -1298,10 +1298,10 @@ namespace Tinke
             if (!isMono)
                 wait.Start("S04");
 
-            Carpeta uncompress = dialog.Files;
+            sFolder uncompress = dialog.Files;
             dialog.Dispose();
 
-            if (!(uncompress.files is List<Archivo>) || dialog.DialogResult != System.Windows.Forms.DialogResult.OK)
+            if (!(uncompress.files is List<sFile>) || dialog.DialogResult != System.Windows.Forms.DialogResult.OK)
             {
                 if (!isMono)
                     wait.Abort();
@@ -1319,8 +1319,8 @@ namespace Tinke
             TreeNode selected = treeSystem.SelectedNode;
             CarpetaANodo(uncompress, ref selected);
 
-            selected.ImageIndex = accion.ImageFormatFile(Formato.Pack);
-            selected.SelectedImageIndex = accion.ImageFormatFile(Formato.Pack);
+            selected.ImageIndex = accion.ImageFormatFile(Format.Pack);
+            selected.SelectedImageIndex = accion.ImageFormatFile(Format.Pack);
 
             // Agregamos los nodos al árbol
             TreeNode[] nodos = new TreeNode[selected.Nodes.Count]; selected.Nodes.CopyTo(nodos, 0);
@@ -1356,47 +1356,47 @@ namespace Tinke
                 return;
             }
 
-            Carpeta resul = new Carpeta();
-            resul.files = new List<Archivo>();
-            resul.folders = new List<Carpeta>();
+            sFolder resul = new sFolder();
+            resul.files = new List<sFile>();
+            resul.folders = new List<sFolder>();
 
             if (txtSearch.Text == "<Ani>")
-                resul = accion.Search_File(Formato.Animación);
+                resul = accion.Search_File(Format.Animation);
             else if (txtSearch.Text == "<Cell>")
-                resul = accion.Search_File(Formato.Celdas);
+                resul = accion.Search_File(Format.Cell);
             else if (txtSearch.Text == "<Map>")
-                resul = accion.Search_File(Formato.Map);
+                resul = accion.Search_File(Format.Map);
             else if (txtSearch.Text == "<Image>")
-                resul = accion.Search_File(Formato.Imagen);
+                resul = accion.Search_File(Format.Tile);
             else if (txtSearch.Text == "<FullImage")
-                resul = accion.Search_File(Formato.ImagenCompleta);
+                resul = accion.Search_File(Format.FullImage);
             else if (txtSearch.Text == "<Palette>")
-                resul = accion.Search_File(Formato.Paleta);
+                resul = accion.Search_File(Format.Palette);
             else if (txtSearch.Text == "<Text>")
-                resul = accion.Search_File(Formato.Texto);
+                resul = accion.Search_File(Format.Text);
             else if (txtSearch.Text == "<Video>")
-                resul = accion.Search_File(Formato.Video);
+                resul = accion.Search_File(Format.Video);
             else if (txtSearch.Text == "<Sound>")
-                resul = accion.Search_File(Formato.Sonido);
+                resul = accion.Search_File(Format.Sound);
             else if (txtSearch.Text == "<Font>")
-                resul = accion.Search_File(Formato.Fuentes);
+                resul = accion.Search_File(Format.Font);
             else if (txtSearch.Text == "<Compress>")
-                resul = accion.Search_File(Formato.Comprimido);
+                resul = accion.Search_File(Format.Compressed);
             else if (txtSearch.Text == "<Script>")
-                resul = accion.Search_File(Formato.Script);
+                resul = accion.Search_File(Format.Script);
             else if (txtSearch.Text == "<Pack>")
-                resul = accion.Search_File(Formato.Pack);
+                resul = accion.Search_File(Format.Pack);
             else if (txtSearch.Text == "<Texture>")
-                resul = accion.Search_File(Formato.Texture);
+                resul = accion.Search_File(Format.Texture);
             else if (txtSearch.Text == "<3DModel>")
-                resul = accion.Search_File(Formato.Model3D);
+                resul = accion.Search_File(Format.Model3D);
             else if (txtSearch.Text == "<Unknown>")
-                resul = accion.Search_File(Formato.Desconocido);
+                resul = accion.Search_File(Format.Unknown);
             else if (txtSearch.Text.StartsWith("Length: ") && txtSearch.Text.Length > 8 && txtSearch.Text.Length < 17)
                 resul = accion.Search_FileLength(Convert.ToInt32(txtSearch.Text.Substring(7)));
             else if (txtSearch.Text.StartsWith("ID: ") && txtSearch.Text.Length > 4 && txtSearch.Text.Length < 13)
             {
-                Archivo searchedFile = accion.Search_File(Convert.ToInt32(txtSearch.Text.Substring(4), 16));
+                sFile searchedFile = accion.Search_File(Convert.ToInt32(txtSearch.Text.Substring(4), 16));
                 if (searchedFile.name is String)
                     resul.files.Add(searchedFile);
             }
@@ -1405,11 +1405,11 @@ namespace Tinke
 
             resul.id = (ushort)accion.LastFolderID;
             accion.LastFolderID++;
-            if (resul.folders is List<Carpeta>)
+            if (resul.folders is List<sFolder>)
             {
                 for (int i = 0; i < resul.folders.Count; i++)
                 {
-                    Carpeta newFolder = resul.folders[i];
+                    sFolder newFolder = resul.folders[i];
                     newFolder.id = resul.id;
                     resul.folders[i] = newFolder;
                 }
@@ -1466,8 +1466,8 @@ namespace Tinke
 
             #region Preparativos
             // Copia para no modificar el originial
-            List<Archivo> origianlFiles = new List<Archivo>();
-            origianlFiles.AddRange((Archivo[])accion.Search_Folder("ftc").files.ToArray().Clone());
+            List<sFile> origianlFiles = new List<sFile>();
+            origianlFiles.AddRange((sFile[])accion.Search_Folder("ftc").files.ToArray().Clone());
 
             // Quitamos archivos especiales que no cuentan en la ROM
             int id = accion.Search_File("fnt.bin").files[0].id;
@@ -1482,14 +1482,14 @@ namespace Tinke
             id = accion.Search_File("arm7.bin").files[0].id;
             accion.Remove_File(id, accion.Root);
 
-            Carpeta y9 = accion.Search_File("y9.bin");
+            sFolder y9 = accion.Search_File("y9.bin");
             if (y9.files.Count > 0)
             {
                 id = y9.files[0].id;
                 accion.Remove_File(id, accion.Root);
             }
 
-            Carpeta y7 = accion.Search_File("y7.bin");
+            sFolder y7 = accion.Search_File("y7.bin");
             if (y7.files.Count > 0)
             {
                 id = y7.files[0].id;
@@ -1688,8 +1688,8 @@ namespace Tinke
             // The current selected file will be changed if they only select one file
             if (o.FileNames.Length == 1)
             {
-                Archivo newFile = new Archivo();
-                Archivo fileToBeChanged = accion.Select_File();
+                sFile newFile = new sFile();
+                sFile fileToBeChanged = accion.Select_File();
                 newFile.name = fileToBeChanged.name;
                 newFile.id = fileToBeChanged.id;
                 newFile.offset = 0x00;
@@ -1700,7 +1700,7 @@ namespace Tinke
                 }
                 else
                     newFile.path = o.FileNames[0];
-                newFile.formato = fileToBeChanged.formato;
+                newFile.format = fileToBeChanged.format;
                 newFile.size = (uint)new FileInfo(o.FileNames[0]).Length;
                 if ((String)newFile.tag == "Descomprimido")
                     newFile.tag = String.Format("{0:X}", newFile.size).PadLeft(8, '0') + newFile.path;
@@ -1712,13 +1712,13 @@ namespace Tinke
             // If more than one file is selected, they will be changed by name
             foreach (string currFile in o.FileNames)
             {
-                Carpeta filesWithSameName = new Carpeta();
+                sFolder filesWithSameName = new sFolder();
                 if (accion.IDSelect > 0xF000)
                     filesWithSameName = accion.Search_FileName(Path.GetFileName(currFile), accion.Select_Folder());
                 else
                     filesWithSameName = accion.Search_FileName(Path.GetFileName(currFile));
 
-                Archivo fileToBeChanged;
+                sFile fileToBeChanged;
                 if (filesWithSameName.files.Count == 0)
                     continue;
                 else if (filesWithSameName.files.Count == 1)
@@ -1728,7 +1728,7 @@ namespace Tinke
                     // Get relative path
                     for (int i = 0; i < filesWithSameName.files.Count; i++)
                     {
-                        Archivo file = filesWithSameName.files[i];
+                        sFile file = filesWithSameName.files[i];
                         file.tag = accion.Get_RelativePath(filesWithSameName.files[i].id, "", accion.Root);
                         filesWithSameName.files[i] = file;
                     }
@@ -1740,7 +1740,7 @@ namespace Tinke
                     fileToBeChanged = dialog.SelectedFile;
                 }
 
-                Archivo newFile = new Archivo();
+                sFile newFile = new sFile();
                 newFile.name = fileToBeChanged.name;
                 newFile.id = fileToBeChanged.id;
                 newFile.offset = 0x00;
@@ -1751,7 +1751,7 @@ namespace Tinke
                 }
                 else
                     newFile.path = currFile;
-                newFile.formato = fileToBeChanged.formato;
+                newFile.format = fileToBeChanged.format;
                 newFile.size = (uint)new FileInfo(currFile).Length;
                 if ((String)newFile.tag == "Descomprimido")
                     newFile.tag = String.Format("{0:X}", newFile.size).PadLeft(8, '0') + newFile.path;
@@ -1759,15 +1759,15 @@ namespace Tinke
                 accion.Change_File(fileToBeChanged.id, newFile, accion.Root);
             }
         }
-        private TreeNode[] FilesToNodes(Archivo[] files)
+        private TreeNode[] FilesToNodes(sFile[] files)
         {
             TreeNode[] nodos = new TreeNode[files.Length];
 
             for (int i = 0; i < files.Length; i++)
             {
-                int nImage = accion.ImageFormatFile(files[i].formato);
+                int nImage = accion.ImageFormatFile(files[i].format);
                 string ext = "";
-                if (files[i].formato == Formato.Desconocido)
+                if (files[i].format == Format.Unknown)
                 {
                     ext = new String(Encoding.ASCII.GetChars(accion.Get_MagicID(files[i].path)));
                     if (ext != "")

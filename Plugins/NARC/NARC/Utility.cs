@@ -62,21 +62,21 @@ namespace NARC
                 {
                     if (id < 0x80)  // Es archivo
                     {
-                        Archivo currFile = new Archivo();
+                        sFile currFile = new sFile();
                         currFile.id = (ushort)idFile;
                         idFile++;
                         currFile.name = new String(br.ReadChars(id));
-                        if (!(main.files is List<Archivo>))
-                            main.files = new List<Archivo>();
+                        if (!(main.files is List<sFile>))
+                            main.files = new List<sFile>();
                         main.files.Add(currFile);
                     }
                     else if (id > 0x80) // Es carpeta
                     {
-                        Carpeta currFolder = new Carpeta();
+                        sFolder currFolder = new sFolder();
                         currFolder.name = new String(br.ReadChars(id - 0x80));
                         currFolder.id = br.ReadUInt16();
-                        if (!(main.folders is List<Carpeta>))
-                            main.folders = new List<Carpeta>();
+                        if (!(main.folders is List<sFolder>))
+                            main.folders = new List<sFolder>();
                         main.folders.Add(currFolder);
                     }
 
@@ -87,7 +87,7 @@ namespace NARC
 
             } while (fntOffset + arc.btnf.entries[0].offset != br.BaseStream.Position);
 
-            Carpeta root = Jerarquizar_Carpetas(arc.btnf.entries, 0xF000, "root");
+            sFolder root = Jerarquizar_Carpetas(arc.btnf.entries, 0xF000, "root");
             #endregion
 
             // Archivos
@@ -104,33 +104,33 @@ namespace NARC
             pluginHost.Set_Files(root);
             return arc;
         }
-        public Carpeta Jerarquizar_Carpetas(List<BTNF_MainEntry> entries, int idFolder, string nameFolder)
+        public sFolder Jerarquizar_Carpetas(List<BTNF_MainEntry> entries, int idFolder, string nameFolder)
         {
-            Carpeta currFolder = new Carpeta();
+            sFolder currFolder = new sFolder();
 
             currFolder.name = nameFolder;
             currFolder.id = (ushort)idFolder;
             currFolder.files = entries[idFolder & 0xFFF].files;
 
-            if (entries[idFolder & 0xFFF].folders is List<Carpeta>) // Si tiene carpetas dentro.
+            if (entries[idFolder & 0xFFF].folders is List<sFolder>) // Si tiene carpetas dentro.
             {
-                currFolder.folders = new List<Carpeta>();
+                currFolder.folders = new List<sFolder>();
 
-                foreach (Carpeta subFolder in entries[idFolder & 0xFFF].folders)
+                foreach (sFolder subFolder in entries[idFolder & 0xFFF].folders)
                     currFolder.folders.Add(Jerarquizar_Carpetas(entries, subFolder.id, subFolder.name));
             }
 
             return currFolder;
         }
-        public void Asignar_Archivos(Carpeta currFolder, int idFile, UInt32 size, UInt32 offset)
+        public void Asignar_Archivos(sFolder currFolder, int idFile, UInt32 size, UInt32 offset)
         {
-            if (currFolder.files is List<Archivo>)
+            if (currFolder.files is List<sFile>)
             {
                 for (int i = 0; i < currFolder.files.Count; i++)
                 {
                     if (currFolder.files[i].id == idFile)
                     {
-                        Archivo newFile = currFolder.files[i];
+                        sFile newFile = currFolder.files[i];
                         newFile.size = size;
                         newFile.offset = offset;
                         newFile.path = utilityFile;
@@ -142,8 +142,8 @@ namespace NARC
                 }
             }
 
-            if (currFolder.folders is List<Carpeta>) // Si tiene carpetas dentro.
-                foreach (Carpeta subFolder in currFolder.folders)
+            if (currFolder.folders is List<sFolder>) // Si tiene carpetas dentro.
+                foreach (sFolder subFolder in currFolder.folders)
                     Asignar_Archivos(subFolder, idFile, size, offset);
         }
     }

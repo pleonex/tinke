@@ -13,33 +13,32 @@ namespace KIRBY_DRO
         string gameCode;
         IPluginHost pluginHost;
 
-        public void Inicializar(IPluginHost pluginHost, string gameCode)
+        public void Initialize(IPluginHost pluginHost, string gameCode)
         {
             this.gameCode = gameCode;
             this.pluginHost = pluginHost;
         }
 
-        public bool EsCompatible()
+        public bool IsCompatible()
         {
             if (gameCode == "AKWE")
                 return true;
             else
                 return false;
         }
-        public Formato Get_Formato(string nombre, byte[] magic, int id)
+        public Format Get_Format(string nombre, byte[] magic, int id)
         {
             nombre = nombre.ToUpper();
 
             if (nombre.EndsWith(".BIN"))
-                return Formato.ImagenCompleta;
+                return Format.FullImage;
 
-            return Formato.Desconocido;
+            return Format.Unknown;
         }
 
 
-        public void Leer(string archivo, int id)
+        public void Read(string archivo, int id)
         {
-            throw new NotImplementedException();
         }
 
         public Control Show_Info(string archivo, int id)

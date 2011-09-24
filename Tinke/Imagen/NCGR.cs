@@ -19,14 +19,14 @@ namespace Tinke
             BinaryReader br = new BinaryReader(File.OpenRead(file));
 
             // Read the common header
-            ncgr.cabecera.id = br.ReadChars(4);
-            ncgr.cabecera.endianess = br.ReadUInt16();
-            if (ncgr.cabecera.endianess == 0xFFFE)
-                ncgr.cabecera.id.Reverse<char>();
-            ncgr.cabecera.constant = br.ReadUInt16();
-            ncgr.cabecera.file_size = br.ReadUInt32();
-            ncgr.cabecera.header_size = br.ReadUInt16();
-            ncgr.cabecera.nSection = br.ReadUInt16();
+            ncgr.header.id = br.ReadChars(4);
+            ncgr.header.endianess = br.ReadUInt16();
+            if (ncgr.header.endianess == 0xFFFE)
+                ncgr.header.id.Reverse<char>();
+            ncgr.header.constant = br.ReadUInt16();
+            ncgr.header.file_size = br.ReadUInt32();
+            ncgr.header.header_size = br.ReadUInt16();
+            ncgr.header.nSection = br.ReadUInt16();
 
             // Read the first section: CHAR (CHARacter data)
             ncgr.rahc.id = br.ReadChars(4);
@@ -38,10 +38,10 @@ namespace Tinke
             ncgr.rahc.unknown2 = br.ReadUInt16();
             ncgr.rahc.tiledFlag = br.ReadUInt32();
             if ((ncgr.rahc.tiledFlag & 0xFF) == 0x0)
-                ncgr.orden = Orden_Tiles.Horizontal;
+                ncgr.order = TileOrder.Horizontal;
             else
             {
-                ncgr.orden = Orden_Tiles.No_Tiles;
+                ncgr.order = TileOrder.NoTiled;
                 if (ncgr.rahc.nTilesX != 0xFFFF)
                 {
                     ncgr.rahc.nTilesX *= 8;
@@ -55,16 +55,16 @@ namespace Tinke
                 ncgr.rahc.nTiles = (ushort)(ncgr.rahc.size_tiledata / 64);
             else
                 ncgr.rahc.nTiles = (ushort)(ncgr.rahc.nTilesX * ncgr.rahc.nTilesY);
-            if (ncgr.orden == Orden_Tiles.Horizontal)
+            if (ncgr.order == TileOrder.Horizontal)
                 ncgr.rahc.tileData.tiles = new byte[ncgr.rahc.nTiles][];
             else
                 ncgr.rahc.tileData.tiles = new byte[1][];
             List<byte> noTile = new List<byte>();
-            ncgr.rahc.tileData.nPaleta = new byte[ncgr.rahc.nTiles];
+            ncgr.rahc.tileData.nPalette = new byte[ncgr.rahc.nTiles];
 
             for (int i = 0; i < ncgr.rahc.nTiles; i++)
             {
-                if (ncgr.orden == Orden_Tiles.Horizontal)
+                if (ncgr.order == TileOrder.Horizontal)
                 {
                     if (ncgr.rahc.depth == ColorDepth.Depth4Bit)
                         ncgr.rahc.tileData.tiles[i] = Tools.Helper.BytesTo4BitsRev(br.ReadBytes(32));
@@ -78,12 +78,12 @@ namespace Tinke
                     else
                         noTile.AddRange(br.ReadBytes(64));
                 }
-                ncgr.rahc.tileData.nPaleta[i] = 0;
+                ncgr.rahc.tileData.nPalette[i] = 0;
             }
-            if (ncgr.orden == Orden_Tiles.No_Tiles)
+            if (ncgr.order == TileOrder.NoTiled)
                 ncgr.rahc.tileData.tiles[0] = noTile.ToArray();
 
-            if (ncgr.cabecera.nSection == 1 || br.BaseStream.Position == br.BaseStream.Length)   // If there isn't SOPC section
+            if (ncgr.header.nSection == 1 || br.BaseStream.Position == br.BaseStream.Length)   // If there isn't SOPC section
             {
                 br.Close();
                 return ncgr;
@@ -107,13 +107,13 @@ namespace Tinke
             // Creamos un archivo NCGR genérico.
             NCGR ncgr = new NCGR();
             ncgr.id = (uint)id;
-            ncgr.cabecera.endianess = 0xFEFF;
-            ncgr.cabecera.id = "UNKN".ToCharArray();
-            ncgr.cabecera.nSection = 1;
-            ncgr.cabecera.constant = 0x0100;
-            ncgr.cabecera.file_size = file_size;
-            // El archivo es NTFT raw, sin ninguna información.
-            ncgr.orden = Orden_Tiles.Horizontal;
+            ncgr.header.endianess = 0xFEFF;
+            ncgr.header.id = "UNKN".ToCharArray();
+            ncgr.header.nSection = 1;
+            ncgr.header.constant = 0x0100;
+            ncgr.header.file_size = file_size;
+            // Raw file
+            ncgr.order = TileOrder.Horizontal;
             ncgr.rahc.nTiles = (ushort)(file_size / 32);
             ncgr.rahc.depth = System.Windows.Forms.ColorDepth.Depth4Bit;
             ncgr.rahc.nTilesX = 0x0020;
@@ -121,13 +121,13 @@ namespace Tinke
             ncgr.rahc.tiledFlag = 0x00000000;
             ncgr.rahc.size_section = file_size;
             ncgr.rahc.tileData = new NTFT();
-            ncgr.rahc.tileData.nPaleta = new byte[ncgr.rahc.nTiles];
+            ncgr.rahc.tileData.nPalette = new byte[ncgr.rahc.nTiles];
             ncgr.rahc.tileData.tiles = new byte[ncgr.rahc.nTiles][];
 
             for (int i = 0; i < ncgr.rahc.nTiles; i++)
             {
                 ncgr.rahc.tileData.tiles[i] = Tools.Helper.BytesTo4BitsRev(br.ReadBytes(32));
-                ncgr.rahc.tileData.nPaleta[i] = 0;
+                ncgr.rahc.tileData.nPalette[i] = 0;
             }
 
             br.Close();
@@ -139,16 +139,16 @@ namespace Tinke
             BinaryWriter bw = new BinaryWriter(File.OpenWrite(fileout));
 
             // Common header
-            bw.Write(tile.cabecera.id);
-            bw.Write(tile.cabecera.endianess);
-            bw.Write(tile.cabecera.constant);
-            bw.Write(tile.cabecera.file_size);
-            bw.Write(tile.cabecera.header_size);
-            bw.Write(tile.cabecera.nSection);
+            bw.Write(tile.header.id);
+            bw.Write(tile.header.endianess);
+            bw.Write(tile.header.constant);
+            bw.Write(tile.header.file_size);
+            bw.Write(tile.header.header_size);
+            bw.Write(tile.header.nSection);
             // RAHC section
             bw.Write(tile.rahc.id);
             bw.Write(tile.rahc.size_section);
-            if (tile.orden == Orden_Tiles.Horizontal)
+            if (tile.order == TileOrder.Horizontal)
             {
                 bw.Write(tile.rahc.nTilesY);
                 bw.Write(tile.rahc.nTilesX);
@@ -170,7 +170,7 @@ namespace Tinke
                 else
                     bw.Write(tile.rahc.tileData.tiles[i]);
             // SOPC section
-            if (tile.cabecera.nSection == 2)
+            if (tile.header.nSection == 2)
             {
                 bw.Write(tile.sopc.id);
                 bw.Write(tile.sopc.size_section);
@@ -182,18 +182,18 @@ namespace Tinke
             bw.Flush();
             bw.Close();
         }
-        public static NCGR BitmapToTile(string bitmap, Orden_Tiles tileOrder)
+        public static NCGR BitmapToTile(string bitmap, TileOrder tileOrder)
         {
             NCGR tile = new NCGR();
             BinaryReader br = new BinaryReader(File.OpenRead(bitmap));
             if (new String(br.ReadChars(2)) != "BM")
                 throw new NotSupportedException(Tools.Helper.ObtenerTraduccion("NCGR", "S23"));
 
-            tile.cabecera.id = "RGCN".ToCharArray();
-            tile.cabecera.endianess = 0xFEFF;
-            tile.cabecera.constant = 0x0001;
-            tile.cabecera.header_size = 0x10;
-            tile.cabecera.nSection = 0x01;
+            tile.header.id = "RGCN".ToCharArray();
+            tile.header.endianess = 0xFEFF;
+            tile.header.constant = 0x0001;
+            tile.header.header_size = 0x10;
+            tile.header.nSection = 0x01;
 
             br.BaseStream.Position = 0x0A;
             uint offsetImagen = br.ReadUInt32();
@@ -203,7 +203,7 @@ namespace Tinke
             uint alto = br.ReadUInt32();
             tile.rahc.nTilesX = (ushort)(ancho);
             tile.rahc.nTilesY = (ushort)(alto);
-            if (tileOrder == Orden_Tiles.Horizontal)
+            if (tileOrder == TileOrder.Horizontal)
             {
                 tile.rahc.nTilesX /= 8;
                 tile.rahc.nTilesY /= 8;
@@ -228,7 +228,7 @@ namespace Tinke
                 case System.Windows.Forms.ColorDepth.Depth4Bit:
                     #region 4 BPP
                     tile.rahc.tileData.tiles[0] = new byte[ancho * alto * 2];
-                    tile.rahc.tileData.nPaleta = new byte[ancho * alto * 2];
+                    tile.rahc.tileData.nPalette = new byte[ancho * alto * 2];
 
                     int divisor = (int)ancho / 2;
                     if (ancho % 4 != 0)
@@ -248,11 +248,11 @@ namespace Tinke
                                 hex = '0' + hex;
 
                             tile.rahc.tileData.tiles[0][w + h * ancho] = Convert.ToByte(hex[0].ToString(), 16);
-                            tile.rahc.tileData.nPaleta[w + h * ancho] = 0;
+                            tile.rahc.tileData.nPalette[w + h * ancho] = 0;
                             if (w + 1 == (int)ancho)
                                 continue;
                             tile.rahc.tileData.tiles[0][w + 1 + h * ancho] = Convert.ToByte(hex[1].ToString(), 16);
-                            tile.rahc.tileData.nPaleta[w + 1 + h * ancho] = 0;
+                            tile.rahc.tileData.nPalette[w + 1 + h * ancho] = 0;
                         }
                         br.ReadBytes((int)(divisor - ((float)ancho / 2)));
                     }
@@ -261,7 +261,7 @@ namespace Tinke
                 case System.Windows.Forms.ColorDepth.Depth8Bit:
                     #region 8 BPP
                     tile.rahc.tileData.tiles[0] = new byte[ancho * alto];
-                    tile.rahc.tileData.nPaleta = new byte[ancho * alto];
+                    tile.rahc.tileData.nPalette = new byte[ancho * alto];
 
                     divisor = (int)ancho;
                     if (ancho % 4 != 0)
@@ -276,26 +276,26 @@ namespace Tinke
                         for (int w = 0; w < ancho; w++)
                         {
                             tile.rahc.tileData.tiles[0][w + h * ancho] = br.ReadByte();
-                            tile.rahc.tileData.nPaleta[w + h * ancho] = 0;
+                            tile.rahc.tileData.nPalette[w + h * ancho] = 0;
                         }
                         br.ReadBytes(divisor - (int)ancho);
                     }
                     #endregion
                     break;
             }
-            if (tileOrder == Orden_Tiles.Horizontal)
+            if (tileOrder == TileOrder.Horizontal)
                 tile.rahc.tileData.tiles = Convertir.BytesToTiles_NoChanged(tile.rahc.tileData.tiles[0], 
                                            tile.rahc.nTilesX, tile.rahc.nTilesY);
 
             tile.rahc.id = "RAHC".ToCharArray();
-            tile.rahc.size_tiledata = (uint)tile.rahc.tileData.nPaleta.Length;
-            tile.rahc.tiledFlag = (uint)(tileOrder == Orden_Tiles.No_Tiles ? 0x01 : 0x00);
+            tile.rahc.size_tiledata = (uint)tile.rahc.tileData.nPalette.Length;
+            tile.rahc.tiledFlag = (uint)(tileOrder == TileOrder.NoTiled ? 0x01 : 0x00);
             tile.rahc.unknown1 = 0x00;
             tile.rahc.unknown2 = 0x00;
             tile.rahc.unknown3 = 0x0018;
             tile.rahc.size_section = tile.rahc.size_tiledata + 0x20;
-            tile.cabecera.file_size = tile.rahc.size_section + tile.cabecera.header_size;
-            tile.orden = tileOrder;
+            tile.header.file_size = tile.rahc.size_section + tile.header.header_size;
+            tile.order = tileOrder;
 
             return tile;
         }
@@ -304,14 +304,14 @@ namespace Tinke
         {
             if (tile.rahc.nTilesX == 0xFFFF)        // En caso de que no venga la información hacemos la imagen de 256x256
             {
-                if (tile.orden == Orden_Tiles.No_Tiles)
+                if (tile.order == TileOrder.NoTiled)
                     tile.rahc.nTilesX = 0x40;
                 else
                     tile.rahc.nTilesX = 0x08;
             }
             if (tile.rahc.nTilesY == 0xFFFF)
             {
-                if (tile.orden == Orden_Tiles.No_Tiles)
+                if (tile.order == TileOrder.NoTiled)
                     if (tile.rahc.nTiles >= 0x40) // Por si es menor, para que el tamaño no sea 0
                         tile.rahc.nTilesY = (ushort)((tile.rahc.nTiles / 0x40) * 0x40);
                     else
@@ -323,13 +323,13 @@ namespace Tinke
                         tile.rahc.nTilesY = 0x08;
             }
 
-            switch (tile.orden)
+            switch (tile.order)
             {
-                case Orden_Tiles.No_Tiles:
+                case TileOrder.NoTiled:
                     return No_Tile(tile, paleta, 0, tile.rahc.nTilesX, tile.rahc.nTilesY);
-                case Orden_Tiles.Horizontal:
+                case TileOrder.Horizontal:
                     return Horizontal(tile, paleta, 0, tile.rahc.nTilesX, tile.rahc.nTilesY);
-                case Orden_Tiles.Vertical:
+                case TileOrder.Vertical:
                     throw new NotImplementedException();
                 default:
                     return new Bitmap(0, 0);
@@ -339,14 +339,14 @@ namespace Tinke
         {
             if (tile.rahc.nTilesX == 0xFFFF)        // En caso de que no venga la información hacemos la imagen de 256x256
             {
-                if (tile.orden == Orden_Tiles.No_Tiles)
+                if (tile.order == TileOrder.NoTiled)
                         tile.rahc.nTilesX = 0x40;
                 else
                     tile.rahc.nTilesX = 0x08;
             }
             if (tile.rahc.nTilesY == 0xFFFF)
             {
-                if (tile.orden == Orden_Tiles.No_Tiles)
+                if (tile.order == TileOrder.NoTiled)
                     if (tile.rahc.nTiles >= 0x40) // Por si es menor, para que el tamaño no sea 0
                         tile.rahc.nTilesY = (ushort)((tile.rahc.nTiles / 0x40) * 0x40);
                     else
@@ -358,13 +358,13 @@ namespace Tinke
                         tile.rahc.nTilesY = 0x08;
             }
 
-            switch (tile.orden)
+            switch (tile.order)
             {
-                case Orden_Tiles.No_Tiles:
+                case TileOrder.NoTiled:
                     return No_Tile(tile, paleta, startTile, tile.rahc.nTilesX, tile.rahc.nTilesY);
-                case Orden_Tiles.Horizontal:
+                case TileOrder.Horizontal:
                     return Horizontal(tile, paleta, startTile, tile.rahc.nTilesX, tile.rahc.nTilesY);
-                case Orden_Tiles.Vertical:
+                case TileOrder.Vertical:
                     throw new NotImplementedException();
                 default:
                     return new Bitmap(1, 1);
@@ -372,13 +372,13 @@ namespace Tinke
         }
         public static Bitmap Crear_Imagen(NCGR tile, NCLR paleta, int startTile, int tilesX, int tilesY)
         {
-            switch (tile.orden)
+            switch (tile.order)
             {
-                case Orden_Tiles.No_Tiles:
+                case TileOrder.NoTiled:
                     return No_Tile(tile, paleta, startTile, tilesX, tilesY);
-                case Orden_Tiles.Horizontal:
+                case TileOrder.Horizontal:
                     return Horizontal(tile, paleta, startTile, tilesX, tilesY);
-                case Orden_Tiles.Vertical:
+                case TileOrder.Vertical:
                     throw new NotImplementedException();
                 default:
                     return new Bitmap(0, 0);
@@ -402,7 +402,7 @@ namespace Tinke
                             imagen.SetPixel(
                                 w,
                                 h,
-                                paleta.pltt.paletas[tile.rahc.tileData.nPaleta[0]].colores[
+                                paleta.pltt.palettes[tile.rahc.tileData.nPalette[0]].colors[
                                     tile.rahc.tileData.tiles[0][w + h * width + salto]
                                     ]);
                         }
@@ -435,7 +435,7 @@ namespace Tinke
                                 imagen.SetPixel(
                                     w + wt * 8,
                                     h + ht * 8,
-                                    paleta.pltt.paletas[tile.rahc.tileData.nPaleta[startTile]].colores[
+                                    paleta.pltt.palettes[tile.rahc.tileData.nPalette[startTile]].colors[
                                         tile.rahc.tileData.tiles[startTile][w + h * 8]
                                         ]);
                             }

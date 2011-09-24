@@ -24,29 +24,29 @@ namespace AI_IGO_DS
             uint pCabeceraSize = br.ReadUInt32() * 4;
             uint pSize = br.ReadUInt32() * 4;
             NCLR paleta = new NCLR();
-            paleta.pltt.tamaño = pSize - 0x08;
-            paleta.pltt.tamañoPaletas = pSize - 0x08;
-            paleta.pltt.nColores = (pSize - 0x08) / 2;
-            paleta.pltt.profundidad = ColorDepth.Depth8Bit;
-            paleta.pltt.paletas = new NTFP[1];
-            paleta.pltt.paletas[0].colores = pluginHost.BGR555(br.ReadBytes((int)paleta.pltt.tamañoPaletas));
+            paleta.pltt.length = pSize - 0x08;
+            paleta.pltt.paletteLength = pSize - 0x08;
+            paleta.pltt.nColors = (pSize - 0x08) / 2;
+            paleta.pltt.depth = ColorDepth.Depth8Bit;
+            paleta.pltt.palettes = new NTFP[1];
+            paleta.pltt.palettes[0].colors = pluginHost.BGR555(br.ReadBytes((int)paleta.pltt.paletteLength));
             // Tile data
             br.BaseStream.Position = tileOffset;
             uint tCabeceraSize = br.ReadUInt32() * 4;
             uint tSize = br.ReadUInt32() * 4;
             NCGR tile = new NCGR();
-            tile.orden = Orden_Tiles.Horizontal;
+            tile.order = TileOrder.Horizontal;
             tile.rahc.depth = System.Windows.Forms.ColorDepth.Depth8Bit;
             tile.rahc.nTilesX = (ushort)(0x20);
             tile.rahc.nTilesY = (ushort)(0x18);
             tile.rahc.nTiles = (ushort)(tile.rahc.nTilesX * tile.rahc.nTilesY);
 
             tile.rahc.tileData.tiles = new byte[tile.rahc.nTiles][];
-            tile.rahc.tileData.nPaleta = new byte[tile.rahc.nTiles];
+            tile.rahc.tileData.nPalette = new byte[tile.rahc.nTiles];
             for (int i = 0; i < tile.rahc.nTiles; i++)
             {
                 tile.rahc.tileData.tiles[i] = br.ReadBytes(64);
-                tile.rahc.tileData.nPaleta[i] = 0;
+                tile.rahc.tileData.nPalette[i] = 0;
             }
             // Map, innecesario y estropea la imagen
             br.BaseStream.Position = mapOffset;

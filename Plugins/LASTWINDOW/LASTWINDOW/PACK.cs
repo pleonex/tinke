@@ -18,7 +18,7 @@ namespace LASTWINDOW
             string tempFolder = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + Path.GetFileNameWithoutExtension(archivo);
             Directory.CreateDirectory(tempFolder);
 
-            Carpeta descomprimidos = new Carpeta(); // Donde guardaremos los archivos descomprimidos
+            sFolder descomprimidos = new sFolder(); // Donde guardaremos los archivos descomprimidos
             sPACK pack = new sPACK();
 
             pack.unknown1 = br.ReadBytes(7);
@@ -35,10 +35,10 @@ namespace LASTWINDOW
                 pack.files[i].size = BitConverter.ToUInt32(br.ReadBytes(4).Reverse().ToArray(), 0);
             }
 
-            descomprimidos.files = new List<Archivo>();
+            descomprimidos.files = new List<sFile>();
             for (int i = 0; i < pack.nFiles; i++)
             {
-                Archivo newFile = new Archivo();
+                sFile newFile = new sFile();
                 newFile.name = pack.files[i].name;
                 newFile.offset = (uint)br.BaseStream.Position;
                 newFile.path = packFile;

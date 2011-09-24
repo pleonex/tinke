@@ -22,12 +22,12 @@ namespace LAYTON
             this.archivo = archivo;
         }
 
-        public Formato Get_Formato(string nombre)
+        public Format Get_Formato(string nombre)
         {
             if (nombre.EndsWith(".ARC"))
-                return Formato.ImagenCompleta;
+                return Format.FullImage;
 
-            return Formato.Desconocido;
+            return Format.Unknown;
         }
 
         public void Leer()
@@ -41,7 +41,7 @@ namespace LAYTON
             Array.Copy(File.ReadAllBytes(archivo), 4, compressFile, 0, compressFile.Length); ;
             File.WriteAllBytes(temp, compressFile);
 
-            pluginHost.Descomprimir(temp);
+            pluginHost.Decompress(temp);
             archivo = pluginHost.Get_Files().files[0].path;
             File.Delete(temp);
 
@@ -57,10 +57,10 @@ namespace LAYTON
 
             // Paleta, NCLR sin cabecera
             NCLR paleta = new NCLR();
-            paleta.pltt.nColores = br.ReadUInt32();
-            paleta.pltt.paletas = new NTFP[1];
-            paleta.pltt.paletas[0].colores =
-                pluginHost.BGR555(br.ReadBytes((int)paleta.pltt.nColores * 2));
+            paleta.pltt.nColors = br.ReadUInt32();
+            paleta.pltt.palettes = new NTFP[1];
+            paleta.pltt.palettes[0].colors =
+                pluginHost.BGR555(br.ReadBytes((int)paleta.pltt.nColors * 2));
 
             // Tile, sin cabecera
             NCGR tile = new NCGR();
@@ -69,7 +69,7 @@ namespace LAYTON
             tile.rahc.tileData.tiles = new byte[tile.rahc.nTiles][];
             for (int i = 0; i < tile.rahc.nTiles; i++)
                 tile.rahc.tileData.tiles[i] = br.ReadBytes(64);
-            tile.orden = Orden_Tiles.Horizontal;
+            tile.order = TileOrder.Horizontal;
 
             // Tile Map Info
             NSCR map = new NSCR();
@@ -91,7 +91,7 @@ namespace LAYTON
 
             br.Close();
 
-            tile.rahc.tileData = pluginHost.Transformar_NSCR(map, tile.rahc.tileData);
+            tile.rahc.tileData = pluginHost.Transform_NSCR(map, tile.rahc.tileData);
             return pluginHost.Bitmap_NCGR(tile, paleta);
         }
     }

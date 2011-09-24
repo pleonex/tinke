@@ -75,7 +75,9 @@ namespace SDAT
             if (wav.wave.fmt.audioFormat == WaveFormat.WAVE_FORMAT_PCM && wav.wave.fmt.bitsPerSample == 0x08) // PCM8
             {
                 wav.wave.fmt.bitsPerSample = 0x10;
-                wav.wave.data.data = PCM.PCM8ToPCM16(wav.wave.data.data);
+                wav.wave.fmt.blockAlign = (ushort)(wav.wave.fmt.numChannels * wav.wave.fmt.bitsPerSample / (ushort)(8));
+                wav.wave.fmt.byteRate = wav.wave.fmt.sampleRate * wav.wave.fmt.bitsPerSample * wav.wave.fmt.numChannels / 8;
+                wav.wave.data.data = PCM.PCM8UnsignedToPCM16(wav.wave.data.data);
             }
 
             return wav;

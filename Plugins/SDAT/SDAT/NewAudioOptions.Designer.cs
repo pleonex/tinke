@@ -42,6 +42,10 @@
             this.label4 = new System.Windows.Forms.Label();
             this.numericVolume = new System.Windows.Forms.NumericUpDown();
             this.label5 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.radioSam = new System.Windows.Forms.RadioButton();
+            this.radioSec = new System.Windows.Forms.RadioButton();
+            this.radioMSec = new System.Windows.Forms.RadioButton();
             this.groupLoop.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericLoopLength)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericLoopOffset)).BeginInit();
@@ -100,13 +104,17 @@
             // 
             // groupLoop
             // 
+            this.groupLoop.Controls.Add(this.radioMSec);
+            this.groupLoop.Controls.Add(this.radioSec);
+            this.groupLoop.Controls.Add(this.radioSam);
+            this.groupLoop.Controls.Add(this.label6);
             this.groupLoop.Controls.Add(this.label3);
             this.groupLoop.Controls.Add(this.label2);
             this.groupLoop.Controls.Add(this.numericLoopLength);
             this.groupLoop.Controls.Add(this.numericLoopOffset);
             this.groupLoop.Location = new System.Drawing.Point(16, 93);
             this.groupLoop.Name = "groupLoop";
-            this.groupLoop.Size = new System.Drawing.Size(234, 88);
+            this.groupLoop.Size = new System.Drawing.Size(234, 124);
             this.groupLoop.TabIndex = 4;
             this.groupLoop.TabStop = false;
             this.groupLoop.Text = "S03";
@@ -114,7 +122,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(6, 58);
+            this.label3.Location = new System.Drawing.Point(6, 100);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(26, 13);
             this.label3.TabIndex = 3;
@@ -123,7 +131,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(6, 32);
+            this.label2.Location = new System.Drawing.Point(6, 74);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(26, 13);
             this.label2.TabIndex = 2;
@@ -132,7 +140,7 @@
             // numericLoopLength
             // 
             this.numericLoopLength.Hexadecimal = true;
-            this.numericLoopLength.Location = new System.Drawing.Point(158, 56);
+            this.numericLoopLength.Location = new System.Drawing.Point(158, 98);
             this.numericLoopLength.Maximum = new decimal(new int[] {
             -1,
             0,
@@ -145,8 +153,7 @@
             // 
             // numericLoopOffset
             // 
-            this.numericLoopOffset.Hexadecimal = true;
-            this.numericLoopOffset.Location = new System.Drawing.Point(158, 30);
+            this.numericLoopOffset.Location = new System.Drawing.Point(158, 72);
             this.numericLoopOffset.Maximum = new decimal(new int[] {
             -1,
             0,
@@ -159,7 +166,7 @@
             // 
             // numericBlockLen
             // 
-            this.numericBlockLen.Location = new System.Drawing.Point(174, 187);
+            this.numericBlockLen.Location = new System.Drawing.Point(174, 223);
             this.numericBlockLen.Maximum = new decimal(new int[] {
             -1,
             0,
@@ -178,7 +185,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(22, 189);
+            this.label4.Location = new System.Drawing.Point(22, 225);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(26, 13);
             this.label4.TabIndex = 6;
@@ -191,7 +198,7 @@
             0,
             0,
             0});
-            this.numericVolume.Location = new System.Drawing.Point(174, 213);
+            this.numericVolume.Location = new System.Drawing.Point(174, 249);
             this.numericVolume.Maximum = new decimal(new int[] {
             1000,
             0,
@@ -211,12 +218,56 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(22, 215);
+            this.label5.Location = new System.Drawing.Point(22, 251);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(26, 13);
             this.label5.TabIndex = 8;
             this.label5.Text = "S07";
             this.label5.Visible = false;
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(65, 15);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(26, 13);
+            this.label6.TabIndex = 4;
+            this.label6.Text = "S09";
+            // 
+            // radioSam
+            // 
+            this.radioSam.AutoSize = true;
+            this.radioSam.Checked = true;
+            this.radioSam.Location = new System.Drawing.Point(6, 50);
+            this.radioSam.Name = "radioSam";
+            this.radioSam.Size = new System.Drawing.Size(45, 17);
+            this.radioSam.TabIndex = 5;
+            this.radioSam.TabStop = true;
+            this.radioSam.Text = "S0C";
+            this.radioSam.UseVisualStyleBackColor = true;
+            this.radioSam.CheckedChanged += new System.EventHandler(this.radioSam_CheckedChanged);
+            // 
+            // radioSec
+            // 
+            this.radioSec.AutoSize = true;
+            this.radioSec.Location = new System.Drawing.Point(6, 28);
+            this.radioSec.Name = "radioSec";
+            this.radioSec.Size = new System.Drawing.Size(45, 17);
+            this.radioSec.TabIndex = 6;
+            this.radioSec.Text = "S0A";
+            this.radioSec.UseVisualStyleBackColor = true;
+            this.radioSec.CheckedChanged += new System.EventHandler(this.radioSec_CheckedChanged);
+            // 
+            // radioMSec
+            // 
+            this.radioMSec.AutoSize = true;
+            this.radioMSec.Location = new System.Drawing.Point(136, 28);
+            this.radioMSec.Name = "radioMSec";
+            this.radioMSec.Size = new System.Drawing.Size(45, 17);
+            this.radioMSec.TabIndex = 7;
+            this.radioMSec.Text = "S0B";
+            this.radioMSec.UseVisualStyleBackColor = true;
+            this.radioMSec.CheckedChanged += new System.EventHandler(this.radioMSec_CheckedChanged);
             // 
             // NewAudioOptions
             // 
@@ -265,5 +316,9 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.NumericUpDown numericVolume;
         private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.RadioButton radioSec;
+        private System.Windows.Forms.RadioButton radioSam;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.RadioButton radioMSec;
     }
 }

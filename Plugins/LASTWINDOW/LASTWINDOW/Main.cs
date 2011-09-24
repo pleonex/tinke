@@ -13,7 +13,7 @@ namespace LASTWINDOW
         IPluginHost pluginHost;
         string gameCode;
 
-        public bool EsCompatible()
+        public bool IsCompatible()
         {
             if (gameCode == "YLUP")
                 return true;
@@ -21,23 +21,23 @@ namespace LASTWINDOW
             return false;
         }
 
-        public Formato Get_Formato(string nombre, byte[] magic, int id)
+        public Format Get_Format(string nombre, byte[] magic, int id)
         {
             nombre = nombre.ToUpper();
 
             if (nombre.EndsWith(".PACK"))
-                return Formato.Comprimido;
+                return Format.Compressed;
 
-            return Formato.Desconocido;
+            return Format.Unknown;
         }
 
-        public void Inicializar(IPluginHost pluginHost, string gameCode)
+        public void Initialize(IPluginHost pluginHost, string gameCode)
         {
             this.pluginHost = pluginHost;
             this.gameCode = gameCode;
         }
 
-        public void Leer(string archivo, int id)
+        public void Read(string archivo, int id)
         {
             if (archivo.ToUpper().EndsWith(".PACK"))
                 PACK.Leer(pluginHost, archivo);
@@ -45,7 +45,7 @@ namespace LASTWINDOW
 
         public Control Show_Info(string archivo, int id)
         {
-            throw new NotImplementedException();
+            return new Control();
         }
     }
 }

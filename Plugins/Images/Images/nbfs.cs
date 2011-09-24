@@ -51,12 +51,12 @@ namespace Images
             nscr.id = (uint)id;
 
             // Lee cabecera genérica
-            nscr.cabecera.id = "NBFS".ToCharArray();
-            nscr.cabecera.endianess = 0xFEFF;
-            nscr.cabecera.constant = 0x0100;
-            nscr.cabecera.file_size = file_size;
-            nscr.cabecera.header_size = 0x10;
-            nscr.cabecera.nSection = 1;
+            nscr.header.id = "NBFS".ToCharArray();
+            nscr.header.endianess = 0xFEFF;
+            nscr.header.constant = 0x0100;
+            nscr.header.file_size = file_size;
+            nscr.header.header_size = 0x10;
+            nscr.header.nSection = 1;
 
             // Lee primera y única sección:
             nscr.section.id = "NSCR".ToCharArray();

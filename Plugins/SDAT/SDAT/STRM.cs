@@ -348,7 +348,7 @@ namespace SDAT
                 else if (waveType == 1)
                     resultado.AddRange(blockData);
                 else if (waveType == 0)
-                    resultado.AddRange(PCM.PCM8ToPCM16(blockData));
+                    resultado.AddRange(PCM.PCM8SignedToPCM16(blockData));
             }
             blockData = new byte[(int)lastBlockLen];
             j = (leftChannel) ? 0 : (int)lastBlockLen;
@@ -359,7 +359,7 @@ namespace SDAT
             else if (waveType == 1)
                 resultado.AddRange(blockData);
             else if (waveType == 0)
-                resultado.AddRange(PCM.PCM8ToPCM16(blockData));
+                resultado.AddRange(PCM.PCM8SignedToPCM16(blockData));
 
             return resultado.ToArray();
         }
@@ -413,7 +413,7 @@ namespace SDAT
                 else if (waveType == 1)
                     resultado.AddRange(blockData);
                 else if (waveType == 0)
-                    resultado.AddRange(PCM.PCM8ToPCM16(blockData));
+                    resultado.AddRange(PCM.PCM8SignedToPCM16(blockData));
             }
             blockData = new byte[(int)lastBlockLen];
             datos.CopyTo((int)(nBlocks - 1) * (int)blockLen, blockData, 0, (int)lastBlockLen);
@@ -431,7 +431,7 @@ namespace SDAT
             else if (waveType == 1)
                 resultado.AddRange(blockData);
             else if (waveType == 0)
-                resultado.AddRange(PCM.PCM8ToPCM16(blockData));
+                resultado.AddRange(PCM.PCM8SignedToPCM16(blockData));
 
             return resultado.ToArray();
         }
