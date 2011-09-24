@@ -64,7 +64,7 @@ namespace Images
             {
                 this.map = pluginHost.Get_NSCR();
                 NCGR newTile = tile;
-                newTile.rahc.tileData = pluginHost.Transformar_NSCR(map, tile.rahc.tileData);
+                newTile.rahc.tileData = pluginHost.Transform_NSCR(map, tile.rahc.tileData);
                 newTile.rahc.nTilesX = (ushort)(map.section.width / 8);
                 newTile.rahc.nTilesY = (ushort)(map.section.height / 8);
                 pic.Image = pluginHost.Bitmap_NCGR(newTile, paleta, 0);
@@ -76,13 +76,13 @@ namespace Images
             this.numericHeight.Value = pic.Image.Height;
             oldDepth = comboDepth.Text;
             this.comboDepth.Text = (tile.rahc.depth == ColorDepth.Depth4Bit ? "4 bpp" : "8 bpp");
-            switch (tile.orden)
+            switch (tile.order)
             {
-                case Orden_Tiles.No_Tiles:
+                case TileOrder.NoTiled:
                     oldTiles = 0;
                     comboBox1.SelectedIndex = 0;
                     break;
-                case Orden_Tiles.Horizontal:
+                case TileOrder.Horizontal:
                     oldTiles = 1;
                     comboBox1.SelectedIndex = 1;
                     break;
@@ -117,31 +117,31 @@ namespace Images
             if (comboDepth.Text == "4 bpp")
             {
                 byte[] temp = pluginHost.Bit8ToBit4(pluginHost.TilesToBytes(tile.rahc.tileData.tiles));
-                if (tile.orden != Orden_Tiles.No_Tiles)
+                if (tile.order != TileOrder.NoTiled)
                 {
                     tile.rahc.tileData.tiles = pluginHost.BytesToTiles(temp);
-                    tile.rahc.tileData.nPaleta = new byte[tile.rahc.tileData.tiles.Length];
+                    tile.rahc.tileData.nPalette = new byte[tile.rahc.tileData.tiles.Length];
                 }
                 else
                 {
                     tile.rahc.tileData.tiles = new Byte[1][];
                     tile.rahc.tileData.tiles[0] = temp;
-                    tile.rahc.tileData.nPaleta = new byte[tile.rahc.tileData.tiles[0].Length];
+                    tile.rahc.tileData.nPalette = new byte[tile.rahc.tileData.tiles[0].Length];
                 }
             }
             else
             {
                 byte[] temp = pluginHost.Bit4ToBit8(pluginHost.TilesToBytes(tile.rahc.tileData.tiles));
-                if (tile.orden != Orden_Tiles.No_Tiles)
+                if (tile.order != TileOrder.NoTiled)
                 {
                     tile.rahc.tileData.tiles = pluginHost.BytesToTiles(temp);
-                    tile.rahc.tileData.nPaleta = new byte[tile.rahc.tileData.tiles.Length];
+                    tile.rahc.tileData.nPalette = new byte[tile.rahc.tileData.tiles.Length];
                 }
                 else
                 {
                     tile.rahc.tileData.tiles = new Byte[1][];
                     tile.rahc.tileData.tiles[0] = temp;
-                    tile.rahc.tileData.nPaleta = new byte[tile.rahc.tileData.tiles[0].Length];
+                    tile.rahc.tileData.nPalette = new byte[tile.rahc.tileData.tiles[0].Length];
                 }
             }
             pluginHost.Set_NCGR(tile);
@@ -155,7 +155,7 @@ namespace Images
             switch (comboBox1.SelectedIndex)
             {
                 case 0:
-                    tile.orden = Orden_Tiles.No_Tiles;
+                    tile.order = TileOrder.NoTiled;
                     tile.rahc.tileData.tiles[0] = pluginHost.TilesToBytes(tile.rahc.tileData.tiles);
                     numericHeight.Minimum = 0;
                     numericWidth.Minimum = 0;
@@ -163,7 +163,7 @@ namespace Images
                     numericHeight.Increment = 1;
                     break;
                 case 1:
-                    tile.orden = Orden_Tiles.Horizontal;
+                    tile.order = TileOrder.Horizontal;
                     tile.rahc.tileData.tiles = pluginHost.BytesToTiles(tile.rahc.tileData.tiles[0]);
                     numericHeight.Minimum = 8;
                     numericWidth.Minimum = 8;
@@ -171,7 +171,7 @@ namespace Images
                     numericHeight.Increment = 8;
                     break;
                 case 2:
-                    tile.orden = Orden_Tiles.Vertical;
+                    tile.order = TileOrder.Vertical;
                     break;
             }
             oldTiles = comboBox1.SelectedIndex;
@@ -183,7 +183,7 @@ namespace Images
             if (stopUpdating)
                 return;
 
-            if (tile.orden != Orden_Tiles.No_Tiles)
+            if (tile.order != TileOrder.NoTiled)
             {
                 tile.rahc.nTilesX = (ushort)(numericWidth.Value / 8);
                 tile.rahc.nTilesY = (ushort)(numericHeight.Value / 8);
@@ -197,7 +197,7 @@ namespace Images
             if (isMap)
             {
                 NCGR newTile = tile;
-                newTile.rahc.tileData = pluginHost.Transformar_NSCR(map, tile.rahc.tileData);
+                newTile.rahc.tileData = pluginHost.Transform_NSCR(map, tile.rahc.tileData);
                 pic.Image = pluginHost.Bitmap_NCGR(newTile, paleta, startTile);
             }
             else
@@ -246,8 +246,8 @@ namespace Images
         }
         private void Info()
         {
-            listInfo.Items[0].SubItems.Add("0x" + String.Format("{0:X}", tile.cabecera.constant));
-            listInfo.Items[1].SubItems.Add(tile.cabecera.nSection.ToString());
+            listInfo.Items[0].SubItems.Add("0x" + String.Format("{0:X}", tile.header.constant));
+            listInfo.Items[1].SubItems.Add(tile.header.nSection.ToString());
             listInfo.Items[2].SubItems.Add(new String(tile.rahc.id));
             listInfo.Items[3].SubItems.Add("0x" + String.Format("{0:X}", tile.rahc.size_section));
             listInfo.Items[4].SubItems.Add(tile.rahc.nTilesY.ToString() + " (0x" + String.Format("{0:X}", tile.rahc.nTilesY) + ')');
@@ -268,10 +268,10 @@ namespace Images
             o.Multiselect = false;
             if (o.ShowDialog() == DialogResult.OK)
             {
-                NCGR newTile = pluginHost.BitmapToTile(o.FileName, (comboBox1.SelectedIndex == 0 ? Orden_Tiles.No_Tiles : Orden_Tiles.Horizontal));
-                String tileFile = System.IO.Path.GetTempFileName() + '.' + new String(tile.cabecera.id);
+                NCGR newTile = pluginHost.BitmapToTile(o.FileName, (comboBox1.SelectedIndex == 0 ? TileOrder.NoTiled : TileOrder.Horizontal));
+                String tileFile = System.IO.Path.GetTempFileName() + '.' + new String(tile.header.id);
                 newTile.id = tile.id;
-                newTile.cabecera.id = tile.cabecera.id;
+                newTile.header.id = tile.header.id;
                 tile = newTile;
 
                 pluginHost.Set_NCGR(tile);
@@ -281,13 +281,13 @@ namespace Images
                 if (isMap)
                 {
                     NSCR newMap;
-                    if (tile.orden == Orden_Tiles.Horizontal)
+                    if (tile.order == TileOrder.Horizontal)
                         newMap = pluginHost.Create_BasicMap((int)tile.rahc.nTiles, tile.rahc.nTilesX * 8, tile.rahc.nTilesY * 8);
                     else
                         newMap = pluginHost.Create_BasicMap((int)tile.rahc.nTiles, tile.rahc.nTilesX, tile.rahc.nTilesY);
                     newMap.id = map.id;
-                    newMap.cabecera.id = map.cabecera.id;
-                    String mapFile = System.IO.Path.GetTempFileName() + new String(map.cabecera.id);
+                    newMap.header.id = map.header.id;
+                    String mapFile = System.IO.Path.GetTempFileName() + new String(map.header.id);
                     map = newMap;
 
                     pluginHost.Set_NSCR(map);
@@ -296,7 +296,7 @@ namespace Images
                 }
 
                 stopUpdating = true;
-                if (tile.orden == Orden_Tiles.No_Tiles)
+                if (tile.order == TileOrder.NoTiled)
                 {
                     numericWidth.Value = tile.rahc.nTilesX;
                     numericHeight.Value = tile.rahc.nTilesY;
@@ -406,7 +406,7 @@ namespace Images
             if (checkTransparency.Checked)
             {
                 Bitmap imagen = (Bitmap)pic.Image;
-                imagen.MakeTransparent(paleta.pltt.paletas[tile.rahc.tileData.nPaleta[0]].colores[0]);
+                imagen.MakeTransparent(paleta.pltt.palettes[tile.rahc.tileData.nPalette[0]].colors[0]);
                 pic.Image = imagen;
             }
             else

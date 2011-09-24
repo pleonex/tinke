@@ -13,7 +13,7 @@ namespace EDGEWORTH
         IPluginHost pluginHost;
         string gameCode;
 
-        public bool EsCompatible()
+        public bool IsCompatible()
         {
             if (gameCode == "C32P")
                 return true;
@@ -21,23 +21,23 @@ namespace EDGEWORTH
             return false;
         }
 
-        public Formato Get_Formato(string nombre, byte[] magic, int id)
+        public Format Get_Format(string nombre, byte[] magic, int id)
         {
             nombre = nombre.ToUpper();
 
             if (nombre == "ROMFILE.BIN")
-                return Formato.Pack;
+                return Format.Pack;
 
-            return Formato.Desconocido;
+            return Format.Unknown;
         }
 
-        public void Inicializar(IPluginHost pluginHost, string gameCode)
+        public void Initialize(IPluginHost pluginHost, string gameCode)
         {
             this.pluginHost = pluginHost;
             this.gameCode = gameCode;
         }
 
-        public void Leer(string archivo, int id)
+        public void Read(string archivo, int id)
         {
             if (archivo.ToUpper().EndsWith("ROMFILE.BIN"))
             {

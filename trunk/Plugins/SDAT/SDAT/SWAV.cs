@@ -154,7 +154,7 @@ namespace SDAT
 
             if (swav.data.info.nWaveType == 0) // 8 Bits per sample, PCM-8
             {
-                swav.data.data = PCM.PCM8ToPCM16(swav.data.data);
+                swav.data.data = PCM.PCM8SignedToPCM16(swav.data.data);
                 if (loop)
                 {
                     Byte[] data = new Byte[(int)swav.data.info.nNonLoopLen];
@@ -211,7 +211,7 @@ namespace SDAT
             if (wav.wave.fmt.numChannels > 1)
                 wav.wave.data.data = WAV.ConvertToMono(wav.wave.data.data, wav.wave.fmt.numChannels, wav.wave.fmt.bitsPerSample);
 
-            wav.wave.data.data = ChangeVolume(wav.wave.data.data, volume, wav.wave.fmt.bitsPerSample);
+            //wav.wave.data.data = ChangeVolume(wav.wave.data.data, volume, wav.wave.fmt.bitsPerSample);
             if (waveType == 0)
                 swav.data.data = PCM.PCM16ToPCM8(wav.wave.data.data);
             else if (waveType == 2)

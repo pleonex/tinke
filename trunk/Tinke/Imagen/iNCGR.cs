@@ -65,17 +65,17 @@ namespace Tinke
             this.numericHeight.Value = pic.Image.Height;
             this.comboDepth.Text = (tile.rahc.depth == ColorDepth.Depth4Bit ? "4 bpp" : "8 bpp");
             oldDepth = comboDepth.Text;
-            switch (tile.orden)
+            switch (tile.order)
             {
-                case Orden_Tiles.No_Tiles:
+                case TileOrder.NoTiled:
                     oldTiles = 0;
                     comboBox1.SelectedIndex = 0;
                     break;
-                case Orden_Tiles.Horizontal:
+                case TileOrder.Horizontal:
                     oldTiles = 1;
                     comboBox1.SelectedIndex = 1;
                     break;
-                //case Orden_Tiles.Vertical:  NOT SUPPORTED
+                //case TileOrder.Vertical:  NOT SUPPORTED
                 //    oldTiles = 2;
                 //    comboBox1.SelectedIndex = 2;
                 //    break;
@@ -87,7 +87,7 @@ namespace Tinke
 
             Info();
 
-            if (new String(paleta.cabecera.id) != "NCLR" && new String(paleta.cabecera.id) != "RLCN")
+            if (new String(paleta.header.id) != "NCLR" && new String(paleta.header.id) != "RLCN")
                 btnSetTrans.Enabled = false;
         }
         public iNCGR(NCGR tile, NCLR paleta, NSCR map, IPluginHost pluginHost)
@@ -102,7 +102,7 @@ namespace Tinke
             this.pluginHost = pluginHost;
 
             NCGR newTile = tile;
-            newTile.rahc.tileData = pluginHost.Transformar_NSCR(map, tile.rahc.tileData);
+            newTile.rahc.tileData = pluginHost.Transform_NSCR(map, tile.rahc.tileData);
             newTile.rahc.nTilesX = (ushort)(map.section.width / 8);
             newTile.rahc.nTilesY = (ushort)(map.section.height / 8);
             pic.Image = Imagen_NCGR.Crear_Imagen(newTile, paleta, 0);
@@ -112,13 +112,13 @@ namespace Tinke
             this.comboDepth.Text = (tile.rahc.depth == ColorDepth.Depth4Bit ? "4 bpp" : "8 bpp");
             oldDepth = comboDepth.Text;
             this.numericStart.Increment = 2;
-            switch (tile.orden)
+            switch (tile.order)
             {
-                case Orden_Tiles.No_Tiles:
+                case TileOrder.NoTiled:
                     oldTiles = 0;
                     comboBox1.SelectedIndex = 0;
                     break;
-                case Orden_Tiles.Horizontal:
+                case TileOrder.Horizontal:
                     oldTiles = 1;
                     comboBox1.SelectedIndex = 1;
                     break;
@@ -131,7 +131,7 @@ namespace Tinke
 
             Info();
 
-            if (new String(paleta.cabecera.id) != "NCLR" && new String(paleta.cabecera.id) != "RLCN")
+            if (new String(paleta.header.id) != "NCLR" && new String(paleta.header.id) != "RLCN")
                 btnSetTrans.Enabled = false;
         }
 
@@ -155,31 +155,31 @@ namespace Tinke
             if (comboDepth.Text == "4 bpp")
             {
                 byte[] temp = Convertir.Bit8ToBit4(Convertir.TilesToBytes(tile.rahc.tileData.tiles));
-                if (tile.orden != Orden_Tiles.No_Tiles)
+                if (tile.order != TileOrder.NoTiled)
                 {
                     tile.rahc.tileData.tiles = pluginHost.BytesToTiles(temp);
-                    tile.rahc.tileData.nPaleta = new byte[tile.rahc.tileData.tiles.Length];
+                    tile.rahc.tileData.nPalette = new byte[tile.rahc.tileData.tiles.Length];
                 }
                 else
                 {
                     tile.rahc.tileData.tiles = new Byte[1][];
                     tile.rahc.tileData.tiles[0] = temp;
-                    tile.rahc.tileData.nPaleta = new Byte[tile.rahc.tileData.tiles[0].Length];
+                    tile.rahc.tileData.nPalette = new Byte[tile.rahc.tileData.tiles[0].Length];
                 }
             }
             else
             {
                 byte[] temp = Convertir.Bit4ToBit8(Convertir.TilesToBytes(tile.rahc.tileData.tiles));
-                if (tile.orden != Orden_Tiles.No_Tiles)
+                if (tile.order != TileOrder.NoTiled)
                 {
                     tile.rahc.tileData.tiles = pluginHost.BytesToTiles(temp);
-                    tile.rahc.tileData.nPaleta = new byte[tile.rahc.tileData.tiles.Length];
+                    tile.rahc.tileData.nPalette = new byte[tile.rahc.tileData.tiles.Length];
                 }
                 else
                 {
                     tile.rahc.tileData.tiles = new Byte[1][];
                     tile.rahc.tileData.tiles[0] = temp;
-                    tile.rahc.tileData.nPaleta = new byte[tile.rahc.tileData.tiles[0].Length];
+                    tile.rahc.tileData.nPalette = new byte[tile.rahc.tileData.tiles[0].Length];
                 }
             }
 
@@ -194,7 +194,7 @@ namespace Tinke
             switch (comboBox1.SelectedIndex)
             {
                 case 0:
-                    tile.orden = Orden_Tiles.No_Tiles;
+                    tile.order = TileOrder.NoTiled;
                     tile.rahc.tileData.tiles[0] = Convertir.TilesToBytes(tile.rahc.tileData.tiles);
                     numericHeight.Minimum = 0;
                     numericWidth.Minimum = 0;
@@ -202,7 +202,7 @@ namespace Tinke
                     numericHeight.Increment = 1;
                     break;
                 case 1:
-                    tile.orden = Orden_Tiles.Horizontal;
+                    tile.order = TileOrder.Horizontal;
                     tile.rahc.tileData.tiles = Convertir.BytesToTiles(tile.rahc.tileData.tiles[0]);
                     numericHeight.Minimum = 8;
                     numericWidth.Minimum = 8;
@@ -210,7 +210,7 @@ namespace Tinke
                     numericHeight.Increment = 8;
                     break;
                 case 2:
-                    tile.orden = Orden_Tiles.Vertical;
+                    tile.order = TileOrder.Vertical;
                     break;
             }
             oldTiles = comboBox1.SelectedIndex;
@@ -223,7 +223,7 @@ namespace Tinke
             if (stopUpdating)
                 return;
 
-            if (tile.orden != Orden_Tiles.No_Tiles)
+            if (tile.order != TileOrder.NoTiled)
             {
                 tile.rahc.nTilesX = (ushort)(numericWidth.Value / 8);
                 tile.rahc.nTilesY = (ushort)(numericHeight.Value / 8);
@@ -237,7 +237,7 @@ namespace Tinke
             if (isMap)
             {
                 NCGR newTile = tile;
-                newTile.rahc.tileData = pluginHost.Transformar_NSCR(map, newTile.rahc.tileData, startTile);
+                newTile.rahc.tileData = pluginHost.Transform_NSCR(map, newTile.rahc.tileData, startTile);
                 pic.Image = Imagen_NCGR.Crear_Imagen(newTile, paleta, 0);
             }
             else
@@ -285,8 +285,8 @@ namespace Tinke
         }
         private void Info()
         {
-            listInfo.Items[0].SubItems.Add("0x" + String.Format("{0:X}", tile.cabecera.constant));
-            listInfo.Items[1].SubItems.Add(tile.cabecera.nSection.ToString());
+            listInfo.Items[0].SubItems.Add("0x" + String.Format("{0:X}", tile.header.constant));
+            listInfo.Items[1].SubItems.Add(tile.header.nSection.ToString());
             listInfo.Items[2].SubItems.Add(new String(tile.rahc.id));
             listInfo.Items[3].SubItems.Add("0x" + String.Format("{0:X}", tile.rahc.size_section));
             listInfo.Items[4].SubItems.Add(tile.rahc.nTilesY.ToString() + " (0x" + String.Format("{0:X}", tile.rahc.nTilesY) + ')');
@@ -307,7 +307,7 @@ namespace Tinke
             o.Multiselect = false;
             if (o.ShowDialog() == DialogResult.OK)
             {
-                if (new String(paleta.cabecera.id) != "NCLR" && new String(paleta.cabecera.id) != "RLCN")
+                if (new String(paleta.header.id) != "NCLR" && new String(paleta.header.id) != "RLCN")
                     goto Set_Tiles;
 
                 NCLR newPalette = Imagen_NCLR.BitmapToPalette(o.FileName);
@@ -320,7 +320,7 @@ namespace Tinke
                 pluginHost.ChangeFile((int)paleta.id, paletteFile);
 
             Set_Tiles:
-                NCGR newTile = Imagen_NCGR.BitmapToTile(o.FileName, (comboBox1.SelectedIndex == 0 ? Orden_Tiles.No_Tiles : Orden_Tiles.Horizontal));
+                NCGR newTile = Imagen_NCGR.BitmapToTile(o.FileName, (comboBox1.SelectedIndex == 0 ? TileOrder.NoTiled : TileOrder.Horizontal));
                 newTile.id = tile.id;
                 tile = newTile;
 
@@ -331,13 +331,13 @@ namespace Tinke
 
                 if (isMap)
                 {
-                    if (new String(map.cabecera.id) != "NSCR" && new String(map.cabecera.id) != "RCSN")
+                    if (new String(map.header.id) != "NSCR" && new String(map.header.id) != "RCSN")
                         goto End;
 
                     NSCR newMap;
 
                     int width, heigth;
-                    if (tile.orden == Orden_Tiles.Horizontal)
+                    if (tile.order == TileOrder.Horizontal)
                     {
                         width = tile.rahc.nTilesX * 8;
                         heigth = tile.rahc.nTilesY * 8;
@@ -368,7 +368,7 @@ namespace Tinke
                 }
             End:
                 stopUpdating = true;
-                if (tile.orden == Orden_Tiles.No_Tiles)
+                if (tile.order == TileOrder.NoTiled)
                 {
                     numericWidth.Value = tile.rahc.nTilesX;
                     numericHeight.Value = tile.rahc.nTilesY;
@@ -472,7 +472,7 @@ namespace Tinke
             if (checkTransparency.Checked)
             {
                 Bitmap imagen = (Bitmap)pic.Image;
-                imagen.MakeTransparent(paleta.pltt.paletas[tile.rahc.tileData.nPaleta[0]].colores[0]);
+                imagen.MakeTransparent(paleta.pltt.palettes[tile.rahc.tileData.nPalette[0]].colors[0]);
                 pic.Image = imagen;
             }
             else
@@ -530,12 +530,12 @@ namespace Tinke
         private void Change_TransparencyColor(Color color)
         {
             int colorIndex = 0;
-            for (int i = 0; i < paleta.pltt.paletas[0].colores.Length; i++)
+            for (int i = 0; i < paleta.pltt.palettes[0].colors.Length; i++)
             {
-                if (paleta.pltt.paletas[0].colores[i] == color)
+                if (paleta.pltt.palettes[0].colors[i] == color)
                 {
-                    paleta.pltt.paletas[0].colores[i] = paleta.pltt.paletas[0].colores[0];
-                    paleta.pltt.paletas[0].colores[0] = color;
+                    paleta.pltt.palettes[0].colors[i] = paleta.pltt.palettes[0].colors[0];
+                    paleta.pltt.palettes[0].colors[0] = color;
                     colorIndex = i;
                     break;
                 }

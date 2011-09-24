@@ -12,22 +12,22 @@ namespace Sounds
     {
         IPluginHost pluginHost;
 
-        public void Inicializar(IPluginHost pluginHost)
+        public void Initialize(IPluginHost pluginHost)
         {
             this.pluginHost = pluginHost;
         }
 
-        public Formato Get_Formato(string nombre, byte[] magic)
+        public Format Get_Format(string nombre, byte[] magic)
         {
             string ext = new String(Encoding.ASCII.GetChars(magic));
 
             if (ext == "sadl")
-                return Formato.Sonido;
+                return Format.Sound;
 
-            return Formato.Desconocido;
+            return Format.Unknown;
         }
 
-        public void Leer(string archivo, int id)
+        public void Read(string archivo, int id)
         {
         }
 

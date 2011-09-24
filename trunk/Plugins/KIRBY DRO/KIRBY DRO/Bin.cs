@@ -34,10 +34,10 @@ namespace KIRBY_DRO
 
             uint header = br.ReadUInt32();
 
-            paleta.pltt.tamaño = br.ReadUInt32();
+            paleta.pltt.length = br.ReadUInt32();
             tile.rahc.size_tiledata = br.ReadUInt32();
             map.section.data_size = br.ReadUInt32();
-            tile.orden = Orden_Tiles.Horizontal;
+            tile.order = TileOrder.Horizontal;
 
             // Si el tamaño de la cabecera es 0x18 entonces hay información de ancho y largo, sino la imagen es imcompatible por el momento
             if (header == 0x18)
@@ -56,24 +56,24 @@ namespace KIRBY_DRO
 
             tile.rahc.nTilesX = (ushort)(map.section.width / 8);
             tile.rahc.nTilesY = (ushort)(map.section.height / 8);
-            paleta.pltt.profundidad = (paleta.pltt.tamaño < 512 ? ColorDepth.Depth4Bit : ColorDepth.Depth8Bit);
-            tile.rahc.nTiles = (ushort)(paleta.pltt.profundidad == ColorDepth.Depth4Bit ?
+            paleta.pltt.depth = (paleta.pltt.length < 512 ? ColorDepth.Depth4Bit : ColorDepth.Depth8Bit);
+            tile.rahc.nTiles = (ushort)(paleta.pltt.depth == ColorDepth.Depth4Bit ?
                 tile.rahc.size_tiledata / 32 :
                 tile.rahc.size_tiledata / 64);
 
             // Comienzo de la paleta
-            if (paleta.pltt.profundidad == ColorDepth.Depth4Bit)
-                paleta.pltt.nColores = 0x10;
+            if (paleta.pltt.depth == ColorDepth.Depth4Bit)
+                paleta.pltt.nColors = 0x10;
             else
-                paleta.pltt.nColores = 0x0100;
-            paleta.pltt.paletas = new NTFP[(paleta.pltt.tamaño / 2) / paleta.pltt.nColores];
-            for (int i = 0; i < paleta.pltt.paletas.Length; i++)
-                paleta.pltt.paletas[i].colores = pluginHost.BGR555(br.ReadBytes((int)(paleta.pltt.nColores * 2)));
+                paleta.pltt.nColors = 0x0100;
+            paleta.pltt.palettes = new NTFP[(paleta.pltt.length / 2) / paleta.pltt.nColors];
+            for (int i = 0; i < paleta.pltt.palettes.Length; i++)
+                paleta.pltt.palettes[i].colors = pluginHost.BGR555(br.ReadBytes((int)(paleta.pltt.nColors * 2)));
 
             // Lectura de tiles
             tile.rahc.tileData.tiles = new byte[tile.rahc.nTiles][];
             for (int i = 0; i < tile.rahc.nTiles; i++)
-                if (paleta.pltt.profundidad == ColorDepth.Depth4Bit)
+                if (paleta.pltt.depth == ColorDepth.Depth4Bit)
                     tile.rahc.tileData.tiles[i] = pluginHost.BytesTo4BitsRev(br.ReadBytes(32));
                 else
                     tile.rahc.tileData.tiles[i] = br.ReadBytes(64);
@@ -104,7 +104,7 @@ namespace KIRBY_DRO
                     map.section.mapData[i].nTile = Convert.ToUInt16(bits.Substring(6, 10), 2);
                 }
             }
-            tile.rahc.tileData = pluginHost.Transformar_NSCR(map, tile.rahc.tileData);
+            tile.rahc.tileData = pluginHost.Transform_NSCR(map, tile.rahc.tileData);
 
             br.Close();
             return pluginHost.Bitmap_NCGR(tile, paleta);

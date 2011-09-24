@@ -17,14 +17,14 @@ namespace Tinke
             nscr.id = (uint)id;
 
             // Lee cabecera genérica
-            nscr.cabecera.id = br.ReadChars(4);
-            nscr.cabecera.endianess = br.ReadUInt16();
-            if (nscr.cabecera.endianess == 0xFFFE)
-                nscr.cabecera.id.Reverse<char>();
-            nscr.cabecera.constant = br.ReadUInt16();
-            nscr.cabecera.file_size = br.ReadUInt32();
-            nscr.cabecera.header_size = br.ReadUInt16();
-            nscr.cabecera.nSection = br.ReadUInt16();
+            nscr.header.id = br.ReadChars(4);
+            nscr.header.endianess = br.ReadUInt16();
+            if (nscr.header.endianess == 0xFFFE)
+                nscr.header.id.Reverse<char>();
+            nscr.header.constant = br.ReadUInt16();
+            nscr.header.file_size = br.ReadUInt32();
+            nscr.header.header_size = br.ReadUInt16();
+            nscr.header.nSection = br.ReadUInt16();
 
             // Lee primera y única sección:
             nscr.section.id = br.ReadChars(4);
@@ -65,12 +65,12 @@ namespace Tinke
             nscr.id = (uint)id;
 
             // Lee cabecera genérica
-            nscr.cabecera.id = "UNKN".ToCharArray();
-            nscr.cabecera.endianess = 0xFEFF;
-            nscr.cabecera.constant = 0x0100;
-            nscr.cabecera.file_size = file_size;
-            nscr.cabecera.header_size = 0x10;
-            nscr.cabecera.nSection = 1;
+            nscr.header.id = "UNKN".ToCharArray();
+            nscr.header.endianess = 0xFEFF;
+            nscr.header.constant = 0x0100;
+            nscr.header.file_size = file_size;
+            nscr.header.header_size = 0x10;
+            nscr.header.nSection = 1;
 
             // Lee primera y única sección:
             nscr.section.id = "UNKN".ToCharArray();
@@ -101,11 +101,11 @@ namespace Tinke
             NSCR map = new NSCR();
 
             // Common header
-            map.cabecera.id = "RCSN".ToCharArray();
-            map.cabecera.endianess = 0xFEFF;
-            map.cabecera.constant = 0x0100;
-            map.cabecera.header_size = 0x10;
-            map.cabecera.nSection = 1;
+            map.header.id = "RCSN".ToCharArray();
+            map.header.endianess = 0xFEFF;
+            map.header.constant = 0x0100;
+            map.header.header_size = 0x10;
+            map.header.nSection = 1;
 
             // Lee primera y única sección:
             map.section.id = "NRCS".ToCharArray();
@@ -123,7 +123,7 @@ namespace Tinke
                 map.section.mapData[i].nTile = (ushort)i;
             }
             map.section.section_size = map.section.data_size + 0x14;
-            map.cabecera.file_size = map.section.section_size + map.cabecera.header_size;
+            map.header.file_size = map.section.section_size + map.header.header_size;
 
             return map;
         }
@@ -133,11 +133,11 @@ namespace Tinke
             int nTiles = width * height / 64;
 
             // Common header
-            map.cabecera.id = "RCSN".ToCharArray();
-            map.cabecera.endianess = 0xFEFF;
-            map.cabecera.constant = 0x0100;
-            map.cabecera.header_size = 0x10;
-            map.cabecera.nSection = 1;
+            map.header.id = "RCSN".ToCharArray();
+            map.header.endianess = 0xFEFF;
+            map.header.constant = 0x0100;
+            map.header.header_size = 0x10;
+            map.header.nSection = 1;
 
             // Lee primera y única sección:
             map.section.id = "NRCS".ToCharArray();
@@ -158,7 +158,7 @@ namespace Tinke
                     map.section.mapData[i].nTile = (ushort)i;
             }
             map.section.section_size = map.section.data_size + 0x14;
-            map.cabecera.file_size = map.section.section_size + map.cabecera.header_size;
+            map.header.file_size = map.section.section_size + map.header.header_size;
 
             return map;
         }
@@ -167,12 +167,12 @@ namespace Tinke
             BinaryWriter bw = new BinaryWriter(File.OpenWrite(fileout));
 
             // Common header
-            bw.Write(map.cabecera.id);
-            bw.Write(map.cabecera.endianess);
-            bw.Write(map.cabecera.constant);
-            bw.Write(map.cabecera.file_size);
-            bw.Write(map.cabecera.header_size);
-            bw.Write(map.cabecera.nSection);
+            bw.Write(map.header.id);
+            bw.Write(map.header.endianess);
+            bw.Write(map.header.constant);
+            bw.Write(map.header.file_size);
+            bw.Write(map.header.header_size);
+            bw.Write(map.header.nSection);
             // SCRN section
             bw.Write(map.section.id);
             bw.Write(map.section.section_size);
@@ -218,7 +218,7 @@ namespace Tinke
                 bytes.Add(currTile);
                 nPltt.Add(nscr.section.mapData[i].nPalette);
             }
-            ntft.nPaleta = nPltt.ToArray();
+            ntft.nPalette = nPltt.ToArray();
             ntft.tiles = bytes.ToArray();
             return ntft;
         }

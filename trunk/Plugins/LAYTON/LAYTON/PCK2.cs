@@ -11,11 +11,11 @@ namespace LAYTON
     {
         public static void Read(string file, int id, IPluginHost pluginHost)
         {
-            pluginHost.Descomprimir(file);
+            pluginHost.Decompress(file);
             string dec_file = pluginHost.Get_Files().files[0].path;
 
             BinaryReader br = new BinaryReader(File.OpenRead(dec_file));
-            Carpeta decompressed = new Carpeta();
+            sFolder decompressed = new sFolder();
             sPCK2 pck2 = new sPCK2();
             pck2.file_id = id;
 
@@ -26,7 +26,7 @@ namespace LAYTON
             pck2.header.unknown = br.ReadUInt32();
 
             // Read all files
-            decompressed.files = new List<Archivo>();
+            decompressed.files = new List<sFile>();
             br.BaseStream.Position = pck2.header.header_size;
             while (br.BaseStream.Position != br.BaseStream.Length)
             {
@@ -50,7 +50,7 @@ namespace LAYTON
                 br.BaseStream.Position = pos + newFile.size;
 
                 // Save the new file
-                Archivo savedFile = new Archivo();
+                sFile savedFile = new sFile();
                 savedFile.name = newFile.name;
                 savedFile.offset = 0x00;
                 savedFile.size = newFile.data_size;

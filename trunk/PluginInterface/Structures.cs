@@ -1,75 +1,93 @@
-﻿using System;
+﻿/*
+ * Copyright (C) 2011  pleoNeX
+ *
+ *   This program is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+ *
+ *   by pleoNeX
+ * 
+ */ 
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 
 namespace PluginInterface
 {
-    public struct Archivo
-        {
-            public UInt32 offset;           // Offset inside of a pack file
-            public UInt32 size;             // Tamaño definido por la resta del offset inicial y el offset final
-            public string name;             // Nombre dado en la FNT
-            public UInt16 id;               // ID único de cada archivo.
-            public string path;             // En caso de haber sido descomprimido y estar fuera del sistema de archivos.
-            public Formato formato;         // Formato del archivo  
-            public Object tag;              // Para asignar cualquier valor
-    }
-    public struct Carpeta
+    public struct sFile
     {
-        public List<Archivo> files;        // Lista de archivos que contiene el directorio
-        public List<Carpeta> folders;      // Lista de carpetas que contiene el directorio
-        public string name;                // Nombre de la carpeta
-        public UInt16 id;                  // ID de la carpeta. Comienza en 0xF000 que es root
-        public Object tag;                 // Para asignar cualquier valor
+            public UInt32 offset;           // Offset where the files inside of the file in path
+            public UInt32 size;             // Length of the file
+            public string name;             // File name
+            public UInt16 id;               // Internal id
+            public string path;             // Path where the file is
+            public Format format;           // Format file 
+            public Object tag;              // Extra information
+    }
+    public struct sFolder
+    {
+        public List<sFile> files;           // List of files
+        public List<sFolder> folders;      // List of folders
+        public string name;                // Folder name
+        public UInt16 id;                  // Internal id
+        public Object tag;                 // Extra information
     }
 
     public struct Header    // Generic Header
     {
-        public char[] id;                   // RCSN = 0x5243534E
-        public UInt16 endianess;            // 0xFFFE -> indica little endian
-        public UInt16 constant;             // Siempre es 0x0100
-        public UInt32 file_size;            // Tamaño total del archivo
-        public UInt16 header_size;          // Siempre es 0x10
-        public UInt16 nSection;             // Número de secciones
+        public char[] id;                   
+        public UInt16 endianess;            // 0xFFFE -> little endian
+        public UInt16 constant;             // Always 0x0100
+        public UInt32 file_size;            
+        public UInt16 header_size;          // Always 0x10
+        public UInt16 nSection;             // Number of sections
     }
     #region NCLR
-    public struct NCLR
+    public struct NCLR      // Nintendo CoLor Resource
     {
-        public Header cabecera;
+        public Header header;
         public TTLP pltt;
         public Object other;
         public UInt32 id;
     }
-    public struct TTLP
+    public struct TTLP  // PaLeTTe
     {
         public char[] ID;
-        public UInt32 tamaño;       // Incluye cabecera
-        public ColorDepth profundidad;
-        public UInt32 unknown1;    // ¿¿padding??
-        public UInt32 tamañoPaletas;
-        public UInt32 nColores;     // Suele ser 0x10
-        public NTFP[] paletas;
+        public UInt32 length;       
+        public ColorDepth depth;
+        public UInt32 unknown1;    // padding?
+        public UInt32 paletteLength;
+        public UInt32 nColors;    // Number of colors
+        public NTFP[] palettes;
     }
-
     public struct NTFP              // Nintendo Tile Format Palette
     {
-        public Color[] colores;
+        public Color[] colors;
     }
     #endregion
     #region NCGR
-    public struct NCGR
+    public struct NCGR  // Nintendo Character Graphic Resource
     {
-        public Header cabecera;
+        public Header header;
         public RAHC rahc;
         public SOPC sopc;
-        public Orden_Tiles orden;
+        public TileOrder order;
         public Object other;
         public UInt32 id;
     }
-    public struct RAHC
+    public struct RAHC  // CHARacter
     {
-        public char[] id;               // Siempre RAHC = 0x52414843
+        public char[] id;               // Always RAHC = 0x52414843
         public UInt32 size_section;
         public UInt16 nTilesY;
         public UInt16 nTilesX;
@@ -78,12 +96,12 @@ namespace PluginInterface
         public UInt16 unknown2;
         public UInt32 tiledFlag;
         public UInt32 size_tiledata;
-        public UInt32 unknown3;         // Constante siempre 0x18 (24)
+        public UInt32 unknown3;         // Always 0x18 (24) (data offset?)
         public NTFT tileData;
 
-        public UInt32 nTiles;       // Campo propio para operaciones más fáciles, resultado de nTilesX * nTilesY ó size_Tiledata / 64
+        public UInt32 nTiles;       // Number of tiles
     }
-    public struct SOPC
+    public struct SOPC  // Unknown section
     {
         public char[] id;
         public UInt32 size_section;
@@ -91,17 +109,16 @@ namespace PluginInterface
         public UInt16 charSize;
         public UInt16 nChar;
     }
-
     public struct NTFT              // Nintendo Tile Format Tile
     {
         public byte[][] tiles;
-        public byte[] nPaleta;
+        public byte[] nPalette;     // Number of the palette that this tile uses
     }
     #endregion
     #region NSCR
-    public struct NSCR
+    public struct NSCR      // Nintendo SCreen Resource
     {
-        public Header cabecera;
+        public Header header;
         public NSCR_Section section;        // Sección NSCR
         public Object other;
         public UInt32 id;
@@ -109,23 +126,23 @@ namespace PluginInterface
     public struct NSCR_Section
     {
         public char[] id;                   // NRCS = 0x4E524353
-        public UInt32 section_size;         // Tamaño del archivo total
-        public UInt16 width;                // Ancho de la imagen
-        public UInt16 height;               // Alto de la imagen
-        public UInt32 padding;              // Siempre 0x0
-        public UInt32 data_size;            //
+        public UInt32 section_size;         
+        public UInt16 width;                
+        public UInt16 height;               
+        public UInt32 padding;              // Always 0x0
+        public UInt32 data_size;          
         public NTFS[] mapData;
     }
     public struct NTFS              // Nintedo Tile Format Screen
     {
-        public byte nPalette;        // Junto con los cuatro siguientes forman dos bytes de la siguiente forma (en bits):
-        public byte xFlip;           // PPPP Y X NNNNNNNNNN
+        public byte nPalette;        // The parameters (two bytes) is PPPP Y X NNNNNNNNNN
+        public byte xFlip;           
         public byte yFlip;
         public ushort nTile;
     }
     #endregion
     #region NCER
-    public struct NCER       // CEll Resource
+    public struct NCER       // Nintendo CEll Resource
     {
         public Header header;
         public CEBK cebk;
@@ -139,11 +156,11 @@ namespace PluginInterface
         public char[] id;
         public UInt32 section_size;
         public UInt16 nBanks;
-        public UInt16 tBank;            // Formato de bank, 0 ó 1
+        public UInt16 tBank;            // type of banks, 0 ó 1
         public UInt32 constant;
         public UInt32 block_size;
         public UInt32 unknown1;
-        public UInt64 unknown2;         // ¿¿ padding ??
+        public UInt64 unknown2;         // padding?
         public Bank[] banks;
     }
     public struct Bank
@@ -170,7 +187,7 @@ namespace PluginInterface
     #region NANR
     public struct NANR
     {
-        public Header cabecera;
+        public Header header;
         public ABNK abnk;
         public LABL labl;
         public UEXT uext;
@@ -231,21 +248,21 @@ namespace PluginInterface
         public UInt32 unknown;
     }
 
-    public enum Formato
+    public enum Format
     {
-        Paleta,
-        Imagen,
+        Palette,
+        Tile,
         Map,
-        Celdas,
-        Animación,
-        ImagenCompleta,
-        Texto,
+        Cell,
+        Animation,
+        FullImage,
+        Text,
         Video,
-        Sonido,
-        Fuentes,
-        Comprimido,
-        Desconocido,
-        Sistema,
+        Sound,
+        Font,
+        Compressed,
+        Unknown,
+        System,
         Script,
         Pack,
         Model3D,
@@ -264,9 +281,9 @@ namespace PluginInterface
         GBA,
         Invalid
     }
-    public enum Orden_Tiles
+    public enum TileOrder
     {
-        No_Tiles,
+        NoTiled,
         Horizontal,
         Vertical
     }

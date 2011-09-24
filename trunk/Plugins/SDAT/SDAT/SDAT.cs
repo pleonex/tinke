@@ -33,21 +33,21 @@ namespace SDAT
         string archivo;
 
         #region Plugin
-        public Formato Get_Formato(string nombre, byte[] magic)
+        public Format Get_Format(string nombre, byte[] magic)
         {
             nombre = nombre.ToUpper();
             string ext = new String(System.Text.Encoding.ASCII.GetChars(magic));
 
             if (ext == "SDAT" || (nombre.EndsWith(".SWAV") || ext == "SWAV"))
-                return Formato.Sonido;
+                return Format.Sound;
 
-            return Formato.Desconocido;
+            return Format.Unknown;
         }
-        public void Inicializar(IPluginHost pluginHost)
+        public void Initialize(IPluginHost pluginHost)
         {
             this.pluginHost = pluginHost;
         }
-        public void Leer(string archivo, int id)
+        public void Read(string archivo, int id)
         {
         }
         public Control Show_Info(string archivo, int id)

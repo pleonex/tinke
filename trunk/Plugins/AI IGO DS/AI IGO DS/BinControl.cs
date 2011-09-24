@@ -46,7 +46,7 @@ namespace AI_IGO_DS
             if (isMap)
             {
                 NSCR map = pluginHost.Get_NSCR();
-                tiles[0].rahc.tileData = pluginHost.Transformar_NSCR(map, tiles[0].rahc.tileData);
+                tiles[0].rahc.tileData = pluginHost.Transform_NSCR(map, tiles[0].rahc.tileData);
                 tiles[0].rahc.nTilesX = (ushort)(map.section.width / 8);
                 tiles[0].rahc.nTilesY = (ushort)(map.section.height / 8);
             }
@@ -115,7 +115,7 @@ namespace AI_IGO_DS
             if (checkTransparency.Checked)
             {
                 Bitmap imagen = (Bitmap)picBox.Image;
-                imagen.MakeTransparent(paleta.pltt.paletas[0].colores[0]);
+                imagen.MakeTransparent(paleta.pltt.palettes[0].colors[0]);
                 picBox.Image = imagen;
             }
         }

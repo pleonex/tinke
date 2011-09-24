@@ -18,20 +18,20 @@ namespace AI_IGO_DS
             ansc.id = (uint)id;
 
             // Lee cabecera genérica
-            ansc.cabecera.id = br.ReadChars(4);
-            ansc.cabecera.endianess = 0xFEFF;
-            ansc.cabecera.constant = 0x0100;
-            ansc.cabecera.file_size = (uint)br.ReadUInt16() + 0x06;
-            ansc.cabecera.header_size = 0x10;
-            ansc.cabecera.nSection = 1;
+            ansc.header.id = br.ReadChars(4);
+            ansc.header.endianess = 0xFEFF;
+            ansc.header.constant = 0x0100;
+            ansc.header.file_size = (uint)br.ReadUInt16() + 0x06;
+            ansc.header.header_size = 0x10;
+            ansc.header.nSection = 1;
 
             // Lee primera y única sección:
             ansc.section.id = "ANSC".ToCharArray();
-            ansc.section.section_size = ansc.cabecera.file_size;
+            ansc.section.section_size = ansc.header.file_size;
             ansc.section.width = 0x0100;
             ansc.section.height = 0x00C0;
             ansc.section.padding = 0x00000000;
-            ansc.section.data_size = ansc.cabecera.file_size - 0x06;
+            ansc.section.data_size = ansc.header.file_size - 0x06;
             ansc.section.mapData = new NTFS[ansc.section.data_size / 2];
 
             for (int i = 0; i < ansc.section.mapData.Length; i++)

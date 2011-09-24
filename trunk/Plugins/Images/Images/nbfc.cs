@@ -49,12 +49,12 @@ namespace Images
 			// Creamos un archivo NCGR genérico.
 			NCGR ncgr = new NCGR();
             ncgr.id = (uint)id;
-			ncgr.cabecera.id = "NBFC".ToCharArray();
-			ncgr.cabecera.nSection = 1;
-			ncgr.cabecera.constant = 0x0100;
-			ncgr.cabecera.file_size = file_size;
+			ncgr.header.id = "NBFC".ToCharArray();
+			ncgr.header.nSection = 1;
+			ncgr.header.constant = 0x0100;
+			ncgr.header.file_size = file_size;
 			// El archivo es NTFT raw, sin ninguna información.
-			ncgr.orden = Orden_Tiles.Horizontal;
+			ncgr.order = TileOrder.Horizontal;
 
             if (file_size == 512)
             {
@@ -73,7 +73,7 @@ namespace Images
 			ncgr.rahc.tiledFlag = 0x00000000;
 			ncgr.rahc.size_section = file_size;
 			ncgr.rahc.tileData = new NTFT();
-			ncgr.rahc.tileData.nPaleta = new byte[ncgr.rahc.nTiles];
+			ncgr.rahc.tileData.nPalette = new byte[ncgr.rahc.nTiles];
 			ncgr.rahc.tileData.tiles = new byte[ncgr.rahc.nTiles][];
 			
 			for (int i = 0; i < ncgr.rahc.nTiles; i++)
@@ -83,7 +83,7 @@ namespace Images
 				else
                     ncgr.rahc.tileData.tiles[i] = pluginsHost.BytesTo4BitsRev(br.ReadBytes(32));
 
-                ncgr.rahc.tileData.nPaleta[i] = 0;
+                ncgr.rahc.tileData.nPalette[i] = 0;
 			}
 			
 			br.Close();

@@ -92,47 +92,47 @@
   </English>
   <Français>
     <NFTR>
-      <S00>Reading NFTR font file...</S00>
-      <S01>Number of blocks: {0}</S01>
-      <S02>Section: {0}</S02>
-      <S03>Block size: 0x{0}</S03>
-      <S04>Unknown 1: 0x{0}</S04>
-      <S05>Unknown 2: 0x{0}</S05>
-      <S06>PLGC offset: 0x{0}</S06>
-      <S07>HDWC offset: 0x{0}</S07>
-      <S08>PAMC offset: 0x{0}</S08>
-      <S09>Unknown 3: 0x{0}</S09>
-      <S0A>Tile width: {0}</S0A>
-      <S0B>Tile height: {0}</S0B>
-      <S0C>Tile length: {0}</S0C>
-      <S0D>Unknown: 0x{0}</S0D>
-      <S0E>Depth: {0}</S0E>
-      <S0F>Rotate mode: {0}</S0F>
-      <S10>Unknown 2: {0}</S10>
-      <S11>First code: 0x{0}</S11>
-      <S12>Last code: 0x{0}</S12>
-      <S13>Unknown 1: 0x{0}</S13>
-      <S14>First char: 0x{0}</S14>
-      <S15>Last char: 0x{0}</S15>
-      <S16>Type: {0}</S16>
-      <S17>Info type {0}</S17>
-      <S18>First char code: 0x{0}</S18>
-      <S19>Number of elements: {0}</S19>
-      <S1A>Char code {0}: 0x{1} ({2})</S1A>
-      <S1B>Number of chars: {0}</S1B>
-      <S1C>Char code {0}: 0x{1}</S1C>
-      <S1D>Char {0}: {1}</S1D>
+      <S00>Lecture du fichier police NFTR...</S00>
+      <S01>Nombre de blocs : {0}</S01>
+      <S02>Section : {0}</S02>
+      <S03>Taille du bloc : 0x{0}</S03>
+      <S04>Inconnu 1 : 0x{0}</S04>
+      <S05>Inconnu 2 : 0x{0}</S05>
+      <S06>Offset PLGC : 0x{0}</S06>
+      <S07>Offset HDWC : 0x{0}</S07>
+      <S08>Offset PAMC : 0x{0}</S08>
+      <S09>Inconnu 3 : 0x{0}</S09>
+      <S0A>Largeur de la tuile : {0}</S0A>
+      <S0B>Hauteur de la tuile : {0}</S0B>
+      <S0C>Longueur de la tuile : {0}</S0C>
+      <S0D>Inconnu : 0x{0}</S0D>
+      <S0E>Profondeur : {0}</S0E>
+      <S0F>Mode de rotation : {0}</S0F>
+      <S10>Inconnu 2 : {0}</S10>
+      <S11>Premier code : 0x{0}</S11>
+      <S12>Dernier code : 0x{0}</S12>
+      <S13>Inconnu 1 : 0x{0}</S13>
+      <S14>Premier caractère : 0x{0}</S14>
+      <S15>Dernier caractère : 0x{0}</S15>
+      <S16>Type : {0}</S16>
+      <S17>Type d'info. {0}</S17>
+      <S18>Premier code du caractère : 0x{0}</S18>
+      <S19>Nombre d'éléments : {0}</S19>
+      <S1A>Code du caractère {0} : 0x{1} ({2})</S1A>
+      <S1B>Nombre de caractères : {0}</S1B>
+      <S1C>Code du caractère {0} : 0x{1}</S1C>
+      <S1D>Caractère {0} : {1}</S1D>
     </NFTR>
     <FontControl>
-      <S00>Save new font</S00>
-      <S01>Apply changes</S01>
-      <S02>Encoding:</S02>
+      <S00>Sauver la nouvelle police (font)</S00>
+      <S01>Appliquer les changements</S01>
+      <S02>Codage :</S02>
     </FontControl>
     <CharControl>
-      <S00>Width:</S00>
-      <S01>Start:</S01>
-      <S02>Length:</S02>
-      <S03>Char code:</S03>
+      <S00>Largeur :</S00>
+      <S01>Début :</S01>
+      <S02>Longeur :</S02>
+      <S03>Code :</S03>
     </CharControl>
   </Français>
 </Language>

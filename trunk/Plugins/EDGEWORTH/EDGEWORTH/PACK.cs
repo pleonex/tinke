@@ -14,8 +14,8 @@ namespace EDGEWORTH
             String romFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + Path.GetRandomFileName();
             File.Copy(file, romFile, true);
             BinaryReader br = new BinaryReader(File.OpenRead(file));
-            Carpeta unpacked = new Carpeta();
-            unpacked.files = new List<Archivo>();
+            sFolder unpacked = new sFolder();
+            unpacked.files = new List<sFile>();
 
             uint num_files = (br.ReadUInt32() / 0x04) - 1;
             br.ReadUInt32(); // Pointer table
@@ -25,7 +25,7 @@ namespace EDGEWORTH
                 long currPos = br.BaseStream.Position;
                 br.BaseStream.Position = startOffset;
 
-                Archivo newFile = new Archivo();
+                sFile newFile = new sFile();
                 newFile.name = "File " + i.ToString();
                 newFile.offset = startOffset + 4;
                 newFile.path = romFile;
@@ -38,7 +38,7 @@ namespace EDGEWORTH
             br.Close();
             pluginHost.Set_Files(unpacked);
         }
-        public static void Write(string output, Carpeta unpackedFiles)
+        public static void Write(string output, sFolder unpackedFiles)
         {
             BinaryWriter bw = new BinaryWriter(File.OpenWrite(output));
 

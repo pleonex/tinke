@@ -85,7 +85,7 @@ namespace LAYTON
             o.OverwritePrompt = true;
 
             if (o.ShowDialog() == DialogResult.OK)
-                pluginHost.Crear_APNG(o.FileName, imagenes, Convert.ToInt32(maskedTextBox1.Text), 0);
+                pluginHost.Create_APNG(o.FileName, imagenes, Convert.ToInt32(maskedTextBox1.Text), 0);
                 
         }
 

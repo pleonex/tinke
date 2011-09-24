@@ -54,7 +54,7 @@ namespace NARC
 
             pluginHost.ChangeFile(narc.file_id, narcFile);
         }
-        private void Save_NARC(string fileout, Carpeta decompressed)
+        private void Save_NARC(string fileout, sFolder decompressed)
         {
             /* Structure of the file
              * 
@@ -116,7 +116,7 @@ namespace NARC
             File.Delete(btnfTmp);
             File.Delete(gmifTmp);
         }
-        private void Write_BTAF(string fileout, uint startOffset, Carpeta decompressed)
+        private void Write_BTAF(string fileout, uint startOffset, sFolder decompressed)
         {
             BinaryWriter bw = new BinaryWriter(File.OpenWrite(fileout));
             uint offset = 0;
@@ -127,7 +127,7 @@ namespace NARC
 
             for (int i = 0; i < narc.btaf.nFiles; i++)
             {
-                Archivo currFile = Search_File(i + decompressed.id, decompressed);
+                sFile currFile = Search_File(i + decompressed.id, decompressed);
                 bw.Write(offset);
                 offset += currFile.size;
                 bw.Write(offset);
@@ -136,13 +136,13 @@ namespace NARC
             bw.Flush();
             bw.Close();
         }
-        private void Write_GMIF(string fileout, Carpeta decompressed)
+        private void Write_GMIF(string fileout, sFolder decompressed)
         {
             BinaryWriter bw = new BinaryWriter(File.OpenWrite(fileout));
 
             for (int i = 0; i < narc.btaf.nFiles; i++)
             {
-                Archivo currFile = Search_File(i + decompressed.id, decompressed);
+                sFile currFile = Search_File(i + decompressed.id, decompressed);
                 BinaryReader br = new BinaryReader(File.OpenRead(currFile.path));
                 br.BaseStream.Position = currFile.offset;
 
@@ -155,25 +155,25 @@ namespace NARC
             bw.Close();
             narc.gmif.section_size = (uint)(new FileInfo(fileout).Length) + 0x08;
         }
-        private Archivo Search_File(int id, Carpeta currFolder)
+        private sFile Search_File(int id, sFolder currFolder)
         {
-            if (currFolder.files is List<Archivo>)
-                foreach (Archivo archivo in currFolder.files)
+            if (currFolder.files is List<sFile>)
+                foreach (sFile archivo in currFolder.files)
                     if (archivo.id == id)
                         return archivo;
 
 
-            if (currFolder.folders is List<Carpeta>)
+            if (currFolder.folders is List<sFolder>)
             {
-                foreach (Carpeta subFolder in currFolder.folders)
+                foreach (sFolder subFolder in currFolder.folders)
                 {
-                    Archivo currFile = Search_File(id, subFolder);
+                    sFile currFile = Search_File(id, subFolder);
                     if (currFile.name is string)
                         return currFile;
                 }
             }
 
-            return new Archivo();
+            return new sFile();
         }
 
     }

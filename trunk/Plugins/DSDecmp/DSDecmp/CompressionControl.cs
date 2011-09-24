@@ -81,7 +81,7 @@ namespace DSDecmp
 
         private void btnCompress_Click(object sender, EventArgs e)
         {
-            Archivo decompressedFile = pluginHost.Get_DecompressedFiles(id).files[0];
+            sFile decompressedFile = pluginHost.Get_DecompressedFiles(id).files[0];
             String filein = decompressedFile.path;
             String fileout = System.IO.Path.GetTempFileName();
 
@@ -100,7 +100,7 @@ namespace DSDecmp
         }
         private void btnSearchCompression_Click(object sender, EventArgs e)
         {
-            Archivo decompressedFile = pluginHost.Get_DecompressedFiles(id).files[0];
+            sFile decompressedFile = pluginHost.Get_DecompressedFiles(id).files[0];
             String filein = decompressedFile.path;
             String fileout = System.IO.Path.GetTempFileName();
 

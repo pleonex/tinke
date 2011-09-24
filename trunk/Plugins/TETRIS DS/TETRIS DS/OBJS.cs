@@ -12,11 +12,11 @@ namespace TETRIS_DS
     {
         public static void Read(string file, IPluginHost pluginHost)
         {
-            pluginHost.Descomprimir(file);
+            pluginHost.Decompress(file);
             string dec_file;
-            Carpeta dec_folder = pluginHost.Get_Files();
+            sFolder dec_folder = pluginHost.Get_Files();
 
-            if (dec_folder.files is List<Archivo>)
+            if (dec_folder.files is List<sFile>)
                 dec_file = dec_folder.files[0].path;
             else
             {
@@ -25,7 +25,7 @@ namespace TETRIS_DS
                 Array.Copy(File.ReadAllBytes(file), 0x08, compressFile, 0, compressFile.Length); ;
                 File.WriteAllBytes(tempFile, compressFile);
 
-                pluginHost.Descomprimir(tempFile);
+                pluginHost.Decompress(tempFile);
                 dec_file = pluginHost.Get_Files().files[0].path;
             }
 
@@ -76,20 +76,20 @@ namespace TETRIS_DS
             #region Palette
             NCLR nclr = new NCLR();
             uint file_size = (uint)(br.BaseStream.Length - br.BaseStream.Position);
-            nclr.cabecera.id = "OBJS".ToCharArray();
-            nclr.cabecera.constant = 0x0100;
-            nclr.cabecera.file_size = file_size;
-            nclr.cabecera.header_size = 0x10;
+            nclr.header.id = "OBJS".ToCharArray();
+            nclr.header.constant = 0x0100;
+            nclr.header.file_size = file_size;
+            nclr.header.header_size = 0x10;
 
             nclr.pltt.ID = "PLZ ".ToCharArray();
-            nclr.pltt.tamaño = file_size;
-            nclr.pltt.profundidad = (file_size > 0x20) ? System.Windows.Forms.ColorDepth.Depth8Bit : System.Windows.Forms.ColorDepth.Depth4Bit;
+            nclr.pltt.length = file_size;
+            nclr.pltt.depth = (file_size > 0x20) ? System.Windows.Forms.ColorDepth.Depth8Bit : System.Windows.Forms.ColorDepth.Depth4Bit;
             nclr.pltt.unknown1 = 0x00000000;
-            nclr.pltt.tamañoPaletas = file_size;
-            nclr.pltt.nColores = file_size / 2;
-            nclr.pltt.paletas = new NTFP[1];
+            nclr.pltt.paletteLength = file_size;
+            nclr.pltt.nColors = file_size / 2;
+            nclr.pltt.palettes = new NTFP[1];
 
-            nclr.pltt.paletas[0].colores = pluginHost.BGR555(br.ReadBytes((int)file_size));
+            nclr.pltt.palettes[0].colors = pluginHost.BGR555(br.ReadBytes((int)file_size));
 
             pluginHost.Set_NCLR(nclr);
             #endregion

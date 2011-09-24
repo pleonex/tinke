@@ -18,9 +18,9 @@ namespace Tinke.Nitro
         /// <param name="file">Archivo ROM</param>
         /// <param name="offset">Offset donde comienza la FNT</param>
         /// <returns></returns>
-        public static Carpeta LeerFNT(string file, UInt32 offset)
+        public static sFolder LeerFNT(string file, UInt32 offset)
         {
-            Carpeta root = new Carpeta();
+            sFolder root = new sFolder();
             List<Estructuras.MainFNT> mains = new List<Estructuras.MainFNT>();
 
             BinaryReader br = new BinaryReader(File.OpenRead(file)); 
@@ -47,10 +47,10 @@ namespace Tinke.Nitro
                 {
                     if (id < 0x80)  // Archivo
                     {
-                        Archivo currFile = new Archivo();
+                        sFile currFile = new sFile();
 
-                        if (!(main.subTable.files is List<Archivo>))
-                            main.subTable.files = new List<Archivo>();
+                        if (!(main.subTable.files is List<sFile>))
+                            main.subTable.files = new List<sFile>();
 
                         int lengthName = id;
                         currFile.name = new String(Encoding.GetEncoding("shift-jis").GetChars(br.ReadBytes(lengthName)));
@@ -60,10 +60,10 @@ namespace Tinke.Nitro
                     }
                     if (id > 0x80)  // Directorio
                     {
-                        Carpeta currFolder = new Carpeta();
+                        sFolder currFolder = new sFolder();
 
-                        if (!(main.subTable.folders is List<Carpeta>))
-                           main.subTable.folders = new List<Carpeta>();
+                        if (!(main.subTable.folders is List<sFolder>))
+                           main.subTable.folders = new List<sFolder>();
 
                         int lengthName = id - 0x80;
                         currFolder.name = new String(Encoding.GetEncoding("shift-jis").GetChars(br.ReadBytes(lengthName)));
@@ -87,26 +87,26 @@ namespace Tinke.Nitro
             return root;
         }
 
-        public static Carpeta Jerarquizar_Carpetas(List<Estructuras.MainFNT> tables, int idFolder, string nameFolder)
+        public static sFolder Jerarquizar_Carpetas(List<Estructuras.MainFNT> tables, int idFolder, string nameFolder)
         {
-            Carpeta currFolder = new Carpeta();
+            sFolder currFolder = new sFolder();
             
             currFolder.name = nameFolder;
             currFolder.id = (ushort)idFolder;
             currFolder.files = tables[idFolder & 0xFFF].subTable.files;
 
-            if (tables[idFolder & 0xFFF].subTable.folders is List<Carpeta>) // Si tiene carpetas dentro.
+            if (tables[idFolder & 0xFFF].subTable.folders is List<sFolder>) // Si tiene carpetas dentro.
            {
-                currFolder.folders = new List<Carpeta>();
+                currFolder.folders = new List<sFolder>();
 
-                foreach (Carpeta subFolder in tables[idFolder & 0xFFF].subTable.folders)
+                foreach (sFolder subFolder in tables[idFolder & 0xFFF].subTable.folders)
                     currFolder.folders.Add(Jerarquizar_Carpetas(tables, subFolder.id, subFolder.name));
            }
 
             return currFolder;
         }
 
-        private static void Obtener_Mains(Carpeta currFolder, List<Estructuras.MainFNT> mains, int nTotalMains, ushort parent)
+        private static void Obtener_Mains(sFolder currFolder, List<Estructuras.MainFNT> mains, int nTotalMains, ushort parent)
         {
             // Añadimos la carpeta actual al sistema
             Estructuras.MainFNT main = new Estructuras.MainFNT();
@@ -117,13 +117,13 @@ namespace Tinke.Nitro
             mains.Add(main);
 
             // Seguimos buscando más carpetas
-            if (currFolder.folders is List<Carpeta>)
-                foreach (Carpeta subFolder in currFolder.folders)
+            if (currFolder.folders is List<sFolder>)
+                foreach (sFolder subFolder in currFolder.folders)
                     Obtener_Mains(subFolder, mains, nTotalMains, currFolder.id);
         }
-        private static int Obtener_FirstID(Carpeta currFolder)
+        private static int Obtener_FirstID(sFolder currFolder)
         {
-            if (currFolder.folders is List<Carpeta>)
+            if (currFolder.folders is List<sFolder>)
             {
                 for (int i = 0; i < currFolder.folders.Count; i++)
                 {
@@ -133,7 +133,7 @@ namespace Tinke.Nitro
                 }
             }
 
-            if (currFolder.files is List<Archivo>)
+            if (currFolder.files is List<sFile>)
                 return currFolder.files[0].id;
 
             return -1;

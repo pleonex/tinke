@@ -11,39 +11,39 @@ namespace TETRIS_DS
         String gameCode;
 
 
-        public void Inicializar(IPluginHost pluginHost, string gameCode)
+        public void Initialize(IPluginHost pluginHost, string gameCode)
         {
             this.pluginHost = pluginHost;
             this.gameCode = gameCode;
         }
-        public bool EsCompatible()
+        public bool IsCompatible()
         {
             if (gameCode == "ATRP")
                 return true;
             return false;
         }
 
-        public Formato Get_Formato(string nombre, byte[] magic, int id)
+        public Format Get_Format(string nombre, byte[] magic, int id)
         {
             if (nombre.ToUpper().EndsWith(".CZ"))
-                return Formato.Imagen;
+                return Format.Tile;
             else if (nombre.ToUpper().EndsWith(".BDZ") || nombre.ToUpper().EndsWith(".BLZ"))
-                return Formato.Imagen;
+                return Format.Tile;
             else if (nombre.ToUpper().EndsWith(".SLZ"))
-                return Formato.Map;
+                return Format.Map;
             else if (nombre.ToUpper().EndsWith(".PLZ"))
-                return Formato.Paleta;
+                return Format.Palette;
             else if (nombre.ToUpper().EndsWith(".CLZ") || nombre.ToUpper().EndsWith(".CHR"))
-                return Formato.Imagen;
+                return Format.Tile;
             else if (nombre.ToUpper().EndsWith(".OBJS"))
-                return Formato.Celdas;
+                return Format.Cell;
             else if (nombre.ToUpper().EndsWith(".SRL"))
-                return Formato.Sistema;
+                return Format.System;
 
-            return Formato.Desconocido;
+            return Format.Unknown;
         }
 
-        public void Leer(string archivo, int id)
+        public void Read(string archivo, int id)
         {
             if (archivo.ToUpper().EndsWith(".CZ"))
                 CZ.Read(archivo, id, pluginHost);
@@ -60,14 +60,14 @@ namespace TETRIS_DS
         }
         public System.Windows.Forms.Control Show_Info(string archivo, int id)
         {
-            Leer(archivo, id);
+            Read(archivo, id);
 
-            if (archivo.ToUpper().EndsWith(".CZ") && pluginHost.Get_NCLR().cabecera.file_size != 0x00)
+            if (archivo.ToUpper().EndsWith(".CZ") && pluginHost.Get_NCLR().header.file_size != 0x00)
                 return new ImageControl(pluginHost, false);
             else if (archivo.ToUpper().EndsWith(".SLZ") &&
-                pluginHost.Get_NCGR().cabecera.file_size != 0x00 && pluginHost.Get_NCLR().cabecera.file_size != 0x00)
+                pluginHost.Get_NCGR().header.file_size != 0x00 && pluginHost.Get_NCLR().header.file_size != 0x00)
                 return new ImageControl(pluginHost, true);
-            else if ((archivo.ToUpper().EndsWith(".CLZ") || archivo.ToUpper().EndsWith(".CHR")) && pluginHost.Get_NCLR().cabecera.file_size != 0x00)
+            else if ((archivo.ToUpper().EndsWith(".CLZ") || archivo.ToUpper().EndsWith(".CHR")) && pluginHost.Get_NCLR().header.file_size != 0x00)
                 return new ImageControl(pluginHost, false);
             else if (archivo.ToUpper().EndsWith(".PLZ"))
                 return new PaletteControl(pluginHost);

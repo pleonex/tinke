@@ -11,27 +11,26 @@ namespace Common
     {
         IPluginHost pluginHost;
 
-        public Formato Get_Formato(string nombre, byte[] magic)
+        public Format Get_Format(string nombre, byte[] magic)
         {
             nombre = nombre.ToUpper();
             string ext = new String(Encoding.ASCII.GetChars(magic));
 
             if (nombre.EndsWith(".TGA") || nombre.EndsWith(".JPG") || nombre.EndsWith(".PNG") || nombre.EndsWith(".BMP"))
-                return Formato.ImagenCompleta;
+                return Format.FullImage;
             else if (nombre.EndsWith(".WAV") || ext == "RIFF")
-                return Formato.Sonido;
+                return Format.Sound;
             
-            return Formato.Desconocido;
+            return Format.Unknown;
         }
 
-        public void Inicializar(IPluginHost pluginHost)
+        public void Initialize(IPluginHost pluginHost)
         {
             this.pluginHost = pluginHost;
         }
 
-        public void Leer(string archivo, int id)
+        public void Read(string archivo, int id)
         {
-            MessageBox.Show("Estos archivos no pueden guardar información.");
         }
 
         public Control Show_Info(string archivo, int id)

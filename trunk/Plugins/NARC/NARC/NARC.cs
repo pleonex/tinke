@@ -14,23 +14,23 @@ namespace NARC
         string narcFile;
         ARC narc;
 
-        public void Inicializar(IPluginHost pluginHost)
+        public void Initialize(IPluginHost pluginHost)
         {
             this.pluginHost = pluginHost;
         }
-        public Formato Get_Formato(string nombre, byte[] magic)
+        public Format Get_Format(string nombre, byte[] magic)
         {
             nombre = nombre.ToUpper();
             string id = new String(Encoding.ASCII.GetChars(magic));
 
             if (id == "NARC" || id == "CRAN" || (nombre.EndsWith("UTILITY.BIN") && magic[0] == 0x10))
-                return Formato.Pack;
+                return Format.Pack;
 
-            return Formato.Desconocido;
+            return Format.Unknown;
         }
 
 
-        public void Leer(string archivo, int idArchivo)
+        public void Read(string archivo, int idArchivo)
         {
             if (archivo.ToUpper().EndsWith("UTILITY.BIN"))
             {
@@ -84,11 +84,11 @@ namespace NARC
 
                     for (int i = 0; i < arc.btaf.nFiles; i++)
                     {
-                        Archivo currFile = new Archivo();
+                        sFile currFile = new sFile();
                         currFile.id = (ushort)idFile; idFile++;
                         currFile.name = "file" + idFile.ToString();
-                        if (!(main.files is List<Archivo>))
-                            main.files = new List<Archivo>();
+                        if (!(main.files is List<sFile>))
+                            main.files = new List<sFile>();
                         main.files.Add(currFile);
                     }
                     br.BaseStream.Position = main.offset + pos; // Para que funcione la condición while
@@ -103,21 +103,21 @@ namespace NARC
                 {
                     if (id < 0x80)  // Es archivo
                     {
-                        Archivo currFile = new Archivo();
+                        sFile currFile = new sFile();
                         currFile.id = (ushort)idFile;
                         idFile++;
                         currFile.name = new String(br.ReadChars(id));
-                        if (!(main.files is List<Archivo>))
-                            main.files = new List<Archivo>();
+                        if (!(main.files is List<sFile>))
+                            main.files = new List<sFile>();
                         main.files.Add(currFile);
                     }
                     else if (id > 0x80) // Es carpeta
                     {
-                        Carpeta currFolder = new Carpeta();
+                        sFolder currFolder = new sFolder();
                         currFolder.name = new String(br.ReadChars(id - 0x80));
                         currFolder.id = br.ReadUInt16();
-                        if (!(main.folders is List<Carpeta>))
-                            main.folders = new List<Carpeta>();
+                        if (!(main.folders is List<sFolder>))
+                            main.folders = new List<sFolder>();
                         main.folders.Add(currFolder);
                     }
 
@@ -129,7 +129,7 @@ namespace NARC
             } while (arc.btnf.entries[0].offset + pos != br.BaseStream.Position);
 
             br.BaseStream.Position = pos - 8 + arc.btnf.section_size;
-            Carpeta root = Jerarquizar_Carpetas(arc.btnf.entries, 0xF000, "root");
+            sFolder root = Jerarquizar_Carpetas(arc.btnf.entries, 0xF000, "root");
             #endregion
 
             // Lee tercera sección GMIF (File IMaGe)
@@ -147,33 +147,33 @@ namespace NARC
             pluginHost.Set_Files(root);
             narc = arc;
         }
-        public Carpeta Jerarquizar_Carpetas(List<BTNF_MainEntry> entries, int idFolder, string nameFolder)
+        public sFolder Jerarquizar_Carpetas(List<BTNF_MainEntry> entries, int idFolder, string nameFolder)
         {
-            Carpeta currFolder = new Carpeta();
+            sFolder currFolder = new sFolder();
 
             currFolder.name = nameFolder;
             currFolder.id = (ushort)idFolder;
             currFolder.files = entries[idFolder & 0xFFF].files;
 
-            if (entries[idFolder & 0xFFF].folders is List<Carpeta>) // Si tiene carpetas dentro.
+            if (entries[idFolder & 0xFFF].folders is List<sFolder>) // Si tiene carpetas dentro.
             {
-                currFolder.folders = new List<Carpeta>();
+                currFolder.folders = new List<sFolder>();
 
-                foreach (Carpeta subFolder in entries[idFolder & 0xFFF].folders)
+                foreach (sFolder subFolder in entries[idFolder & 0xFFF].folders)
                     currFolder.folders.Add(Jerarquizar_Carpetas(entries, subFolder.id, subFolder.name));
             }
 
             return currFolder;
         }
-        public void Asignar_Archivos(Carpeta currFolder, int idFile, UInt32 size, UInt32 offset)
+        public void Asignar_Archivos(sFolder currFolder, int idFile, UInt32 size, UInt32 offset)
         {
-            if (currFolder.files is List<Archivo>)
+            if (currFolder.files is List<sFile>)
             {
                 for (int i = 0; i < currFolder.files.Count; i++)
                 {
                     if (currFolder.files[i].id == idFile)
                     {
-                        Archivo newFile = currFolder.files[i];
+                        sFile newFile = currFolder.files[i];
                         newFile.size = size;
                         newFile.offset = offset;
                         newFile.path = narcFile;
@@ -185,14 +185,14 @@ namespace NARC
                 }
             }
 
-            if (currFolder.folders is List<Carpeta>) // Si tiene carpetas dentro.
-                foreach (Carpeta subFolder in currFolder.folders)
+            if (currFolder.folders is List<sFolder>) // Si tiene carpetas dentro.
+                foreach (sFolder subFolder in currFolder.folders)
                     Asignar_Archivos(subFolder, idFile, size, offset);
         }
 
         public Control Show_Info(string archivo, int id)
         {
-            Leer(archivo, id);
+            Read(archivo, id);
 
             if (new String(narc.id) == "NARC")
             {
@@ -247,8 +247,8 @@ namespace NARC
         public UInt32 offset;       // Relativo a la primera entrada
         public UInt32 first_pos;    // ID del primer archivo.
         public UInt32 parent;       // En el caso de root, número de carpetas;
-        public List<Archivo> files;
-        public List<Carpeta> folders;
+        public List<sFile> files;
+        public List<sFolder> folders;
     }
     public struct GMIF
     {

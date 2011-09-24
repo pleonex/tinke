@@ -9,7 +9,7 @@ namespace Tinke.Nitro
 {
     public static class FAT
     {
-        public static Carpeta LeerFAT(string file, UInt32 offset, UInt32 size, Carpeta root)
+        public static sFolder LeerFAT(string file, UInt32 offset, UInt32 size, sFolder root)
         {
             BinaryReader br = new BinaryReader(File.OpenRead(file));
             br.BaseStream.Position = offset;
@@ -24,7 +24,7 @@ namespace Tinke.Nitro
             br.Close();
             return root;
         }
-        public static void EscribirFAT(string salida, Carpeta root, int nFiles, uint offsetFAT, uint offsetOverlay9,
+        public static void EscribirFAT(string salida, sFolder root, int nFiles, uint offsetFAT, uint offsetOverlay9,
             uint offsetOverlay7)
         {
             BinaryWriter bw = new BinaryWriter(new FileStream(salida, FileMode.Create));
@@ -34,7 +34,7 @@ namespace Tinke.Nitro
 
             for (int i = 0; i < nFiles; i++)
             {
-                Archivo currFile = BuscarArchivo(i, root);
+                sFile currFile = BuscarArchivo(i, root);
                 if (currFile.name.StartsWith("overlay9"))
                 {
                     bw.Write(offsetOverlay9);
@@ -60,11 +60,11 @@ namespace Tinke.Nitro
             Console.WriteLine(Tools.Helper.ObtenerTraduccion("Messages", "S09"), new FileInfo(salida).Length);
         }
 
-        private static Archivo BuscarArchivo(int id, Carpeta currFolder)
+        private static sFile BuscarArchivo(int id, sFolder currFolder)
         {
             if (currFolder.id == id) // Archivos descomprimidos
             {
-                Archivo folderFile = new Archivo();
+                sFile folderFile = new sFile();
                 folderFile.name = currFolder.name;
                 folderFile.id = currFolder.id;
                 folderFile.size = Convert.ToUInt32(((String)currFolder.tag).Substring(0, 8), 16);
@@ -74,54 +74,54 @@ namespace Tinke.Nitro
                 return folderFile;
             }
 
-            if (currFolder.files is List<Archivo>)
-                foreach (Archivo archivo in currFolder.files)
+            if (currFolder.files is List<sFile>)
+                foreach (sFile archivo in currFolder.files)
                     if (archivo.id == id)
                         return archivo;
 
 
-            if (currFolder.folders is List<Carpeta>)
+            if (currFolder.folders is List<sFolder>)
             {
-                foreach (Carpeta subFolder in currFolder.folders)
+                foreach (sFolder subFolder in currFolder.folders)
                 {
-                    Archivo currFile = BuscarArchivo(id, subFolder);
+                    sFile currFile = BuscarArchivo(id, subFolder);
                     if (currFile.name is string)
                         return currFile;
                 }
             }
 
-            return new Archivo();
+            return new sFile();
         }
-        private static Archivo BuscarArchivo(string name, Carpeta currFolder)
+        private static sFile BuscarArchivo(string name, sFolder currFolder)
         {
-            if (currFolder.files is List<Archivo>)
-                foreach (Archivo archivo in currFolder.files)
+            if (currFolder.files is List<sFile>)
+                foreach (sFile archivo in currFolder.files)
                     if (archivo.name == name)
                         return archivo;
 
 
-            if (currFolder.folders is List<Carpeta>)
+            if (currFolder.folders is List<sFolder>)
             {
-                foreach (Carpeta subFolder in currFolder.folders)
+                foreach (sFolder subFolder in currFolder.folders)
                 {
-                    Archivo currFile = BuscarArchivo(name, subFolder);
+                    sFile currFile = BuscarArchivo(name, subFolder);
                     if (currFile.name is String)
                         return currFile;
                 }
             }
 
-            return new Archivo();
+            return new sFile();
         }
 
-        private static void Asignar_Archivo(int id, UInt32 offset, UInt32 size, String romFile, Carpeta currFolder)
+        private static void Asignar_Archivo(int id, UInt32 offset, UInt32 size, String romFile, sFolder currFolder)
         {
-            if (currFolder.files is List<Archivo>)
+            if (currFolder.files is List<sFile>)
             {
                 for (int i = 0; i < currFolder.files.Count; i++)
                 {
                     if (currFolder.files[i].id == id)
                     {
-                        Archivo newFile = currFolder.files[i];
+                        sFile newFile = currFolder.files[i];
                         newFile.offset = offset;
                         newFile.size = size;
                         newFile.path = romFile;
@@ -132,8 +132,8 @@ namespace Tinke.Nitro
                 }
             }
 
-            if (currFolder.folders is List<Carpeta>)
-                foreach (Carpeta subFolder in currFolder.folders)
+            if (currFolder.folders is List<sFolder>)
+                foreach (sFolder subFolder in currFolder.folders)
                     Asignar_Archivo(id, offset, size, romFile, subFolder);
         }
 

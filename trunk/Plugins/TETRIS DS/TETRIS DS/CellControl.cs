@@ -287,7 +287,7 @@ namespace TETRIS_DS
                 if (Image.FromFile(o.FileName).Size != new Size(512, 512))
                     throw new NotSupportedException();
 
-                NCGR bitmap = Imagen_NCGR.BitmapToTile(o.FileName, Orden_Tiles.No_Tiles);
+                NCGR bitmap = Imagen_NCGR.BitmapToTile(o.FileName, TileOrder.NoTiled);
 
                 for (int i = 0; i < ncer.cebk.banks[comboCelda.SelectedIndex].cells.Length; i++)
                 {

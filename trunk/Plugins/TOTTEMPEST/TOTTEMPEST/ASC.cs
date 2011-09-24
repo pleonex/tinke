@@ -37,12 +37,12 @@ namespace TOTTEMPEST
             nscr.id = (uint)id;
 
             // Common header
-            nscr.cabecera.id = "ASC ".ToCharArray();
-            nscr.cabecera.endianess = 0xFEFF;
-            nscr.cabecera.constant = 0x0100;
-            nscr.cabecera.file_size = file_size;
-            nscr.cabecera.header_size = 0x10;
-            nscr.cabecera.nSection = 1;
+            nscr.header.id = "ASC ".ToCharArray();
+            nscr.header.endianess = 0xFEFF;
+            nscr.header.constant = 0x0100;
+            nscr.header.file_size = file_size;
+            nscr.header.header_size = 0x10;
+            nscr.header.nSection = 1;
 
             // NTFS data
             nscr.section.id = "ASC ".ToCharArray();

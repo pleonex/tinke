@@ -321,7 +321,9 @@ namespace SDAT
             for (int i = 0; i < bytes.Length; i += 2)
             {
                 byte byte1 = bytes[i];
-                byte byte2 = (byte)(bytes[i + 1] << 4);
+                byte byte2 = 0;
+                if (i + 1 < bytes.Length)
+                    byte2 = (byte)(bytes[i + 1] << 4);
                 bit8.Add((byte)(byte1 + byte2));
             }
 

@@ -12,20 +12,20 @@ namespace LAYTON
         IPluginHost pluginHost;
         string gameCode;
 
-        public void Inicializar(IPluginHost pluginHost, string gameCode)
+        public void Initialize(IPluginHost pluginHost, string gameCode)
         {
             this.pluginHost = pluginHost;
             this.gameCode = gameCode;
         }
 
-        public bool EsCompatible()
+        public bool IsCompatible()
         {
             if (gameCode == "A5FP" || gameCode == "A5FE" || gameCode == "YLTS")
                 return true;
             else
                 return false;
         }
-        public Formato Get_Formato(string nombre, byte[] magic, int id)
+        public Format Get_Format(string nombre, byte[] magic, int id)
         {
             nombre = nombre.ToUpper();
 
@@ -52,17 +52,17 @@ namespace LAYTON
             }
 
             if (nombre.ToUpper().EndsWith(".TXT"))
-                return Formato.Texto;
+                return Format.Text;
             if (nombre.ToUpper().EndsWith(".PLZ"))
-                return Formato.Comprimido;
+                return Format.Compressed;
             if (nombre.EndsWith(".PCM") && BitConverter.ToInt32(magic, 0) == 0x00000010)
-                return Formato.Comprimido;
+                return Format.Compressed;
 
             
-            return Formato.Desconocido;
+            return Format.Unknown;
         }
 
-        public void Leer(string archivo, int id)
+        public void Read(string archivo, int id)
         {
             if (archivo.ToUpper().EndsWith(".PLZ"))
                 PCK2.Read(archivo, id, pluginHost);

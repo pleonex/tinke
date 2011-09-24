@@ -21,6 +21,7 @@ namespace SDAT
         int compressFormat;
         int blockLength;
         int volume;
+        int sampleRate;
 
         public NewAudioOptions()
         {
@@ -55,6 +56,10 @@ namespace SDAT
                 label4.Text = xml.Element("S06").Value;
                 label5.Text = xml.Element("S07").Value;
                 btnAccept.Text = xml.Element("S08").Value;
+                label6.Text = xml.Element("S09").Value;
+                radioSec.Text = xml.Element("S0A").Value;
+                radioMSec.Text = xml.Element("S0B").Value;
+                radioSam.Text = xml.Element("S0C").Value;
             }
             catch { throw new Exception("There was an error reading the language file"); }
         }
@@ -95,6 +100,11 @@ namespace SDAT
             get { return volume; }
             set { numericVolume.Value = value; volume = value; }
         }
+        public int SampleRate
+        {
+            set { sampleRate = value; }
+            get { return sampleRate; }
+        }
 
         private void button1_Click(object sender, EventArgs e)
         {
@@ -107,7 +117,12 @@ namespace SDAT
         }
         private void numericLoopOffset_ValueChanged(object sender, EventArgs e)
         {
-            loopOffset = (int)numericLoopOffset.Value;
+            if (radioSam.Checked)
+                loopOffset = (int)numericLoopOffset.Value;
+            else if (radioSec.Checked)
+                loopOffset = (int)(numericLoopOffset.Value * sampleRate);
+            else if (radioMSec.Checked)
+                loopOffset = (int)(numericLoopOffset.Value / 1000 * sampleRate);
         }
         private void numericLoopLength_ValueChanged(object sender, EventArgs e)
         {
@@ -120,6 +135,26 @@ namespace SDAT
         private void numericVolume_ValueChanged(object sender, EventArgs e)
         {
             volume = (int)numericVolume.Value;
+        }
+
+        private void radioSec_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!radioSec.Checked)
+                return;
+
+            numericLoopOffset.Value = (decimal)((float)loopOffset / sampleRate);
+        }
+        private void radioSam_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!radioSam.Checked)
+                return;
+            numericLoopOffset.Value = loopOffset;
+        }
+        private void radioMSec_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!radioMSec.Checked)
+                return;
+            numericLoopOffset.Value = (decimal)((float)loopOffset / sampleRate * 1000);
         }
     }
 }

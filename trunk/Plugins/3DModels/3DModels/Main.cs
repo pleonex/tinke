@@ -10,22 +10,22 @@ namespace _3DModels
     {
         IPluginHost pluginHost;
 
-        public void Inicializar(IPluginHost pluginHost)
+        public void Initialize(IPluginHost pluginHost)
         {
             this.pluginHost = pluginHost;
         }
 
-        public Formato Get_Formato(string nombre, byte[] magic)
+        public Format Get_Format(string nombre, byte[] magic)
         {
             string ext = new String(Encoding.ASCII.GetChars(magic));
 
             if (ext == "BTX0")
-                return Formato.Texture;
+                return Format.Texture;
 
-            return Formato.Desconocido;
+            return Format.Unknown;
         }
 
-        public void Leer(string archivo, int id)
+        public void Read(string archivo, int id)
         {
         }
         public System.Windows.Forms.Control Show_Info(string archivo, int id)

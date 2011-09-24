@@ -12,17 +12,17 @@ namespace TXT
     {
         IPluginHost pluginHost;
 
-        public void Inicializar(IPluginHost pluginHost)
+        public void Initialize(IPluginHost pluginHost)
         {
             this.pluginHost = pluginHost;
         }
-        public Formato Get_Formato(string nombre, byte[] magic)
+        public Format Get_Format(string nombre, byte[] magic)
         {
             nombre = nombre.ToUpper();
             string ext = new String(Encoding.ASCII.GetChars(magic));
 
             if ((nombre.EndsWith("LZ.TXT") || nombre.EndsWith("LZ.XML")) && magic[0] == 0x10)
-                return Formato.Desconocido;
+                return Format.Unknown;
 
             if (nombre.EndsWith(".TXT") || nombre.EndsWith(".SADL") || nombre.EndsWith(".XML")
                 || nombre.EndsWith(".INI") || nombre.EndsWith(".H") || nombre.EndsWith(".XSADL")
@@ -30,15 +30,15 @@ namespace TXT
                 || nombre.EndsWith(".C") || nombre.EndsWith("MAKEFILE") || nombre.EndsWith(".BSF")
                 || nombre.EndsWith(".LUA") || nombre.EndsWith(".CSV") || nombre.EndsWith(".SMAP")
                 || nombre.EndsWith("BUILDTIME"))
-                return Formato.Texto;
+                return Format.Text;
             else if (ext == "MESG")
-                return Formato.Texto;
+                return Format.Text;
 
-            return Formato.Desconocido;
+            return Format.Unknown;
         }
 
 
-        public void Leer(string archivo, int id)
+        public void Read(string archivo, int id)
         {
             Console.WriteLine("Este archivo no contiene información para guardar.");
         }

@@ -11,11 +11,11 @@ namespace TETRIS_DS
     {
         public static void Read(string file, int id, IPluginHost pluginHost)
         {
-            pluginHost.Descomprimir(file);
+            pluginHost.Decompress(file);
             string dec_file;
-            Carpeta dec_folder = pluginHost.Get_Files();
+            sFolder dec_folder = pluginHost.Get_Files();
 
-            if (dec_folder.files is List<Archivo>)
+            if (dec_folder.files is List<sFile>)
                 dec_file = dec_folder.files[0].path;
             else
             {
@@ -24,7 +24,7 @@ namespace TETRIS_DS
                 Array.Copy(File.ReadAllBytes(file), 0x08, compressFile, 0, compressFile.Length); ;
                 File.WriteAllBytes(tempFile, compressFile);
 
-                pluginHost.Descomprimir(tempFile);
+                pluginHost.Decompress(tempFile);
                 dec_file = pluginHost.Get_Files().files[0].path;
             }
 
@@ -34,12 +34,12 @@ namespace TETRIS_DS
             NSCR nscr = new NSCR();
             nscr.id = (uint)id;
 
-            nscr.cabecera.id = "SLZ ".ToCharArray();
-            nscr.cabecera.endianess = 0xFEFF;
-            nscr.cabecera.constant = 0x0100;
-            nscr.cabecera.file_size = file_size;
-            nscr.cabecera.header_size = 0x10;
-            nscr.cabecera.nSection = 1;
+            nscr.header.id = "SLZ ".ToCharArray();
+            nscr.header.endianess = 0xFEFF;
+            nscr.header.constant = 0x0100;
+            nscr.header.file_size = file_size;
+            nscr.header.header_size = 0x10;
+            nscr.header.nSection = 1;
 
             nscr.section.id = "SLZ ".ToCharArray();
             nscr.section.section_size = file_size;

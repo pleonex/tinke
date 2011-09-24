@@ -24,7 +24,7 @@ namespace LAYTON
 
             uint localizador;
             pcm.files = new KCPL_File[pcm.nFiles];
-            Archivo[] files = new Archivo[pcm.nFiles];
+            sFile[] files = new sFile[pcm.nFiles];
 
             for (int i = 0; i < pcm.nFiles; i++)
             {
@@ -49,8 +49,8 @@ namespace LAYTON
             }
             br.Close();
 
-            Carpeta carpeta = new Carpeta();
-            carpeta.files = new List<Archivo>();
+            sFolder carpeta = new sFolder();
+            carpeta.files = new List<sFile>();
             carpeta.files.AddRange(files);
             pluginHost.Set_Files(carpeta);
         }

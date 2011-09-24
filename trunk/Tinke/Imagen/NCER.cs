@@ -322,12 +322,12 @@ namespace Tinke
 
                 if (image)
                 {
-                    for (int j = 0; j < tile.rahc.tileData.nPaleta.Length; j++)
-                        tile.rahc.tileData.nPaleta[j] = banco.cells[i].nPalette;
+                    for (int j = 0; j < tile.rahc.tileData.nPalette.Length; j++)
+                        tile.rahc.tileData.nPalette[j] = banco.cells[i].nPalette;
 
                     if (blockSize != 4)
                     {
-                        if (tile.orden == Orden_Tiles.No_Tiles)
+                        if (tile.order == TileOrder.NoTiled)
                         {
                             if (tile.rahc.depth == System.Windows.Forms.ColorDepth.Depth4Bit)
                                 tileOffset *= 2;
@@ -340,7 +340,7 @@ namespace Tinke
                     {
                         int imageWidth = tile.rahc.nTilesX;
                         int imageHeight = tile.rahc.nTilesY;
-                        if (tile.orden == Orden_Tiles.Horizontal)
+                        if (tile.order == TileOrder.Horizontal)
                         {
                             imageWidth *= 8;
                             imageHeight *= 8;
@@ -367,7 +367,7 @@ namespace Tinke
                         celdas[i].RotateFlip(RotateFlipType.RotateNoneFlipY);
                     #endregion
                     if (transparencia)
-                        ((Bitmap)celdas[i]).MakeTransparent(paleta.pltt.paletas[tile.rahc.tileData.nPaleta[0]].colores[0]);
+                        ((Bitmap)celdas[i]).MakeTransparent(paleta.pltt.palettes[tile.rahc.tileData.nPalette[0]].colors[0]);
 
                     grafico.DrawImageUnscaled(celdas[i], tamaño.Width / 2 + banco.cells[i].xOffset, tamaño.Height / 2 + banco.cells[i].yOffset);
                 }
@@ -414,12 +414,12 @@ namespace Tinke
 
                 if (image)
                 {
-                    for (int j = 0; j < tile.rahc.tileData.nPaleta.Length; j++)
-                        tile.rahc.tileData.nPaleta[j] = banco.cells[i].nPalette;
+                    for (int j = 0; j < tile.rahc.tileData.nPalette.Length; j++)
+                        tile.rahc.tileData.nPalette[j] = banco.cells[i].nPalette;
 
                     if (blockSize != 0x04)
                     {
-                        if (tile.orden == Orden_Tiles.No_Tiles)
+                        if (tile.order == TileOrder.NoTiled)
                         {
                             if (tile.rahc.depth == System.Windows.Forms.ColorDepth.Depth4Bit)
                                 tileOffset *= 2;
@@ -433,7 +433,7 @@ namespace Tinke
                     {
                         int imageWidth = tile.rahc.nTilesX;
                         int imageHeight = tile.rahc.nTilesY;
-                        if (tile.orden == Orden_Tiles.Horizontal)
+                        if (tile.order == TileOrder.Horizontal)
                         {
                             imageWidth *= 8;
                             imageHeight *= 8;
@@ -460,7 +460,7 @@ namespace Tinke
                         celdas[i].RotateFlip(RotateFlipType.RotateNoneFlipY);
                     #endregion
                     if (transparencia)
-                        ((Bitmap)celdas[i]).MakeTransparent(paleta.pltt.paletas[tile.rahc.tileData.nPaleta[0]].colores[0]);
+                        ((Bitmap)celdas[i]).MakeTransparent(paleta.pltt.palettes[tile.rahc.tileData.nPalette[0]].colors[0]);
 
                     grafico.DrawImageUnscaled(celdas[i], tamaño.Width / 2 + banco.cells[i].xOffset, tamaño.Height / 2 + banco.cells[i].yOffset);
                 }
@@ -517,14 +517,14 @@ namespace Tinke
                     }
                 }
             }
-            if (oldImage.orden == Orden_Tiles.Horizontal)
+            if (oldImage.order == TileOrder.Horizontal)
                 newImage.AddRange(Convertir.BytesToTiles_NoChanged(temp.ToArray(), cell.width / 0x08, cell.height / 0x08));
             else
                 newImage.Add(temp.ToArray());
             temp.Clear();
             #endregion
 
-            if (oldImage.orden == Orden_Tiles.Horizontal)
+            if (oldImage.order == TileOrder.Horizontal)
             {
                 uint tileOffset = (oldImage.rahc.depth == System.Windows.Forms.ColorDepth.Depth4Bit ? cell.tileOffset * 2 : cell.tileOffset);
                 tileOffset *= (blockSize != 0x00 ? blockSize : 1);
@@ -537,7 +537,7 @@ namespace Tinke
                 for (int i = (int)(tileOffset + (cell.width * cell.height) / 0x40); i < oldImage.rahc.tileData.tiles.Length; i++)
                     result.Add(oldImage.rahc.tileData.tiles[i]);
             }
-            else if (oldImage.orden == Orden_Tiles.No_Tiles)
+            else if (oldImage.order == TileOrder.NoTiled)
             {
                 uint tileOffset = (oldImage.rahc.depth == System.Windows.Forms.ColorDepth.Depth4Bit ? cell.tileOffset * 2 : cell.tileOffset) * 0x40;
                 tileOffset *= (blockSize != 0x00 ? blockSize : 1);
@@ -560,7 +560,7 @@ namespace Tinke
             List<Byte[]> result = new List<byte[]>();
             List<Byte> temp = new List<byte>();
 
-            if (image.orden == Orden_Tiles.Horizontal)
+            if (image.order == TileOrder.Horizontal)
             {
                 uint tileOffset = (image.rahc.depth == System.Windows.Forms.ColorDepth.Depth4Bit ? cell.tileOffset * 2 : cell.tileOffset);
                 tileOffset *= (blockSize != 0x00 ? blockSize : 1);
@@ -585,7 +585,7 @@ namespace Tinke
 
                 }
             }
-            else if (image.orden == Orden_Tiles.No_Tiles)
+            else if (image.order == TileOrder.NoTiled)
             {
                 uint tileOffset = (image.rahc.depth == System.Windows.Forms.ColorDepth.Depth4Bit ? cell.tileOffset * 2 : cell.tileOffset) * 0x40;
                 tileOffset *= (blockSize != 0x00 ? blockSize : 1);

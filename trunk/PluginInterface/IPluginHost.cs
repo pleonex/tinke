@@ -14,9 +14,7 @@
  *   You should have received a copy of the GNU General Public License
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  *
- * Programador: pleoNeX
- * Programa utilizado: Microsoft Visual C# 2010 Express
- * Fecha: 18/02/2011
+ *   by pleoNeX
  * 
  */ 
 using System;
@@ -44,7 +42,7 @@ namespace PluginInterface
         
         Color[] BGR555(byte[] data);
         Byte[] ColorToBGR555(Color[] color);
-        Byte[] BytesTo4BitsRev(byte[] datos);
+        Byte[] BytesTo4BitsRev(byte[] data);
         String BytesToBits(byte[] datos);
         Byte[] Bit4ToBit8(byte[] bits4);
         Byte[] Bit8ToBit4(byte[] bits8);
@@ -55,17 +53,16 @@ namespace PluginInterface
         TTLP Palette_8bppTo4bpp(TTLP palette);
         void Change_Color(ref byte[][] tiles, int oldIndex, int newIndex);
 
-        Bitmap[] Bitmaps_NCLR(string archivo);
         Bitmap[] Bitmaps_NCLR(NCLR nclr);
         Bitmap Bitmap_NCGR(NCGR ncgr, NCLR nclr);
         Bitmap Bitmap_NCGR(NCGR ncgr, NCLR nclr, int startTile);
         Bitmap Bitmap_NCGR(NCGR ncgr, NCLR nclr, int startTile, int tilesX, int tilesY);
-        NTFT Transformar_NSCR(NSCR nscr, NTFT ntft, int startOffset = 0);
-        Size Tamaño_NCER(byte byte1, byte byte2);
-        Bitmap Bitmap_NCER(Bank banco, uint blockSize, NCGR ncgr, NCLR nclr, bool entorno, bool celda,
-            bool numero, bool transparencia, bool imagen);
-        Bitmap Bitmap_NCER(Bank banco, uint blockSize, NCGR tile, NCLR paleta,
-            bool entorno, bool celda, bool numero, bool transparencia, bool image, int maxWidth, int maxHeight);
+        NTFT Transform_NSCR(NSCR nscr, NTFT ntft, int startOffset = 0);
+        Size Size_NCER(byte byte1, byte byte2);
+        Bitmap Bitmap_NCER(Bank bank, uint blockSize, NCGR ncgr, NCLR nclr, bool guides, bool cell,
+            bool numbers, bool transparency, bool image);
+        Bitmap Bitmap_NCER(Bank bank, uint blockSize, NCGR tile, NCLR paleta,
+            bool guides, bool cell, bool numbers, bool transparency, bool image, int maxWidth, int maxHeight);
         /// <summary>
         /// Save an animation in a APNG file (Firefox supported)
         /// </summary>
@@ -73,20 +70,20 @@ namespace PluginInterface
         /// <param name="frames">All frames (path of files or bitmaps)</param>
         /// <param name="delay">The delay between frames (delay/1000)</param>
         /// <param name="loops">The number of  loops (if 0 = infinite)</param>
-        void Crear_APNG(string salida, Bitmap[] frames, int delay, int loops);
-        void Crear_APNG(string salida, String[] frames, int delay, int loops);
+        void Create_APNG(string outFile, Bitmap[] frames, int delay, int loops);
+        void Create_APNG(string outFile, String[] frames, int delay, int loops);
 
-        // Para descomprimir archivos
-        void Set_Files(Carpeta archivos);
-        Carpeta Get_Files();
-        Carpeta Get_DecompressedFiles(int id); // Get all the files and folder that have been decompressed (to compress them)
+        // Decompressed files methods
+        void Set_Files(sFolder files);
+        sFolder Get_Files();
+        sFolder Get_DecompressedFiles(int id); // Get all the files and folder that have been decompressed (to compress them)
         String Search_File(int id); // Search file by id
 
         string Get_Language();
         string Get_TempFolder();
 
-        void Descomprimir(string archivo);
-        void Descomprimir(byte[] datos);
+        void Decompress(string file);
+        void Decompress(byte[] data);
         void Compress(string filein, string fileout, FormatCompress format);
 
         /// <summary>
@@ -97,7 +94,7 @@ namespace PluginInterface
         void ChangeFile(int id, string newFile);
 
         NCLR BitmapToPalette(string bitmap);
-        NCGR BitmapToTile(string bitmap, Orden_Tiles tileOrder);
+        NCGR BitmapToTile(string bitmap, TileOrder tileOrder);
         NSCR Create_BasicMap(int nTiles, int width, int height);
     }
 }

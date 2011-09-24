@@ -12,40 +12,40 @@ namespace AI_IGO_DS
         IPluginHost pluginHost;
         string gameCode;
 
-        public void Inicializar(IPluginHost pluginHost, string gameCode)
+        public void Initialize(IPluginHost pluginHost, string gameCode)
         {
             this.pluginHost = pluginHost;
             this.gameCode = gameCode;
         }
-        public bool EsCompatible()
+        public bool IsCompatible()
         {
             if (gameCode == "AIIJ")
                 return true;
 
             return false;
         }
-        public Formato Get_Formato(string nombre, byte[] magic, int id)
+        public Format Get_Format(string nombre, byte[] magic, int id)
         {
             nombre = nombre.ToUpper();
 
             if (nombre.EndsWith(".ANCL"))
-                return Formato.Paleta;
+                return Format.Palette;
             else if (nombre.EndsWith(".ANCG"))
-                return Formato.Imagen;
+                return Format.Tile;
             else if (nombre.EndsWith(".ATEX"))
-                return Formato.Imagen;
+                return Format.Tile;
             else if (nombre.EndsWith(".ANSC"))
-                return Formato.Map;
+                return Format.Map;
             else if (nombre.EndsWith("FNT.BIN") || nombre.EndsWith(".SRL") || nombre.EndsWith("FAT.BIN") ||
                 nombre.EndsWith("ARM9.BIN") || nombre.EndsWith("ARM7.BIN"))
-                return Formato.Sistema;
+                return Format.System;
             else if (nombre.EndsWith(".BIN") || nombre.EndsWith(".R00"))
-                return Formato.ImagenCompleta;
+                return Format.FullImage;
 
-            return Formato.Desconocido;
+            return Format.Unknown;
         }
 
-        public void Leer(string archivo, int id)
+        public void Read(string archivo, int id)
         {
             if (archivo.ToUpper().EndsWith(".ANCL"))
                 ANCL.Leer(archivo, pluginHost);
@@ -58,20 +58,20 @@ namespace AI_IGO_DS
         }
         public Control Show_Info(string archivo, int id)
         {
-            Leer(archivo, id);
+            Read(archivo, id);
 
             if (archivo.ToUpper().EndsWith(".ANCL"))
                 return new PaletteControl(pluginHost);
-            if (archivo.ToUpper().EndsWith(".ANCG") && pluginHost.Get_NCLR().cabecera.file_size != 0x00)
+            if (archivo.ToUpper().EndsWith(".ANCG") && pluginHost.Get_NCLR().header.file_size != 0x00)
                 return new BinControl(pluginHost, false);
-            if (archivo.ToUpper().EndsWith(".ANSC") && pluginHost.Get_NCLR().cabecera.file_size != 0x00 &&
-                pluginHost.Get_NCGR().cabecera.file_size != 0x00)
+            if (archivo.ToUpper().EndsWith(".ANSC") && pluginHost.Get_NCLR().header.file_size != 0x00 &&
+                pluginHost.Get_NCGR().header.file_size != 0x00)
                 return new BinControl(pluginHost, true);
             if (archivo.ToUpper().EndsWith(".BIN"))
                 return BIN.Leer(archivo, pluginHost);
             if (archivo.ToUpper().EndsWith(".R00"))
                 return R00.Leer(archivo, pluginHost);
-            if (archivo.ToUpper().EndsWith(".ATEX") && pluginHost.Get_NCLR().cabecera.file_size != 0x00)
+            if (archivo.ToUpper().EndsWith(".ATEX") && pluginHost.Get_NCLR().header.file_size != 0x00)
                 return new BinControl(pluginHost, false);
 
             return new Control();

@@ -31,16 +31,16 @@ namespace AI_IGO_DS
             if (paletaOffset == 0x00) // No hay paleta
             {
                 profundidad = ColorDepth.Depth4Bit;
-                paleta.pltt.tamaño = (uint)defaultPaletteData.Length;
-                paleta.pltt.tamañoPaletas = (uint)0x20;
-                paleta.pltt.nColores = (uint)0x10;
-                paleta.pltt.profundidad = profundidad;
-                paleta.pltt.paletas = new NTFP[defaultPaletteData.Length / 0x20];
-                for (int i = 0; i < paleta.pltt.paletas.Length; i++)
+                paleta.pltt.length = (uint)defaultPaletteData.Length;
+                paleta.pltt.paletteLength = (uint)0x20;
+                paleta.pltt.nColors = (uint)0x10;
+                paleta.pltt.depth = profundidad;
+                paleta.pltt.palettes = new NTFP[defaultPaletteData.Length / 0x20];
+                for (int i = 0; i < paleta.pltt.palettes.Length; i++)
                 {
-                    Byte[] paletteData = new Byte[paleta.pltt.tamañoPaletas];
-                    Array.Copy(defaultPaletteData, i * paleta.pltt.tamañoPaletas, paletteData, 0, paleta.pltt.tamañoPaletas);
-                    paleta.pltt.paletas[i].colores = pluginHost.BGR555(paletteData);
+                    Byte[] paletteData = new Byte[paleta.pltt.paletteLength];
+                    Array.Copy(defaultPaletteData, i * paleta.pltt.paletteLength, paletteData, 0, paleta.pltt.paletteLength);
+                    paleta.pltt.palettes[i].colors = pluginHost.BGR555(paletteData);
                 }
                 goto Tile;
             }
@@ -53,13 +53,13 @@ namespace AI_IGO_DS
             else if (pSize - 0x08 == 0x20)
                 profundidad = ColorDepth.Depth4Bit;
 
-            paleta.pltt.tamaño = pSize - 0x08;
-            paleta.pltt.tamañoPaletas = (profundidad == ColorDepth.Depth4Bit) ? 0x20 : pSize - 0x08;
-            paleta.pltt.nColores = (profundidad == ColorDepth.Depth4Bit) ? 0x10 : (pSize - 0x08) / 2;
-            paleta.pltt.profundidad = profundidad;
-            paleta.pltt.paletas = new NTFP[(profundidad == ColorDepth.Depth4Bit ? (pSize - 0x08) / 0x20 : 1)];
-            for (int i = 0; i < paleta.pltt.paletas.Length; i++)
-                paleta.pltt.paletas[i].colores = pluginHost.BGR555(br.ReadBytes((int)paleta.pltt.tamañoPaletas));
+            paleta.pltt.length = pSize - 0x08;
+            paleta.pltt.paletteLength = (profundidad == ColorDepth.Depth4Bit) ? 0x20 : pSize - 0x08;
+            paleta.pltt.nColors = (profundidad == ColorDepth.Depth4Bit) ? 0x10 : (pSize - 0x08) / 2;
+            paleta.pltt.depth = profundidad;
+            paleta.pltt.palettes = new NTFP[(profundidad == ColorDepth.Depth4Bit ? (pSize - 0x08) / 0x20 : 1)];
+            for (int i = 0; i < paleta.pltt.palettes.Length; i++)
+                paleta.pltt.palettes[i].colors = pluginHost.BGR555(br.ReadBytes((int)paleta.pltt.paletteLength));
             
             // Tile data
             Tile:
@@ -67,7 +67,7 @@ namespace AI_IGO_DS
             uint tCabeceraSize = br.ReadUInt32() * 4; // siempre 0x04
             uint tSize = br.ReadUInt32() * 4;
             NCGR tile = new NCGR();
-            tile.orden = Orden_Tiles.Horizontal;
+            tile.order = TileOrder.Horizontal;
             tile.rahc.depth = profundidad;
             if (profundidad == ColorDepth.Depth4Bit)
                 tile.rahc.nTiles = (ushort)((tSize - 0x08) / 0x20);
@@ -75,14 +75,14 @@ namespace AI_IGO_DS
                 tile.rahc.nTiles = (ushort)((tSize - 0x08) / 0x40);
 
             tile.rahc.tileData.tiles = new byte[tile.rahc.nTiles][];
-            tile.rahc.tileData.nPaleta = new byte[tile.rahc.nTiles];
+            tile.rahc.tileData.nPalette = new byte[tile.rahc.nTiles];
             for (int i = 0; i < tile.rahc.nTiles; i++)
             {
                 if (profundidad == ColorDepth.Depth4Bit)
                     tile.rahc.tileData.tiles[i] = pluginHost.BytesTo4BitsRev(br.ReadBytes(32));
                 else
                     tile.rahc.tileData.tiles[i] = br.ReadBytes(64);
-                tile.rahc.tileData.nPaleta[i] = 0;
+                tile.rahc.tileData.nPalette[i] = 0;
             }
             NCGR[] tiles;
 
@@ -127,7 +127,7 @@ namespace AI_IGO_DS
                 }
 
                 tiles[i] = tile;
-                tiles[i].rahc.tileData = pluginHost.Transformar_NSCR(maps[i], tile.rahc.tileData);
+                tiles[i].rahc.tileData = pluginHost.Transform_NSCR(maps[i], tile.rahc.tileData);
                 tiles[i].rahc.nTilesX = maps[i].section.width;
                 tiles[i].rahc.nTilesY = maps[i].section.height;
                 tiles[i].rahc.nTiles = (ushort)(tiles[i].rahc.nTilesX * tiles[i].rahc.nTilesY);
