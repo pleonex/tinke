@@ -27,6 +27,7 @@ namespace Fonts
 
             this.pluginHost = pluginHost;
             this.font = font;
+            ReadLanguage();
 
             for (int i = 0; i < font.plgc.tiles.Length; i++)
                 comboBox1.Items.Add("Char " + i.ToString());
@@ -37,6 +38,21 @@ namespace Fonts
 
             comboBox1.SelectedIndex = 0;
             comboEncoding.SelectedIndex = 0;
+        }
+
+        private void ReadLanguage()
+        {
+            try
+            {
+                System.Xml.Linq.XElement xml = System.Xml.Linq.XElement.Load(Application.StartupPath + System.IO.Path.DirectorySeparatorChar +
+                    "Plugins" + System.IO.Path.DirectorySeparatorChar + "FontLang.xml");
+                xml = xml.Element(pluginHost.Get_Language()).Element("FontControl");
+
+                btnSave.Text = xml.Element("S00").Value;
+                btnApply.Text = xml.Element("S01").Value;
+                label1.Text = xml.Element("S02").Value;
+            }
+            catch { throw new NotSupportedException("There was an error reading the language file"); }
         }
         private void Fill_CharTile()
         {
@@ -72,6 +88,7 @@ namespace Fonts
         {
             panelCharEdit.Controls.Clear();
             panelCharEdit.Controls.Add(new CharControl(
+                pluginHost.Get_Language(),
                 (from k in charTile where int.Equals(k.Value, comboBox1.SelectedIndex) select k.Key).FirstOrDefault(),
                 font.hdwc.info[comboBox1.SelectedIndex],
                 font.plgc.tiles[comboBox1.SelectedIndex],

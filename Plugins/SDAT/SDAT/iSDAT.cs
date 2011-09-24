@@ -27,6 +27,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.IO;
 using System.Media;
+using System.Threading;
 using PluginInterface;
 
 namespace SDAT
@@ -37,7 +38,7 @@ namespace SDAT
         SoundPlayer soundPlayer;
         string wavFile = "";
         string loopFile = "";
-        BackgroundWorker bgdWorker;
+        Thread bgdWorker;
         IPluginHost pluginHost;
 
         uint lastFolderID;
@@ -50,10 +51,6 @@ namespace SDAT
         public iSDAT(sSDAT sdat, IPluginHost pluginHost)
         {
             InitializeComponent();
-
-            bgdWorker = new BackgroundWorker();
-            bgdWorker.DoWork += new DoWorkEventHandler(bgdWorker_DoWork);
-            bgdWorker.WorkerSupportsCancellation = true;
 
             this.sdat = sdat;
             this.pluginHost = pluginHost;
@@ -776,7 +773,8 @@ namespace SDAT
 
                 if (checkLoop.Checked)
                 {
-                    bgdWorker.RunWorkerAsync(new String[] { wavFile, loopFile });
+                    bgdWorker = new Thread(bgdWorker_DoWork);
+                    bgdWorker.Start(new String[] { wavFile, loopFile });
                 }
                 else
                 {
@@ -799,13 +797,14 @@ namespace SDAT
         {
             if (soundPlayer is SoundPlayer)
                 soundPlayer.Stop();
-            if (bgdWorker.IsBusy)
-                bgdWorker.CancelAsync();
+            if (bgdWorker is Thread)
+                if (bgdWorker.ThreadState == ThreadState.Running)
+                    bgdWorker.Abort();
         }
-        void bgdWorker_DoWork(object sender, DoWorkEventArgs e)
+        void bgdWorker_DoWork(object files)
         {
-            string wave = ((String[])e.Argument)[0];
-            string loopWave = ((String[])e.Argument)[1];
+            string wave = ((String[])files)[0];
+            string loopWave = ((String[])files)[1];
 
             SoundPlayer soundLoop = new SoundPlayer(loopWave);
             soundPlayer = new SoundPlayer(wave);

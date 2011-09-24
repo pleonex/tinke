@@ -21,16 +21,17 @@ namespace TXT
         {
             this.pluginHost = pluginHost;
             InitializeComponent();
-            LeerIdioma();
+            ReadLanguage();
 
             this.bmg = bmg;
             Informacion();
         }
-        private void LeerIdioma()
+        private void ReadLanguage()
         {
             try
             {
-                System.Xml.Linq.XElement xml = System.Xml.Linq.XElement.Load(Application.StartupPath + "\\Plugins\\TXTLang.xml");
+                System.Xml.Linq.XElement xml = System.Xml.Linq.XElement.Load(Application.StartupPath + System.IO.Path.DirectorySeparatorChar + 
+                    "Plugins" + System.IO.Path.DirectorySeparatorChar + "TXTLang.xml");
                 xml = xml.Element(pluginHost.Get_Language()).Element("BMG");
 
                 columnHeader1.Text = xml.Element("S01").Value;

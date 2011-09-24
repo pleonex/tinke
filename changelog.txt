@@ -5,8 +5,7 @@
 ** Game EDGEWORTH supported
    - Unpack and pack support to the file romfile.bin
 ** Improved Image plugin: import and export palette in Window Palette format
-* Improved plugins NARC, PCM and LASTWINDOW, now the extract function is faster
-* Italian language by Otty
+* Improved plugins NARC and LASTWINDOW, now the extract function is faster
 * Added multifile importer function
 * Improved plugin Font
   - Added support for encodings shift-jis, unicode and unicode bigendian
@@ -16,6 +15,7 @@
   - Compress imported audio with PCM8, PCM16 or IMA-ADPCM
   - Fixed problems importing new SWAV and STRM audio
   - Improved PCM8 codification.
+* Improved french translation by Valioukha
 * Fixed problem saving new NCGR/NCBR files
 * Fixed reading problem in NCER
 * Fixed NCER files with 0x04 as blockSize

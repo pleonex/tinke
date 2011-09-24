@@ -92,7 +92,7 @@
       <S03>Info Textura</S03>
       <S04>Posición (hex)</S04>
       <S05>Repetición X</S05>
-      <S06>Repeticón Y</S06>
+      <S06>Repetición Y</S06>
       <S07>Flip X</S07>
       <S08>Flip Y</S08>
       <S09>Ancho</S09>
@@ -110,56 +110,56 @@
   </Español>
   <Français>
     <BTX0>
-      <S00>Read BTX0 files</S00>
-      <S01>Texture section</S01>
-      <S02>Header:</S02>
-      <S03>Texture Info offset: 0x{0}</S03>
-      <S04>Texture Data offset: 0x{0}</S04>
-      <S05>Texture Data size: 0x{0}</S05>
-      <S06>Compressed Texture Data offset: 0x{0}</S06>
-      <S07>Compressed Texture Data size: 0x{0}</S07>
-      <S08>Compressed Info offset: 0x{0}</S08>
-      <S09>Compressed Info Data offset: 0x{0}</S09>
-      <S0A>Palette Data offset: 0x{0}</S0A>
-      <S0B>Palette Data size: 0x{0}</S0B>
-      <S0C>Palette Info offset: 0x{0}</S0C>
-      <S0D>Texture Information:</S0D>
-      <S0E>*Objs: {0} ({1})</S0E>
+      <S00>Lecture des archives BTX0</S00>
+      <S01>Section de la texture</S01>
+      <S02>En-tête :</S02>
+      <S03>Offset des infos de la texture : 0x{0}</S03>
+      <S04>Offset des données de la texture : 0x{0}</S04>
+      <S05>Taille des données de la texture : 0x{0}</S05>
+      <S06>Offset des données de la texture compressée : 0x{0}</S06>
+      <S07>Taille des données de la texture compressée : 0x{0}</S07>
+      <S08>Offset des infos compressées : 0x{0}</S08>
+      <S09>Offset des données des infos compressées : 0x{0}</S09>
+      <S0A>Offset des données de la palette : 0x{0}</S0A>
+      <S0B>Taille des données de la palette : 0x{0}</S0B>
+      <S0C>Offset des infos de la palette : 0x{0}</S0C>
+      <S0D>Information de la Texture :</S0D>
+      <S0E>*Objets : {0} ({1})</S0E>
       <S0F>|_ Offset 0x{0}</S0F>
-      <S10>|_ Parameters 0x{0}</S10>
-      <S11>~~ Repeat: X->{0}, Y->{1}</S11>
-      <S12> | Flip: X-> {0}, Y->{1}</S12>
-      <S13> | Size: {0}x{1}</S13>
-      <S14> | Format: {0} ({1})</S14>
-      <S15> | Color0: {0}</S15>
-      <S16>    | Coordinates Transformation Modes: {0} ({1})</S16>
-      <S17> | Unknown1 {0} | Unknown2 {1} | Unknown3 {2}</S17>
-      <S18>Palette Information:</S18>
-      <S19>*Pal: {0} ({1})</S19>
+      <S10>|_ Paramètres 0x{0}</S10>
+      <S11>~~ Répétition : X->{0}, Y->{1}</S11>
+      <S12> | Basculement : X-> {0}, Y->{1}</S12>
+      <S13> | Taille : {0}x{1}</S13>
+      <S14> | Format : {0} ({1})</S14>
+      <S15> | Color0 : {0}</S15>
+      <S16>    | Mode de transformation des coordonnées : {0} ({1})</S16>
+      <S17> | Inconnu1 {0} | Inconnu2 {1} | Inconnu3 {2}</S17>
+      <S18>Information de la Palette :</S18>
+      <S19>*Pal : {0} ({1})</S19>
       <S1A>|_Offset 0x{0}</S1A>
       <S1B>EOF</S1B>
     </BTX0>
     <TextureControl>
-      <S00>Property</S00>
-      <S01>Value</S01>
+      <S00>Champ</S00>
+      <S01>Valeur</S01>
       <S02>Section</S02>
-      <S03>Texture Info</S03>
-      <S04>Offset (hex)</S04>
-      <S05>Repeat X</S05>
-      <S06>Repeat Y</S06>
-      <S07>Flip X</S07>
-      <S08>Flip Y</S08>
-      <S09>Width</S09>
-      <S0A>Height</S0A>
+      <S03>Info. Texture</S03>
+      <S04>Offset (hexa)</S04>
+      <S05>Répéter X</S05>
+      <S06>Répéter Y</S06>
+      <S07>Basculer X</S07>
+      <S08>Basculer Y</S08>
+      <S09>Longueur</S09>
+      <S0A>Hauteur</S0A>
       <S0B>Format</S0B>
       <S0C>Color0</S0C>
-      <S0D>Transforms</S0D>
-      <S0E>Palette Info</S0E>
-      <S0F>Texture:</S0F>
-      <S10>Palette:</S10>
-      <S11>Palette image</S11>
-      <S12>Set background color</S12>
-      <S13>Save texture</S13>
+      <S0D>Transformation</S0D>
+      <S0E>Info. Palette</S0E>
+      <S0F>Texture :</S0F>
+      <S10>Palette :</S10>
+      <S11>Image de la palette</S11>
+      <S12>Définir la couleur du fond</S12>
+      <S13>Sauver texture</S13>
     </TextureControl>
   </Français>
 </Language>

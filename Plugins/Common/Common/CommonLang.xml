@@ -20,11 +20,11 @@
   </English>
   <Français>
     <BasicControl>
-      <S00>Save</S00>
+      <S00>Enregistrer</S00>
     </BasicControl>
     <iWav>
-      <S00>Play</S00>
-      <S01>Stop</S01>
+      <S00>Lancer</S00>
+      <S01>Arrêter</S01>
     </iWav>
   </Français>
 </Language>

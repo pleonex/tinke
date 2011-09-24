@@ -101,7 +101,7 @@
             this.btnApply.Name = "btnApply";
             this.btnApply.Size = new System.Drawing.Size(75, 46);
             this.btnApply.TabIndex = 1;
-            this.btnApply.Text = "Apply changes";
+            this.btnApply.Text = "S01";
             this.btnApply.UseVisualStyleBackColor = true;
             this.btnApply.Click += new System.EventHandler(this.btnApply_Click);
             // 
@@ -117,9 +117,9 @@
             this.btnSave.Image = global::Fonts.Properties.Resources.disk;
             this.btnSave.Location = new System.Drawing.Point(0, 0);
             this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(116, 26);
+            this.btnSave.Size = new System.Drawing.Size(163, 26);
             this.btnSave.TabIndex = 8;
-            this.btnSave.Text = "Save new font";
+            this.btnSave.Text = "S00";
             this.btnSave.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnSave.UseVisualStyleBackColor = true;
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
@@ -127,11 +127,11 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(169, 6);
+            this.label1.Location = new System.Drawing.Point(165, 6);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(55, 13);
+            this.label1.Size = new System.Drawing.Size(26, 13);
             this.label1.TabIndex = 9;
-            this.label1.Text = "Encoding:";
+            this.label1.Text = "S02";
             // 
             // comboEncoding
             // 

@@ -198,7 +198,7 @@
     </PaletteControl>
     <ImageControl>
       <S01>
-        Faites un double-clic sur l'image pour la voir en
+        Double-cliquez sur l'image pour la voir en
         taille réelle.
       </S01>
       <S02>Propriétés</S02>
@@ -256,7 +256,7 @@
       <S13>Montrer numéros</S13>
       <S14>Cellules</S14>
       <S15>
-        Faites un double-clic sur l'image pour la voir
+        Double-cliquez sur l'image pour la voir
         en taille réelle.
       </S15>
       <S16>Zoom</S16>

@@ -34,17 +34,17 @@
   </English>
   <Français>
     <BinControl>
-      <S00>Number of image:</S00>
-      <S01>Width:</S01>
-      <S02>Height:</S02>
-      <S03>Transparency</S03>
-      <S04>Background color</S04>
-      <S05>Remove background</S05>
+      <S00>Nombre de l'image :</S00>
+      <S01>Longueur :</S01>
+      <S02>Hauteur :</S02>
+      <S03>Transparence</S03>
+      <S04>Couleur du fond</S04>
+      <S05>Supprimer le fond</S05>
       <S06>Zoom</S06>
-      <S07>Save</S07>
+      <S07>Sauvegarder</S07>
       <S08>
-        Double click the image to
-        see in full size.
+        Double-cliquez sur l'image pour
+        la voir en taille réelle.
       </S08>
     </BinControl>
   </Français>

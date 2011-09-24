@@ -32,7 +32,6 @@ REM Compilación de plugins de los juegos
 
 REM Compilación de los plugins de formatos
 %windir%\microsoft.net\framework\v4.0.30319\msbuild Plugins\NARC\NARC.sln /v:minimal /p:Configuration=%conf%;TarjetFrameworkVersion=v3.5 "/p:Platform=Any CPU" "/p:OutputPath=%CD%\build\Plugins\"
-%windir%\microsoft.net\framework\v4.0.30319\msbuild Plugins\PCM\PCM.sln /v:minimal /p:Configuration=%conf%;TarjetFrameworkVersion=v3.5 "/p:Platform=Any CPU" "/p:OutputPath=%CD%\build\Plugins\"
 %windir%\microsoft.net\framework\v4.0.30319\msbuild Plugins\TXT\TXT.sln /v:minimal /p:Configuration=%conf%;TarjetFrameworkVersion=v3.5 "/p:Platform=Any CPU" "/p:OutputPath=%CD%\build\Plugins\"
 %windir%\microsoft.net\framework\v4.0.30319\msbuild Plugins\Common\Common.sln /v:minimal /p:Configuration=%conf%;TarjetFrameworkVersion=v3.5 "/p:Platform=Any CPU" "/p:OutputPath=%CD%\build\Plugins\"
 %windir%\microsoft.net\framework\v4.0.30319\msbuild Plugins\Images\Images.sln /v:minimal /p:Configuration=%conf%;TarjetFrameworkVersion=v3.5 "/p:Platform=Any CPU" "/p:OutputPath=%CD%\build\Plugins\"

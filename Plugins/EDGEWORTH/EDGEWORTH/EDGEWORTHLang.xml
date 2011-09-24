@@ -11,8 +11,8 @@
     <S02>Unpacking...</S02>
   </English>
   <Français>
-    <S00>Pack file</S00>
-    <S01>Packing...</S01>
-    <S02>Unpacking...</S02>
+    <S00>Compresser l'archive</S00>
+    <S01>Compression en cours...</S01>
+    <S02>Décompression en cours...</S02>
   </Français>
 </Language>

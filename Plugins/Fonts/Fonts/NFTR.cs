@@ -4,20 +4,19 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Drawing;
+using System.Xml.Linq;
 using PluginInterface;
 
 namespace Fonts
 {
     public static class NFTR
     {
-        public static sNFTR Read(string file, int id)
+        public static sNFTR Read(string file, int id, string lang)
         {
             sNFTR font = new sNFTR();
             font.id = id;
             BinaryReader br = new BinaryReader(File.OpenRead(file));
 
-            Console.WriteLine("Reading NFTR font file...");
-            Console.WriteLine("<pre>");
             // Read the standard header
             font.header.type = br.ReadChars(4);
             font.header.endianess = br.ReadUInt16();
@@ -25,7 +24,6 @@ namespace Fonts
             font.header.file_size = br.ReadUInt32();
             font.header.block_size = br.ReadUInt16();
             font.header.num_blocks = br.ReadUInt16();
-            Console.WriteLine("# blocks: {0}", font.header.num_blocks.ToString());
 
             // Font INFo section
             font.fnif.type = br.ReadChars(4);
@@ -37,15 +35,6 @@ namespace Fonts
             font.fnif.offset_pamc = br.ReadUInt32();
             if (font.fnif.block_size == 0x20)
                 font.fnif.unknown3 = br.ReadUInt32();
-            Console.WriteLine("<b>Sección: {0}</b>", new String(font.fnif.type));
-            Console.WriteLine("Block size: 0x{0}", font.fnif.block_size.ToString("x"));
-            Console.WriteLine("Unknown 1: 0x{0}", font.fnif.unknown1.ToString("x"));
-            Console.WriteLine("Unknown 2: 0x{0}", font.fnif.unknown2.ToString("x"));
-            Console.WriteLine("PLGC offset: 0x{0}", font.fnif.offset_plgc.ToString("x"));
-            Console.WriteLine("HDWC offset: 0x{0}", font.fnif.offset_hdwc.ToString("x"));
-            Console.WriteLine("PAMC offset: 0x{0}", font.fnif.offset_pamc.ToString("x"));
-            if (font.fnif.block_size == 0x20)
-                Console.WriteLine("Unknown 3: 0x{0}", font.fnif.unknown3.ToString("x"));
 
             // Character Graphics LP
             br.BaseStream.Position = font.fnif.offset_plgc - 0x08;
@@ -64,15 +53,6 @@ namespace Fonts
             for (int i = 0; i < font.plgc.tiles.Length; i++)
                 font.plgc.tiles[i] = BytesToBits(br.ReadBytes(font.plgc.tile_length));
 
-            Console.WriteLine("<b>Section: {0}</b>", new String(font.plgc.type));
-            Console.WriteLine("Block size: 0x{0}", font.plgc.block_size.ToString("x"));
-            Console.WriteLine("Tile width: {0}", font.plgc.tile_width.ToString());
-            Console.WriteLine("Tile height: {0}", font.plgc.tile_height.ToString());
-            Console.WriteLine("Tile length: {0}", font.plgc.tile_length.ToString());
-            Console.WriteLine("Unknown: 0x{0}", font.plgc.unknown.ToString("x"));
-            Console.WriteLine("Depth: {0}", font.plgc.depth.ToString());
-            Console.WriteLine("Rotate mode: {0}", font.plgc.rotateMode.ToString());
-            Console.WriteLine("Unknown 2: {0}", font.plgc.unknown2.ToString());
 
             // Character Width DH
             br.BaseStream.Position = font.fnif.offset_hdwc - 0x08;
@@ -82,13 +62,6 @@ namespace Fonts
             font.hdwc.last_code = br.ReadUInt16();
             font.hdwc.unknown1 = br.ReadUInt32();
 
-            Console.WriteLine("<b>Section: {0}</b>", new String(font.hdwc.type));
-            Console.WriteLine("Block size: 0x{0}", font.hdwc.block_size.ToString("x"));
-            Console.WriteLine("Fist code: 0x{0}", font.hdwc.fist_code.ToString("x"));
-            Console.WriteLine("Last code: 0x{0}", font.hdwc.last_code.ToString("x"));
-            Console.WriteLine("Unknown 1: 0x{0}", font.hdwc.unknown1.ToString("x"));
-
-            Console.WriteLine("Tile information");
             font.hdwc.info = new List<sNFTR.HDWC.Info>();
             for (int i = 0; i < font.plgc.tiles.Length; i++)
             {
@@ -97,14 +70,9 @@ namespace Fonts
                 info.pixel_width = br.ReadByte();
                 info.pixel_length = br.ReadByte();
                 font.hdwc.info.Add(info);
-                Console.WriteLine("<u>Tile {0}</u>", i.ToString());
-                Console.WriteLine("  |_Pixel start: {0}", info.pixel_start.ToString());
-                Console.WriteLine("  |_Pixel width: {0}", info.pixel_width.ToString());
-                Console.WriteLine("  |_Pixel length: {0}", info.pixel_length.ToString());
             }
 
             // Character MAP
-            Console.WriteLine("<b>Sections: PAMC</b>");
             br.BaseStream.Position = font.fnif.offset_pamc - 0x08;
             font.pamc = new List<sNFTR.PAMC>();
             uint nextOffset = 0x00;
@@ -119,33 +87,19 @@ namespace Fonts
                 nextOffset = br.ReadUInt32();
                 pamc.next_section = nextOffset;
 
-                Console.WriteLine("<u>Section {0}</u>", font.pamc.Count.ToString());
-                Console.WriteLine("  |__Block size: 0x{0}", pamc.block_size.ToString("x"));
-                Console.WriteLine("  |_First char: 0x{0}", pamc.first_char.ToString("x"));
-                Console.WriteLine("  |_Last char: 0x{0}", pamc.last_char.ToString("x"));
-                Console.WriteLine("  |_Type: {0}", pamc.type_section.ToString());
-
                 switch (pamc.type_section)
                 {
                     case 0:
                         sNFTR.PAMC.Type0 type0 = new sNFTR.PAMC.Type0();
                         type0.fist_char_code = br.ReadUInt16();
                         pamc.info = type0;
-                        Console.WriteLine("    \\_Info type 0");
-                        Console.WriteLine("    \\_First char code: 0x{0}", type0.fist_char_code.ToString("x"));
                         break;
                     case 1:
                         sNFTR.PAMC.Type1 type1 = new sNFTR.PAMC.Type1();
                         type1.char_code = new ushort[(pamc.block_size - 0x14) / 2];
-                        Console.WriteLine("    \\_Info type 1");
-                        Console.WriteLine("    \\_Number of elements: {0}", type1.char_code.Length.ToString());
                         for (int i = 0; i < type1.char_code.Length; i++)
-                        {
                             type1.char_code[i] = br.ReadUInt16();
-                            Console.WriteLine("    |_Char code {0}: 0x{1} ({2})", i.ToString(), type1.char_code[i].ToString("x"),
-                                Encoding.GetEncoding("shift-jis").GetChars(
-                                BitConverter.GetBytes(pamc.first_char + i).Reverse().ToArray()).Reverse().ToArray()[0]);
-                        }
+
                         pamc.info = type1;
                         break;
                     case 2:
@@ -154,14 +108,10 @@ namespace Fonts
                         type2.chars_code = new ushort[type2.num_chars];
                         type2.chars = new ushort[type2.num_chars];
 
-                        Console.WriteLine("    \\_Info type 2");
-                        Console.WriteLine("    \\_Number of chars: {0}", type2.num_chars.ToString());
                         for (int i = 0; i < type2.num_chars; i++)
                         {
                             type2.chars_code[i] = br.ReadUInt16();
                             type2.chars[i] = br.ReadUInt16();
-                            Console.WriteLine("    |_Char code {0}: 0x{1}", i.ToString(), type2.chars_code[i].ToString("x"));
-                            Console.WriteLine("    |_Char {0}: {1}", i.ToString(), type2.chars[i].ToString());
                         }
                         pamc.info = type2;
                         break;
@@ -171,7 +121,7 @@ namespace Fonts
                 br.BaseStream.Position = nextOffset - 0x08;
             } while (nextOffset != 0x00);
 
-            Console.WriteLine("</pre>");
+            WriteInfo(font, lang); 
             br.Close();
             return font;
         }
@@ -262,6 +212,92 @@ namespace Fonts
 
             bw.Flush();
             bw.Close();
+        }
+
+        public static void WriteInfo(sNFTR font, string lang)
+        {
+            try
+            {
+                XElement xml = XElement.Load(System.Windows.Forms.Application.StartupPath + Path.DirectorySeparatorChar +
+                    "Plugins" + Path.DirectorySeparatorChar + "FontLang.xml");
+                xml = xml.Element(lang).Element("NFTR");
+
+                Console.WriteLine(xml.Element("S00").Value);
+                Console.WriteLine("<pre>");
+                Console.WriteLine(xml.Element("S01").Value, font.header.num_blocks.ToString());
+
+
+                Console.WriteLine("<b>" + xml.Element("S02").Value + "</b>", new String(font.fnif.type));
+                Console.WriteLine(xml.Element("S03").Value, font.fnif.block_size.ToString("x"));
+                Console.WriteLine(xml.Element("S04").Value, font.fnif.unknown1.ToString("x"));
+                Console.WriteLine(xml.Element("S05").Value, font.fnif.unknown2.ToString("x"));
+                Console.WriteLine(xml.Element("S06").Value, font.fnif.offset_plgc.ToString("x"));
+                Console.WriteLine(xml.Element("S07").Value, font.fnif.offset_hdwc.ToString("x"));
+                Console.WriteLine(xml.Element("S08").Value, font.fnif.offset_pamc.ToString("x"));
+                if (font.fnif.block_size == 0x20)
+                    Console.WriteLine(xml.Element("S09").Value, font.fnif.unknown3.ToString("x"));
+
+
+                Console.WriteLine("<b>" + xml.Element("S02").Value + "</b>", new String(font.plgc.type));
+                Console.WriteLine(xml.Element("S03").Value, font.plgc.block_size.ToString("x"));
+                Console.WriteLine(xml.Element("S0A").Value, font.plgc.tile_width.ToString());
+                Console.WriteLine(xml.Element("S0B").Value, font.plgc.tile_height.ToString());
+                Console.WriteLine(xml.Element("S0C").Value, font.plgc.tile_length.ToString());
+                Console.WriteLine(xml.Element("S0D").Value, font.plgc.unknown.ToString("x"));
+                Console.WriteLine(xml.Element("S0E").Value, font.plgc.depth.ToString());
+                Console.WriteLine(xml.Element("S0F").Value, font.plgc.rotateMode.ToString());
+                Console.WriteLine(xml.Element("S10").Value, font.plgc.unknown2.ToString());
+
+                Console.WriteLine("<b>" + xml.Element("S02").Value + "</b>", new String(font.hdwc.type));
+                Console.WriteLine(xml.Element("S03").Value, font.hdwc.block_size.ToString("x"));
+                Console.WriteLine(xml.Element("S11").Value, font.hdwc.fist_code.ToString("x"));
+                Console.WriteLine(xml.Element("S12").Value, font.hdwc.last_code.ToString("x"));
+                Console.WriteLine(xml.Element("S13").Value, font.hdwc.unknown1.ToString("x"));
+
+                Console.WriteLine("<b>" + xml.Element("S02").Value + "</b>", "PAMC");
+                for (int i = 0; i < font.pamc.Count; i++)
+                {
+                    sNFTR.PAMC pamc = font.pamc[i];
+                    Console.WriteLine("<u>" + xml.Element("S02").Value + "</u>", i.ToString());
+                    Console.WriteLine("  |__" + xml.Element("S03").Value, pamc.block_size.ToString("x"));
+                    Console.WriteLine("  |_" + xml.Element("S14").Value, pamc.first_char.ToString("x"));
+                    Console.WriteLine("  |_" + xml.Element("S15").Value, pamc.last_char.ToString("x"));
+                    Console.WriteLine("  |_" + xml.Element("S16").Value, pamc.type_section.ToString());
+
+                    switch (pamc.type_section)
+                    {
+                        case 0:
+                            sNFTR.PAMC.Type0 type0 = (sNFTR.PAMC.Type0)pamc.info;
+                            Console.WriteLine("    \\_" + xml.Element("S17").Value, 0);
+                            Console.WriteLine("    \\_" + xml.Element("S18").Value, type0.fist_char_code.ToString("x"));
+                            break;
+
+                        case 1:
+                            sNFTR.PAMC.Type1 type1 = (sNFTR.PAMC.Type1)pamc.info;
+                            Console.WriteLine("    \\_" + xml.Element("S17").Value, 1);
+                            Console.WriteLine("    \\_" + xml.Element("S19").Value, type1.char_code.Length.ToString());
+                            for (int j = 0; j < type1.char_code.Length; j++)
+                                Console.WriteLine("    |_" + xml.Element("S1A").Value, j.ToString(), type1.char_code[j].ToString("x"),
+                                        Encoding.GetEncoding("shift-jis").GetChars(
+                                        BitConverter.GetBytes(pamc.first_char + j).Reverse().ToArray()).Reverse().ToArray()[0]);
+                            break;
+
+                        case 2:
+                            sNFTR.PAMC.Type2 type2 = (sNFTR.PAMC.Type2)pamc.info;
+                            Console.WriteLine("    \\_" + xml.Element("S17").Value, 2);
+                            Console.WriteLine("    \\_" + xml.Element("S1B").Value, type2.num_chars.ToString());
+                            for (int j = 0; j < type2.num_chars; j++)
+                            {
+                                Console.WriteLine("    |_" + xml.Element("S1C").Value, j.ToString(), type2.chars_code[j].ToString("x"));
+                                Console.WriteLine("    |_" + xml.Element("S1D").Value, j.ToString(), type2.chars[j].ToString());
+                            }
+                            break;
+                    }
+                }
+
+                Console.WriteLine("EOF</pre>");
+            }
+            catch { throw new NotSupportedException("There was an error reading the language file"); }
         }
 
         public static Bitmap Get_Char(sNFTR font, int id, int zoom = 1)

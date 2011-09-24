@@ -226,7 +226,7 @@ namespace Tinke
             // 
             this.btnSetTrans.Location = new System.Drawing.Point(7, 356);
             this.btnSetTrans.Name = "btnSetTrans";
-            this.btnSetTrans.Size = new System.Drawing.Size(150, 30);
+            this.btnSetTrans.Size = new System.Drawing.Size(227, 30);
             this.btnSetTrans.TabIndex = 24;
             this.btnSetTrans.Text = "S22";
             this.btnSetTrans.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;

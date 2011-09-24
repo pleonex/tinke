@@ -27,7 +27,8 @@ namespace LAYTON
 
             try
             {
-                System.Xml.Linq.XElement xml = System.Xml.Linq.XElement.Load(Application.StartupPath + "\\Plugins\\LaytonLang.xml");
+                System.Xml.Linq.XElement xml = System.Xml.Linq.XElement.Load(Application.StartupPath + System.IO.Path.DirectorySeparatorChar +
+                    "Plugins" + System.IO.Path.DirectorySeparatorChar + "LaytonLang.xml");
                 xml = xml.Element(idioma).Element("InfoImage");
 
                 lblImgs.Text = xml.Element("S01").Value;

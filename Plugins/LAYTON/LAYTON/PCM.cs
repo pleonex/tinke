@@ -3,36 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
-using System.Windows.Forms;
 using PluginInterface;
 
-namespace PCM
+namespace LAYTON
 {
-    public class PCM : IPlugin
+    public static class PCM
     {
-        IPluginHost pluginHost;
-        public void Inicializar(IPluginHost pluginHost)
-        {
-            this.pluginHost = pluginHost;
-        }
-
-        public Formato Get_Formato(string nombre, byte[] magic)
-        {
-            nombre = nombre.ToUpper();
-
-            if (nombre.EndsWith(".PCM") && 
-                (magic[0] == 0x10 && magic[1] == 0x00 && magic[2] == 0x00 && magic[3] == 0x00 ))
-                return Formato.Comprimido;
-
-            return Formato.Desconocido;
-        }
-
-        public void Leer(string archivo, int id)
+        public static void Unpack(string file, IPluginHost pluginHost)
         {
             String packFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + Path.GetRandomFileName();
-            File.Copy(archivo, packFile, true);
+            File.Copy(file, packFile, true);
 
-            BinaryReader br = new BinaryReader(File.OpenRead(archivo));
+            BinaryReader br = new BinaryReader(File.OpenRead(file));
             sPCM pcm = new sPCM();
 
             pcm.header_size = br.ReadUInt32();
@@ -72,28 +54,24 @@ namespace PCM
             carpeta.files.AddRange(files);
             pluginHost.Set_Files(carpeta);
         }
-        public Control Show_Info(string archivo, int id)
-        {
-            return new Control();
-        }
-
-        #region Estructuras
-        public struct sPCM
-        {
-            public uint header_size;
-            public uint file_size;
-            public uint nFiles;
-            public char[] id;
-            public KCPL_File[] files;
-        }
-        public struct KCPL_File
-        {
-            public uint file_size;
-            public uint unknown;
-            public uint data_size;
-            public string name;
-            public uint offset;
-        }
-        #endregion
     }
+    #region Structures
+    public struct sPCM
+    {
+        public uint header_size;
+        public uint file_size;
+        public uint nFiles;
+        public char[] id;
+        public KCPL_File[] files;
+    }
+    public struct KCPL_File
+    {
+        public uint file_size;
+        public uint unknown;
+        public uint data_size;
+        public string name;
+        public uint offset;
+    }
+    #endregion
+
 }
