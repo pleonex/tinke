@@ -62,9 +62,9 @@
             this.Controls.Add(this.txtHex);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(825, 0);
+            this.MinimumSize = new System.Drawing.Size(825, 38);
             this.Name = "VisorHex";
-            this.Text = "Visor Hexadecimal";
+            this.Text = "S41";
             this.Resize += new System.EventHandler(this.VisorHex_Resize);
             this.ResumeLayout(false);
             this.PerformLayout();

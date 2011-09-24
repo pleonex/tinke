@@ -44,7 +44,7 @@ namespace TXT
             txtBox.Text = txtBox.Text.Replace("\n", "\r\n");
             txtBox.Text = txtBox.Text.Replace("\0", "\\0");
 
-            LeerIdioma();
+            ReadLanguage();
         }
 
         private void btnSave_Click(object sender, EventArgs e)
@@ -58,11 +58,12 @@ namespace TXT
             pluginHost.ChangeFile(id, tempFile);
         }
 
-        private void LeerIdioma()
+        private void ReadLanguage()
         {
             try
             {
-                System.Xml.Linq.XElement xml = System.Xml.Linq.XElement.Load(Application.StartupPath + "\\Plugins\\TXTLang.xml");
+                System.Xml.Linq.XElement xml = System.Xml.Linq.XElement.Load(Application.StartupPath + System.IO.Path.DirectorySeparatorChar +
+                    "Plugins" + System.IO.Path.DirectorySeparatorChar + "TXTLang.xml");
                 xml = xml.Element(pluginHost.Get_Language());
                 xml = xml.Element("TXT");
 

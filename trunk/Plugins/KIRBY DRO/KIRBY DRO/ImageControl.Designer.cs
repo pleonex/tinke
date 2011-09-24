@@ -50,7 +50,7 @@
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(79, 36);
             this.btnSave.TabIndex = 1;
-            this.btnSave.Text = "Save";
+            this.btnSave.Text = "S00";
             this.btnSave.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnSave.UseVisualStyleBackColor = true;
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);

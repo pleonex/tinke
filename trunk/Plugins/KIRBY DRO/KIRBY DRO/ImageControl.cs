@@ -21,9 +21,22 @@ namespace KIRBY_DRO
         public ImageControl(IPluginHost pluginHost, Bitmap image)
         {
             InitializeComponent();
-
             this.pluginHost = pluginHost;
+            ReadLanguage();
+
             picBox.Image = image;
+        }
+        private void ReadLanguage()
+        {
+            try
+            {
+                System.Xml.Linq.XElement xml = System.Xml.Linq.XElement.Load(Application.StartupPath + System.IO.Path.DirectorySeparatorChar +
+                    "Plugins" + System.IO.Path.DirectorySeparatorChar + "KIRBY DROLang.xml");
+                xml = xml.Element(pluginHost.Get_Language()).Element("ImageControl");
+
+                btnSave.Text = xml.Element("S00").Value;
+            }
+            catch { throw new NotSupportedException("There was an error reading the language file"); }
         }
 
         private void btnSave_Click(object sender, EventArgs e)

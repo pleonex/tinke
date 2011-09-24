@@ -19,6 +19,7 @@ namespace Tinke
         public VisorHex(string file, UInt32 offset, UInt32 size)
         {
             InitializeComponent();
+            this.Text = Tools.Helper.ObtenerTraduccion("Sistema", "S41");
 
             this.file = file;
             this.offset = offset;

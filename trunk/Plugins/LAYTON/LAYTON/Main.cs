@@ -55,6 +55,9 @@ namespace LAYTON
                 return Formato.Texto;
             if (nombre.ToUpper().EndsWith(".PLZ"))
                 return Formato.Comprimido;
+            if (nombre.EndsWith(".PCM") && BitConverter.ToInt32(magic, 0) == 0x00000010)
+                return Formato.Comprimido;
+
             
             return Formato.Desconocido;
         }
@@ -63,6 +66,8 @@ namespace LAYTON
         {
             if (archivo.ToUpper().EndsWith(".PLZ"))
                 PCK2.Read(archivo, id, pluginHost);
+            else if (archivo.ToUpper().EndsWith(".PCM"))
+                PCM.Unpack(archivo, pluginHost);
         }
         public Control Show_Info(string archivo, int id)
         {

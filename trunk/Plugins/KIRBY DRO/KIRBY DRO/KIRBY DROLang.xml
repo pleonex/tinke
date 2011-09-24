@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Language>
+  <Español>
+    <ImageControl>
+      <S00>Guardar</S00>
+    </ImageControl>
+  </Español>
+  <English>
+    <ImageControl>
+      <S00>Save</S00>
+    </ImageControl>
+  </English>
+  <Français>
+    <ImageControl>
+      <S00>Save</S00>
+    </ImageControl>
+  </Français>
+</Language>

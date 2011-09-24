@@ -1,0 +1,138 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Language>
+  <Español>
+    <NFTR>
+      <S00>Leyendo fuente NFTR...</S00>
+      <S01>Número de secciones: {0}</S01>
+      <S02>Sección: {0}</S02>
+      <S03>Tamaño de la sección: 0x{0}</S03>
+      <S04>Desconocido 1: 0x{0}</S04>
+      <S05>Desconocido 2: 0x{0}</S05>
+      <S06>Posición PLGC: 0x{0}</S06>
+      <S07>Posición HDWC: 0x{0}</S07>
+      <S08>Posición PAMC: 0x{0}</S08>
+      <S09>Desconocido 3: 0x{0}</S09>
+      <S0A>Ancho de tile: {0}</S0A>
+      <S0B>Alto de tile: {0}</S0B>
+      <S0C>Longitud de tile: {0}</S0C>
+      <S0D>Desconocido: 0x{0}</S0D>
+      <S0E>Profundidad: {0}</S0E>
+      <S0F>Modo de rotación: {0}</S0F>
+      <S10>Desconocido 2: {0}</S10>
+      <S11>Primer código: 0x{0}</S11>
+      <S12>Último código: 0x{0}</S12>
+      <S13>Desconocido 1: 0x{0}</S13>
+      <S14>Primer caracter: 0x{0}</S14>
+      <S15>Último caracter: 0x{0}</S15>
+      <S16>Tipo: {0}</S16>
+      <S17>Tipo de información {0}</S17>
+      <S18>Primer código de caracter: 0x{0}</S18>
+      <S19>Número de elementos: {0}</S19>
+      <S1A>Código de caracter {0}: 0x{1} ({2})</S1A>
+      <S1B>Número de caracteres: {0}</S1B>
+      <S1C>Código de caracter {0}: 0x{1}</S1C>
+      <S1D>Caracter {0}: {1}</S1D>
+    </NFTR>
+    <FontControl>
+      <S00>Guardar nueva fuente</S00>
+      <S01>Aplicar cambios</S01>
+      <S02>Codificación:</S02>
+    </FontControl>
+    <CharControl>
+      <S00>Ancho:</S00>
+      <S01>Inicio:</S01>
+      <S02>Longitud:</S02>
+      <S03>Código:</S03>
+    </CharControl>
+  </Español>
+  <English>
+    <NFTR>
+      <S00>Reading NFTR font file...</S00>
+      <S01>Number of blocks: {0}</S01>
+      <S02>Section: {0}</S02>
+      <S03>Block size: 0x{0}</S03>
+      <S04>Unknown 1: 0x{0}</S04>
+      <S05>Unknown 2: 0x{0}</S05>
+      <S06>PLGC offset: 0x{0}</S06>
+      <S07>HDWC offset: 0x{0}</S07>
+      <S08>PAMC offset: 0x{0}</S08>
+      <S09>Unknown 3: 0x{0}</S09>
+      <S0A>Tile width: {0}</S0A>
+      <S0B>Tile height: {0}</S0B>
+      <S0C>Tile length: {0}</S0C>
+      <S0D>Unknown: 0x{0}</S0D>
+      <S0E>Depth: {0}</S0E>
+      <S0F>Rotate mode: {0}</S0F>
+      <S10>Unknown 2: {0}</S10>
+      <S11>First code: 0x{0}</S11>
+      <S12>Last code: 0x{0}</S12>
+      <S13>Unknown 1: 0x{0}</S13>
+      <S14>First char: 0x{0}</S14>
+      <S15>Last char: 0x{0}</S15>
+      <S16>Type: {0}</S16>
+      <S17>Info type {0}</S17>
+      <S18>First char code: 0x{0}</S18>
+      <S19>Number of elements: {0}</S19>
+      <S1A>Char code {0}: 0x{1} ({2})</S1A>
+      <S1B>Number of chars: {0}</S1B>
+      <S1C>Char code {0}: 0x{1}</S1C>
+      <S1D>Char {0}: {1}</S1D>
+    </NFTR>
+    <FontControl>
+      <S00>Save new font</S00>
+      <S01>Apply changes</S01>
+      <S02>Encoding:</S02>
+    </FontControl>
+    <CharControl>
+      <S00>Width:</S00>
+      <S01>Start:</S01>
+      <S02>Length:</S02>
+      <S03>Char code:</S03>
+    </CharControl>
+  </English>
+  <Français>
+    <NFTR>
+      <S00>Reading NFTR font file...</S00>
+      <S01>Number of blocks: {0}</S01>
+      <S02>Section: {0}</S02>
+      <S03>Block size: 0x{0}</S03>
+      <S04>Unknown 1: 0x{0}</S04>
+      <S05>Unknown 2: 0x{0}</S05>
+      <S06>PLGC offset: 0x{0}</S06>
+      <S07>HDWC offset: 0x{0}</S07>
+      <S08>PAMC offset: 0x{0}</S08>
+      <S09>Unknown 3: 0x{0}</S09>
+      <S0A>Tile width: {0}</S0A>
+      <S0B>Tile height: {0}</S0B>
+      <S0C>Tile length: {0}</S0C>
+      <S0D>Unknown: 0x{0}</S0D>
+      <S0E>Depth: {0}</S0E>
+      <S0F>Rotate mode: {0}</S0F>
+      <S10>Unknown 2: {0}</S10>
+      <S11>First code: 0x{0}</S11>
+      <S12>Last code: 0x{0}</S12>
+      <S13>Unknown 1: 0x{0}</S13>
+      <S14>First char: 0x{0}</S14>
+      <S15>Last char: 0x{0}</S15>
+      <S16>Type: {0}</S16>
+      <S17>Info type {0}</S17>
+      <S18>First char code: 0x{0}</S18>
+      <S19>Number of elements: {0}</S19>
+      <S1A>Char code {0}: 0x{1} ({2})</S1A>
+      <S1B>Number of chars: {0}</S1B>
+      <S1C>Char code {0}: 0x{1}</S1C>
+      <S1D>Char {0}: {1}</S1D>
+    </NFTR>
+    <FontControl>
+      <S00>Save new font</S00>
+      <S01>Apply changes</S01>
+      <S02>Encoding:</S02>
+    </FontControl>
+    <CharControl>
+      <S00>Width:</S00>
+      <S01>Start:</S01>
+      <S02>Length:</S02>
+      <S03>Char code:</S03>
+    </CharControl>
+  </Français>
+</Language>

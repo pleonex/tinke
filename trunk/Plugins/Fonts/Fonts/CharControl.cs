@@ -25,9 +25,11 @@ namespace Fonts
         {
             InitializeComponent();
         }
-        public CharControl(int charCode, sNFTR.HDWC.Info tileInfo, Byte[] tiles, int depth, int width, int height, int rotateMode)
+        public CharControl(String lang, 
+            int charCode, sNFTR.HDWC.Info tileInfo, Byte[] tiles, int depth, int width, int height, int rotateMode)
         {
             InitializeComponent();
+            ReadLanguage(lang);
 
             this.charCode = charCode;
             this.tileInfo = tileInfo;
@@ -54,6 +56,21 @@ namespace Fonts
 
             picPaletteColour.BackColor = palette[0];
             trackPalette.Maximum = palette.Length - 1;
+        }
+        private void ReadLanguage(string lang)
+        {
+            try
+            {
+                System.Xml.Linq.XElement xml = System.Xml.Linq.XElement.Load(Application.StartupPath + System.IO.Path.DirectorySeparatorChar +
+                    "Plugins" + System.IO.Path.DirectorySeparatorChar + "FontLang.xml");
+                xml = xml.Element(lang).Element("CharControl");
+
+                label1.Text = xml.Element("S00").Value;
+                label3.Text = xml.Element("S01").Value;
+                label2.Text = xml.Element("S02").Value;
+                label4.Text = xml.Element("S03").Value;
+            }
+            catch { throw new NotSupportedException("There was an error reading the language file"); }
         }
         public void Draw_Char()
         {

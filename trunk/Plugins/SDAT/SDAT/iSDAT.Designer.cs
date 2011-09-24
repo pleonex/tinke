@@ -30,10 +30,6 @@ namespace SDAT
 
         protected override void Dispose(bool disposing)
         {
-            if (bgdWorker.IsBusy)
-                bgdWorker.CancelAsync();
-            bgdWorker.Dispose();
-
             if (disposing && (components != null))
             {
                 components.Dispose();

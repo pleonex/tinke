@@ -74,10 +74,6 @@ namespace NotManagedNetPlugins
                         DateTime t3 = DateTime.Now;
 
                         pluginHost.Set_Files(decompressedFolder);
-
-                        Console.WriteLine("Unpacking files {0}", (t2 - t1).ToString());
-                        Console.WriteLine("Reading new files {0}", (t3 - t2).ToString());
-                        Console.WriteLine("Total time {0}", (t3 - t1).ToString());
                     }
                     break;
             }

@@ -26,7 +26,8 @@ namespace LAYTON
         {
             try
             {
-                System.Xml.Linq.XElement xml = System.Xml.Linq.XElement.Load(Application.StartupPath + "\\Plugins\\LaytonLang.xml");
+                System.Xml.Linq.XElement xml = System.Xml.Linq.XElement.Load(Application.StartupPath + System.IO.Path.DirectorySeparatorChar + 
+                    "Plugins" + System.IO.Path.DirectorySeparatorChar + "LaytonLang.xml");
                 xml = xml.Element(pluginHost.Get_Language()).Element("InfoAni");
                 btnSave.Text = xml.Element("S03").Value;
             }
