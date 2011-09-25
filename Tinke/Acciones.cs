@@ -124,7 +124,7 @@ namespace Tinke
 
         }
         public void Liberar_Plugins()
-        {
+        { // IT DOESN'T WORK
             formatList.Clear();
             gamePlugin = null;
         }
@@ -412,7 +412,7 @@ namespace Tinke
                 for (int i = 0; i < carpeta.files.Count; i++)
                 {
                     sFile newFile = carpeta.files[i];
-                    newFile.format = Get_Formato(newFile, -1);
+                    newFile.format = Get_Format(newFile, -1);
                     carpeta.files[i] = newFile;
                 }
             }
@@ -717,7 +717,7 @@ namespace Tinke
                 folderFile.size = Convert.ToUInt32(((String)currFolder.tag).Substring(0, 8), 16);
                 folderFile.offset = Convert.ToUInt32(((String)currFolder.tag).Substring(8, 8), 16);
                 folderFile.path = ((string)currFolder.tag).Substring(16);
-                folderFile.format = Get_Formato(folderFile, folderFile.id);
+                folderFile.format = Get_Format(folderFile, folderFile.id);
                 folderFile.tag = "Descomprimido"; // Tag para indicar que ya ha sido procesado
 
                 return folderFile;
@@ -1009,11 +1009,11 @@ namespace Tinke
             return fin;
         }
 
-        public Format Get_Formato()
+        public Format Get_Format()
         {
-            return Get_Formato(idSelect);
+            return Get_Format(idSelect);
         }
-        public Format Get_Formato(int id)
+        public Format Get_Format(int id)
         {
             Format tipo = Format.Unknown;
             sFile currFile = Search_File(id);
@@ -1075,7 +1075,7 @@ namespace Tinke
 
             return Format.Unknown;
         }
-        public Format Get_Formato(sFile currFile, int id)
+        public Format Get_Format(sFile currFile, int id)
         {
             if (currFile.size == 0x00)
                 return Format.Unknown;
@@ -1135,7 +1135,7 @@ namespace Tinke
 
             return Format.Unknown;
         }
-        public Format Get_Formato(string file)
+        public Format Get_Format(string file)
         {
             if (new FileInfo(file).Length == 0x00)
                 return Format.Unknown;
@@ -1798,7 +1798,7 @@ namespace Tinke
             catch { }
             return new Control();
         }
-        public void Set_Data()
+        public void Read_File()
         {
             sFile selectFile = Select_File();
 

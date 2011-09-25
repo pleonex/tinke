@@ -542,7 +542,7 @@ namespace Tinke
 
             if (currFolder.id < 0xF000) // Archivo descomprimido
             {
-                int imageIndex = accion.ImageFormatFile(accion.Get_Formato(currFolder.id));
+                int imageIndex = accion.ImageFormatFile(accion.Get_Format(currFolder.id));
                 currNode = new TreeNode(currFolder.name, imageIndex, imageIndex);
             }
             else
@@ -581,7 +581,7 @@ namespace Tinke
         {
             if (carpeta.id < 0xF000)
             {
-                nodo.ImageIndex = accion.ImageFormatFile(accion.Get_Formato(carpeta.id));
+                nodo.ImageIndex = accion.ImageFormatFile(accion.Get_Format(carpeta.id));
                 nodo.SelectedImageIndex = nodo.ImageIndex;
             }
             else
@@ -631,7 +631,7 @@ namespace Tinke
                 for (int i = 0; i < carpeta.files.Count; i++)
                 {
                     sFile newFile = carpeta.files[i];
-                    newFile.format = accion.Get_Formato(newFile.id);
+                    newFile.format = accion.Get_Format(newFile.id);
                     carpeta.files[i] = newFile;
                 }
             }
@@ -1043,7 +1043,7 @@ namespace Tinke
 
             if (accion.IDSelect < 0xF000)   // Comprobación de que la selección no sea un directorio
             {
-                accion.Set_Data();
+                accion.Read_File();
                 debug.Añadir_Texto(sb.ToString());
                 sb.Length = 0;
             }

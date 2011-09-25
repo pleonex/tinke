@@ -27,6 +27,7 @@ using System.Drawing;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
+using System.IO;
 
 namespace Tinke
 {
@@ -37,6 +38,7 @@ namespace Tinke
             InitializeComponent();
 
             LeerIdioma();
+            ReadPlugins();
         }
 
         public string AssemblyTitle
@@ -101,7 +103,33 @@ namespace Tinke
             lblfamfamfam.Text = xml.Element("S0B").Value;
             label7.Text = xml.Element("S0D").Value;
         }
+        private void ReadPlugins()
+        {
+            if (!Directory.Exists(Application.StartupPath + Path.DirectorySeparatorChar + "Plugins"))
+                return;
 
+            foreach (string fileName in Directory.GetFiles(Application.StartupPath + Path.DirectorySeparatorChar + "Plugins", "*.dll"))
+            {
+                try
+                {
+
+                    if (fileName.EndsWith("PluginInterface.dll"))
+                        continue;
+
+                    
+                    Assembly assembly = Assembly.LoadFile(fileName);
+                    object[] attributes =  assembly.GetCustomAttributes(typeof(AssemblyCopyrightAttribute), false);
+                    if (attributes.Length == 0)
+                        continue;
+
+                    listPlugin.Items.Add(Path.GetFileNameWithoutExtension(fileName) + "  -->  " +
+                        ((AssemblyCopyrightAttribute)attributes[0]).Copyright);
+                       
+                }
+                catch { continue; }
+            }
+
+        }
 
     }
 }
