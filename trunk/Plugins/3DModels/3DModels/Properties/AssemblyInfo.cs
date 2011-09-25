@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // conjunto de atributos. Cambie estos atributos para modificar la información
 // asociada con un ensamblado.
 [assembly: AssemblyTitle("3DModels")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Support for BTX0 files")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Microsoft")]
-[assembly: AssemblyProduct("3DModels")]
-[assembly: AssemblyCopyright("Copyright © Microsoft 2011")]
+[assembly: AssemblyCompany("")]
+[assembly: AssemblyProduct("Tinke")]
+[assembly: AssemblyCopyright("pleoNeX")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

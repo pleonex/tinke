@@ -532,8 +532,17 @@ namespace SDAT
             o.Description = xml.Element("S0F").Value; ;
             if (o.ShowDialog() == DialogResult.OK)
             {
-                Directory.CreateDirectory(o.SelectedPath + Path.DirectorySeparatorChar + currFolder.name);
-                RecursivoExtractFolder(currFolder, o.SelectedPath + Path.DirectorySeparatorChar + currFolder.name);
+                String folderName = currFolder.name;
+                foreach (char c in Path.GetInvalidPathChars())
+                    folderName = folderName.Replace(c.ToString(), "");
+
+                if (!o.SelectedPath.EndsWith("\\"))
+                    folderName = o.SelectedPath + '\\' + folderName;
+                else
+                    folderName = o.SelectedPath + folderName;
+
+                Directory.CreateDirectory(folderName);
+                RecursivoExtractFolder(currFolder, folderName);
             }
         }
         private void RecursivoExtractFolder(Folder currFolder, String path)
@@ -543,7 +552,13 @@ namespace SDAT
                 {
                     BinaryReader br = new BinaryReader(File.OpenRead(sdat.archivo));
                     br.BaseStream.Position = archivo.offset;
-                    File.WriteAllBytes(path + '\\' + archivo.name, br.ReadBytes((int)archivo.size));
+
+                    String fileName = archivo.name;
+                    foreach (char c in Path.GetInvalidFileNameChars())
+                        fileName = fileName.Replace(c.ToString(), "");
+                    fileName = path + Path.DirectorySeparatorChar + fileName;
+
+                    File.WriteAllBytes(fileName, br.ReadBytes((int)archivo.size));
                     br.Close();
                 }
 
@@ -551,8 +566,13 @@ namespace SDAT
             {
                 foreach (Folder subFolder in currFolder.folders)
                 {
-                    Directory.CreateDirectory(path + '\\' + subFolder.name);
-                    RecursivoExtractFolder(subFolder, path + '\\' + subFolder.name);
+                    string folderName = subFolder.name;
+                    foreach (char c in Path.GetInvalidPathChars())
+                        folderName = folderName.Replace(c.ToString(), "");
+                    folderName = path + Path.DirectorySeparatorChar + folderName;
+
+                    Directory.CreateDirectory(folderName);
+                    RecursivoExtractFolder(subFolder, folderName);
                 }
             }
         }

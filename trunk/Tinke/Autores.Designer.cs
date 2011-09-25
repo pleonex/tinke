@@ -70,6 +70,7 @@ namespace Tinke
             this.label7 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.lblTrad = new System.Windows.Forms.Label();
+            this.listPlugin = new System.Windows.Forms.ListBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureImage)).BeginInit();
             this.SuspendLayout();
             // 
@@ -270,11 +271,25 @@ namespace Tinke
             this.lblTrad.TabIndex = 20;
             this.lblTrad.Text = "S0C";
             // 
+            // listPlugin
+            // 
+            this.listPlugin.BackColor = System.Drawing.SystemColors.GradientActiveCaption;
+            this.listPlugin.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.listPlugin.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.listPlugin.FormattingEnabled = true;
+            this.listPlugin.ItemHeight = 15;
+            this.listPlugin.Location = new System.Drawing.Point(477, 9);
+            this.listPlugin.Name = "listPlugin";
+            this.listPlugin.Size = new System.Drawing.Size(299, 317);
+            this.listPlugin.TabIndex = 21;
+            // 
             // Autores
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(498, 340);
+            this.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
+            this.ClientSize = new System.Drawing.Size(788, 340);
+            this.Controls.Add(this.listPlugin);
             this.Controls.Add(this.lblTrad);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.label7);
@@ -332,6 +347,7 @@ namespace Tinke
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label lblTrad;
+        private System.Windows.Forms.ListBox listPlugin;
 
     }
 }

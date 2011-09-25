@@ -149,38 +149,42 @@ namespace _3DModels
             {
                 for (int w = 0; w < info.width; w++)
                 {
-                    Color color = Color.Black; ;
-                    if (info.format == 2 || info.format == 3 || info.format == 4) // 2-4-8 bits per color
-                        color = palette[data[w + h * info.width]];
-                    else if (info.format == 1) // A3I5 8-bit
+                    Color color = Color.Black;
+                    try
                     {
-                        int colorIndex = data[w + h * info.width] & 0x1F;
-                        int alpha = (data[w + h * info.width] >> 5);
-                        alpha = ((alpha * 4) + (alpha / 2)) * 8;
-                        color = Color.FromArgb(alpha,
-                            palette[colorIndex].R,
-                            palette[colorIndex].G,
-                            palette[colorIndex].B);
+                        if (info.format == 2 || info.format == 3 || info.format == 4) // 2-4-8 bits per color
+                            color = palette[data[w + h * info.width]];
+                        else if (info.format == 1) // A3I5 8-bit
+                        {
+                            int colorIndex = data[w + h * info.width] & 0x1F;
+                            int alpha = (data[w + h * info.width] >> 5);
+                            alpha = ((alpha * 4) + (alpha / 2)) * 8;
+                            color = Color.FromArgb(alpha,
+                                palette[colorIndex].R,
+                                palette[colorIndex].G,
+                                palette[colorIndex].B);
+                        }
+                        else if (info.format == 6) // A5I3 8-bit
+                        {
+                            int colorIndex = data[w + h * info.width] & 0x7;
+                            int alpha = (data[w + h * info.width] >> 3);
+                            alpha *= 8;
+                            color = Color.FromArgb(alpha,
+                                palette[colorIndex].R,
+                                palette[colorIndex].G,
+                                palette[colorIndex].B);
+                        }
+                        else if (info.format == 7) // Direct texture 16-bit (not tested)
+                        {
+                            ushort byteColor = BitConverter.ToUInt16(data, (w + h * info.width) * 2);
+                            color = Color.FromArgb(
+                                (byteColor >> 15) * 255,
+                                (byteColor & 0x1F) * 8,
+                                ((byteColor >> 5) & 0x1F) * 8,
+                                ((byteColor >> 10) & 0x1F) * 8);
+                        }
                     }
-                    else if (info.format == 6) // A5I3 8-bit
-                    {
-                        int colorIndex = data[w + h * info.width] & 0x3;
-                        int alpha = (data[w + h * info.width] >> 3);
-                        alpha *= 8;
-                        color = Color.FromArgb(alpha,
-                            palette[colorIndex].R,
-                            palette[colorIndex].G,
-                            palette[colorIndex].B);
-                    }
-                    else if (info.format == 7) // Direct texture 16-bit (not tested)
-                    {
-                        ushort byteColor = BitConverter.ToUInt16(data, (w + h * info.width) * 2);
-                        color = Color.FromArgb(
-                            (byteColor >> 15) * 255,
-                            (byteColor & 0x1F) * 8,
-                            ((byteColor >> 5) & 0x1F) * 8,
-                            ((byteColor >> 10) & 0x1F) * 8);
-                    }
+                    catch { }
 
                     imagen.SetPixel(w, h, color);
                 }
