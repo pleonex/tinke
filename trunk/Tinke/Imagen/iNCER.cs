@@ -240,6 +240,7 @@ namespace Tinke
             Bitmap imagen = new Bitmap(wSize, hSize);
             Graphics graficos = Graphics.FromImage(imagen);
             graficos.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+            graficos.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
             graficos.DrawImage(imgBox.Image, wSize / 2 - wSize + 128, wSize / 2 - hSize + 128, wSize, hSize);
             imgBox.Image = imagen;
 

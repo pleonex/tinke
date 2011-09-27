@@ -51,7 +51,16 @@ namespace Fonts
 
             font.plgc.tiles = new Byte[(font.plgc.block_size - 0x10) / font.plgc.tile_length][];
             for (int i = 0; i < font.plgc.tiles.Length; i++)
+            {
                 font.plgc.tiles[i] = BytesToBits(br.ReadBytes(font.plgc.tile_length));
+                if (font.plgc.rotateMode == 2)
+                    font.plgc.tiles[i] = Rotate270(font.plgc.tiles[i], font.plgc.tile_width, font.plgc.tile_height, font.plgc.depth);
+                else if (font.plgc.rotateMode == 1)
+                    font.plgc.tiles[i] = Rotate90(font.plgc.tiles[i], font.plgc.tile_width, font.plgc.tile_height, font.plgc.depth);
+                else if (font.plgc.rotateMode == 3)
+                    font.plgc.tiles[i] = Rotate180(font.plgc.tiles[i], font.plgc.tile_width, font.plgc.tile_height, font.plgc.depth);
+
+            }
 
 
             // Character Width DH
@@ -121,7 +130,9 @@ namespace Fonts
                 br.BaseStream.Position = nextOffset - 0x08;
             } while (nextOffset != 0x00);
 
-            WriteInfo(font, lang); 
+            WriteInfo(font, lang);
+            font.plgc.rotateMode = 0;
+
             br.Close();
             return font;
         }
@@ -342,13 +353,6 @@ namespace Fonts
                 }
             }
 
-            switch (font.plgc.rotateMode)
-            {
-                case 1: image.RotateFlip(RotateFlipType.Rotate90FlipNone); break;
-                case 2: image.RotateFlip(RotateFlipType.Rotate270FlipNone); break;
-                case 3: image.RotateFlip(RotateFlipType.Rotate180FlipNone); break;
-            }
-
             image.MakeTransparent(Color.FromArgb(255, 255, 255));
             return image;
         }
@@ -390,13 +394,6 @@ namespace Fonts
                 }
             }
 
-            switch (rotateMode)
-            {
-                case 1: image.RotateFlip(RotateFlipType.Rotate90FlipNone); break;
-                case 2: image.RotateFlip(RotateFlipType.Rotate270FlipNone); break;
-                case 3: image.RotateFlip(RotateFlipType.Rotate180FlipNone); break;
-            }
-
             return image;
         }
         public static Bitmap Get_Chars(sNFTR font, int maxWidth)
@@ -422,6 +419,62 @@ namespace Fonts
 
             return image;
         }
+
+        public static Byte[] Rotate270(Byte[] bytes,int width, int height, int depth)
+        {
+            Byte[] rotated = new Byte[bytes.Length];
+
+            for (int h = 0; h < height; h++)
+            {
+                for (int w = 0; w < width; w++)
+                {
+                    byte[] original = new byte[depth];
+                    Array.Copy(bytes, (w + h * width) * depth, original, 0, depth);
+
+                    for (int i = 0; i < depth; i++)
+                        rotated[(h + width * (height - 1) - w * width) * depth + i] = original[i];
+                }
+            }
+
+            return rotated;
+        }
+        public static Byte[] Rotate90(Byte[] bytes, int width, int height, int depth)
+        {
+            Byte[] rotated = new Byte[bytes.Length];
+
+            for (int h = 0; h < height; h++)
+            {
+                for (int w = 0; w < width; w++)
+                {
+                    byte[] original = new byte[depth];
+                    Array.Copy(bytes, (w + h * width) * depth, original, 0, depth);
+
+                    for (int i = 0; i < depth; i++)
+                        rotated[((width - 1 - h) + w * width) * depth + i] = original[i];
+                }
+            }
+
+            return rotated;
+        }
+        public static Byte[] Rotate180(Byte[] bytes, int width, int height, int depth)
+        {
+            Byte[] rotated = new Byte[bytes.Length];
+
+            for (int h = 0; h < height; h++)
+            {
+                for (int w = 0; w < width; w++)
+                {
+                    byte[] original = new byte[depth];
+                    Array.Copy(bytes, (w + h * width) * depth, original, 0, depth);
+
+                    for (int i = 0; i < depth; i++)
+                        rotated[((width - 1) + (width -1) * height - w - h * width) * depth + i] = original[i];
+                }
+            }
+
+            return rotated;
+        }
+
 
         public static Byte[] BytesToBits(Byte[] bytes)
         {

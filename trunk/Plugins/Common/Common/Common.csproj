@@ -76,11 +76,9 @@
   <ItemGroup>
     <Compile Include="Imagen\BasicControl.cs">
       <SubType>UserControl</SubType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
     <Compile Include="Imagen\BasicControl.Designer.cs">
       <DependentUpon>BasicControl.cs</DependentUpon>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Compile>
     <Compile Include="Imagen\BMP.cs" />
     <Compile Include="Imagen\JPG.cs" />
@@ -105,7 +103,6 @@
   <ItemGroup>
     <EmbeddedResource Include="Imagen\BasicControl.resx">
       <DependentUpon>BasicControl.cs</DependentUpon>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

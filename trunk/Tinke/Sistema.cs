@@ -1686,7 +1686,7 @@ namespace Tinke
                 return;
 
             // The current selected file will be changed if they only select one file
-            if (o.FileNames.Length == 1)
+            if (o.FileNames.Length == 1 && accion.IDSelect < 0xF000)
             {
                 sFile newFile = new sFile();
                 sFile fileToBeChanged = accion.Select_File();

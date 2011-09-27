@@ -64,7 +64,7 @@ namespace Fonts
                     sNFTR.PAMC.Type0 type0 = (sNFTR.PAMC.Type0)font.pamc[p].info;
                     int interval = font.pamc[p].last_char - font.pamc[p].first_char;
 
-                    for (int j = 0; j < interval; j++)
+                    for (int j = 0; j <= interval; j++)
                         charTile.Add(font.pamc[p].first_char + j, type0.fist_char_code + j);
                 }
                 else if (font.pamc[p].info is sNFTR.PAMC.Type1)
