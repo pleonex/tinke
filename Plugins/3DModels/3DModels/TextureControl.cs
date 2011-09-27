@@ -118,7 +118,7 @@ namespace _3DModels
 
             // Get palette data
             br.BaseStream.Position = btx0.header.offset[0] + btx0.texture.header.paletteData_offset;
-            br.BaseStream.Position += (texInfo.format == 2 ? palInfo.palette_offset * 16 : palInfo.palette_offset * 8);
+            br.BaseStream.Position += (texInfo.format == 2 ? palInfo.palette_offset * 8 : palInfo.palette_offset * 8);
             Byte[] palette_data = br.ReadBytes((int)PaletteSize[texInfo.format]);
             Color[] palette = pluginHost.BGR555(palette_data);
             br.Close();

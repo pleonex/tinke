@@ -1,4 +1,8 @@
-0.8.1
+0.8.2
+* Fixed problem with rotated Font and some char codes
+* Fixed problem with textures with format 2
+
+0.8.1 (public release) rev100
 *** BTX0 textures supported (view only)
 ** Game 999HRPERDOOR (Nine Hours, Nine Persons, Nine Doors) supported
    - SIR0 files in folder /cha

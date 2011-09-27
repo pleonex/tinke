@@ -463,6 +463,7 @@ namespace Tinke
             float scale = trackZoom.Value / 100f;
             Bitmap imagen = new Bitmap((int)(pic.Image.Width * scale), (int)(pic.Image.Height * scale));
             Graphics graficos = Graphics.FromImage(imagen);
+            graficos.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
             graficos.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
             graficos.DrawImage(pic.Image, 0, 0, pic.Image.Width * scale, pic.Image.Height * scale);
             pic.Image = imagen;
