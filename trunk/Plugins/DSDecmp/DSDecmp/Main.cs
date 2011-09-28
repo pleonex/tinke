@@ -19,7 +19,7 @@ namespace DSDecmp
             {
                 switch (f)
                 {
-                    case FormatCompress.LZOVL: fmt = new LZOvl(); break;
+                    //case FormatCompress.LZOVL: fmt = new LZOvl(); break;
                     case FormatCompress.LZ10: fmt = new LZ10(); break;
                     case FormatCompress.LZ11: fmt = new LZ11(); break;
                     case FormatCompress.RLE: fmt = new RLE(); break;
@@ -43,7 +43,7 @@ namespace DSDecmp
             {
                 switch (f)
                 {
-                    case FormatCompress.LZOVL: fmt = new LZOvl(); break;
+                    //case FormatCompress.LZOVL: fmt = new LZOvl(); break;
                     case FormatCompress.LZ10: fmt = new LZ10(); break;
                     case FormatCompress.LZ11: fmt = new LZ11(); break;
                     case FormatCompress.RLE: fmt = new RLE(); break;

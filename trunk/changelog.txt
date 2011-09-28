@@ -1,12 +1,16 @@
 0.8.2
+** Game GYAKUKEN (Gyajuten kenji 2) supported
+  - Unpacker
+* Fixed some problems with compressed false positive
 * Fixed problem with rotated Font and some char codes
 * Fixed problem with textures with format 2
+* Added hotkeys (X for eXpand all nodes, C for Collapse all nodes)
 
 0.8.1 (public release) rev100
 *** BTX0 textures supported (view only)
 ** Game 999HRPERDOOR (Nine Hours, Nine Persons, Nine Doors) supported
    - SIR0 files in folder /cha
-** Game EDGEWORTH supported
+** Game EDGEWORTH (Ace Attorney Investigation Miles Edgeworth) supported
    - Unpack and pack support to the file romfile.bin
 ** Improved Image plugin: import and export palette in Window Palette format
 * Improved plugins NARC and LASTWINDOW, now the extract function is faster

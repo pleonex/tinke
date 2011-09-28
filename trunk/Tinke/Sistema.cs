@@ -1084,6 +1084,16 @@ namespace Tinke
                 if (btnDescomprimir.Enabled)
                     btnDescomprimir.PerformClick();
             }
+            else if (e.KeyCode == Keys.X && treeSystem.Focused)
+            {
+                e.SuppressKeyPress = true;
+                treeSystem.SelectedNode.ExpandAll();
+            }
+            else if (e.KeyCode == Keys.C && treeSystem.Focused)
+            {
+                e.SuppressKeyPress = true;
+                treeSystem.SelectedNode.Collapse(false);
+            }
 
         }
         private void Sistema_KeyUp(object sender, KeyEventArgs e)

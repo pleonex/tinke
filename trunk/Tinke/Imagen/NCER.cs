@@ -329,9 +329,10 @@ namespace Tinke
                     {
                         if (tile.order == TileOrder.NoTiled)
                         {
-                            if (tile.rahc.depth == System.Windows.Forms.ColorDepth.Depth4Bit)
-                                tileOffset *= 2;
-                            celdas[i] = Imagen_NCGR.Crear_Imagen(tile, paleta, (int)tileOffset * 32, banco.cells[i].width, banco.cells[i].height);
+                            int mul = 64;
+                            if (blockSize == 0x00) // Not sure... Only temp
+                                mul = 32;
+                            celdas[i] = Imagen_NCGR.Crear_Imagen(tile, paleta, (int)tileOffset * mul, banco.cells[i].width, banco.cells[i].height);
                         }
                         else
                             celdas[i] = Imagen_NCGR.Crear_Imagen(tile, paleta, (int)tileOffset * 64, banco.cells[i].width / 8, banco.cells[i].height / 8);

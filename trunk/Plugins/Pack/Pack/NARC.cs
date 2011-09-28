@@ -1,4 +1,23 @@
-﻿using System;
+﻿/*
+ * Copyright (C) 2011  pleoNeX
+ *
+ *   This program is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+ *
+ * Programador: pleoNeX
+ * 
+ */
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,38 +25,21 @@ using System.IO;
 using System.Windows.Forms;
 using PluginInterface;
 
-namespace NARC
+namespace Pack
 {
-    public class NARC : IPlugin 
+    public class NARC 
     {
         IPluginHost pluginHost;
         string narcFile;
         ARC narc;
 
-        public void Initialize(IPluginHost pluginHost)
+        public NARC(IPluginHost pluginHost)
         {
             this.pluginHost = pluginHost;
         }
-        public Format Get_Format(string nombre, byte[] magic)
-        {
-            nombre = nombre.ToUpper();
-            string id = new String(Encoding.ASCII.GetChars(magic));
-
-            if (id == "NARC" || id == "CRAN" || (nombre.EndsWith("UTILITY.BIN") && magic[0] == 0x10))
-                return Format.Pack;
-
-            return Format.Unknown;
-        }
-
 
         public void Read(string archivo, int idArchivo)
         {
-            if (archivo.ToUpper().EndsWith("UTILITY.BIN"))
-            {
-                narc = new Utility(pluginHost).Leer(archivo, idArchivo);
-                return;
-            }
-
             ARC arc = new ARC();
             narcFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + idArchivo + new FileInfo(archivo).Name;
             File.Copy(archivo, narcFile, true);
@@ -147,7 +149,7 @@ namespace NARC
             pluginHost.Set_Files(root);
             narc = arc;
         }
-        public sFolder Jerarquizar_Carpetas(List<BTNF_MainEntry> entries, int idFolder, string nameFolder)
+        private sFolder Jerarquizar_Carpetas(List<BTNF_MainEntry> entries, int idFolder, string nameFolder)
         {
             sFolder currFolder = new sFolder();
 
@@ -165,7 +167,7 @@ namespace NARC
 
             return currFolder;
         }
-        public void Asignar_Archivos(sFolder currFolder, int idFile, UInt32 size, UInt32 offset)
+        private void Asignar_Archivos(sFolder currFolder, int idFile, UInt32 size, UInt32 offset)
         {
             if (currFolder.files is List<sFile>)
             {
