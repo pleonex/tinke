@@ -346,7 +346,7 @@ namespace Tinke
             this.txtTime.Name = "txtTime";
             this.txtTime.Size = new System.Drawing.Size(37, 20);
             this.txtTime.TabIndex = 9;
-            this.txtTime.Text = "100";
+            this.txtTime.Text = "150";
             this.txtTime.TextChanged += new System.EventHandler(this.txtTime_TextChanged);
             // 
             // label1

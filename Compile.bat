@@ -29,9 +29,10 @@ REM Compilación de plugins de los juegos
 %windir%\microsoft.net\framework\v4.0.30319\msbuild "Plugins\TETRIS DS\TETRIS DS.sln" /v:minimal /p:Configuration=%conf%;TarjetFrameworkVersion=v3.5 "/p:Platform=Any CPU" "/p:OutputPath=%CD%\build\Plugins\"
 %windir%\microsoft.net\framework\v4.0.30319\msbuild "Plugins\999HRPERDOOR\999HRPERDOOR.sln" /v:minimal /p:Configuration=%conf%;TarjetFrameworkVersion=v3.5 "/p:Platform=Any CPU" "/p:OutputPath=%CD%\build\Plugins\"
 %windir%\microsoft.net\framework\v4.0.30319\msbuild "Plugins\EDGEWORTH\EDGEWORTH.sln" /v:minimal /p:Configuration=%conf%;TarjetFrameworkVersion=v3.5 "/p:Platform=Any CPU" "/p:OutputPath=%CD%\build\Plugins\"
+%windir%\microsoft.net\framework\v4.0.30319\msbuild "Plugins\GYAKUKEN\GYAKUKEN.sln" /v:minimal /p:Configuration=%conf%;TarjetFrameworkVersion=v3.5 "/p:Platform=Any CPU" "/p:OutputPath=%CD%\build\Plugins\"
 
 REM Compilación de los plugins de formatos
-%windir%\microsoft.net\framework\v4.0.30319\msbuild Plugins\NARC\NARC.sln /v:minimal /p:Configuration=%conf%;TarjetFrameworkVersion=v3.5 "/p:Platform=Any CPU" "/p:OutputPath=%CD%\build\Plugins\"
+%windir%\microsoft.net\framework\v4.0.30319\msbuild Plugins\Pack\Pack.sln /v:minimal /p:Configuration=%conf%;TarjetFrameworkVersion=v3.5 "/p:Platform=Any CPU" "/p:OutputPath=%CD%\build\Plugins\"
 %windir%\microsoft.net\framework\v4.0.30319\msbuild Plugins\TXT\TXT.sln /v:minimal /p:Configuration=%conf%;TarjetFrameworkVersion=v3.5 "/p:Platform=Any CPU" "/p:OutputPath=%CD%\build\Plugins\"
 %windir%\microsoft.net\framework\v4.0.30319\msbuild Plugins\Common\Common.sln /v:minimal /p:Configuration=%conf%;TarjetFrameworkVersion=v3.5 "/p:Platform=Any CPU" "/p:OutputPath=%CD%\build\Plugins\"
 %windir%\microsoft.net\framework\v4.0.30319\msbuild Plugins\Images\Images.sln /v:minimal /p:Configuration=%conf%;TarjetFrameworkVersion=v3.5 "/p:Platform=Any CPU" "/p:OutputPath=%CD%\build\Plugins\"

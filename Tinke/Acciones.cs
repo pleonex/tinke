@@ -1000,8 +1000,13 @@ namespace Tinke
 
             byte[] ext = br.ReadBytes(4);
             br.Close();
+            if (ext.Length < 4)
+                return "";
 
             string fin = new String(Encoding.ASCII.GetChars(ext));
+            if (fin.Length < 4)
+                return "";
+
             for (int i = 0; i < 4; i++)             // En caso de no ser extensión
                 if (!Char.IsLetterOrDigit(fin[i]))
                     return "";
