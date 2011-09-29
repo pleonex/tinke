@@ -65,7 +65,6 @@
             this.MinimumSize = new System.Drawing.Size(825, 38);
             this.Name = "VisorHex";
             this.Text = "S41";
-            this.Resize += new System.EventHandler(this.VisorHex_Resize);
             this.ResumeLayout(false);
             this.PerformLayout();
 
