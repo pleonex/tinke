@@ -30,7 +30,7 @@ namespace Tinke
 
             txtHex.Select(0, 0);
             txtHex.HideSelection = false;
-
+            this.Resize += new System.EventHandler(this.VisorHex_Resize);
         }
 
         public void Clear()

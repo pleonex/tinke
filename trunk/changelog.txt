@@ -1,6 +1,8 @@
 0.8.2
 ** Game GYAKUKEN (Gyajuten kenji 2) supported
   - Unpacker
+** Game DBK ULTIMATE (Dragon Ball Kai Ultimate Butouden) supported
+  - Unpacker for file "archiveDBK.dsa" 
 * Fixed some problems with compressed false positive
 * Fixed problem with rotated Font and some char codes
 * Fixed problem with textures with format 2
