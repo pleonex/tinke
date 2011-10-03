@@ -59,6 +59,7 @@ namespace Tinke
             pluginHost.ChangeFile_Event += new Action<int, string>(pluginHost_ChangeFile_Event);
             pluginHost.event_GetDecompressedFiles += new Func<int, sFolder>(pluginHost_event_GetDecompressedFiles);
             pluginHost.event_SearchFile += new Func<int, String>(Save_File);
+            pluginHost.event_SearchFile2 += new Func<int, sFile>(Search_File);
             Cargar_Plugins();
         }
         public void Dispose()

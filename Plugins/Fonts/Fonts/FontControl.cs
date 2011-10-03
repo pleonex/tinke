@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Data;
 using System.Linq;
 using System.Text;
+using System.Drawing;
 using System.Windows.Forms;
 using PluginInterface;
 
@@ -16,6 +17,7 @@ namespace Fonts
         sNFTR font;
         List<CharControl> chars = new List<CharControl>();
         Dictionary<int, int> charTile;
+        Color[] palette;
 
         public FontControl()
         {
@@ -28,11 +30,12 @@ namespace Fonts
             this.pluginHost = pluginHost;
             this.font = font;
             ReadLanguage();
+            this.palette = CalculatePalette();
 
             for (int i = 0; i < font.plgc.tiles.Length; i++)
                 comboBox1.Items.Add("Char " + i.ToString());
 
-            picFont.Image = NFTR.Get_Chars(font, 250);
+            picFont.Image = NFTR.Get_Chars(font, 250, palette);
 
             Fill_CharTile();
 
@@ -95,7 +98,8 @@ namespace Fonts
                 font.plgc.depth,
                 font.plgc.tile_width,
                 font.plgc.tile_height,
-                font.plgc.rotateMode));
+                font.plgc.rotateMode,
+                palette));
         }
 
         private void comboEncoding_SelectedIndexChanged(object sender, EventArgs e)
@@ -137,7 +141,7 @@ namespace Fonts
                 }
 
                 width += font.hdwc.info[tileCode].pixel_start;
-                graphic.DrawImageUnscaled(NFTR.Get_Char(font, tileCode), width, height);
+                graphic.DrawImageUnscaled(NFTR.Get_Char(font, tileCode, palette), width, height);
                 width += font.hdwc.info[tileCode].pixel_length - font.hdwc.info[tileCode].pixel_start;
 
                 if (width + font.plgc.tile_width > image.Width)
@@ -155,7 +159,7 @@ namespace Fonts
             CharControl charControl = (CharControl)panelCharEdit.Controls[0];
             font.hdwc.info[comboBox1.SelectedIndex] = charControl.TileInfo;
             font.plgc.tiles[comboBox1.SelectedIndex] = charControl.Tiles;
-            picFont.Image = NFTR.Get_Chars(font, 250);
+            picFont.Image = NFTR.Get_Chars(font, 250, palette);
         }
         private void btnSave_Click(object sender, EventArgs e)
         {
@@ -173,6 +177,33 @@ namespace Fonts
             comboBox1.SelectedIndex = charX + charY * totalX;
         }
 
+        private void btnPalette_Click(object sender, EventArgs e)
+        {
+            if (pluginHost.Get_NCLR().header.file_size != 0x00)
+                palette = pluginHost.Get_NCLR().pltt.palettes[0].colors;
+
+            int depth = Convert.ToByte(new String('1', font.plgc.depth), 2);
+            Color[] palette2 = new System.Drawing.Color[depth + 1];
+            Array.Copy(palette, 0, palette2, 0, palette2.Length);
+            palette2 = palette2.Reverse().ToArray();
+            palette = palette2;
+
+            picFont.Image = NFTR.Get_Chars(font, 250, palette);
+            txtBox_TextChanged(txtBox, null);
+        }
+
+        private Color[] CalculatePalette()
+        {
+            Color[] palette = new Color[(int)Math.Pow(2, font.plgc.depth)];
+            for (int i = 0; i < palette.Length; i++)
+            {
+                int colorIndex = 255 - (i * (255 / (palette.Length - 1)));
+                palette[i] = Color.FromArgb(colorIndex, 0, 0, 0);
+                //palette[i] = Color.FromArgb(255, colorIndex, colorIndex, colorIndex);
+            }
+            palette = palette.Reverse().ToArray();
+            return palette;
+        }
 
     }
 }

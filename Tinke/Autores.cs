@@ -81,6 +81,10 @@ namespace Tinke
         {
             System.Diagnostics.Process.Start("http://famfamfam.com/");
         }
+        private void linkLabel2_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("http://hexbox.sourceforge.net/");
+        }
 
         private void LeerIdioma()
         {
@@ -102,6 +106,7 @@ namespace Tinke
             lblLowLines.Text = xml.Element("S0A").Value;
             lblfamfamfam.Text = xml.Element("S0B").Value;
             label7.Text = xml.Element("S0D").Value;
+            label9.Text = String.Format(xml.Element("S0E").Value, "Bernhard Elbl");
         }
         private void ReadPlugins()
         {
@@ -130,6 +135,8 @@ namespace Tinke
             }
 
         }
+
+
 
     }
 }
