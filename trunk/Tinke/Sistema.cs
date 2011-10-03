@@ -816,10 +816,17 @@ namespace Tinke
         private void btnHex_Click(object sender, EventArgs e)
         {
             sFile file = accion.Select_File();
-
-            VisorHex hex = new VisorHex(file.path, file.offset, file.size);
+            VisorHex hex = new VisorHex(file, true);
             hex.Text += " - " + file.name;
             hex.Show();
+            hex.FormClosed += new FormClosedEventHandler(hex_FormClosed);
+        }
+
+        void hex_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            VisorHex hex = (VisorHex)sender;
+            if (hex.Edited)
+                accion.Change_File(hex.NewFile.id, hex.NewFile, accion.Root);
         }
         private void BtnSee(object sender, EventArgs e)
         {

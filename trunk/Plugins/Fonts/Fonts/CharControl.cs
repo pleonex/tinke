@@ -26,7 +26,8 @@ namespace Fonts
             InitializeComponent();
         }
         public CharControl(String lang, 
-            int charCode, sNFTR.HDWC.Info tileInfo, Byte[] tiles, int depth, int width, int height, int rotateMode)
+            int charCode, sNFTR.HDWC.Info tileInfo, Byte[] tiles, int depth, int width, int height, int rotateMode,
+            Color[] palette)
         {
             InitializeComponent();
             ReadLanguage(lang);
@@ -38,6 +39,7 @@ namespace Fonts
             this.width = width;
             this.height = height;
             this.rotateMode = rotateMode;
+            this.palette = palette;
 
             txtCharCode.Text = String.Format("0x{0:X}", charCode);
             numericStart.Value = tileInfo.pixel_start;
@@ -46,16 +48,8 @@ namespace Fonts
 
             Draw_Char();
 
-            palette = new Color[(int)Math.Pow(2, depth)];
-            for (int i = 0; i < palette.Length; i++)
-            {
-                int colorIndex = 255 - (i * (255 / (palette.Length - 1)));
-                palette[i] = Color.FromArgb(colorIndex, 0, 0, 0);
-            }
-            palette = palette.Reverse().ToArray();
-
             picPaletteColour.BackColor = palette[0];
-            trackPalette.Maximum = palette.Length - 1;
+            trackPalette.Maximum = Convert.ToByte(new String('1', depth), 2);
         }
         private void ReadLanguage(string lang)
         {
@@ -74,7 +68,7 @@ namespace Fonts
         }
         public void Draw_Char()
         {
-            Bitmap image = NFTR.Get_Char(tiles, depth, width, height, rotateMode, 10);
+            Bitmap image = NFTR.Get_Char(tiles, depth, width, height, rotateMode, palette, 10);
             // Draw the grid
             Graphics graphic = Graphics.FromImage(image);
             for (int h = 0; h < height * 10; h += 10)

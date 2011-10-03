@@ -311,7 +311,7 @@ namespace Tinke.Dialog
         }
         private void btnHex_Click(object sender, EventArgs e)
         {
-            VisorHex hex = new VisorHex(file, fat.files[listBoxFiles.SelectedIndex].offset, fat.files[listBoxFiles.SelectedIndex].size);
+            VisorHex hex = new VisorHex(fat.files[listBoxFiles.SelectedIndex], false);
             hex.Show();
         }
 

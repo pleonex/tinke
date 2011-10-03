@@ -78,6 +78,7 @@ namespace PluginInterface
         sFolder Get_Files();
         sFolder Get_DecompressedFiles(int id); // Get all the files and folder that have been decompressed (to compress them)
         String Search_File(int id); // Search file by id
+        sFile Search_File(short id);
 
         string Get_Language();
         string Get_TempFolder();

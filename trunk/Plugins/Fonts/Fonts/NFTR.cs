@@ -186,13 +186,16 @@ namespace Fonts
             // Write the PAMC section
             for (int i = 0; i < font.pamc.Count; i++)
             {
+                long currPos = bw.BaseStream.Position;
+                uint next_section = (uint)(currPos + font.pamc[i].block_size) + 0x08;
+                if (i + 1 == font.pamc.Count)
+                    next_section = 0;
                 bw.Write(font.pamc[i].type);
                 bw.Write(font.pamc[i].block_size);
                 bw.Write(font.pamc[i].first_char);
                 bw.Write(font.pamc[i].last_char);
                 bw.Write(font.pamc[i].type_section);
-                uint next_section = (uint)(bw.BaseStream.Position - 0x10 + font.pamc[i].block_size) + 0x08;
-                bw.Write(font.pamc[i].next_section);
+                bw.Write(next_section);
 
                 switch (font.pamc[i].type_section)
                 {
@@ -216,7 +219,7 @@ namespace Fonts
                         break;
                 }
 
-                int relleno = (int)(next_section - 0x08 - bw.BaseStream.Position);
+                int relleno = (int)(currPos + font.pamc[i].block_size - bw.BaseStream.Position);
                 for (int r = 0; r < relleno; r++)
                     bw.Write((byte)0x00);
             }
@@ -311,19 +314,10 @@ namespace Fonts
             catch { throw new NotSupportedException("There was an error reading the language file"); }
         }
 
-        public static Bitmap Get_Char(sNFTR font, int id, int zoom = 1)
+        public static Bitmap Get_Char(sNFTR font, int id, Color[] palette, int zoom = 1)
         {
             Bitmap image = new Bitmap(font.plgc.tile_width * zoom, font.plgc.tile_height * zoom);
             List<Byte> tileData = new List<byte>();
-
-            Color[] palette = new Color[(int)Math.Pow(2, font.plgc.depth)];
-            for (int i = 0; i < palette.Length; i++)
-            {
-                int colorIndex = 255 - (i * (255 / (palette.Length - 1)));
-                palette[i] = Color.FromArgb(colorIndex, 0, 0, 0);
-                //palette[i] = Color.FromArgb(255, colorIndex, colorIndex, colorIndex);
-            }
-            palette = palette.Reverse().ToArray();
 
             int bits = Convert.ToByte(new String('1', font.plgc.depth), 2);
             for (int i = 0; i < font.plgc.tiles[id].Length; i += font.plgc.depth)
@@ -353,21 +347,14 @@ namespace Fonts
                 }
             }
 
-            image.MakeTransparent(Color.FromArgb(255, 255, 255));
+            //image.MakeTransparent();
             return image;
         }
-        public static Bitmap Get_Char(byte[] tiles, int depth, int width, int height, int rotateMode, int zoom = 1)
+        public static Bitmap Get_Char(byte[] tiles, int depth, int width, int height, int rotateMode,
+            Color[] palette, int zoom = 1)
         {
             Bitmap image = new Bitmap(width * zoom + 1, height * zoom + 1);
             List<Byte> tileData = new List<byte>();
-
-            Color[] palette = new Color[(int)Math.Pow(2, depth)];
-            for (int i = 0; i < palette.Length; i++)
-            {
-                int colorIndex = 255 - (i * (255 / (palette.Length - 1)));
-                palette[i] = Color.FromArgb(colorIndex, 0, 0, 0);
-            }
-            palette = palette.Reverse().ToArray();
 
             int bits = Convert.ToByte(new String('1', depth), 2);
             for (int i = 0; i < tiles.Length; i += depth)
@@ -396,7 +383,7 @@ namespace Fonts
 
             return image;
         }
-        public static Bitmap Get_Chars(sNFTR font, int maxWidth)
+        public static Bitmap Get_Chars(sNFTR font, int maxWidth, Color[] palette)
         {
             int char_x = maxWidth / font.plgc.tile_width;
             int char_y = (font.plgc.tiles.Length / char_x) + 1;
@@ -408,7 +395,7 @@ namespace Fonts
             for (int i = 0; i < font.plgc.tiles.Length; i++)
             {
                 graphic.DrawRectangle(Pens.Red, w, h, font.plgc.tile_width, font.plgc.tile_height);
-                graphic.DrawImageUnscaled(Get_Char(font, i), w, h);
+                graphic.DrawImageUnscaled(Get_Char(font, i, palette), w, h);
                 w += font.plgc.tile_width;
                 if (w + font.plgc.tile_width > maxWidth)
                 {

@@ -53,7 +53,7 @@ namespace Tinke
             ncer.cebk.nBanks = br.ReadUInt16();
             ncer.cebk.tBank = br.ReadUInt16();
             ncer.cebk.constant = br.ReadUInt32();
-            ncer.cebk.block_size = br.ReadUInt32() & 0xF;
+            ncer.cebk.block_size = br.ReadUInt32() & 0xFF;
             ncer.cebk.unknown1 = br.ReadUInt32();
             ncer.cebk.unknown2 = br.ReadUInt64();
             ncer.cebk.banks = new Bank[ncer.cebk.nBanks];
@@ -315,23 +315,25 @@ namespace Tinke
                     continue;
 
                 uint tileOffset = banco.cells[i].tileOffset;
+                if (blockSize > 4)
+                    blockSize = 4;
                 if (tile.rahc.depth == System.Windows.Forms.ColorDepth.Depth4Bit)
-                    tileOffset *= (uint)((blockSize != 0) ? blockSize * 2 : 1);
+                    tileOffset = (uint)(tileOffset << (byte)blockSize);
                 else
-                    tileOffset *= (uint)((blockSize != 0) ? blockSize : 1);
+                    tileOffset = (uint)(tileOffset << (byte)blockSize) / 2;
 
                 if (image)
                 {
                     for (int j = 0; j < tile.rahc.tileData.nPalette.Length; j++)
                         tile.rahc.tileData.nPalette[j] = banco.cells[i].nPalette;
 
-                    if (blockSize != 4)
+                    if (blockSize < 4)
                     {
                         if (tile.order == TileOrder.NoTiled)
                         {
                             int mul = 64;
-                            if (blockSize == 0x00) // Not sure... Only temp
-                                mul = 32;
+                            //if (blockSize == 0x00) // Not sure... Only temporaly
+                            //    mul = 32;
                             celdas[i] = Imagen_NCGR.Crear_Imagen(tile, paleta, (int)tileOffset * mul, banco.cells[i].width, banco.cells[i].height);
                         }
                         else
@@ -339,6 +341,7 @@ namespace Tinke
                     }
                     else
                     {
+                        tileOffset /= (blockSize / 2);
                         int imageWidth = tile.rahc.nTilesX;
                         int imageHeight = tile.rahc.nTilesY;
                         if (tile.order == TileOrder.Horizontal)

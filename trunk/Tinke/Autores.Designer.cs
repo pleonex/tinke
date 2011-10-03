@@ -71,6 +71,8 @@ namespace Tinke
             this.label8 = new System.Windows.Forms.Label();
             this.lblTrad = new System.Windows.Forms.Label();
             this.listPlugin = new System.Windows.Forms.ListBox();
+            this.linkHexEditor = new System.Windows.Forms.LinkLabel();
+            this.label9 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureImage)).BeginInit();
             this.SuspendLayout();
             // 
@@ -162,7 +164,7 @@ namespace Tinke
             // lblDSDecmp
             // 
             this.lblDSDecmp.AutoSize = true;
-            this.lblDSDecmp.Location = new System.Drawing.Point(12, 178);
+            this.lblDSDecmp.Location = new System.Drawing.Point(12, 191);
             this.lblDSDecmp.Name = "lblDSDecmp";
             this.lblDSDecmp.Size = new System.Drawing.Size(56, 13);
             this.lblDSDecmp.TabIndex = 9;
@@ -173,7 +175,7 @@ namespace Tinke
             // lblDSDecmp2
             // 
             this.lblDSDecmp2.AutoSize = true;
-            this.lblDSDecmp2.Location = new System.Drawing.Point(75, 177);
+            this.lblDSDecmp2.Location = new System.Drawing.Point(75, 190);
             this.lblDSDecmp2.Name = "lblDSDecmp2";
             this.lblDSDecmp2.Size = new System.Drawing.Size(255, 39);
             this.lblDSDecmp2.TabIndex = 10;
@@ -183,7 +185,7 @@ namespace Tinke
             // linkGBATEK
             // 
             this.linkGBATEK.AutoSize = true;
-            this.linkGBATEK.Location = new System.Drawing.Point(12, 227);
+            this.linkGBATEK.Location = new System.Drawing.Point(12, 240);
             this.linkGBATEK.Name = "linkGBATEK";
             this.linkGBATEK.Size = new System.Drawing.Size(49, 13);
             this.linkGBATEK.TabIndex = 11;
@@ -194,7 +196,7 @@ namespace Tinke
             // lblGBATEK
             // 
             this.lblGBATEK.AutoSize = true;
-            this.lblGBATEK.Location = new System.Drawing.Point(78, 227);
+            this.lblGBATEK.Location = new System.Drawing.Point(78, 240);
             this.lblGBATEK.Name = "lblGBATEK";
             this.lblGBATEK.Size = new System.Drawing.Size(26, 13);
             this.lblGBATEK.TabIndex = 12;
@@ -203,7 +205,7 @@ namespace Tinke
             // linkLowLines
             // 
             this.linkLowLines.AutoSize = true;
-            this.linkLowLines.Location = new System.Drawing.Point(12, 249);
+            this.linkLowLines.Location = new System.Drawing.Point(12, 262);
             this.linkLowLines.Name = "linkLowLines";
             this.linkLowLines.Size = new System.Drawing.Size(55, 13);
             this.linkLowLines.TabIndex = 13;
@@ -214,7 +216,7 @@ namespace Tinke
             // lblLowLines
             // 
             this.lblLowLines.AutoSize = true;
-            this.lblLowLines.Location = new System.Drawing.Point(78, 249);
+            this.lblLowLines.Location = new System.Drawing.Point(78, 262);
             this.lblLowLines.Name = "lblLowLines";
             this.lblLowLines.Size = new System.Drawing.Size(27, 13);
             this.lblLowLines.TabIndex = 14;
@@ -223,7 +225,7 @@ namespace Tinke
             // linkfamfamfam
             // 
             this.linkfamfamfam.AutoSize = true;
-            this.linkfamfamfam.Location = new System.Drawing.Point(12, 271);
+            this.linkfamfamfam.Location = new System.Drawing.Point(12, 284);
             this.linkfamfamfam.Name = "linkfamfamfam";
             this.linkfamfamfam.Size = new System.Drawing.Size(58, 13);
             this.linkfamfamfam.TabIndex = 15;
@@ -234,7 +236,7 @@ namespace Tinke
             // lblfamfamfam
             // 
             this.lblfamfamfam.AutoSize = true;
-            this.lblfamfamfam.Location = new System.Drawing.Point(78, 271);
+            this.lblfamfamfam.Location = new System.Drawing.Point(78, 284);
             this.lblfamfamfam.Name = "lblfamfamfam";
             this.lblfamfamfam.Size = new System.Drawing.Size(27, 13);
             this.lblfamfamfam.TabIndex = 16;
@@ -245,7 +247,7 @@ namespace Tinke
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label7.ForeColor = System.Drawing.Color.Black;
-            this.label7.Location = new System.Drawing.Point(169, 291);
+            this.label7.Location = new System.Drawing.Point(169, 325);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(35, 17);
             this.label7.TabIndex = 18;
@@ -255,7 +257,7 @@ namespace Tinke
             // 
             this.label8.AutoSize = true;
             this.label8.Font = new System.Drawing.Font("Consolas", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label8.Location = new System.Drawing.Point(82, 314);
+            this.label8.Location = new System.Drawing.Point(82, 348);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(248, 17);
             this.label8.TabIndex = 19;
@@ -283,12 +285,34 @@ namespace Tinke
             this.listPlugin.Size = new System.Drawing.Size(299, 317);
             this.listPlugin.TabIndex = 21;
             // 
+            // linkHexEditor
+            // 
+            this.linkHexEditor.AutoSize = true;
+            this.linkHexEditor.Location = new System.Drawing.Point(12, 309);
+            this.linkHexEditor.Name = "linkHexEditor";
+            this.linkHexEditor.Size = new System.Drawing.Size(69, 13);
+            this.linkHexEditor.TabIndex = 22;
+            this.linkHexEditor.TabStop = true;
+            this.linkHexEditor.Text = "Be.HexEditor";
+            this.linkHexEditor.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel2_LinkClicked);
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(78, 309);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(70, 13);
+            this.label9.TabIndex = 23;
+            this.label9.Text = "Bernhard Elbl";
+            // 
             // Autores
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
-            this.ClientSize = new System.Drawing.Size(788, 340);
+            this.ClientSize = new System.Drawing.Size(788, 374);
+            this.Controls.Add(this.label9);
+            this.Controls.Add(this.linkHexEditor);
             this.Controls.Add(this.listPlugin);
             this.Controls.Add(this.lblTrad);
             this.Controls.Add(this.label8);
@@ -348,6 +372,8 @@ namespace Tinke
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label lblTrad;
         private System.Windows.Forms.ListBox listPlugin;
+        private System.Windows.Forms.LinkLabel linkHexEditor;
+        private System.Windows.Forms.Label label9;
 
     }
 }

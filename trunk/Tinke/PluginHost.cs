@@ -114,6 +114,8 @@ namespace Tinke
         public sFolder Get_DecompressedFiles(int id) { return event_GetDecompressedFiles(id); }
         public event Func<int, String> event_SearchFile;
         public String Search_File(int id) { return event_SearchFile(id); }
+        public event Func<int, sFile> event_SearchFile2;
+        public sFile Search_File(short id) { return event_SearchFile2(id); }
 
         public string Get_TempFolder()
         {
