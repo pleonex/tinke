@@ -359,6 +359,7 @@ namespace Tinke
                         newMap = Imagen_NSCR.Create_BasicMap((int)tile.rahc.nTiles, width, heigth);
 
                     newMap.id = map.id;
+                    newMap.section.padding = map.section.padding;
                     map = newMap;
 
                     pluginHost.Set_NSCR(map);

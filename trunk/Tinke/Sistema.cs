@@ -1417,6 +1417,8 @@ namespace Tinke
                 if (searchedFile.name is String)
                     resul.files.Add(searchedFile);
             }
+            else if (txtSearch.Text.StartsWith("Offset: ") && txtSearch.Text.Length > 8 && txtSearch.Text.Length < 17)
+                resul = accion.Search_FileOffset(Convert.ToInt32(txtSearch.Text.Substring(8), 16));
             else
                 resul = accion.Search_File(txtSearch.Text);
 

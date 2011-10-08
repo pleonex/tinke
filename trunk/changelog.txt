@@ -8,10 +8,17 @@
   - Unpacker for file "RESOURCE.NXARC"
 ** Game NINOKUNI (Ninokuni Shikkoku no Madoushi) supported
   - Unpacker for NPCK files
+  - Packer for N2D files
+** Game SUBARASHIKI (The world end with you) supported
+** Improved Font plugin
+  - Fixed problem with rotated Font
+  - Fixed problem with char codes
+  - Change info map char (PMAC section)
+  - Fixed problems saving new fonts
 ** Fixed problem reading NCER files
-* Fixed problem with rotated Font and some char codes
 * Fixed problem with textures with format 2
 * Added hotkeys (X for eXpand all nodes, C for Collapse all nodes)
+* Search by offset -> Offset: 00000000
 
 0.8.1 (public release) rev100
 *** BTX0 textures supported (view only)
