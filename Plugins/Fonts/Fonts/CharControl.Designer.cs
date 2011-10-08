@@ -176,9 +176,9 @@
             this.Controls.Add(this.numericLength);
             this.Controls.Add(this.numericWidth);
             this.Controls.Add(this.picFont);
-            this.MinimumSize = new System.Drawing.Size(243, 311);
+            this.MinimumSize = new System.Drawing.Size(243, 308);
             this.Name = "CharControl";
-            this.Size = new System.Drawing.Size(243, 311);
+            this.Size = new System.Drawing.Size(243, 308);
             ((System.ComponentModel.ISupportInitialize)(this.picFont)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericWidth)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericLength)).EndInit();

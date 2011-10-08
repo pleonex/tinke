@@ -5,7 +5,6 @@ using System.Drawing;
 using System.Data;
 using System.Linq;
 using System.Text;
-using System.Drawing;
 using System.Windows.Forms;
 using PluginInterface;
 
@@ -68,21 +67,24 @@ namespace Fonts
                     int interval = font.pamc[p].last_char - font.pamc[p].first_char;
 
                     for (int j = 0; j <= interval; j++)
-                        charTile.Add(font.pamc[p].first_char + j, type0.fist_char_code + j);
+                        try { charTile.Add(font.pamc[p].first_char + j, (int)type0.fist_char_code + j); }
+                        catch { }
                 }
                 else if (font.pamc[p].info is sNFTR.PAMC.Type1)
                 {
                     sNFTR.PAMC.Type1 type1 = (sNFTR.PAMC.Type1)font.pamc[p].info;
 
                     for (int j = 0; j < type1.char_code.Length; j++)
-                        charTile.Add(font.pamc[p].first_char + j, type1.char_code[j]);
+                        try { charTile.Add(font.pamc[p].first_char + j, type1.char_code[j]); }
+                        catch { }
                 }
                 else if (font.pamc[p].info is sNFTR.PAMC.Type2)
                 {
                     sNFTR.PAMC.Type2 type2 = (sNFTR.PAMC.Type2)font.pamc[p].info;
 
                     for (int j = 0; j < type2.num_chars; j++)
-                        charTile.Add(type2.chars_code[j], type2.chars[j]);
+                        try { charTile.Add(type2.chars_code[j], type2.chars[j]); }
+                        catch { }
                 }
             }
         }
@@ -203,6 +205,18 @@ namespace Fonts
             }
             palette = palette.Reverse().ToArray();
             return palette;
+        }
+
+        private void btnChangeMap_Click(object sender, EventArgs e)
+        {
+            MapChar map = new MapChar(font.pamc);
+            map.ShowDialog();
+            if (map.DialogResult == DialogResult.OK)
+            {
+                font.pamc = map.Maps;
+                charTile.Clear();
+                Fill_CharTile();
+            }
         }
 
     }

@@ -35,6 +35,8 @@ namespace Fonts
             font.fnif.offset_pamc = br.ReadUInt32();
             if (font.fnif.block_size == 0x20)
                 font.fnif.unknown3 = br.ReadUInt32();
+            else
+                font.fnif.unknown3 = 0xFFFF;    // It doesn't exit
 
             // Character Graphics LP
             br.BaseStream.Position = font.fnif.offset_plgc - 0x08;
@@ -100,7 +102,7 @@ namespace Fonts
                 {
                     case 0:
                         sNFTR.PAMC.Type0 type0 = new sNFTR.PAMC.Type0();
-                        type0.fist_char_code = br.ReadUInt16();
+                        type0.fist_char_code = br.ReadUInt32();
                         pamc.info = type0;
                         break;
                     case 1:
@@ -138,6 +140,23 @@ namespace Fonts
         }
         public static void Write(sNFTR font, string fileout)
         {
+            // Calculate de size of each block
+            font.fnif.block_size = 0x1C;
+            if (font.fnif.unknown3 != 0xFFFF)
+                font.fnif.block_size += 4;
+            font.plgc.block_size = (uint)(0x10 + font.plgc.tiles.Length * font.plgc.tile_length);
+            font.hdwc.block_size = (uint)(0x10 + font.hdwc.info.Count * 3) + 0x02;
+            uint pacm_totalSize = 0x00;
+            for (int i = 0; i < font.pamc.Count; i++)
+                pacm_totalSize += font.pamc[i].block_size;
+            font.header.file_size = font.header.block_size + font.fnif.block_size + font.plgc.block_size +
+                font.hdwc.block_size + pacm_totalSize;
+
+            // Calculate the new offset
+            font.fnif.offset_plgc = font.header.block_size + font.fnif.block_size + 0x08;
+            font.fnif.offset_hdwc = (font.fnif.offset_plgc - 0x08) + font.plgc.block_size + 0x08;
+            font.fnif.offset_pamc = (font.fnif.offset_hdwc - 0x08) + font.hdwc.block_size + 0x08;
+
             BinaryWriter bw = new BinaryWriter(File.OpenWrite(fileout));
 
             // Write the generic header
@@ -156,7 +175,7 @@ namespace Fonts
             bw.Write(font.fnif.offset_plgc);
             bw.Write(font.fnif.offset_hdwc);
             bw.Write(font.fnif.offset_pamc);
-            if (font.fnif.block_size == 0x20)
+            if (font.fnif.unknown3 != 0xFFFF)
                 bw.Write(font.fnif.unknown3);
 
             // Write the PLGC section
@@ -182,6 +201,7 @@ namespace Fonts
                 bw.Write(font.hdwc.info[i].pixel_width);
                 bw.Write(font.hdwc.info[i].pixel_length);
             }
+            bw.Write((ushort)0x00);
 
             // Write the PAMC section
             for (int i = 0; i < font.pamc.Count; i++)
@@ -218,10 +238,6 @@ namespace Fonts
                         }
                         break;
                 }
-
-                int relleno = (int)(currPos + font.pamc[i].block_size - bw.BaseStream.Position);
-                for (int r = 0; r < relleno; r++)
-                    bw.Write((byte)0x00);
             }
 
             bw.Flush();
@@ -562,7 +578,7 @@ namespace Fonts
 
             public struct Type0
             {
-                public ushort fist_char_code;
+                public uint fist_char_code;
             }
             public struct Type1
             {

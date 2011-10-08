@@ -1,4 +1,4 @@
-﻿namespace NINOKUNI
+﻿namespace SUBARASHIKI
 {
     partial class PackControl
     {
@@ -28,32 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.btnPack = new System.Windows.Forms.Button();
-            this.SuspendLayout();
-            // 
-            // btnPack
-            // 
-            this.btnPack.Location = new System.Drawing.Point(4, 4);
-            this.btnPack.Name = "btnPack";
-            this.btnPack.Size = new System.Drawing.Size(75, 23);
-            this.btnPack.TabIndex = 0;
-            this.btnPack.Text = "Pack";
-            this.btnPack.UseVisualStyleBackColor = true;
-            this.btnPack.Click += new System.EventHandler(this.btnPack_Click);
-            // 
-            // PackControl
-            // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            components = new System.ComponentModel.Container();
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.Transparent;
-            this.Controls.Add(this.btnPack);
-            this.Name = "PackControl";
-            this.ResumeLayout(false);
-
         }
 
         #endregion
-
-        private System.Windows.Forms.Button btnPack;
     }
 }

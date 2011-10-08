@@ -695,6 +695,13 @@ namespace Tinke
             Recursivo_Archivo(length, root, carpeta);
             return carpeta;
         }
+        public sFolder Search_FileOffset(int offset)
+        {
+            sFolder carpeta = new sFolder();
+            carpeta.files = new List<sFile>();
+            Recursive_FileOffset(offset, root, carpeta);
+            return carpeta;
+        }
         public sFolder Search_Folder(string name)
         {
             return Recursivo_Carpeta(name, root);
@@ -774,6 +781,19 @@ namespace Tinke
             if (currFolder.folders is List<sFolder>)
                 foreach (sFolder subFolder in currFolder.folders)
                     Recursivo_Archivo(length, subFolder, carpeta);
+
+        }
+        private void Recursive_FileOffset(int offset, sFolder currFolder, sFolder carpeta)
+        {
+            if (currFolder.files is List<sFile>)
+                foreach (sFile archivo in currFolder.files)
+                    if (archivo.offset <= offset && archivo.offset + archivo.size >= offset)
+                        carpeta.files.Add(archivo);
+
+
+            if (currFolder.folders is List<sFolder>)
+                foreach (sFolder subFolder in currFolder.folders)
+                    Recursive_FileOffset(offset, subFolder, carpeta);
 
         }
         private void Recursivo_Archivo(string name, sFolder currFolder, sFolder carpeta)

@@ -67,6 +67,27 @@ namespace Fonts.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap font_add {
+            get {
+                object obj = ResourceManager.GetObject("font_add", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap font_delete {
+            get {
+                object obj = ResourceManager.GetObject("font_delete", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap font_go {
+            get {
+                object obj = ResourceManager.GetObject("font_go", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap palette {
             get {
                 object obj = ResourceManager.GetObject("palette", resourceCulture);
