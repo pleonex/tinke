@@ -50,13 +50,16 @@
             // picFont
             // 
             this.picFont.BackColor = System.Drawing.Color.Moccasin;
+            this.picFont.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.picFont.Location = new System.Drawing.Point(0, 0);
             this.picFont.Name = "picFont";
             this.picFont.Size = new System.Drawing.Size(243, 200);
             this.picFont.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.picFont.TabIndex = 0;
             this.picFont.TabStop = false;
-            this.picFont.MouseClick += new System.Windows.Forms.MouseEventHandler(this.picFont_MouseClick);
+            this.picFont.MouseDown += new System.Windows.Forms.MouseEventHandler(this.picFont_MouseDown);
+            this.picFont.MouseMove += new System.Windows.Forms.MouseEventHandler(this.picFont_MouseMove);
+            this.picFont.MouseUp += new System.Windows.Forms.MouseEventHandler(this.picFont_MouseUp);
             // 
             // numericWidth
             // 

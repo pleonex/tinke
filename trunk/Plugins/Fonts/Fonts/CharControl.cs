@@ -21,11 +21,13 @@ namespace Fonts
         int height;
         int rotateMode;
 
+        bool mouseDown;
+
         public CharControl()
         {
             InitializeComponent();
         }
-        public CharControl(String lang, 
+        public CharControl(String lang,
             int charCode, sNFTR.HDWC.Info tileInfo, Byte[] tiles, int depth, int width, int height, int rotateMode,
             Color[] palette)
         {
@@ -50,6 +52,8 @@ namespace Fonts
 
             picPaletteColour.BackColor = palette[0];
             trackPalette.Maximum = Convert.ToByte(new String('1', depth), 2);
+            trackPalette.Value = trackPalette.Maximum;
+            picPaletteColour.BackColor = palette[trackPalette.Value];
         }
         private void ReadLanguage(string lang)
         {
@@ -112,17 +116,6 @@ namespace Fonts
         {
             picPaletteColour.BackColor = palette[trackPalette.Value];
         }
-
-        private void picFont_MouseClick(object sender, MouseEventArgs e)
-        {
-            Bitmap image = (Bitmap)picFont.Image;
-            Point location_pixel = new Point(e.X / 10, e.Y / 10);
-            for (int d = 0; d < depth; d++)
-                tiles[(location_pixel.X + location_pixel.Y * width) * depth + d] = (byte)((trackPalette.Value >> d) & 1);
-
-            Draw_Char();
-        }
-
         private void numericWidth_ValueChanged(object sender, EventArgs e)
         {
             tileInfo.pixel_width = (byte)numericWidth.Value;
@@ -134,6 +127,36 @@ namespace Fonts
         private void numericStart_ValueChanged(object sender, EventArgs e)
         {
             tileInfo.pixel_start = (byte)numericStart.Value;
+        }
+
+        private void picFont_MouseDown(object sender, MouseEventArgs e)
+        {
+            mouseDown = true;
+
+            Bitmap image = (Bitmap)picFont.Image;
+            Point location_pixel = new Point(e.X / 10, e.Y / 10);
+            for (int d = 0; d < depth; d++)
+                tiles[(location_pixel.X + location_pixel.Y * width) * depth + d] = (byte)((trackPalette.Value >> d) & 1);
+
+            Draw_Char();
+        }
+        private void picFont_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (!mouseDown || e.X + 3 >= picFont.Width || e.Y + 3 >= picFont.Height || e.X < 0 || e.Y < 0)
+                return;
+            
+
+            Bitmap image = (Bitmap)picFont.Image;
+            Point location_pixel = new Point(e.X / 10, e.Y / 10);
+            for (int d = 0; d < depth; d++)
+                tiles[(location_pixel.X + location_pixel.Y * width) * depth + d] = (byte)((trackPalette.Value >> d) & 1);
+
+            Draw_Char();
+
+        }
+        private void picFont_MouseUp(object sender, MouseEventArgs e)
+        {
+            mouseDown = false;
         }
     }
 }

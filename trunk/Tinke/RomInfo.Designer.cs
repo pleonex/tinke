@@ -188,12 +188,12 @@ namespace Tinke
             this.label2 = new System.Windows.Forms.Label();
             this.comboBannerLang = new System.Windows.Forms.ComboBox();
             this.txtBannerTitle = new System.Windows.Forms.TextBox();
+            this.picIcon = new System.Windows.Forms.PictureBox();
             this.listInfo = new System.Windows.Forms.ListView();
             this.columnPosicion = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnCampo = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnValor = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.btnEdit = new System.Windows.Forms.Button();
-            this.picIcon = new System.Windows.Forms.PictureBox();
             this.groupBanner.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picIcon)).BeginInit();
             this.SuspendLayout();
@@ -213,10 +213,10 @@ namespace Tinke
             this.groupBanner.Controls.Add(this.comboBannerLang);
             this.groupBanner.Controls.Add(this.txtBannerTitle);
             this.groupBanner.Controls.Add(this.picIcon);
-            this.groupBanner.Dock = System.Windows.Forms.DockStyle.Top;
+            this.groupBanner.Dock = System.Windows.Forms.DockStyle.Right;
             this.groupBanner.Location = new System.Drawing.Point(494, 0);
             this.groupBanner.Name = "groupBanner";
-            this.groupBanner.Size = new System.Drawing.Size(200, 307);
+            this.groupBanner.Size = new System.Drawing.Size(200, 472);
             this.groupBanner.TabIndex = 7;
             this.groupBanner.TabStop = false;
             this.groupBanner.Text = "S02";
@@ -332,6 +332,15 @@ namespace Tinke
             this.txtBannerTitle.Size = new System.Drawing.Size(182, 85);
             this.txtBannerTitle.TabIndex = 3;
             // 
+            // picIcon
+            // 
+            this.picIcon.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.picIcon.Location = new System.Drawing.Point(9, 19);
+            this.picIcon.Name = "picIcon";
+            this.picIcon.Size = new System.Drawing.Size(32, 32);
+            this.picIcon.TabIndex = 0;
+            this.picIcon.TabStop = false;
+            // 
             // listInfo
             // 
             this.listInfo.Activation = System.Windows.Forms.ItemActivation.OneClick;
@@ -421,33 +430,23 @@ namespace Tinke
             this.btnEdit.UseVisualStyleBackColor = true;
             this.btnEdit.Click += new System.EventHandler(this.btnEdit_Click);
             // 
-            // picIcon
-            // 
-            this.picIcon.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.picIcon.Location = new System.Drawing.Point(9, 19);
-            this.picIcon.Name = "picIcon";
-            this.picIcon.Size = new System.Drawing.Size(32, 32);
-            this.picIcon.TabIndex = 0;
-            this.picIcon.TabStop = false;
-            // 
             // RomInfo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
             this.ClientSize = new System.Drawing.Size(694, 472);
-            this.ControlBox = false;
             this.Controls.Add(this.btnEdit);
             this.Controls.Add(this.groupBanner);
             this.Controls.Add(this.listInfo);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
+            this.MinimumSize = new System.Drawing.Size(710, 380);
             this.Name = "RomInfo";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "S01";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.RomInfo_FormClosing);
+            this.Resize += new System.EventHandler(this.RomInfo_Resize);
             this.groupBanner.ResumeLayout(false);
             this.groupBanner.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picIcon)).EndInit();

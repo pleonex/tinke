@@ -17,6 +17,7 @@ namespace Fonts
         List<CharControl> chars = new List<CharControl>();
         Dictionary<int, int> charTile;
         Color[] palette;
+        const int ZOOM = 2;
 
         public FontControl()
         {
@@ -32,13 +33,13 @@ namespace Fonts
             this.palette = CalculatePalette();
 
             for (int i = 0; i < font.plgc.tiles.Length; i++)
-                comboBox1.Items.Add("Char " + i.ToString());
+                comboChar.Items.Add("Char " + i.ToString());
 
-            picFont.Image = NFTR.Get_Chars(font, 250, palette);
+            picFont.Image = NFTR.Get_Chars(font, 250, palette, ZOOM);
 
             Fill_CharTile();
 
-            comboBox1.SelectedIndex = 0;
+            comboChar.SelectedIndex = 0;
             comboEncoding.SelectedIndex = 0;
         }
 
@@ -67,7 +68,7 @@ namespace Fonts
                     int interval = font.pamc[p].last_char - font.pamc[p].first_char;
 
                     for (int j = 0; j <= interval; j++)
-                        try { charTile.Add(font.pamc[p].first_char + j, (int)type0.fist_char_code + j); }
+                        try { charTile.Add(font.pamc[p].first_char + j, type0.fist_char_code + j); }
                         catch { }
                 }
                 else if (font.pamc[p].info is sNFTR.PAMC.Type1)
@@ -94,9 +95,9 @@ namespace Fonts
             panelCharEdit.Controls.Clear();
             panelCharEdit.Controls.Add(new CharControl(
                 pluginHost.Get_Language(),
-                (from k in charTile where int.Equals(k.Value, comboBox1.SelectedIndex) select k.Key).FirstOrDefault(),
-                font.hdwc.info[comboBox1.SelectedIndex],
-                font.plgc.tiles[comboBox1.SelectedIndex],
+                (from k in charTile where int.Equals(k.Value, comboChar.SelectedIndex) select k.Key).FirstOrDefault(),
+                font.hdwc.info[comboChar.SelectedIndex],
+                font.plgc.tiles[comboChar.SelectedIndex],
                 font.plgc.depth,
                 font.plgc.tile_width,
                 font.plgc.tile_height,
@@ -159,9 +160,10 @@ namespace Fonts
         private void btnApply_Click(object sender, EventArgs e)
         {
             CharControl charControl = (CharControl)panelCharEdit.Controls[0];
-            font.hdwc.info[comboBox1.SelectedIndex] = charControl.TileInfo;
-            font.plgc.tiles[comboBox1.SelectedIndex] = charControl.Tiles;
-            picFont.Image = NFTR.Get_Chars(font, 250, palette);
+            font.hdwc.info[comboChar.SelectedIndex] = charControl.TileInfo;
+            font.plgc.tiles[comboChar.SelectedIndex] = charControl.Tiles;
+            picFont.Image = NFTR.Get_Chars(font, 250, palette, ZOOM);
+            txtBox_TextChanged(txtBox, null);
         }
         private void btnSave_Click(object sender, EventArgs e)
         {
@@ -172,11 +174,13 @@ namespace Fonts
 
         private void picFont_MouseClick(object sender, MouseEventArgs e)
         {
-            int charX = e.X / font.plgc.tile_width;
-            int charY = e.Y / font.plgc.tile_height;
-            int totalX = 250 / font.plgc.tile_width;
+            int charX = e.X / (font.plgc.tile_width * ZOOM);
+            int charY = e.Y / (font.plgc.tile_height * ZOOM);
+            int totalX = 250 / (font.plgc.tile_width * ZOOM);
 
-            comboBox1.SelectedIndex = charX + charY * totalX;
+            int index = charX + charY * totalX;
+            if (index < comboChar.Items.Count)
+                comboChar.SelectedIndex = index;
         }
 
         private void btnPalette_Click(object sender, EventArgs e)
@@ -193,7 +197,6 @@ namespace Fonts
             picFont.Image = NFTR.Get_Chars(font, 250, palette);
             txtBox_TextChanged(txtBox, null);
         }
-
         private Color[] CalculatePalette()
         {
             Color[] palette = new Color[(int)Math.Pow(2, font.plgc.depth)];
@@ -216,7 +219,44 @@ namespace Fonts
                 font.pamc = map.Maps;
                 charTile.Clear();
                 Fill_CharTile();
+                txtBox_TextChanged(txtBox, null);
             }
+        }
+        private void btnAddChar_Click(object sender, EventArgs e)
+        {
+            font.hdwc.last_code++;
+            sNFTR.HDWC.Info newInfo = new sNFTR.HDWC.Info();
+            newInfo.pixel_start = 0;
+            newInfo.pixel_width = 9;
+            newInfo.pixel_length = 9;
+            font.hdwc.info.Add(newInfo);
+
+            List<byte[]> tiles = new List<byte[]>();
+            tiles.AddRange(font.plgc.tiles);
+            Byte[] newChar = new byte[8 * font.plgc.tile_length];
+            tiles.Add(newChar);
+            font.plgc.tiles = tiles.ToArray();
+
+            picFont.Image = NFTR.Get_Chars(font, 250, palette, ZOOM);
+            comboChar.Items.Add("Char" + comboChar.Items.Count.ToString());
+            comboChar.SelectedIndex = comboChar.Items.Count - 1;
+
+        }
+        private void btnRemoveChar_Click(object sender, EventArgs e)
+        {
+            int index = comboChar.SelectedIndex;
+
+            font.hdwc.last_code--;
+            font.hdwc.info.RemoveAt(index);
+
+            List<byte[]> tiles = new List<byte[]>();
+            tiles.AddRange(font.plgc.tiles);
+            tiles.RemoveAt(index);
+            font.plgc.tiles = tiles.ToArray();
+
+            picFont.Image = NFTR.Get_Chars(font, 250, palette, ZOOM);
+            comboChar.Items.RemoveAt(index);
+            comboChar.SelectedIndex = index - 1;
         }
 
     }

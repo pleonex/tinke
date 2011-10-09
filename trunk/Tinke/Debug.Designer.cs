@@ -74,13 +74,14 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(644, 152);
             this.ContextMenuStrip = this.contextMenuStrip1;
-            this.ControlBox = false;
+            this.ControlBox = true;
             if (System.Type.GetType("Mono.Runtime") == null)
                 this.Controls.Add(this.txtInfo);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
+            this.MaximizeBox = true;
+            this.MinimizeBox = true;
+            this.ShowIcon = true;
             this.Name = "Debug";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;

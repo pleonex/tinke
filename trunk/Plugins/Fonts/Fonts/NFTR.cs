@@ -102,12 +102,12 @@ namespace Fonts
                 {
                     case 0:
                         sNFTR.PAMC.Type0 type0 = new sNFTR.PAMC.Type0();
-                        type0.fist_char_code = br.ReadUInt32();
+                        type0.fist_char_code = br.ReadUInt16();
                         pamc.info = type0;
                         break;
                     case 1:
                         sNFTR.PAMC.Type1 type1 = new sNFTR.PAMC.Type1();
-                        type1.char_code = new ushort[(pamc.block_size - 0x14) / 2];
+                        type1.char_code = new ushort[(pamc.block_size - 0x14 - 0x02) / 2];
                         for (int i = 0; i < type1.char_code.Length; i++)
                             type1.char_code[i] = br.ReadUInt16();
 
@@ -238,6 +238,7 @@ namespace Fonts
                         }
                         break;
                 }
+                bw.Write((ushort)0x00);
             }
 
             bw.Flush();
@@ -399,24 +400,24 @@ namespace Fonts
 
             return image;
         }
-        public static Bitmap Get_Chars(sNFTR font, int maxWidth, Color[] palette)
+        public static Bitmap Get_Chars(sNFTR font, int maxWidth, Color[] palette, int zoom = 1)
         {
-            int char_x = maxWidth / font.plgc.tile_width;
+            int char_x = maxWidth / (font.plgc.tile_width * zoom);
             int char_y = (font.plgc.tiles.Length / char_x) + 1;
-            Bitmap image = new Bitmap(char_x * font.plgc.tile_width + 1, char_y * font.plgc.tile_height + 1);
+            Bitmap image = new Bitmap(char_x * (font.plgc.tile_width * zoom) + 1, char_y * (font.plgc.tile_height * zoom) + 1);
             Graphics graphic = Graphics.FromImage(image);
 
             int w, h;
             w = h = 0;
             for (int i = 0; i < font.plgc.tiles.Length; i++)
             {
-                graphic.DrawRectangle(Pens.Red, w, h, font.plgc.tile_width, font.plgc.tile_height);
-                graphic.DrawImageUnscaled(Get_Char(font, i, palette), w, h);
-                w += font.plgc.tile_width;
-                if (w + font.plgc.tile_width > maxWidth)
+                graphic.DrawRectangle(Pens.Red, w, h, font.plgc.tile_width * zoom, font.plgc.tile_height * zoom);
+                graphic.DrawImageUnscaled(Get_Char(font, i, palette, zoom), w, h);
+                w += font.plgc.tile_width * zoom;
+                if (w + (font.plgc.tile_width * zoom) > maxWidth)
                 {
                     w = 0;
-                    h += font.plgc.tile_height;
+                    h += font.plgc.tile_height * zoom;
                 }
             }
 
@@ -578,7 +579,7 @@ namespace Fonts
 
             public struct Type0
             {
-                public uint fist_char_code;
+                public ushort fist_char_code;
             }
             public struct Type1
             {
