@@ -120,7 +120,7 @@ namespace _999HRPERDOOR
             cells.cebk.id = "SIR0".ToCharArray();
             cells.header.file_size = cell_size;
             cells.cebk.section_size = cell_size;
-            cells.cebk.block_size = 1;
+            cells.cebk.block_size = 0;
             cells.cebk.nBanks = 1;
             cells.cebk.tBank = 0;
             cells.cebk.banks = new Bank[1];

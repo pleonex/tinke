@@ -71,7 +71,7 @@ namespace Fonts
                 switch (map.type_section)
                 {
                     case 0:
-                        size += 4;
+                        size += 2;
                         break;
 
                     case 1:
@@ -86,6 +86,7 @@ namespace Fonts
                         size += (uint)type2.chars.Length * 2;
                         break;
                 }
+                size += 2;  // 0x00 terminator
 
                 map.block_size = size;
                 maps[i] = map;
@@ -175,6 +176,21 @@ namespace Fonts
 
                         type2.num_chars++;
                     }
+                    else if (dataGridMapInfo.RowCount < type2.chars.Length)
+                    {
+                        List<ushort> values = new List<ushort>();
+
+                        values.AddRange(type2.chars);
+                        values.RemoveAt(e.RowIndex);
+                        type2.chars = values.ToArray();
+
+                        values.Clear();
+                        values.AddRange(type2.chars_code);
+                        values.RemoveAt(e.RowIndex);
+                        type2.chars_code = values.ToArray();
+
+                        type2.num_chars--;
+                    }
                     else
                         type2.chars[e.RowIndex] = Convert.ToUInt16(dataGridMapInfo.Rows[e.RowIndex].Cells[0].Value);
 
@@ -196,6 +212,21 @@ namespace Fonts
 
                         type2.num_chars++;
                     }
+                    else if (dataGridMapInfo.RowCount < type2.chars.Length)
+                    {
+                        List<ushort> values = new List<ushort>();
+
+                        values.AddRange(type2.chars_code);
+                        values.RemoveAt(e.RowIndex);
+                        type2.chars_code = values.ToArray();
+
+                        values.Clear();
+                        values.AddRange(type2.chars);
+                        values.RemoveAt(e.RowIndex);
+                        type2.chars = values.ToArray();
+
+                        type2.num_chars--;
+                    }
                     else
                         type2.chars_code[e.RowIndex] = Convert.ToUInt16(dataGridMapInfo.Rows[e.RowIndex].Cells[1].Value);
                 }
@@ -214,6 +245,13 @@ namespace Fonts
                         values.Add(Convert.ToUInt16(dataGridMapInfo.Rows[e.RowIndex].Cells[0].Value));
                         type1.char_code = values.ToArray();
                     }
+                    else if (dataGridMapInfo.RowCount < type1.char_code.Length)
+                    {
+                        List<ushort> values = new List<ushort>();
+                        values.AddRange(type1.char_code);
+                        values.RemoveAt(e.RowIndex);
+                        type1.char_code = values.ToArray();
+                    }
                     else
                         type1.char_code[e.RowIndex] = Convert.ToUInt16(dataGridMapInfo.Rows[e.RowIndex].Cells[0].Value);
                 }
@@ -224,7 +262,7 @@ namespace Fonts
             {
                 sNFTR.PAMC.Type0 type0 = (sNFTR.PAMC.Type0)map.info;
 
-                if (e.ColumnIndex == 0 && e.RowIndex == 0)
+                if (e.ColumnIndex == 0 && e.RowIndex == 0 && dataGridMapInfo.RowCount > 0)
                 {
                     type0.fist_char_code = Convert.ToUInt16(dataGridMapInfo.Rows[e.RowIndex].Cells[0].Value);
                 }

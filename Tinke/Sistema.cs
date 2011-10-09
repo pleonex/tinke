@@ -159,6 +159,8 @@ namespace Tinke
 
 
             debug = new Debug();
+            debug.FormClosing += new FormClosingEventHandler(debug_FormClosing);
+            romInfo.FormClosing += new FormClosingEventHandler(romInfo_FormClosing);
             LoadPreferences();
 
             debug.Añadir_Texto(sb.ToString());
@@ -1151,6 +1153,14 @@ namespace Tinke
                 btnDesplazar.Text = ">>>>>";
             }
 
+        }
+        void romInfo_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            toolStripInfoRom.Checked = romInfo.Visible;
+        }
+        void debug_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            toolStripDebug.Checked = debug.Visible;
         }
 
         private void btnDesplazar_Click(object sender, EventArgs e)

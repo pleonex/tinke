@@ -17,6 +17,7 @@ namespace Tinke
             InitializeComponent();
             LeerIdioma();
             this.Location = new Point(10, 585);
+            this.FormClosing += new FormClosingEventHandler(Debug_FormClosing);
 
             if (Type.GetType("Mono.Runtime") == null) // Evitamos Mono que da problemas
             {
@@ -24,6 +25,12 @@ namespace Tinke
                 Añadir_Texto("<b><h3>Tinke " + Assembly.GetExecutingAssembly().GetName().Version.ToString() + "</h3></b>");
                 txtInfo.Document.BackColor = SystemColors.GradientActiveCaption;
             }
+        }
+
+        void Debug_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            e.Cancel = true;
+            this.Hide();
         }
 
         public void Añadir_Texto(string mensaje)

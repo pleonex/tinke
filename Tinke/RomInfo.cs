@@ -294,5 +294,16 @@ namespace Tinke
 
             Mostrar_Informacion(cabecera, banner);
         }
+
+        private void RomInfo_Resize(object sender, EventArgs e)
+        {
+            btnEdit.Location = new Point(groupBanner.Location.X + 5, 313);
+        }
+
+        private void RomInfo_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            e.Cancel = true;
+            this.Hide();
+        }
     }
 }

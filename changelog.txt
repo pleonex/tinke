@@ -15,6 +15,7 @@
   - Fixed problem with char codes
   - Change info map char (PMAC section)
   - Fixed problems saving new fonts
+  - Add new chars
 ** Fixed problem reading NCER files
 * Fixed problem with textures with format 2
 * Added hotkeys (X for eXpand all nodes, C for Collapse all nodes)

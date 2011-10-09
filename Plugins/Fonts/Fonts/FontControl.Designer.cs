@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.comboChar = new System.Windows.Forms.ComboBox();
             this.txtBox = new System.Windows.Forms.TextBox();
             this.panelPicImage = new System.Windows.Forms.Panel();
             this.picFont = new System.Windows.Forms.PictureBox();
@@ -40,33 +40,36 @@
             this.btnSave = new System.Windows.Forms.Button();
             this.picText = new System.Windows.Forms.PictureBox();
             this.btnChangeMap = new System.Windows.Forms.Button();
+            this.btnAddChar = new System.Windows.Forms.Button();
+            this.btnRemoveChar = new System.Windows.Forms.Button();
             this.panelPicImage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picFont)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picText)).BeginInit();
             this.SuspendLayout();
             // 
-            // comboBox1
+            // comboChar
             // 
-            this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(388, 3);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(121, 21);
-            this.comboBox1.TabIndex = 1;
-            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
+            this.comboChar.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboChar.FormattingEnabled = true;
+            this.comboChar.Location = new System.Drawing.Point(388, 3);
+            this.comboChar.Name = "comboChar";
+            this.comboChar.Size = new System.Drawing.Size(121, 21);
+            this.comboChar.TabIndex = 1;
+            this.comboChar.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
             // 
             // txtBox
             // 
-            this.txtBox.Location = new System.Drawing.Point(7, 371);
+            this.txtBox.Location = new System.Drawing.Point(0, 371);
             this.txtBox.Multiline = true;
             this.txtBox.Name = "txtBox";
-            this.txtBox.Size = new System.Drawing.Size(505, 50);
+            this.txtBox.Size = new System.Drawing.Size(509, 50);
             this.txtBox.TabIndex = 3;
             this.txtBox.TextChanged += new System.EventHandler(this.txtBox_TextChanged);
             // 
             // panelPicImage
             // 
             this.panelPicImage.AutoScroll = true;
+            this.panelPicImage.BackColor = System.Drawing.SystemColors.Control;
             this.panelPicImage.Controls.Add(this.picFont);
             this.panelPicImage.Location = new System.Drawing.Point(2, 29);
             this.panelPicImage.MaximumSize = new System.Drawing.Size(263, 310);
@@ -79,9 +82,8 @@
             this.picFont.BackColor = System.Drawing.Color.Moccasin;
             this.picFont.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.picFont.Location = new System.Drawing.Point(0, 0);
-            this.picFont.MaximumSize = new System.Drawing.Size(263, 512);
             this.picFont.Name = "picFont";
-            this.picFont.Size = new System.Drawing.Size(263, 310);
+            this.picFont.Size = new System.Drawing.Size(260, 310);
             this.picFont.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.picFont.TabIndex = 0;
             this.picFont.TabStop = false;
@@ -155,7 +157,7 @@
             // picText
             // 
             this.picText.BackColor = System.Drawing.SystemColors.Control;
-            this.picText.Location = new System.Drawing.Point(7, 427);
+            this.picText.Location = new System.Drawing.Point(2, 427);
             this.picText.Name = "picText";
             this.picText.Size = new System.Drawing.Size(505, 50);
             this.picText.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
@@ -174,10 +176,36 @@
             this.btnChangeMap.UseVisualStyleBackColor = true;
             this.btnChangeMap.Click += new System.EventHandler(this.btnChangeMap_Click);
             // 
+            // btnAddChar
+            // 
+            this.btnAddChar.Image = global::Fonts.Properties.Resources.font_add;
+            this.btnAddChar.Location = new System.Drawing.Point(2, 342);
+            this.btnAddChar.Name = "btnAddChar";
+            this.btnAddChar.Size = new System.Drawing.Size(92, 23);
+            this.btnAddChar.TabIndex = 13;
+            this.btnAddChar.Text = "Add char";
+            this.btnAddChar.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnAddChar.UseVisualStyleBackColor = true;
+            this.btnAddChar.Click += new System.EventHandler(this.btnAddChar_Click);
+            // 
+            // btnRemoveChar
+            // 
+            this.btnRemoveChar.Image = global::Fonts.Properties.Resources.font_delete;
+            this.btnRemoveChar.Location = new System.Drawing.Point(101, 342);
+            this.btnRemoveChar.Name = "btnRemoveChar";
+            this.btnRemoveChar.Size = new System.Drawing.Size(107, 23);
+            this.btnRemoveChar.TabIndex = 14;
+            this.btnRemoveChar.Text = "Remove char";
+            this.btnRemoveChar.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnRemoveChar.UseVisualStyleBackColor = true;
+            this.btnRemoveChar.Click += new System.EventHandler(this.btnRemoveChar_Click);
+            // 
             // FontControl
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
             this.BackColor = System.Drawing.Color.Transparent;
+            this.Controls.Add(this.btnRemoveChar);
+            this.Controls.Add(this.btnAddChar);
             this.Controls.Add(this.btnApply);
             this.Controls.Add(this.btnChangeMap);
             this.Controls.Add(this.btnPalette);
@@ -188,7 +216,7 @@
             this.Controls.Add(this.panelPicImage);
             this.Controls.Add(this.picText);
             this.Controls.Add(this.txtBox);
-            this.Controls.Add(this.comboBox1);
+            this.Controls.Add(this.comboChar);
             this.Name = "FontControl";
             this.Size = new System.Drawing.Size(512, 512);
             this.panelPicImage.ResumeLayout(false);
@@ -203,7 +231,7 @@
         #endregion
 
         private System.Windows.Forms.PictureBox picFont;
-        private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.ComboBox comboChar;
         private System.Windows.Forms.TextBox txtBox;
         private System.Windows.Forms.PictureBox picText;
         private System.Windows.Forms.Panel panelPicImage;
@@ -214,5 +242,7 @@
         private System.Windows.Forms.ComboBox comboEncoding;
         private System.Windows.Forms.Button btnPalette;
         private System.Windows.Forms.Button btnChangeMap;
+        private System.Windows.Forms.Button btnAddChar;
+        private System.Windows.Forms.Button btnRemoveChar;
     }
 }
