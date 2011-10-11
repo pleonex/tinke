@@ -293,7 +293,7 @@ namespace Tinke
                     goto End;
 
                 if (Image.FromFile(o.FileName).Size != new Size(512, 512))
-                    throw new NotSupportedException();
+                    throw new NotSupportedException(Tools.Helper.ObtenerTraduccion("NCER", "S26"));
 
                 NCGR bitmap = Imagen_NCGR.BitmapToTile(o.FileName, TileOrder.NoTiled);
 

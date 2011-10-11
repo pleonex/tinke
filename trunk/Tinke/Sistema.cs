@@ -50,7 +50,7 @@ namespace Tinke
         {
             InitializeComponent();
             this.Location = new Point(10, 10);
-            this.Text = "Tinke V " + Application.ProductVersion + " - NDScene by pleoNeX";
+            this.Text = "Tinke V " + Application.ProductVersion + " - romhacking by pleoNeX";
 
             // Modo debug donde se muestran los mensajes en otra ventana en caso de no ejecutarse en Mono
             isMono = (Type.GetType("Mono.Runtime") != null) ? true : false;

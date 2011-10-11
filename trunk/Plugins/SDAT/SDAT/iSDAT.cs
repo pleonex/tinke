@@ -236,7 +236,7 @@ namespace SDAT
                 else
                     folderFile.offset = Convert.ToUInt32(((String)carpeta.tag).Substring(8), 16);
                 folderFile.size = Convert.ToUInt32(((String)carpeta.tag).Substring(0, 8), 16);
-                folderFile.type = (carpeta.name.EndsWith(".SWAR") ? FormatSound.SWAR : FormatSound.SSAR);
+                folderFile.type = (carpeta.name.ToUpper().EndsWith(".SWAR") ? FormatSound.SWAR : FormatSound.SSAR);
                 folderFile.tag = "Descomprimido"; // Tag para indicar que ya ha sido procesado
 
                 return folderFile;

@@ -331,6 +331,11 @@
     <S23>Fixed tile offset</S23>
     <S24>Import</S24>
     <S25>Set transparency colour</S25>
+    <S26>
+      Incorrect image.
+      The image must have the size 512x512,
+      that is, the same as the exported image.
+    </S26>
   </NCER>
   <NANR>
     <S01>Interval:</S01>

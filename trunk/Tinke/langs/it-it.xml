@@ -331,6 +331,11 @@
     <S23>Offset tile modificato</S23>
     <S24>Importa</S24>
     <S25>Imposta colore trasparente</S25>
+    <S26>
+      Incorrect image.
+      The image must have the size 512x512,
+      that is, the same as the exported image.
+    </S26>
   </NCER>
   <NANR>
     <S01>Intervallo:</S01>

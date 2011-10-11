@@ -106,9 +106,9 @@ namespace Tinke
                     ncer.cebk.banks[i].cells[j].priority = (byte)((pos & 0xC00) >> 10);
                     ncer.cebk.banks[i].cells[j].tileOffset = (uint)(pos & 0x03FF);
                     if (ncer.cebk.unknown1 != 0x00)
-                        if ((ncer.cebk.unknown1 & 0x100) == 0x00)
-                            ncer.cebk.banks[i].cells[j].tileOffset = (uint)(i + ncer.cebk.banks[i].cells[j].tileOffset);
-                        else
+                        //if ((ncer.cebk.unknown1 & 0x100) == 0x00)
+                        //    ncer.cebk.banks[i].cells[j].tileOffset = (uint)(i + ncer.cebk.banks[i].cells[j].tileOffset);
+                        //else
                             ncer.cebk.banks[i].cells[j].tileOffset += tilePos;
 
                     ncer.cebk.banks[i].cells[j].yFlip = (Tools.Helper.ByteTo4Bits(byte2)[1] & 2) == 2 ? true : false;
@@ -133,7 +133,7 @@ namespace Tinke
                 {
                     Cell ultimaCelda = Get_LastCell(ncer.cebk.banks[i]);
                     int ultimaCeldaSize = (int)(ultimaCelda.height * ultimaCelda.width);
-                    ultimaCeldaSize /= (int)(128 * (ncer.cebk.block_size == 0 ? 1 : ncer.cebk.block_size));
+                    ultimaCeldaSize /= (int)(64 << (byte)ncer.cebk.block_size);
                     if (ultimaCeldaSize == 0)
                         ultimaCeldaSize = 1;
                     tilePos += (uint)((ultimaCelda.tileOffset - tilePos) + ultimaCeldaSize);
@@ -331,10 +331,7 @@ namespace Tinke
                     {
                         if (tile.order == TileOrder.NoTiled)
                         {
-                            int mul = 64;
-                            //if (blockSize == 0x00) // Not sure... Only temporaly
-                            //    mul = 32;
-                            celdas[i] = Imagen_NCGR.Crear_Imagen(tile, paleta, (int)tileOffset * mul, banco.cells[i].width, banco.cells[i].height);
+                            celdas[i] = Imagen_NCGR.Crear_Imagen(tile, paleta, (int)tileOffset * 64, banco.cells[i].width, banco.cells[i].height);
                         }
                         else
                             celdas[i] = Imagen_NCGR.Crear_Imagen(tile, paleta, (int)tileOffset * 64, banco.cells[i].width / 8, banco.cells[i].height / 8);

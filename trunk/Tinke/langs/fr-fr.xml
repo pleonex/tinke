@@ -334,6 +334,11 @@
     <S23>Offset tuile fixée</S23>
     <S24>Importer</S24>
     <S25>Fixer la couleur de transparence</S25>
+    <S26>
+      Incorrect image.
+      The image must have the size 512x512,
+      that is, the same as the exported image.
+    </S26>
   </NCER>
   <NANR>
     <S01>Intervalle :</S01>

@@ -56,7 +56,7 @@ namespace Tinke
 
         private void VisorHex_Resize(object sender, EventArgs e)
         {
-            hexBox1.Height = this.Height - 74;
+            hexBox1.Height = this.Height - 83;
         }
 
         private void comboBoxEncoding_SelectedIndexChanged(object sender, EventArgs e)
