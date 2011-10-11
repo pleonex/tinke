@@ -347,6 +347,11 @@
     <S23>Tile offset modificado</S23>
     <S24>Importar</S24>
     <S25>Seleccionar color de transparencia</S25>
+    <S26>
+      Imagen incorrecta.
+      La imagen importada debe tener las dimensiones 512x512,
+      igual que cuando la exporta.
+    </S26>
   </NCER>
   <NANR>
     <S01>Intervalo:</S01>

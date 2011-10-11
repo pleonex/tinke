@@ -35,7 +35,6 @@ namespace Tinke
         NCGR tile;
         NSCR map;
         IPluginHost pluginHost;
-        int startTile;
 
         string oldDepth;
         
@@ -60,7 +59,11 @@ namespace Tinke
             this.paleta = paleta;
             this.tile = tile;
             this.pluginHost = pluginHost;
-            pic.Image = Imagen_NCGR.Crear_Imagen(tile, paleta, 0);
+
+            if (!(this.tile.other is int))
+                this.tile.other = 0;
+
+            pic.Image = Imagen_NCGR.Crear_Imagen(tile, paleta, (int)this.tile.other);
             this.numericWidth.Value = pic.Image.Width;
             this.numericHeight.Value = pic.Image.Height;
             this.comboDepth.Text = (tile.rahc.depth == ColorDepth.Depth4Bit ? "4 bpp" : "8 bpp");
@@ -75,11 +78,9 @@ namespace Tinke
                     oldTiles = 1;
                     comboBox1.SelectedIndex = 1;
                     break;
-                //case TileOrder.Vertical:  NOT SUPPORTED
-                //    oldTiles = 2;
-                //    comboBox1.SelectedIndex = 2;
-                //    break;
             }
+
+
             this.comboDepth.SelectedIndexChanged += new EventHandler(comboDepth_SelectedIndexChanged);
             this.numericWidth.ValueChanged += new EventHandler(numericSize_ValueChanged);
             this.numericHeight.ValueChanged += new EventHandler(numericSize_ValueChanged);
@@ -101,11 +102,17 @@ namespace Tinke
             this.map = map;
             this.pluginHost = pluginHost;
 
+
+            if (!(this.tile.other is int))
+                this.tile.other = 0;
+            if (!(this.map.other is int))
+                this.map.other = 0;
+
             NCGR newTile = tile;
-            newTile.rahc.tileData = pluginHost.Transform_NSCR(map, tile.rahc.tileData);
+            newTile.rahc.tileData = pluginHost.Transform_NSCR(map, tile.rahc.tileData, (int)this.map.other);
             newTile.rahc.nTilesX = (ushort)(map.section.width / 8);
             newTile.rahc.nTilesY = (ushort)(map.section.height / 8);
-            pic.Image = Imagen_NCGR.Crear_Imagen(newTile, paleta, 0);
+            pic.Image = Imagen_NCGR.Crear_Imagen(newTile, paleta, (int)this.tile.other);
 
             this.numericWidth.Value = pic.Image.Width;
             this.numericHeight.Value = pic.Image.Height;
@@ -137,7 +144,17 @@ namespace Tinke
 
         private void numericStart_ValueChanged(object sender, EventArgs e)
         {
-            startTile = (int)numericStart.Value;
+            if (isMap)
+            {
+                map.other = (int)numericStart.Value;
+                pluginHost.Set_NSCR(map);
+            }
+            else
+            {
+                tile.other = (int)numericStart.Value;
+                pluginHost.Set_NCGR(tile);
+            }
+
             UpdateImage();
         }
         private void numericSize_ValueChanged(object sender, EventArgs e)
@@ -237,11 +254,11 @@ namespace Tinke
             if (isMap)
             {
                 NCGR newTile = tile;
-                newTile.rahc.tileData = pluginHost.Transform_NSCR(map, newTile.rahc.tileData, startTile);
-                pic.Image = Imagen_NCGR.Crear_Imagen(newTile, paleta, 0);
+                newTile.rahc.tileData = pluginHost.Transform_NSCR(map, newTile.rahc.tileData, (int)map.other);
+                pic.Image = Imagen_NCGR.Crear_Imagen(newTile, paleta, (int)tile.other);
             }
             else
-                pic.Image = Imagen_NCGR.Crear_Imagen(tile, paleta, startTile);
+                pic.Image = Imagen_NCGR.Crear_Imagen(tile, paleta, (int)tile.other);
         }
 
         private void ReadLanguage()

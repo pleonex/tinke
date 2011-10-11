@@ -113,6 +113,8 @@ namespace NotManagedNetPlugins
                     return Format.Script;
                 case "System":
                     return Format.System;
+                case "Pack":
+                    return Format.Pack;
                 case "Unknown":
                     return Format.Unknown;
                 default:
