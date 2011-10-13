@@ -40,7 +40,6 @@ namespace KIRBY_DRO
         public void Read(string archivo, int id)
         {
         }
-
         public Control Show_Info(string archivo, int id)
         {
             if (archivo.ToUpper().EndsWith(".BIN"))
@@ -48,5 +47,8 @@ namespace KIRBY_DRO
 
             return new Control();
         }
+
+        public String Pack(sFolder unpacked, string file, int id) { return null; }
+        public sFolder Unpack(string file, int id) { return new sFolder(); }
     }
 }

@@ -36,12 +36,11 @@ namespace Pack
             this.pluginHost = pluginHost;
         }
 
-        public ARC Leer(string archivo, int idArchivo)
+        public sFolder Unpack(string archivo)
         {
             ARC arc = new ARC();
-            utilityFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + idArchivo + new FileInfo(archivo).Name;
+            utilityFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + "pack_" + new FileInfo(archivo).Name;
             File.Copy(archivo, utilityFile, true);
-            arc.file_id = idArchivo;
             BinaryReader br = new BinaryReader(System.IO.File.OpenRead(archivo));
 
             uint fntOffset = br.ReadUInt32();
@@ -121,7 +120,7 @@ namespace Pack
             br.Close();
 
             pluginHost.Set_Files(root);
-            return arc;
+            return root;
         }
         public sFolder Jerarquizar_Carpetas(List<BTNF_MainEntry> entries, int idFolder, string nameFolder)
         {

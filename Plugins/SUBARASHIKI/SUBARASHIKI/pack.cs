@@ -7,11 +7,9 @@ using PluginInterface;
 
 namespace SUBARASHIKI
 {
-    public static class Pack
-    {
-
-        
-        public static void Unpack(string file, IPluginHost pluginHost)
+    public static class PACK
+    {        
+        public static sFolder Unpack(string file, IPluginHost pluginHost)
         {
             // Copied from:
             // http://forum.xentax.com/viewtopic.php?f=18&t=3175&p=30296&hilit=pack+world+ends#p30296
@@ -41,7 +39,7 @@ namespace SUBARASHIKI
             }
 
             br.Close();
-            pluginHost.Set_Files(unpack);
+            return unpack;
         }
     }
 }

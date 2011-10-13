@@ -29,9 +29,9 @@ namespace GYAKUKEN
     /// <summary>
     /// Class for pack files in Gyakuten kenji 2
     /// </summary>
-    public static class Pack
+    public static class PACK
     {
-        public static void Unpack(IPluginHost pluginHost, string file)
+        public static sFolder Unpack(IPluginHost pluginHost, string file)
         {
             string packFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + "pack_" + Path.GetFileName(file);
             File.Copy(file, packFile, true);
@@ -63,11 +63,10 @@ namespace GYAKUKEN
                 unpack.files.Add(currFile);
             }
 
-
-            pluginHost.Set_Files(unpack);
             br.Close();
+            return unpack;
         }
-        public static void Unpack2(IPluginHost pluginHost, string file)
+        public static sFolder Unpack2(IPluginHost pluginHost, string file)
         {
             string packFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + "pack_" + Path.GetFileName(file);
             File.Copy(file, packFile, true);
@@ -101,9 +100,8 @@ namespace GYAKUKEN
                 unpack.files.Add(currFile);
             }
 
-
-            pluginHost.Set_Files(unpack);
             br.Close();
+            return unpack;
         }
     }
 }

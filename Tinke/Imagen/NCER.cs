@@ -106,10 +106,7 @@ namespace Tinke
                     ncer.cebk.banks[i].cells[j].priority = (byte)((pos & 0xC00) >> 10);
                     ncer.cebk.banks[i].cells[j].tileOffset = (uint)(pos & 0x03FF);
                     if (ncer.cebk.unknown1 != 0x00)
-                        //if ((ncer.cebk.unknown1 & 0x100) == 0x00)
-                        //    ncer.cebk.banks[i].cells[j].tileOffset = (uint)(i + ncer.cebk.banks[i].cells[j].tileOffset);
-                        //else
-                            ncer.cebk.banks[i].cells[j].tileOffset += tilePos;
+                        ncer.cebk.banks[i].cells[j].tileOffset += tilePos;
 
                     ncer.cebk.banks[i].cells[j].yFlip = (Tools.Helper.ByteTo4Bits(byte2)[1] & 2) == 2 ? true : false;
                     ncer.cebk.banks[i].cells[j].xFlip = (Tools.Helper.ByteTo4Bits(byte2)[1] & 1) == 1 ? true : false;
@@ -126,7 +123,7 @@ namespace Tinke
                 // Sort the cell using the priority value
                 List<Cell> cells = new List<Cell>();
                 cells.AddRange(ncer.cebk.banks[i].cells);
-                //cells.Sort(Comparision_Cell);
+                cells.Sort(Comparision_Cell);
                 ncer.cebk.banks[i].cells = cells.ToArray();
 
                 if (ncer.cebk.unknown1 != 0x00)

@@ -60,7 +60,7 @@ namespace Tinke
             System.Windows.Forms.ListViewItem listViewItem6 = new System.Windows.Forms.ListViewItem("S0E");
             System.Windows.Forms.ListViewItem listViewItem7 = new System.Windows.Forms.ListViewItem("S40");
             this.iconos = new System.Windows.Forms.ImageList(this.components);
-            this.btnExtraer = new System.Windows.Forms.Button();
+            this.btnExtract = new System.Windows.Forms.Button();
             this.btnSee = new System.Windows.Forms.Button();
             this.btnHex = new System.Windows.Forms.Button();
             this.listFile = new System.Windows.Forms.ListView();
@@ -75,7 +75,7 @@ namespace Tinke
             this.toolStripPlugin = new System.Windows.Forms.ToolStripDropDownButton();
             this.recargarPluginsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripLanguage = new System.Windows.Forms.ToolStripSplitButton();
-            this.btnDescomprimir = new System.Windows.Forms.Button();
+            this.btnUnpack = new System.Windows.Forms.Button();
             this.btnDesplazar = new System.Windows.Forms.Button();
             this.panelObj = new System.Windows.Forms.Panel();
             this.toolStrip2 = new System.Windows.Forms.ToolStrip();
@@ -101,6 +101,7 @@ namespace Tinke
             this.lblSupport = new System.Windows.Forms.Label();
             this.btnImport = new System.Windows.Forms.Button();
             this.btnSaveROM = new System.Windows.Forms.Button();
+            this.btnPack = new System.Windows.Forms.Button();
             this.toolStrip1.SuspendLayout();
             this.toolStrip2.SuspendLayout();
             this.SuspendLayout();
@@ -116,7 +117,7 @@ namespace Tinke
             this.iconos.Images.SetKeyName(4, "page_white_text.png");
             this.iconos.Images.SetKeyName(5, "compress.png");
             this.iconos.Images.SetKeyName(6, "package.png");
-            this.iconos.Images.SetKeyName(7, "package_go.png");
+            this.iconos.Images.SetKeyName(7, "folder_go.png");
             this.iconos.Images.SetKeyName(8, "pictures.png");
             this.iconos.Images.SetKeyName(9, "picture_link.png");
             this.iconos.Images.SetKeyName(10, "photo.png");
@@ -127,24 +128,26 @@ namespace Tinke
             this.iconos.Images.SetKeyName(15, "picture_go.png");
             this.iconos.Images.SetKeyName(16, "font.png");
             this.iconos.Images.SetKeyName(17, "script.png");
-            this.iconos.Images.SetKeyName(18, "package_add.png");
+            this.iconos.Images.SetKeyName(18, "folder_add.png");
             this.iconos.Images.SetKeyName(19, "disk.png");
             this.iconos.Images.SetKeyName(20, "page_gear.png");
             this.iconos.Images.SetKeyName(21, "image.png");
             this.iconos.Images.SetKeyName(22, "map.png");
+            this.iconos.Images.SetKeyName(23, "package_go.png");
+            this.iconos.Images.SetKeyName(24, "package_add.png");
             // 
-            // btnExtraer
+            // btnExtract
             // 
-            this.btnExtraer.ImageKey = "package_go.png";
-            this.btnExtraer.ImageList = this.iconos;
-            this.btnExtraer.Location = new System.Drawing.Point(525, 455);
-            this.btnExtraer.Name = "btnExtraer";
-            this.btnExtraer.Size = new System.Drawing.Size(110, 40);
-            this.btnExtraer.TabIndex = 4;
-            this.btnExtraer.Text = "S1B";
-            this.btnExtraer.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.btnExtraer.UseVisualStyleBackColor = true;
-            this.btnExtraer.Click += new System.EventHandler(this.btnExtraer_Click);
+            this.btnExtract.ImageIndex = 7;
+            this.btnExtract.ImageList = this.iconos;
+            this.btnExtract.Location = new System.Drawing.Point(409, 409);
+            this.btnExtract.Name = "btnExtract";
+            this.btnExtract.Size = new System.Drawing.Size(110, 40);
+            this.btnExtract.TabIndex = 4;
+            this.btnExtract.Text = "S1B";
+            this.btnExtract.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnExtract.UseVisualStyleBackColor = true;
+            this.btnExtract.Click += new System.EventHandler(this.btnExtraer_Click);
             // 
             // btnSee
             // 
@@ -188,7 +191,7 @@ namespace Tinke
             listViewItem7});
             this.listFile.Location = new System.Drawing.Point(409, 28);
             this.listFile.Name = "listFile";
-            this.listFile.Size = new System.Drawing.Size(197, 202);
+            this.listFile.Size = new System.Drawing.Size(197, 150);
             this.listFile.TabIndex = 0;
             this.listFile.UseCompatibleStateImageBehavior = false;
             this.listFile.View = System.Windows.Forms.View.Details;
@@ -298,24 +301,24 @@ namespace Tinke
             this.toolStripLanguage.Size = new System.Drawing.Size(57, 22);
             this.toolStripLanguage.Text = "S1E";
             // 
-            // btnDescomprimir
+            // btnUnpack
             // 
-            this.btnDescomprimir.ImageKey = "compress.png";
-            this.btnDescomprimir.ImageList = this.iconos;
-            this.btnDescomprimir.Location = new System.Drawing.Point(409, 455);
-            this.btnDescomprimir.Name = "btnDescomprimir";
-            this.btnDescomprimir.Size = new System.Drawing.Size(110, 40);
-            this.btnDescomprimir.TabIndex = 7;
-            this.btnDescomprimir.Text = "S1A";
-            this.btnDescomprimir.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.btnDescomprimir.UseVisualStyleBackColor = true;
-            this.btnDescomprimir.Click += new System.EventHandler(this.btnUncompress_Click);
+            this.btnUnpack.ImageIndex = 23;
+            this.btnUnpack.ImageList = this.iconos;
+            this.btnUnpack.Location = new System.Drawing.Point(409, 455);
+            this.btnUnpack.Name = "btnUnpack";
+            this.btnUnpack.Size = new System.Drawing.Size(110, 40);
+            this.btnUnpack.TabIndex = 7;
+            this.btnUnpack.Text = "S1A";
+            this.btnUnpack.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnUnpack.UseVisualStyleBackColor = true;
+            this.btnUnpack.Click += new System.EventHandler(this.btnUnpack_Click);
             // 
             // btnDesplazar
             // 
             this.btnDesplazar.BackColor = System.Drawing.SystemColors.ButtonFace;
             this.btnDesplazar.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnDesplazar.Location = new System.Drawing.Point(612, 80);
+            this.btnDesplazar.Location = new System.Drawing.Point(612, 28);
             this.btnDesplazar.Name = "btnDesplazar";
             this.btnDesplazar.Size = new System.Drawing.Size(30, 150);
             this.btnDesplazar.TabIndex = 9;
@@ -340,11 +343,11 @@ namespace Tinke
             this.toolStripDeleteChain,
             this.toolStripOpenAs});
             this.toolStrip2.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Table;
-            this.toolStrip2.Location = new System.Drawing.Point(409, 355);
+            this.toolStrip2.Location = new System.Drawing.Point(409, 309);
             this.toolStrip2.Name = "toolStrip2";
             this.toolStrip2.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
             this.toolStrip2.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.toolStrip2.Size = new System.Drawing.Size(55, 65);
+            this.toolStrip2.Size = new System.Drawing.Size(55, 46);
             this.toolStrip2.TabIndex = 11;
             this.toolStrip2.Text = "toolStrip2";
             // 
@@ -433,7 +436,7 @@ namespace Tinke
             // 
             this.toolStripMenuItem1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripMenuItem1.Image")));
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(94, 22);
             this.toolStripMenuItem1.Text = "S17";
             this.toolStripMenuItem1.Click += new System.EventHandler(this.toolAbrirComoItemPaleta_Click);
             // 
@@ -441,7 +444,7 @@ namespace Tinke
             // 
             this.toolStripMenuItem2.Image = ((System.Drawing.Image)(resources.GetObject("toolStripMenuItem2.Image")));
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(152, 22);
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(94, 22);
             this.toolStripMenuItem2.Text = "S18";
             this.toolStripMenuItem2.Click += new System.EventHandler(this.toolAbrirComoItemTile_Click);
             // 
@@ -449,7 +452,7 @@ namespace Tinke
             // 
             this.toolStripMenuItem3.Image = ((System.Drawing.Image)(resources.GetObject("toolStripMenuItem3.Image")));
             this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(152, 22);
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(94, 22);
             this.toolStripMenuItem3.Text = "S19";
             this.toolStripMenuItem3.Click += new System.EventHandler(this.toolAbrirComoItemScreen_Click);
             // 
@@ -457,7 +460,7 @@ namespace Tinke
             // 
             this.toolStripMenuComprimido.Image = global::Tinke.Properties.Resources.compress;
             this.toolStripMenuComprimido.Name = "toolStripMenuComprimido";
-            this.toolStripMenuComprimido.Size = new System.Drawing.Size(152, 22);
+            this.toolStripMenuComprimido.Size = new System.Drawing.Size(94, 22);
             this.toolStripMenuComprimido.Text = "S2A";
             this.toolStripMenuComprimido.Click += new System.EventHandler(this.s2AToolStripMenuItem_Click);
             // 
@@ -465,7 +468,7 @@ namespace Tinke
             // 
             this.toolStripAbrirFat.Image = global::Tinke.Properties.Resources.package;
             this.toolStripAbrirFat.Name = "toolStripAbrirFat";
-            this.toolStripAbrirFat.Size = new System.Drawing.Size(152, 22);
+            this.toolStripAbrirFat.Size = new System.Drawing.Size(94, 22);
             this.toolStripAbrirFat.Text = "S3D";
             this.toolStripAbrirFat.Click += new System.EventHandler(this.toolStripAbrirFat_Click);
             // 
@@ -473,7 +476,7 @@ namespace Tinke
             // 
             this.toolStripAbrirTexto.Image = global::Tinke.Properties.Resources.page_white_text;
             this.toolStripAbrirTexto.Name = "toolStripAbrirTexto";
-            this.toolStripAbrirTexto.Size = new System.Drawing.Size(152, 22);
+            this.toolStripAbrirTexto.Size = new System.Drawing.Size(94, 22);
             this.toolStripAbrirTexto.Text = "S26";
             this.toolStripAbrirTexto.Click += new System.EventHandler(this.toolStripAbrirTexto_Click);
             // 
@@ -482,7 +485,7 @@ namespace Tinke
             this.linkAboutBox.AutoSize = true;
             this.linkAboutBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.linkAboutBox.LinkColor = System.Drawing.SystemColors.HotTrack;
-            this.linkAboutBox.Location = new System.Drawing.Point(409, 233);
+            this.linkAboutBox.Location = new System.Drawing.Point(408, 187);
             this.linkAboutBox.Name = "linkAboutBox";
             this.linkAboutBox.Size = new System.Drawing.Size(29, 13);
             this.linkAboutBox.TabIndex = 13;
@@ -493,7 +496,7 @@ namespace Tinke
             // txtSearch
             // 
             this.txtSearch.ForeColor = System.Drawing.Color.Black;
-            this.txtSearch.Location = new System.Drawing.Point(410, 267);
+            this.txtSearch.Location = new System.Drawing.Point(409, 221);
             this.txtSearch.Name = "txtSearch";
             this.txtSearch.Size = new System.Drawing.Size(183, 20);
             this.txtSearch.TabIndex = 14;
@@ -503,7 +506,7 @@ namespace Tinke
             // btnSearch
             // 
             this.btnSearch.Image = global::Tinke.Properties.Resources.zoom;
-            this.btnSearch.Location = new System.Drawing.Point(599, 264);
+            this.btnSearch.Location = new System.Drawing.Point(598, 218);
             this.btnSearch.Name = "btnSearch";
             this.btnSearch.Size = new System.Drawing.Size(43, 23);
             this.btnSearch.TabIndex = 15;
@@ -514,7 +517,7 @@ namespace Tinke
             // checkSearch
             // 
             this.checkSearch.AutoSize = true;
-            this.checkSearch.Location = new System.Drawing.Point(410, 293);
+            this.checkSearch.Location = new System.Drawing.Point(409, 247);
             this.checkSearch.Name = "checkSearch";
             this.checkSearch.Size = new System.Drawing.Size(46, 17);
             this.checkSearch.TabIndex = 16;
@@ -533,7 +536,7 @@ namespace Tinke
             // 
             this.lblSupport.AutoSize = true;
             this.lblSupport.Font = new System.Drawing.Font("Consolas", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblSupport.Location = new System.Drawing.Point(409, 325);
+            this.lblSupport.Location = new System.Drawing.Point(409, 279);
             this.lblSupport.Name = "lblSupport";
             this.lblSupport.Size = new System.Drawing.Size(32, 17);
             this.lblSupport.TabIndex = 17;
@@ -556,7 +559,7 @@ namespace Tinke
             // 
             this.btnSaveROM.ImageIndex = 19;
             this.btnSaveROM.ImageList = this.iconos;
-            this.btnSaveROM.Location = new System.Drawing.Point(409, 409);
+            this.btnSaveROM.Location = new System.Drawing.Point(409, 363);
             this.btnSaveROM.Name = "btnSaveROM";
             this.btnSaveROM.Size = new System.Drawing.Size(110, 40);
             this.btnSaveROM.TabIndex = 19;
@@ -565,11 +568,25 @@ namespace Tinke
             this.btnSaveROM.UseVisualStyleBackColor = true;
             this.btnSaveROM.Click += new System.EventHandler(this.btnSaveROM_Click);
             // 
+            // btnPack
+            // 
+            this.btnPack.ImageIndex = 24;
+            this.btnPack.ImageList = this.iconos;
+            this.btnPack.Location = new System.Drawing.Point(525, 455);
+            this.btnPack.Name = "btnPack";
+            this.btnPack.Size = new System.Drawing.Size(110, 40);
+            this.btnPack.TabIndex = 20;
+            this.btnPack.Text = "S42";
+            this.btnPack.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnPack.UseVisualStyleBackColor = true;
+            this.btnPack.Click += new System.EventHandler(this.btnPack_Click);
+            // 
             // Sistema
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
             this.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
             this.ClientSize = new System.Drawing.Size(644, 547);
+            this.Controls.Add(this.btnPack);
             this.Controls.Add(this.btnSaveROM);
             this.Controls.Add(this.btnImport);
             this.Controls.Add(this.lblSupport);
@@ -580,9 +597,9 @@ namespace Tinke
             this.Controls.Add(this.toolStrip2);
             this.Controls.Add(this.panelObj);
             this.Controls.Add(this.btnDesplazar);
-            this.Controls.Add(this.btnDescomprimir);
+            this.Controls.Add(this.btnUnpack);
             this.Controls.Add(this.toolStrip1);
-            this.Controls.Add(this.btnExtraer);
+            this.Controls.Add(this.btnExtract);
             this.Controls.Add(this.treeSystem);
             this.Controls.Add(this.listFile);
             this.Controls.Add(this.btnSee);
@@ -615,12 +632,12 @@ namespace Tinke
         private System.Windows.Forms.ColumnHeader columnHeader2;
         private System.Windows.Forms.Button btnHex;
         private System.Windows.Forms.Button btnSee;
-        private System.Windows.Forms.Button btnExtraer;
+        private System.Windows.Forms.Button btnExtract;
         private System.Windows.Forms.ToolStrip toolStrip1;
         private System.Windows.Forms.ToolStripButton toolStripInfoRom;
         private System.Windows.Forms.ToolStripButton toolStripDebug;
         private System.Windows.Forms.ToolStripButton toolStripOpen;
-        private System.Windows.Forms.Button btnDescomprimir;
+        private System.Windows.Forms.Button btnUnpack;
         private System.Windows.Forms.ToolStripButton toolStripVentana;
         private System.Windows.Forms.Button btnDesplazar;
         private System.Windows.Forms.Panel panelObj;
@@ -650,6 +667,7 @@ namespace Tinke
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuComprimido;
         private System.Windows.Forms.ToolStripMenuItem toolStripAbrirFat;
         private System.Windows.Forms.ToolStripMenuItem toolStripAbrirTexto;
+        private System.Windows.Forms.Button btnPack;
 
     }
 }

@@ -53,5 +53,8 @@ namespace Sounds
             Waiting waitWind = new Waiting(args[0], args[1]);
             waitWind.Show();
         }
+
+        public String Pack(sFolder unpacked, string file) { return null; }
+        public sFolder Unpack(string file) { return new sFolder(); }
     }
 }

@@ -34,15 +34,21 @@ namespace SUBARASHIKI
             return Format.Unknown;
         }
 
-
-
         public void Read(string file, int id)
         {
-            Pack.Unpack(file, pluginHost);
         }
         public System.Windows.Forms.Control Show_Info(string file, int id)
         {
             return new System.Windows.Forms.Control();
+        }
+
+        public String Pack(sFolder unpacked, string file, int id) 
+        { 
+            return null;
+        }
+        public sFolder Unpack(string file, int id)
+        {
+            return PACK.Unpack(file, pluginHost);
         }
     }
 }

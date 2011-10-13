@@ -78,6 +78,15 @@
     <S3F>Modèle 3D</S3F>
     <S40>Chemin relatif</S40>
     <S41>Visionneuse hexadécimale</S41>
+    <S42>Pack</S42>
+    <S43>
+      There was an error compressing the file.
+      Check the debug messages.
+    </S43>
+    <S44>
+      Sorry, you can't overwrite the current
+      opened file.
+    </S44>
   </Sistema>
   <RomInfo>
     <S01>Informations de la ROM</S01>
@@ -154,7 +163,7 @@
     <S0B>Icônes utilisés pour ce logiciel.</S0B>
     <S0C>rafael1193, Vix33, Valioukha</S0C>
     <S0D>Remerciements spéciaux :</S0D>
-    <S0E>Hexadecimal editor by {0}</S0E>
+    <S0E>Éditeur hexadécimal par {0}</S0E>
   </Autores>
   <Espera>
     <S01>Chargement...</S01>
@@ -216,6 +225,7 @@
     </S20>
     <S21>Temps de lecture des archives externes :</S21>
     <S22>Le dossier temporaire (temp) ne peut pas être supprimé</S22>
+    <S23>There was an error attempting to compress/pack the file.</S23>
   </Messages>
   <NCLR>
     <S01>Nombre de la palette :</S01>

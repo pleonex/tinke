@@ -9,7 +9,7 @@ namespace NINOKUNI
 {
     public static class NPCK
     {
-        public static void Unpack(string file, IPluginHost pluginHost)
+        public static sFolder Unpack(string file, IPluginHost pluginHost)
         {
             String packFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + "unpack_" + Path.GetFileName(file);
             File.Copy(file, packFile, true);
@@ -39,7 +39,7 @@ namespace NINOKUNI
             }
 
             br.Close();
-            pluginHost.Set_Files(unpack);
+            return unpack;
         }
         public static void Pack(string file, int id, IPluginHost pluginHost)
         {

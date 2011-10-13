@@ -15,8 +15,6 @@
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  *
  * Programador: pleoNeX
- * Programa utilizado: Microsoft Visual C# 2010 Express
- * Fecha: 18/02/2011
  * 
  */
 using System;
@@ -36,6 +34,7 @@ namespace Tinke
         NSCR map;
         NCER celda;
         NANR animacion;
+        Object objects;
 
         sFolder extraidos;
         string tempFolder;
@@ -65,12 +64,14 @@ namespace Tinke
         public NSCR Get_NSCR() { return map; }
         public NCER Get_NCER() { return celda; }
         public NANR Get_NANR() { return animacion; }
+        public Object Get_Object() { return objects; }
 
         public void Set_NCLR(NCLR nclr) { paleta = nclr; }
         public void Set_NCGR(NCGR ncgr) { tile = ncgr; }
         public void Set_NSCR(NSCR nscr) { map = nscr; }
         public void Set_NCER(NCER ncer) { celda = ncer; }
         public void Set_NANR(NANR nanr) { animacion = nanr; }
+        public void Set_Object(Object objects) { this.objects = objects; }
 
         public Color[] BGR555(byte[] datos) { return Convertir.BGR555(datos); }
         public Byte[] ColorToBGR555(Color[] color) { return Convertir.ColorToBGR555(color); }

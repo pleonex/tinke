@@ -38,12 +38,12 @@ namespace Pack
             this.pluginHost = pluginHost;
         }
 
-        public void Read(string archivo, int idArchivo)
+        #region Unpack methods
+        public sFolder Unpack(string archivo)
         {
             ARC arc = new ARC();
-            narcFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + idArchivo + new FileInfo(archivo).Name;
+            narcFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + "pack_" + new FileInfo(archivo).Name;
             File.Copy(archivo, narcFile, true);
-            arc.file_id = idArchivo;
             BinaryReader br = new BinaryReader(System.IO.File.OpenRead(archivo));
 
             // Lee cabecera genérica e inicial:
@@ -146,8 +146,8 @@ namespace Pack
             }
 
             br.Close();
-            pluginHost.Set_Files(root);
             narc = arc;
+            return root;
         }
         private sFolder Jerarquizar_Carpetas(List<BTNF_MainEntry> entries, int idFolder, string nameFolder)
         {
@@ -191,21 +191,142 @@ namespace Pack
                 foreach (sFolder subFolder in currFolder.folders)
                     Asignar_Archivos(subFolder, idFile, size, offset);
         }
+        #endregion
 
-        public Control Show_Info(string archivo, int id)
+        #region Pack methods
+        public String Pack(string file, sFolder unpacked)
         {
-            Read(archivo, id);
+            Unpack(file);
+            String fileout = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + "Newpack_" + Path.GetFileName(file);
+            if (File.Exists(fileout))
+                File.Delete(fileout);
 
-            if (new String(narc.id) == "NARC")
+            Save_NARC(fileout, unpacked);
+            return fileout;
+        }
+        private void Save_NARC(string fileout, sFolder decompressed)
+        {
+            /* Structure of the file
+             * 
+             * Common header
+             * 
+             * BTAF section
+             * |_ Start offset
+             * |_ End offset
+             * 
+             * BTNF section
+             * 
+             * GMIF section
+             * |_ Files
+             * 
+             */
+
+            BinaryWriter bw = new BinaryWriter(File.OpenWrite(fileout));
+            BinaryReader br = new BinaryReader(File.OpenRead(narc.file));
+
+            // Write the BTAF section
+            String btafTmp = Path.GetTempFileName();
+            Write_BTAF(
+                btafTmp,
+                0x10 + narc.btaf.section_size + narc.btnf.section_size + 0x08,
+                decompressed);
+
+            // Write the BTNF section
+            String btnfTmp = Path.GetTempFileName();
+            br.BaseStream.Position = 0x10 + narc.btaf.section_size;
+            File.WriteAllBytes(btnfTmp, br.ReadBytes((int)narc.btnf.section_size));
+
+            // Write the GMIF section
+            String gmifTmp = Path.GetTempFileName();
+            Write_GMIF(gmifTmp, decompressed);
+
+            // Write the NARC file
+            int file_size = (int)(narc.header_size + narc.btaf.section_size + narc.btnf.section_size +
+                narc.gmif.section_size);
+
+            // Common header
+            bw.Write(narc.id);
+            bw.Write(narc.id_endian);
+            bw.Write(narc.constant);
+            bw.Write(file_size);
+            bw.Write(narc.header_size);
+            bw.Write(narc.nSections);
+            // Write the sections
+            bw.Write(File.ReadAllBytes(btafTmp));
+            bw.Write(File.ReadAllBytes(btnfTmp));
+            bw.Write(narc.gmif.id);
+            bw.Write(narc.gmif.section_size);
+            bw.Write(File.ReadAllBytes(gmifTmp));
+
+            bw.Flush();
+            bw.Close();
+            br.Close();
+
+            File.Delete(btafTmp);
+            File.Delete(btnfTmp);
+            File.Delete(gmifTmp);
+        }
+        private void Write_BTAF(string fileout, uint startOffset, sFolder decompressed)
+        {
+            BinaryWriter bw = new BinaryWriter(File.OpenWrite(fileout));
+            uint offset = 0;
+
+            bw.Write(narc.btaf.id);
+            bw.Write(narc.btaf.section_size);
+            bw.Write(narc.btaf.nFiles);
+
+            for (int i = 0; i < narc.btaf.nFiles; i++)
             {
-                narc.file = Path.GetTempFileName();
-                File.Copy(archivo, narc.file, true);
-
-                return new iNARC(narc, pluginHost);
+                sFile currFile = Search_File(i + decompressed.id, decompressed);
+                bw.Write(offset);
+                offset += currFile.size;
+                bw.Write(offset);
             }
 
-            return new Control();
+            bw.Flush();
+            bw.Close();
         }
+        private void Write_GMIF(string fileout, sFolder decompressed)
+        {
+            BinaryWriter bw = new BinaryWriter(File.OpenWrite(fileout));
+
+            for (int i = 0; i < narc.btaf.nFiles; i++)
+            {
+                sFile currFile = Search_File(i + decompressed.id, decompressed);
+                BinaryReader br = new BinaryReader(File.OpenRead(currFile.path));
+                br.BaseStream.Position = currFile.offset;
+
+                bw.Write(br.ReadBytes((int)currFile.size));
+                br.Close();
+                bw.Flush();
+            }
+
+            bw.Flush();
+            bw.Close();
+            narc.gmif.section_size = (uint)(new FileInfo(fileout).Length) + 0x08;
+        }
+        private sFile Search_File(int id, sFolder currFolder)
+        {
+            if (currFolder.files is List<sFile>)
+                foreach (sFile archivo in currFolder.files)
+                    if (archivo.id == id)
+                        return archivo;
+
+
+            if (currFolder.folders is List<sFolder>)
+            {
+                foreach (sFolder subFolder in currFolder.folders)
+                {
+                    sFile currFile = Search_File(id, subFolder);
+                    if (currFile.name is string)
+                        return currFile;
+                }
+            }
+
+            return new sFile();
+        }
+        #endregion
+
     }
 
     #region Estructuras

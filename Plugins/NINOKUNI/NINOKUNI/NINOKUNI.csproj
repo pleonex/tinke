@@ -45,18 +45,7 @@
   <ItemGroup>
     <Compile Include="Main.cs" />
     <Compile Include="NPCK.cs" />
-    <Compile Include="PackControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="PackControl.Designer.cs">
-      <DependentUpon>PackControl.cs</DependentUpon>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="PackControl.resx">
-      <DependentUpon>PackControl.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

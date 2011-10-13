@@ -17,6 +17,7 @@
   - Fixed problems saving new fonts
   - Add new chars
 ** Fixed problem reading NCER files
+** Add button Pack (instead of using controls from button "View")
 * Fixed problem with button Compress in SDAT plugin
 * Fixed problem with textures with format 2
 * Added hotkeys (X for eXpand all nodes, C for Collapse all nodes)
