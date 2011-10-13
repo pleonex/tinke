@@ -45,12 +45,6 @@
   <ItemGroup>
     <Compile Include="Main.cs" />
     <Compile Include="pack.cs" />
-    <Compile Include="PackControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="PackControl.Designer.cs">
-      <DependentUpon>PackControl.cs</DependentUpon>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

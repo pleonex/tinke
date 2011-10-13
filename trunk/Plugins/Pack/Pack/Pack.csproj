@@ -45,26 +45,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="iNARC.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="iNARC.Designer.cs">
-      <DependentUpon>iNARC.cs</DependentUpon>
-    </Compile>
     <Compile Include="Main.cs" />
     <Compile Include="NARC.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utility.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="iNARC.resx">
-      <DependentUpon>iNARC.cs</DependentUpon>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="NARCLang.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -79,6 +79,15 @@
     <S3F>Modelo 3D</S3F>
     <S40>Ruta relativa</S40>
     <S41>Visor hexadecimal</S41>
+    <S42>Comprimir</S42>
+    <S43>
+      Hubo un fallo al comprimir.
+      Revise los mensajes debug.
+    </S43>
+    <S44>
+      No puedes guardar el nuevo archivo sobre el que está
+      abierto actualmente.
+    </S44>
   </Sistema>
   <RomInfo>
     <S01>Información de la ROM</S01>
@@ -232,6 +241,7 @@
     </S20>
     <S21>Tiempo en leer archivos exteriores:</S21>
     <S22>No se pudo borrar la carpeta temporal</S22>
+    <S23>Hubo un fallo al intentar comprimir el archivo</S23>
   </Messages>
   <NCLR>
     <S01>Nº de paleta:</S01>

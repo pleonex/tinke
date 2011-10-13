@@ -1,4 +1,23 @@
-﻿using System;
+﻿/*
+ * Copyright (C) 2011  pleoNeX
+ *
+ *   This program is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+ *
+ * Programador: pleoNeX
+ * 
+ */
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,9 +26,9 @@ using PluginInterface;
 
 namespace MAPLESTORYDS
 {
-    public static class Pack
+    public static class PACK
     {
-        public static void Unpack(string file, IPluginHost pluginHost)
+        public static sFolder Unpack(string file, IPluginHost pluginHost)
         {
             string packFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + "pack_" + Path.GetFileName(file);
             File.Copy(file, packFile, true);
@@ -76,7 +95,8 @@ namespace MAPLESTORYDS
             {
                 folder = AddFile(nxarc.files[i], folder);
             }
-            pluginHost.Set_Files(folder);
+
+            return folder;
         }
 
         private static sFolder ReorderFolder(sFolder rootFolder, sFolder newFolder, string folderPath)
@@ -105,8 +125,7 @@ namespace MAPLESTORYDS
             }
 
             return new sFolder();
-        }
-   
+        } 
         private static sFolder AddFile(sFile newFile, sFolder currfolder)
         {
             if (currfolder.files is List<sFile>)

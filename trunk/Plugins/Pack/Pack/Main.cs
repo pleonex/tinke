@@ -51,22 +51,35 @@ namespace Pack
             string type = new String(Encoding.ASCII.GetChars(br.ReadBytes(4)));
             br.Close();
 
-            if (archivo.ToUpper().EndsWith("UTILITY.BIN"))
-                new Utility(pluginHost).Leer(archivo, idArchivo);
-            else if (type == "NARC" || type == "CRAN")
-                new NARC(pluginHost).Read(archivo, idArchivo);
         }
         public Control Show_Info(string file, int id)
+        {
+            return new Control();
+        }
+
+        public String Pack(sFolder unpacked, string file) 
         {
             System.IO.BinaryReader br = new System.IO.BinaryReader(System.IO.File.OpenRead(file));
             string type = new String(Encoding.ASCII.GetChars(br.ReadBytes(4)));
             br.Close();
 
-
             if (type == "NARC" || type == "CRAN")
-                return new NARC(pluginHost).Show_Info(file, id);
+                return new NARC(pluginHost).Pack(file, unpacked);
 
-            return new Control();
+            return null;
+        }
+        public sFolder Unpack(string file)
+        {
+            System.IO.BinaryReader br = new System.IO.BinaryReader(System.IO.File.OpenRead(file));
+            string type = new String(Encoding.ASCII.GetChars(br.ReadBytes(4)));
+            br.Close();
+
+            if (file.ToUpper().EndsWith("UTILITY.BIN"))
+                return new Utility(pluginHost).Unpack(file);
+            else if (type == "NARC" || type == "CRAN")
+                return new NARC(pluginHost).Unpack(file);
+
+            return new sFolder();
         }
 
     }

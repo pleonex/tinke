@@ -74,18 +74,28 @@ namespace GYAKUKEN
 
         public void Read(string file, int id)
         {
-            if (gameCode == "BXOJ")
-            {
-                if (file.ToUpper().EndsWith(".BIN"))
-                    Pack.Unpack(pluginHost, file);
-                else if (file.ToUpper().EndsWith(".DBIN"))
-                    Pack.Unpack2(pluginHost, file);
-            }
         }
 
         public System.Windows.Forms.Control Show_Info(string file, int id)
         {
             return new System.Windows.Forms.Control();
+        }
+
+        public sFolder Unpack(string file, int id)
+        {
+            if (gameCode == "BXOJ")
+            {
+                if (file.ToUpper().EndsWith(".BIN"))
+                    return PACK.Unpack(pluginHost, file);
+                else if (file.ToUpper().EndsWith(".DBIN"))
+                    return PACK.Unpack2(pluginHost, file);
+            }
+
+            return new sFolder();
+        }
+        public String Pack(sFolder unpacked, string file, int id)
+        {
+            return null;
         }
     }
 }

@@ -26,7 +26,7 @@
     <S17>Palette</S17>
     <S18>Tile</S18>
     <S19>Map</S19>
-    <S1A>Decompress</S1A>
+    <S1A>Unpack</S1A>
     <S1B>Extract</S1B>
     <S1C>View</S1C>
     <S1D>Hexadecimal</S1D>
@@ -78,6 +78,15 @@
     <S3F>3D Model</S3F>
     <S40>Relative path</S40>
     <S41>Hexadecimal viewer</S41>
+    <S42>Pack</S42>
+    <S43>
+      There was an error compressing the file.
+      Check the debug messages.
+    </S43>
+    <S44>
+      Sorry, you can't overwrite the current 
+      opened file.
+    </S44>
   </Sistema>
   <RomInfo>
     <S01>Game information</S01>
@@ -219,6 +228,7 @@
     </S20>
     <S21>Time reading external files:</S21>
     <S22>The temp folder couldn't be removed</S22>
+    <S23>There was an error attempting to compress/pack the file.</S23>
   </Messages>
   <NCLR>
     <S01># palette:</S01>

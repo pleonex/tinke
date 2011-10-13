@@ -35,15 +35,31 @@ namespace NINOKUNI
 
         public void Read(string file, int id)
         {
-                NPCK.Unpack(file, pluginHost);
         }
-
         public System.Windows.Forms.Control Show_Info(string file, int id)
         {
-            if (file.ToUpper().EndsWith(".N2D"))
-                return new PackControl(file, id, pluginHost);
-
             return new System.Windows.Forms.Control();
+        }
+
+        public String Pack(sFolder unpacked, string file, int id)
+        {
+            if (file.ToUpper().EndsWith(".N2D"))
+            {
+                string fileOut = pluginHost.Get_TempFolder() + System.IO.Path.DirectorySeparatorChar +
+                    "pack_" + System.IO.Path.GetFileName(file);
+                
+                NPCK.Pack(fileOut, id, pluginHost);
+                return fileOut;
+            }
+
+            return null;
+        }
+        public sFolder Unpack(string file, int id)
+        {
+            if (file.ToUpper().EndsWith(".N2D"))
+                return NPCK.Unpack(file, pluginHost);
+
+            return new sFolder();
         }
     }
 }

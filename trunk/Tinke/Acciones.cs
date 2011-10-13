@@ -1221,11 +1221,11 @@ namespace Tinke
             return Format.Unknown;
         }
 
-        public sFolder Extract()
+        public sFolder Unpack()
         {
-            return Extract(idSelect);
+            return Unpack(idSelect);
         }
-        public sFolder Extract(int id)
+        public sFolder Unpack(int id)
         {
             sFile selectedFile = Search_File(id);
 
@@ -1239,6 +1239,7 @@ namespace Tinke
             byte[] ext = br.ReadBytes(4);
             br.Close();
 
+            sFolder desc = new sFolder();
             #region Calling to plugins
             try
             {
@@ -1248,7 +1249,7 @@ namespace Tinke
                     f = gamePlugin.Get_Format(selectedFile.name, ext, idSelect);
                     if (f == Format.Compressed || f == Format.Pack)
                     {
-                        gamePlugin.Read(tempFile, idSelect);
+                        desc = gamePlugin.Unpack(tempFile, idSelect);
                         goto Continuar;
                     }
                 }
@@ -1257,12 +1258,12 @@ namespace Tinke
                     f = plugin.Get_Format(selectedFile.name, ext);
                     if (f == Format.Compressed || f == Format.Pack)
                     {
-                        plugin.Read(tempFile, id);
+                        desc = plugin.Unpack(tempFile);
                         goto Continuar;
                     }
                 }
 
-                if (new String(Encoding.ASCII.GetChars(ext)) == "LZ77") // LZ77
+                if (new String(Encoding.ASCII.GetChars(ext)) == "LZ77") // LZ77 header
                 {
                     string tempFile2 = Path.GetTempPath() + Path.DirectorySeparatorChar + "c_" + selectedFile.id + selectedFile.name;
                     Byte[] compressFile = new Byte[selectedFile.size - 4];
@@ -1279,16 +1280,14 @@ namespace Tinke
                     if (!File.Exists(uncompFile))
                         throw new Exception(Tools.Helper.ObtenerTraduccion("Sistema", "S36"));
 
-                    sFile file = new sFile();
-                    file.name = selectedFile.name;
-                    file.offset = 0x00;
-                    file.path = uncompFile;
-                    file.size = (uint)new FileInfo(uncompFile).Length;
+                    sFile newFile = new sFile();
+                    newFile.name = selectedFile.name;
+                    newFile.offset = 0x00;
+                    newFile.path = uncompFile;
+                    newFile.size = (uint)new FileInfo(uncompFile).Length;
 
-                    sFolder carpeta = new sFolder();
-                    carpeta.files = new List<sFile>();
-                    carpeta.files.Add(file);
-                    pluginHost.Set_Files(carpeta);
+                    desc.files = new List<sFile>();
+                    desc.files.Add(newFile);
                 }
                 else
                     return new sFolder();
@@ -1302,16 +1301,16 @@ namespace Tinke
         Continuar:
 
             File.Delete(tempFile);
-            sFolder desc = pluginHost.Get_Files();
 
             Add_Files(ref desc, id);
             return desc;
         }
-        public sFolder Extract(String compressedFile, int id)
+        public sFolder Unpack(String compressedFile, int id)
         {
             byte[] ext = Get_MagicID(compressedFile);
             String name = new FileInfo(compressedFile).Name;
 
+            sFolder desc = new sFolder();
             #region Calling to plugins
             try
             {
@@ -1321,7 +1320,7 @@ namespace Tinke
                     f = gamePlugin.Get_Format(name, ext, idSelect);
                     if (f == Format.Compressed || f == Format.Pack)
                     {
-                        gamePlugin.Read(compressedFile, idSelect);
+                        desc = gamePlugin.Unpack(compressedFile, idSelect);
                         goto Continuar;
                     }
                 }
@@ -1330,7 +1329,7 @@ namespace Tinke
                     f = plugin.Get_Format(name, ext);
                     if (f == Format.Compressed || f == Format.Pack)
                     {
-                        plugin.Read(compressedFile, id);
+                        desc = plugin.Unpack(compressedFile);
                         goto Continuar;
                     }
                 }
@@ -1354,16 +1353,14 @@ namespace Tinke
                     if (!File.Exists(uncompFile))
                         throw new Exception(Tools.Helper.ObtenerTraduccion("Sistema", "S36"));
 
-                    sFile file = new sFile();
-                    file.name = name;
-                    file.offset = 0x00;
-                    file.path = uncompFile;
-                    file.size = (uint)new FileInfo(uncompFile).Length;
+                    sFile newFile = new sFile();
+                    newFile.name = name;
+                    newFile.offset = 0x00;
+                    newFile.path = uncompFile;
+                    newFile.size = (uint)new FileInfo(uncompFile).Length;
 
-                    sFolder carpeta = new sFolder();
-                    carpeta.files = new List<sFile>();
-                    carpeta.files.Add(file);
-                    pluginHost.Set_Files(carpeta);
+                    desc.files = new List<sFile>();
+                    desc.files.Add(newFile);
                 }
                 else
                     return new sFolder();
@@ -1376,7 +1373,6 @@ namespace Tinke
             #endregion
 
         Continuar:
-            sFolder desc = pluginHost.Get_Files();
             Add_Files(ref desc, id);    // Añadimos los archivos descomprimidos al árbol de archivos
             return desc;
         }
@@ -1463,7 +1459,7 @@ namespace Tinke
                     currDecompressed.id = subFolder.id;
                     currDecompressed.name = subFolder.name;
 
-                    if ((String)subFolder.tag != "") // Decompressed file
+                    if (subFolder.tag == "Descomprimido") // Decompressed file
                     {
                         sFile file = Search_File(subFolder.id);
                         decompressedFiles.files.Add(file);
@@ -1487,6 +1483,108 @@ namespace Tinke
             if (currFolder.folders is List<sFolder>)
                 foreach (sFolder subFolder in currFolder.folders)
                     Get_LowestID(subFolder, ref id);
+        }
+        public void Pack()
+        {
+            Pack(idSelect);
+        }
+        public void Pack(int id)
+        {
+            sFile selectedFile = Search_File(id);
+            String original_packfile = Save_File(id);
+            Byte[] ext = Get_MagicID(id);
+
+            sFile packFile = selectedFile;
+            sFolder unpacked = pluginHost_event_GetDecompressedFiles(id);
+
+            #region Calling to plugins
+            try
+            {
+                Format f;
+                if (gamePlugin is IGamePlugin)
+                {
+                    f = gamePlugin.Get_Format(selectedFile.name, ext, idSelect);
+                    if (f == Format.Compressed || f == Format.Pack)
+                    {
+                        packFile.path = gamePlugin.Pack(unpacked, original_packfile, id);
+                        goto Continue;
+                    }
+                }
+                foreach (IPlugin plugin in formatList)
+                {
+                    f = plugin.Get_Format(selectedFile.name, ext);
+                    if (f == Format.Compressed || f == Format.Pack)
+                    {
+                        packFile.path = plugin.Pack(unpacked, original_packfile);
+                        goto Continue;
+                    }
+                }
+
+                #region Common compression
+
+                if (new String(Encoding.ASCII.GetChars(ext)) == "LZ77") // LZ77 header
+                {
+                    String compFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + "pack_" + selectedFile.name;
+
+                    DSDecmp.Main.Compress(original_packfile, compFile, FormatCompress.LZ10);
+                    if (!File.Exists(compFile))
+                        throw new Exception(Tools.Helper.ObtenerTraduccion("Sistema", "S43"));
+
+                    // Write the header LZ77
+                    String packFilePath = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + "lz10_" + selectedFile.name;
+                    BinaryReader br = new BinaryReader(File.OpenRead(compFile));
+                    BinaryWriter bw = new BinaryWriter(File.OpenWrite(packFilePath));
+                    bw.Write(new char[] { 'L', 'Z', '7', '7' });
+                    bw.Write(br.ReadBytes((int)br.BaseStream.Length));
+                    bw.Flush();
+                    bw.Close();
+                    br.Close();
+                    File.Delete(compFile);
+
+                    packFile.name = selectedFile.name;
+                    packFile.offset = 0x00;
+                    packFile.path = packFilePath;
+                    packFile.size = (uint)new FileInfo(packFilePath).Length;
+                }
+
+                FileStream fs = new FileStream(selectedFile.path, FileMode.OpenOrCreate);
+                fs.Seek(selectedFile.offset, SeekOrigin.Begin);
+                FormatCompress compressFormat = DSDecmp.Main.Get_Format(fs, false);
+                fs.Close();
+                fs.Dispose();
+                if (compressFormat != FormatCompress.Invalid)
+                {
+                    String compFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + "pack_" + selectedFile.name;
+
+                    DSDecmp.Main.Compress(original_packfile, compFile, compressFormat);
+                    if (!File.Exists(compFile))
+                        throw new Exception(Tools.Helper.ObtenerTraduccion("Sistema", "S43"));
+
+                    packFile.name = selectedFile.name;
+                    packFile.offset = 0x00;
+                    packFile.path = compFile;
+                    packFile.size = (uint)new FileInfo(compFile).Length;
+                }
+                else
+                    return;
+                #endregion
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return;
+            }
+            #endregion
+
+        Continue:
+            if (!(packFile.path is String) ||packFile.path == "")
+            {
+                MessageBox.Show(Tools.Helper.ObtenerTraduccion("Messages", "S23"));
+                return;
+            }
+
+            packFile.size = (uint)new FileInfo(packFile.path).Length;
+            Change_File(id, packFile, root);
         }
 
         public void Save_File(int id, string outFile)
@@ -1643,15 +1741,6 @@ namespace Tinke
                     }
                 }
 
-                if (new String(Encoding.ASCII.GetChars(ext)) == "LZ77") // LZ77
-                {
-                    string tempFile2 = Path.GetTempPath() + Path.DirectorySeparatorChar + "c_" + selectFile.id + selectFile.name;
-                    Byte[] compressFile = new Byte[selectFile.size - 4];
-                    Array.Copy(File.ReadAllBytes(tempFile), 4, compressFile, 0, compressFile.Length); ;
-                    File.WriteAllBytes(tempFile2, compressFile);
-                    tempFile = tempFile2;
-                }
-
                 FormatCompress compressFormat = DSDecmp.Main.Get_Format(tempFile);
                 if (compressFormat != FormatCompress.Invalid)
                 {
@@ -1794,15 +1883,6 @@ namespace Tinke
                         MessageBox.Show(Tools.Helper.ObtenerTraduccion("Messages", "S1E"));
                         return new Control();
                     }
-                }
-
-                if (new String(Encoding.ASCII.GetChars(ext)) == "LZ77") // LZ77
-                {
-                    string tempFile2 = Path.GetTempPath() + Path.DirectorySeparatorChar + "c_" + idSelect + name;
-                    Byte[] compressFile = new Byte[new FileInfo(archivo).Length - 4];
-                    Array.Copy(File.ReadAllBytes(archivo), 4, compressFile, 0, compressFile.Length); ;
-                    File.WriteAllBytes(tempFile2, compressFile);
-                    archivo = tempFile2;
                 }
 
                 FormatCompress compressFormat = DSDecmp.Main.Get_Format(archivo);

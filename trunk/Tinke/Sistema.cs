@@ -403,8 +403,8 @@ namespace Tinke
                 toolStripMenuItem1.Text = xml.Element("S17").Value;
                 toolStripMenuItem2.Text = xml.Element("S18").Value;
                 toolStripMenuItem3.Text = xml.Element("S19").Value;
-                btnDescomprimir.Text = xml.Element("S1A").Value;
-                btnExtraer.Text = xml.Element("S1B").Value;
+                btnUnpack.Text = xml.Element("S1A").Value;
+                btnExtract.Text = xml.Element("S1B").Value;
                 btnSee.Text = xml.Element("S1C").Value;
                 btnHex.Text = xml.Element("S1D").Value;
                 checkSearch.Text = xml.Element("S2E").Value;
@@ -433,6 +433,7 @@ namespace Tinke
                 toolStripMenuComprimido.Text = xml.Element("S2A").Value;
                 toolStripAbrirTexto.Text = xml.Element("S26").Value;
                 toolStripAbrirFat.Text = xml.Element("S3D").Value;
+                btnPack.Text = xml.Element("S42").Value;
             }
             catch { throw new NotSupportedException("There was an error reading the language file"); }
         }
@@ -686,6 +687,7 @@ namespace Tinke
 
         private void treeSystem_AfterSelect(object sender, TreeViewEventArgs e)
         {
+            btnPack.Enabled = false;
             accion.IDSelect = Convert.ToInt32(e.Node.Tag);
             // Limpiar información anterior
             for (int i = 0; i < listFile.Items.Count; i++)
@@ -704,7 +706,7 @@ namespace Tinke
                 btnHex.Enabled = false;
                 btnSee.Enabled = false;
                 toolStripOpenAs.Enabled = false;
-                btnDescomprimir.Enabled = true;
+                btnUnpack.Enabled = true;
             }
             else if (Convert.ToUInt16(e.Node.Tag) < 0xF000)
             {
@@ -780,13 +782,14 @@ namespace Tinke
                 else
                     btnSee.Enabled = false;
                 if (selectFile.format == Format.Compressed || selectFile.format == Format.Pack)
-                    btnDescomprimir.Enabled = true;
+                    btnUnpack.Enabled = true;
                 else
-                    btnDescomprimir.Enabled = false;
+                    btnUnpack.Enabled = false;
                 if ((String)selectFile.tag == "Descomprimido")
                 {
                     toolStripOpenAs.Enabled = false;
-                    btnDescomprimir.Enabled = true;
+                    btnUnpack.Enabled = true;
+                    btnPack.Enabled = true;
                 }
 
                 if (keyDown != Keys.Escape)
@@ -810,7 +813,7 @@ namespace Tinke
                 btnHex.Enabled = false;
                 btnSee.Enabled = false;
                 toolStripOpenAs.Enabled = false;
-                btnDescomprimir.Enabled = true;
+                btnUnpack.Enabled = true;
             }
 
             listFile.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
@@ -858,23 +861,23 @@ namespace Tinke
             debug.Añadir_Texto(sb.ToString());
             sb.Length = 0;
         }
-        private void btnUncompress_Click(object sender, EventArgs e)
+        private void btnUnpack_Click(object sender, EventArgs e)
         {
             sFolder uncompress;
 
             if (accion.IDSelect >= 0x0F000)
             {
-                UncompressFolder();
+                UnpackFolder();
                 return;
             }
             if ((String)accion.Select_File().tag == "Descomprimido")
             {
-                UncompressFolder();
+                UnpackFolder();
                 return;
             }
 
             this.Cursor = Cursors.WaitCursor;
-            uncompress = accion.Extract();
+            uncompress = accion.Unpack();
 
             if (!(uncompress.files is List<sFile>) && !(uncompress.folders is List<sFolder>)) // En caso de que falle la extracción
             {
@@ -888,15 +891,16 @@ namespace Tinke
             }
 
             toolStripOpenAs.Enabled = false;
+            btnPack.Enabled = true;
 
             Get_SupportedFiles();
 
+            // Add new files to the main tree
             TreeNode selected = treeSystem.SelectedNode;
             CarpetaANodo(uncompress, ref selected);
             selected.ImageIndex = accion.ImageFormatFile(accion.Select_File().format);
             selected.SelectedImageIndex = selected.ImageIndex;
 
-            // Agregamos los nodos al árbol
             TreeNode[] nodos = new TreeNode[selected.Nodes.Count]; selected.Nodes.CopyTo(nodos, 0);
             treeSystem.SelectedNode.Tag = selected.Tag;
             accion.IDSelect = Convert.ToInt32(selected.Tag);
@@ -910,14 +914,24 @@ namespace Tinke
             sb.Length = 0;
             this.Cursor = Cursors.Default;
         }
-        private void UncompressFolder()
+        private void btnPack_Click(object sender, EventArgs e)
+        {
+            this.Cursor = Cursors.WaitCursor;
+
+            accion.Pack();
+
+            debug.Añadir_Texto(sb.ToString());
+            sb.Length = 0;
+            this.Cursor = Cursors.Default;
+        }
+        private void UnpackFolder()
         {
             this.Cursor = Cursors.WaitCursor;
             Thread espera = new System.Threading.Thread(ThreadEspera);
             if (!isMono)
                 espera.Start("S04");
 
-            Recursivo_UncompressFolder(accion.Select_Folder());
+            Recursivo_UnpackFolder(accion.Select_Folder());
             Get_SupportedFiles();
             treeSystem.Nodes.Clear();
             treeSystem.Nodes.Add(Jerarquizar_Nodos(accion.Root));
@@ -930,14 +944,14 @@ namespace Tinke
             sb.Length = 0;
             this.Cursor = Cursors.Default;
         }
-        private void Recursivo_UncompressFolder(sFolder currFolder)
+        private void Recursivo_UnpackFolder(sFolder currFolder)
         {
             if (currFolder.folders is List<sFolder>)
             {
                 sFolder[] carpetas = new sFolder[currFolder.folders.Count];
                 currFolder.folders.CopyTo(carpetas);
                 foreach (sFolder subFolder in carpetas)
-                    Recursivo_UncompressFolder(subFolder);
+                    Recursivo_UnpackFolder(subFolder);
             }
 
             if (currFolder.files is List<sFile>)
@@ -946,7 +960,7 @@ namespace Tinke
                 currFolder.files.CopyTo(archivos);
                 foreach (sFile archivo in archivos)
                     if (archivo.format == Format.Compressed || archivo.format == Format.Pack)
-                        accion.Extract(archivo.id);
+                        accion.Unpack(archivo.id);
             }
         }
         private void btnExtraer_Click(object sender, EventArgs e)
@@ -1090,8 +1104,8 @@ namespace Tinke
                 e.SuppressKeyPress = true;
                 keyDown = e.KeyCode;
 
-                if (btnDescomprimir.Enabled)
-                    btnDescomprimir.PerformClick();
+                if (btnUnpack.Enabled)
+                    btnUnpack.PerformClick();
             }
             else if (e.KeyCode == Keys.X && treeSystem.Focused)
             {
@@ -1278,7 +1292,7 @@ namespace Tinke
             File.WriteAllBytes(tempFile, compressFile);
             #endregion
 
-            sFolder uncompress = accion.Extract(tempFile, accion.IDSelect);
+            sFolder uncompress = accion.Unpack(tempFile, accion.IDSelect);
 
             if (!(uncompress.files is List<sFile>) && !(uncompress.folders is List<sFolder>)) // En caso de que falle la extracción
             {
@@ -1651,8 +1665,15 @@ namespace Tinke
             o.DefaultExt = ".nds";
             o.Filter = "Nintendo DS ROM (*.nds)|*.nds";
             o.OverwritePrompt = true;
+            Open_Dialog:
             if (o.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
+                if (o.FileName == accion.ROMFile)
+                {
+                    MessageBox.Show(Tools.Helper.ObtenerTraduccion("Sistema", "S44"));
+                    goto Open_Dialog;
+                }
+
                 espera = new Thread(ThreadEspera);
                 if (!isMono)
                     espera.Start("S06");

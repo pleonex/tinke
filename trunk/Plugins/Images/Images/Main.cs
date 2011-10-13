@@ -152,5 +152,8 @@ namespace Images
             if (archivo.ToUpper().EndsWith(".CHAR") || archivo.ToUpper().EndsWith(".CHR"))
                 new CHAR(pluginHost, archivo, id).Leer();
 		}
+
+        public String Pack(sFolder unpacked, string file) { return null; }
+        public sFolder Unpack(string file) { return new sFolder(); }
 	}
 }

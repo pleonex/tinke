@@ -32,12 +32,14 @@ namespace PluginInterface
         NSCR Get_NSCR();
         NCER Get_NCER();
         NANR Get_NANR();
+        Object Get_Object();
 
         void Set_NCLR(NCLR nclr);
         void Set_NCGR(NCGR ncgr);
         void Set_NSCR(NSCR nscr);
         void Set_NCER(NCER ncer);
         void Set_NANR(NANR nanr);
+        void Set_Object(Object objects);
 
         
         Color[] BGR555(byte[] data);
