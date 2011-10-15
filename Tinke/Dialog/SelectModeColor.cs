@@ -27,6 +27,7 @@ namespace Tinke.Dialog
                 btnOK.Text = xml.Element("S01").Value;
                 radioButton1.Text = xml.Element("S02").Value;
                 radioButton2.Text = xml.Element("S03").Value;
+                radioButton3.Text = xml.Element("S1D").Value;
             }
             catch { throw new NotImplementedException("There was an error reading the language file"); }
         }
@@ -36,15 +37,34 @@ namespace Tinke.Dialog
             this.Close();
         }
 
-        public bool IsOption1
+        public int Option
         {
-            get { return radioButton1.Checked; }
-            set { radioButton1.Checked = value; }
-        }
-        public bool IsOption2
-        {
-            get { return radioButton2.Checked; }
-            set { radioButton2.Checked = value; }
+            get
+            {
+                if (radioButton1.Checked)
+                    return 1;
+                else if (radioButton2.Checked)
+                    return 2;
+                else if (radioButton3.Checked)
+                    return 3;
+                else
+                    return 0;
+            }
+            set
+            {
+                switch (value)
+                {
+                    case 1:
+                        radioButton1.Checked = true;
+                        break;
+                    case 2:
+                        radioButton2.Checked = true;
+                        break;
+                    case 3:
+                        radioButton3.Checked = true;
+                        break;
+                }
+            }
         }
     }
 }

@@ -29,7 +29,7 @@ namespace Tinke
 {
     public static class Imagen_NCER
     {
-        public static NCER Leer(string file, int id)
+        public static NCER Read(string file, int id)
         {
             System.Xml.Linq.XElement xml = Tools.Helper.ObtenerTraduccion("NCER");
             BinaryReader br = new BinaryReader(File.OpenRead(file));
@@ -62,19 +62,23 @@ namespace Tinke
             Console.WriteLine(xml.Element("S0C").Value + ": 0x{0:X}", ncer.cebk.unknown1);
             Console.WriteLine(xml.Element("S09").Value + ": {0}", ncer.cebk.tBank.ToString());
             Console.WriteLine(xml.Element("S08").Value + ": {0}", ncer.cebk.nBanks.ToString());
-            uint tilePos = 0x00; // En caso de que Unknown 1 != 0x00
-            // Lee cada banco
+
+            uint tilePos = 0x00; // If unknown1 != 0x00
+
+            #region Read banks
             for (int i = 0; i < ncer.cebk.nBanks; i++)
             {
-                Console.WriteLine("<br>--------------");
-                Console.WriteLine(xml.Element("S01").Value + " {0}:", i.ToString());
-
                 ncer.cebk.banks[i].nCells = br.ReadUInt16();
                 ncer.cebk.banks[i].unknown1 = br.ReadUInt16();
                 ncer.cebk.banks[i].cell_offset = br.ReadUInt32();
 
                 if (ncer.cebk.tBank == 0x01)
-                    br.ReadBytes(8);    // Desconocido por el momento
+                {
+                    ncer.cebk.banks[i].xMax = br.ReadInt16();
+                    ncer.cebk.banks[i].yMax = br.ReadInt16();
+                    ncer.cebk.banks[i].xMin = br.ReadInt16();
+                    ncer.cebk.banks[i].yMin = br.ReadInt16();
+                }
 
                 long posicion = br.BaseStream.Position;
                 if (ncer.cebk.tBank == 0x00)
@@ -82,67 +86,105 @@ namespace Tinke
                 else
                     br.BaseStream.Position += (ncer.cebk.nBanks - (i + 1)) * 0x10 + ncer.cebk.banks[i].cell_offset;
 
-                ncer.cebk.banks[i].cells = new Cell[ncer.cebk.banks[i].nCells];
-
+                Console.WriteLine("<br>--------------");
+                Console.WriteLine(xml.Element("S01").Value + " {0}:", i.ToString());
                 Console.WriteLine("|_" + xml.Element("S19").Value + ": {0}", ncer.cebk.banks[i].nCells.ToString());
                 Console.WriteLine("|_" + xml.Element("S1A").Value + ": {0}", ncer.cebk.banks[i].unknown1.ToString());
                 Console.WriteLine("|_" + xml.Element("S1B").Value + ": {0}", ncer.cebk.banks[i].cell_offset.ToString());
-                // Lee la información de cada banco
+
+                ncer.cebk.banks[i].cells = new Cell[ncer.cebk.banks[i].nCells];
+                #region Read cells
                 for (int j = 0; j < ncer.cebk.banks[i].nCells; j++)
                 {
                     ncer.cebk.banks[i].cells[j].num_cell = (ushort)j;
-                    ncer.cebk.banks[i].cells[j].yOffset = br.ReadSByte();
-                    byte byte1 = br.ReadByte();
-                    int x = br.ReadUInt16() & 0x01FF;
-                    ncer.cebk.banks[i].cells[j].xOffset = (x >= 0x100) ? x - 0x200 : x;
-                    br.BaseStream.Position -= 1;
-                    byte byte2 = br.ReadByte();
-                    Size tamaño = Obtener_Tamaño(Tools.Helper.ByteTo4Bits(byte1)[1], Tools.Helper.ByteTo4Bits(byte2)[1]);
-                    ncer.cebk.banks[i].cells[j].height = (ushort)tamaño.Height;
-                    ncer.cebk.banks[i].cells[j].width = (ushort)tamaño.Width;
 
-                    ushort pos = br.ReadUInt16();
-                    ncer.cebk.banks[i].cells[j].nPalette = (byte)((pos & 0xF000) >> 12);
-                    ncer.cebk.banks[i].cells[j].priority = (byte)((pos & 0xC00) >> 10);
-                    ncer.cebk.banks[i].cells[j].tileOffset = (uint)(pos & 0x03FF);
+                    ushort obj0 = br.ReadUInt16();
+                    ushort obj1 = br.ReadUInt16();
+                    ushort obj2 = br.ReadUInt16();
+
+                    // Obj 0
+                    ncer.cebk.banks[i].cells[j].obj0.yOffset = (sbyte)(obj0 & 0xFF);
+                    ncer.cebk.banks[i].cells[j].obj0.rs_flag = (byte)((obj0 >> 8) & 1);
+                    if (ncer.cebk.banks[i].cells[j].obj0.rs_flag == 0)
+                        ncer.cebk.banks[i].cells[j].obj0.objDisable = (byte)((obj0 >> 9) & 1);
+                    else
+                        ncer.cebk.banks[i].cells[j].obj0.doubleSize = (byte)((obj0 >> 9) & 1);
+                    ncer.cebk.banks[i].cells[j].obj0.objMode = (byte)((obj0 >> 10) & 3);
+                    ncer.cebk.banks[i].cells[j].obj0.mosaic_flag = (byte)((obj0 >> 12) & 1);
+                    ncer.cebk.banks[i].cells[j].obj0.depth = (byte)((obj0 >> 13) & 1);
+                    ncer.cebk.banks[i].cells[j].obj0.shape = (byte)((obj0 >> 14) & 3);
+
+                    // Obj 1
+                    ncer.cebk.banks[i].cells[j].obj1.xOffset = obj1 & 0x01FF;
+                    if (ncer.cebk.banks[i].cells[j].obj1.xOffset >= 0x100)
+                        ncer.cebk.banks[i].cells[j].obj1.xOffset -= 0x200;
+                    if (ncer.cebk.banks[i].cells[j].obj0.rs_flag == 0)
+                    {
+                        ncer.cebk.banks[i].cells[j].obj1.unused = (byte)((obj1 >> 9) & 7);
+                        ncer.cebk.banks[i].cells[j].obj1.flipX = (byte)((obj1 >> 12) & 1);
+                        ncer.cebk.banks[i].cells[j].obj1.flipY = (byte)((obj1 >> 13) & 1);
+                    }
+                    else
+                        ncer.cebk.banks[i].cells[j].obj1.select_param = (byte)((obj1 >> 9) & 0x1F);
+                    ncer.cebk.banks[i].cells[j].obj1.size = (byte)((obj1 >> 14) & 3);
+
+                    // Obj 2
+                    ncer.cebk.banks[i].cells[j].obj2.tileOffset = (byte)(obj2 & 0x03FF);
                     if (ncer.cebk.unknown1 != 0x00)
-                        ncer.cebk.banks[i].cells[j].tileOffset += tilePos;
+                        ncer.cebk.banks[i].cells[j].obj2.tileOffset += tilePos;
+                    ncer.cebk.banks[i].cells[j].obj2.priority = (byte)((obj2 >> 10) & 3);
+                    ncer.cebk.banks[i].cells[j].obj2.index_palette = (byte)((obj2 >> 12) & 0xF);
 
-                    ncer.cebk.banks[i].cells[j].yFlip = (Tools.Helper.ByteTo4Bits(byte2)[1] & 2) == 2 ? true : false;
-                    ncer.cebk.banks[i].cells[j].xFlip = (Tools.Helper.ByteTo4Bits(byte2)[1] & 1) == 1 ? true : false;
+                    // Calculate the size
+                    Size cellSize = Calculate_Size(ncer.cebk.banks[i].cells[j].obj0.shape, ncer.cebk.banks[i].cells[j].obj1.size);
+                    ncer.cebk.banks[i].cells[j].height = (ushort)cellSize.Height;
+                    ncer.cebk.banks[i].cells[j].width = (ushort)cellSize.Width;
+                    if (ncer.cebk.banks[i].cells[j].obj0.doubleSize == 1)
+                    {
+                        ncer.cebk.banks[i].cells[j].width *= 2;
+                        ncer.cebk.banks[i].cells[j].height *= 2;
+                    }
 
                     Console.WriteLine("|_" + xml.Element("S1C").Value + " {0}:", j.ToString());
-                    Console.WriteLine("    " + xml.Element("S1D").Value + ": {0}", ncer.cebk.banks[i].cells[j].yOffset.ToString());
-                    Console.WriteLine("    " + xml.Element("S1E").Value + ": {0}", ncer.cebk.banks[i].cells[j].xOffset.ToString());
+                    Console.WriteLine("    " + xml.Element("S1D").Value + ": {0}", ncer.cebk.banks[i].cells[j].obj0.yOffset.ToString());
+                    Console.WriteLine("    " + xml.Element("S1E").Value + ": {0}", ncer.cebk.banks[i].cells[j].obj1.xOffset.ToString());
                     Console.WriteLine("    " + xml.Element("S1F").Value + ": {0}", ncer.cebk.banks[i].cells[j].width.ToString());
                     Console.WriteLine("    " + xml.Element("S20").Value + ": {0}", ncer.cebk.banks[i].cells[j].height.ToString());
-                    Console.WriteLine("    " + xml.Element("S21").Value + ": {0}", ncer.cebk.banks[i].cells[j].nPalette.ToString());
-                    Console.WriteLine("    " + xml.Element("S22").Value + ": {0}", (pos & 0x03FF).ToString());
-                    Console.WriteLine("    " + xml.Element("S23").Value + ": {0}", ncer.cebk.banks[i].cells[j].tileOffset.ToString());
+                    Console.WriteLine("    " + xml.Element("S21").Value + ": {0}", ncer.cebk.banks[i].cells[j].obj2.index_palette.ToString());
+                    Console.WriteLine("    " + xml.Element("S22").Value + ": {0}", (obj2 & 0x03FF).ToString());
+                    Console.WriteLine("    " + xml.Element("S23").Value + ": {0}", ncer.cebk.banks[i].cells[j].obj2.tileOffset.ToString());
                 }
+                #endregion
+
                 // Sort the cell using the priority value
                 List<Cell> cells = new List<Cell>();
                 cells.AddRange(ncer.cebk.banks[i].cells);
                 cells.Sort(Comparision_Cell);
                 ncer.cebk.banks[i].cells = cells.ToArray();
 
+                // Calculate the next tileOffset if unknonw1 != 0
                 if (ncer.cebk.unknown1 != 0x00)
                 {
                     Cell ultimaCelda = Get_LastCell(ncer.cebk.banks[i]);
+
                     int ultimaCeldaSize = (int)(ultimaCelda.height * ultimaCelda.width);
                     ultimaCeldaSize /= (int)(64 << (byte)ncer.cebk.block_size);
+                    if (ultimaCelda.obj0.depth == 1)
+                        ultimaCeldaSize *= 2;
                     if (ultimaCeldaSize == 0)
                         ultimaCeldaSize = 1;
-                    tilePos += (uint)((ultimaCelda.tileOffset - tilePos) + ultimaCeldaSize);
 
-                    if (ncer.cebk.unknown1 == 0x160 && i == 5) // I don't know why it works
-                        tilePos -= 3;
-                    if (ncer.cebk.unknown1 == 0x110 && i == 4) // (ncer.cebk.unknown1 & FC0) >> 6 (maybe ?)
-                        tilePos -= 7;
+                    tilePos += (uint)((ultimaCelda.obj2.tileOffset - tilePos) + ultimaCeldaSize);
+
+                    //if (ncer.cebk.unknown1 == 0x160 && i == 5) // I don't know why it works
+                    //    tilePos -= 3;
+                    //if (ncer.cebk.unknown1 == 0x110 && i == 4) // (ncer.cebk.unknown1 & FC0) >> 6 (maybe ?)
+                    //    tilePos -= 7;
                 }
                 br.BaseStream.Position = posicion;
                 Console.WriteLine("--------------");
             }
+            #endregion
 
             #region Sección LABL
             // Lee la segunda LABL
@@ -202,88 +244,69 @@ namespace Tinke
             Console.WriteLine("</pre>EOF");
             return ncer;
         }
-        public static Size Obtener_Tamaño(byte byte1, byte byte2)
+        public static Size Calculate_Size(byte shape, byte size)
         {
-            byte1 = Convert.ToByte(byte1 & 0x0C);
-            byte2 = Convert.ToByte(byte2 & 0x0C);
-            Size tamaño = new Size();
+            Size imageSize = new Size();
 
-            switch (byte1)
+            switch (shape)
             {
-                case 0x00:
-                    switch (byte2)
+                case 0x00:  // Square
+                    switch (size)
                     {
                         case 0x00:
-                            tamaño = new Size(8, 8);
+                            imageSize = new Size(8, 8);
                             break;
-                        case 0x04:
-                            tamaño = new Size(16, 16);
+                        case 0x01:
+                            imageSize = new Size(16, 16);
                             break;
-                        case 0x08:
-                            tamaño = new Size(32, 32);
+                        case 0x02:
+                            imageSize = new Size(32, 32);
                             break;
-                        case 0x0C:
-                            tamaño = new Size(64, 64);
+                        case 0x03:
+                            imageSize = new Size(64, 64);
                             break;
                     }
                     break;
-                case 0x04:
-                    switch (byte2)
+                case 0x01:  // Horizontal
+                    switch (size)
                     {
                         case 0x00:
-                            tamaño = new Size(16, 8);
+                            imageSize = new Size(16, 8);
                             break;
-                        case 0x04:
-                            tamaño = new Size(32, 8);
+                        case 0x01:
+                            imageSize = new Size(32, 8);
                             break;
-                        case 0x08:
-                            tamaño = new Size(32, 16);
+                        case 0x02:
+                            imageSize = new Size(32, 16);
                             break;
-                        case 0x0C:
-                            tamaño = new Size(64, 32);
+                        case 0x03:
+                            imageSize = new Size(64, 32);
                             break;
                     }
                     break;
-                case 0x08:
-                    switch (byte2)
+                case 0x02:  // Vertical
+                    switch (size)
                     {
                         case 0x00:
-                            tamaño = new Size(8, 16);
+                            imageSize = new Size(8, 16);
                             break;
-                        case 0x04:
-                            tamaño = new Size(8, 32);
+                        case 0x01:
+                            imageSize = new Size(8, 32);
                             break;
-                        case 0x08:
-                            tamaño = new Size(16, 32);
+                        case 0x02:
+                            imageSize = new Size(16, 32);
                             break;
-                        case 0x0C:
-                            tamaño = new Size(32, 64);
-                            break;
-                    }
-                    break;
-                case 0x0C:
-                    switch (byte2)
-                    {
-                        case 0x00:
-                            tamaño = new Size(64, 128);
-                            break;
-                        case 0x04:
-                            tamaño = new Size(0, 0);
-                            break;
-                        case 0x08:
-                            tamaño = new Size(0, 0);
-                            break;
-                        case 0x0C:
-                            tamaño = new Size(0, 0);
+                        case 0x03:
+                            imageSize = new Size(32, 64);
                             break;
                     }
                     break;
             }
 
-            return tamaño;
+            return imageSize;
         }
 
-        public static Bitmap Obtener_Imagen(Bank banco, uint blockSize, NCGR tile, NCLR paleta,
+        public static Bitmap Get_Image(Bank banco, uint blockSize, NCGR tile, NCLR paleta,
             bool entorno, bool celda, bool numero, bool transparencia, bool image)
         {
             if (banco.cells.Length == 0)
@@ -311,7 +334,7 @@ namespace Tinke
                 if (banco.cells[i].width == 0x00 || banco.cells[i].height == 0x00)
                     continue;
 
-                uint tileOffset = banco.cells[i].tileOffset;
+                uint tileOffset = banco.cells[i].obj2.tileOffset;
                 if (blockSize > 4)
                     blockSize = 4;
                 if (tile.rahc.depth == System.Windows.Forms.ColorDepth.Depth4Bit)
@@ -322,14 +345,12 @@ namespace Tinke
                 if (image)
                 {
                     for (int j = 0; j < tile.rahc.tileData.nPalette.Length; j++)
-                        tile.rahc.tileData.nPalette[j] = banco.cells[i].nPalette;
+                        tile.rahc.tileData.nPalette[j] = banco.cells[i].obj2.index_palette;
 
                     if (blockSize < 4)
                     {
                         if (tile.order == TileOrder.NoTiled)
-                        {
                             celdas[i] = Imagen_NCGR.Crear_Imagen(tile, paleta, (int)tileOffset * 64, banco.cells[i].width, banco.cells[i].height);
-                        }
                         else
                             celdas[i] = Imagen_NCGR.Crear_Imagen(tile, paleta, (int)tileOffset * 64, banco.cells[i].width / 8, banco.cells[i].height / 8);
                     }
@@ -356,30 +377,32 @@ namespace Tinke
 
                         celdas[i] = Imagen_NCGR.Crear_Imagen(tile, paleta).Clone(new Rectangle(posX, posY, banco.cells[i].width, banco.cells[i].height), System.Drawing.Imaging.PixelFormat.DontCare);
                     }
-                    #region Rotaciones
-                    if (banco.cells[i].xFlip && banco.cells[i].yFlip)
+
+                    #region Flip
+                    if (banco.cells[i].obj1.flipX == 1 && banco.cells[i].obj1.flipY == 1)
                         celdas[i].RotateFlip(RotateFlipType.RotateNoneFlipXY);
-                    else if (banco.cells[i].xFlip)
+                    else if (banco.cells[i].obj1.flipX == 1)
                         celdas[i].RotateFlip(RotateFlipType.RotateNoneFlipX);
-                    else if (banco.cells[i].yFlip)
+                    else if (banco.cells[i].obj1.flipY == 1)
                         celdas[i].RotateFlip(RotateFlipType.RotateNoneFlipY);
                     #endregion
+
                     if (transparencia)
                         ((Bitmap)celdas[i]).MakeTransparent(paleta.pltt.palettes[tile.rahc.tileData.nPalette[0]].colors[0]);
 
-                    grafico.DrawImageUnscaled(celdas[i], tamaño.Width / 2 + banco.cells[i].xOffset, tamaño.Height / 2 + banco.cells[i].yOffset);
+                    grafico.DrawImageUnscaled(celdas[i], tamaño.Width / 2 + banco.cells[i].obj1.xOffset, tamaño.Height / 2 + banco.cells[i].obj0.yOffset);
                 }
 
                 if (celda)
-                    grafico.DrawRectangle(Pens.Black, tamaño.Width / 2 + banco.cells[i].xOffset, tamaño.Height / 2 + banco.cells[i].yOffset,
+                    grafico.DrawRectangle(Pens.Black, tamaño.Width / 2 + banco.cells[i].obj1.xOffset, tamaño.Height / 2 + banco.cells[i].obj0.yOffset,
                         banco.cells[i].width, banco.cells[i].height);
                 if (numero)
-                    grafico.DrawString(banco.cells[i].num_cell.ToString(), SystemFonts.CaptionFont, Brushes.Black, tamaño.Width / 2 + banco.cells[i].xOffset,
-                        tamaño.Height / 2 + banco.cells[i].yOffset);
+                    grafico.DrawString(banco.cells[i].num_cell.ToString(), SystemFonts.CaptionFont, Brushes.Black, tamaño.Width / 2 + banco.cells[i].obj1.xOffset,
+                        tamaño.Height / 2 + banco.cells[i].obj0.yOffset);
             }
             return imagen;
         }
-        public static Bitmap Obtener_Imagen(Bank banco, uint blockSize, NCGR tile, NCLR paleta,
+        public static Bitmap Get_Image(Bank banco, uint blockSize, NCGR tile, NCLR paleta,
             bool entorno, bool celda, bool numero, bool transparencia, bool image, int maxWidth, int maxHeight)
         {
             if (banco.cells.Length == 0)
@@ -404,31 +427,32 @@ namespace Tinke
             Image[] celdas = new Image[banco.nCells];
             for (int i = 0; i < banco.nCells; i++)
             {
-                uint tileOffset = banco.cells[i].tileOffset;
+                if (banco.cells[i].width == 0x00 || banco.cells[i].height == 0x00)
+                    continue;
+
+                uint tileOffset = banco.cells[i].obj2.tileOffset;
+                if (blockSize > 4)
+                    blockSize = 4;
                 if (tile.rahc.depth == System.Windows.Forms.ColorDepth.Depth4Bit)
-                    tileOffset *= (uint)((blockSize != 0) ? blockSize * 2 : 1);
+                    tileOffset = (uint)(tileOffset << (byte)blockSize);
                 else
-                    tileOffset *= (uint)((blockSize != 0) ? blockSize : 1);
+                    tileOffset = (uint)(tileOffset << (byte)blockSize) / 2;
 
                 if (image)
                 {
                     for (int j = 0; j < tile.rahc.tileData.nPalette.Length; j++)
-                        tile.rahc.tileData.nPalette[j] = banco.cells[i].nPalette;
+                        tile.rahc.tileData.nPalette[j] = banco.cells[i].obj2.index_palette;
 
-                    if (blockSize != 0x04)
+                    if (blockSize < 4)
                     {
                         if (tile.order == TileOrder.NoTiled)
-                        {
-                            if (tile.rahc.depth == System.Windows.Forms.ColorDepth.Depth4Bit)
-                                tileOffset *= 2;
-
-                            celdas[i] = Imagen_NCGR.Crear_Imagen(tile, paleta, (int)tileOffset * 32, banco.cells[i].width, banco.cells[i].height);
-                        }
+                            celdas[i] = Imagen_NCGR.Crear_Imagen(tile, paleta, (int)tileOffset * 64, banco.cells[i].width, banco.cells[i].height);
                         else
                             celdas[i] = Imagen_NCGR.Crear_Imagen(tile, paleta, (int)tileOffset * 64, banco.cells[i].width / 8, banco.cells[i].height / 8);
                     }
                     else
                     {
+                        tileOffset /= (blockSize / 2);
                         int imageWidth = tile.rahc.nTilesX;
                         int imageHeight = tile.rahc.nTilesY;
                         if (tile.order == TileOrder.Horizontal)
@@ -449,26 +473,28 @@ namespace Tinke
 
                         celdas[i] = Imagen_NCGR.Crear_Imagen(tile, paleta).Clone(new Rectangle(posX, posY, banco.cells[i].width, banco.cells[i].height), System.Drawing.Imaging.PixelFormat.DontCare);
                     }
-                    #region Rotaciones
-                    if (banco.cells[i].xFlip && banco.cells[i].yFlip)
+
+                    #region Flip
+                    if (banco.cells[i].obj1.flipX == 1 && banco.cells[i].obj1.flipY == 1)
                         celdas[i].RotateFlip(RotateFlipType.RotateNoneFlipXY);
-                    else if (banco.cells[i].xFlip)
+                    else if (banco.cells[i].obj1.flipX == 1)
                         celdas[i].RotateFlip(RotateFlipType.RotateNoneFlipX);
-                    else if (banco.cells[i].yFlip)
+                    else if (banco.cells[i].obj1.flipY == 1)
                         celdas[i].RotateFlip(RotateFlipType.RotateNoneFlipY);
                     #endregion
+
                     if (transparencia)
                         ((Bitmap)celdas[i]).MakeTransparent(paleta.pltt.palettes[tile.rahc.tileData.nPalette[0]].colors[0]);
 
-                    grafico.DrawImageUnscaled(celdas[i], tamaño.Width / 2 + banco.cells[i].xOffset, tamaño.Height / 2 + banco.cells[i].yOffset);
+                    grafico.DrawImageUnscaled(celdas[i], tamaño.Width / 2 + banco.cells[i].obj1.xOffset, tamaño.Height / 2 + banco.cells[i].obj0.yOffset);
                 }
 
                 if (celda)
-                    grafico.DrawRectangle(Pens.Black, tamaño.Width / 2 + banco.cells[i].xOffset, tamaño.Height / 2 + banco.cells[i].yOffset,
+                    grafico.DrawRectangle(Pens.Black, tamaño.Width / 2 + banco.cells[i].obj1.xOffset, tamaño.Height / 2 + banco.cells[i].obj0.yOffset,
                         banco.cells[i].width, banco.cells[i].height);
                 if (numero)
-                    grafico.DrawString(i.ToString(), SystemFonts.CaptionFont, Brushes.Black, tamaño.Width / 2 + banco.cells[i].xOffset,
-                        tamaño.Height / 2 + banco.cells[i].yOffset);
+                    grafico.DrawString(i.ToString(), SystemFonts.CaptionFont, Brushes.Black, tamaño.Width / 2 + banco.cells[i].obj1.xOffset,
+                        tamaño.Height / 2 + banco.cells[i].obj0.yOffset);
             }
 
             return imagen;
@@ -476,9 +502,9 @@ namespace Tinke
 
         private static int Comparision_Cell(Cell c1, Cell c2)
         {
-            if (c1.priority < c2.priority)
+            if (c1.obj2.priority < c2.obj2.priority)
                 return 1;
-            else if (c1.priority > c2.priority)
+            else if (c1.obj2.priority > c2.obj2.priority)
                 return -1;
             else
                 return 0;
@@ -504,9 +530,9 @@ namespace Tinke
             {
                 for (int wt = 0; wt < 512; wt++)
                 {
-                    if (ht >= 256 + cell.yOffset && ht < 256 + cell.yOffset + cell.height)
+                    if (ht >= 256 + cell.obj0.yOffset && ht < 256 + cell.obj0.yOffset + cell.height)
                     {
-                        if (wt >= 256 + cell.xOffset && wt < 256 + cell.xOffset + cell.width)
+                        if (wt >= 256 + cell.obj1.xOffset && wt < 256 + cell.obj1.xOffset + cell.width)
                         {
                             // Get the tile data
                             temp.Add(
@@ -524,7 +550,7 @@ namespace Tinke
 
             if (oldImage.order == TileOrder.Horizontal)
             {
-                uint tileOffset = (oldImage.rahc.depth == System.Windows.Forms.ColorDepth.Depth4Bit ? cell.tileOffset * 2 : cell.tileOffset);
+                uint tileOffset = (oldImage.rahc.depth == System.Windows.Forms.ColorDepth.Depth4Bit ? cell.obj2.tileOffset * 2 : cell.obj2.tileOffset);
                 tileOffset *= (blockSize != 0x00 ? blockSize : 1);
 
                 for (int i = 0; i < tileOffset; i++)
@@ -537,7 +563,7 @@ namespace Tinke
             }
             else if (oldImage.order == TileOrder.NoTiled)
             {
-                uint tileOffset = (oldImage.rahc.depth == System.Windows.Forms.ColorDepth.Depth4Bit ? cell.tileOffset * 2 : cell.tileOffset) * 0x40;
+                uint tileOffset = (oldImage.rahc.depth == System.Windows.Forms.ColorDepth.Depth4Bit ? cell.obj2.tileOffset * 2 : cell.obj2.tileOffset) * 0x40;
                 tileOffset *= (blockSize != 0x00 ? blockSize : 1);
 
                 for (int i = 0; i < tileOffset; i++)
@@ -560,7 +586,7 @@ namespace Tinke
 
             if (image.order == TileOrder.Horizontal)
             {
-                uint tileOffset = (image.rahc.depth == System.Windows.Forms.ColorDepth.Depth4Bit ? cell.tileOffset * 2 : cell.tileOffset);
+                uint tileOffset = (image.rahc.depth == System.Windows.Forms.ColorDepth.Depth4Bit ? cell.obj2.tileOffset * 2 : cell.obj2.tileOffset);
                 tileOffset *= (blockSize != 0x00 ? blockSize : 1);
 
                 for (int i = 0; i < image.rahc.tileData.tiles.Length; i++)
@@ -585,7 +611,7 @@ namespace Tinke
             }
             else if (image.order == TileOrder.NoTiled)
             {
-                uint tileOffset = (image.rahc.depth == System.Windows.Forms.ColorDepth.Depth4Bit ? cell.tileOffset * 2 : cell.tileOffset) * 0x40;
+                uint tileOffset = (image.rahc.depth == System.Windows.Forms.ColorDepth.Depth4Bit ? cell.obj2.tileOffset * 2 : cell.obj2.tileOffset) * 0x40;
                 tileOffset *= (blockSize != 0x00 ? blockSize : 1);
 
                 for (int i = 0; i < image.rahc.tileData.tiles[0].Length; i++)

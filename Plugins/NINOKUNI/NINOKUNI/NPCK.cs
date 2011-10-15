@@ -41,22 +41,8 @@ namespace NINOKUNI
             br.Close();
             return unpack;
         }
-        public static void Pack(string file, int id, IPluginHost pluginHost)
+        public static void Pack(string file, sFolder unpacked, IPluginHost pluginHost)
         {
-            /* In N2D files there must be 9 offset in this order:
-             * 
-             * 0 - Palette
-             * 1 - 1º Tiles
-             * 2 - 2º Tiles
-             * 3 - 1º Cell
-             * 4 - ??
-             * 5 - 1º Animation
-             * 6 - 1º Map
-             * 8 - ??
-             * 9 - ??
-             */
-
-            sFolder unpacked = pluginHost.Get_DecompressedFiles(id);
             BinaryWriter bw = new BinaryWriter(File.OpenWrite(file));
             uint offset = (uint)0x09 * 8 + 0xC;
 
@@ -106,4 +92,33 @@ namespace NINOKUNI
             return new sFile();
         }
     }
+
+    /* In N2D files there must be 9 offset in this order:
+    * 
+    * 0 - Palette
+    * 1 - 1º Tiles
+    * 2 - 2º Tiles
+    * 3 - 1º Cell
+    * 4 - ??
+    * 5 - 1º Animation
+    * 6 - 1º Map
+    * 8 - ??
+    * 9 - ??
+    */
+
+    /* In NPD files there must be 2 offset in this order:
+     * 
+     * 0 - sedl
+     * 1 - swdl
+     */
+
+    /* In N3D files there must be 6 offset in this order:
+     * 
+     * 0 - BMD0
+     * 1 - BCA0
+     * 2 - BVA0
+     * 3 - BMA0
+     * 4 - BTA0
+     * 5 - BTP0
+     */
 }

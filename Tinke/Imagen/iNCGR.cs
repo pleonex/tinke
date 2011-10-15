@@ -340,6 +340,7 @@ namespace Tinke
                 NCGR newTile = Imagen_NCGR.BitmapToTile(o.FileName, (comboBox1.SelectedIndex == 0 ? TileOrder.NoTiled : TileOrder.Horizontal));
                 newTile.id = tile.id;
                 tile = newTile;
+                tile.other = 0;
 
                 pluginHost.Set_NCGR(tile);
                 String tileFile = System.IO.Path.GetTempFileName();
@@ -378,6 +379,7 @@ namespace Tinke
                     newMap.id = map.id;
                     newMap.section.padding = map.section.padding;
                     map = newMap;
+                    map.other = 0;
 
                     pluginHost.Set_NSCR(map);
                     String mapFile = System.IO.Path.GetTempFileName();
@@ -524,7 +526,7 @@ namespace Tinke
             if (dialog.ShowDialog() != DialogResult.OK)
                 return;
 
-            if (dialog.IsOption2)
+            if (dialog.Option == 2)
             {
                 ColorDialog o = new ColorDialog();
                 o.AllowFullOpen = true;
@@ -534,8 +536,10 @@ namespace Tinke
                     Change_TransparencyColor(o.Color);
                 o.Dispose();
             }
-            else
+            else if (dialog.Option == 1)
                 selectColor = true;
+            else if (dialog.Option == 3)
+                Add_TransparencyColor();
 
         }
         private void pic_MouseClick(object sender, MouseEventArgs e)
@@ -559,6 +563,27 @@ namespace Tinke
                     break;
                 }
             }
+
+            pluginHost.Set_NCLR(paleta);
+            String paletteFile = System.IO.Path.GetTempFileName();
+            Imagen_NCLR.Escribir(paleta, paletteFile);
+            pluginHost.ChangeFile((int)paleta.id, paletteFile);
+
+            Convertir.Change_Color(ref tile.rahc.tileData.tiles, colorIndex, 0);
+            pluginHost.Set_NCGR(tile);
+            String tileFile = System.IO.Path.GetTempFileName();
+            Imagen_NCGR.Write(tile, tileFile);
+            pluginHost.ChangeFile((int)tile.id, tileFile);
+
+            UpdateImage();
+            checkTransparency.Checked = true;
+        }
+        private void Add_TransparencyColor()
+        {
+            int colorIndex = paleta.pltt.palettes[0].colors.Length - 1;
+
+            paleta.pltt.palettes[0].colors[colorIndex] = paleta.pltt.palettes[0].colors[0];
+            paleta.pltt.palettes[0].colors[0] = Color.FromArgb(248, 0, 248);
 
             pluginHost.Set_NCLR(paleta);
             String paletteFile = System.IO.Path.GetTempFileName();

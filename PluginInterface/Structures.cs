@@ -57,6 +57,7 @@ namespace PluginInterface
     {
         public Header header;
         public TTLP pltt;
+        public PMCP pmcp;
         public Object other;
         public UInt32 id;
     }
@@ -73,6 +74,15 @@ namespace PluginInterface
     public struct NTFP              // Nintendo Tile Format Palette
     {
         public Color[] colors;
+    }
+    public struct PMCP
+    {
+        public char[] ID;
+        public uint blockSize;
+        public ushort unknown1;
+        public ushort unknown2;     // always BEEF?
+        public uint unknown3;
+        public ushort first_palette_num;
     }
     #endregion
     #region NCGR
@@ -169,19 +179,53 @@ namespace PluginInterface
         public UInt16 unknown1;
         public UInt32 cell_offset;
         public Cell[] cells;
+
+        // Extended mode
+        public short xMax;
+        public short yMax;
+        public short xMin;
+        public short yMin;
     }
     public struct Cell
     {
+        public Obj0 obj0;
+        public Obj1 obj1;
+        public Obj2 obj2;
+
         public UInt16 width;
         public UInt16 height;
-        public Int32 xOffset;
-        public Int32 yOffset;
-        public UInt32 tileOffset;
-        public byte nPalette;
-        public byte priority;
-        public bool xFlip;
-        public bool yFlip;
         public ushort num_cell;
+
+        public struct Obj0  // 16 bits
+        {
+            public Int32 yOffset;       // Bit0-7 -> signed
+            public byte rs_flag;        // Bit8 -> Rotation / Scale flag
+            public byte objDisable;     // Bit9 -> if r/s == 0
+            public byte doubleSize;     // Bit9 -> if r/s != 0
+            public byte objMode;        // Bit10-11 -> 0 = normal; 1 = semi-trans; 2 = window; 3 = invalid
+            public byte mosaic_flag;    // Bit12 
+            public byte depth;          // Bit13 -> 0 = 4bit; 1 = 8bit
+            public byte shape;          // Bit14-15 -> 0 = shape; 1 = horizontal; 2 = vertial; 3 = invalid
+        }
+        public struct Obj1  // 16 bits
+        {
+            public Int32 xOffset;   // Bit0-8 (unsigned)
+
+            // If R/S == 0
+            public byte unused; // Bit9-11
+            public byte flipX;  // Bit12
+            public byte flipY;  // Bit13
+            // If R/S != 0
+            public byte select_param;   //Bit9-13 -> Parameter selection
+
+            public byte size;   // Bit14-15
+        }
+        public struct Obj2  // 16 bits
+        {
+            public uint tileOffset;     // Bit0-9
+            public byte priority;       // Bit10-11
+            public byte index_palette;  // Bit12-15
+        }
     }
     #endregion // CER
     #region NANR

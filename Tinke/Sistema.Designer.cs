@@ -191,7 +191,7 @@ namespace Tinke
             listViewItem7});
             this.listFile.Location = new System.Drawing.Point(409, 28);
             this.listFile.Name = "listFile";
-            this.listFile.Size = new System.Drawing.Size(197, 150);
+            this.listFile.Size = new System.Drawing.Size(197, 169);
             this.listFile.TabIndex = 0;
             this.listFile.UseCompatibleStateImageBehavior = false;
             this.listFile.View = System.Windows.Forms.View.Details;
@@ -485,7 +485,7 @@ namespace Tinke
             this.linkAboutBox.AutoSize = true;
             this.linkAboutBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.linkAboutBox.LinkColor = System.Drawing.SystemColors.HotTrack;
-            this.linkAboutBox.Location = new System.Drawing.Point(408, 187);
+            this.linkAboutBox.Location = new System.Drawing.Point(406, 200);
             this.linkAboutBox.Name = "linkAboutBox";
             this.linkAboutBox.Size = new System.Drawing.Size(29, 13);
             this.linkAboutBox.TabIndex = 13;
@@ -496,7 +496,7 @@ namespace Tinke
             // txtSearch
             // 
             this.txtSearch.ForeColor = System.Drawing.Color.Black;
-            this.txtSearch.Location = new System.Drawing.Point(409, 221);
+            this.txtSearch.Location = new System.Drawing.Point(409, 229);
             this.txtSearch.Name = "txtSearch";
             this.txtSearch.Size = new System.Drawing.Size(183, 20);
             this.txtSearch.TabIndex = 14;
@@ -506,7 +506,7 @@ namespace Tinke
             // btnSearch
             // 
             this.btnSearch.Image = global::Tinke.Properties.Resources.zoom;
-            this.btnSearch.Location = new System.Drawing.Point(598, 218);
+            this.btnSearch.Location = new System.Drawing.Point(598, 226);
             this.btnSearch.Name = "btnSearch";
             this.btnSearch.Size = new System.Drawing.Size(43, 23);
             this.btnSearch.TabIndex = 15;
@@ -517,7 +517,7 @@ namespace Tinke
             // checkSearch
             // 
             this.checkSearch.AutoSize = true;
-            this.checkSearch.Location = new System.Drawing.Point(409, 247);
+            this.checkSearch.Location = new System.Drawing.Point(409, 255);
             this.checkSearch.Name = "checkSearch";
             this.checkSearch.Size = new System.Drawing.Size(46, 17);
             this.checkSearch.TabIndex = 16;

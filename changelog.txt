@@ -7,9 +7,10 @@
 ** Game MAPLESTORYDS (Maple Story DS) supported
   - Unpacker for file "RESOURCE.NXARC"
 ** Game NINOKUNI (Ninokuni Shikkoku no Madoushi) supported
-  - Unpacker for NPCK files
-  - Packer for N2D files
+  - Unpacker for NPCK and KPCN files
+  - Packer for NPCK and KPCN files
 ** Game SUBARASHIKI (The world end with you) supported
+** Game TOKIMEKIGS3S supported (LZS and RESC)
 ** Improved Font plugin
   - Fixed problem with rotated Font
   - Fixed problem with char codes
@@ -22,6 +23,8 @@
 * Fixed problem with textures with format 2
 * Added hotkeys (X for eXpand all nodes, C for Collapse all nodes)
 * Search by offset -> Offset: 00000000
+* Fixed problems in SDAT plugin
+* Added support for PMCP section in NCLR
 
 0.8.1 (public release) rev100
 *** BTX0 textures supported (view only)

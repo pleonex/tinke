@@ -92,11 +92,11 @@ namespace Tinke
         public Bitmap Bitmap_NCGR(NCGR ncgr, NCLR nclr) { return Imagen_NCGR.Crear_Imagen(ncgr, nclr); }
         public Bitmap Bitmap_NCGR(NCGR ncgr, NCLR nclr, int startTile) { return Imagen_NCGR.Crear_Imagen(ncgr, nclr, startTile); }
         public Bitmap Bitmap_NCGR(NCGR ncgr, NCLR nclr, int startTile, int tilesX, int tilesY) { return Imagen_NCGR.Crear_Imagen(ncgr, nclr, startTile, tilesX, tilesY); }
-        public Size Size_NCER(byte byte1, byte byte2) { return Imagen_NCER.Obtener_Tamaño(byte1, byte2); }
+        public Size Size_NCER(byte byte1, byte byte2) { return Imagen_NCER.Calculate_Size(byte1, byte2); }
         public Bitmap Bitmap_NCER(Bank banco, uint blockSize, NCGR ncgr, NCLR nclr, bool entorno, bool celda, bool numero, bool transparencia, bool imagen) 
-            { return Imagen_NCER.Obtener_Imagen(banco, blockSize, ncgr, nclr, entorno, celda, numero, transparencia, imagen); }
+            { return Imagen_NCER.Get_Image(banco, blockSize, ncgr, nclr, entorno, celda, numero, transparencia, imagen); }
         public Bitmap Bitmap_NCER(Bank banco, uint blockSize, NCGR tile, NCLR paleta, bool entorno, bool celda, bool numero, bool transparencia,
-            bool image, int maxWidth, int maxHeight) { return Imagen_NCER.Obtener_Imagen(banco, blockSize, tile, paleta, entorno, celda, numero, transparencia, image, maxWidth, maxHeight); }
+            bool image, int maxWidth, int maxHeight) { return Imagen_NCER.Get_Image(banco, blockSize, tile, paleta, entorno, celda, numero, transparencia, image, maxWidth, maxHeight); }
 
         public void Create_APNG(string fileout, Bitmap[] frames, int delay, int loops) { Tools.APNG.Crear_APNG(frames, fileout, delay, loops); }
         public void Create_APNG(string fileout, String[] frames, int delay, int loops) { Tools.APNG.Crear_APNG(frames, fileout, delay, loops); }
