@@ -31,6 +31,26 @@ namespace Tinke
                 Console.WriteLine('\t' + Tools.Helper.ObtenerTraduccion("NCLR", "S0E") + nclr.header.nSection.ToString());
 
             nclr.pltt = Seccion_PLTT(ref br);
+            if (br.BaseStream.Length != br.BaseStream.Position)
+            {
+                if (new String(br.ReadChars(4)) == "PMCP")
+                {
+                    br.BaseStream.Position -= 4;
+                    nclr.pmcp = Section_PMCP(ref br);
+
+                    List<NTFP> palettes = new List<NTFP>();
+                    for (int i = 0; i < nclr.pmcp.first_palette_num; i++)
+                    {
+                        NTFP ntfp = new NTFP();
+                        ntfp.colors = new Color[0];
+                        palettes.Add(ntfp);
+                    }
+
+                    palettes.AddRange(nclr.pltt.palettes);
+                    nclr.pltt.palettes = palettes.ToArray();
+                }
+            }
+
 
             br.Close();
 
@@ -70,6 +90,18 @@ namespace Tinke
             ntfp.colors = Convertir.BGR555(br.ReadBytes((int)colores * 2));
 
             return ntfp;
+        }
+        public static PMCP Section_PMCP(ref BinaryReader br)
+        {
+            PMCP pmcp = new PMCP();
+            pmcp.ID = br.ReadChars(4);
+            pmcp.blockSize = br.ReadUInt32();
+            pmcp.unknown1 = br.ReadUInt16();
+            pmcp.unknown2 = br.ReadUInt16();
+            pmcp.unknown3 = br.ReadUInt32();
+            pmcp.first_palette_num = br.ReadUInt16();
+
+            return pmcp;
         }
 
         /// <summary>

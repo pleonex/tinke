@@ -534,5 +534,6 @@
     <S1A>Read offsets</S1A>
     <S1B>Hexadecimal</S1B>
     <S1C>Accept</S1C>
+    <S1D>Add and remove the last color</S1D>
   </Dialog>
 </Language>

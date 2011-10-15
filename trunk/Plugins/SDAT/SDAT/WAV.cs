@@ -44,6 +44,9 @@ namespace SDAT
             wav.chunkID = br.ReadChars(4);
             wav.chunkSize = br.ReadUInt32();
             wav.format = br.ReadChars(4);
+            if (new String(wav.chunkID) != "RIFF" || new String(wav.format) != "WAVE")
+                throw new NotSupportedException();
+
             // fmt sub-chunk
             wav.wave.fmt.chunkID = br.ReadChars(4);
             wav.wave.fmt.chunkSize = br.ReadUInt32();
@@ -65,7 +68,6 @@ namespace SDAT
             wav.wave.data.chunkID = br.ReadChars(4);
             wav.wave.data.chunkSize = br.ReadUInt32();
             wav.wave.data.data = br.ReadBytes((int)wav.wave.data.chunkSize - 0x08);
-
             br.Close();
 
             // Convert the data to PCM16

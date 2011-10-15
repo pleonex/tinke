@@ -74,8 +74,8 @@ namespace TETRIS_DS
             {
                 for (int j = 0; j < cells.cebk.banks[i].nCells; j++)
                 {
-                    cells.cebk.banks[i].cells[j].xOffset = br.ReadInt16();
-                    cells.cebk.banks[i].cells[j].yOffset = br.ReadInt16();
+                    cells.cebk.banks[i].cells[j].obj1.xOffset = br.ReadInt16();
+                    cells.cebk.banks[i].cells[j].obj0.yOffset = br.ReadInt16();
 
                     uint sizeByte = br.ReadUInt32();
                     byte byte1 = (byte)((sizeByte & 0xF0) >> 4);
@@ -84,8 +84,8 @@ namespace TETRIS_DS
                     cells.cebk.banks[i].cells[j].width = (ushort)size.Width;
                     cells.cebk.banks[i].cells[j].height = (ushort)size.Height;
 
-                    cells.cebk.banks[i].cells[j].tileOffset = br.ReadUInt32();
-                    cells.cebk.banks[i].cells[j].nPalette = 0;
+                    cells.cebk.banks[i].cells[j].obj2.tileOffset = br.ReadUInt32();
+                    cells.cebk.banks[i].cells[j].obj2.index_palette = 0;
                     cells.cebk.banks[i].cells[j].num_cell = (ushort)j;
                 }
             }

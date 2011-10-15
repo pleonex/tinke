@@ -1459,7 +1459,7 @@ namespace Tinke
                     currDecompressed.id = subFolder.id;
                     currDecompressed.name = subFolder.name;
 
-                    if (subFolder.tag == "Descomprimido") // Decompressed file
+                    if ((String)subFolder.tag !=  "" && subFolder.tag is String) // Decompressed file
                     {
                         sFile file = Search_File(subFolder.id);
                         decompressedFiles.files.Add(file);
@@ -1494,7 +1494,7 @@ namespace Tinke
             String original_packfile = Save_File(id);
             Byte[] ext = Get_MagicID(id);
 
-            sFile packFile = selectedFile;
+            String packFile;
             sFolder unpacked = pluginHost_event_GetDecompressedFiles(id);
 
             #region Calling to plugins
@@ -1506,7 +1506,7 @@ namespace Tinke
                     f = gamePlugin.Get_Format(selectedFile.name, ext, idSelect);
                     if (f == Format.Compressed || f == Format.Pack)
                     {
-                        packFile.path = gamePlugin.Pack(unpacked, original_packfile, id);
+                        packFile = gamePlugin.Pack(unpacked, original_packfile, id);
                         goto Continue;
                     }
                 }
@@ -1515,18 +1515,19 @@ namespace Tinke
                     f = plugin.Get_Format(selectedFile.name, ext);
                     if (f == Format.Compressed || f == Format.Pack)
                     {
-                        packFile.path = plugin.Pack(unpacked, original_packfile);
+                        packFile = plugin.Pack(unpacked, original_packfile);
                         goto Continue;
                     }
                 }
 
                 #region Common compression
+                String fileToCompress = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + "oldPack_" + selectedFile.name;
 
                 if (new String(Encoding.ASCII.GetChars(ext)) == "LZ77") // LZ77 header
                 {
                     String compFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + "pack_" + selectedFile.name;
 
-                    DSDecmp.Main.Compress(original_packfile, compFile, FormatCompress.LZ10);
+                    DSDecmp.Main.Compress(fileToCompress, compFile, FormatCompress.LZ10);
                     if (!File.Exists(compFile))
                         throw new Exception(Tools.Helper.ObtenerTraduccion("Sistema", "S43"));
 
@@ -1541,10 +1542,7 @@ namespace Tinke
                     br.Close();
                     File.Delete(compFile);
 
-                    packFile.name = selectedFile.name;
-                    packFile.offset = 0x00;
-                    packFile.path = packFilePath;
-                    packFile.size = (uint)new FileInfo(packFilePath).Length;
+                    packFile = packFilePath;
                 }
 
                 FileStream fs = new FileStream(selectedFile.path, FileMode.OpenOrCreate);
@@ -1554,16 +1552,14 @@ namespace Tinke
                 fs.Dispose();
                 if (compressFormat != FormatCompress.Invalid)
                 {
+                    Save_File(unpacked.files[0], fileToCompress);
                     String compFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + "pack_" + selectedFile.name;
 
-                    DSDecmp.Main.Compress(original_packfile, compFile, compressFormat);
+                    DSDecmp.Main.Compress(fileToCompress, compFile, compressFormat);
                     if (!File.Exists(compFile))
                         throw new Exception(Tools.Helper.ObtenerTraduccion("Sistema", "S43"));
 
-                    packFile.name = selectedFile.name;
-                    packFile.offset = 0x00;
-                    packFile.path = compFile;
-                    packFile.size = (uint)new FileInfo(compFile).Length;
+                    packFile = compFile;
                 }
                 else
                     return;
@@ -1577,14 +1573,13 @@ namespace Tinke
             #endregion
 
         Continue:
-            if (!(packFile.path is String) ||packFile.path == "")
+            if (!(packFile is String) || packFile == "")
             {
                 MessageBox.Show(Tools.Helper.ObtenerTraduccion("Messages", "S23"));
                 return;
             }
 
-            packFile.size = (uint)new FileInfo(packFile.path).Length;
-            Change_File(id, packFile, root);
+            pluginHost_ChangeFile_Event(id, packFile);
         }
 
         public void Save_File(int id, string outFile)
@@ -1709,7 +1704,7 @@ namespace Tinke
                 }
                 else if (new String(Encoding.ASCII.GetChars(ext)) == "NCER" || new String(Encoding.ASCII.GetChars(ext)) == "RECN")
                 {
-                    pluginHost.Set_NCER(Imagen_NCER.Leer(tempFile, idSelect));
+                    pluginHost.Set_NCER(Imagen_NCER.Read(tempFile, idSelect));
                     File.Delete(tempFile);
 
                     if (pluginHost.Get_NCGR().header.file_size != 0x00 && pluginHost.Get_NCLR().header.file_size != 0x00)
@@ -1849,7 +1844,7 @@ namespace Tinke
                 }
                 else if (new String(Encoding.ASCII.GetChars(ext)) == "NCER" || new String(Encoding.ASCII.GetChars(ext)) == "RECN")
                 {
-                    pluginHost.Set_NCER(Imagen_NCER.Leer(archivo, idSelect));
+                    pluginHost.Set_NCER(Imagen_NCER.Read(archivo, idSelect));
                     File.Delete(archivo);
 
                     if (pluginHost.Get_NCGR().header.file_size != 0x00 && pluginHost.Get_NCLR().header.file_size != 0x00)
@@ -1971,7 +1966,7 @@ namespace Tinke
                 }
                 else if (new String(Encoding.ASCII.GetChars(ext)) == "NCER" || new String(Encoding.ASCII.GetChars(ext)) == "RECN")
                 {
-                    pluginHost.Set_NCER(Imagen_NCER.Leer(tempFile, idSelect));
+                    pluginHost.Set_NCER(Imagen_NCER.Read(tempFile, idSelect));
                     File.Delete(tempFile);
                     return;
                 }

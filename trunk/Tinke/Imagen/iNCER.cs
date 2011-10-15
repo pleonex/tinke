@@ -146,7 +146,7 @@ namespace Tinke
                 pic.Size = new Size(256, 256);
                 pic.Location = new Point(x, y);
                 pic.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-                pic.Image = Imagen_NCER.Obtener_Imagen(ncer.cebk.banks[i], ncer.cebk.block_size, tile, paleta,
+                pic.Image = Imagen_NCER.Get_Image(ncer.cebk.banks[i], ncer.cebk.block_size, tile, paleta,
                     checkEntorno.Checked, checkCelda.Checked, checkNumber.Checked,
                     checkTransparencia.Checked, checkImagen.Checked);
                 Label lbl = new Label();
@@ -228,7 +228,7 @@ namespace Tinke
         private Image ActualizarImagen()
         {
             // Devolvemos la imagen a su estado inicial
-            imgBox.Image = Imagen_NCER.Obtener_Imagen(ncer.cebk.banks[comboCelda.SelectedIndex], ncer.cebk.block_size,
+            imgBox.Image = Imagen_NCER.Get_Image(ncer.cebk.banks[comboCelda.SelectedIndex], ncer.cebk.block_size,
                 tile, paleta, checkEntorno.Checked, checkCelda.Checked, checkNumber.Checked, checkTransparencia.Checked,
                 checkImagen.Checked);
 
@@ -249,7 +249,7 @@ namespace Tinke
         private Image ActualizarFullImagen()
         {
             // Devolvemos la imagen a su estado inicial
-            Image original = Imagen_NCER.Obtener_Imagen(ncer.cebk.banks[comboCelda.SelectedIndex], ncer.cebk.block_size,
+            Image original = Imagen_NCER.Get_Image(ncer.cebk.banks[comboCelda.SelectedIndex], ncer.cebk.block_size,
                 tile, paleta, checkEntorno.Checked, checkCelda.Checked, checkNumber.Checked, checkTransparencia.Checked,
                 checkImagen.Checked, 512, 512);
 
@@ -280,7 +280,7 @@ namespace Tinke
 
                 String paletteFile = System.IO.Path.GetTempFileName();
                 NCLR newPalette = Imagen_NCLR.BitmapToPalette(o.FileName);
-                paleta.pltt.palettes[ncer.cebk.banks[comboCelda.SelectedIndex].cells[0].nPalette].colors = newPalette.pltt.palettes[0].colors;
+                paleta.pltt.palettes[ncer.cebk.banks[comboCelda.SelectedIndex].cells[0].obj2.index_palette].colors = newPalette.pltt.palettes[0].colors;
 
                 pluginHost.Set_NCLR(paleta);
                 Imagen_NCLR.Escribir(paleta, paletteFile);
@@ -321,7 +321,7 @@ namespace Tinke
             if (dialog.ShowDialog() != DialogResult.OK)
                 return;
 
-            if (dialog.IsOption2)
+            if (dialog.Option == 2)
             {
                 ColorDialog o = new ColorDialog();
                 o.AllowFullOpen = true;
@@ -331,8 +331,12 @@ namespace Tinke
                     Change_TransparencyColor(o.Color);
                 o.Dispose();
             }
-            else
+            else if (dialog.Option == 1)
                 selectColor = true;
+            else if (dialog.Option == 3)
+            {
+                Add_TransparencyColor();
+            }
         }
         private void imgBox_MouseClick(object sender, MouseEventArgs e)
         {
@@ -345,7 +349,7 @@ namespace Tinke
         private void Change_TransparencyColor(Color color)
         {
             int colorIndex = 0;
-            int paletteIndex = ncer.cebk.banks[comboCelda.SelectedIndex].cells[0].nPalette;
+            int paletteIndex = ncer.cebk.banks[comboCelda.SelectedIndex].cells[0].obj2.index_palette;
 
             for (int i = 0; i < paleta.pltt.palettes[paletteIndex].colors.Length; i++)
             {
@@ -357,6 +361,32 @@ namespace Tinke
                     break;
                 }
             }
+
+            pluginHost.Set_NCLR(paleta);
+            String paletteFile = System.IO.Path.GetTempFileName();
+            Imagen_NCLR.Escribir(paleta, paletteFile);
+            pluginHost.ChangeFile((int)paleta.id, paletteFile);
+
+            for (int i = 0; i < ncer.cebk.banks[comboCelda.SelectedIndex].cells.Length; i++)
+            {
+                tile.rahc.tileData.tiles = Imagen_NCER.Change_ColorCell(ncer.cebk.banks[comboCelda.SelectedIndex].cells[i],
+                    ncer.cebk.block_size, tile, colorIndex, 0);
+            }
+            pluginHost.Set_NCGR(tile);
+            String tileFile = System.IO.Path.GetTempFileName();
+            Imagen_NCGR.Write(tile, tileFile);
+            pluginHost.ChangeFile((int)tile.id, tileFile);
+
+            ActualizarImagen();
+            checkTransparencia.Checked = true;
+        }
+        private void Add_TransparencyColor()
+        {
+            int paletteIndex = ncer.cebk.banks[comboCelda.SelectedIndex].cells[0].obj2.index_palette;
+            int colorIndex = paleta.pltt.palettes[paletteIndex].colors.Length - 1;
+            
+            paleta.pltt.palettes[paletteIndex].colors[colorIndex] = paleta.pltt.palettes[paletteIndex].colors[0];
+            paleta.pltt.palettes[paletteIndex].colors[0] = Color.FromArgb(248, 0, 248);
 
             pluginHost.Set_NCLR(paleta);
             String paletteFile = System.IO.Path.GetTempFileName();

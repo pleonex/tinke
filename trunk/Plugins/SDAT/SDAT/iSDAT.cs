@@ -664,7 +664,10 @@ namespace SDAT
             if (o.ShowDialog() != DialogResult.OK)
                 return;
             String filein = o.FileName;
-            sWAV wav = WAV.Read(filein);
+
+            sWAV wav = new sWAV();
+            try { wav = WAV.Read(filein); }
+            catch (Exception ex) { MessageBox.Show(ex.Message); return; }
 
             NewAudioOptions dialog = new NewAudioOptions(pluginHost, (selectedFile.type == FormatSound.SWAV ? true : false));
 
@@ -730,7 +733,34 @@ namespace SDAT
                 "SSAR (*.ssar)|*.ssar|" +
                 "SBNK (*.sbnk)|*.sbnk|" +
                 "SWAR (*.swar)|*.swar|" +
+                "SWAV (*.swav)|*.swav|" +
                 "All files (*.*)|*.*";
+
+            switch (selectedFile.type)
+            {
+                case FormatSound.SSEQ:
+                    o.FilterIndex = 2;
+                    break;
+                case FormatSound.SSAR:
+                    o.FilterIndex = 3;
+                    break;
+                case FormatSound.SBNK:
+                    o.FilterIndex = 4;
+                    break;
+                case FormatSound.SWAV:
+                    o.FilterIndex = 6;
+                    break;
+                case FormatSound.SWAR:
+                    o.FilterIndex = 5;
+                    break;
+                case FormatSound.STRM:
+                    o.FilterIndex = 1;
+                    break;
+                default:
+                    o.FilterIndex = 7;
+                    break;
+            }
+
             if (o.ShowDialog() != DialogResult.OK)
                 return;
 
