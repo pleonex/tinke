@@ -17,6 +17,7 @@ namespace Tinke
         sFile file;
         bool fileEdited;
         IByteCharConverter bcc;
+        string hexFile;
 
         public VisorHex(sFile file, bool edit)
         {
@@ -25,21 +26,34 @@ namespace Tinke
             saveToolStripMenuItem.Enabled = edit;
 
             this.file = file;
-            BinaryReader br = new BinaryReader(File.OpenRead(file.path));
-            br.BaseStream.Position = file.offset;
-            hexBox1.ByteProvider = new DynamicByteProvider(br.ReadBytes((int)file.size));
-            br.Close();
 
-            
+            hexFile = Path.GetDirectoryName(file.path) + Path.DirectorySeparatorChar + "hex_" + Path.GetRandomFileName();
+            if (new FileInfo(file.path).Length != file.size)
+            {
+                BinaryReader br = new BinaryReader(File.OpenRead(file.path));
+                br.BaseStream.Position = file.offset;
+                File.WriteAllBytes(hexFile, br.ReadBytes((int)file.size));
+                br.Close();
+            }
+            else
+                File.Copy(file.path, hexFile, true);
+
+            hexBox1.ByteProvider = new DynamicFileByteProvider(hexFile, false); 
             encodingCombo.SelectedIndex = 0;
          }
+        private void VisorHex_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            hexBox1.Dispose();
+            ((DynamicFileByteProvider)hexBox1.ByteProvider).Dispose();
+            if (File.Exists(hexFile))
+                File.Delete(hexFile);
+        }
 
         private void btnSave_Click(object sender, EventArgs e)
         {
             fileEdited = true;
-            String newFilePath = Path.GetTempFileName();
-            File.WriteAllBytes(newFilePath,
-                ((DynamicByteProvider)hexBox1.ByteProvider).Bytes.ToArray());
+            String newFilePath = Path.GetDirectoryName(hexFile) + Path.DirectorySeparatorChar + "new_" + Path.GetRandomFileName();
+            File.Copy(hexFile, newFilePath, true);
             file.offset = 0x00;
             file.path = newFilePath;
             file.size = (uint)new FileInfo(newFilePath).Length;
@@ -90,9 +104,43 @@ namespace Tinke
             hexBox1.Select(start, size);
         }
 
-        private void searchToolStripMenuItem_Click(object sender, EventArgs e)
+        private void rawBytesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            
+            this.Cursor = Cursors.WaitCursor;
+            List<byte> search = new List<byte>();
+            for (int i = 0; i < toolStripSearchBox.Text.Length; i += 2)
+                search.Add(Convert.ToByte(toolStripSearchBox.Text.Substring(i, 2), 16));
+
+            hexBox1.Find(search.ToArray(), 0);
+            this.Cursor = Cursors.Default;
+        }
+        private void shiftjisToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.Cursor = Cursors.WaitCursor;
+            byte[] search = Encoding.GetEncoding("shift_jis").GetBytes(toolStripSearchBox.Text.ToCharArray());
+            hexBox1.Find(search, 0);
+            this.Cursor = Cursors.Default;
+        }
+        private void defaultCharsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.Cursor = Cursors.WaitCursor;
+            byte[] search = Encoding.Default.GetBytes(toolStripSearchBox.Text.ToCharArray());
+            hexBox1.Find(search, 0);
+            this.Cursor = Cursors.Default;
+        }
+        private void unicodeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.Cursor = Cursors.WaitCursor;
+            byte[] search = Encoding.Unicode.GetBytes(toolStripSearchBox.Text.ToCharArray());
+            hexBox1.Find(search, 0);
+            this.Cursor = Cursors.Default;
+        }
+        private void unicodeBigEndianToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.Cursor = Cursors.WaitCursor;
+            byte[] search = Encoding.BigEndianUnicode.GetBytes(toolStripSearchBox.Text.ToCharArray());
+            hexBox1.Find(search, 0);
+            this.Cursor = Cursors.Default;
         }
     }
 
@@ -111,7 +159,7 @@ namespace Tinke
 
         public byte ToByte(char c)
         {
-            if (encoding.WebName == "shift-jis")
+            if (encoding.WebName == "shift_jis")
                 return ToByteShiftJis(c);
 
             return (byte)c;

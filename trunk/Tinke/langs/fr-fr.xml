@@ -226,6 +226,7 @@
     <S21>Temps de lecture des archives externes :</S21>
     <S22>Le dossier temporaire (temp) ne peut pas être supprimé</S22>
     <S23>There was an error attempting to compress/pack the file.</S23>
+    <S24>All the colors are used by the image.</S24>
   </Messages>
   <NCLR>
     <S01>Nombre de la palette :</S01>

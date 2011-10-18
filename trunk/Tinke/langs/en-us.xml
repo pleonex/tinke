@@ -229,6 +229,7 @@
     <S21>Time reading external files:</S21>
     <S22>The temp folder couldn't be removed</S22>
     <S23>There was an error attempting to compress/pack the file.</S23>
+    <S24>All the colors are used by the image.</S24>
   </Messages>
   <NCLR>
     <S01># palette:</S01>
@@ -534,6 +535,6 @@
     <S1A>Read offsets</S1A>
     <S1B>Hexadecimal</S1B>
     <S1C>Accept</S1C>
-    <S1D>Add and remove the last color</S1D>
+    <S1D>Add and remove not used colors</S1D>
   </Dialog>
 </Language>

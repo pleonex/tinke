@@ -147,8 +147,49 @@ namespace Tinke
                 Array.Copy(palette.palettes[0].colors, palette.nColors / 0x10, temp, 0, isExact);
                 newPalette.palettes[newPalette.palettes.Length - 1].colors = temp;
             }
-           
+
             return newPalette;
+        }
+
+        public static int Remove_NotDuplicatedColors(ref NTFP palette, ref byte[][] tiles)
+        {
+            List<Color> colors = new List<Color>();
+            int first_duplicated_color = -1;
+
+            for (int i = 0; i < palette.colors.Length; i++)
+            {
+                if (!colors.Contains(palette.colors[i]))
+                    colors.Add(palette.colors[i]);
+                else        // The color is duplicated
+                {
+                    int newIndex = colors.IndexOf(palette.colors[i]);
+                    Replace_Color(ref tiles, i, newIndex);
+                    colors.Add(Color.FromArgb(248, 0, 248));
+
+                    if (first_duplicated_color == -1)
+                        first_duplicated_color = i;
+                }
+            }
+
+            palette.colors = colors.ToArray();
+            return first_duplicated_color;
+        }
+        public static int Remove_NotUsedColors(ref NTFP palette, ref byte[][] tiles)
+        {
+            int first_notUsed_color = -1;
+            List<bool> colors = new List<bool>();
+            for (int i = 0; i < palette.colors.Length; i++)
+                colors.Add(false);
+
+            for (int i = 0; i < tiles.Length; i++)
+                for (int j = 0; j < tiles[i].Length; j++)
+                    colors[tiles[i][j]] = true;
+
+            for (int i = 0; i < colors.Count; i++)
+                if (!colors[i])
+                    first_notUsed_color = i;
+
+            return first_notUsed_color;
         }
         #endregion
 
@@ -230,6 +271,18 @@ namespace Tinke
                 }
             }
         }
+        public static void Replace_Color(ref byte[][] tiles, int oldIndex, int newIndex)
+        {
+            for (int i = 0; i < tiles.Length; i++)
+            {
+                for (int j = 0; j < tiles[i].Length; j++)
+                {
+                    if (tiles[i][j] == oldIndex)
+                        tiles[i][j] = (byte)newIndex;
+                }
+            }
+        }
+
         #endregion
 
         /// <summary>

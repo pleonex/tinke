@@ -91,7 +91,7 @@ namespace DBK_ULTIMATE
                         {
                             br.BaseStream.Position = newFile.offset;
                             newFile.name = new String(
-                                Encoding.GetEncoding("shift-jis").GetChars(br.ReadBytes((int)name_length)));
+                                Encoding.GetEncoding("shift_jis").GetChars(br.ReadBytes((int)name_length)));
                             newFile.offset += name_length;
                         }
                         else

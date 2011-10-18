@@ -129,7 +129,7 @@ namespace Tinke
                     ncer.cebk.banks[i].cells[j].obj1.size = (byte)((obj1 >> 14) & 3);
 
                     // Obj 2
-                    ncer.cebk.banks[i].cells[j].obj2.tileOffset = (byte)(obj2 & 0x03FF);
+                    ncer.cebk.banks[i].cells[j].obj2.tileOffset = (uint)(obj2 & 0x03FF);
                     if (ncer.cebk.unknown1 != 0x00)
                         ncer.cebk.banks[i].cells[j].obj2.tileOffset += tilePos;
                     ncer.cebk.banks[i].cells[j].obj2.priority = (byte)((obj2 >> 10) & 3);

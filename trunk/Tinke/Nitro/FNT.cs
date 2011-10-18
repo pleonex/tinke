@@ -53,7 +53,7 @@ namespace Tinke.Nitro
                             main.subTable.files = new List<sFile>();
 
                         int lengthName = id;
-                        currFile.name = new String(Encoding.GetEncoding("shift-jis").GetChars(br.ReadBytes(lengthName)));
+                        currFile.name = new String(Encoding.GetEncoding("shift_jis").GetChars(br.ReadBytes(lengthName)));
                         currFile.id = idFile; idFile++;
                         
                         main.subTable.files.Add(currFile);
@@ -66,7 +66,7 @@ namespace Tinke.Nitro
                            main.subTable.folders = new List<sFolder>();
 
                         int lengthName = id - 0x80;
-                        currFolder.name = new String(Encoding.GetEncoding("shift-jis").GetChars(br.ReadBytes(lengthName)));
+                        currFolder.name = new String(Encoding.GetEncoding("shift_jis").GetChars(br.ReadBytes(lengthName)));
                         currFolder.id = br.ReadUInt16();
 
                         main.subTable.folders.Add(currFolder);

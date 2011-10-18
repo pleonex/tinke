@@ -9,6 +9,7 @@
 ** Game NINOKUNI (Ninokuni Shikkoku no Madoushi) supported
   - Unpacker for NPCK and KPCN files
   - Packer for NPCK and KPCN files
+  - Text translator for SQ files
 ** Game SUBARASHIKI (The world end with you) supported
 ** Game TOKIMEKIGS3S supported (LZS and RESC)
 ** Improved Font plugin
@@ -18,6 +19,7 @@
   - Fixed problems saving new fonts
   - Add new chars
 ** Fixed problem reading NCER files
+** Added new method to set the transparency color.
 ** Add button Pack (instead of using controls from button "View")
 * Fixed problem with button Compress in SDAT plugin
 * Fixed problem with textures with format 2
@@ -25,6 +27,7 @@
 * Search by offset -> Offset: 00000000
 * Fixed problems in SDAT plugin
 * Added support for PMCP section in NCLR
+* Improved support for Mono 2.10
 
 0.8.1 (public release) rev100
 *** BTX0 textures supported (view only)

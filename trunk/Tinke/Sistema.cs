@@ -379,8 +379,8 @@ namespace Tinke
                 toolStripInfoRom.Text = xml.Element("S02").Value;
                 toolStripDebug.Text = xml.Element("S03").Value;
                 toolStripVentana.Text = xml.Element("S04").Value;
-                toolStripPlugin.Text = xml.Element("S05").Value;
-                recargarPluginsToolStripMenuItem.Text = xml.Element("S06").Value;
+                //toolStripPlugin.Text = xml.Element("S05").Value;
+                //recargarPluginsToolStripMenuItem.Text = xml.Element("S06").Value;
                 toolStripLanguage.Text = xml.Element("S1E").Value;
                 columnHeader1.Text = xml.Element("S07").Value;
                 columnHeader2.Text = xml.Element("S08").Value;
@@ -475,6 +475,15 @@ namespace Tinke
             ftc.files.AddRange(
                 ARMOverlay(accion.ROMFile, romInfo.Cabecera.ARM7overlayOffset, romInfo.Cabecera.ARM7overlaySize, false)
                 );
+
+            sFile rom = new sFile();
+            rom.name = "rom.nds";
+            rom.offset = 0x00;
+            rom.size = (uint)new FileInfo(accion.ROMFile).Length;
+            rom.path = accion.ROMFile;
+            rom.id = (ushort)accion.LastFileID;
+            accion.LastFileID++;
+            ftc.files.Add(rom);
 
             sFile fnt = new sFile();
             fnt.name = "fnt.bin";
@@ -1129,7 +1138,11 @@ namespace Tinke
             keyDown = Keys.Escape;
         }
 
-
+        private void stripRefreshMsg_Click(object sender, EventArgs e)
+        {
+            debug.Añadir_Texto(sb.ToString());
+            sb.Length = 0;
+        }
         private void toolStripInfoRom_Click(object sender, EventArgs e)
         {
             if (toolStripInfoRom.Checked)

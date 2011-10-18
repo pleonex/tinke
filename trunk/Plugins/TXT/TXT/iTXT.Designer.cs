@@ -94,7 +94,7 @@ namespace TXT
             this.comboEncod.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboEncod.FormattingEnabled = true;
             this.comboEncod.Items.AddRange(new object[] {
-            "shift-jis",
+            "shift_jis",
             "utf-7",
             "unicode",
             "utf-32",
