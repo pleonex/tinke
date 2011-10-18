@@ -1605,10 +1605,17 @@ namespace Tinke
         }
         public void Save_File(sFile currfile, string outFile)
         {
-            BinaryReader br = new BinaryReader(File.OpenRead(currfile.path));
-            br.BaseStream.Position = currfile.offset;
-            File.WriteAllBytes(outFile, br.ReadBytes((int)currfile.size));
-            br.Close();
+            if (currfile.size == new FileInfo(currfile.path).Length)
+            {
+                File.Copy(currfile.path, outFile);
+            }
+            else
+            {
+                BinaryReader br = new BinaryReader(File.OpenRead(currfile.path));
+                br.BaseStream.Position = currfile.offset;
+                File.WriteAllBytes(outFile, br.ReadBytes((int)currfile.size));
+                br.Close();
+            }
         }
 
 

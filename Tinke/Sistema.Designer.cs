@@ -72,8 +72,6 @@ namespace Tinke
             this.toolStripInfoRom = new System.Windows.Forms.ToolStripButton();
             this.toolStripDebug = new System.Windows.Forms.ToolStripButton();
             this.toolStripVentana = new System.Windows.Forms.ToolStripButton();
-            this.toolStripPlugin = new System.Windows.Forms.ToolStripDropDownButton();
-            this.recargarPluginsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripLanguage = new System.Windows.Forms.ToolStripSplitButton();
             this.btnUnpack = new System.Windows.Forms.Button();
             this.btnDesplazar = new System.Windows.Forms.Button();
@@ -102,6 +100,7 @@ namespace Tinke
             this.btnImport = new System.Windows.Forms.Button();
             this.btnSaveROM = new System.Windows.Forms.Button();
             this.btnPack = new System.Windows.Forms.Button();
+            this.stripRefreshMsg = new System.Windows.Forms.ToolStripButton();
             this.toolStrip1.SuspendLayout();
             this.toolStrip2.SuspendLayout();
             this.SuspendLayout();
@@ -227,8 +226,8 @@ namespace Tinke
             this.toolStripInfoRom,
             this.toolStripDebug,
             this.toolStripVentana,
-            this.toolStripPlugin,
-            this.toolStripLanguage});
+            this.toolStripLanguage,
+            this.stripRefreshMsg});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
@@ -274,24 +273,6 @@ namespace Tinke
             this.toolStripVentana.Size = new System.Drawing.Size(45, 22);
             this.toolStripVentana.Text = "S04";
             this.toolStripVentana.Click += new System.EventHandler(this.toolStripVentana_Click);
-            // 
-            // toolStripPlugin
-            // 
-            this.toolStripPlugin.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.recargarPluginsToolStripMenuItem});
-            this.toolStripPlugin.Image = ((System.Drawing.Image)(resources.GetObject("toolStripPlugin.Image")));
-            this.toolStripPlugin.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripPlugin.Name = "toolStripPlugin";
-            this.toolStripPlugin.Size = new System.Drawing.Size(54, 22);
-            this.toolStripPlugin.Text = "S05";
-            // 
-            // recargarPluginsToolStripMenuItem
-            // 
-            this.recargarPluginsToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("recargarPluginsToolStripMenuItem.Image")));
-            this.recargarPluginsToolStripMenuItem.Name = "recargarPluginsToolStripMenuItem";
-            this.recargarPluginsToolStripMenuItem.Size = new System.Drawing.Size(92, 22);
-            this.recargarPluginsToolStripMenuItem.Text = "S06";
-            this.recargarPluginsToolStripMenuItem.Click += new System.EventHandler(this.recargarPluginsToolStripMenuItem_Click);
             // 
             // toolStripLanguage
             // 
@@ -581,6 +562,15 @@ namespace Tinke
             this.btnPack.UseVisualStyleBackColor = true;
             this.btnPack.Click += new System.EventHandler(this.btnPack_Click);
             // 
+            // stripRefreshMsg
+            // 
+            this.stripRefreshMsg.Image = ((System.Drawing.Image)(resources.GetObject("stripRefreshMsg.Image")));
+            this.stripRefreshMsg.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.stripRefreshMsg.Name = "stripRefreshMsg";
+            this.stripRefreshMsg.Size = new System.Drawing.Size(120, 22);
+            this.stripRefreshMsg.Text = "Refresh messages";
+            this.stripRefreshMsg.Click += new System.EventHandler(this.stripRefreshMsg_Click);
+            // 
             // Sistema
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
@@ -641,8 +631,6 @@ namespace Tinke
         private System.Windows.Forms.ToolStripButton toolStripVentana;
         private System.Windows.Forms.Button btnDesplazar;
         private System.Windows.Forms.Panel panelObj;
-        private System.Windows.Forms.ToolStripDropDownButton toolStripPlugin;
-        private System.Windows.Forms.ToolStripMenuItem recargarPluginsToolStripMenuItem;
         private System.Windows.Forms.ToolStrip toolStrip2;
         private System.Windows.Forms.ToolStripSplitButton toolStripLanguage;
         private System.Windows.Forms.LinkLabel linkAboutBox;
@@ -668,6 +656,7 @@ namespace Tinke
         private System.Windows.Forms.ToolStripMenuItem toolStripAbrirFat;
         private System.Windows.Forms.ToolStripMenuItem toolStripAbrirTexto;
         private System.Windows.Forms.Button btnPack;
+        private System.Windows.Forms.ToolStripButton stripRefreshMsg;
 
     }
 }

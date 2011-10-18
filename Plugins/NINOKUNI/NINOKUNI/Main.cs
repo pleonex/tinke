@@ -30,6 +30,8 @@ namespace NINOKUNI
 
             if (ext == "NPCK" || ext == "KPCN")
                 return Format.Pack;
+            else if (BitConverter.ToUInt32(magic, 0) == 0x001C080A)
+                return Format.Text;
 
             return Format.Unknown;
         }
@@ -39,6 +41,9 @@ namespace NINOKUNI
         }
         public System.Windows.Forms.Control Show_Info(string file, int id)
         {
+            if (file.ToUpper().EndsWith(".SQ"))
+                return new SQcontrol(pluginHost, file, id);
+
             return new System.Windows.Forms.Control();
         }
 

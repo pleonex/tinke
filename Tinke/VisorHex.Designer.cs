@@ -45,6 +45,12 @@
             this.relativeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.goToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.searchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSearchBox = new System.Windows.Forms.ToolStripTextBox();
+            this.rawBytesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.shiftjisToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.unicodeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.unicodeBigEndianToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.defaultCharsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.encodingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.encodingCombo = new System.Windows.Forms.ToolStripComboBox();
@@ -196,11 +202,58 @@
             // 
             // searchToolStripMenuItem
             // 
+            this.searchToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripSearchBox,
+            this.rawBytesToolStripMenuItem,
+            this.shiftjisToolStripMenuItem,
+            this.unicodeToolStripMenuItem,
+            this.unicodeBigEndianToolStripMenuItem,
+            this.defaultCharsToolStripMenuItem});
             this.searchToolStripMenuItem.Name = "searchToolStripMenuItem";
-            this.searchToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.F)));
             this.searchToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
             this.searchToolStripMenuItem.Text = "Search";
-            this.searchToolStripMenuItem.Click += new System.EventHandler(this.searchToolStripMenuItem_Click);
+            // 
+            // toolStripSearchBox
+            // 
+            this.toolStripSearchBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.toolStripSearchBox.Name = "toolStripSearchBox";
+            this.toolStripSearchBox.Size = new System.Drawing.Size(100, 23);
+            // 
+            // rawBytesToolStripMenuItem
+            // 
+            this.rawBytesToolStripMenuItem.Name = "rawBytesToolStripMenuItem";
+            this.rawBytesToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
+            this.rawBytesToolStripMenuItem.Text = "Raw bytes";
+            this.rawBytesToolStripMenuItem.Click += new System.EventHandler(this.rawBytesToolStripMenuItem_Click);
+            // 
+            // shiftjisToolStripMenuItem
+            // 
+            this.shiftjisToolStripMenuItem.Name = "shiftjisToolStripMenuItem";
+            this.shiftjisToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
+            this.shiftjisToolStripMenuItem.Text = "Shift-jis";
+            this.shiftjisToolStripMenuItem.Click += new System.EventHandler(this.shiftjisToolStripMenuItem_Click);
+            // 
+            // unicodeToolStripMenuItem
+            // 
+            this.unicodeToolStripMenuItem.Name = "unicodeToolStripMenuItem";
+            this.unicodeToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
+            this.unicodeToolStripMenuItem.Text = "Unicode";
+            this.unicodeToolStripMenuItem.Click += new System.EventHandler(this.unicodeToolStripMenuItem_Click);
+            // 
+            // unicodeBigEndianToolStripMenuItem
+            // 
+            this.unicodeBigEndianToolStripMenuItem.Name = "unicodeBigEndianToolStripMenuItem";
+            this.unicodeBigEndianToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
+            this.unicodeBigEndianToolStripMenuItem.Text = "Unicode Big Endian";
+            this.unicodeBigEndianToolStripMenuItem.Click += new System.EventHandler(this.unicodeBigEndianToolStripMenuItem_Click);
+            // 
+            // defaultCharsToolStripMenuItem
+            // 
+            this.defaultCharsToolStripMenuItem.Name = "defaultCharsToolStripMenuItem";
+            this.defaultCharsToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.F)));
+            this.defaultCharsToolStripMenuItem.Size = new System.Drawing.Size(183, 22);
+            this.defaultCharsToolStripMenuItem.Text = "Default chars";
+            this.defaultCharsToolStripMenuItem.Click += new System.EventHandler(this.defaultCharsToolStripMenuItem_Click);
             // 
             // optionsToolStripMenuItem
             // 
@@ -260,6 +313,7 @@
             this.MainMenuStrip = this.menuStripTop;
             this.Name = "VisorHex";
             this.Text = "S41";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.VisorHex_FormClosed);
             this.Resize += new System.EventHandler(this.VisorHex_Resize);
             this.menuStripTop.ResumeLayout(false);
             this.menuStripTop.PerformLayout();
@@ -293,6 +347,12 @@
         private System.Windows.Forms.ToolStripMenuItem encodingToolStripMenuItem;
         private System.Windows.Forms.ToolStripComboBox encodingCombo;
         private System.Windows.Forms.ToolStripMenuItem searchToolStripMenuItem;
+        private System.Windows.Forms.ToolStripTextBox toolStripSearchBox;
+        private System.Windows.Forms.ToolStripMenuItem rawBytesToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem shiftjisToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem defaultCharsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem unicodeToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem unicodeBigEndianToolStripMenuItem;
 
 
 

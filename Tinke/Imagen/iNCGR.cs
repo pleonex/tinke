@@ -580,22 +580,38 @@ namespace Tinke
         }
         private void Add_TransparencyColor()
         {
-            int colorIndex = paleta.pltt.palettes[0].colors.Length - 1;
+            // Search for unused or duplicated colors to change them with transparency color
+            // Search for duplicated colors
+            int result = Convertir.Remove_NotDuplicatedColors(ref paleta.pltt.palettes[0], ref tile.rahc.tileData.tiles);
+            if (result == -1)
+            {
+                // Try another way: search for not used colors
+                result = Convertir.Remove_NotUsedColors(ref paleta.pltt.palettes[0], ref tile.rahc.tileData.tiles);
+                if (result == -1)
+                {
+                    MessageBox.Show(Tools.Helper.ObtenerTraduccion("Messages", "S24"));
+                    return;  // Nothing found.
+                }
+            }
 
-            paleta.pltt.palettes[0].colors[colorIndex] = paleta.pltt.palettes[0].colors[0];
+            // Now, the palette must have at least one transparency color, we put it in first place.
+            paleta.pltt.palettes[0].colors[result] = paleta.pltt.palettes[0].colors[0];
             paleta.pltt.palettes[0].colors[0] = Color.FromArgb(248, 0, 248);
+            Convertir.Change_Color(ref tile.rahc.tileData.tiles, result, 0);
 
+            // Save new palette file
             pluginHost.Set_NCLR(paleta);
             String paletteFile = System.IO.Path.GetTempFileName();
             Imagen_NCLR.Escribir(paleta, paletteFile);
             pluginHost.ChangeFile((int)paleta.id, paletteFile);
 
-            Convertir.Change_Color(ref tile.rahc.tileData.tiles, colorIndex, 0);
+            // Save new tile file
             pluginHost.Set_NCGR(tile);
             String tileFile = System.IO.Path.GetTempFileName();
             Imagen_NCGR.Write(tile, tileFile);
             pluginHost.ChangeFile((int)tile.id, tileFile);
 
+            // Refresh de image
             UpdateImage();
             checkTransparency.Checked = true;
         }
