@@ -1,0 +1,46 @@
+#summary Documentación sobre archivos NSCR
+#labels Info-Format
+
+Estos archivos aportan información adicional sobre cómo debería formarse la imagen.
+Se reconocen por la cabecera NSCR o RCSN y generalmente por esa misma extensión, cuyo significado podría ser _Nintendo SCreen Resource_.
+
+Por su contenido pertenecen al formato *Map*.
+
+=Estructura del archivo=
+
+||_Posición_||_Nombre_||_Tipo_||_Descripción_||
+
+*Cabecera genérica*
+
+||0x00||ID||char`[4]`||NCLR o RLCN||
+||0x04||Endianess||ushort||Si es igual a 0xFFFE el ID se encuentra inverso||
+||0x06||Constante||ushort||Desconocido||
+||0x08||Tamaño del archivo||uint||||
+||0x0C||Tamaño de la cabecera||ushort||Siempre 0x10||
+||0x0E||Nº de secciones||ushort||Siempre 0x01||
+
+*Sección NRCS*
+
+||0x00||ID||char`[4]`||NRCS||
+||0x04||Tamaño de la sección||uint||||
+||0x08||Ancho||ushort||Ancho real de la imagen en pixels||
+||0x0A||Alto||ushort||Alto real de la imagen en pixels||
+||0x0C||Desconocido||uint||No siempre 0x00, también encontrado como 0x01 y 0x02||
+||0x10||Longitud de datos||uint||Tamaño de los datos siguientes (NTFS)||
+||0x14||Datos en NTFS||NTFS`[]`||La longitud de la array es: Longitud de datos / 2||
+
+*Datos NTFS (Nintendo Tile Format Screen)*
+
+Cada estructura de datos ocupa 16bits, es decir, 2 bytes, y representa la información de un tile según como vaya
+apareciendo en el archivo, así la primera estructura NTFS representa el primer tile, la segunda el segundo...
+
+Dentro de cada estructura los datos se ordenan de la siguiente forma (cada letra es un bit):
+
+{{{
+PPPP X Y NNNNNNNNNN
+
+PPPP => Número de la paleta (en el caso de que sea 4bpp y haya más de una paleta)
+X => Valor boolean que indica si se debe realizar un flip en el eje X
+Y => Valor boolean que indica si se debe realizar un flip en el eje Y
+NNNNNNNNNN => Número de tile que debe aparecer modificado según los datos de arriba
+}}}

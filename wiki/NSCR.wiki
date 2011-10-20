@@ -1,46 +1,44 @@
-#summary Documentación sobre archivos NSCR
-#labels Formato
+#summary Specification about NSCR files
+#labels Info-Format
 
-Estos archivos, muy frecuentes sobre todo en juegos de Nintendo, aportan información adicional sobre cómo debería formarse la imagen.
-Se reconocen por la cabecera NSCR y generalmente por esa misma extensión, cuyo significado podría ser _Nintendo SCreen Resource_.
+These files, used in many games, give extra information about how the image must be composed.
+They are recognized by their header (NSCR or RCSN) and frequently have the same extension, which name could mean _Nintendo SCreen Resource_.
+They have the format *Map*.
 
-Por su contenido pertenecen al formato *Map*.
+=File structure=
 
-=Estructura del archivo=
+||_Offset_||_Name_||_Type_||_Description_||
 
-||_Posición_||_Nombre_||_Tipo_||_Descripción_||
+*Generic header*
 
-*Cabecera genérica*
+||0x00||ID||char`[4]`||NSCR o RCSN||
+||0x04||Endianess||ushort||If = 0xFFFE the Magic ID must be reversed||
+||0x06||Constant||ushort||Unknown||
+||0x08||File size||uint||||
+||0x0C||Header size||ushort||Always 0x10||
+||0x0E||Number of sections||ushort||Always 0x01||
 
-||0x00||ID||char`[4]`||NCLR o RLCN||
-||0x04||Endianess||ushort||Suele ser 0xFEFF||
-||0x06||Constante||ushort||Desconocido||
-||0x08||Tamaño del archivo||uint||||
-||0x0C||Tamaño de la cabecera||ushort||Siempre 0x10||
-||0x0E||Nº de secciones||ushort||Siempre 0x01||
-
-*Sección NRCS*
+*NRCS section*
 
 ||0x00||ID||char`[4]`||NRCS||
-||0x04||Tamaño de la sección||uint||||
-||0x08||Ancho||ushort||Ancho real de la imagen en pixels||
-||0x0A||Alto||ushort||Alto real de la imagen en pixels||
-||0x0C||Desconocido||uint||No siempre 0x00, también encontrado como 0x01 y 0x02||
-||0x10||Longitud de datos||uint||Tamaño de los datos siguientes (NTFS)||
-||0x14||Datos en NTFS||NTFS`[]`||La longitud de la array es: Longitud de datos / 2||
+||0x04||Section size||uint||||
+||0x08||Width||ushort||Image width in pixels||
+||0x0A||Height||ushort||Image height in pixels||
+||0x0C||Unknown||uint||It can be 0x00, 0x01 and 0x02||
+||0x10||Data length||uint||Data length (NTFS)||
+||0x14||NTFS data||NTFS`[]`||The array length is: Data length / 2||
 
-*Datos NTFS (Nintendo Tile Format Screen)*
+*NTFS (Nintendo Tile Format Screen) data*
 
-Cada estructura de datos ocupa 16bits, es decir, 2 bytes, y representa la información de un tile según como vaya
-apareciendo en el archivo, así la primera estructura NTFS representa el primer tile, la segunda el segundo...
-
-Dentro de cada estructura los datos se ordenan de la siguiente forma (cada letra es un bit):
+Each structure is 16bits, that is, 2 bytes, and it contains the informations from one tile. The first structure
+contains the information for the first tile, the second structure for the second tile and soon...
+The structure has the following format (each char is a bit):
 
 {{{
 PPPP X Y NNNNNNNNNN
 
-PPPP => Número de la paleta (en el caso de que sea 4bpp y haya más de una paleta)
-X => Valor boolean que indica si se debe realizar un flip en el eje X
-Y => Valor boolean que indica si se debe realizar un flip en el eje Y
-NNNNNNNNNN => Número de tile que debe aparecer modificado según los datos de arriba
+PPPP => Palette number (in the case of 4bpp palettes where there are more than one palette)
+X => Boolean value to flip in the X axis
+Y => Boolean value to flip in the Y axis
+NNNNNNNNNN => Tile number modified by the above values
 }}}

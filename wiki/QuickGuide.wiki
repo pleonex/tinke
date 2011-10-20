@@ -1,82 +1,86 @@
-#summary Guía rápida para iniciarse con el programa
-#labels Featured
+#summary Start using Tinke with a few steps
+#labels Featured, Phase-Design
 
-*Tinke* es un intuitivo programa para hacer ingeniería inversa, es decir ver imágenes, audios, textos y demás que están contenidos en un juego para la NDS.
+*Tinke* is an intuitive program to do reverse engineering, that is to see the media (images, text, audio, etc...) contained in a NDS game. These kind of program can be called as "nds rom viewer", in the category of "Rom hacking" and "NDS Scene".
 
 ----
 
-=Interfaz=
+=Interface=
 
-La ventana principal del programa se llama "Sistema", es la primera que verás. Además se encuentran las ventanas "Información de la ROM" y "Mensajes Debug".
+The main window of the program is called "System", it's the first that you will see. Furthermore you can see the "ROM information" window and the "Debug messages" window.
 
-==_Sistema_==
+==_System_==
 
-Aquí se muestran el árbol de archivos y la información de cada uno de ellos. Es la ventana principal del programa.
+Here, it shows the files tree and the information of each file. It's the main windows of the program.
 
 [https://lh3.googleusercontent.com/_H6ACRUcYPos/TajJVdoF5TI/AAAAAAAAAIk/gY28W3696XA/s800/system.PNG]
 
- # La barra del menú contiene las principales opciones del programa:
-    * "Abrir ROM", abre un nuego juego.
-    * "Información del juego", muestra o esconde la ventana.
-    * "Mensajes Debug", muestra o esconde la ventana.
-    * "Modo ventana", muestra el resultado de pulsar el botón "Ver" en una nueva ventana o en la ventana principal.
-    * "Plugins", recarga los plugins (no funciona)
-    * "Language", cambia el idioma de la interfaz.
- # Éste es el árbol de archivos que contiene el juego.
- # Muestra la información general de archivo seleccionado.
- # Botones para interaccionar con el archivo seleccionado:
-    * "Borrar cadena", borra cualquier información guardada anteriormente (ejemplo: paletas)
-    * "Abrir como...", abre un archivo desconocido de forma estándar.
-    * "Descomprimir", descomprime el archivo seleccionado (ejemplo: .NARC or LZ77, HUFFMAN)
-    * "Extraer", guarda el archivo seleccionado a tu ordenador.
-    * "Ver", mira la información del archivo, es decir lo que el archivo es (ejemplo: mira la animación de un archivo NANR)
-    * "Hexadecimal", abre el archivo con el visor hexadecimal.
- # Este es el control que el plugin devuelve cuando se pulsa el botón _Ver_ .
+ # The menu bar has the main options of the program:
+    * "Open ROM", open a new NDS game.
+    * "ROM information", shows or hides the _ROM information_ window.
+    * "Debug Messages", shows or hides the _Debug Messegaes_ window.
+    * "Windowed", you'll be able to show the result from the button "See" in a new windows or in the main interface
+    * "Plugins", reloads the plugins (now it doesn't work)
+    * "Language", changes the language of the interface.
+ # This is the system file tree where all the rom files are.
+ # It shows you the general information of the select file.
+ # Different buttons to do actions with the file selected:
+    * "Delete chain", delete any information file saved in the memory (ie: palette)
+    * "Open as...", open an unknown file using a standar format.
+    * "Uncompress", uncompress the selected file (ie: .NARC or LZ77, HUFFMAN)
+    * "Extract", save the select file to your computer.
+    * "See", see the information of the file, that is what the file is (ie: see the animation of a NANR file)
+    * "Hexadecimal", open the selected with the hexadecimal viewer.
+ # This is the control that the plugin returns when you click the _See_ button.
 
 
-==_Información del juego_==
+==_ROM information_==
 
-Aquí aparece la información que contiene la cabecera de la ROM.
+Here, it shows the information that the header of the ROM has.
 
 [https://lh5.googleusercontent.com/_H6ACRUcYPos/TajJVGyIlkI/AAAAAAAAAIg/xXiIc1nf3vE/s800/rominfo.PNG]
 
-Se pueden ver un gran número de variables del sistema como la posición del archivo FAT (File Allocation Table) o los diferentes títulos en seis idiomas. También tienes la posibilidad de guardar en banner a tu escritorio.
+You can see a huge number of system variables like the FAT (File Allocation Table) offset or the differents titles for each language. You have the posibility to save the banner of the rom to your desktop.
 
-==_Mensajes Debug_==
+==_Debug Messages_==
 
-Por último esta ventana muestra los mensajes que los plugins, usando el método Console.Write() envían.
+Finally, this window shows the messages that the plugins, using the method Console.Write(), send.
 
 [https://lh6.googleusercontent.com/_H6ACRUcYPos/TajJU__ClmI/AAAAAAAAAIc/pnY9jBqcJDg/s800/messages.PNG]
 
 ----
 
-=Tipos de archivo=
+=File Type=
 
-La versión 0.6 soporta los siguientes archivos:
+The version 0.5 supports the following types of file:
 
- * _Paleta_ [https://lh4.googleusercontent.com/_H6ACRUcYPos/TasvUW7HvHI/AAAAAAAAAI8/aTHOM7hIxY8/s800/palette.png]: Contiene los colores de la imagen (ejemplo: .NCLR)
- * _Tiles_ [https://lh3.googleusercontent.com/_H6ACRUcYPos/TaswOx7ktfI/AAAAAAAAAJE/rYqwMmnJ1ec/s800/picture.png]: Contiene los datos de la imagen. Junto con una paleta se puede ver la imagen (ejemplo: NCGR).
- * _Screen_ [https://lh6.googleusercontent.com/_H6ACRUcYPos/TaswfwsLhwI/AAAAAAAAAJM/3TRiAlDCCXU/s800/picture_link.png]: Contiene información sobre cómo se organizan los tiles (ejemplo: .NSCR).
- * _Celda_ [https://lh5.googleusercontent.com/_H6ACRUcYPos/TaswixhG0cI/AAAAAAAAAJQ/r6rIlLtcnUU/s800/pictures.png]: Contiene información sobre como organizar tiles para formar diferentes imágenes (ejemplo: .NCER).
- * _Animación_ [https://lh3.googleusercontent.com/_H6ACRUcYPos/Taswo2KwZBI/AAAAAAAAAJc/Ha3LBLpQPso/s800/picture_go.png]: Contiene información para animar celdas (ejemplo: .NANR)
- * _Imagen completa_ [https://lh5.googleusercontent.com/_H6ACRUcYPos/TaswzqUD8ZI/AAAAAAAAAJk/-_ATNaGCvac/s800/photo.png]: Archivo con toda la información necesaria para mostrar una imagen (paleta + tiles, también puede contener Screen, Celdas y Animaciones) (ejemplo .arc en los juegos del Profesor Layton). 
- * _Textos_ [https://lh5.googleusercontent.com/_H6ACRUcYPos/Tasw6A9FVzI/AAAAAAAAAJs/Q6ndBp2Tp9s/s800/page_white_text.png]: Contienen mensajes de texto (ejemplo .txt)
- * _Video_ [https://lh5.googleusercontent.com/_H6ACRUcYPos/TasxJCc5r0I/AAAAAAAAAKA/xzMFdACyfxY/s800/film.png] (todavía no hay ningún archivo soportado)
- * _Sonido_ [https://lh5.googleusercontent.com/_H6ACRUcYPos/TasxFdvYSZI/AAAAAAAAAJ8/7SEse1Ay738/s800/music.png]: Contiene uno o varios archivos de sonido (ejemplo: .SDAT o .WAV)
- * _Fuentes_ [https://lh4.googleusercontent.com/_H6ACRUcYPos/Tas1rAhMcvI/AAAAAAAAAKM/45hRDPtLE0Q/s800/font.png]: Contiene información sobre la tipografía del juego.
- * _Comprimido_ [https://lh3.googleusercontent.com/_H6ACRUcYPos/TasxB5Nk66I/AAAAAAAAAJ0/iPMDiuvvsps/s800/package.png]: Contiene diferentes archivos en él (ejemplo: .NARC).
+ * _Palette_ [https://lh4.googleusercontent.com/_H6ACRUcYPos/TasvUW7HvHI/AAAAAAAAAI8/aTHOM7hIxY8/s800/palette.png]: Contains the colours to the image (ie .NCLR)
+ * _Tiles_ [https://lh3.googleusercontent.com/_H6ACRUcYPos/TaswOx7ktfI/AAAAAAAAAJE/rYqwMmnJ1ec/s800/picture.png]: Contains the image data. With the palette it could create an image (ie .NCGR)
+ * _Screen_ [https://lh6.googleusercontent.com/_H6ACRUcYPos/TaswfwsLhwI/AAAAAAAAAJM/3TRiAlDCCXU/s800/picture_link.png]: Contains more information about the organization of the tiles (ie .NSCR)
+ * _Cells_ [https://lh5.googleusercontent.com/_H6ACRUcYPos/TaswixhG0cI/AAAAAAAAAJQ/r6rIlLtcnUU/s800/pictures.png]: Contains information about how the resource images are in an image (ie .NCER)
+ * _Animation_ [https://lh3.googleusercontent.com/_H6ACRUcYPos/Taswo2KwZBI/AAAAAAAAAJc/Ha3LBLpQPso/s800/picture_go.png]: Contains the information to animate cells (ie .NANR)
+ * _Full Image_ [https://lh5.googleusercontent.com/_H6ACRUcYPos/TaswzqUD8ZI/AAAAAAAAAJk/-_ATNaGCvac/s800/photo.png]: A file with all the necessary information to create the real image (palette + tiles, also it could have screen, cells and animation data) (ie .arc in the Professor Layton games). 
+ * _Texts_ [https://lh5.googleusercontent.com/_H6ACRUcYPos/Tasw6A9FVzI/AAAAAAAAAJs/Q6ndBp2Tp9s/s800/page_white_text.png]: Contains text messages (ie .txt)
+ * _Video_ [https://lh5.googleusercontent.com/_H6ACRUcYPos/TasxJCc5r0I/AAAAAAAAAKA/xzMFdACyfxY/s800/film.png] (it isn't support yet)
+ * _Sounds_ [https://lh5.googleusercontent.com/_H6ACRUcYPos/TasxFdvYSZI/AAAAAAAAAJ8/7SEse1Ay738/s800/music.png]: It can contains one or more sounds or it can be a sound file (ie .SDAT or .wav)
+ * _Fonts_ [https://lh4.googleusercontent.com/_H6ACRUcYPos/Tas1rAhMcvI/AAAAAAAAAKM/45hRDPtLE0Q/s800/font.png]: Contains information about a font resource
+ * _Compress_ [https://lh3.googleusercontent.com/_H6ACRUcYPos/TasxB5Nk66I/AAAAAAAAAJ0/iPMDiuvvsps/s800/package.png]: Contains differents files in it.
 
 ----
 
-=Acciones=
+=Actions=
 
-Para ver un archivo (la paleta o animación que da un archivo), debes seleccionar el archivo y pulsar sobre el botón _Ver_ . Además algunos archivo necesitan otra información para crear el recurso final, algunos de ellos son los siguientes:
- * Imagen (tiles): Requiere una paleta.
- * Screen: Requiere una imagen (y una paleta)
- * Celdas: Requiere una imagen (y una paleta)
- * Animación: Requiere celdas (y una imagen con su paleta).
+To see a file (the palette, or the animation given by a file), you must select the file and click in the _See_ button. Some files requires other informations from other files in order to create the final resource, some of them are:
+ * Image: Requires a palette.
+ * Screen: Requires an image (and a palette)
+ * Cells: Requires an image (and a palette)
+ * Animation: Requires cells and an image (and a palette)
 
-Con el objetivo de guardar en la memoria estos archivo que se necesitan para otros hay dos métodos:
- # Pulsa el botón *Ver*. Verás la información de ese archivo y si es posible se guardará en la memoria.
- # Haz *doble-click* sobre un archivo en el árbol de archivos. Si es posible se guardará la información que aporta ese archivo.
-Esos datos serán guardados pero no usados en el momentos, es decir, que su guardas la información de un archivo Screen no modificará la imagen hasta que pulses el botón _Ver_ y si guardas de nuevo otro archivo Screen, este modificará la imagen original (no la modificada por al archivo Screen antiguo). De todas formas en cualquier momento puedes borrar estos datos guardados pulsando en los botos de _Borrar cadena_ .
+In order to save in the memory this information, to create later other resource, you have two method:
+ # Click the *See* button. You'll see the actual data from this file and if it's possible it will save in the memory.
+ # *Double-click* a file in the file tree. If it's possible the information given by the file will be saved.
+These data will be saved but won't be used in the moment, that is, if you save a Screen information it won't modify the image until you click the _See_ button and if you save a different Screen information it will modify the original image (not the image modified by the older Screen data).
+Anyway if you want to delete some of these saved data you just need click into the _Delete chain_ buttons.
+
+----
+*_Final note_*: I'm Spanish, so if you find any writing error (high probable), please tell me it.

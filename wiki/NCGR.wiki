@@ -1,66 +1,65 @@
-#summary Documentación sobre archivos NCGR
-#labels Formato
+#summary Specification about NCGR files
+#labels Info-Format
 
-Estos archivos, cuyo nombre podría ser _"Nintendo Character Graphic Resource"_, se usan en bastantes juegos
-de Nintendo. Contienen los datos de la imagen, es decir, los colores que corresponde a cada pixels.
+These files, which name could be "Nintendo Character Graphic Resource", contain the data of the image
+, that is, the colour of each pixels (*tiles*). They are recognized by their header (NCGR or RGCN) and frequently
+have the same extension.
 
-Un _tile_ es un bloque de 8x8 pixels.
+A tile is a block of 8x8 pixels.
 
-=Estructura=
+=NCGR structure=
 
-||_Posición_||_Tipo_||_Descripción_||
+||_Offset_||_Type_||_Description_||
 
-*Cabecera genérica*
+*Generic header*
 
-||0x00||char`[4]`||ID (NCGR)||
-||0x04||ushort||Endianess (si es igual a 0xFFFE el ID está inverso)||
-||0x06||ushort||Constante (debería ser 0x1000)||
-||0x08||uint||Tamaño del archivo||
-||0x0C||ushort||Tamaño de la cabecera||
-||0x0E||ushort||# de secciones||
+||0x00||char`[4]`||Magic ID (NCGR)||
+||0x04||ushort||Endianess (if = 0xFFFE the Magic ID must be reverse)||
+||0x06||ushort||Constant (should be 0x1000)||
+||0x08||uint||File size||
+||0x0C||ushort||Header size||
+||0x0E||ushort||# of sections||
 
-*Sección: CHAR (CHARacter data)*
+*CHAR (CHARacter data) section*
 
-||0x00||char`[4]`||ID (CHAR)||
-||0x04||uint||Tamaño de la sección||
-||0x08||ushort||Altura en tiles||
-||0x0A||ushort||Ancho en tiles||
-||0x0C||uint||Profundidad (0x03 == 4bpp; 0x04 == 8bpp)||
-||0x10||ushort||Desconocido 1||
-||0x12||ushort||Desconocido 2||
-||0x14||uint||Orden de tiles (0-7 bit => si 0x00 == Orden horizontal; sino == No ordenado en tiles (lineal))||
-||0x18||uint||Tamaño de los datos||
-||0x1C||uint||Desconocido 3||
+||0x00||char`[4]`||Magic ID (CHAR)||
+||0x04||uint||Section size||
+||0x08||ushort||Height in tiles||
+||0x0A||ushort||Width in tiles||
+||0x0C||uint||Depth (if 0x03 == 4bpp; else (0x04) == 8bpp)||
+||0x10||ushort||Unknown 1||
+||0x12||ushort||Unknown 2||
+||0x14||uint||Tiled flag (0-7 bit => if 0x00 == Horizontal tile order; else == No tile order)||
+||0x18||uint||Tile data size||
+||0x1C||uint||Unknown 3||
 
-*Datos de la imagen*
+*Image data*
 
-||0x00||byte`[]`||Datos||
+||0x00||byte`[]`||Image data||
 
-*Sección: SOPC*
+*SOPC section (optional)*
 
-||0x00||char`[4]`||ID (SOPC)||
-||0x04||uint||Tamaño de la sección||
-||0x08||uint||Desconocido 1||
-||0x0A||ushort||Tamaño de personaje (suele ser 0x10)||
-||0x0C||ushort||# de personajes (suele ser 0x20)||
+||0x00||char`[4]`||Magic ID (SOPC)||
+||0x04||uint||Section size||
+||0x08||uint||Unknown 1||
+||0x0A||ushort||Unknown 2 (usually 0x10)||
+||0x0C||ushort||Unknown 3 (usually 0x20)||
 
- _Nota 1:_ Si el orden de los tiles es _lineal_ entonces el ancho y el alto deben ser multiplacos por 8 (el tamaño de un tile)
+ * _Note 1:_ If the the image is "no tile order" then the width and height must be multiplicate by 8 (the size of one tile)
 
- _Nota 2:_ El _Tamaño de los datos_ puede ser 0, entonces éste valor es (Ancho `*` Alto)
+ * _Note 2:_ The "Tile data size" can be 0, then this value must be (Width `*` Height)
 
- _Nota 3:_ La imagen generalmente tiene un color de transparencia que es siempre el primero de la paleta.
+ * _Note 3:_ The image usually have a transparent colour which is the first of the palette.
 
 
-=Datos de la imagen=
+=Image data=
 
-Si la _profundidad_ es 8bpp, cada byte representa el color de un pixel, el valor de éste byte indica el lugar del color en la paleta
-(ejemplo: si éste es 0x05 el color de éste pixel es el color que se encuentra en la quinta posición de la paleta (empezando por 0)).
+If the Depth is 8bpp, each byte represent the colour of one pixel, the value of this byte indicates the place of the colour in 
+the palette data (ie: if it's 0x05 the colour of this pixel is the colour that is placed at the fith position (zero index)).
 
-Si la _profundidad_ es 4bpp, cada byte representa dos pixel: 0-3 bits = primer pixel; 4-7 bits = segundo pixel. El valor representa lo
-mismo que en el caso de 8bpp (teniendo en este caso la paleta como máximo 16 colores).
+If the Depth is 4bpp, each byte represent two pixel: 0-3 bit = one pixel; 4-7 bit = second pixel. The value is the same as above.
 
-Si el _orden de los tiles_ es _Horizontal_ significa que cada pixel se encuentra en un bloque de 8x8 pixels (un tile), que se ordena 
-de la siguiente forma:
+If the image is Tile order (ie: Horizontal), this indicates that the pixel are stored in blocks of 8x8 pixels (one tile), as follow:
 
 {{{
  0  1  2  3  4  5  6  7  64 65 66 67 68 69 70 71
@@ -73,15 +72,14 @@ de la siguiente forma:
 56 57 58 59 60 61 62 63
 }}}
 
-Si la imagen no se ordena en tiles (_lineal_), entonces los pixels se ordenan de la siguiente forma:
+If the image is No Tile order, then the pixels are store in a lineal form:
 
 {{{
 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 ...
 }}}
 
-=Sección: SOPC=
+==SOPC section==
 
-Ésta es una sección desconocida que puede o no estar en el archivo. Desde mi punto de vista creo que contiene información
-sobre como dividir en subimágenes la imagen actual, pero esta relación la he visto en muy pocas imágenes. El valor _tamaño de personaje_
-indicaría el Ancho y Alto de cada una de las subimágenes (siempre cuadradas) que contiene la imagen y el siguiente valor el número de
-subimágenes que hay. Sin embargo ésto solo ha sido válido en una imagen...
+This is an strange section that can not be in the file. I think that in a few files (not always) indicates the
+subimages that contains one image. The "Unknown 2" value is the Width and Height of this subimage (always they are squared)
+and the next value the number of subimages. I see this guest correctly only in one image...

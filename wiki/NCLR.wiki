@@ -1,51 +1,67 @@
-#summary Documentación sobre archivos NCLR
-#labels Formato
+#summary Specification about NCLR files
+#labels Info-Format
 
-Estos archivos, cuyo nombre podría ser _"Nintendo CoLour Resource"_, se usan en muchos juegos. Contienen la paleta de una imagen,
-pudiendo contener un archivo más de una paleta (4-bpp).
+These files, which name could be _Nintendo CoLour Resource_, are used by many games. They contain the information about
+the *palettes* of the image (It can have more than one palette (4-bpp)). They are recognized by their header (NCLR or RLCN) 
+and frequently have the same extension
 
-=Estructura de la paleta=
+=Palette structure=
 
-||_Posición_||_Tipo_||_Descripción_||
+||_Offset_||_Type_||_Description_||
 
-*Cabecera genérica*
+*Generic header*
 
-||0x00||char`[4]`||ID (NCLR)||
-||0x04||ushort||Endianess (si es igual a 0xFFFE el ID se encuentra inverso)||
-||0x06||ushort||Constante (debería ser 0x1000)||
-||0x08||uint||Tamaño del archivo||
-||0x0C||ushort||Tamaño de la cabecera||
-||0x0E||ushort||# de secciones||
+||0x00||char`[4]`||Magic ID (NCLR)||
+||0x04||ushort||Endianess (if = 0xFFFE the Magic ID must be reversed)||
+||0x06||ushort||Constant||
+||0x08||uint||File size||
+||0x0C||ushort||Header size||
+||0x0E||ushort||# of sections||
 
-*Sección: PLTT (PaLeTTe)*
+*PLTT (PaLeTTe) section*
 
-||0x00||char`[4]`||ID (PLTT)||
-||0x04||uint||Tamaño de la sección||
-||0x08||ushort||Profundidad (0x03 == 4bpp; 0x04 == 8bpp)||
-||0x0A||ushort||Desconocido 1||
-||0x0C||uint||Desconocido 2||
-||0x10||uint||Tamaño de las paletas||
-||0x14||uint||# de colores por paleta (si Profundidad == 8bpp entonces debe ser 0x0100)||
+||0x00||char`[4]`||Magic ID (PLTT)||
+||0x04||uint||Section size||
+||0x08||ushort||Depth (0x03 == 4bpp; 0x04 == 8bpp)||
+||0x0A||ushort||Unknown 1||
+||0x0C||uint||Unkwnon 2||
+||0x10||uint||Palettes size||
+||0x14||uint||Start offset of the Color data (from "Section size" 0x14)||
 
-*Datos de las paletas (NTFP Nintendo Tile Format Palette)*
+*Palettes data (NTFP Nintendo Tile Format Palette)*
 
-||0x00||byte`[2]`||Color codificado con BGR555||
+||0x00||byte`[2]`||Color encoded with BGR555||
 ||...||
 
-_Nota:_ El número de paletas puede ser calculado de la siguiente forma:
+*PMCP section (optional)*
+
+||0x00||char`[4]`||Magic ID (PMCP)||
+||0x04||uint||Block size (should be 0x12)||
+||0x08||ushort||Unknown 1||
+||0x0A||ushort||Unknown 2||
+||0x0C||uint||Unknown 3||
+||0x10||ushort||Number of the first palette||
+
+ * _Note:_ The number of palettes can be calculate in this way:
 
 {{{
-int nPaletas = (Tamaño de paleta) / (# de colores * 2);
+int nPalettes = (Palttes size) / (number of colors * 2);
 }}}
 
+ * _Note 1:_ If the depth is 4bpp there are 16 colors, if the depth is 8bpp there are 256 colors
 
-=Codificación BGR555=
+ * _Note 2:_ The value "Number of the first palette" in PMCP section is used with NSCR files, 
+ there in the map data the first palette to use is this value,
+ so instead to be the palette 0 the first palette it can be the 0xE one.
 
-Cada dos bytes representa un color definido por tres números (BGR Blue Green Red), estos están guardados en el bytes de la
-siguiente forma:
+=BGR555 encoding=
+
+Two bytes define a color by three number (BGR Blue Green Red), they are stored in the following form:
+
 XBBBBBGGGGGRRRRR
-cada letras es un bit (5 bit por color), la letra X no se usa (siempre es 0).
-Una forma de decodificar los dos bytes a un color es (en C#):
+
+where each letter is a bit (5 bit per colour), the X letter is never used (always 0).
+A way of decoding the two bytes is (in C#):
 
 {{{
 int r, b; double g;
@@ -57,3 +73,4 @@ b = ((bgr & 0x7C00) >> 10) * 0x08;
 
 return System.Drawing.Color.FromArgb(r, (int)g, b);
 }}}
+Using 5 bit can be 32 possible colors per attribute (Red, Blue or Green) so we can encode 32768 different colors.
