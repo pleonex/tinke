@@ -264,18 +264,18 @@
             this.label8.AutoSize = true;
             this.label8.Location = new System.Drawing.Point(466, 342);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(25, 13);
+            this.label8.Size = new System.Drawing.Size(19, 13);
             this.label8.TabIndex = 26;
-            this.label8.Text = "800";
+            this.label8.Text = "20";
             // 
             // label7
             // 
             this.label7.AutoSize = true;
             this.label7.Location = new System.Drawing.Point(262, 343);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(25, 13);
+            this.label7.Size = new System.Drawing.Size(13, 13);
             this.label7.TabIndex = 25;
-            this.label7.Text = "100";
+            this.label7.Text = "1";
             // 
             // lblZoom
             // 
@@ -290,16 +290,15 @@
             // trackZoom
             // 
             this.trackZoom.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
-            this.trackZoom.LargeChange = 100;
+            this.trackZoom.LargeChange = 2;
             this.trackZoom.Location = new System.Drawing.Point(265, 358);
-            this.trackZoom.Maximum = 800;
-            this.trackZoom.Minimum = 100;
+            this.trackZoom.Maximum = 20;
+            this.trackZoom.Minimum = 1;
             this.trackZoom.Name = "trackZoom";
             this.trackZoom.Size = new System.Drawing.Size(226, 45);
             this.trackZoom.SmallChange = 50;
             this.trackZoom.TabIndex = 23;
-            this.trackZoom.TickFrequency = 50;
-            this.trackZoom.Value = 100;
+            this.trackZoom.Value = 1;
             this.trackZoom.Scroll += new System.EventHandler(this.trackZoom_Scroll);
             // 
             // btnImport

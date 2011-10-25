@@ -44,6 +44,10 @@
             this.numericMaxHeight = new System.Windows.Forms.NumericUpDown();
             this.numericMaxWidth = new System.Windows.Forms.NumericUpDown();
             this.label5 = new System.Windows.Forms.Label();
+            this.groupSubImages = new System.Windows.Forms.GroupBox();
+            this.checkSubImage = new System.Windows.Forms.CheckBox();
+            this.label7 = new System.Windows.Forms.Label();
+            this.numericSubStart = new System.Windows.Forms.NumericUpDown();
             ((System.ComponentModel.ISupportInitialize)(this.numericWidth)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericHeight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericStartTile)).BeginInit();
@@ -51,13 +55,15 @@
             this.groupFill.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericMaxHeight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericMaxWidth)).BeginInit();
+            this.groupSubImages.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericSubStart)).BeginInit();
             this.SuspendLayout();
             // 
             // btnOk
             // 
             this.btnOk.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.btnOk.Image = global::Tinke.Properties.Resources.accept;
-            this.btnOk.Location = new System.Drawing.Point(15, 226);
+            this.btnOk.Location = new System.Drawing.Point(15, 347);
             this.btnOk.Name = "btnOk";
             this.btnOk.Size = new System.Drawing.Size(90, 40);
             this.btnOk.TabIndex = 0;
@@ -226,12 +232,59 @@
             this.label5.TabIndex = 10;
             this.label5.Text = "S07";
             // 
+            // groupSubImages
+            // 
+            this.groupSubImages.Controls.Add(this.numericSubStart);
+            this.groupSubImages.Controls.Add(this.label7);
+            this.groupSubImages.Enabled = false;
+            this.groupSubImages.Location = new System.Drawing.Point(15, 264);
+            this.groupSubImages.Name = "groupSubImages";
+            this.groupSubImages.Size = new System.Drawing.Size(371, 66);
+            this.groupSubImages.TabIndex = 11;
+            this.groupSubImages.TabStop = false;
+            this.groupSubImages.Text = "Subimages";
+            // 
+            // checkSubImage
+            // 
+            this.checkSubImage.AutoSize = true;
+            this.checkSubImage.Location = new System.Drawing.Point(15, 241);
+            this.checkSubImage.Name = "checkSubImage";
+            this.checkSubImage.Size = new System.Drawing.Size(79, 17);
+            this.checkSubImage.TabIndex = 12;
+            this.checkSubImage.Text = "SubImages";
+            this.checkSubImage.UseVisualStyleBackColor = true;
+            this.checkSubImage.CheckedChanged += new System.EventHandler(this.checkSubImage_CheckedChanged);
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(12, 29);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(79, 13);
+            this.label7.TabIndex = 0;
+            this.label7.Text = "Posición inicial:";
+            // 
+            // numericSubStart
+            // 
+            this.numericSubStart.Hexadecimal = true;
+            this.numericSubStart.Location = new System.Drawing.Point(134, 27);
+            this.numericSubStart.Maximum = new decimal(new int[] {
+            65535,
+            0,
+            0,
+            0});
+            this.numericSubStart.Name = "numericSubStart";
+            this.numericSubStart.Size = new System.Drawing.Size(60, 20);
+            this.numericSubStart.TabIndex = 1;
+            // 
             // MapOptions
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
             this.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
-            this.ClientSize = new System.Drawing.Size(394, 269);
+            this.ClientSize = new System.Drawing.Size(394, 392);
             this.ControlBox = false;
+            this.Controls.Add(this.checkSubImage);
+            this.Controls.Add(this.groupSubImages);
             this.Controls.Add(this.groupFill);
             this.Controls.Add(this.checkFillTile);
             this.Controls.Add(this.numericHeight);
@@ -254,6 +307,9 @@
             this.groupFill.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericMaxHeight)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericMaxWidth)).EndInit();
+            this.groupSubImages.ResumeLayout(false);
+            this.groupSubImages.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericSubStart)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -276,5 +332,9 @@
         private System.Windows.Forms.NumericUpDown numericMaxHeight;
         private System.Windows.Forms.NumericUpDown numericMaxWidth;
         private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.GroupBox groupSubImages;
+        private System.Windows.Forms.NumericUpDown numericSubStart;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.CheckBox checkSubImage;
     }
 }

@@ -126,11 +126,29 @@ namespace Tinke
             o.AddExtension = true;
             o.CheckPathExists = true;
             o.DefaultExt = ".bmp";
-            o.Filter = "BitMaP (*.bmp)|*.bmp";
+            o.Filter = "BitMaP (*.bmp)|*.bmp|" +
+                       "Portable Network Graphic (*.png)|*.png|" +
+                       "JPEG (*.jpg)|*.jpg;*.jpeg|" +
+                       "Tagged Image File Format (*.tiff)|*.tiff;*.tif|" + 
+                       "Graphic Interchange Format (*.gif)|*.gif|" +
+                       "Icon (*.ico)|*.ico;*.icon";
             o.OverwritePrompt = true;
 
             if (o.ShowDialog() == DialogResult.OK)
-                ActualizarFullImagen().Save(o.FileName, System.Drawing.Imaging.ImageFormat.Bmp);
+            {
+                if (o.FilterIndex == 1)
+                    ActualizarFullImagen().Save(o.FileName, System.Drawing.Imaging.ImageFormat.Bmp);
+                else if (o.FilterIndex == 2)
+                    ActualizarFullImagen().Save(o.FileName, System.Drawing.Imaging.ImageFormat.Png);
+                else if (o.FilterIndex == 3)
+                    ActualizarFullImagen().Save(o.FileName, System.Drawing.Imaging.ImageFormat.Jpeg);
+                else if (o.FilterIndex == 4)
+                    ActualizarFullImagen().Save(o.FileName, System.Drawing.Imaging.ImageFormat.Tiff);
+                else if (o.FilterIndex == 5)
+                    ActualizarFullImagen().Save(o.FileName, System.Drawing.Imaging.ImageFormat.Gif);
+                else if (o.FilterIndex == 6)
+                    ActualizarFullImagen().Save(o.FileName, System.Drawing.Imaging.ImageFormat.Icon);
+            }
         }
 
         private void btnTodos_Click(object sender, EventArgs e)
@@ -227,41 +245,20 @@ namespace Tinke
 
         private Image ActualizarImagen()
         {
-            // Devolvemos la imagen a su estado inicial
             imgBox.Image = Imagen_NCER.Get_Image(ncer.cebk.banks[comboCelda.SelectedIndex], ncer.cebk.block_size,
                 tile, paleta, checkEntorno.Checked, checkCelda.Checked, checkNumber.Checked, checkTransparencia.Checked,
-                checkImagen.Checked);
+                checkImagen.Checked, trackZoom.Value);
 
-            // Zooms
-            float scale = trackZoom.Value / 100f;
-            int wSize = (int)(imgBox.Image.Width * scale);
-            int hSize = (int)(imgBox.Image.Height * scale);
-
-            Bitmap imagen = new Bitmap(wSize, hSize);
-            Graphics graficos = Graphics.FromImage(imagen);
-            graficos.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
-            graficos.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-            graficos.DrawImage(imgBox.Image, wSize / 2 - wSize + 128, wSize / 2 - hSize + 128, wSize, hSize);
-            imgBox.Image = imagen;
-
-            return imagen;
+            return imgBox.Image;
         }
         private Image ActualizarFullImagen()
         {
             // Devolvemos la imagen a su estado inicial
             Image original = Imagen_NCER.Get_Image(ncer.cebk.banks[comboCelda.SelectedIndex], ncer.cebk.block_size,
                 tile, paleta, checkEntorno.Checked, checkCelda.Checked, checkNumber.Checked, checkTransparencia.Checked,
-                checkImagen.Checked, 512, 512);
+                checkImagen.Checked, 512, 512, trackZoom.Value);
 
-            float scale = trackZoom.Value / 100f;
-            int wSize = (int)(original.Width * scale);
-            int hSize = (int)(original.Height * scale);
-
-            Bitmap imagen = new Bitmap(wSize, hSize);
-            Graphics graficos = Graphics.FromImage(imagen);
-            graficos.DrawImage(original, 0, 0, wSize, hSize);
-
-            return imagen;
+            return original;
         }
 
         private void btnImport_Click(object sender, EventArgs e)
@@ -269,17 +266,59 @@ namespace Tinke
             OpenFileDialog o = new OpenFileDialog();
             o.CheckFileExists = true;
             o.DefaultExt = "bmp";
-            o.Filter = "BitMaP (*.bmp)|*.bmp";
-
+            o.Filter = "Supported images |*.png;*.bmp;*.jpg;*.jpeg;*.tif;*.tiff;*.gif;*.ico;*.icon|" +
+                       "BitMaP (*.bmp)|*.bmp|" +
+                       "Portable Network Graphic (*.png)|*.png|" +
+                       "JPEG (*.jpg)|*.jpg;*.jpeg|" +
+                       "Tagged Image File Format (*.tiff)|*.tiff;*.tif|" +
+                       "Graphic Interchange Format (*.gif)|*.gif|" +
+                       "Icon (*.ico)|*.ico;*.icon";
             o.Multiselect = false;
             if (o.ShowDialog() == DialogResult.OK)
             {
+                string filePath = o.FileName;
+
+                if (o.FilterIndex != 2)
+                {
+                    // Convert the image to bmp format
+                    using (System.IO.MemoryStream ms = new System.IO.MemoryStream())
+                    {
+                        // Convert to BMP
+                        Image.FromFile(filePath).Save(ms, System.Drawing.Imaging.ImageFormat.Bmp);
+                        Bitmap bmp = (Bitmap)Image.FromStream(ms);
+
+                        // Convert to indexed colors (palette+tiles)
+                        if (tile.rahc.depth == ColorDepth.Depth4Bit)
+                        {
+                            bmp = bmp.Clone(
+                                new Rectangle(new Point(0, 0), bmp.Size),
+                                System.Drawing.Imaging.PixelFormat.Format4bppIndexed);
+                        }
+                        else
+                        {
+                            bmp = bmp.Clone(
+                                new Rectangle(new Point(0, 0), bmp.Size),
+                                System.Drawing.Imaging.PixelFormat.Format8bppIndexed);
+
+                        }
+
+                        // Save the new file
+                        filePath = pluginHost.Get_TempFolder() + System.IO.Path.DirectorySeparatorChar + "bmp_" +
+                            System.IO.Path.GetFileName(filePath);
+                        if (System.IO.File.Exists(filePath))
+                            System.IO.File.Delete(filePath);
+
+                        bmp.Save(filePath, System.Drawing.Imaging.ImageFormat.Bmp);
+                    }
+                }
+
+
                 #region Set new palette
                 if (new String(paleta.header.id) != "NCLR" && new String(paleta.header.id) != "RLCN") // Not NCLR file
                     goto Set_Tiles;
 
                 String paletteFile = System.IO.Path.GetTempFileName();
-                NCLR newPalette = Imagen_NCLR.BitmapToPalette(o.FileName);
+                NCLR newPalette = Imagen_NCLR.BitmapToPalette(filePath);
                 paleta.pltt.palettes[ncer.cebk.banks[comboCelda.SelectedIndex].cells[0].obj2.index_palette].colors = newPalette.pltt.palettes[0].colors;
 
                 pluginHost.Set_NCLR(paleta);
@@ -292,10 +331,10 @@ namespace Tinke
                 if (new String(tile.header.id) != "NCGR" && new String(tile.header.id) != "RGCN") // Not NCGR file
                     goto End;
 
-                if (Image.FromFile(o.FileName).Size != new Size(512, 512))
+                if (Image.FromFile(filePath).Size != new Size(512, 512))
                     throw new NotSupportedException(Tools.Helper.ObtenerTraduccion("NCER", "S26"));
 
-                NCGR bitmap = Imagen_NCGR.BitmapToTile(o.FileName, TileOrder.NoTiled);
+                NCGR bitmap = Imagen_NCGR.BitmapToTile(filePath, TileOrder.NoTiled);
 
                 for (int i = 0; i < ncer.cebk.banks[comboCelda.SelectedIndex].cells.Length; i++)
                 {

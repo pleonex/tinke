@@ -300,7 +300,20 @@ namespace Tinke
             return tile;
         }
 
-        public static Bitmap Crear_Imagen(NCGR tile, NCLR paleta)
+        public static Byte[][] MergeImage(Byte[][] originalTile, Byte[][] newTiles, int startTile)
+        {
+            List<Byte[]> data = new List<byte[]>();
+
+            for (int i = 0; i < startTile; i++)
+            {
+                data.Add(originalTile[i]);
+            }
+            data.AddRange(newTiles);
+
+            return data.ToArray();
+        }
+
+        public static Bitmap Crear_Imagen(NCGR tile, NCLR paleta, int zoom = 1)
         {
             if (tile.rahc.nTilesX == 0xFFFF)        // En caso de que no venga la información hacemos la imagen de 256x256
             {
@@ -326,16 +339,16 @@ namespace Tinke
             switch (tile.order)
             {
                 case TileOrder.NoTiled:
-                    return No_Tile(tile, paleta, 0, tile.rahc.nTilesX, tile.rahc.nTilesY);
+                    return No_Tile(tile, paleta, 0, tile.rahc.nTilesX, tile.rahc.nTilesY, zoom);
                 case TileOrder.Horizontal:
-                    return Horizontal(tile, paleta, 0, tile.rahc.nTilesX, tile.rahc.nTilesY);
+                    return Horizontal(tile, paleta, 0, tile.rahc.nTilesX, tile.rahc.nTilesY, zoom);
                 case TileOrder.Vertical:
                     throw new NotImplementedException();
                 default:
                     return new Bitmap(0, 0);
             }
         }
-        public static Bitmap Crear_Imagen(NCGR tile, NCLR paleta, int startTile)
+        public static Bitmap Crear_Imagen(NCGR tile, NCLR paleta, int startTile, int zoom = 1)
         {
             if (tile.rahc.nTilesX == 0xFFFF)        // En caso de que no venga la información hacemos la imagen de 256x256
             {
@@ -361,23 +374,23 @@ namespace Tinke
             switch (tile.order)
             {
                 case TileOrder.NoTiled:
-                    return No_Tile(tile, paleta, startTile, tile.rahc.nTilesX, tile.rahc.nTilesY);
+                    return No_Tile(tile, paleta, startTile, tile.rahc.nTilesX, tile.rahc.nTilesY, zoom);
                 case TileOrder.Horizontal:
-                    return Horizontal(tile, paleta, startTile, tile.rahc.nTilesX, tile.rahc.nTilesY);
+                    return Horizontal(tile, paleta, startTile, tile.rahc.nTilesX, tile.rahc.nTilesY, zoom);
                 case TileOrder.Vertical:
                     throw new NotImplementedException();
                 default:
                     return new Bitmap(1, 1);
             }
         }
-        public static Bitmap Crear_Imagen(NCGR tile, NCLR paleta, int startTile, int tilesX, int tilesY)
+        public static Bitmap Crear_Imagen(NCGR tile, NCLR paleta, int startTile, int tilesX, int tilesY, int zoom = 1)
         {
             switch (tile.order)
             {
                 case TileOrder.NoTiled:
-                    return No_Tile(tile, paleta, startTile, tilesX, tilesY);
+                    return No_Tile(tile, paleta, startTile, tilesX, tilesY, zoom);
                 case TileOrder.Horizontal:
-                    return Horizontal(tile, paleta, startTile, tilesX, tilesY);
+                    return Horizontal(tile, paleta, startTile, tilesX, tilesY, zoom);
                 case TileOrder.Vertical:
                     throw new NotImplementedException();
                 default:
@@ -386,36 +399,47 @@ namespace Tinke
         }
 
 
-        private static Bitmap No_Tile(NCGR tile, NCLR paleta, int salto, int width, int height)
+        private static Bitmap No_Tile(NCGR tile, NCLR paleta, int salto, int width, int height, int zoom = 1)
         {
-            Bitmap imagen = new Bitmap(width, height);
+            if (zoom <= 0)
+                zoom = 1;
+
+            Bitmap imagen = new Bitmap(width * zoom, height * zoom);
 
 
                 for (int h = 0; h < height; h++)
                 {
                     for (int w = 0; w < width; w++)
                     {
-                        try
+                        for (int hzoom = 0; hzoom < zoom; hzoom++)
                         {
-                            if (tile.rahc.tileData.tiles[0].Length == 0)
-                                goto Fin;
-                            imagen.SetPixel(
-                                w,
-                                h,
-                                paleta.pltt.palettes[tile.rahc.tileData.nPalette[0]].colors[
-                                    tile.rahc.tileData.tiles[0][w + h * width + salto]
-                                    ]);
+                            for (int wzoom = 0; wzoom < zoom; wzoom++)
+                            {
+                                try
+                                {
+                                    if (tile.rahc.tileData.tiles[0].Length == 0)
+                                        goto Fin;
+                                    imagen.SetPixel(
+                                        w * zoom + wzoom,
+                                        h * zoom + hzoom,
+                                        paleta.pltt.palettes[tile.rahc.tileData.nPalette[0]].colors[
+                                            tile.rahc.tileData.tiles[0][w + h * width + salto]
+                                            ]);
+                                }
+                                catch { goto Fin; }
+                            }
                         }
-                        catch { goto Fin; }
                     }
                 }
             Fin:
                 return imagen;
 
         }
-        private static Bitmap Horizontal(NCGR tile, NCLR paleta, int startTile, int tilesX, int tilesY)
+        private static Bitmap Horizontal(NCGR tile, NCLR paleta, int startTile, int tilesX, int tilesY, int zoom = 1)
         {
-            Bitmap imagen = new Bitmap(tilesX * 8, tilesY * 8);
+            if (zoom <= 0)
+                zoom = 1;
+            Bitmap imagen = new Bitmap((tilesX * 8) * zoom, (tilesY * 8) * zoom);
 
             tile.rahc.tileData.tiles = Convertir.BytesToTiles(Convertir.TilesToBytes(tile.rahc.tileData.tiles, startTile));
             startTile = 0;
@@ -428,19 +452,24 @@ namespace Tinke
                     {
                         for (int w = 0; w < 8; w++)
                         {
-                            try
+                            for (int hzoom = 0; hzoom < zoom; hzoom++)
                             {
-                                if (tile.rahc.tileData.tiles[wt + ht * tilesX].Length == 0)
-                                    goto Fin;
-                                imagen.SetPixel(
-                                    w + wt * 8,
-                                    h + ht * 8,
-                                    paleta.pltt.palettes[tile.rahc.tileData.nPalette[startTile]].colors[
-                                        tile.rahc.tileData.tiles[startTile][w + h * 8]
-                                        ]);
+                                for (int wzoom = 0; wzoom < zoom; wzoom++)
+                                {
+                                    try
+                                    {
+                                        if (tile.rahc.tileData.tiles[wt + ht * tilesX].Length == 0)
+                                            goto Fin;
+                                        imagen.SetPixel(
+                                            (w + wt * 8) * zoom + wzoom,
+                                            (h + ht * 8) * zoom + hzoom,
+                                            paleta.pltt.palettes[tile.rahc.tileData.nPalette[startTile]].colors[
+                                                tile.rahc.tileData.tiles[startTile][w + h * 8]
+                                                ]);
+                                    }
+                                    catch { goto Fin; }
+                                }
                             }
-                            catch { goto Fin; }
-
                         }
                     }
                     startTile++;

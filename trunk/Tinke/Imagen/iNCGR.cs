@@ -37,8 +37,8 @@ namespace Tinke
         IPluginHost pluginHost;
 
         string oldDepth;
-        
-        
+
+
         int oldTiles;
         bool stopUpdating;
         bool isMap;
@@ -235,10 +235,12 @@ namespace Tinke
             pluginHost.Set_NCGR(tile);
             UpdateImage();
         }
-        private void UpdateImage()
+        private Image UpdateImage()
         {
             if (stopUpdating)
-                return;
+                return null;
+
+            Image image;
 
             if (tile.order != TileOrder.NoTiled)
             {
@@ -255,48 +257,51 @@ namespace Tinke
             {
                 NCGR newTile = tile;
                 newTile.rahc.tileData = pluginHost.Transform_NSCR(map, newTile.rahc.tileData, (int)map.other);
-                pic.Image = Imagen_NCGR.Crear_Imagen(newTile, paleta, (int)tile.other);
+                image = Imagen_NCGR.Crear_Imagen(newTile, paleta, (int)tile.other, trackZoom.Value);
             }
             else
-                pic.Image = Imagen_NCGR.Crear_Imagen(tile, paleta, (int)tile.other);
+                image = Imagen_NCGR.Crear_Imagen(tile, paleta, (int)tile.other, trackZoom.Value);
+                
+            pic.Image = image;
+            return image;
         }
 
         private void ReadLanguage()
         {
             try
             {
-            System.Xml.Linq.XElement xml = Tools.Helper.ObtenerTraduccion("NCGR");
+                System.Xml.Linq.XElement xml = Tools.Helper.ObtenerTraduccion("NCGR");
 
-            label5.Text = xml.Element("S01").Value;
-            groupProp.Text = xml.Element("S02").Value;
-            columnPos.Text = xml.Element("S03").Value;
-            columnCampo.Text = xml.Element("S04").Value;
-            columnValor.Text = xml.Element("S05").Value;
-            listInfo.Items[0].SubItems[1].Text = xml.Element("S06").Value;
-            listInfo.Items[1].SubItems[1].Text = xml.Element("S07").Value;
-            listInfo.Items[2].SubItems[1].Text = xml.Element("S08").Value;
-            listInfo.Items[3].SubItems[1].Text = xml.Element("S09").Value;
-            listInfo.Items[4].SubItems[1].Text = xml.Element("S0A").Value;
-            listInfo.Items[5].SubItems[1].Text = xml.Element("S0B").Value;
-            listInfo.Items[6].SubItems[1].Text = xml.Element("S0C").Value;
-            listInfo.Items[7].SubItems[1].Text = xml.Element("S0D").Value;
-            listInfo.Items[8].SubItems[1].Text = xml.Element("S0E").Value;
-            listInfo.Items[9].SubItems[1].Text = xml.Element("S0F").Value;
-            listInfo.Items[10].SubItems[1].Text = xml.Element("S10").Value;
-            label3.Text = xml.Element("S11").Value;
-            label1.Text = xml.Element("S12").Value;
-            label2.Text = xml.Element("S13").Value;
-            label6.Text = xml.Element("S14").Value;
-            btnSave.Text = xml.Element("S15").Value;
-            comboBox1.Items[0] = xml.Element("S16").Value;
-            comboBox1.Items[1] = xml.Element("S17").Value;
-            //comboBox1.Items[2] = xml.Element("S18").Value;
-            checkTransparency.Text = xml.Element("S1C").Value;
-            lblZoom.Text = xml.Element("S1E").Value;
-            btnBgd.Text = xml.Element("S1F").Value;
-            btnBgdTrans.Text = xml.Element("S20").Value;
-            btnImport.Text = xml.Element("S21").Value;
-            btnSetTrans.Text = xml.Element("S22").Value;
+                label5.Text = xml.Element("S01").Value;
+                groupProp.Text = xml.Element("S02").Value;
+                columnPos.Text = xml.Element("S03").Value;
+                columnCampo.Text = xml.Element("S04").Value;
+                columnValor.Text = xml.Element("S05").Value;
+                listInfo.Items[0].SubItems[1].Text = xml.Element("S06").Value;
+                listInfo.Items[1].SubItems[1].Text = xml.Element("S07").Value;
+                listInfo.Items[2].SubItems[1].Text = xml.Element("S08").Value;
+                listInfo.Items[3].SubItems[1].Text = xml.Element("S09").Value;
+                listInfo.Items[4].SubItems[1].Text = xml.Element("S0A").Value;
+                listInfo.Items[5].SubItems[1].Text = xml.Element("S0B").Value;
+                listInfo.Items[6].SubItems[1].Text = xml.Element("S0C").Value;
+                listInfo.Items[7].SubItems[1].Text = xml.Element("S0D").Value;
+                listInfo.Items[8].SubItems[1].Text = xml.Element("S0E").Value;
+                listInfo.Items[9].SubItems[1].Text = xml.Element("S0F").Value;
+                listInfo.Items[10].SubItems[1].Text = xml.Element("S10").Value;
+                label3.Text = xml.Element("S11").Value;
+                label1.Text = xml.Element("S12").Value;
+                label2.Text = xml.Element("S13").Value;
+                label6.Text = xml.Element("S14").Value;
+                btnSave.Text = xml.Element("S15").Value;
+                comboBox1.Items[0] = xml.Element("S16").Value;
+                comboBox1.Items[1] = xml.Element("S17").Value;
+                //comboBox1.Items[2] = xml.Element("S18").Value;
+                checkTransparency.Text = xml.Element("S1C").Value;
+                lblZoom.Text = xml.Element("S1E").Value;
+                btnBgd.Text = xml.Element("S1F").Value;
+                btnBgdTrans.Text = xml.Element("S20").Value;
+                btnImport.Text = xml.Element("S21").Value;
+                btnSetTrans.Text = xml.Element("S22").Value;
             }
             catch { throw new Exception("There was an error reading the XML language file."); }
         }
@@ -320,14 +325,59 @@ namespace Tinke
             OpenFileDialog o = new OpenFileDialog();
             o.CheckFileExists = true;
             o.DefaultExt = "bmp";
-            o.Filter = "BitMaP (*.bmp)|*.bmp";
+            o.Filter = "Supported images |*.png;*.bmp;*.jpg;*.jpeg;*.tif;*.tiff;*.gif;*.ico;*.icon|" +
+                       "BitMaP (*.bmp)|*.bmp|" +
+                       "Portable Network Graphic (*.png)|*.png|" +
+                       "JPEG (*.jpg)|*.jpg;*.jpeg|" +
+                       "Tagged Image File Format (*.tiff)|*.tiff;*.tif|" +
+                       "Graphic Interchange Format (*.gif)|*.gif|" +
+                       "Icon (*.ico)|*.ico;*.icon";
             o.Multiselect = false;
             if (o.ShowDialog() == DialogResult.OK)
             {
+                string filePath = o.FileName;
+
+                #region Convert to BMP format
+                if (o.FilterIndex != 2)
+                {
+                    // Convert the image to bmp format
+                    using (System.IO.MemoryStream ms = new System.IO.MemoryStream())
+                    {
+                        // Convert to BMP
+                        Image.FromFile(filePath).Save(ms, System.Drawing.Imaging.ImageFormat.Bmp);
+                        Bitmap bmp = (Bitmap)Image.FromStream(ms);
+
+                        // Convert to indexed colors (palette+tiles)
+                        if (tile.rahc.depth == ColorDepth.Depth4Bit)
+                        {
+                            bmp = bmp.Clone(
+                                new Rectangle(new Point(0, 0), bmp.Size),
+                                System.Drawing.Imaging.PixelFormat.Format4bppIndexed);
+                        }
+                        else
+                        {
+                            bmp = bmp.Clone(
+                                new Rectangle(new Point(0, 0), bmp.Size),
+                                System.Drawing.Imaging.PixelFormat.Format8bppIndexed);
+
+                        }
+
+                        // Save the new file
+                        filePath = pluginHost.Get_TempFolder() + System.IO.Path.DirectorySeparatorChar + "bmp_" +
+                            System.IO.Path.GetFileName(filePath);
+                        if (System.IO.File.Exists(filePath))
+                            System.IO.File.Delete(filePath);
+
+                        bmp.Save(filePath, System.Drawing.Imaging.ImageFormat.Bmp);
+                    }
+                }
+                #endregion
+
+                #region Save the new palette
                 if (new String(paleta.header.id) != "NCLR" && new String(paleta.header.id) != "RLCN")
                     goto Set_Tiles;
 
-                NCLR newPalette = Imagen_NCLR.BitmapToPalette(o.FileName);
+                NCLR newPalette = Imagen_NCLR.BitmapToPalette(filePath);
                 newPalette.id = paleta.id;
                 paleta = newPalette;
 
@@ -335,10 +385,32 @@ namespace Tinke
                 String paletteFile = System.IO.Path.GetTempFileName();
                 Imagen_NCLR.Escribir(paleta, paletteFile);
                 pluginHost.ChangeFile((int)paleta.id, paletteFile);
+                #endregion
 
             Set_Tiles:
-                NCGR newTile = Imagen_NCGR.BitmapToTile(o.FileName, (comboBox1.SelectedIndex == 0 ? TileOrder.NoTiled : TileOrder.Horizontal));
+
+                int width, heigth, startTile = 0;
+                Dialog.MapOptions mapOptions = new Dialog.MapOptions();
+                if (isMap)
+                {
+                    if (tile.order == TileOrder.Horizontal)
+                    {
+                        width = tile.rahc.nTilesX * 8;
+                        heigth = tile.rahc.nTilesY * 8;
+                    }
+                    else
+                    {
+                        width = tile.rahc.nTilesX;
+                        heigth = tile.rahc.nTilesY;
+                    }
+                    mapOptions = new Dialog.MapOptions(width, heigth);
+                    mapOptions.ShowDialog();
+                    startTile = mapOptions.SubImagesStart;
+                }
+
+                NCGR newTile = Imagen_NCGR.BitmapToTile(filePath, (comboBox1.SelectedIndex == 0 ? TileOrder.NoTiled : TileOrder.Horizontal));
                 newTile.id = tile.id;
+                newTile.rahc.tileData.tiles = Imagen_NCGR.MergeImage(tile.rahc.tileData.tiles, newTile.rahc.tileData.tiles, startTile);
                 tile = newTile;
                 tile.other = 0;
 
@@ -354,27 +426,13 @@ namespace Tinke
 
                     NSCR newMap;
 
-                    int width, heigth;
-                    if (tile.order == TileOrder.Horizontal)
-                    {
-                        width = tile.rahc.nTilesX * 8;
-                        heigth = tile.rahc.nTilesY * 8;
-                    }
-                    else
-                    {
-                        width = tile.rahc.nTilesX;
-                        heigth = tile.rahc.nTilesY;
-                    }
-
-                    Dialog.MapOptions mapOptions = new Dialog.MapOptions(width, heigth);
-                    mapOptions.ShowDialog();
                     width = mapOptions.ImagenWidth;
                     heigth = mapOptions.ImageHeight;
 
                     if (mapOptions.FillTiles)
-                        newMap = Imagen_NSCR.Create_BasicMap(width, heigth, mapOptions.StartFillTiles, mapOptions.FillTilesWith);
+                        newMap = Imagen_NSCR.Create_BasicMap(width, heigth, mapOptions.StartFillTiles, mapOptions.FillTilesWith, startTile);
                     else
-                        newMap = Imagen_NSCR.Create_BasicMap((int)tile.rahc.nTiles, width, heigth);
+                        newMap = Imagen_NSCR.Create_BasicMap((int)tile.rahc.nTiles, width, heigth,startTile);
 
                     newMap.id = map.id;
                     newMap.section.padding = map.section.padding;
@@ -431,28 +489,29 @@ namespace Tinke
             SaveFileDialog o = new SaveFileDialog();
             o.AddExtension = true;
             o.DefaultExt = "bmp";
-            o.Filter = "BitMaP (*.bmp)|*.bmp";
+            o.Filter = "BitMaP (*.bmp)|*.bmp|" +
+                       "Portable Network Graphic (*.png)|*.png|" +
+                       "JPEG (*.jpg)|*.jpg;*.jpeg|" +
+                       "Tagged Image File Format (*.tiff)|*.tiff;*.tif|" +
+                       "Graphic Interchange Format (*.gif)|*.gif|" +
+                       "Icon (*.ico)|*.ico;*.icon";
             o.OverwritePrompt = true;
             if (o.ShowDialog() == DialogResult.OK)
             {
-                // In this way the palette of the bitmap image has a few colours
-                /*Bitmap savedImage = (Bitmap)pic.Image;
-
-                if (tile.rahc.depth == ColorDepth.Depth4Bit)
-                {
-                    savedImage = (Bitmap)savedImage.Clone(
-                        new Rectangle(0, 0, pic.Image.Width, pic.Image.Height),
-                        System.Drawing.Imaging.PixelFormat.Format4bppIndexed);
-                }
-                else
-                {
-                    savedImage = (Bitmap)savedImage.Clone(
-                        new Rectangle(0, 0, pic.Image.Width, pic.Image.Height),
-                        System.Drawing.Imaging.PixelFormat.Format8bppIndexed);
-                }
-
-                savedImage.Save(o.FileName, System.Drawing.Imaging.ImageFormat.Bmp);*/
-                pic.Image.Save(o.FileName, System.Drawing.Imaging.ImageFormat.Bmp);
+                Bitmap image = (Bitmap)UpdateImage();
+                //image = image.Clone(new Rectangle(new Point(0, 0), image.Size), System.Drawing.Imaging.PixelFormat.Indexed);
+                if (o.FilterIndex == 1)
+                    image.Save(o.FileName, System.Drawing.Imaging.ImageFormat.Bmp);
+                else if (o.FilterIndex == 2)
+                    UpdateImage().Save(o.FileName, System.Drawing.Imaging.ImageFormat.Png);
+                else if (o.FilterIndex == 3)
+                    UpdateImage().Save(o.FileName, System.Drawing.Imaging.ImageFormat.Jpeg);
+                else if (o.FilterIndex == 4)
+                    UpdateImage().Save(o.FileName, System.Drawing.Imaging.ImageFormat.Tiff);
+                else if (o.FilterIndex == 5)
+                    UpdateImage().Save(o.FileName, System.Drawing.Imaging.ImageFormat.Gif);
+                else if (o.FilterIndex == 6)
+                    UpdateImage().Save(o.FileName, System.Drawing.Imaging.ImageFormat.Icon);
             }
             o.Dispose();
         }
@@ -478,15 +537,7 @@ namespace Tinke
 
         private void trackZoom_Scroll(object sender, EventArgs e)
         {
-            UpdateImage(); // Devolvemos la imagen original para no perder calidad
-
-            float scale = trackZoom.Value / 100f;
-            Bitmap imagen = new Bitmap((int)(pic.Image.Width * scale), (int)(pic.Image.Height * scale));
-            Graphics graficos = Graphics.FromImage(imagen);
-            graficos.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
-            graficos.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
-            graficos.DrawImage(pic.Image, 0, 0, pic.Image.Width * scale, pic.Image.Height * scale);
-            pic.Image = imagen;
+            UpdateImage();
         }
         private void checkTransparency_CheckedChanged(object sender, EventArgs e)
         {

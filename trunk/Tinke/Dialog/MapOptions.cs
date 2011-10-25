@@ -63,6 +63,14 @@ namespace Tinke.Dialog
         {
             get { return (int)numericFillTile.Value; }
         }
+        public bool SubImages
+        {
+            get { return checkSubImage.Checked; }
+        }
+        public int SubImagesStart
+        {
+            get { return (int)numericSubStart.Value; }
+        }
 
         private void checkFillTile_CheckedChanged(object sender, EventArgs e)
         {
@@ -80,6 +88,11 @@ namespace Tinke.Dialog
         private void numericStartTile_ValueChanged(object sender, EventArgs e)
         {
             numericMaxHeight.Value = (numericStartTile.Value * 64) / numericWidth.Value;
+        }
+
+        private void checkSubImage_CheckedChanged(object sender, EventArgs e)
+        {
+            groupSubImages.Enabled = checkSubImage.Checked;
         }
     }
 }

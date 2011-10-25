@@ -40,6 +40,8 @@ namespace _3DModels
 
             if (ext == "BTX0")
                 return Format.Texture;
+            else if (ext == "BMD0")
+                return Format.Texture;
 
             return Format.Unknown;
         }
@@ -55,6 +57,13 @@ namespace _3DModels
 
             if (ext == "BTX0")
                 return new TextureControl(pluginHost, BTX0.Read(archivo, id, pluginHost));
+            else if (ext == "BMD0")
+            {
+                sBMD0 bmd = BMD0.Read(archivo, id, pluginHost);
+
+                if (bmd.header.numSect == 2)
+                    return new TextureControl(pluginHost, bmd.texture, bmd.header.offset[1], bmd.filePath);
+            }
             
             return new System.Windows.Forms.Control();
         }

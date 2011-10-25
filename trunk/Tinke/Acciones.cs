@@ -1623,7 +1623,9 @@ namespace Tinke
         {
             sFile selectFile = Select_File();
 
-            string tempFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + selectFile.id + selectFile.name; ;
+            string tempFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + selectFile.id + selectFile.name;
+            if (File.Exists(tempFile))
+                File.Delete(tempFile);
             BinaryReader br = new BinaryReader(File.OpenRead(selectFile.path));
             br.BaseStream.Position = selectFile.offset;
             File.WriteAllBytes(tempFile, br.ReadBytes((int)selectFile.size));

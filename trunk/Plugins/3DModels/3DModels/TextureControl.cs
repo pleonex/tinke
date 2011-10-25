@@ -62,6 +62,34 @@ namespace _3DModels
 
             UpdateTexture(0, 0);
         }
+        public TextureControl(IPluginHost pluginHost, sBTX0.Texture tex, uint texOffset, string filePath)
+        {
+            InitializeComponent();
+
+            sBTX0 btx0 = new sBTX0();
+            btx0.texture = tex;
+            btx0.file = filePath;
+            btx0.header.offset = new uint[1];
+            btx0.header.offset[0] = texOffset;
+
+            this.pluginHost = pluginHost;
+            this.btx0 = btx0;
+            ReadLanguage();
+
+            for (int i = 0; i < btx0.texture.texInfo.num_objs; i++)
+                listTextures.Items.Add(String.Format("{0}: {1}", i.ToString(), btx0.texture.texInfo.names[i]));
+            for (int i = 0; i < btx0.texture.palInfo.num_objs; i++)
+                listPalettes.Items.Add(String.Format("{0}: {1}", i.ToString(), btx0.texture.palInfo.names[i]));
+
+            listTextures.SelectedIndex = 0;
+            listPalettes.SelectedIndex = 0;
+
+            listTextures.SelectedIndexChanged += new EventHandler(listTextures_SelectedIndexChanged);
+            listPalettes.SelectedIndexChanged += new EventHandler(listPalettes_SelectedIndexChanged);
+
+            UpdateTexture(0, 0);
+        }
+
         private void ReadLanguage()
         {
             try

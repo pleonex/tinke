@@ -292,18 +292,18 @@ namespace Tinke
             this.label8.AutoSize = true;
             this.label8.Location = new System.Drawing.Point(212, 407);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(25, 13);
+            this.label8.Size = new System.Drawing.Size(19, 13);
             this.label8.TabIndex = 18;
-            this.label8.Text = "800";
+            this.label8.Text = "20";
             // 
             // label7
             // 
             this.label7.AutoSize = true;
             this.label7.Location = new System.Drawing.Point(7, 407);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(19, 13);
+            this.label7.Size = new System.Drawing.Size(13, 13);
             this.label7.TabIndex = 17;
-            this.label7.Text = "50";
+            this.label7.Text = "1";
             // 
             // lblZoom
             // 
@@ -318,16 +318,15 @@ namespace Tinke
             // trackZoom
             // 
             this.trackZoom.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
-            this.trackZoom.LargeChange = 100;
+            this.trackZoom.LargeChange = 2;
             this.trackZoom.Location = new System.Drawing.Point(10, 423);
-            this.trackZoom.Maximum = 800;
-            this.trackZoom.Minimum = 50;
+            this.trackZoom.Maximum = 20;
+            this.trackZoom.Minimum = 1;
             this.trackZoom.Name = "trackZoom";
             this.trackZoom.Size = new System.Drawing.Size(226, 45);
             this.trackZoom.SmallChange = 50;
             this.trackZoom.TabIndex = 15;
-            this.trackZoom.TickFrequency = 50;
-            this.trackZoom.Value = 100;
+            this.trackZoom.Value = 1;
             this.trackZoom.Scroll += new System.EventHandler(this.trackZoom_Scroll);
             // 
             // label6

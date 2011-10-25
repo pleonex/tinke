@@ -78,14 +78,14 @@
     <S3F>Modèle 3D</S3F>
     <S40>Chemin relatif</S40>
     <S41>Visionneuse hexadécimale</S41>
-    <S42>Pack</S42>
+    <S42>Compresser</S42>
     <S43>
-      There was an error compressing the file.
-      Check the debug messages.
+      Il y a une erreur à la compression de l'archive.
+      Vérifiez les messages d'erreur.
     </S43>
     <S44>
-      Sorry, you can't overwrite the current
-      opened file.
+      Désolé, vous ne pouvez pas écraser l'archive
+      ouverte actuellement.
     </S44>
   </Sistema>
   <RomInfo>
@@ -224,9 +224,9 @@
       {1}
     </S20>
     <S21>Temps de lecture des archives externes :</S21>
-    <S22>Le dossier temporaire (temp) ne peut pas être supprimé</S22>
-    <S23>There was an error attempting to compress/pack the file.</S23>
-    <S24>All the colors are used by the image.</S24>
+    <S22>Le dossier temporaire (temp) ne peut pas être supprimé.</S22>
+    <S23>Il y a une erreur de tentative à la compression de l'archive.</S23>
+    <S24>Toutes les couleurs sont utilisées par l'image.</S24>
   </Messages>
   <NCLR>
     <S01>Nombre de la palette :</S01>
@@ -346,9 +346,9 @@
     <S24>Importer</S24>
     <S25>Fixer la couleur de transparence</S25>
     <S26>
-      Incorrect image.
-      The image must have the size 512x512,
-      that is, the same as the exported image.
+      Image incorrecte.
+      L'image doit être de taille 512x512,
+      qui est, la même que l'image exportée.
     </S26>
   </NCER>
   <NANR>
@@ -541,6 +541,6 @@
     <S1A>Lire les offsets</S1A>
     <S1B>Hexadécimal</S1B>
     <S1C>Accepter</S1C>
-    <S1D>Add and remove the last color</S1D>
+    <S1D>Ajouter et supprimer les couleurs non utilisées</S1D>
   </Dialog>
 </Language>

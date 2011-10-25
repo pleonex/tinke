@@ -1,5 +1,6 @@
 0.8.2
 *** Improved Hexadecimal editor -> Now using Be.HexEditor (by Bernhard Elbl)
+** Read BMD0 files and show the textures (if any)
 ** Game GYAKUKEN (Gyajuten kenji 2) supported
   - Unpacker
 ** Game DBK ULTIMATE (Dragon Ball Kai Ultimate Butouden) supported
@@ -10,8 +11,9 @@
   - Unpacker for NPCK and KPCN files
   - Packer for NPCK and KPCN files
   - Text translator for SQ files
-** Game SUBARASHIKI (The world end with you) supported
+** Game SUBARASHIKI (The world end with you) supported (Unpacker)
 ** Game TOKIMEKIGS3S supported (LZS and RESC)
+** Game BLOODBAHAMUT supported (.DPK pack method by Tricky Upgrade)
 ** Improved Font plugin
   - Fixed problem with rotated Font
   - Fixed problem with char codes
@@ -20,13 +22,12 @@
   - Add new chars
 ** Fixed problem reading NCER files
 ** Added new method to set the transparency color.
+** Added method to create NSCR files of NCGR subimages
 ** Add button Pack (instead of using controls from button "View")
-* Fixed problem with button Compress in SDAT plugin
 * Fixed problem with textures with format 2
-* Added hotkeys (X for eXpand all nodes, C for Collapse all nodes)
-* Search by offset -> Offset: 00000000
 * Fixed problems in SDAT plugin
 * Added support for PMCP section in NCLR
+* Improved zoom function
 * Improved support for Mono 2.10
 
 0.8.1 (public release) rev100
