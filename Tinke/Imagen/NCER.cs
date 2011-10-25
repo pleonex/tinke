@@ -307,7 +307,7 @@ namespace Tinke
         }
 
         public static Bitmap Get_Image(Bank banco, uint blockSize, NCGR tile, NCLR paleta,
-            bool entorno, bool celda, bool numero, bool transparencia, bool image)
+            bool entorno, bool celda, bool numero, bool transparencia, bool image, int zoom = 1)
         {
             if (banco.cells.Length == 0)
                 return new Bitmap(1, 1);
@@ -350,9 +350,9 @@ namespace Tinke
                     if (blockSize < 4)
                     {
                         if (tile.order == TileOrder.NoTiled)
-                            celdas[i] = Imagen_NCGR.Crear_Imagen(tile, paleta, (int)tileOffset * 64, banco.cells[i].width, banco.cells[i].height);
+                            celdas[i] = Imagen_NCGR.Crear_Imagen(tile, paleta, (int)tileOffset * 64, banco.cells[i].width, banco.cells[i].height, zoom);
                         else
-                            celdas[i] = Imagen_NCGR.Crear_Imagen(tile, paleta, (int)tileOffset * 64, banco.cells[i].width / 8, banco.cells[i].height / 8);
+                            celdas[i] = Imagen_NCGR.Crear_Imagen(tile, paleta, (int)tileOffset * 64, banco.cells[i].width / 8, banco.cells[i].height / 8, zoom);
                     }
                     else
                     {
@@ -375,7 +375,7 @@ namespace Tinke
                         if (posY >= imageHeight)
                             posY = posY % imageHeight;
 
-                        celdas[i] = Imagen_NCGR.Crear_Imagen(tile, paleta).Clone(new Rectangle(posX, posY, banco.cells[i].width, banco.cells[i].height), System.Drawing.Imaging.PixelFormat.DontCare);
+                        celdas[i] = Imagen_NCGR.Crear_Imagen(tile, paleta, zoom).Clone(new Rectangle(posX, posY, banco.cells[i].width, banco.cells[i].height), System.Drawing.Imaging.PixelFormat.DontCare);
                     }
 
                     #region Flip
@@ -403,7 +403,7 @@ namespace Tinke
             return imagen;
         }
         public static Bitmap Get_Image(Bank banco, uint blockSize, NCGR tile, NCLR paleta,
-            bool entorno, bool celda, bool numero, bool transparencia, bool image, int maxWidth, int maxHeight)
+            bool entorno, bool celda, bool numero, bool transparencia, bool image, int maxWidth, int maxHeight, int zoom = 1)
         {
             if (banco.cells.Length == 0)
                 return new Bitmap(1, 1);
@@ -446,9 +446,9 @@ namespace Tinke
                     if (blockSize < 4)
                     {
                         if (tile.order == TileOrder.NoTiled)
-                            celdas[i] = Imagen_NCGR.Crear_Imagen(tile, paleta, (int)tileOffset * 64, banco.cells[i].width, banco.cells[i].height);
+                            celdas[i] = Imagen_NCGR.Crear_Imagen(tile, paleta, (int)tileOffset * 64, banco.cells[i].width, banco.cells[i].height, zoom);
                         else
-                            celdas[i] = Imagen_NCGR.Crear_Imagen(tile, paleta, (int)tileOffset * 64, banco.cells[i].width / 8, banco.cells[i].height / 8);
+                            celdas[i] = Imagen_NCGR.Crear_Imagen(tile, paleta, (int)tileOffset * 64, banco.cells[i].width / 8, banco.cells[i].height / 8, zoom);
                     }
                     else
                     {
@@ -471,7 +471,7 @@ namespace Tinke
                         if (posY >= imageHeight)
                             posY = posY % imageHeight;
 
-                        celdas[i] = Imagen_NCGR.Crear_Imagen(tile, paleta).Clone(new Rectangle(posX, posY, banco.cells[i].width, banco.cells[i].height), System.Drawing.Imaging.PixelFormat.DontCare);
+                        celdas[i] = Imagen_NCGR.Crear_Imagen(tile, paleta, zoom).Clone(new Rectangle(posX, posY, banco.cells[i].width, banco.cells[i].height), System.Drawing.Imaging.PixelFormat.DontCare);
                     }
 
                     #region Flip

@@ -830,7 +830,7 @@ namespace Tinke
         private void btnHex_Click(object sender, EventArgs e)
         {
             sFile file = accion.Select_File();
-            VisorHex hex = new VisorHex(file, true);
+            VisorHex hex = new VisorHex(file, (file.name == "rom.nds" ? false : true));
             hex.Text += " - " + file.name;
             hex.Show();
             hex.FormClosed += new FormClosedEventHandler(hex_FormClosed);
@@ -1194,12 +1194,12 @@ namespace Tinke
         {
             if (btnDesplazar.Text == ">>>>>")
             {
-                this.Width = 1167;
+                this.Width += panelObj.Width;
                 btnDesplazar.Text = "<<<<<";
             }
             else
             {
-                this.Width = 650;
+                this.Width -= panelObj.Width;
                 btnDesplazar.Text = ">>>>>";
             }
         }

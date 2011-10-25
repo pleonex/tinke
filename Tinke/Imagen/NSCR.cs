@@ -96,7 +96,7 @@ namespace Tinke
             return nscr;
         }
         
-        public static NSCR Create_BasicMap(int nTiles, int width, int height)
+        public static NSCR Create_BasicMap(int nTiles, int width, int height, int startTile = 0)
         {
             NSCR map = new NSCR();
 
@@ -120,14 +120,14 @@ namespace Tinke
                 map.section.mapData[i].nPalette = 0;
                 map.section.mapData[i].yFlip = 0;
                 map.section.mapData[i].xFlip = 0;
-                map.section.mapData[i].nTile = (ushort)i;
+                map.section.mapData[i].nTile = (ushort)(i + startTile);
             }
             map.section.section_size = map.section.data_size + 0x14;
             map.header.file_size = map.section.section_size + map.header.header_size;
 
             return map;
         }
-        public static NSCR Create_BasicMap(int width, int height, int startFillTile, int fillTile)
+        public static NSCR Create_BasicMap(int width, int height, int startFillTile, int fillTile, int startTile = 0)
         {
             NSCR map = new NSCR();
             int nTiles = width * height / 64;
@@ -155,7 +155,7 @@ namespace Tinke
                 if (i >= startFillTile)
                     map.section.mapData[i].nTile = (ushort)fillTile;
                 else
-                    map.section.mapData[i].nTile = (ushort)i;
+                    map.section.mapData[i].nTile = (ushort)(i + startTile);
             }
             map.section.section_size = map.section.data_size + 0x14;
             map.header.file_size = map.section.section_size + map.header.header_size;
