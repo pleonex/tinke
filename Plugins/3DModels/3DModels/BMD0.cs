@@ -510,9 +510,11 @@ namespace _3DModels
                 #endregion
                 #region Polygon definition
                 data.polygon.definition = new sBMD0.Model.ModelData.Polygon.Definition[data.polygon.header.num_objs];
-                long currPos = br.BaseStream.Position;
                 for (int i = 0; i < data.polygon.header.num_objs; i++)
                 {
+                    br.BaseStream.Position = modelOffset + data.header.polygonStartOffset + (uint)data.polygon.header.infoBlock.infoData[i];
+                    long currPos = br.BaseStream.Position;
+
                     sBMD0.Model.ModelData.Polygon.Definition def = new sBMD0.Model.ModelData.Polygon.Definition();
                     def.unknown1 = br.ReadUInt32();
                     def.unknown2 = br.ReadUInt32();

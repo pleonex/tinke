@@ -63,6 +63,8 @@ namespace _3DModels
 
                 if (bmd.header.numSect == 2)
                     return new TextureControl(pluginHost, bmd.texture, bmd.header.offset[1], bmd.filePath);
+                else
+                    System.Windows.Forms.MessageBox.Show("There is not texture section.");
             }
             
             return new System.Windows.Forms.Control();

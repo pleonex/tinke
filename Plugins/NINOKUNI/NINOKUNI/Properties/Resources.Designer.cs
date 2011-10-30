@@ -66,5 +66,19 @@ namespace NINOKUNI.Properties {
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
+        
+        internal static System.Drawing.Bitmap picture_edit {
+            get {
+                object obj = ResourceManager.GetObject("picture_edit", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap picture_save {
+            get {
+                object obj = ResourceManager.GetObject("picture_save", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
     }
 }

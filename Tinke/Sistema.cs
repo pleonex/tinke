@@ -50,7 +50,7 @@ namespace Tinke
         {
             InitializeComponent();
             this.Location = new Point(10, 10);
-            this.Text = "Tinke V " + Application.ProductVersion + " - romhacking by pleoNeX";
+            this.Text = "Tinke " + Application.ProductVersion + " - romhacking by pleoNeX";
 
             // Modo debug donde se muestran los mensajes en otra ventana en caso de no ejecutarse en Mono
             isMono = (Type.GetType("Mono.Runtime") != null) ? true : false;
@@ -216,6 +216,9 @@ namespace Tinke
             Console.WriteLine("<li>" + xml.Element("S18").Value + (t8 - t7).ToString() + "</li>");
             Console.WriteLine("<li>" + xml.Element("S19").Value + (t9 - t8).ToString() + "</li>");
             Console.Write("</font></ul><br>");
+
+            this.Text += "          " + new String(romInfo.Cabecera.gameTitle).Replace("\0", "") +
+                " (" + new String(romInfo.Cabecera.gameCode) + ')';
         }
         private void ReadFiles(string[] files)
         {
@@ -940,7 +943,11 @@ namespace Tinke
             if (!isMono)
                 espera.Start("S04");
 
-            Recursivo_UnpackFolder(accion.Select_Folder());
+            sFolder folderSelected = accion.Select_Folder();
+            if (!(folderSelected.name is String)) // If it's the search folder or similar
+                folderSelected = Get_SearchedFiles();
+
+            Recursivo_UnpackFolder(folderSelected);
             Get_SupportedFiles();
             treeSystem.Nodes.Clear();
             treeSystem.Nodes.Add(Jerarquizar_Nodos(accion.Root));
@@ -1008,27 +1015,9 @@ namespace Tinke
         {
             sFolder folderSelect = accion.Select_Folder();
 
-            if (!(folderSelect.name is String)) // En caso que sea el resultado de una búsqueda
+            if (!(folderSelect.name is String)) // If it's the search folder or similar
             {
-                folderSelect.files = new List<sFile>();
-                folderSelect.folders = new List<sFolder>();
-                folderSelect.name = treeSystem.SelectedNode.Name;
-
-                for (int i = 0; i < treeSystem.SelectedNode.Nodes.Count; i++)
-                {
-                    int id = Convert.ToInt32(treeSystem.SelectedNode.Nodes[i].Tag);
-                    if (id < 0xF000)
-                        folderSelect.files.Add(accion.Search_File(id));
-                    else
-                    {
-                        sFolder carpeta = new sFolder();
-                        carpeta.files = new List<sFile>();
-                        carpeta.name = treeSystem.SelectedNode.Nodes[i].Name;
-                        for (int j = 0; j < treeSystem.SelectedNode.Nodes[i].Nodes.Count; j++)
-                            carpeta.files.Add(accion.Search_File(Convert.ToUInt16(treeSystem.SelectedNode.Nodes[i].Nodes[j].Tag)));
-                        folderSelect.folders.Add(carpeta);
-                    }
-                }
+                folderSelect = Get_SearchedFiles();
             }
 
             FolderBrowserDialog o = new FolderBrowserDialog();
@@ -1159,7 +1148,7 @@ namespace Tinke
         }
         private void toolStripOpen_Click(object sender, EventArgs e)
         {
-            Application.Restart();
+            System.Diagnostics.Process.Start(Application.ExecutablePath);
         }
         private void toolStripVentana_Click(object sender, EventArgs e)
         {
@@ -1488,6 +1477,30 @@ namespace Tinke
         {
             if (e.KeyCode == Keys.Enter)
                 btnSearch.PerformClick();
+        }
+        private sFolder Get_SearchedFiles()
+        {
+            sFolder searchFolder = new sFolder();
+            searchFolder.files = new List<sFile>();
+            searchFolder.folders = new List<sFolder>();
+            searchFolder.name = treeSystem.SelectedNode.Name;
+
+            for (int i = 0; i < treeSystem.SelectedNode.Nodes.Count; i++)
+            {
+                int id = Convert.ToInt32(treeSystem.SelectedNode.Nodes[i].Tag);
+                if (id < 0xF000)
+                    searchFolder.files.Add(accion.Search_File(id));
+                else
+                {
+                    sFolder carpeta = new sFolder();
+                    carpeta.files = new List<sFile>();
+                    carpeta.name = treeSystem.SelectedNode.Nodes[i].Name;
+                    for (int j = 0; j < treeSystem.SelectedNode.Nodes[i].Nodes.Count; j++)
+                        carpeta.files.Add(accion.Search_File(Convert.ToUInt16(treeSystem.SelectedNode.Nodes[i].Nodes[j].Tag)));
+                    searchFolder.folders.Add(carpeta);
+                }
+            }
+            return searchFolder;
         }
 
         private void btnSaveROM_Click(object sender, EventArgs e)

@@ -31,10 +31,11 @@ namespace NINOKUNI
                     continue;
 
                 sFile newFile = new sFile();
-                newFile.name = "File" + i.ToString() + ".bin";
+                newFile.name = "File" + i.ToString() + Get_Extension(num_files, i);
                 newFile.offset = offset;
                 newFile.size = size;
                 newFile.path = packFile;
+
                 unpack.files.Add(newFile);
             }
 
@@ -91,25 +92,66 @@ namespace NINOKUNI
 
             return new sFile();
         }
+
+        public static string Get_Extension(uint packType, int num_file)
+        {
+            switch (packType)
+            {
+                case 9: // N2D (Nitro 2D), files with 2D images
+                    switch (num_file)
+                    {
+                        case 0: return ".nclr";
+                        case 1: return ".ncgr";
+                        case 2: return ".ncgr";
+                        case 3: return ".ncer";
+                        case 5: return ".nanr";
+                        case 6: return ".nscr";
+                        default: return ".bin";
+                    }
+
+                case 6: // N3D (Nitro 3D), files with 3D models and animations
+                    switch (num_file)
+                    {
+                        case 0: return ".bmd0";
+                        case 1: return ".bca0";
+                        case 2: return ".bva0";
+                        case 3: return ".bma0";
+                        case 4: return ".bta0";
+                        case 5: return ".btp0";
+                        default: return ".bin";
+                    }
+
+                case 2: // NPD (Nitro Pulse Digitial??), files with sounds
+                    switch (num_file)
+                    {
+                        case 0: return ".sedl";
+                        case 1: return ".swdl";
+                        default: return ".bin";
+                    }
+
+                default:
+                    return ".bin";
+            }
+        }
     }
 
     /* In N2D files there must be 9 offset in this order:
     * 
-    * 0 - Palette
-    * 1 - 1º Tiles
-    * 2 - 2º Tiles
-    * 3 - 1º Cell
-    * 4 - ??
-    * 5 - 1º Animation
-    * 6 - 1º Map
-    * 8 - ??
-    * 9 - ??
+    * 0 - Palette       (nclr)
+    * 1 - 1º Tiles      (ncgr)
+    * 2 - 2º Tiles      (ncgr)
+    * 3 - 1º Cell       (ncer)
+    * 4 - Nothing
+    * 5 - 1º Animation  (nanr)
+    * 6 - 1º Map        (nscr)
+    * 7 - Nothing
+    * 8 - Nothing
     */
 
     /* In NPD files there must be 2 offset in this order:
      * 
-     * 0 - sedl
-     * 1 - swdl
+     * 0 - sedl         (sedl)
+     * 1 - swdl         (swdl)
      */
 
     /* In N3D files there must be 6 offset in this order:
