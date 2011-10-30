@@ -32,6 +32,8 @@ namespace NINOKUNI
                 return Format.Pack;
             else if (BitConverter.ToUInt32(magic, 0) == 0x001C080A)
                 return Format.Text;
+            else if (magic[0] == 0x42 && magic[1] == 0x4D && fileName.ToUpper().StartsWith("EDDN")) // BMP image
+                return Format.FullImage;
 
             return Format.Unknown;
         }
@@ -43,6 +45,9 @@ namespace NINOKUNI
         {
             if (file.ToUpper().EndsWith(".SQ"))
                 return new SQcontrol(pluginHost, file, id);
+            else if (Path.GetFileName(file).Contains("eddn"))
+                return new BMPControl(file, id, pluginHost);
+
 
             return new System.Windows.Forms.Control();
         }

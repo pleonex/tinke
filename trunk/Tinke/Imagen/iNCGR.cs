@@ -499,7 +499,6 @@ namespace Tinke
             if (o.ShowDialog() == DialogResult.OK)
             {
                 Bitmap image = (Bitmap)UpdateImage();
-                //image = image.Clone(new Rectangle(new Point(0, 0), image.Size), System.Drawing.Imaging.PixelFormat.Indexed);
                 if (o.FilterIndex == 1)
                     image.Save(o.FileName, System.Drawing.Imaging.ImageFormat.Bmp);
                 else if (o.FilterIndex == 2)

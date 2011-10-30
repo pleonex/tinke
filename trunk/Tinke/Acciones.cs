@@ -1436,6 +1436,8 @@ namespace Tinke
             Get_DecompressedFiles(compresFile, decompressedFiles);
             Get_LowestID(decompressedFiles, ref decompressedFiles.id);
 
+            decompressedFiles.files.Sort(SortByID);
+
             return decompressedFiles;
         }
         void Get_DecompressedFiles(sFolder currFolder, sFolder decompressedFiles)
@@ -1471,6 +1473,10 @@ namespace Tinke
                     }
                 }
             }
+        }
+        private int SortByID(sFile f1, sFile f2)
+        {
+            return f1.id.CompareTo(f2.id);
         }
         void Get_LowestID(sFolder currFolder, ref ushort id)
         {

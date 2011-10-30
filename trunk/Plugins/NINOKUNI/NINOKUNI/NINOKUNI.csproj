@@ -43,6 +43,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BMPControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="BMPControl.Designer.cs">
+      <DependentUpon>BMPControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="KPCN.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="NPCK.cs" />
@@ -60,6 +66,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="BMPControl.resx">
+      <DependentUpon>BMPControl.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -70,6 +79,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\page_white_edit.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\picture_save.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\picture_edit.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
