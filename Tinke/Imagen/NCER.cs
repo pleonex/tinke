@@ -311,7 +311,7 @@ namespace Tinke
         {
             if (banco.cells.Length == 0)
                 return new Bitmap(1, 1);
-            Size tamaño = new Size(256, 256);
+            Size tamaño = new Size(256 * zoom, 256 * zoom);
             Bitmap imagen = new Bitmap(tamaño.Width, tamaño.Height);
             Graphics grafico = Graphics.FromImage(imagen);
 
@@ -320,11 +320,11 @@ namespace Tinke
             {
                 for (int i = (0 - tamaño.Width); i < tamaño.Width; i += 8)
                 {
-                    grafico.DrawLine(Pens.LightBlue, i + tamaño.Width / 2, 0, i + tamaño.Width / 2, tamaño.Height);
-                    grafico.DrawLine(Pens.LightBlue, 0, i + tamaño.Height / 2, tamaño.Width, i + tamaño.Height / 2);
+                    grafico.DrawLine(Pens.LightBlue, (i + tamaño.Width / 2) * zoom, 0, (i + tamaño.Width / 2) * zoom, tamaño.Height * zoom);
+                    grafico.DrawLine(Pens.LightBlue, 0, (i + tamaño.Height / 2) * zoom, tamaño.Width * zoom, (i + tamaño.Height / 2) * zoom);
                 }
-                grafico.DrawLine(Pens.Blue, 128, 0, 128, 256);
-                grafico.DrawLine(Pens.Blue, 0, 128, 256, 128);
+                grafico.DrawLine(Pens.Blue, 128 * zoom, 0, 128 * zoom, 256 * zoom);
+                grafico.DrawLine(Pens.Blue, 0, 128 * zoom, 256 * zoom, 128 * zoom);
             }
 
 
@@ -375,7 +375,7 @@ namespace Tinke
                         if (posY >= imageHeight)
                             posY = posY % imageHeight;
 
-                        celdas[i] = Imagen_NCGR.Crear_Imagen(tile, paleta, zoom).Clone(new Rectangle(posX, posY, banco.cells[i].width, banco.cells[i].height), System.Drawing.Imaging.PixelFormat.DontCare);
+                        celdas[i] = Imagen_NCGR.Crear_Imagen(tile, paleta, zoom).Clone(new Rectangle(posX * zoom, posY * zoom, banco.cells[i].width * zoom, banco.cells[i].height * zoom), System.Drawing.Imaging.PixelFormat.DontCare);
                     }
 
                     #region Flip
@@ -390,15 +390,15 @@ namespace Tinke
                     if (transparencia)
                         ((Bitmap)celdas[i]).MakeTransparent(paleta.pltt.palettes[tile.rahc.tileData.nPalette[0]].colors[0]);
 
-                    grafico.DrawImageUnscaled(celdas[i], tamaño.Width / 2 + banco.cells[i].obj1.xOffset, tamaño.Height / 2 + banco.cells[i].obj0.yOffset);
+                    grafico.DrawImageUnscaled(celdas[i], tamaño.Width / 2 + banco.cells[i].obj1.xOffset * zoom, tamaño.Height / 2 + banco.cells[i].obj0.yOffset * zoom);
                 }
 
                 if (celda)
-                    grafico.DrawRectangle(Pens.Black, tamaño.Width / 2 + banco.cells[i].obj1.xOffset, tamaño.Height / 2 + banco.cells[i].obj0.yOffset,
-                        banco.cells[i].width, banco.cells[i].height);
+                    grafico.DrawRectangle(Pens.Black, tamaño.Width / 2 + banco.cells[i].obj1.xOffset * zoom, tamaño.Height / 2 + banco.cells[i].obj0.yOffset * zoom,
+                        banco.cells[i].width * zoom, banco.cells[i].height * zoom);
                 if (numero)
-                    grafico.DrawString(banco.cells[i].num_cell.ToString(), SystemFonts.CaptionFont, Brushes.Black, tamaño.Width / 2 + banco.cells[i].obj1.xOffset,
-                        tamaño.Height / 2 + banco.cells[i].obj0.yOffset);
+                    grafico.DrawString(banco.cells[i].num_cell.ToString(), SystemFonts.CaptionFont, Brushes.Black, tamaño.Width / 2 + banco.cells[i].obj1.xOffset * zoom,
+                        tamaño.Height / 2 + banco.cells[i].obj0.yOffset * zoom);
             }
             return imagen;
         }
@@ -407,7 +407,7 @@ namespace Tinke
         {
             if (banco.cells.Length == 0)
                 return new Bitmap(1, 1);
-            Size tamaño = new Size(maxWidth, maxHeight);
+            Size tamaño = new Size(maxWidth * zoom, maxHeight * zoom);
             Bitmap imagen = new Bitmap(tamaño.Width, tamaño.Height);
             Graphics grafico = Graphics.FromImage(imagen);
 
@@ -416,11 +416,11 @@ namespace Tinke
             {
                 for (int i = (0 - tamaño.Width); i < tamaño.Width; i += 8)
                 {
-                    grafico.DrawLine(Pens.LightBlue, i + tamaño.Width / 2, 0, i + tamaño.Width / 2, tamaño.Height);
-                    grafico.DrawLine(Pens.LightBlue, 0, i + tamaño.Height / 2, tamaño.Width, i + tamaño.Height / 2);
+                    grafico.DrawLine(Pens.LightBlue, (i + tamaño.Width / 2) * zoom, 0, (i + tamaño.Width / 2) * zoom, tamaño.Height * zoom);
+                    grafico.DrawLine(Pens.LightBlue, 0, (i + tamaño.Height / 2) * zoom, tamaño.Width * zoom, (i + tamaño.Height / 2) * zoom);
                 }
-                grafico.DrawLine(Pens.Blue, maxWidth / 2, 0, maxWidth / 2, maxHeight);
-                grafico.DrawLine(Pens.Blue, 0, maxHeight / 2, maxWidth, maxHeight / 2);
+                grafico.DrawLine(Pens.Blue, (maxWidth / 2) * zoom, 0, (maxWidth / 2) * zoom, maxHeight * zoom);
+                grafico.DrawLine(Pens.Blue, 0, (maxHeight / 2) * zoom, maxWidth * zoom, (maxHeight / 2) * zoom);
             }
 
 
@@ -471,7 +471,7 @@ namespace Tinke
                         if (posY >= imageHeight)
                             posY = posY % imageHeight;
 
-                        celdas[i] = Imagen_NCGR.Crear_Imagen(tile, paleta, zoom).Clone(new Rectangle(posX, posY, banco.cells[i].width, banco.cells[i].height), System.Drawing.Imaging.PixelFormat.DontCare);
+                        celdas[i] = Imagen_NCGR.Crear_Imagen(tile, paleta, zoom).Clone(new Rectangle(posX * zoom, posY * zoom, banco.cells[i].width * zoom, banco.cells[i].height * zoom), System.Drawing.Imaging.PixelFormat.DontCare);
                     }
 
                     #region Flip
@@ -486,15 +486,15 @@ namespace Tinke
                     if (transparencia)
                         ((Bitmap)celdas[i]).MakeTransparent(paleta.pltt.palettes[tile.rahc.tileData.nPalette[0]].colors[0]);
 
-                    grafico.DrawImageUnscaled(celdas[i], tamaño.Width / 2 + banco.cells[i].obj1.xOffset, tamaño.Height / 2 + banco.cells[i].obj0.yOffset);
+                    grafico.DrawImageUnscaled(celdas[i], tamaño.Width / 2 + banco.cells[i].obj1.xOffset * zoom, tamaño.Height / 2 + banco.cells[i].obj0.yOffset * zoom);
                 }
 
                 if (celda)
-                    grafico.DrawRectangle(Pens.Black, tamaño.Width / 2 + banco.cells[i].obj1.xOffset, tamaño.Height / 2 + banco.cells[i].obj0.yOffset,
-                        banco.cells[i].width, banco.cells[i].height);
+                    grafico.DrawRectangle(Pens.Black, tamaño.Width / 2 + banco.cells[i].obj1.xOffset * zoom, tamaño.Height / 2 + banco.cells[i].obj0.yOffset * zoom,
+                        banco.cells[i].width * zoom, banco.cells[i].height * zoom);
                 if (numero)
-                    grafico.DrawString(i.ToString(), SystemFonts.CaptionFont, Brushes.Black, tamaño.Width / 2 + banco.cells[i].obj1.xOffset,
-                        tamaño.Height / 2 + banco.cells[i].obj0.yOffset);
+                    grafico.DrawString(i.ToString(), SystemFonts.CaptionFont, Brushes.Black, tamaño.Width / 2 + banco.cells[i].obj1.xOffset * zoom,
+                        tamaño.Height / 2 + banco.cells[i].obj0.yOffset * zoom);
             }
 
             return imagen;

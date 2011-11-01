@@ -147,7 +147,8 @@ namespace Tinke
             if (!isMono)
                 espera.Start("S02");
 
-            if (filesToRead.Length == 1 && Path.GetFileName(filesToRead[0]).ToUpper().EndsWith(".NDS")) // Si se ha seleccionado un juego de la NDS
+            if (filesToRead.Length == 1 && 
+                (Path.GetFileName(filesToRead[0]).ToUpper().EndsWith(".NDS") || Path.GetFileName(filesToRead[0]).ToUpper().EndsWith(".SRL")))
                 ReadGame(filesToRead[0]);
             else if (filesToRead.Length == 1 && Directory.Exists(filesToRead[0]))
                 ReadFolder(filesToRead[0]);
@@ -661,6 +662,9 @@ namespace Tinke
             filesSupported = nFiles = 0; // Reiniciamos el contador
 
             RecursivoSupportFile(accion.Root);
+            if (nFiles == 0)
+                nFiles = 1;
+
             lblSupport.Text = Tools.Helper.ObtenerTraduccion("Sistema", "S30") + ' ' + (filesSupported * 100 / nFiles) + '%';
             if ((filesSupported * 100 / nFiles) >= 75)
                 lblSupport.Font = new Font("Consolas", 10, FontStyle.Bold | FontStyle.Underline);
@@ -673,8 +677,8 @@ namespace Tinke
             {
                 foreach (sFile archivo in carpeta.files)
                 {
-                    if (archivo.format == Format.System)
-                        continue; // Evitamos archivos del sistema
+                    if (archivo.format == Format.System || archivo.size == 0x00)
+                        continue;
 
                     if (archivo.format != Format.Unknown)
                         filesSupported++;
@@ -701,7 +705,7 @@ namespace Tinke
         {
             btnPack.Enabled = false;
             accion.IDSelect = Convert.ToInt32(e.Node.Tag);
-            // Limpiar información anterior
+            // Clean old information
             for (int i = 0; i < listFile.Items.Count; i++)
                 if (listFile.Items[i].SubItems.Count == 2)
                     listFile.Items[i].SubItems.RemoveAt(1);
@@ -789,7 +793,7 @@ namespace Tinke
                 btnHex.Enabled = true;
                 toolStripOpenAs.Enabled = true;
 
-                if (selectFile.format != Format.Unknown && selectFile.format != Format.System)
+                if (selectFile.format != Format.Unknown)
                     btnSee.Enabled = true;
                 else
                     btnSee.Enabled = false;
@@ -821,6 +825,7 @@ namespace Tinke
                 listFile.Items[3].SubItems.Add("");
                 listFile.Items[4].SubItems.Add(Tools.Helper.ObtenerTraduccion("Sistema", "S1F"));
                 listFile.Items[5].SubItems.Add("");
+                listFile.Items[6].SubItems.Add(accion.Get_RelativePath(selectFolder.id, "", accion.Root));
 
                 btnHex.Enabled = false;
                 btnSee.Enabled = false;
@@ -830,6 +835,7 @@ namespace Tinke
 
             listFile.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
         }
+
         private void btnHex_Click(object sender, EventArgs e)
         {
             sFile file = accion.Select_File();
@@ -838,7 +844,6 @@ namespace Tinke
             hex.Show();
             hex.FormClosed += new FormClosedEventHandler(hex_FormClosed);
         }
-
         void hex_FormClosed(object sender, FormClosedEventArgs e)
         {
             VisorHex hex = (VisorHex)sender;
@@ -847,6 +852,7 @@ namespace Tinke
         }
         private void BtnSee(object sender, EventArgs e)
         {
+            this.Cursor = Cursors.WaitCursor;
             if (toolStripVentana.Checked)
             {
                 Visor visor = new Visor();
@@ -870,6 +876,8 @@ namespace Tinke
                     if (btnDesplazar.Text == "<<<<<")
                         btnDesplazar.PerformClick();
             }
+            this.Cursor = Cursors.Default;
+
             debug.Añadir_Texto(sb.ToString());
             sb.Length = 0;
         }
@@ -1114,6 +1122,11 @@ namespace Tinke
             {
                 e.SuppressKeyPress = true;
                 treeSystem.SelectedNode.Collapse(false);
+            }
+            else if (e.KeyCode == Keys.H && treeSystem.Focused)
+            {
+                e.SuppressKeyPress = true;
+                btnHex.PerformClick();
             }
 
         }

@@ -88,7 +88,7 @@ namespace Tinke
 
         public Bitmap[] Bitmaps_NCLR(string archivo) { return Imagen_NCLR.Mostrar(archivo); }
         public Bitmap[] Bitmaps_NCLR(NCLR nclr) { return Imagen_NCLR.Mostrar(nclr); }
-        public NTFT Transform_NSCR(NSCR nscr, NTFT ntft, int startOffset = 0) { return Imagen_NSCR.Modificar_Tile(nscr, ntft, startOffset); }
+        public NTFT Transform_NSCR(NSCR nscr, NTFT ntft, int startInfo = 0) { return Imagen_NSCR.Modificar_Tile(nscr, ntft, startInfo); }
         public Bitmap Bitmap_NCGR(NCGR ncgr, NCLR nclr) { return Imagen_NCGR.Crear_Imagen(ncgr, nclr); }
         public Bitmap Bitmap_NCGR(NCGR ncgr, NCLR nclr, int startTile) { return Imagen_NCGR.Crear_Imagen(ncgr, nclr, startTile); }
         public Bitmap Bitmap_NCGR(NCGR ncgr, NCLR nclr, int startTile, int tilesX, int tilesY) { return Imagen_NCGR.Crear_Imagen(ncgr, nclr, startTile, tilesX, tilesY); }

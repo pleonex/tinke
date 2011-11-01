@@ -243,6 +243,7 @@
     <S22>No se pudo borrar la carpeta temporal</S22>
     <S23>Hubo un fallo al intentar comprimir el archivo</S23>
     <S24>La imagen utiliza todos los colores, no puede ser eliminado ninguno</S24>
+    <S25>No se encontraron operaciones para realizar.</S25>
   </Messages>
   <NCLR>
     <S01>Nº de paleta:</S01>

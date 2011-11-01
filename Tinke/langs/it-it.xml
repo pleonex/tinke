@@ -230,6 +230,7 @@
     <S22>No se pudo borrar la carpeta temporal</S22>
     <S23>There was an error attempting to compress/pack the file.</S23>
     <S24>All the colors are used by the image.</S24>
+    <S25>Nothing to do.</S25>
   </Messages>
   <NCLR>
     <S01># palette:</S01>
