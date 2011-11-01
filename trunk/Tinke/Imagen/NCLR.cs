@@ -161,7 +161,7 @@ namespace Tinke
             bw.Flush();
             bw.Close();
         }
-        public static NCLR BitmapToPalette(string bitmap)
+        public static NCLR BitmapToPalette(string bitmap, int paletteIndex = 0)
         {
             NCLR paleta = new NCLR();
             BinaryReader br = new BinaryReader(File.OpenRead(bitmap));
@@ -189,16 +189,16 @@ namespace Tinke
                 paleta.pltt.nColors = (uint)(profundidad == 0x04 ? 0x10 : 0x0100);
 
             br.BaseStream.Position += 0x04;
-            paleta.pltt.palettes = new NTFP[1];
-            paleta.pltt.palettes[0].colors = new Color[(int)paleta.pltt.nColors];
+            paleta.pltt.palettes = new NTFP[paletteIndex + 1];
+            paleta.pltt.palettes[paletteIndex].colors = new Color[(int)paleta.pltt.nColors];
             for (int i = 0; i < paleta.pltt.nColors; i++)
             {
                 Byte[] color = br.ReadBytes(4);
-                paleta.pltt.palettes[0].colors[i] = Color.FromArgb(color[2], color[1], color[0]);
+                paleta.pltt.palettes[paletteIndex].colors[i] = Color.FromArgb(color[2], color[1], color[0]);
             }
             // Get the colors with BGR555 encoding (not all colours from bitmap are allowed)
-            byte[] temp = Convertir.ColorToBGR555(paleta.pltt.palettes[0].colors);
-            paleta.pltt.palettes[0].colors = Convertir.BGR555(temp);
+            byte[] temp = Convertir.ColorToBGR555(paleta.pltt.palettes[paletteIndex].colors);
+            paleta.pltt.palettes[paletteIndex].colors = Convertir.BGR555(temp);
 
             paleta.pltt.ID = "TTLP".ToCharArray();
             paleta.pltt.paletteLength = paleta.pltt.nColors * 2;

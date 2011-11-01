@@ -45,9 +45,11 @@
             this.numericMaxWidth = new System.Windows.Forms.NumericUpDown();
             this.label5 = new System.Windows.Forms.Label();
             this.groupSubImages = new System.Windows.Forms.GroupBox();
-            this.checkSubImage = new System.Windows.Forms.CheckBox();
-            this.label7 = new System.Windows.Forms.Label();
+            this.numericSubPalette = new System.Windows.Forms.NumericUpDown();
+            this.label8 = new System.Windows.Forms.Label();
             this.numericSubStart = new System.Windows.Forms.NumericUpDown();
+            this.label7 = new System.Windows.Forms.Label();
+            this.checkSubImage = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.numericWidth)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericHeight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericStartTile)).BeginInit();
@@ -56,6 +58,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericMaxHeight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericMaxWidth)).BeginInit();
             this.groupSubImages.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericSubPalette)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericSubStart)).BeginInit();
             this.SuspendLayout();
             // 
@@ -234,35 +237,38 @@
             // 
             // groupSubImages
             // 
+            this.groupSubImages.Controls.Add(this.numericSubPalette);
+            this.groupSubImages.Controls.Add(this.label8);
             this.groupSubImages.Controls.Add(this.numericSubStart);
             this.groupSubImages.Controls.Add(this.label7);
             this.groupSubImages.Enabled = false;
             this.groupSubImages.Location = new System.Drawing.Point(15, 264);
             this.groupSubImages.Name = "groupSubImages";
-            this.groupSubImages.Size = new System.Drawing.Size(371, 66);
+            this.groupSubImages.Size = new System.Drawing.Size(371, 77);
             this.groupSubImages.TabIndex = 11;
             this.groupSubImages.TabStop = false;
             this.groupSubImages.Text = "Subimages";
             // 
-            // checkSubImage
+            // numericSubPalette
             // 
-            this.checkSubImage.AutoSize = true;
-            this.checkSubImage.Location = new System.Drawing.Point(15, 241);
-            this.checkSubImage.Name = "checkSubImage";
-            this.checkSubImage.Size = new System.Drawing.Size(79, 17);
-            this.checkSubImage.TabIndex = 12;
-            this.checkSubImage.Text = "SubImages";
-            this.checkSubImage.UseVisualStyleBackColor = true;
-            this.checkSubImage.CheckedChanged += new System.EventHandler(this.checkSubImage_CheckedChanged);
+            this.numericSubPalette.Location = new System.Drawing.Point(134, 54);
+            this.numericSubPalette.Maximum = new decimal(new int[] {
+            15,
+            0,
+            0,
+            0});
+            this.numericSubPalette.Name = "numericSubPalette";
+            this.numericSubPalette.Size = new System.Drawing.Size(60, 20);
+            this.numericSubPalette.TabIndex = 3;
             // 
-            // label7
+            // label8
             // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(12, 29);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(79, 13);
-            this.label7.TabIndex = 0;
-            this.label7.Text = "Posición inicial:";
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(12, 56);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(94, 13);
+            this.label8.TabIndex = 2;
+            this.label8.Text = "Número de paleta:";
             // 
             // numericSubStart
             // 
@@ -276,6 +282,26 @@
             this.numericSubStart.Name = "numericSubStart";
             this.numericSubStart.Size = new System.Drawing.Size(60, 20);
             this.numericSubStart.TabIndex = 1;
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(12, 29);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(79, 13);
+            this.label7.TabIndex = 0;
+            this.label7.Text = "Posición inicial:";
+            // 
+            // checkSubImage
+            // 
+            this.checkSubImage.AutoSize = true;
+            this.checkSubImage.Location = new System.Drawing.Point(15, 241);
+            this.checkSubImage.Name = "checkSubImage";
+            this.checkSubImage.Size = new System.Drawing.Size(79, 17);
+            this.checkSubImage.TabIndex = 12;
+            this.checkSubImage.Text = "SubImages";
+            this.checkSubImage.UseVisualStyleBackColor = true;
+            this.checkSubImage.CheckedChanged += new System.EventHandler(this.checkSubImage_CheckedChanged);
             // 
             // MapOptions
             // 
@@ -309,6 +335,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericMaxWidth)).EndInit();
             this.groupSubImages.ResumeLayout(false);
             this.groupSubImages.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericSubPalette)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericSubStart)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -336,5 +363,7 @@
         private System.Windows.Forms.NumericUpDown numericSubStart;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.CheckBox checkSubImage;
+        private System.Windows.Forms.NumericUpDown numericSubPalette;
+        private System.Windows.Forms.Label label8;
     }
 }

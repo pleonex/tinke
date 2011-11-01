@@ -1,19 +1,17 @@
 0.8.2
 *** Improved Hexadecimal editor -> Now using Be.HexEditor (by Bernhard Elbl)
-** Read BMD0 files and show the textures (if any)
-** Game GYAKUKEN (Gyajuten kenji 2) supported
-  - Unpacker
-** Game DBK ULTIMATE (Dragon Ball Kai Ultimate Butouden) supported
-  - Unpacker for file "archiveDBK.dsa" 
-** Game MAPLESTORYDS (Maple Story DS) supported
-  - Unpacker for file "RESOURCE.NXARC"
+*** Read BMD0 files and show the textures (if any)
+** Game GYAKUKEN (Gyajuten kenji 2) - Unpacker
+** Game DBK ULTIMATE (Dragon Ball Kai Ultimate Butouden) - Unpacker for "archiveDBK.dsa" 
+** Game MAPLESTORYDS (Maple Story DS) - Unpacker for "RESOURCE.NXARC"
 ** Game NINOKUNI (Ninokuni Shikkoku no Madoushi) supported
   - Unpacker for NPCK and KPCN files
   - Packer for NPCK and KPCN files
   - Text translator for SQ files
-** Game SUBARASHIKI (The world end with you) supported (Unpacker)
+  - Credits images supported
+** Game SUBARASHIKI (The world end with you) - Unpacker
 ** Game TOKIMEKIGS3S supported (LZS and RESC)
-** Game BLOODBAHAMUT supported (.DPK pack method by Tricky Upgrade)
+** Game BLOODBAHAMUT supported (.DPK by Tricky Upgrade)
 ** Improved Font plugin
   - Fixed problem with rotated Font
   - Fixed problem with char codes
@@ -24,11 +22,13 @@
 ** Added new method to set the transparency color.
 ** Added method to create NSCR files of NCGR subimages
 ** Add button Pack (instead of using controls from button "View")
+* Supported SRL files (wifi download files)
 * Fixed problem with textures with format 2
 * Fixed problems in SDAT plugin
 * Added support for PMCP section in NCLR
 * Improved zoom function
 * Improved support for Mono 2.10
+* Fixed minor bugs
 
 0.8.1 (public release) rev100
 *** BTX0 textures supported (view only)

@@ -297,6 +297,7 @@ namespace Tinke
             tile.header.file_size = tile.rahc.size_section + tile.header.header_size;
             tile.order = tileOrder;
 
+            br.Close();
             return tile;
         }
 
@@ -304,11 +305,24 @@ namespace Tinke
         {
             List<Byte[]> data = new List<byte[]>();
 
+
             for (int i = 0; i < startTile; i++)
             {
+                if (i >= originalTile.Length)
+                {
+                    Byte[] nullTile = new byte[64];
+                    for (int t = 0; t < 64; t++)
+                        nullTile[t] = 0;
+                    data.Add(nullTile);
+                    continue;
+                }
                 data.Add(originalTile[i]);
             }
+
             data.AddRange(newTiles);
+
+            for (int i = startTile + newTiles.Length; i < originalTile.Length; i++)
+                data.Add(originalTile[i]);
 
             return data.ToArray();
         }

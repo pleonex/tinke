@@ -73,9 +73,9 @@ namespace LAYTON
             if (nombre.ToUpper().EndsWith(".TXT"))
                 return Format.Text;
             if (nombre.ToUpper().EndsWith(".PLZ"))
-                return Format.Compressed;
+                return Format.Pack;
             if (nombre.EndsWith(".PCM") && BitConverter.ToInt32(magic, 0) == 0x00000010)
-                return Format.Compressed;
+                return Format.Pack;
 
             
             return Format.Unknown;

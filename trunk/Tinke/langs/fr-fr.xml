@@ -227,6 +227,7 @@
     <S22>Le dossier temporaire (temp) ne peut pas être supprimé.</S22>
     <S23>Il y a une erreur de tentative à la compression de l'archive.</S23>
     <S24>Toutes les couleurs sont utilisées par l'image.</S24>
+    <S25>Nothing to do.</S25>
   </Messages>
   <NCLR>
     <S01>Nombre de la palette :</S01>

@@ -71,6 +71,11 @@ namespace Tinke.Dialog
         {
             get { return (int)numericSubStart.Value; }
         }
+        public int SubPalette
+        {
+            get { return (int)numericSubPalette.Value; }
+            set { numericSubPalette.Value = value; }
+        }
 
         private void checkFillTile_CheckedChanged(object sender, EventArgs e)
         {

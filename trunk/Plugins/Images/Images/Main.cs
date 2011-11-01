@@ -57,7 +57,7 @@ namespace Images
                 return Format.Palette;
             else if (nombre.EndsWith(".PLT") || nombre.EndsWith(".PAL") || nombre.EndsWith(".PLTT"))
                 return Format.Palette;
-            else if (nombre.EndsWith(".CHAR") || nombre.EndsWith(".CHR"))
+            else if (nombre.EndsWith(".CHAR") || nombre.EndsWith(".CHR") && ext != "NARC" && ext != "CRAN")
                 return Format.Tile;
 			
 			return Format.Unknown;

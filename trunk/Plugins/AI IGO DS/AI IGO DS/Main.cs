@@ -55,8 +55,8 @@ namespace AI_IGO_DS
                 return Format.Tile;
             else if (nombre.EndsWith(".ANSC"))
                 return Format.Map;
-            else if (nombre.EndsWith("FNT.BIN") || nombre.EndsWith(".SRL") || nombre.EndsWith("FAT.BIN") ||
-                nombre.EndsWith("ARM9.BIN") || nombre.EndsWith("ARM7.BIN"))
+            else if (nombre.EndsWith("FAT.BIN") || nombre.EndsWith("FNT.BIN") || nombre.EndsWith("ARM9.BIN") ||
+                    nombre.EndsWith("ARM7.BIN"))
                 return Format.System;
             else if (nombre.EndsWith(".BIN") || nombre.EndsWith(".R00"))
                 return Format.FullImage;
@@ -86,7 +86,8 @@ namespace AI_IGO_DS
             if (archivo.ToUpper().EndsWith(".ANSC") && pluginHost.Get_NCLR().header.file_size != 0x00 &&
                 pluginHost.Get_NCGR().header.file_size != 0x00)
                 return new BinControl(pluginHost, true);
-            if (archivo.ToUpper().EndsWith(".BIN"))
+            if (archivo.ToUpper().EndsWith(".BIN") && !archivo.EndsWith("fat.bin") && !archivo.EndsWith("fnt.bin") &&
+                !archivo.EndsWith("arm9.bin") && !archivo.EndsWith("arm7.bin"))
                 return BIN.Leer(archivo, pluginHost);
             if (archivo.ToUpper().EndsWith(".R00"))
                 return R00.Leer(archivo, pluginHost);

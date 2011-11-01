@@ -21,6 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Data;
 using System.Linq;
 using System.Text;
@@ -108,17 +109,12 @@ namespace Tinke
             if (!(this.map.other is int))
                 this.map.other = 0;
 
-            NCGR newTile = tile;
-            newTile.rahc.tileData = pluginHost.Transform_NSCR(map, tile.rahc.tileData, (int)this.map.other);
-            newTile.rahc.nTilesX = (ushort)(map.section.width / 8);
-            newTile.rahc.nTilesY = (ushort)(map.section.height / 8);
-            pic.Image = Imagen_NCGR.Crear_Imagen(newTile, paleta, (int)this.tile.other);
+            this.numericWidth.Value = map.section.width;
+            this.numericHeight.Value = map.section.height;
 
-            this.numericWidth.Value = pic.Image.Width;
-            this.numericHeight.Value = pic.Image.Height;
             this.comboDepth.Text = (tile.rahc.depth == ColorDepth.Depth4Bit ? "4 bpp" : "8 bpp");
             oldDepth = comboDepth.Text;
-            this.numericStart.Increment = 2;
+
             switch (tile.order)
             {
                 case TileOrder.NoTiled:
@@ -140,6 +136,8 @@ namespace Tinke
 
             if (new String(paleta.header.id) != "NCLR" && new String(paleta.header.id) != "RLCN")
                 btnSetTrans.Enabled = false;
+
+            UpdateImage();
         }
 
         private void numericStart_ValueChanged(object sender, EventArgs e)
@@ -256,8 +254,9 @@ namespace Tinke
             if (isMap)
             {
                 NCGR newTile = tile;
+                newTile.rahc.tileData.tiles = Convertir.BytesToTiles(Convertir.TilesToBytes(newTile.rahc.tileData.tiles, (int)tile.other));
                 newTile.rahc.tileData = pluginHost.Transform_NSCR(map, newTile.rahc.tileData, (int)map.other);
-                image = Imagen_NCGR.Crear_Imagen(newTile, paleta, (int)tile.other, trackZoom.Value);
+                image = Imagen_NCGR.Crear_Imagen(newTile, paleta, 0, trackZoom.Value);
             }
             else
                 image = Imagen_NCGR.Crear_Imagen(tile, paleta, (int)tile.other, trackZoom.Value);
@@ -338,8 +337,11 @@ namespace Tinke
                 string filePath = o.FileName;
 
                 #region Convert to BMP format
-                if (o.FilterIndex != 2)
+                Image tempImage = Image.FromFile(o.FileName);
+                if (!(tempImage.PixelFormat == PixelFormat.Format8bppIndexed ||tempImage.PixelFormat == PixelFormat.Format4bppIndexed) ||
+                    tempImage.RawFormat != ImageFormat.Bmp)
                 {
+                    tempImage.Dispose();
                     // Convert the image to bmp format
                     using (System.IO.MemoryStream ms = new System.IO.MemoryStream())
                     {
@@ -371,13 +373,51 @@ namespace Tinke
                         bmp.Save(filePath, System.Drawing.Imaging.ImageFormat.Bmp);
                     }
                 }
+                tempImage.Dispose();
                 #endregion
+
+                // Ask for map options
+                int width, heigth, num_palette = 0, startTile = 0;
+                Dialog.MapOptions mapOptions = new Dialog.MapOptions();
+                if (isMap)
+                {
+                    mapOptions.SubPalette = map.section.mapData[0].nPalette;
+                    Image currentImg = Image.FromFile(filePath);
+                    width = currentImg.Width;
+                    heigth = currentImg.Height;
+                    currentImg.Dispose();
+
+                    mapOptions = new Dialog.MapOptions(width, heigth);
+                    mapOptions.ShowDialog();
+                    startTile = mapOptions.SubImagesStart;
+                    num_palette = mapOptions.SubPalette;
+                }
+
 
                 #region Save the new palette
                 if (new String(paleta.header.id) != "NCLR" && new String(paleta.header.id) != "RLCN")
                     goto Set_Tiles;
 
-                NCLR newPalette = Imagen_NCLR.BitmapToPalette(filePath);
+                NCLR newPalette = Imagen_NCLR.BitmapToPalette(filePath, num_palette);
+
+                // Save the other palettes
+                if (mapOptions.SubImages)
+                {
+                    List<NTFP> pals = new List<NTFP>();
+                    for (int i = 0; i < paleta.pltt.palettes.Length; i++)
+                    {
+                        if (i == num_palette)
+                        {
+                            pals.Add(newPalette.pltt.palettes[num_palette]);
+                            continue;
+                        }
+                        pals.Add(paleta.pltt.palettes[i]);
+                    }
+                    newPalette.pltt.palettes = pals.ToArray();
+                    newPalette.pltt.paletteLength = (uint)pals.Count * newPalette.pltt.nColors * 2;
+                    newPalette.pltt.length = newPalette.pltt.paletteLength + 0x18;
+                    newPalette.header.file_size = newPalette.pltt.length + newPalette.header.header_size;
+                }
                 newPalette.id = paleta.id;
                 paleta = newPalette;
 
@@ -386,31 +426,23 @@ namespace Tinke
                 Imagen_NCLR.Escribir(paleta, paletteFile);
                 pluginHost.ChangeFile((int)paleta.id, paletteFile);
                 #endregion
-
+                #region Save the new tiles
             Set_Tiles:
-
-                int width, heigth, startTile = 0;
-                Dialog.MapOptions mapOptions = new Dialog.MapOptions();
-                if (isMap)
-                {
-                    if (tile.order == TileOrder.Horizontal)
-                    {
-                        width = tile.rahc.nTilesX * 8;
-                        heigth = tile.rahc.nTilesY * 8;
-                    }
-                    else
-                    {
-                        width = tile.rahc.nTilesX;
-                        heigth = tile.rahc.nTilesY;
-                    }
-                    mapOptions = new Dialog.MapOptions(width, heigth);
-                    mapOptions.ShowDialog();
-                    startTile = mapOptions.SubImagesStart;
-                }
 
                 NCGR newTile = Imagen_NCGR.BitmapToTile(filePath, (comboBox1.SelectedIndex == 0 ? TileOrder.NoTiled : TileOrder.Horizontal));
                 newTile.id = tile.id;
-                newTile.rahc.tileData.tiles = Imagen_NCGR.MergeImage(tile.rahc.tileData.tiles, newTile.rahc.tileData.tiles, startTile);
+
+                // Save the other images
+                if (mapOptions.SubImages)
+                {
+                    newTile.rahc.tileData.tiles = Imagen_NCGR.MergeImage(tile.rahc.tileData.tiles, newTile.rahc.tileData.tiles, startTile);
+                    newTile.rahc.nTiles = (uint)newTile.rahc.tileData.tiles.Length;
+                    newTile.rahc.nTilesY = (ushort)(newTile.rahc.nTiles / newTile.rahc.nTilesX);
+                    newTile.rahc.size_tiledata = (uint)newTile.rahc.tileData.tiles.Length * 64;
+                    newTile.rahc.size_section = newTile.rahc.size_tiledata + 0x20;
+                    newTile.header.file_size = newTile.rahc.size_section + newTile.header.header_size;
+                }
+
                 tile = newTile;
                 tile.other = 0;
 
@@ -418,7 +450,8 @@ namespace Tinke
                 String tileFile = System.IO.Path.GetTempFileName();
                 Imagen_NCGR.Write(tile, tileFile);
                 pluginHost.ChangeFile((int)tile.id, tileFile);
-
+                #endregion
+                #region Save the new map
                 if (isMap)
                 {
                     if (new String(map.header.id) != "NSCR" && new String(map.header.id) != "RCSN")
@@ -430,9 +463,9 @@ namespace Tinke
                     heigth = mapOptions.ImageHeight;
 
                     if (mapOptions.FillTiles)
-                        newMap = Imagen_NSCR.Create_BasicMap(width, heigth, mapOptions.StartFillTiles, mapOptions.FillTilesWith, startTile);
+                        newMap = Imagen_NSCR.Create_BasicMap(width, heigth, mapOptions.StartFillTiles, mapOptions.FillTilesWith, startTile, (byte)num_palette);
                     else
-                        newMap = Imagen_NSCR.Create_BasicMap((int)tile.rahc.nTiles, width, heigth,startTile);
+                        newMap = Imagen_NSCR.Create_BasicMap((int)tile.rahc.nTiles, width, heigth, startTile, (byte)num_palette);
 
                     newMap.id = map.id;
                     newMap.section.padding = map.section.padding;
@@ -444,6 +477,9 @@ namespace Tinke
                     Imagen_NSCR.Write(map, mapFile);
                     pluginHost.ChangeFile((int)map.id, mapFile);
                 }
+                #endregion
+
+                #region Refresh image and information
             End:
                 stopUpdating = true;
                 if (tile.order == TileOrder.NoTiled)
@@ -482,6 +518,7 @@ namespace Tinke
 
                 UpdateImage();
                 Info();
+                #endregion
             }
         }
         private void btnSave_Click(object sender, EventArgs e)

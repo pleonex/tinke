@@ -59,7 +59,7 @@ namespace PluginInterface
         Bitmap Bitmap_NCGR(NCGR ncgr, NCLR nclr);
         Bitmap Bitmap_NCGR(NCGR ncgr, NCLR nclr, int startTile);
         Bitmap Bitmap_NCGR(NCGR ncgr, NCLR nclr, int startTile, int tilesX, int tilesY);
-        NTFT Transform_NSCR(NSCR nscr, NTFT ntft, int startOffset = 0);
+        NTFT Transform_NSCR(NSCR nscr, NTFT ntft, int startInfo = 0);
         Size Size_NCER(byte byte1, byte byte2);
         Bitmap Bitmap_NCER(Bank bank, uint blockSize, NCGR ncgr, NCLR nclr, bool guides, bool cell,
             bool numbers, bool transparency, bool image);

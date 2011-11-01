@@ -226,6 +226,9 @@ namespace Tinke
             {
                 for (int i = 0; i < currFolder.folders.Count; i++)
                 {
+                    if (id == currFolder.folders[i].id)
+                        return relativePath;
+
                     relativePath += '/' + currFolder.folders[i].name;
                     String path = Get_RelativePath(id, relativePath, currFolder.folders[i]);
 
@@ -1082,7 +1085,8 @@ namespace Tinke
             else if (new String(Encoding.ASCII.GetChars(ext)) == "NANR" || new String(Encoding.ASCII.GetChars(ext)) == "RNAN")
                 return Format.Animation;
             else if (currFile.name == "FNT.BIN" || currFile.name == "FAT.BIN" || currFile.name.StartsWith("OVERLAY9_") || currFile.name.StartsWith("OVERLAY7_") ||
-                currFile.name == "ARM9.BIN" || currFile.name == "ARM7.BIN" || currFile.name == "Y9.BIN" || currFile.name == "Y7.BIN")
+                currFile.name == "ARM9.BIN" || currFile.name == "ARM7.BIN" || currFile.name == "Y9.BIN" || currFile.name == "Y7.BIN" ||
+                currFile.name.EndsWith(".SRL") || currFile.name.EndsWith(".NDS"))
                 return Format.System;
 
 
@@ -1143,7 +1147,8 @@ namespace Tinke
             else if (new String(Encoding.ASCII.GetChars(ext)) == "NANR" || new String(Encoding.ASCII.GetChars(ext)) == "RNAN")
                 return Format.Animation;
             else if (currFile.name == "FNT.BIN" || currFile.name == "FAT.BIN" || currFile.name.StartsWith("OVERLAY9_") || currFile.name.StartsWith("OVERLAY7_") ||
-                currFile.name == "ARM9.BIN" || currFile.name == "ARM7.BIN" || currFile.name == "Y9.BIN" || currFile.name == "Y7.BIN")
+                currFile.name == "ARM9.BIN" || currFile.name == "ARM7.BIN" || currFile.name == "Y9.BIN" || currFile.name == "Y7.BIN" ||
+                currFile.name.EndsWith(".SRL") || currFile.name.EndsWith(".NDS"))
                 return Format.System;
 
             FileStream fs = new FileStream(currFile.path, FileMode.Open);
@@ -1204,7 +1209,8 @@ namespace Tinke
             else if (new String(Encoding.ASCII.GetChars(ext)) == "NANR" || new String(Encoding.ASCII.GetChars(ext)) == "RNAN")
                 return Format.Animation;
             else if (name == "FNT.BIN" || name == "FAT.BIN" || name.StartsWith("OVERLAY9_") || name.StartsWith("OVERLAY7_") ||
-                name == "ARM9.BIN" || name == "ARM7.BIN" || name == "Y9.BIN" || name == "Y7.BIN")
+                name == "ARM9.BIN" || name == "ARM7.BIN" || name == "Y9.BIN" || name == "Y7.BIN"|| name.EndsWith(".SRL") ||
+                name.EndsWith(".NDS"))
                 return Format.System;
 
             if (new String(Encoding.ASCII.GetChars(ext)) == "LZ77") // LZ77
@@ -1231,6 +1237,9 @@ namespace Tinke
 
             // Save the file
             string tempFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + id + selectedFile.name;
+            if (File.Exists(tempFile))
+                File.Delete(tempFile);
+
             BinaryReader br = new BinaryReader(File.OpenRead(selectedFile.path));
             br.BaseStream.Position = selectedFile.offset;
             File.WriteAllBytes(tempFile, br.ReadBytes((int)selectedFile.size));
@@ -1299,8 +1308,6 @@ namespace Tinke
             }
             #endregion
         Continuar:
-
-            File.Delete(tempFile);
 
             Add_Files(ref desc, id);
             return desc;
@@ -1582,6 +1589,7 @@ namespace Tinke
             if (!(packFile is String) || packFile == "")
             {
                 MessageBox.Show(Tools.Helper.ObtenerTraduccion("Messages", "S23"));
+                Console.WriteLine(Tools.Helper.ObtenerTraduccion("Messages", "S25"));
                 return;
             }
 
@@ -1601,6 +1609,8 @@ namespace Tinke
         {
             sFile selectFile = Search_File(id);
             String outFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + id + selectFile.name;
+            if (File.Exists(outFile))
+                File.Delete(outFile);
 
             BinaryReader br = new BinaryReader(File.OpenRead(selectFile.path));
             br.BaseStream.Position = selectFile.offset;
@@ -1628,6 +1638,8 @@ namespace Tinke
         public Control See_File()
         {
             sFile selectFile = Select_File();
+            if (selectFile.name == "rom.nds")
+                goto NDS;
 
             string tempFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + selectFile.id + selectFile.name;
             if (File.Exists(tempFile))
@@ -1648,7 +1660,6 @@ namespace Tinke
                     if (gamePlugin.Get_Format(selectFile.name, ext, idSelect) != Format.Unknown)
                     {
                         Control resultado = gamePlugin.Show_Info(tempFile, idSelect);
-                        File.Delete(tempFile);
                         return resultado;
                     }
                 }
@@ -1658,7 +1669,6 @@ namespace Tinke
                     if (plugin.Get_Format(selectFile.name, ext) != Format.Unknown)
                     {
                         Control resultado = plugin.Show_Info(tempFile, idSelect);
-                        File.Delete(tempFile);
                         return resultado;
                     }
                 }
@@ -1679,7 +1689,6 @@ namespace Tinke
                 {
                     NCLR nclr = Imagen_NCLR.Leer(tempFile, idSelect);
                     pluginHost.Set_NCLR(nclr);
-                    File.Delete(tempFile);
 
                     iNCLR control = new iNCLR(nclr, pluginHost);
                     return control; ;
@@ -1688,7 +1697,6 @@ namespace Tinke
                 {
                     NCGR tile = Imagen_NCGR.Leer(tempFile, idSelect);
                     pluginHost.Set_NCGR(tile);
-                    File.Delete(tempFile);
 
                     if (pluginHost.Get_NCLR().header.file_size != 0x00)
                     {
@@ -1704,7 +1712,6 @@ namespace Tinke
                 else if (new String(Encoding.ASCII.GetChars(ext)) == "NSCR" || new String(Encoding.ASCII.GetChars(ext)) == "RCSN")
                 {
                     pluginHost.Set_NSCR(Imagen_NSCR.Leer(tempFile, idSelect));
-                    File.Delete(tempFile);
 
                     if (pluginHost.Get_NCGR().header.file_size != 0x00 && pluginHost.Get_NCLR().header.file_size != 0x00)
                     {
@@ -1720,7 +1727,6 @@ namespace Tinke
                 else if (new String(Encoding.ASCII.GetChars(ext)) == "NCER" || new String(Encoding.ASCII.GetChars(ext)) == "RECN")
                 {
                     pluginHost.Set_NCER(Imagen_NCER.Read(tempFile, idSelect));
-                    File.Delete(tempFile);
 
                     if (pluginHost.Get_NCGR().header.file_size != 0x00 && pluginHost.Get_NCLR().header.file_size != 0x00)
                     {
@@ -1736,7 +1742,6 @@ namespace Tinke
                 else if (new String(Encoding.ASCII.GetChars(ext)) == "NANR" || new String(Encoding.ASCII.GetChars(ext)) == "RNAN")
                 {
                     pluginHost.Set_NANR(Imagen_NANR.Leer(tempFile, idSelect));
-                    File.Delete(tempFile);
 
                     if (pluginHost.Get_NCER().header.file_size != 0x00 && pluginHost.Get_NCGR().header.file_size != 0x00 &&
                         pluginHost.Get_NCLR().header.file_size != 0x00)
@@ -1755,8 +1760,13 @@ namespace Tinke
                 if (compressFormat != FormatCompress.Invalid)
                 {
                     Control resultado = new DSDecmp.CompressionControl(idSelect, compressFormat, pluginHost);
-                    File.Delete(tempFile);
                     return resultado;
+                }
+
+                if (selectFile.name.ToUpper().EndsWith(".SRL"))
+                {
+                    System.Diagnostics.Process.Start(Application.ExecutablePath, '\"' + tempFile + '\"');
+                    return new Control();
                 }
             }
             catch (Exception e)
@@ -1764,10 +1774,16 @@ namespace Tinke
                 MessageBox.Show(e.Message);
                 Console.WriteLine(e.Message);
             }
+
+        NDS:
+            if (selectFile.name == "rom.nds")
+            {
+                System.Diagnostics.Process.Start(Application.ExecutablePath, '\"' + ROMFile + '\"');
+                return new Control();
+            }
             #endregion
 
-            try { File.Delete(tempFile); }
-            catch { }
+            Console.WriteLine(Tools.Helper.ObtenerTraduccion("Messages", "S25"));
             return new Control();
         }
         public Control See_File(String archivo)
@@ -1785,7 +1801,6 @@ namespace Tinke
                     if (gamePlugin.Get_Format(name, ext, idSelect) != Format.Unknown)
                     {
                         Control resultado = gamePlugin.Show_Info(archivo, idSelect);
-                        File.Delete(archivo);
                         return resultado;
                     }
                 }
@@ -1795,7 +1810,6 @@ namespace Tinke
                     if (plugin.Get_Format(name, ext) != Format.Unknown)
                     {
                         Control resultado = plugin.Show_Info(archivo, idSelect);
-                        File.Delete(archivo);
                         return resultado;
                     }
                 }
@@ -1816,7 +1830,6 @@ namespace Tinke
                 {
                     NCLR nclr = Imagen_NCLR.Leer(archivo, idSelect);
                     pluginHost.Set_NCLR(nclr);
-                    File.Delete(archivo);
 
                     iNCLR control = new iNCLR(nclr, pluginHost);
                     control.Dock = DockStyle.Fill;
@@ -1826,7 +1839,6 @@ namespace Tinke
                 {
                     NCGR tile = Imagen_NCGR.Leer(archivo, idSelect);
                     pluginHost.Set_NCGR(tile);
-                    File.Delete(archivo);
 
                     if (pluginHost.Get_NCLR().header.file_size != 0x00)
                     {
@@ -1843,7 +1855,6 @@ namespace Tinke
                 else if (new String(Encoding.ASCII.GetChars(ext)) == "NSCR" || new String(Encoding.ASCII.GetChars(ext)) == "RCSN")
                 {
                     pluginHost.Set_NSCR(Imagen_NSCR.Leer(archivo, idSelect));
-                    File.Delete(archivo);
 
                     if (pluginHost.Get_NCGR().header.file_size != 0x00 && pluginHost.Get_NCLR().header.file_size != 0x00)
                     {
@@ -1860,7 +1871,6 @@ namespace Tinke
                 else if (new String(Encoding.ASCII.GetChars(ext)) == "NCER" || new String(Encoding.ASCII.GetChars(ext)) == "RECN")
                 {
                     pluginHost.Set_NCER(Imagen_NCER.Read(archivo, idSelect));
-                    File.Delete(archivo);
 
                     if (pluginHost.Get_NCGR().header.file_size != 0x00 && pluginHost.Get_NCLR().header.file_size != 0x00)
                     {
@@ -1878,7 +1888,6 @@ namespace Tinke
                 else if (new String(Encoding.ASCII.GetChars(ext)) == "NANR" || new String(Encoding.ASCII.GetChars(ext)) == "RNAN")
                 {
                     pluginHost.Set_NANR(Imagen_NANR.Leer(archivo, idSelect));
-                    File.Delete(archivo);
 
                     if (pluginHost.Get_NCER().header.file_size != 0x00 && pluginHost.Get_NCGR().header.file_size != 0x00 &&
                         pluginHost.Get_NCLR().header.file_size != 0x00)
@@ -1899,8 +1908,18 @@ namespace Tinke
                 if (compressFormat != FormatCompress.Invalid)
                 {
                     Control resultado = new DSDecmp.CompressionControl(idSelect, compressFormat, pluginHost);
-                    File.Delete(archivo);
                     return resultado;
+                }
+
+                if (Path.GetFileName(archivo).ToUpper().EndsWith(".SRL"))
+                {
+                    System.Diagnostics.Process.Start(Application.ExecutablePath, '\"' + archivo + '\"');
+                    return new Control();
+                }
+                else if (Path.GetFileName(archivo).ToUpper().EndsWith(".NDS"))
+                {
+                    System.Diagnostics.Process.Start(Application.ExecutablePath, '\"' + archivo + '\"');
+                    return new Control();
                 }
             }
             catch (Exception e)
@@ -1910,8 +1929,7 @@ namespace Tinke
             }
             #endregion
 
-            try { File.Delete(archivo); }
-            catch { }
+            Console.WriteLine(Tools.Helper.ObtenerTraduccion("Messages", "S25"));
             return new Control();
         }
         public void Read_File()
@@ -2004,6 +2022,7 @@ namespace Tinke
 
             try { File.Delete(tempFile); }
             catch { }
+            Console.WriteLine(Tools.Helper.ObtenerTraduccion("Messages", "S25"));
         }
     }
 
