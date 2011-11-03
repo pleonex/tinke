@@ -39,6 +39,10 @@ namespace Tinke.Dialog
                 btnOk.Text = xml.Element("S06").Value;
                 label5.Text = xml.Element("S07").Value;
                 label6.Text = xml.Element("S08").Value;
+                checkSubImage.Text = xml.Element("S09").Value;
+                groupSubImages.Text = xml.Element("S09").Value;
+                label7.Text = xml.Element("S0A").Value;
+                label8.Text = xml.Element("S0B").Value;
             }
             catch { throw new NotImplementedException("There was an error reading the language file"); }
         }

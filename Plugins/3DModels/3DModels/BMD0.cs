@@ -527,7 +527,7 @@ namespace _3DModels
                 data.polygon.display = new sBMD0.Model.ModelData.Polygon.Display[data.polygon.header.num_objs];
                 for (int i = 0; i < data.polygon.header.num_objs; i++)
                 {
-                    br.BaseStream.Position = data.polygon.definition[i].display_size;
+                    br.BaseStream.Position = data.polygon.definition[i].display_offset;
                     data.polygon.display[i].geometryCmd = br.ReadBytes((int)data.polygon.definition[i].display_size);
                 }
                 #endregion

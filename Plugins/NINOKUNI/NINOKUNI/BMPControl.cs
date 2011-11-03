@@ -29,6 +29,22 @@ namespace NINOKUNI
             string imagePath = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + "bmp_" + Path.GetFileName(image);
             File.Copy(image, imagePath, true);
             picBox.ImageLocation = imagePath;
+
+            ReadLanguage();
+        }
+
+        private void ReadLanguage()
+        {
+            try
+            {
+                System.Xml.Linq.XElement xml = System.Xml.Linq.XElement.Load(Application.StartupPath + System.IO.Path.DirectorySeparatorChar +
+                    "Plugins" + System.IO.Path.DirectorySeparatorChar + "NINOKUNILang.xml");
+                xml = xml.Element(pluginHost.Get_Language()).Element("BMPControl");
+
+                btnSave.Text = xml.Element("S00").Value;
+                btnImport.Text = xml.Element("S01").Value;
+            }
+            catch { throw new NotSupportedException("There was an error reading the language file"); }
         }
 
         private void btnSave_Click(object sender, EventArgs e)
@@ -48,7 +64,6 @@ namespace NINOKUNI
                     picBox.Image.Save(o.FileName, System.Drawing.Imaging.ImageFormat.Png);
             }
         }
-
         private void btnImport_Click(object sender, EventArgs e)
         {
             OpenFileDialog o = new OpenFileDialog();

@@ -247,7 +247,7 @@
             this.groupSubImages.Size = new System.Drawing.Size(371, 77);
             this.groupSubImages.TabIndex = 11;
             this.groupSubImages.TabStop = false;
-            this.groupSubImages.Text = "Subimages";
+            this.groupSubImages.Text = "S1E";
             // 
             // numericSubPalette
             // 
@@ -266,9 +266,9 @@
             this.label8.AutoSize = true;
             this.label8.Location = new System.Drawing.Point(12, 56);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(94, 13);
+            this.label8.Size = new System.Drawing.Size(26, 13);
             this.label8.TabIndex = 2;
-            this.label8.Text = "Número de paleta:";
+            this.label8.Text = "S1F";
             // 
             // numericSubStart
             // 
@@ -288,18 +288,18 @@
             this.label7.AutoSize = true;
             this.label7.Location = new System.Drawing.Point(12, 29);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(79, 13);
+            this.label7.Size = new System.Drawing.Size(28, 13);
             this.label7.TabIndex = 0;
-            this.label7.Text = "Posición inicial:";
+            this.label7.Text = "S1D";
             // 
             // checkSubImage
             // 
             this.checkSubImage.AutoSize = true;
             this.checkSubImage.Location = new System.Drawing.Point(15, 241);
             this.checkSubImage.Name = "checkSubImage";
-            this.checkSubImage.Size = new System.Drawing.Size(79, 17);
+            this.checkSubImage.Size = new System.Drawing.Size(46, 17);
             this.checkSubImage.TabIndex = 12;
-            this.checkSubImage.Text = "SubImages";
+            this.checkSubImage.Text = "S1E";
             this.checkSubImage.UseVisualStyleBackColor = true;
             this.checkSubImage.CheckedChanged += new System.EventHandler(this.checkSubImage_CheckedChanged);
             // 

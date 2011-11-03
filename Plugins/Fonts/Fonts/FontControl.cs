@@ -73,6 +73,10 @@ namespace Fonts
                 btnSave.Text = xml.Element("S00").Value;
                 btnApply.Text = xml.Element("S01").Value;
                 label1.Text = xml.Element("S02").Value;
+                btnAddChar.Text = xml.Element("S03").Value;
+                btnRemoveChar.Text = xml.Element("S04").Value;
+                btnPalette.Text = xml.Element("S05").Value;
+                btnChangeMap.Text = xml.Element("S06").Value;
             }
             catch { throw new NotSupportedException("There was an error reading the language file"); }
         }
@@ -231,7 +235,7 @@ namespace Fonts
 
         private void btnChangeMap_Click(object sender, EventArgs e)
         {
-            MapChar map = new MapChar(font.pamc);
+            MapChar map = new MapChar(font.pamc, pluginHost.Get_Language());
             map.ShowDialog();
             if (map.DialogResult == DialogResult.OK)
             {

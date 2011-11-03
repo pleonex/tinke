@@ -87,6 +87,7 @@
       Sorry, you can't overwrite the current
       opened file.
     </S44>
+    <S45>Refresh messages</S45>
   </Sistema>
   <RomInfo>
     <S01>Informazioni di gioco</S01>
@@ -304,6 +305,9 @@
     <S06>Accetta</S06>
     <S07>Larghezza immagine:</S07>
     <S08>Altezza immagine:</S08>
+    <S09>Subimages</S09>
+    <S0A>Start offset:</S0A>
+    <S0B>Number of palette:</S0B>
   </NSCR>
   <NCER>
     <S01>Bank:</S01>
@@ -509,6 +513,7 @@
     <S01>Accetta</S01>
     <S02>Clicca su un colore dell'immagine</S02>
     <S03>Scegli il colore dai valori RGB</S03>
+    <S1D>Add and remove the last color</S1D>
     <!-- Select offset -->
     <S04>Scegli l'offset</S04>
     <S05>Scrivi l'offset dove comincerà la lettura</S05>
@@ -536,6 +541,5 @@
     <S1A>Leggi gli offset</S1A>
     <S1B>Esadecimale</S1B>
     <S1C>Accetta</S1C>
-    <S1D>Add and remove the last color</S1D>
   </Dialog>
 </Language>
