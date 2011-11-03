@@ -34,7 +34,7 @@ namespace EDGEWORTH
 
         public bool IsCompatible()
         {
-            if (gameCode == "C32P")
+            if (gameCode == "C32P" || gameCode == "C32J")
                 return true;
 
             return false;

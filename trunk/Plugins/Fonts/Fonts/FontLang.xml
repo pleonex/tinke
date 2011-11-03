@@ -37,6 +37,10 @@
       <S00>Guardar nueva fuente</S00>
       <S01>Aplicar cambios</S01>
       <S02>Codificación:</S02>
+      <S03>Añadir caracter</S03>
+      <S04>Eliminar caracter</S04>
+      <S05>Usar paleta abierta</S05>
+      <S06>Cambiar mapa</S06>
     </FontControl>
     <CharControl>
       <S00>Ancho:</S00>
@@ -44,6 +48,20 @@
       <S02>Longitud:</S02>
       <S03>Código:</S03>
     </CharControl>
+    <MapChar>
+      <S00>Mapa de caracteres</S00>
+      <S01>Sección</S01>
+      <S02>de {0}</S02>
+      <S03>Aceptar</S03>
+      <S04>Información de la sección</S04>
+      <S05>Tipo:</S05>
+      <S06>Primer caracter:</S06>
+      <S07>Último caracter:</S07>
+      <S08>Añadir sección</S08>
+      <S09>Eliminar sección</S09>
+      <S0A>Númbero de imagen</S0A>
+      <S0B>Código del caracter</S0B>
+    </MapChar>
   </Español>
   <English>
     <NFTR>
@@ -82,6 +100,10 @@
       <S00>Save new font</S00>
       <S01>Apply changes</S01>
       <S02>Encoding:</S02>
+      <S03>Add char</S03>
+      <S04>Remove char</S04>
+      <S05>Use custom palette</S05>
+      <S06>Change Map char</S06>
     </FontControl>
     <CharControl>
       <S00>Width:</S00>
@@ -89,6 +111,20 @@
       <S02>Length:</S02>
       <S03>Char code:</S03>
     </CharControl>
+    <MapChar>
+      <S00>Character map</S00>
+      <S01>Section</S01>
+      <S02>of {0}</S02>
+      <S03>Accept</S03>
+      <S04>Map info</S04>
+      <S05>Type:</S05>
+      <S06>First char:</S06>
+      <S07>Last char:</S07>
+      <S08>Add section</S08>
+      <S09>Remove section</S09>
+      <S0A>Number of image</S0A>
+      <S0B>Char code</S0B>
+    </MapChar>
   </English>
   <Français>
     <NFTR>
@@ -127,6 +163,10 @@
       <S00>Sauver la nouvelle police (font)</S00>
       <S01>Appliquer les changements</S01>
       <S02>Codage :</S02>
+      <S03>Add char</S03>
+      <S04>Remove char</S04>
+      <S05>Use custom palette</S05>
+      <S06>Change Map char</S06>
     </FontControl>
     <CharControl>
       <S00>Largeur :</S00>
@@ -134,5 +174,19 @@
       <S02>Longeur :</S02>
       <S03>Code :</S03>
     </CharControl>
+    <MapChar>
+      <S00>Character map</S00>
+      <S01>Section</S01>
+      <S02>of {0}</S02>
+      <S03>Accept</S03>
+      <S04>Map info</S04>
+      <S05>Type:</S05>
+      <S06>First char:</S06>
+      <S07>Last char:</S07>
+      <S08>Add section</S08>
+      <S09>Remove section</S09>
+      <S0A>Number of image</S0A>
+      <S0B>Char code</S0B>
+    </MapChar>
   </Français>
 </Language>

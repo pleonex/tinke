@@ -87,6 +87,7 @@
       Sorry, you can't overwrite the current 
       opened file.
     </S44>
+    <S45>Refresh messages</S45>
   </Sistema>
   <RomInfo>
     <S01>Game information</S01>
@@ -304,6 +305,9 @@
     <S06>Accept</S06>
     <S07>Width image:</S07>
     <S08>Height image:</S08>
+    <S09>Subimages</S09>
+    <S0A>Start offset:</S0A>
+    <S0B>Number of palette:</S0B>
   </NSCR>
   <NCER>
     <S01>Bank:</S01>
@@ -509,6 +513,7 @@
     <S01>Accept</S01>
     <S02>Click on a color of the image</S02>
     <S03>Choose color from RGB values</S03>
+    <S1D>Add and remove not used colors</S1D>
     <!-- Select offset -->
     <S04>Choose the offset</S04>
     <S05>Write the offset where the reading will start</S05>
@@ -536,6 +541,5 @@
     <S1A>Read offsets</S1A>
     <S1B>Hexadecimal</S1B>
     <S1C>Accept</S1C>
-    <S1D>Add and remove not used colors</S1D>
   </Dialog>
 </Language>

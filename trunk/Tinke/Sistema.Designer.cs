@@ -73,6 +73,7 @@ namespace Tinke
             this.toolStripDebug = new System.Windows.Forms.ToolStripButton();
             this.toolStripVentana = new System.Windows.Forms.ToolStripButton();
             this.toolStripLanguage = new System.Windows.Forms.ToolStripSplitButton();
+            this.stripRefreshMsg = new System.Windows.Forms.ToolStripButton();
             this.btnUnpack = new System.Windows.Forms.Button();
             this.btnDesplazar = new System.Windows.Forms.Button();
             this.panelObj = new System.Windows.Forms.Panel();
@@ -100,7 +101,6 @@ namespace Tinke
             this.btnImport = new System.Windows.Forms.Button();
             this.btnSaveROM = new System.Windows.Forms.Button();
             this.btnPack = new System.Windows.Forms.Button();
-            this.stripRefreshMsg = new System.Windows.Forms.ToolStripButton();
             this.toolStrip1.SuspendLayout();
             this.toolStrip2.SuspendLayout();
             this.SuspendLayout();
@@ -281,6 +281,15 @@ namespace Tinke
             this.toolStripLanguage.Name = "toolStripLanguage";
             this.toolStripLanguage.Size = new System.Drawing.Size(57, 22);
             this.toolStripLanguage.Text = "S1E";
+            // 
+            // stripRefreshMsg
+            // 
+            this.stripRefreshMsg.Image = ((System.Drawing.Image)(resources.GetObject("stripRefreshMsg.Image")));
+            this.stripRefreshMsg.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.stripRefreshMsg.Name = "stripRefreshMsg";
+            this.stripRefreshMsg.Size = new System.Drawing.Size(45, 22);
+            this.stripRefreshMsg.Text = "S45";
+            this.stripRefreshMsg.Click += new System.EventHandler(this.stripRefreshMsg_Click);
             // 
             // btnUnpack
             // 
@@ -561,15 +570,6 @@ namespace Tinke
             this.btnPack.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnPack.UseVisualStyleBackColor = true;
             this.btnPack.Click += new System.EventHandler(this.btnPack_Click);
-            // 
-            // stripRefreshMsg
-            // 
-            this.stripRefreshMsg.Image = ((System.Drawing.Image)(resources.GetObject("stripRefreshMsg.Image")));
-            this.stripRefreshMsg.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.stripRefreshMsg.Name = "stripRefreshMsg";
-            this.stripRefreshMsg.Size = new System.Drawing.Size(120, 22);
-            this.stripRefreshMsg.Text = "Refresh messages";
-            this.stripRefreshMsg.Click += new System.EventHandler(this.stripRefreshMsg_Click);
             // 
             // Sistema
             // 

@@ -1151,7 +1151,7 @@ namespace Tinke
                 currFile.name.EndsWith(".SRL") || currFile.name.EndsWith(".NDS"))
                 return Format.System;
 
-            FileStream fs = new FileStream(currFile.path, FileMode.Open);
+            FileStream fs = File.OpenRead(currFile.path);
             fs.Position = currFile.offset;
             if (new String(Encoding.ASCII.GetChars(ext)) == "LZ77") // LZ77
                 fs.Seek(4, SeekOrigin.Current);

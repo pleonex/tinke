@@ -88,6 +88,7 @@
       No puedes guardar el nuevo archivo sobre el que está
       abierto actualmente.
     </S44>
+    <S45>Recargar mensajes</S45>
   </Sistema>
   <RomInfo>
     <S01>Información de la ROM</S01>
@@ -320,6 +321,9 @@
     <S06>Aceptar</S06>
     <S07>Ancho imagen:</S07>
     <S08>Alto imagen:</S08>
+    <S09>Sub-imágenes</S09>
+    <S0A>Posición inicial:</S0A>
+    <S0B>Número de paleta:</S0B>
   </NSCR>
   <NCER>
     <S01>Banco:</S01>
@@ -525,6 +529,7 @@
     <S01>Aceptar</S01>
     <S02>Hacer click sobre el color en la imagen</S02>
     <S03>Elegir color a partir de valores RGB</S03>
+    <S1D>Añadir eliminando colores no usados</S1D>
     <!-- Select offset -->
     <S04>Introduce offset</S04>
     <S05>Introduce el offset de inicio de lectura del archivo</S05>
@@ -552,6 +557,5 @@
     <S1A>Leer offset</S1A>
     <S1B>Visor hexadecimal</S1B>
     <S1C>Aceptar</S1C>
-    <S1D>Añadir eliminando colores no usados</S1D>
   </Dialog>
 </Language>

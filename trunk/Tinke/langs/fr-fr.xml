@@ -87,6 +87,7 @@
       Désolé, vous ne pouvez pas écraser l'archive
       ouverte actuellement.
     </S44>
+    <S45>Refresh messages</S45>
   </Sistema>
   <RomInfo>
     <S01>Informations de la ROM</S01>
@@ -304,6 +305,9 @@
     <S06>Accepter</S06>
     <S07>Longeur d'image :</S07>
     <S08>Hauteur d'image :</S08>
+    <S09>Subimages</S09>
+    <S0A>Start offset:</S0A>
+    <S0B>Number of palette:</S0B>
   </NSCR>
   <NCER>
     <S01>Banques :</S01>
@@ -515,6 +519,7 @@
     <S01>Accepter</S01>
     <S02>Cliquer sur une couleur de l'image</S02>
     <S03>Choisir la couleur depuis les valeurs RGB</S03>
+    <S1D>Ajouter et supprimer les couleurs non utilisées</S1D>
     <!-- Select offset -->
     <S04>Choisissez l'offset</S04>
     <S05>Écrire l'offset où la lecture débutera</S05>
@@ -542,6 +547,5 @@
     <S1A>Lire les offsets</S1A>
     <S1B>Hexadécimal</S1B>
     <S1C>Accepter</S1C>
-    <S1D>Ajouter et supprimer les couleurs non utilisées</S1D>
   </Dialog>
 </Language>

@@ -79,7 +79,7 @@ namespace Fonts
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(75, 23);
             this.btnSave.TabIndex = 0;
-            this.btnSave.Text = "Accept";
+            this.btnSave.Text = "S03";
             this.btnSave.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnSave.UseVisualStyleBackColor = true;
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
@@ -114,7 +114,7 @@ namespace Fonts
             this.groupBox1.Size = new System.Drawing.Size(380, 207);
             this.groupBox1.TabIndex = 2;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Map info";
+            this.groupBox1.Text = "S04";
             // 
             // dataGridMapInfo
             // 
@@ -134,46 +134,46 @@ namespace Fonts
             // 
             // ColumnImage
             // 
-            this.ColumnImage.HeaderText = "Number of image";
+            this.ColumnImage.HeaderText = "S0A";
             this.ColumnImage.Name = "ColumnImage";
             // 
             // ColumnCharCode
             // 
-            this.ColumnCharCode.HeaderText = "Char Code";
+            this.ColumnCharCode.HeaderText = "S0B";
             this.ColumnCharCode.Name = "ColumnCharCode";
             // 
             // btnAddSect
             // 
-            this.btnAddSect.Location = new System.Drawing.Point(202, 50);
+            this.btnAddSect.Location = new System.Drawing.Point(165, 50);
             this.btnAddSect.Name = "btnAddSect";
-            this.btnAddSect.Size = new System.Drawing.Size(80, 23);
+            this.btnAddSect.Size = new System.Drawing.Size(100, 23);
             this.btnAddSect.TabIndex = 10;
-            this.btnAddSect.Text = "Add section";
+            this.btnAddSect.Text = "S08";
             this.btnAddSect.UseVisualStyleBackColor = true;
             this.btnAddSect.Click += new System.EventHandler(this.btnAddSect_Click);
             // 
             // btnRemoveSec
             // 
-            this.btnRemoveSec.Location = new System.Drawing.Point(288, 50);
+            this.btnRemoveSec.Location = new System.Drawing.Point(268, 50);
             this.btnRemoveSec.Name = "btnRemoveSec";
-            this.btnRemoveSec.Size = new System.Drawing.Size(80, 23);
+            this.btnRemoveSec.Size = new System.Drawing.Size(100, 23);
             this.btnRemoveSec.TabIndex = 9;
-            this.btnRemoveSec.Text = "Del section";
+            this.btnRemoveSec.Text = "S09";
             this.btnRemoveSec.UseVisualStyleBackColor = true;
             this.btnRemoveSec.Click += new System.EventHandler(this.btnRemoveSec_Click);
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(246, 26);
+            this.label4.Location = new System.Drawing.Point(235, 26);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(54, 13);
+            this.label4.Size = new System.Drawing.Size(26, 13);
             this.label4.TabIndex = 5;
-            this.label4.Text = "Last char:";
+            this.label4.Text = "S07";
             // 
             // numericLastChar
             // 
-            this.numericLastChar.Location = new System.Drawing.Point(305, 24);
+            this.numericLastChar.Location = new System.Drawing.Point(318, 24);
             this.numericLastChar.Maximum = new decimal(new int[] {
             65535,
             0,
@@ -186,7 +186,7 @@ namespace Fonts
             // 
             // numericFirstChar
             // 
-            this.numericFirstChar.Location = new System.Drawing.Point(179, 24);
+            this.numericFirstChar.Location = new System.Drawing.Point(183, 24);
             this.numericFirstChar.Maximum = new decimal(new int[] {
             65535,
             0,
@@ -200,15 +200,15 @@ namespace Fonts
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(120, 26);
+            this.label3.Location = new System.Drawing.Point(98, 26);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(53, 13);
+            this.label3.Size = new System.Drawing.Size(26, 13);
             this.label3.TabIndex = 2;
-            this.label3.Text = "First char:";
+            this.label3.Text = "S06";
             // 
             // numericType
             // 
-            this.numericType.Location = new System.Drawing.Point(53, 24);
+            this.numericType.Location = new System.Drawing.Point(46, 24);
             this.numericType.Maximum = new decimal(new int[] {
             2,
             0,
@@ -223,29 +223,29 @@ namespace Fonts
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(12, 26);
+            this.label2.Location = new System.Drawing.Point(6, 26);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(34, 13);
+            this.label2.Size = new System.Drawing.Size(26, 13);
             this.label2.TabIndex = 0;
-            this.label2.Text = "Type:";
+            this.label2.Text = "S05";
             // 
             // label1
             // 
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(12, 9);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(43, 13);
+            this.label1.Size = new System.Drawing.Size(26, 13);
             this.label1.TabIndex = 3;
-            this.label1.Text = "Section";
+            this.label1.Text = "S01";
             // 
             // lblTotalSec
             // 
             this.lblTotalSec.AutoSize = true;
             this.lblTotalSec.Location = new System.Drawing.Point(120, 9);
             this.lblTotalSec.Name = "lblTotalSec";
-            this.lblTotalSec.Size = new System.Drawing.Size(25, 13);
+            this.lblTotalSec.Size = new System.Drawing.Size(26, 13);
             this.lblTotalSec.TabIndex = 4;
-            this.lblTotalSec.Text = "of 0";
+            this.lblTotalSec.Text = "S02";
             // 
             // MapChar
             // 
@@ -260,7 +260,7 @@ namespace Fonts
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "MapChar";
             this.ShowInTaskbar = false;
-            this.Text = "Character map";
+            this.Text = "S00";
             this.Resize += new System.EventHandler(this.MapChar_Resize);
             ((System.ComponentModel.ISupportInitialize)(this.numericSection)).EndInit();
             this.groupBox1.ResumeLayout(false);

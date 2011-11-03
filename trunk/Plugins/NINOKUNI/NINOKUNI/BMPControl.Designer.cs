@@ -41,7 +41,7 @@
             this.btnImport.Name = "btnImport";
             this.btnImport.Size = new System.Drawing.Size(90, 30);
             this.btnImport.TabIndex = 2;
-            this.btnImport.Text = "Import";
+            this.btnImport.Text = "S01";
             this.btnImport.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnImport.UseVisualStyleBackColor = true;
             this.btnImport.Click += new System.EventHandler(this.btnImport_Click);
@@ -53,7 +53,7 @@
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(90, 30);
             this.btnSave.TabIndex = 1;
-            this.btnSave.Text = "Save";
+            this.btnSave.Text = "S00";
             this.btnSave.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnSave.UseVisualStyleBackColor = true;
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);

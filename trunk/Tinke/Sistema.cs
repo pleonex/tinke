@@ -95,7 +95,7 @@ namespace Tinke
                     ToolStripLang_Click);
             }
 
-            LeerIdioma();
+            ReadLanguage();
             #endregion
             this.Load += new EventHandler(Sistema_Load);
             treeSystem.LostFocus += new EventHandler(treeSystem_LostFocus);
@@ -373,7 +373,7 @@ namespace Tinke
             }
             catch { MessageBox.Show(Tools.Helper.ObtenerTraduccion("Sistema", "S38"), Tools.Helper.ObtenerTraduccion("Sistema", "S3A")); }
         }
-        private void LeerIdioma()
+        private void ReadLanguage()
         {
             try
             {
@@ -438,6 +438,7 @@ namespace Tinke
                 toolStripAbrirTexto.Text = xml.Element("S26").Value;
                 toolStripAbrirFat.Text = xml.Element("S3D").Value;
                 btnPack.Text = xml.Element("S42").Value;
+                stripRefreshMsg.Text = xml.Element("S45").Value;
             }
             catch { throw new NotSupportedException("There was an error reading the language file"); }
         }
@@ -647,7 +648,7 @@ namespace Tinke
                 for (int i = 0; i < carpeta.files.Count; i++)
                 {
                     sFile newFile = carpeta.files[i];
-                    newFile.format = accion.Get_Format(newFile.id);
+                    newFile.format = accion.Get_Format(newFile, newFile.id);
                     carpeta.files[i] = newFile;
                 }
             }
@@ -1007,6 +1008,7 @@ namespace Tinke
         }
         private void ExtractFile()
         {
+            this.Cursor = Cursors.WaitCursor;
             sFile fileSelect = accion.Select_File();
 
             SaveFileDialog o = new SaveFileDialog();
@@ -1018,6 +1020,7 @@ namespace Tinke
                 File.WriteAllBytes(o.FileName, br.ReadBytes((int)fileSelect.size));
                 br.Close();
             }
+            this.Cursor = Cursors.Default;
         }
         private void ExtractFolder()
         {
@@ -1196,12 +1199,12 @@ namespace Tinke
         {
             if (btnDesplazar.Text == ">>>>>")
             {
-                this.Width += panelObj.Width;
+                this.Width += panelObj.Width + 7;
                 btnDesplazar.Text = "<<<<<";
             }
             else
             {
-                this.Width -= panelObj.Width;
+                this.Width -= (panelObj.Width + 7);
                 btnDesplazar.Text = ">>>>>";
             }
         }

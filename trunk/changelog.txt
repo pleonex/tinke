@@ -12,6 +12,7 @@
 ** Game SUBARASHIKI (The world end with you) - Unpacker
 ** Game TOKIMEKIGS3S supported (LZS and RESC)
 ** Game BLOODBAHAMUT supported (.DPK by Tricky Upgrade)
+** Game RUNFACTORY3 supported (unpacker and packer)
 ** Improved Font plugin
   - Fixed problem with rotated Font
   - Fixed problem with char codes
@@ -22,6 +23,7 @@
 ** Added new method to set the transparency color.
 ** Added method to create NSCR files of NCGR subimages
 ** Add button Pack (instead of using controls from button "View")
+* Improved speed reading ROMs
 * Supported SRL files (wifi download files)
 * Fixed problem with textures with format 2
 * Fixed problems in SDAT plugin

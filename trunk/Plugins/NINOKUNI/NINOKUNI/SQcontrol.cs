@@ -31,7 +31,26 @@ namespace NINOKUNI
             Read(file);
             translated = original;
             listBlock.SelectedIndex = 0;
+
+            ReadLanguage();
         }
+
+        private void ReadLanguage()
+        {
+            try
+            {
+                System.Xml.Linq.XElement xml = System.Xml.Linq.XElement.Load(Application.StartupPath + System.IO.Path.DirectorySeparatorChar +
+                    "Plugins" + System.IO.Path.DirectorySeparatorChar + "NINOKUNILang.xml");
+                xml = xml.Element(pluginHost.Get_Language()).Element("SQcontrol");
+
+                label1.Text = xml.Element("S00").Value;
+                label2.Text = xml.Element("S01").Value;
+                label3.Text = xml.Element("S02").Value;
+                btnSave.Text = xml.Element("S03").Value;
+            }
+            catch { throw new NotSupportedException("There was an error reading the language file"); }
+        }
+
 
         private void Read(string file)
         {

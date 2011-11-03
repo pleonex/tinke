@@ -33,14 +33,40 @@ namespace Fonts
         List<sNFTR.PAMC> maps;
 
 
-        public MapChar(List<sNFTR.PAMC> maps)
+        public MapChar(List<sNFTR.PAMC> maps, string lang)
         {
             InitializeComponent();
             this.maps = maps;
-            lblTotalSec.Text = "of " + (maps.Count - 1).ToString();
             numericSection.Maximum = maps.Count - 1;
             MapInfo();
+
+            ReadLanguage(lang);
         }
+        private void ReadLanguage(string lang)
+        {
+            try
+            {
+                System.Xml.Linq.XElement xml = System.Xml.Linq.XElement.Load(Application.StartupPath + System.IO.Path.DirectorySeparatorChar +
+                    "Plugins" + System.IO.Path.DirectorySeparatorChar + "FontLang.xml");
+                xml = xml.Element(lang).Element("MapChar");
+
+                this.Text = xml.Element("S00").Value;
+                label1.Text = xml.Element("S01").Value;
+                lblTotalSec.Text = String.Format(xml.Element("S02").Value, (maps.Count - 1).ToString());
+                btnSave.Text = xml.Element("S03").Value;
+                groupBox1.Text = xml.Element("S04").Value;
+                label2.Text = xml.Element("S05").Value;
+                label3.Text = xml.Element("S06").Value;
+                label4.Text = xml.Element("S07").Value;
+                btnAddSect.Text = xml.Element("S08").Value;
+                btnRemoveSec.Text = xml.Element("S09").Value;
+                ColumnImage.HeaderText = xml.Element("S0A").Value;
+                ColumnCharCode.HeaderText = xml.Element("S0B").Value;
+            }
+            catch { throw new NotSupportedException("There was an error reading the language file"); }
+        }
+
+
 
         private void MapInfo()
         {

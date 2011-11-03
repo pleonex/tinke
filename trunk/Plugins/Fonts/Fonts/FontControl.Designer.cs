@@ -154,9 +154,9 @@ namespace Fonts
             this.btnPalette.Image = global::Fonts.Properties.Resources.palette;
             this.btnPalette.Location = new System.Drawing.Point(4, 483);
             this.btnPalette.Name = "btnPalette";
-            this.btnPalette.Size = new System.Drawing.Size(133, 26);
+            this.btnPalette.Size = new System.Drawing.Size(172, 26);
             this.btnPalette.TabIndex = 11;
-            this.btnPalette.Text = "Use custom palette";
+            this.btnPalette.Text = "S05";
             this.btnPalette.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnPalette.UseVisualStyleBackColor = true;
             this.btnPalette.Click += new System.EventHandler(this.btnPalette_Click);
@@ -186,11 +186,11 @@ namespace Fonts
             // btnChangeMap
             // 
             this.btnChangeMap.Image = global::Fonts.Properties.Resources.font_go;
-            this.btnChangeMap.Location = new System.Drawing.Point(144, 483);
+            this.btnChangeMap.Location = new System.Drawing.Point(182, 483);
             this.btnChangeMap.Name = "btnChangeMap";
-            this.btnChangeMap.Size = new System.Drawing.Size(121, 26);
+            this.btnChangeMap.Size = new System.Drawing.Size(150, 26);
             this.btnChangeMap.TabIndex = 12;
-            this.btnChangeMap.Text = "Change Map char";
+            this.btnChangeMap.Text = "S06";
             this.btnChangeMap.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnChangeMap.UseVisualStyleBackColor = true;
             this.btnChangeMap.Click += new System.EventHandler(this.btnChangeMap_Click);
@@ -200,9 +200,9 @@ namespace Fonts
             this.btnAddChar.Image = global::Fonts.Properties.Resources.font_add;
             this.btnAddChar.Location = new System.Drawing.Point(2, 342);
             this.btnAddChar.Name = "btnAddChar";
-            this.btnAddChar.Size = new System.Drawing.Size(92, 23);
+            this.btnAddChar.Size = new System.Drawing.Size(130, 23);
             this.btnAddChar.TabIndex = 13;
-            this.btnAddChar.Text = "Add char";
+            this.btnAddChar.Text = "S03";
             this.btnAddChar.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnAddChar.UseVisualStyleBackColor = true;
             this.btnAddChar.Click += new System.EventHandler(this.btnAddChar_Click);
@@ -210,11 +210,11 @@ namespace Fonts
             // btnRemoveChar
             // 
             this.btnRemoveChar.Image = global::Fonts.Properties.Resources.font_delete;
-            this.btnRemoveChar.Location = new System.Drawing.Point(101, 342);
+            this.btnRemoveChar.Location = new System.Drawing.Point(135, 342);
             this.btnRemoveChar.Name = "btnRemoveChar";
-            this.btnRemoveChar.Size = new System.Drawing.Size(107, 23);
+            this.btnRemoveChar.Size = new System.Drawing.Size(130, 23);
             this.btnRemoveChar.TabIndex = 14;
-            this.btnRemoveChar.Text = "Remove char";
+            this.btnRemoveChar.Text = "S04";
             this.btnRemoveChar.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnRemoveChar.UseVisualStyleBackColor = true;
             this.btnRemoveChar.Click += new System.EventHandler(this.btnRemoveChar_Click);
