@@ -791,8 +791,12 @@ namespace Tinke
                 #endregion
                 listFile.Items[5].SubItems.Add(selectFile.path);
                 listFile.Items[6].SubItems.Add(accion.Get_RelativePath(selectFile.id, "", accion.Root));
-                btnHex.Enabled = true;
                 toolStripOpenAs.Enabled = true;
+
+                if (isMono)
+                    btnHex.Enabled = false;
+                else
+                    btnHex.Enabled = true;
 
                 if (selectFile.format != Format.Unknown)
                     btnSee.Enabled = true;

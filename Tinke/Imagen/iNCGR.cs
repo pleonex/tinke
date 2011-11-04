@@ -388,7 +388,8 @@ namespace Tinke
                     currentImg.Dispose();
 
                     mapOptions = new Dialog.MapOptions(width, heigth);
-                    mapOptions.ShowDialog();
+                    if (mapOptions.ShowDialog() != DialogResult.OK)
+                        return;
                     startTile = mapOptions.SubImagesStart;
                     num_palette = mapOptions.SubPalette;
                 }

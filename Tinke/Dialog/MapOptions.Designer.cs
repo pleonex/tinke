@@ -50,6 +50,7 @@
             this.numericSubStart = new System.Windows.Forms.NumericUpDown();
             this.label7 = new System.Windows.Forms.Label();
             this.checkSubImage = new System.Windows.Forms.CheckBox();
+            this.btnCancel = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.numericWidth)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericHeight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericStartTile)).BeginInit();
@@ -303,12 +304,25 @@
             this.checkSubImage.UseVisualStyleBackColor = true;
             this.checkSubImage.CheckedChanged += new System.EventHandler(this.checkSubImage_CheckedChanged);
             // 
+            // btnCancel
+            // 
+            this.btnCancel.Image = global::Tinke.Properties.Resources.cancel;
+            this.btnCancel.Location = new System.Drawing.Point(131, 347);
+            this.btnCancel.Name = "btnCancel";
+            this.btnCancel.Size = new System.Drawing.Size(90, 40);
+            this.btnCancel.TabIndex = 13;
+            this.btnCancel.Text = "S0C";
+            this.btnCancel.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnCancel.UseVisualStyleBackColor = true;
+            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
+            // 
             // MapOptions
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
             this.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
             this.ClientSize = new System.Drawing.Size(394, 392);
             this.ControlBox = false;
+            this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.checkSubImage);
             this.Controls.Add(this.groupSubImages);
             this.Controls.Add(this.groupFill);
@@ -365,5 +379,6 @@
         private System.Windows.Forms.CheckBox checkSubImage;
         private System.Windows.Forms.NumericUpDown numericSubPalette;
         private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Button btnCancel;
     }
 }
