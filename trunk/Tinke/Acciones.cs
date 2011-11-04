@@ -1032,7 +1032,7 @@ namespace Tinke
                 return "";
 
             for (int i = 0; i < 4; i++)             // En caso de no ser extensión
-                if (!Char.IsLetterOrDigit(fin[i]))
+                if (!Char.IsLetterOrDigit(fin[i]) && fin[i] != ' ')
                     return "";
 
             return fin;
@@ -1249,10 +1249,10 @@ namespace Tinke
             br.Close();
 
             sFolder desc = new sFolder();
-            #region Calling to plugins
             try
             {
                 Format f;
+                #region Calling to plugins
                 if (gamePlugin is IGamePlugin)
                 {
                     f = gamePlugin.Get_Format(selectedFile.name, ext, idSelect);
@@ -1271,6 +1271,7 @@ namespace Tinke
                         goto Continuar;
                     }
                 }
+#endregion
 
                 if (new String(Encoding.ASCII.GetChars(ext)) == "LZ77") // LZ77 header
                 {
@@ -1280,6 +1281,7 @@ namespace Tinke
                     File.WriteAllBytes(tempFile2, compressFile);
                     tempFile = tempFile2;
                 }
+
                 FormatCompress compressFormat = DSDecmp.Main.Get_Format(tempFile);
                 if (compressFormat != FormatCompress.Invalid)
                 {
@@ -1306,7 +1308,6 @@ namespace Tinke
                 Console.WriteLine(e.Message);
                 return new sFolder();
             }
-            #endregion
         Continuar:
 
             Add_Files(ref desc, id);

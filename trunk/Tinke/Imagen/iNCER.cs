@@ -278,8 +278,13 @@ namespace Tinke
             {
                 string filePath = o.FileName;
 
-                if (o.FilterIndex != 2)
+                #region Convert to BMP format
+                Image tempImage = Image.FromFile(o.FileName);
+                if (!(tempImage.PixelFormat == System.Drawing.Imaging.PixelFormat.Format8bppIndexed ||
+                    tempImage.PixelFormat == System.Drawing.Imaging.PixelFormat.Format4bppIndexed) ||
+                    tempImage.RawFormat != System.Drawing.Imaging.ImageFormat.Bmp)
                 {
+                    tempImage.Dispose();
                     // Convert the image to bmp format
                     using (System.IO.MemoryStream ms = new System.IO.MemoryStream())
                     {
@@ -311,7 +316,8 @@ namespace Tinke
                         bmp.Save(filePath, System.Drawing.Imaging.ImageFormat.Bmp);
                     }
                 }
-
+                tempImage.Dispose();
+                #endregion
 
                 #region Set new palette
                 if (new String(paleta.header.id) != "NCLR" && new String(paleta.header.id) != "RLCN") // Not NCLR file

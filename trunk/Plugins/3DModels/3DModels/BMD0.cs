@@ -466,7 +466,10 @@ namespace _3DModels
                 #region Material definition
                 data.material.material = new sBMD0.Model.ModelData.Material.MatDef[data.material.definition.num_objs];
                 for (int i = 0; i < data.material.definition.num_objs; i++)
+                {
+                    br.BaseStream.Position = modelOffset + data.header.materialOffset + (uint)data.material.definition.infoBlock.infoData[i];
                     data.material.material[i].definition = br.ReadBytes(0x2E);
+                }
                 #endregion
 
                 // Polygon section
@@ -528,7 +531,28 @@ namespace _3DModels
                 for (int i = 0; i < data.polygon.header.num_objs; i++)
                 {
                     br.BaseStream.Position = data.polygon.definition[i].display_offset;
-                    data.polygon.display[i].geometryCmd = br.ReadBytes((int)data.polygon.definition[i].display_size);
+                    byte[] display_list = br.ReadBytes((int)data.polygon.definition[i].display_size);
+
+                    data.polygon.display[i].commands = new List<Command>();
+                    for (int l = 0; l + 4 < display_list.Length; )
+                    {
+                        byte[] cmdID = new byte[] { display_list[l], display_list[l + 1], display_list[l + 2], display_list[l + 3] };
+                        l += 4;
+                        
+                        Command[] commands = new Command[4];
+                        for (int c = 0; c < 4; c++)
+                        {
+                            commands[c] = new Command();
+                            commands[c].cmd = cmdID[c];
+
+                            int cmd_size = Get_CommandSize(cmdID[c]);
+                            commands[c].param = new uint[cmd_size];
+                            for (int p = 0; p < cmd_size && l + 4 < display_list.Length; p++, l += 4)
+                                commands[c].param[p] = BitConverter.ToUInt32(display_list, l);
+                        }
+
+                        data.polygon.display[i].commands.AddRange(commands);
+                    }
                 }
                 #endregion
 
@@ -658,8 +682,26 @@ namespace _3DModels
                             bmd.model.mdlData[m].polygon.definition[i].display_size.ToString("x"),
                             bmd.model.mdlData[m].polygon.definition[i].unknown1.ToString("x"),
                             bmd.model.mdlData[m].polygon.definition[i].unknown2.ToString("x"));
-                        Console.WriteLine("|__" + xml.Element("S35").Value);
-                        Console.WriteLine(BitConverter.ToString(bmd.model.mdlData[m].polygon.display[i].geometryCmd, 0));
+
+                        Console.WriteLine("|__" + xml.Element("S35").Value + "<ol>");
+                        for (int c = 0; c < bmd.model.mdlData[m].polygon.display[i].commands.Count; c++)
+                        {
+                            Console.Write("<li>" + (GeometryCmd)bmd.model.mdlData[m].polygon.display[i].commands[c].cmd);
+                            Console.Write(" (0x" + bmd.model.mdlData[m].polygon.display[i].commands[c].cmd.ToString("x") + ')');
+
+                            if (bmd.model.mdlData[m].polygon.display[i].commands[c].param.Length != 0)
+                            {
+                                Console.Write("  - " + xml.Element("S36").Value);
+                                for (int p = 0; p < bmd.model.mdlData[m].polygon.display[i].commands[c].param.Length; p++)
+                                {
+                                    Console.Write(" 0x" + bmd.model.mdlData[m].polygon.display[i].commands[c].param[p].ToString("x"));
+                                    if (p + 1 != bmd.model.mdlData[m].polygon.display[i].commands[c].param.Length)
+                                        Console.Write(" |");
+                                }
+                            }
+                            Console.WriteLine("</li>");
+                        }
+                        Console.Write("</ol>");
                     }
 
 
@@ -681,6 +723,61 @@ namespace _3DModels
                 point = -point;
 
             return point;
+        }
+        public static int Get_CommandSize(byte cmd)
+        {
+            switch (cmd)
+            {
+                case 0: return 0;
+
+                case 0x10: return 1;
+                case 0x11: return 0;
+                case 0x12: return 1;
+                case 0x13: return 1;
+                case 0x14: return 1;
+                case 0x15: return 0;
+                case 0x16: return 16;
+                case 0x17: return 12;
+                case 0x18: return 16;
+                case 0x19: return 12;
+                case 0x1A: return 9;
+                case 0x1B: return 3;
+                case 0x1C: return 3;
+
+                case 0x20: return 1;
+                case 0x21: return 1;
+                case 0x22: return 1;
+                case 0x23: return 2;
+                case 0x24: return 1;
+                case 0x25: return 1;
+                case 0x26: return 1;
+                case 0x27: return 1;
+                case 0x28: return 1;
+
+                case 0x29: return 1;
+                case 0x2A: return 1;
+                case 0x2B: return 1;
+
+                case 0x30: return 1;
+                case 0x31: return 1;
+                case 0x32: return 1;
+                case 0x33: return 1;
+                case 0x34: return 32;
+
+                case 0x40: return 1;
+                case 0x41: return 0;
+
+                case 0x50: return 1;
+
+                case 0x60: return 1;
+
+                case 0x70: return 3;
+                case 0x71: return 2;
+                case 0x72: return 1;
+
+                default:
+                    return 0;
+            }
         }
     }
 
@@ -835,10 +932,58 @@ namespace _3DModels
                     }
                     public struct Display
                     {
-                        public byte[] geometryCmd;
+                        public List<Command> commands;
                     }
                 }
             }
         }
+    }
+
+    public struct Command
+    {
+        public byte cmd;
+        public uint[] param;
+    }
+    public enum GeometryCmd : byte
+    {
+        Unknown,
+        NOP = 0x00,
+        MTX_MODE = 0x10,
+        MTX_PUSH = 0x11,
+        MTX_POP = 0x12,
+        MTX_STORE = 0x13,
+        MTX_RESTORE = 0x14,
+        MTX_IDENTITY = 0x15,
+        MTX_LOAD_4x4 = 0x16,
+        MTX_LOAD_4x3 = 0x17,
+        MTX_MULT_4x4 = 0x18,
+        MTX_MULT_4x3 = 0x19,
+        MTX_MULT_3x3 = 0x1A,
+        MTX_SCALE = 0x1B,
+        MTX_TRANS = 0x1C,
+        COLOR = 0x20,
+        NORMAL = 0x21,
+        TEXCOORD = 0x22,
+        VTX_16 = 0x23,
+        VTX_10 = 0x24,
+        VTX_XY = 0x25,
+        VTX_XZ = 0x26,
+        VTX_YZ = 0x27,
+        VTX_DIFF = 0x28,
+        POLYGON_ATTR = 0x29,
+        TEXIMAGE_PARAM = 0x2A,
+        PLTT_BASE = 0x2B,
+        DIF_AMB = 0x30,
+        SPE_EMI = 0x31,
+        LIGHT_VECTOR = 0x32,
+        LIGHT_COLOR = 0x33,
+        SHININESS = 0x34,
+        BEGIN_VTXS = 0x40,
+        END_VTXS = 0x41,
+        SWAP_BUFFERS = 0x50,
+        VIEWPORT = 0x60,
+        BOX_TEST = 0x70,
+        POS_TEST = 0x71,
+        VEC_TEST = 0x72,
     }
 }

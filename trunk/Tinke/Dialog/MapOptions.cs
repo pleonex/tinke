@@ -43,6 +43,7 @@ namespace Tinke.Dialog
                 groupSubImages.Text = xml.Element("S09").Value;
                 label7.Text = xml.Element("S0A").Value;
                 label8.Text = xml.Element("S0B").Value;
+                btnCancel.Text = xml.Element("S0C").Value;
             }
             catch { throw new NotImplementedException("There was an error reading the language file"); }
         }
@@ -87,6 +88,7 @@ namespace Tinke.Dialog
         }
         private void btnOk_Click(object sender, EventArgs e)
         {
+            this.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.Close();
         }
 
@@ -102,6 +104,12 @@ namespace Tinke.Dialog
         private void checkSubImage_CheckedChanged(object sender, EventArgs e)
         {
             groupSubImages.Enabled = checkSubImage.Checked;
+        }
+
+        private void btnCancel_Click(object sender, EventArgs e)
+        {
+            this.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.Close();
         }
     }
 }

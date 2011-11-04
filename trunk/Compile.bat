@@ -37,6 +37,7 @@ REM Compilación de plugins de los juegos
 %windir%\microsoft.net\framework\v4.0.30319\msbuild "Plugins\TOKIMEKIGS3S\TOKIMEKIGS3S.sln" /v:minimal /p:Configuration=%conf%;TarjetFrameworkVersion=v3.5 "/p:Platform=Any CPU" "/p:OutputPath=%CD%\build\Plugins\"
 %windir%\microsoft.net\framework\v4.0.30319\msbuild "Plugins\BLOODBAHAMUT\BLOODBAHAMUT.sln" /v:minimal /p:Configuration=%conf%;TarjetFrameworkVersion=v3.5 "/p:Platform=Any CPU" "/p:OutputPath=%CD%\build\Plugins\"
 %windir%\microsoft.net\framework\v4.0.30319\msbuild "Plugins\RUNEFACTORY3\RUNEFACTORY3.sln" /v:minimal /p:Configuration=%conf%;TarjetFrameworkVersion=v3.5 "/p:Platform=Any CPU" "/p:OutputPath=%CD%\build\Plugins\"
+%windir%\microsoft.net\framework\v4.0.30319\msbuild "Plugins\SF FEATHER\SF FEATHER.sln" /v:minimal /p:Configuration=%conf%;TarjetFrameworkVersion=v3.5 "/p:Platform=Any CPU" "/p:OutputPath=%CD%\build\Plugins\"
 
 
 REM Compilación de los plugins de formatos

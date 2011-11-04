@@ -13,6 +13,7 @@
 ** Game TOKIMEKIGS3S supported (LZS and RESC)
 ** Game BLOODBAHAMUT supported (.DPK by Tricky Upgrade)
 ** Game RUNFACTORY3 supported (unpacker and packer)
+** Game SF FEATHER supported (unpacker for pac, support for CGx, SCx)
 ** Improved Font plugin
   - Fixed problem with rotated Font
   - Fixed problem with char codes
