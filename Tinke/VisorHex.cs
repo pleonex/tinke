@@ -1,4 +1,23 @@
-﻿using System;
+﻿/*
+ * Copyright (C) 2011  pleoNeX
+ *
+ *   This program is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+ *
+ * By: pleoNeX
+ * 
+ */
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -23,7 +42,8 @@ namespace Tinke
         public VisorHex(sFile file, bool edit)
         {
             InitializeComponent();
-            this.Text = Tools.Helper.ObtenerTraduccion("Sistema", "S41");
+            ReadLanguage();
+
             saveToolStripMenuItem.Enabled = edit;
 
             this.file = file;
@@ -51,6 +71,31 @@ namespace Tinke
             ((DynamicFileByteProvider)hexBox1.ByteProvider).Dispose();
             if (File.Exists(hexFile) && allowEdit)
                 File.Delete(hexFile);
+        }
+
+        private void ReadLanguage()
+        {
+            try
+            {
+                System.Xml.Linq.XElement xml = Tools.Helper.ObtenerTraduccion("VisorHex");
+
+                this.Text = Tools.Helper.ObtenerTraduccion("Sistema", "S41");
+                fileToolStripMenuItem.Text = xml.Element("S00").Value;
+                saveToolStripMenuItem.Text = xml.Element("S01").Value;
+                toolsToolStripMenuItem.Text = xml.Element("S02").Value;
+                gotoToolStripMenuItem.Text = xml.Element("S03").Value;
+                goToolStripMenuItem.Text = xml.Element("S05").Value;
+                goToolStripMenuItem1.Text = xml.Element("S05").Value;
+                selectRangeToolStripMenuItem.Text = xml.Element("S04").Value;
+                startOffsetToolStripMenuItem.Text = xml.Element("S06").Value;
+                endOffsetToolStripMenuItem.Text = xml.Element("S07").Value;
+                relativeToolStripMenuItem.Text = xml.Element("S08").Value;
+                searchToolStripMenuItem.Text = xml.Element("S09").Value;
+                optionsToolStripMenuItem.Text = xml.Element("S0A").Value;
+                encodingToolStripMenuItem.Text = xml.Element("S0B").Value;
+            }
+            catch { throw new NotSupportedException("There was an error reading the language file"); }
+
         }
 
         private void btnSave_Click(object sender, EventArgs e)
@@ -97,7 +142,7 @@ namespace Tinke
         }
         private void hexBox1_SelectionLengthChanged(object sender, EventArgs e)
         {
-            toolStripSelect.Text = String.Format("Selected at  0x{0}  with length  0x{1}",
+            toolStripSelect.Text = String.Format(Tools.Helper.ObtenerTraduccion("VisorHex", "S0C"),
                 hexBox1.SelectionStart.ToString("x"), hexBox1.SelectionLength.ToString("x"));
         }
         private void goToolStripMenuItem1_Click(object sender, EventArgs e)

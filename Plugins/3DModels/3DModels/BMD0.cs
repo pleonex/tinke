@@ -565,7 +565,7 @@ namespace _3DModels
             if (bmd.header.numSect == 2)    // There is a Tex0 section
             {
                 br.BaseStream.Position = bmd.header.offset[1];
-                bmd.texture = BTX0.Read_Section(ref br, bmd.header.offset[1]);
+                bmd.texture = BTX0.Read_Section(ref br, bmd.header.offset[1], pluginHost.Get_Language());
             }
 
             br.Close();
@@ -707,7 +707,7 @@ namespace _3DModels
 
                 }
 
-                Console.WriteLine("<br>End Of Section</pre>");
+                Console.WriteLine("<br>" + xml.Element("S37").Value + "</pre>");
             }
             catch { throw new NotSupportedException("There was an error reading the language file"); }
         }
@@ -716,7 +716,7 @@ namespace _3DModels
         {
             double point = ((value >> 12) & 7);
 
-            point += (double)(value & 0xFFF) / 10000;
+            point += (double)(value & 0xFFF) / 0x1000;
 
             // sign
             if ((value >> 15) == 1)

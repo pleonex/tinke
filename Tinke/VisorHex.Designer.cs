@@ -1,4 +1,23 @@
-﻿namespace Tinke
+﻿/*
+ * Copyright (C) 2011  pleoNeX
+ *
+ *   This program is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+ *
+ * By: pleoNeX
+ * 
+ */
+namespace Tinke
 {
     partial class VisorHex
     {
@@ -95,14 +114,14 @@
             this.saveToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
-            this.fileToolStripMenuItem.Text = "File";
+            this.fileToolStripMenuItem.Text = "S00";
             // 
             // saveToolStripMenuItem
             // 
             this.saveToolStripMenuItem.Image = global::Tinke.Properties.Resources.disk;
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(98, 22);
-            this.saveToolStripMenuItem.Text = "Save";
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.saveToolStripMenuItem.Text = "S01";
             this.saveToolStripMenuItem.Click += new System.EventHandler(this.btnSave_Click);
             // 
             // toolsToolStripMenuItem
@@ -112,8 +131,8 @@
             this.selectRangeToolStripMenuItem,
             this.searchToolStripMenuItem});
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
-            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
-            this.toolsToolStripMenuItem.Text = "Tools";
+            this.toolsToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
+            this.toolsToolStripMenuItem.Text = "S02";
             // 
             // gotoToolStripMenuItem
             // 
@@ -122,8 +141,8 @@
             this.goToolStripMenuItem});
             this.gotoToolStripMenuItem.Name = "gotoToolStripMenuItem";
             this.gotoToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.G)));
-            this.gotoToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
-            this.gotoToolStripMenuItem.Text = "Goto (0x)";
+            this.gotoToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.gotoToolStripMenuItem.Text = "S03";
             // 
             // toolStripTextBox1
             // 
@@ -138,7 +157,7 @@
             this.goToolStripMenuItem.Image = global::Tinke.Properties.Resources.accept;
             this.goToolStripMenuItem.Name = "goToolStripMenuItem";
             this.goToolStripMenuItem.Size = new System.Drawing.Size(160, 22);
-            this.goToolStripMenuItem.Text = "Go";
+            this.goToolStripMenuItem.Text = "S05";
             this.goToolStripMenuItem.Click += new System.EventHandler(this.numericOffset_ValueChanged);
             // 
             // selectRangeToolStripMenuItem
@@ -150,16 +169,16 @@
             this.goToolStripMenuItem1});
             this.selectRangeToolStripMenuItem.Name = "selectRangeToolStripMenuItem";
             this.selectRangeToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.R)));
-            this.selectRangeToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
-            this.selectRangeToolStripMenuItem.Text = "Select range";
+            this.selectRangeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.selectRangeToolStripMenuItem.Text = "S04";
             // 
             // startOffsetToolStripMenuItem
             // 
             this.startOffsetToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.startOffsetSelect});
             this.startOffsetToolStripMenuItem.Name = "startOffsetToolStripMenuItem";
-            this.startOffsetToolStripMenuItem.Size = new System.Drawing.Size(153, 22);
-            this.startOffsetToolStripMenuItem.Text = "Start offset (0x)";
+            this.startOffsetToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.startOffsetToolStripMenuItem.Text = "S06";
             // 
             // startOffsetSelect
             // 
@@ -174,8 +193,8 @@
             this.endOffsetToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.endOffsetSelect});
             this.endOffsetToolStripMenuItem.Name = "endOffsetToolStripMenuItem";
-            this.endOffsetToolStripMenuItem.Size = new System.Drawing.Size(153, 22);
-            this.endOffsetToolStripMenuItem.Text = "End offset (0x)";
+            this.endOffsetToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.endOffsetToolStripMenuItem.Text = "S07";
             // 
             // endOffsetSelect
             // 
@@ -189,15 +208,15 @@
             // 
             this.relativeToolStripMenuItem.CheckOnClick = true;
             this.relativeToolStripMenuItem.Name = "relativeToolStripMenuItem";
-            this.relativeToolStripMenuItem.Size = new System.Drawing.Size(153, 22);
-            this.relativeToolStripMenuItem.Text = "Relative";
+            this.relativeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.relativeToolStripMenuItem.Text = "S08";
             // 
             // goToolStripMenuItem1
             // 
             this.goToolStripMenuItem1.Image = global::Tinke.Properties.Resources.accept;
             this.goToolStripMenuItem1.Name = "goToolStripMenuItem1";
-            this.goToolStripMenuItem1.Size = new System.Drawing.Size(153, 22);
-            this.goToolStripMenuItem1.Text = "Go";
+            this.goToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+            this.goToolStripMenuItem1.Text = "S05";
             this.goToolStripMenuItem1.Click += new System.EventHandler(this.goToolStripMenuItem1_Click);
             // 
             // searchToolStripMenuItem
@@ -210,8 +229,8 @@
             this.unicodeBigEndianToolStripMenuItem,
             this.defaultCharsToolStripMenuItem});
             this.searchToolStripMenuItem.Name = "searchToolStripMenuItem";
-            this.searchToolStripMenuItem.Size = new System.Drawing.Size(179, 22);
-            this.searchToolStripMenuItem.Text = "Search";
+            this.searchToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.searchToolStripMenuItem.Text = "S09";
             // 
             // toolStripSearchBox
             // 
@@ -260,16 +279,16 @@
             this.optionsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.encodingToolStripMenuItem});
             this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
-            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
-            this.optionsToolStripMenuItem.Text = "Options";
+            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
+            this.optionsToolStripMenuItem.Text = "S0A";
             // 
             // encodingToolStripMenuItem
             // 
             this.encodingToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.encodingCombo});
             this.encodingToolStripMenuItem.Name = "encodingToolStripMenuItem";
-            this.encodingToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
-            this.encodingToolStripMenuItem.Text = "Encoding";
+            this.encodingToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.encodingToolStripMenuItem.Text = "S0B";
             // 
             // encodingCombo
             // 
@@ -298,8 +317,8 @@
             // 
             this.toolStripSelect.BackColor = System.Drawing.SystemColors.Control;
             this.toolStripSelect.Name = "toolStripSelect";
-            this.toolStripSelect.Size = new System.Drawing.Size(57, 17);
-            this.toolStripSelect.Text = "Selected: ";
+            this.toolStripSelect.Size = new System.Drawing.Size(27, 17);
+            this.toolStripSelect.Text = "S0C";
             // 
             // VisorHex
             // 

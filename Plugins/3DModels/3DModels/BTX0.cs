@@ -203,96 +203,7 @@ namespace _3DModels
             br.Close();
             return btx;
         }
-        private static void Write_Info(sBTX0 btx0, string lang)
-        {
-            try
-            {
-                System.Xml.Linq.XElement xml = System.Xml.Linq.XElement.Load(Application.StartupPath + Path.DirectorySeparatorChar +
-                    "Plugins" + Path.DirectorySeparatorChar + "3DModelsLang.xml");
-                xml = xml.Element(lang).Element("BTX0");
-
-                Console.WriteLine("<pre><b>" + xml.Element("S00").Value + "</b>");
-                Console.WriteLine(xml.Element("S01").Value);
-                Console.WriteLine("<u>" + xml.Element("S02").Value + "</u>");
-                Console.WriteLine(xml.Element("S03").Value, btx0.texture.header.textInfo_offset.ToString("x"));
-                Console.WriteLine(xml.Element("S04").Value, btx0.texture.header.textData_offset.ToString("x"));
-                Console.WriteLine(xml.Element("S05").Value, btx0.texture.header.textData_size.ToString("x"));
-                Console.WriteLine(xml.Element("S06").Value, btx0.texture.header.textCompressedData_offset.ToString("x"));
-                Console.WriteLine(xml.Element("S07").Value, btx0.texture.header.textCompressedData_size.ToString("x"));
-                Console.WriteLine(xml.Element("S08").Value, btx0.texture.header.textCompressedInfo_offset.ToString("x"));
-                Console.WriteLine(xml.Element("S09").Value, btx0.texture.header.textCompressedInfoData_offset.ToString("x"));
-                Console.WriteLine(xml.Element("S0A").Value, btx0.texture.header.paletteData_offset.ToString("x"));
-                Console.WriteLine(xml.Element("S0B").Value, btx0.texture.header.paletteData_offset.ToString("x"));
-                Console.WriteLine(xml.Element("S0C").Value, btx0.texture.header.paletteInfo_offset.ToString("x"));
-
-                Console.WriteLine("<u>" + xml.Element("S0D").Value + "</u>");
-                for (int i = 0; i < btx0.texture.texInfo.num_objs; i++)
-                {
-                    sBTX0.Texture.TextInfo texInfo = (sBTX0.Texture.TextInfo)btx0.texture.texInfo.infoBlock.infoData[i];
-                    Console.WriteLine(xml.Element("S0E").Value, i.ToString(), btx0.texture.texInfo.names[i].Trim('\x0'));
-                    Console.WriteLine(xml.Element("S0F").Value, texInfo.tex_offset.ToString("x"));
-                    Console.WriteLine(xml.Element("S10").Value, texInfo.parameters.ToString("x"));
-                    Console.Write(xml.Element("S11").Value, texInfo.repeat_X.ToString(), texInfo.repeat_Y.ToString());
-                    Console.Write(xml.Element("S12").Value, texInfo.flip_X.ToString(), texInfo.flip_Y.ToString());
-                    Console.Write(xml.Element("S13").Value, texInfo.width.ToString(), texInfo.height.ToString());
-                    Console.Write(xml.Element("S14").Value, texInfo.format.ToString(), (TextureFormat)texInfo.format);
-                    Console.WriteLine(xml.Element("S15").Value, texInfo.color0.ToString());
-                    Console.Write(xml.Element("S16").Value, texInfo.coord_transf.ToString(), (TextureCoordTransf)texInfo.coord_transf);
-                    Console.WriteLine(xml.Element("S17").Value, texInfo.unknown.ToString(), texInfo.unknown2.ToString(), texInfo.unknown3.ToString());
-                }
-
-                Console.WriteLine("<u>" + xml.Element("S18").Value + "</u>");
-                for (int i = 0; i < btx0.texture.palInfo.num_objs; i++)
-                {
-                    sBTX0.Texture.PalInfo palInfo = (sBTX0.Texture.PalInfo)btx0.texture.palInfo.infoBlock.infoData[i];
-                    Console.WriteLine(xml.Element("S19").Value, i.ToString(), btx0.texture.palInfo.names[i].Trim('\x0'));
-                    Console.Write(xml.Element("S1A").Value, palInfo.palette_offset.ToString("x"));
-                    Console.WriteLine();
-                }
-                Console.WriteLine(xml.Element("S1B").Value + "</pre>");
-            }
-            catch { throw new NotSupportedException("There was an error reading the language file"); }
-        }
-        private static void Write_Info(sBTX0.Texture btx0, string lang)
-        {
-            try
-            {
-                System.Xml.Linq.XElement xml = System.Xml.Linq.XElement.Load(Application.StartupPath + Path.DirectorySeparatorChar +
-                    "Plugins" + Path.DirectorySeparatorChar + "3DModelsLang.xml");
-                xml = xml.Element(lang).Element("BTX0");
-
-                Console.WriteLine("<pre><b>" + xml.Element("S01").Value + "</b>");
-                Console.WriteLine("<u>" + xml.Element("S0D").Value + "</u>");
-                for (int i = 0; i < btx0.texInfo.num_objs; i++)
-                {
-                    sBTX0.Texture.TextInfo texInfo = (sBTX0.Texture.TextInfo)btx0.texInfo.infoBlock.infoData[i];
-                    Console.WriteLine(xml.Element("S0E").Value, i.ToString(), btx0.texInfo.names[i].Trim('\x0'));
-                    Console.WriteLine(xml.Element("S0F").Value, texInfo.tex_offset.ToString("x"));
-                    Console.WriteLine(xml.Element("S10").Value, texInfo.parameters.ToString("x"));
-                    Console.Write(xml.Element("S11").Value, texInfo.repeat_X.ToString(), texInfo.repeat_Y.ToString());
-                    Console.Write(xml.Element("S12").Value, texInfo.flip_X.ToString(), texInfo.flip_Y.ToString());
-                    Console.Write(xml.Element("S13").Value, texInfo.width.ToString(), texInfo.height.ToString());
-                    Console.Write(xml.Element("S14").Value, texInfo.format.ToString(), (TextureFormat)texInfo.format);
-                    Console.WriteLine(xml.Element("S15").Value, texInfo.color0.ToString());
-                    Console.Write(xml.Element("S16").Value, texInfo.coord_transf.ToString(), (TextureCoordTransf)texInfo.coord_transf);
-                    Console.WriteLine(xml.Element("S17").Value, texInfo.unknown.ToString(), texInfo.unknown2.ToString(), texInfo.unknown3.ToString());
-                }
-
-                Console.WriteLine("<u>" + xml.Element("S18").Value + "</u>");
-                for (int i = 0; i < btx0.palInfo.num_objs; i++)
-                {
-                    sBTX0.Texture.PalInfo palInfo = (sBTX0.Texture.PalInfo)btx0.palInfo.infoBlock.infoData[i];
-                    Console.WriteLine(xml.Element("S19").Value, i.ToString(), btx0.palInfo.names[i].Trim('\x0'));
-                    Console.Write(xml.Element("S1A").Value, palInfo.palette_offset.ToString("x"));
-                    Console.WriteLine();
-                }
-                Console.WriteLine(xml.Element("S1B").Value + "</pre>");
-            }
-            catch { throw new NotSupportedException("There was an error reading the language file"); }
-        }
-
-
-        public static sBTX0.Texture Read_Section(ref BinaryReader br, uint texOffset)
+        public static sBTX0.Texture Read_Section(ref BinaryReader br, uint texOffset, string lang)
         {
             sBTX0.Texture tex = new sBTX0.Texture();
 
@@ -432,10 +343,100 @@ namespace _3DModels
                 tex.palInfo.names[i] = new String(br.ReadChars(0x10)).Replace("\0", "");
             #endregion
 
-            Write_Info(tex, "English");
+            Write_Info(tex, lang);
 
             return tex;
         }
+
+        private static void Write_Info(sBTX0 btx0, string lang)
+        {
+            try
+            {
+                System.Xml.Linq.XElement xml = System.Xml.Linq.XElement.Load(Application.StartupPath + Path.DirectorySeparatorChar +
+                    "Plugins" + Path.DirectorySeparatorChar + "3DModelsLang.xml");
+                xml = xml.Element(lang).Element("BTX0");
+
+                Console.WriteLine("<pre><b>" + xml.Element("S00").Value + "</b>");
+                Console.WriteLine(xml.Element("S01").Value);
+                Console.WriteLine("<u>" + xml.Element("S02").Value + "</u>");
+                Console.WriteLine(xml.Element("S03").Value, btx0.texture.header.textInfo_offset.ToString("x"));
+                Console.WriteLine(xml.Element("S04").Value, btx0.texture.header.textData_offset.ToString("x"));
+                Console.WriteLine(xml.Element("S05").Value, btx0.texture.header.textData_size.ToString("x"));
+                Console.WriteLine(xml.Element("S06").Value, btx0.texture.header.textCompressedData_offset.ToString("x"));
+                Console.WriteLine(xml.Element("S07").Value, btx0.texture.header.textCompressedData_size.ToString("x"));
+                Console.WriteLine(xml.Element("S08").Value, btx0.texture.header.textCompressedInfo_offset.ToString("x"));
+                Console.WriteLine(xml.Element("S09").Value, btx0.texture.header.textCompressedInfoData_offset.ToString("x"));
+                Console.WriteLine(xml.Element("S0A").Value, btx0.texture.header.paletteData_offset.ToString("x"));
+                Console.WriteLine(xml.Element("S0B").Value, btx0.texture.header.paletteData_offset.ToString("x"));
+                Console.WriteLine(xml.Element("S0C").Value, btx0.texture.header.paletteInfo_offset.ToString("x"));
+
+                Console.WriteLine("<u>" + xml.Element("S0D").Value + "</u>");
+                for (int i = 0; i < btx0.texture.texInfo.num_objs; i++)
+                {
+                    sBTX0.Texture.TextInfo texInfo = (sBTX0.Texture.TextInfo)btx0.texture.texInfo.infoBlock.infoData[i];
+                    Console.WriteLine(xml.Element("S0E").Value, i.ToString(), btx0.texture.texInfo.names[i].Trim('\x0'));
+                    Console.WriteLine(xml.Element("S0F").Value, texInfo.tex_offset.ToString("x"));
+                    Console.WriteLine(xml.Element("S10").Value, texInfo.parameters.ToString("x"));
+                    Console.Write(xml.Element("S11").Value, texInfo.repeat_X.ToString(), texInfo.repeat_Y.ToString());
+                    Console.Write(xml.Element("S12").Value, texInfo.flip_X.ToString(), texInfo.flip_Y.ToString());
+                    Console.Write(xml.Element("S13").Value, texInfo.width.ToString(), texInfo.height.ToString());
+                    Console.Write(xml.Element("S14").Value, texInfo.format.ToString(), (TextureFormat)texInfo.format);
+                    Console.WriteLine(xml.Element("S15").Value, texInfo.color0.ToString());
+                    Console.Write(xml.Element("S16").Value, texInfo.coord_transf.ToString(), (TextureCoordTransf)texInfo.coord_transf);
+                    Console.WriteLine(xml.Element("S17").Value, texInfo.unknown.ToString(), texInfo.unknown2.ToString(), texInfo.unknown3.ToString());
+                }
+
+                Console.WriteLine("<u>" + xml.Element("S18").Value + "</u>");
+                for (int i = 0; i < btx0.texture.palInfo.num_objs; i++)
+                {
+                    sBTX0.Texture.PalInfo palInfo = (sBTX0.Texture.PalInfo)btx0.texture.palInfo.infoBlock.infoData[i];
+                    Console.WriteLine(xml.Element("S19").Value, i.ToString(), btx0.texture.palInfo.names[i].Trim('\x0'));
+                    Console.Write(xml.Element("S1A").Value, palInfo.palette_offset.ToString("x"));
+                    Console.WriteLine();
+                }
+                Console.WriteLine(xml.Element("S1B").Value + "</pre>");
+            }
+            catch { throw new NotSupportedException("There was an error reading the language file"); }
+        }
+        private static void Write_Info(sBTX0.Texture btx0, string lang)
+        {
+            try
+            {
+                System.Xml.Linq.XElement xml = System.Xml.Linq.XElement.Load(Application.StartupPath + Path.DirectorySeparatorChar +
+                    "Plugins" + Path.DirectorySeparatorChar + "3DModelsLang.xml");
+                xml = xml.Element(lang).Element("BTX0");
+
+                Console.WriteLine("<pre><b>" + xml.Element("S01").Value + "</b>");
+                Console.WriteLine("<u>" + xml.Element("S0D").Value + "</u>");
+                for (int i = 0; i < btx0.texInfo.num_objs; i++)
+                {
+                    sBTX0.Texture.TextInfo texInfo = (sBTX0.Texture.TextInfo)btx0.texInfo.infoBlock.infoData[i];
+                    Console.WriteLine(xml.Element("S0E").Value, i.ToString(), btx0.texInfo.names[i].Trim('\x0'));
+                    Console.WriteLine(xml.Element("S0F").Value, texInfo.tex_offset.ToString("x"));
+                    Console.WriteLine(xml.Element("S10").Value, texInfo.parameters.ToString("x"));
+                    Console.Write(xml.Element("S11").Value, texInfo.repeat_X.ToString(), texInfo.repeat_Y.ToString());
+                    Console.Write(xml.Element("S12").Value, texInfo.flip_X.ToString(), texInfo.flip_Y.ToString());
+                    Console.Write(xml.Element("S13").Value, texInfo.width.ToString(), texInfo.height.ToString());
+                    Console.Write(xml.Element("S14").Value, texInfo.format.ToString(), (TextureFormat)texInfo.format);
+                    Console.WriteLine(xml.Element("S15").Value, texInfo.color0.ToString());
+                    Console.Write(xml.Element("S16").Value, texInfo.coord_transf.ToString(), (TextureCoordTransf)texInfo.coord_transf);
+                    Console.WriteLine(xml.Element("S17").Value, texInfo.unknown.ToString(), texInfo.unknown2.ToString(), texInfo.unknown3.ToString());
+                }
+
+                Console.WriteLine("<u>" + xml.Element("S18").Value + "</u>");
+                for (int i = 0; i < btx0.palInfo.num_objs; i++)
+                {
+                    sBTX0.Texture.PalInfo palInfo = (sBTX0.Texture.PalInfo)btx0.palInfo.infoBlock.infoData[i];
+                    Console.WriteLine(xml.Element("S19").Value, i.ToString(), btx0.palInfo.names[i].Trim('\x0'));
+                    Console.Write(xml.Element("S1A").Value, palInfo.palette_offset.ToString("x"));
+                    Console.WriteLine();
+                }
+                Console.WriteLine(xml.Element("S1B").Value + "</pre>");
+            }
+            catch { throw new NotSupportedException("There was an error reading the language file"); }
+        }
+
+
 
         //                                              0  1  2  3  4  5  6  7
         public static byte[] FormatDepth = new byte[] { 0, 8, 2, 4, 8, 2, 8, 16 };
