@@ -2,7 +2,7 @@
 #labels Info-Format
 
 These files, used in many games, give extra information about how the image must be composed.
-They are recognized by their header (NSCR or RCSN) and frequently have the same extension, which name could mean _Nintendo SCreen Resource_.
+They are recognized by their header (NSCR or RCSN) and frequently have the same extension, which name could mean _Nitro SCreen Resource_.
 They have the format *Map*.
 
 =File structure=

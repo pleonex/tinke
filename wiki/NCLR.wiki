@@ -1,7 +1,7 @@
 #summary Specification about NCLR files
 #labels Info-Format
 
-These files, which name could be _Nintendo CoLour Resource_, are used by many games. They contain the information about
+These files, which name could be _Nitro CoLour Resource_, are used by many games. They contain the information about
 the *palettes* of the image (It can have more than one palette (4-bpp)). They are recognized by their header (NCLR or RLCN) 
 and frequently have the same extension
 

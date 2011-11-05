@@ -1,0 +1,158 @@
+#summary Especificación sobre archivos NCER
+#labels Info-Format
+
+Estos archivos aportan la información para recomponer una imagen (como hacer un puzzle). Por ello están clasificado dentro
+del formato *celda*, ya que contiene la información para formar la imagen uniendo celdas.
+Se reconocen por su cabecera NCER o RECN (_Nitro CEll Resource_) y generalmente el archivo tiene la misma extensión.
+
+=Estructura=
+
+El archivo tiene la siguiente forma:
+ * [NCER#Cabecera_generica Cabecera genérica]
+ * [NCER#Seccion_CEBK_(CEll_BanK) Sección CEBK]
+   * [NCER#Bancos Bancos]
+     * [NCER#Celdas Celdas]
+ * [NCER#Seccion_LABL_(opcional) Sección LBAL]
+ * [NCER#Seccion_UEXT_(opcional) Sección UEXT]
+ 
+||_Posición_||_Nombre_||_Tipo_||_Descripción_||
+
+==Cabecera generica==
+
+||0x00||ID||char`[4]`||NCER o RECN||
+||0x04||Endianess||ushort||Si es igual a 0xFFFE el ID se encuentra inverso||
+||0x06||Constante||ushort||Desconocido||
+||0x08||Tamaño del archivo||uint||||
+||0x0C||Tamaño de la cabecera||ushort||Siempre 0x10||
+||0x0E||Nº de secciones||ushort||Puede ser 0x02 o 0x03||
+
+==Seccion CEBK (CEll BanK)==
+
+||0x00||ID||char`[4]`||CEBK||
+||0x04||Tamaño de la sección||uint||||
+||0x08||Nº de bancos||ushort||||
+||0x0A||Tipo de los bancos||ushort||||
+||0x0C||Desconocido||uint||Debe ser 0x18 (¿offset?)||
+||0x10||Block shift||uint||Bit 0-7 -> "image offset" << "block shift"||
+||0x14||Desconocido||uint||Si es diferente a 0, se debe sumar "tilepos"||
+||0x18||Desconocido||ulong||||
+||0x20||Bancos||Bancos`[]`||||
+
+===Bancos===
+
+||0x00||Número de celdas||ushort||||
+||0x02||Desconocido||ushort||||
+||0x04||Posición de celdas||ushort||Posición de inicio de la información de las celdas||
+
+si el tipo de los bancos es 1, además se incluye esta información:
+
+||0x06||X máxima||ushort||Posición X máxima||
+||0x08||Y máxima||ushort||Posición Y máxima||
+||0x0A||X mínima||ushort||Posición X mínima||
+||0x0C||Y mínima||ushort||Posición Y mínima||
+
+====Celdas====
+
+||0x00||Atributo 0||ushort||Ver más abajo||
+||0x02||Atributo 1||ushort||Ver más abajo||
+||0x04||Atributo 2||ushort||Ver más abajo||
+
+Más información en [http://nocash.emubase.de/gbatek.htm#lcdobjoamattributes gbaTek]
+
+ * Atributo 0:
+
+{{{
+SS D M OO P R YYYYYYYY
+ 
+S -> (forma) 0=cuadrado, 1=horizontal, 2=vertical, 3=prohibido
+D -> (colores/paletas) 0=16/16, 1=256/1
+M -> (mosaico) 0=apagado, 1=encendido
+O -> (modo) 0=normal, 1=semi-transparente, 2=obj ventana, 3=prohibido
+P -> si R=1 => (indicador de tamaño doble) 0=normal, 1=doble
+     si R=0 => (obj deshabilitar) 0=normal, 1=no se muestra
+R -> (Indicador rotación o escalado) 0=apagado, 1=encendido
+Y -> Coordenada
+}}}
+
+ * Atributo 1:
+ 
+{{{
+SS PPPPP XXXXXXXXX
+
+S -> (tamaño) ver la tabla de abajo
+P -> si en atributo 0:
+     R=0 => 9-11 ->(no usado)
+	        12 -> (volteo horizontal) 0=normal, 1=espejo
+			13 -> (volteo vertical) 0=normal, 1=espejo
+	 R=1 => 9-13 -> parametros de rotación o escalado
+X -> Coordenada X (si es mayor o igual a 0x100, se le resta 0x200)
+}}}
+
+ * Atributo 2:
+ 
+{{{
+IIII PP TTTTTTTTTT
+
+I -> Número de paleta a usar (no usado en el modo 256/1)
+P -> Prioridad sobre el fondo (0 mayor prioridad)
+T -> Posición de inicio de los tiles de la imagen
+}}}
+
+Tabla de tamaño:
+||Tamaño||Forma||
+||-||Cuadrado||Horizontal||Vertical||
+||0||8x8||16x8||8x16||
+||1||16x16||32x8||8x32||
+||2||32x32||32x16||16x32||
+||3||64x64||64x32||32x64||
+
+
+==Seccion LABL (opcional)==
+
+||0x00||ID||char`[4]`||LABL||
+||0x04||Tamaño||uint||Tamaño de la sección||
+||0x08||Punteros||uint`[]`||Posición de los nombres, relativo a esta sección||
+||----||Nombres de los bancos||string`[]`||Nombres de cada uno de los bancos||
+
+==Seccion UEXT (opcional)==
+
+||0x00||ID||char`[4]`||UEXT||
+||0x04||Tamaño||uint||Tamaño de la sección||
+||0x08||Desconocido||uint||||
+
+
+=Detalles=
+
+ # Valor 0x14 en CEBK 
+Si la variable es diferente a 0, entonces la posición de los tiles de cada banco empezará en 0 por lo que para
+mostrar la imagen correctamente habrá que sumerle a la posición de cada celda, la última del banco anterior.
+
+ # Block shift en CEBK 
+ * Si es menor de 4, para cada posición de inicio de los tiles de cada celda habrá que desplazar esos bits
+el valor del block shift. Ejemplo, si la posición marca 0x2F y el block shift es 3, la posición será:
+0x2F << 3 = 0x178
+ * Si es 4 o mayor la imagen ya está formado y sólo habra que "recortarla" para mostrar la celda correctamente.
+ Para saber la posición X e Y de donde empieza la celda sobre la imagen original se puede usar éste código (C#):
+ {{{
+ tileOffset /= (blockSize / 2);
+ int imageWidth = tile.rahc.nTilesX;
+ int imageHeight = tile.rahc.nTilesY;
+ if (tile.order == TileOrder.Horizontal)
+ {
+    imageWidth *= 8;
+    imageHeight *= 8;
+ }
+
+int posX = (int)(tileOffset % imageWidth);
+int posY = (int)(tileOffset / imageWidth);
+
+if (tile.rahc.depth == System.Windows.Forms.ColorDepth.Depth4Bit)
+    posY *= (int)blockSize * 2;
+else
+    posY *= (int)blockSize;
+if (posY >= imageHeight)
+    posY = posY % imageHeight;
+}}}
+ 
+ # Tamaño 
+Si la imagen es "No tile" entonces habrá que multiplicar por 8 el tamaño que marca la celda.

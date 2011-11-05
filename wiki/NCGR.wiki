@@ -1,7 +1,7 @@
 #summary Specification about NCGR files
 #labels Info-Format
 
-These files, which name could be "Nintendo Character Graphic Resource", contain the data of the image
+These files, which name could be "Nitro Character Graphic Resource", contain the data of the image
 , that is, the colour of each pixels (*tiles*). They are recognized by their header (NCGR or RGCN) and frequently
 have the same extension.
 

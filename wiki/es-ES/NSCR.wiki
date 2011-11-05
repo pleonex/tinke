@@ -2,7 +2,7 @@
 #labels Info-Format
 
 Estos archivos aportan información adicional sobre cómo debería formarse la imagen.
-Se reconocen por la cabecera NSCR o RCSN y generalmente por esa misma extensión, cuyo significado podría ser _Nintendo SCreen Resource_.
+Se reconocen por la cabecera NSCR o RCSN y generalmente por esa misma extensión, cuyo significado podría ser _Nitro SCreen Resource_.
 
 Por su contenido pertenecen al formato *Map*.
 
