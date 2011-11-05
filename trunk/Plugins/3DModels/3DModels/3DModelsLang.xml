@@ -57,6 +57,7 @@
       <S34>Display-> offset: {0}, size: {1}, unknown1: {2}, unknown2: {3}</S34>
       <S35>Geometry commands:</S35>
       <S36>Parameters: </S36>
+      <S37>End of section</S37>
     </BMD0>
     <BTX0>
       <S00>Read BTX0 file</S00>
@@ -168,6 +169,7 @@
       <S34>Lista de visualización-> posición: {0}, tamaño: {1}, desconocido1: {2}, desconocido2: {3}</S34>
       <S35>Comandos geométricos:</S35>
       <S36>Parámetros:</S36>
+      <S37>Fin de sección</S37>
     </BMD0>
     <BTX0>
       <S00>Leyendo archivo BTX0</S00>
@@ -279,6 +281,7 @@
       <S34>Display-> offset: {0}, size: {1}, unknown1: {2}, unknown2: {3}</S34>
       <S35>Geometry commands:</S35>
       <S36>Parameters: </S36>
+      <S37>End of section</S37>
     </BMD0>
     <BTX0>
       <S00>Lecture des archives BTX0</S00>

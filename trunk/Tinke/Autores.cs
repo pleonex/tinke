@@ -88,25 +88,29 @@ namespace Tinke
 
         private void LeerIdioma()
         {
-            System.Xml.Linq.XElement xml = Tools.Helper.ObtenerTraduccion("Autores");
+            try
+            {
+                System.Xml.Linq.XElement xml = Tools.Helper.ObtenerTraduccion("Autores");
 
-            this.Text = xml.Element("S01").Value + ' ' + AssemblyTitle;
+                this.Text = xml.Element("S01").Value + ' ' + AssemblyTitle;
 
-            label1.Text = "Tinke  " + xml.Element("S02").Value + ' ' + AssemblyVersion;
-            label2.Text = xml.Element("S03").Value;
-            label4.Text = xml.Element("S04").Value;
-            lblTrad.Text = xml.Element("S0C").Value;
-            label5.Text = xml.Element("S06").Value;
-            label6.Text = xml.Element("S05").Value;
-            lblDescription.Text = xml.Element("S07").Value;
-            lblDSDecmp2.Text = xml.Element("S08").Value + " LZ77 (0x10), LZSS (0x11)," +
-                                "\nLZSS (0x40), Huffman (0x20), RLE (0x30), 'overlays'." +
-                                "\nBy: barubary";
-            lblGBATEK.Text = xml.Element("S09").Value;
-            lblLowLines.Text = xml.Element("S0A").Value;
-            lblfamfamfam.Text = xml.Element("S0B").Value;
-            label7.Text = xml.Element("S0D").Value;
-            label9.Text = String.Format(xml.Element("S0E").Value, "Bernhard Elbl");
+                label1.Text = "Tinke  " + xml.Element("S02").Value + ' ' + AssemblyVersion;
+                label2.Text = xml.Element("S03").Value;
+                label4.Text = xml.Element("S04").Value;
+                lblTrad.Text = xml.Element("S0C").Value;
+                label5.Text = xml.Element("S06").Value;
+                label6.Text = xml.Element("S05").Value;
+                lblDescription.Text = xml.Element("S07").Value;
+                lblDSDecmp2.Text = xml.Element("S08").Value + " LZ77 (0x10), LZSS (0x11)," +
+                                    "\nLZSS (0x40), Huffman (0x20), RLE (0x30), 'overlays'." +
+                                    "\nBy: barubary";
+                lblGBATEK.Text = xml.Element("S09").Value;
+                lblLowLines.Text = xml.Element("S0A").Value;
+                lblfamfamfam.Text = xml.Element("S0B").Value;
+                label7.Text = xml.Element("S0D").Value;
+                label9.Text = String.Format(xml.Element("S0E").Value, "Bernhard Elbl");
+            }
+            catch { throw new NotSupportedException("There was an error reading the language file"); }
         }
         private void ReadPlugins()
         {

@@ -543,4 +543,19 @@
     <S1B>Hexadecimal</S1B>
     <S1C>Accept</S1C>
   </Dialog>
+  <VisorHex>
+    <S00>File</S00>
+    <S01>Save</S01>
+    <S02>Tools</S02>
+    <S03>Goto (0x)</S03>
+    <S04>Select range</S04>
+    <S05>Go</S05>
+    <S06>Start offset (0x)</S06>
+    <S07>End offset (0x)</S07>
+    <S08>Relative</S08>
+    <S09>Search</S09>
+    <S0A>Options</S0A>
+    <S0B>Encoding</S0B>
+    <S0C>Selected at 0x{0} with length 0x{1}</S0C>
+  </VisorHex>
 </Language>

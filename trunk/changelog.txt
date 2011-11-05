@@ -1,4 +1,4 @@
-0.8.2
+0.8.2 public release (rev117)
 *** Improved Hexadecimal editor -> Now using Be.HexEditor (by Bernhard Elbl)
 *** Read BMD0 files and show the textures (if any)
 ** Game GYAKUKEN (Gyajuten kenji 2) - Unpacker
@@ -24,8 +24,8 @@
 ** Added new method to set the transparency color.
 ** Added method to create NSCR files of NCGR subimages
 ** Add button Pack (instead of using controls from button "View")
-* Improved speed reading ROMs
-* Supported SRL files (wifi download files)
+** Improved perfomance reading ROMs
+** Supported SRL files (wifi download files)
 * Fixed problem with textures with format 2
 * Fixed problems in SDAT plugin
 * Added support for PMCP section in NCLR

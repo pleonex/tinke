@@ -559,4 +559,19 @@
     <S1B>Visor hexadecimal</S1B>
     <S1C>Aceptar</S1C>
   </Dialog>
+  <VisorHex>
+    <S00>Archivo</S00>
+    <S01>Guardar</S01>
+    <S02>Herramientas</S02>
+    <S03>Ir a (0x)</S03>
+    <S04>Seleccionar bloque (0x)</S04>
+    <S05>Ir</S05>
+    <S06>Posición inicial (0x)</S06>
+    <S07>Posición final (0x)</S07>
+    <S08>Relativo</S08>
+    <S09>Buscar</S09>
+    <S0A>Opciones</S0A>
+    <S0B>Codificación</S0B>
+    <S0C>Seleccionado desde 0x{0} con longitud 0x{1}</S0C>
+  </VisorHex>
 </Language>
