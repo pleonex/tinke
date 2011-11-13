@@ -68,7 +68,7 @@ namespace Tinke
         {
             try
             {
-                System.Xml.Linq.XElement xml = Tools.Helper.ObtenerTraduccion("NCER");
+                System.Xml.Linq.XElement xml = Tools.Helper.GetTranslation("NCER");
 
                 label1.Text = xml.Element("S01").Value;
                 btnTodos.Text = xml.Element("S02").Value;
@@ -182,7 +182,7 @@ namespace Tinke
                 }
             }
 
-            ven.Text = Tools.Helper.ObtenerTraduccion("NCER", "S14");
+            ven.Text = Tools.Helper.GetTranslation("NCER", "S14");
             ven.BackColor = SystemColors.GradientInactiveCaption;
             ven.AutoScroll = true;
             ven.AutoSize = true;
@@ -207,7 +207,7 @@ namespace Tinke
             ventana.AutoScroll = true;
             ventana.MaximumSize = new Size(1024, 700);
             ventana.ShowIcon = false;
-            ventana.Text = Tools.Helper.ObtenerTraduccion("NCER", "S14");
+            ventana.Text = Tools.Helper.GetTranslation("NCER", "S14");
             ventana.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             ventana.MaximizeBox = false;
 
@@ -338,7 +338,7 @@ namespace Tinke
                     goto End;
 
                 if (Image.FromFile(filePath).Size != new Size(512, 512))
-                    throw new NotSupportedException(Tools.Helper.ObtenerTraduccion("NCER", "S26"));
+                    throw new NotSupportedException(Tools.Helper.GetTranslation("NCER", "S26"));
 
                 NCGR bitmap = Imagen_NCGR.BitmapToTile(filePath, TileOrder.NoTiled);
 
@@ -431,14 +431,14 @@ namespace Tinke
 
             // Search for unused or duplicated colors to change them with transparency color
             // Search for duplicated colors
-            int result = Convertir.Remove_NotDuplicatedColors(ref paleta.pltt.palettes[paletteIndex], ref tile.rahc.tileData.tiles);
+            int result = Convertir.Remove_DuplicatedColors(ref paleta.pltt.palettes[paletteIndex], ref tile.rahc.tileData.tiles);
             if (result == -1)
             {
                 // Try another way: search for not used colors
                 result = Convertir.Remove_NotUsedColors(ref paleta.pltt.palettes[paletteIndex], ref tile.rahc.tileData.tiles);
                 if (result == -1)
                 {
-                    MessageBox.Show(Tools.Helper.ObtenerTraduccion("Messages", "S24"));
+                    MessageBox.Show(Tools.Helper.GetTranslation("Messages", "S24"));
                     return;  // Nothing found.
                 }
             }

@@ -204,7 +204,7 @@ namespace Tinke
             Get_SupportedFiles();
             DateTime t9 = DateTime.Now;
 
-            XElement xml = Tools.Helper.ObtenerTraduccion("Messages");
+            XElement xml = Tools.Helper.GetTranslation("Messages");
             Console.Write("<br><u>" + xml.Element("S0F").Value + "</u><ul><font size=\"2\" face=\"consolas\">");
             Console.WriteLine("<li>" + xml.Element("S10").Value + (t9 - startTime).ToString() + "</li>");
             Console.WriteLine("<li>" + xml.Element("S11").Value + (t1 - startTime).ToString() + "</li>");
@@ -262,7 +262,7 @@ namespace Tinke
             Get_SupportedFiles();
             DateTime t6 = DateTime.Now;
 
-            XElement xml = Tools.Helper.ObtenerTraduccion("Messages");
+            XElement xml = Tools.Helper.GetTranslation("Messages");
             Console.Write("<br><u>" + xml.Element("S0F").Value + "</u><ul><font size=\"2\" face=\"consolas\">");
             Console.WriteLine("<li>" + xml.Element("S10").Value + (t6 - startTime).ToString() + "</li>");
             Console.WriteLine("<li>" + xml.Element("S12").Value + (t1 - startTime).ToString() + "</li>");
@@ -305,7 +305,7 @@ namespace Tinke
             Get_SupportedFiles();
             DateTime t6 = DateTime.Now;
 
-            XElement xml = Tools.Helper.ObtenerTraduccion("Messages");
+            XElement xml = Tools.Helper.GetTranslation("Messages");
             Console.Write("<br><u>" + xml.Element("S0F").Value + "</u><ul><font size=\"2\" face=\"consolas\">");
             Console.WriteLine("<li>" + xml.Element("S10").Value + (t6 - startTime).ToString() + "</li>");
             Console.WriteLine("<li>" + xml.Element("S12").Value + (t1 - startTime).ToString() + "</li>");
@@ -330,13 +330,13 @@ namespace Tinke
                 xml = xml.Parent;
                 xml.Save(Application.StartupPath + Path.DirectorySeparatorChar + "Tinke.xml");
             }
-            catch { MessageBox.Show(Tools.Helper.ObtenerTraduccion("Sistema", "S37"), Tools.Helper.ObtenerTraduccion("Sistema", "S3A")); }
+            catch { MessageBox.Show(Tools.Helper.GetTranslation("Sistema", "S37"), Tools.Helper.GetTranslation("Sistema", "S3A")); }
 
             if (accion is Acciones)
             {
                 if (accion.IsNewRom & accion.ROMFile != "")
                 {
-                    if (MessageBox.Show(Tools.Helper.ObtenerTraduccion("Sistema", "S39"), Tools.Helper.ObtenerTraduccion("Sistema", "S3A"),
+                    if (MessageBox.Show(Tools.Helper.GetTranslation("Sistema", "S39"), Tools.Helper.GetTranslation("Sistema", "S3A"),
                         MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == System.Windows.Forms.DialogResult.Cancel)
                     {
                         e.Cancel = true;
@@ -371,13 +371,13 @@ namespace Tinke
                 if (xml.Element("ModeWindow").Value == "True")
                     toolStripVentana.Checked = true;
             }
-            catch { MessageBox.Show(Tools.Helper.ObtenerTraduccion("Sistema", "S38"), Tools.Helper.ObtenerTraduccion("Sistema", "S3A")); }
+            catch { MessageBox.Show(Tools.Helper.GetTranslation("Sistema", "S38"), Tools.Helper.GetTranslation("Sistema", "S3A")); }
         }
         private void ReadLanguage()
         {
             try
             {
-                XElement xml = Tools.Helper.ObtenerTraduccion("Sistema");
+                XElement xml = Tools.Helper.GetTranslation("Sistema");
 
                 toolStripOpen.Text = xml.Element("S01").Value;
                 toolStripInfoRom.Text = xml.Element("S02").Value;
@@ -449,7 +449,7 @@ namespace Tinke
             xml.Element("Options").Element("Language").Value = idioma;
             xml.Save(Application.StartupPath + Path.DirectorySeparatorChar + "Tinke.xml");
 
-            MessageBox.Show(Tools.Helper.ObtenerTraduccion("Messages", "S07"));
+            MessageBox.Show(Tools.Helper.GetTranslation("Messages", "S07"));
         }
 
         private sFolder FNT(string file, UInt32 offset, UInt32 size)
@@ -666,7 +666,7 @@ namespace Tinke
             if (nFiles == 0)
                 nFiles = 1;
 
-            lblSupport.Text = Tools.Helper.ObtenerTraduccion("Sistema", "S30") + ' ' + (filesSupported * 100 / nFiles) + '%';
+            lblSupport.Text = Tools.Helper.GetTranslation("Sistema", "S30") + ' ' + (filesSupported * 100 / nFiles) + '%';
             if ((filesSupported * 100 / nFiles) >= 75)
                 lblSupport.Font = new Font("Consolas", 10, FontStyle.Bold | FontStyle.Underline);
             else
@@ -717,7 +717,7 @@ namespace Tinke
                 listFile.Items[1].SubItems.Add("0xF000");
                 listFile.Items[2].SubItems.Add("");
                 listFile.Items[3].SubItems.Add("");
-                listFile.Items[4].SubItems.Add(Tools.Helper.ObtenerTraduccion("Sistema", "S1F"));
+                listFile.Items[4].SubItems.Add(Tools.Helper.GetTranslation("Sistema", "S1F"));
                 listFile.Items[5].SubItems.Add("");
 
                 btnHex.Enabled = false;
@@ -737,55 +737,55 @@ namespace Tinke
                 switch (selectFile.format)
                 {
                     case Format.Palette:
-                        listFile.Items[4].SubItems.Add(Tools.Helper.ObtenerTraduccion("Sistema", "S20"));
+                        listFile.Items[4].SubItems.Add(Tools.Helper.GetTranslation("Sistema", "S20"));
                         break;
                     case Format.Tile:
-                        listFile.Items[4].SubItems.Add(Tools.Helper.ObtenerTraduccion("Sistema", "S21"));
+                        listFile.Items[4].SubItems.Add(Tools.Helper.GetTranslation("Sistema", "S21"));
                         break;
                     case Format.Map:
-                        listFile.Items[4].SubItems.Add(Tools.Helper.ObtenerTraduccion("Sistema", "S22"));
+                        listFile.Items[4].SubItems.Add(Tools.Helper.GetTranslation("Sistema", "S22"));
                         break;
                     case Format.Cell:
-                        listFile.Items[4].SubItems.Add(Tools.Helper.ObtenerTraduccion("Sistema", "S23"));
+                        listFile.Items[4].SubItems.Add(Tools.Helper.GetTranslation("Sistema", "S23"));
                         break;
                     case Format.Animation:
-                        listFile.Items[4].SubItems.Add(Tools.Helper.ObtenerTraduccion("Sistema", "S24"));
+                        listFile.Items[4].SubItems.Add(Tools.Helper.GetTranslation("Sistema", "S24"));
                         break;
                     case Format.FullImage:
-                        listFile.Items[4].SubItems.Add(Tools.Helper.ObtenerTraduccion("Sistema", "S25"));
+                        listFile.Items[4].SubItems.Add(Tools.Helper.GetTranslation("Sistema", "S25"));
                         break;
                     case Format.Text:
-                        listFile.Items[4].SubItems.Add(Tools.Helper.ObtenerTraduccion("Sistema", "S26"));
+                        listFile.Items[4].SubItems.Add(Tools.Helper.GetTranslation("Sistema", "S26"));
                         break;
                     case Format.Video:
-                        listFile.Items[4].SubItems.Add(Tools.Helper.ObtenerTraduccion("Sistema", "S27"));
+                        listFile.Items[4].SubItems.Add(Tools.Helper.GetTranslation("Sistema", "S27"));
                         break;
                     case Format.Sound:
-                        listFile.Items[4].SubItems.Add(Tools.Helper.ObtenerTraduccion("Sistema", "S28"));
+                        listFile.Items[4].SubItems.Add(Tools.Helper.GetTranslation("Sistema", "S28"));
                         break;
                     case Format.Font:
-                        listFile.Items[4].SubItems.Add(Tools.Helper.ObtenerTraduccion("Sistema", "S29"));
+                        listFile.Items[4].SubItems.Add(Tools.Helper.GetTranslation("Sistema", "S29"));
                         break;
                     case Format.Compressed:
-                        listFile.Items[4].SubItems.Add(Tools.Helper.ObtenerTraduccion("Sistema", "S2A"));
+                        listFile.Items[4].SubItems.Add(Tools.Helper.GetTranslation("Sistema", "S2A"));
                         break;
                     case Format.Unknown:
-                        listFile.Items[4].SubItems.Add(Tools.Helper.ObtenerTraduccion("Sistema", "S2B"));
+                        listFile.Items[4].SubItems.Add(Tools.Helper.GetTranslation("Sistema", "S2B"));
                         break;
                     case Format.System:
-                        listFile.Items[4].SubItems.Add(Tools.Helper.ObtenerTraduccion("Sistema", "S31"));
+                        listFile.Items[4].SubItems.Add(Tools.Helper.GetTranslation("Sistema", "S31"));
                         break;
                     case Format.Script:
-                        listFile.Items[4].SubItems.Add(Tools.Helper.ObtenerTraduccion("Sistema", "S34"));
+                        listFile.Items[4].SubItems.Add(Tools.Helper.GetTranslation("Sistema", "S34"));
                         break;
                     case Format.Pack:
-                        listFile.Items[4].SubItems.Add(Tools.Helper.ObtenerTraduccion("Sistema", "S3D"));
+                        listFile.Items[4].SubItems.Add(Tools.Helper.GetTranslation("Sistema", "S3D"));
                         break;
                     case Format.Texture:
-                        listFile.Items[4].SubItems.Add(Tools.Helper.ObtenerTraduccion("Sistema", "S3E"));
+                        listFile.Items[4].SubItems.Add(Tools.Helper.GetTranslation("Sistema", "S3E"));
                         break;
                     case Format.Model3D:
-                        listFile.Items[4].SubItems.Add(Tools.Helper.ObtenerTraduccion("Sistema", "S3F"));
+                        listFile.Items[4].SubItems.Add(Tools.Helper.GetTranslation("Sistema", "S3F"));
                         break;
                 }
                 #endregion
@@ -828,7 +828,7 @@ namespace Tinke
                 listFile.Items[1].SubItems.Add("0x" + String.Format("{0:X}", e.Node.Tag));
                 listFile.Items[2].SubItems.Add("");
                 listFile.Items[3].SubItems.Add("");
-                listFile.Items[4].SubItems.Add(Tools.Helper.ObtenerTraduccion("Sistema", "S1F"));
+                listFile.Items[4].SubItems.Add(Tools.Helper.GetTranslation("Sistema", "S1F"));
                 listFile.Items[5].SubItems.Add("");
                 listFile.Items[6].SubItems.Add(accion.Get_RelativePath(selectFolder.id, "", accion.Root));
 
@@ -911,7 +911,7 @@ namespace Tinke
                 this.Cursor = Cursors.Default;
                 keyDown = Keys.Escape;
 
-                MessageBox.Show(Tools.Helper.ObtenerTraduccion("Sistema", "S36"));
+                MessageBox.Show(Tools.Helper.GetTranslation("Sistema", "S36"));
                 return;
             }
 
@@ -922,6 +922,7 @@ namespace Tinke
 
             // Add new files to the main tree
             TreeNode selected = treeSystem.SelectedNode;
+            selected.Nodes.Clear();
             CarpetaANodo(uncompress, ref selected);
             selected.ImageIndex = accion.ImageFormatFile(accion.Select_File().format);
             selected.SelectedImageIndex = selected.ImageIndex;
@@ -998,7 +999,7 @@ namespace Tinke
             {
                 if ((String)accion.Select_File().tag == "Descomprimido")
                 {
-                    if (MessageBox.Show(Tools.Helper.ObtenerTraduccion("Sistema", "S3B"), "", MessageBoxButtons.YesNo,
+                    if (MessageBox.Show(Tools.Helper.GetTranslation("Sistema", "S3B"), "", MessageBoxButtons.YesNo,
                           MessageBoxIcon.Question) == System.Windows.Forms.DialogResult.Yes)
                         ExtractFolder();
                     else
@@ -1037,7 +1038,7 @@ namespace Tinke
 
             FolderBrowserDialog o = new FolderBrowserDialog();
             o.ShowNewFolderButton = true;
-            o.Description = Tools.Helper.ObtenerTraduccion("Sistema", "S2C");
+            o.Description = Tools.Helper.GetTranslation("Sistema", "S2C");
             if (o.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 Directory.CreateDirectory(o.SelectedPath + Path.DirectorySeparatorChar + folderSelect.name);
@@ -1318,7 +1319,7 @@ namespace Tinke
 
             if (!(uncompress.files is List<sFile>) && !(uncompress.folders is List<sFolder>)) // En caso de que falle la extracción
             {
-                MessageBox.Show(Tools.Helper.ObtenerTraduccion("Sistema", "S36"));
+                MessageBox.Show(Tools.Helper.GetTranslation("Sistema", "S36"));
                 return;
             }
 
@@ -1369,7 +1370,7 @@ namespace Tinke
                 if (!isMono)
                     wait.Abort();
 
-                MessageBox.Show(Tools.Helper.ObtenerTraduccion("Sistema", "S36"));
+                MessageBox.Show(Tools.Helper.GetTranslation("Sistema", "S36"));
                 return;
             }
 
@@ -1480,10 +1481,10 @@ namespace Tinke
                 }
             }
 
-            TreeNode nodo = new TreeNode(Tools.Helper.ObtenerTraduccion("Sistema", "S2D"));
+            TreeNode nodo = new TreeNode(Tools.Helper.GetTranslation("Sistema", "S2D"));
             CarpetaANodo(resul, ref nodo);
             treeSystem.Nodes.Clear();
-            nodo.Name = Tools.Helper.ObtenerTraduccion("Sistema", "S2D");
+            nodo.Name = Tools.Helper.GetTranslation("Sistema", "S2D");
             treeSystem.Nodes.Add(nodo);
             treeSystem.ExpandAll();
         }
@@ -1594,7 +1595,7 @@ namespace Tinke
 
             #region Obtención de regiones de la ROM
             BinaryReader br;
-            Console.WriteLine(Tools.Helper.ObtenerTraduccion("Messages", "S08"));
+            Console.WriteLine(Tools.Helper.GetTranslation("Messages", "S08"));
             Nitro.Estructuras.ROMHeader cabecera = romInfo.Cabecera;
 
 
@@ -1622,7 +1623,7 @@ namespace Tinke
             bw.Close();
             uint arm9overlayOffset = cabecera.ARM9overlayOffset + cabecera.ARM9overlaySize;
 
-            Console.WriteLine(Tools.Helper.ObtenerTraduccion("Messages", "S09"), new FileInfo(arm9Binary).Length);
+            Console.WriteLine(Tools.Helper.GetTranslation("Messages", "S09"), new FileInfo(arm9Binary).Length);
 
 
             // Escribismo el ARM7 Binary
@@ -1655,7 +1656,7 @@ namespace Tinke
                 arm7overlayOffset = cabecera.ARM7overlayOffset + cabecera.ARM7overlaySize;
             }
             bw.Close();
-            Console.WriteLine(Tools.Helper.ObtenerTraduccion("Messages", "S09"), new FileInfo(arm7Binary).Length);
+            Console.WriteLine(Tools.Helper.GetTranslation("Messages", "S09"), new FileInfo(arm7Binary).Length);
 
 
             // Escribimos el FNT (File Name Table)
@@ -1665,7 +1666,7 @@ namespace Tinke
             br.BaseStream.Position = romInfo.Cabecera.fileNameTableOffset;
             File.WriteAllBytes(fileFNT, br.ReadBytes((int)romInfo.Cabecera.fileNameTableSize));
             br.Close();
-            Console.WriteLine(Tools.Helper.ObtenerTraduccion("Messages", "S09"), new FileInfo(fileFNT).Length);
+            Console.WriteLine(Tools.Helper.GetTranslation("Messages", "S09"), new FileInfo(fileFNT).Length);
             cabecera.fileNameTableOffset = cabecera.ARM7romOffset + cabecera.ARM7size;
 
 
@@ -1716,7 +1717,7 @@ namespace Tinke
             {
                 if (o.FileName == accion.ROMFile)
                 {
-                    MessageBox.Show(Tools.Helper.ObtenerTraduccion("Sistema", "S44"));
+                    MessageBox.Show(Tools.Helper.GetTranslation("Sistema", "S44"));
                     goto Open_Dialog;
                 }
 
@@ -1724,7 +1725,7 @@ namespace Tinke
                 if (!isMono)
                     espera.Start("S06");
 
-                Console.WriteLine(Tools.Helper.ObtenerTraduccion("Messages", "S0D"), o.FileName);
+                Console.WriteLine(Tools.Helper.GetTranslation("Messages", "S0D"), o.FileName);
                 bw = new BinaryWriter(new FileStream(o.FileName, FileMode.Create));
 
                 bw.Write(File.ReadAllBytes(header));
@@ -1743,7 +1744,7 @@ namespace Tinke
                 bw.Flush();
                 bw.Close();
 
-                Console.WriteLine("<b>" + Tools.Helper.ObtenerTraduccion("Messages", "S09") + "</b>", new FileInfo(o.FileName).Length);
+                Console.WriteLine("<b>" + Tools.Helper.GetTranslation("Messages", "S09") + "</b>", new FileInfo(o.FileName).Length);
                 accion.IsNewRom = false;
             }
 

@@ -52,7 +52,7 @@ namespace NINOKUNI
             return new System.Windows.Forms.Control();
         }
 
-        public String Pack(sFolder unpacked, string file, int id)
+        public String Pack(ref sFolder unpacked, string file, int id)
         {
             BinaryReader br = new BinaryReader(File.OpenRead(file));
             string ext = new String(br.ReadChars(4));
@@ -63,7 +63,7 @@ namespace NINOKUNI
                 string fileOut = pluginHost.Get_TempFolder() + System.IO.Path.DirectorySeparatorChar +
                     "pack_" + System.IO.Path.GetFileName(file);
                 
-                NPCK.Pack(fileOut, unpacked, pluginHost);
+                NPCK.Pack(fileOut, ref unpacked, pluginHost);
                 return fileOut;
             }
             else if (ext == "KPCN")
@@ -71,7 +71,7 @@ namespace NINOKUNI
                 string fileOut = pluginHost.Get_TempFolder() + System.IO.Path.DirectorySeparatorChar +
                     "pack_" + System.IO.Path.GetFileName(file);
 
-                KPCN.Pack(fileOut, file, unpacked, pluginHost);
+                KPCN.Pack(fileOut, file, ref unpacked, pluginHost);
                 return fileOut;
             }
 

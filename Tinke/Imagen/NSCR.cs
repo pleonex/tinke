@@ -10,7 +10,7 @@ namespace Tinke
 {
     public static class Imagen_NSCR
     {
-        public static NSCR Leer(string file, int id)
+        public static NSCR Read(string file, int id)
         {
             BinaryReader br = new BinaryReader(File.OpenRead(file));
             NSCR nscr = new NSCR();
@@ -32,30 +32,24 @@ namespace Tinke
             nscr.section.width = br.ReadUInt16();
             nscr.section.height = br.ReadUInt16();
             nscr.section.padding = br.ReadUInt32();
-            /*if (nscr.section.padding == 0x01)
-            {
-                ushort height = nscr.section.height;
-                nscr.section.height = nscr.section.width;
-                nscr.section.width = height;
-            }*/
             nscr.section.data_size = br.ReadUInt32();
             nscr.section.mapData = new NTFS[nscr.section.data_size / 2];
 
             for (int i = 0; i < (nscr.section.data_size / 2); i++)
             {
-                string bits = Tools.Helper.BytesToBits(br.ReadBytes(2));
+                ushort parameters = br.ReadUInt16();
 
                 nscr.section.mapData[i] = new NTFS();
-                nscr.section.mapData[i].nPalette = Convert.ToByte(bits.Substring(0, 4), 2);
-                nscr.section.mapData[i].yFlip = Convert.ToByte(bits.Substring(4, 1), 2);
-                nscr.section.mapData[i].xFlip = Convert.ToByte(bits.Substring(5, 1), 2);
-                nscr.section.mapData[i].nTile = Convert.ToUInt16(bits.Substring(6, 10), 2);
+                nscr.section.mapData[i].nTile = (ushort)(parameters & 0x3FF);
+                nscr.section.mapData[i].xFlip = (byte)((parameters >> 10) & 1);
+                nscr.section.mapData[i].yFlip = (byte)((parameters >> 11) & 1);
+                nscr.section.mapData[i].nPalette = (byte)((parameters >> 12) & 0xF);
             }
 
             br.Close();
             return nscr;
         }
-        public static NSCR Leer_Basico(string archivo, int id)
+        public static NSCR Read_Basic(string archivo, int id)
         {
             BinaryReader br = new BinaryReader(File.OpenRead(archivo));
             uint file_size = (uint)new FileInfo(archivo).Length;
@@ -83,13 +77,13 @@ namespace Tinke
 
             for (int i = 0; i < (file_size / 2); i++)
             {
-                string bits = Tools.Helper.BytesToBits(br.ReadBytes(2));
+                ushort parameters = br.ReadUInt16();
 
                 nscr.section.mapData[i] = new NTFS();
-                nscr.section.mapData[i].nPalette = Convert.ToByte(bits.Substring(0, 4), 2);
-                nscr.section.mapData[i].yFlip = Convert.ToByte(bits.Substring(4, 1), 2);
-                nscr.section.mapData[i].xFlip = Convert.ToByte(bits.Substring(5, 1), 2);
-                nscr.section.mapData[i].nTile = Convert.ToUInt16(bits.Substring(6, 10), 2);
+                nscr.section.mapData[i].nTile = (ushort)(parameters & 0x3FF);
+                nscr.section.mapData[i].xFlip = (byte)((parameters >> 10) & 1);
+                nscr.section.mapData[i].yFlip = (byte)((parameters >> 11) & 1);
+                nscr.section.mapData[i].nPalette = (byte)((parameters >> 12) & 0xF);
             }
 
             br.Close();
@@ -193,7 +187,7 @@ namespace Tinke
             bw.Close();
         }
 
-        public static NTFT Modificar_Tile(NSCR nscr, NTFT tiles, int startInfo = 0)
+        public static NTFT Transform_Tile(NSCR nscr, NTFT tiles, int startInfo = 0)
         {
             NTFT ntft = new NTFT();
             List<Byte[]> bytes = new List<byte[]>();

@@ -42,7 +42,7 @@ namespace NINOKUNI
             br.Close();
             return unpack;
         }
-        public static void Pack(string file, sFolder unpacked, IPluginHost pluginHost)
+        public static void Pack(string file, ref sFolder unpacked, IPluginHost pluginHost)
         {
             BinaryWriter bw = new BinaryWriter(File.OpenWrite(file));
             uint offset = (uint)0x09 * 8 + 0xC;
@@ -57,6 +57,8 @@ namespace NINOKUNI
 
                 if (currFile.name is String)
                 {
+                    currFile.offset = offset;
+
                     bw.Write(offset);
                     bw.Write(currFile.size);
                     offset += currFile.size;

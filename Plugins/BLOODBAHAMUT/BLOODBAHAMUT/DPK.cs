@@ -50,6 +50,12 @@ namespace BLOODBAHAMUT
                 newFile.size = br.ReadUInt32();
                 newFile.path = packFile;
 
+                // For Summon Night X Tears Crown game
+                if (file.ToUpper().EndsWith("CBT.DPK") ||
+                    file.ToUpper().EndsWith("CFL.DPK") ||
+                    file.ToUpper().EndsWith("CFN.DPK") ||
+                    file.ToUpper().EndsWith("ILLUEST.DPK"))
+                        newFile.name += ".dpk";
                 // Get the file extension
                 //long pos = br.BaseStream.Position;
                 //br.BaseStream.Position = newFile.offset;
@@ -63,7 +69,7 @@ namespace BLOODBAHAMUT
             return unpacked;
         }
 
-        public static string Pack(sFolder unpacked, string file, int id)
+        public static string Pack(ref sFolder unpacked, string file, int id)
         {
             unpacked.files.Sort(SortFiles);
 
@@ -85,13 +91,18 @@ namespace BLOODBAHAMUT
                 fileData = Helper.ReadFile(unpacked.files[i].path);
                 for (uint j = 0, k = unpacked.files[i].offset; j < unpacked.files[i].size; j++, k++)
                 {
-                    subFile[j] = fileData[k];
+                    try
+                    {
+                        subFile[j] = fileData[k];
+                    }
+                    catch { }
                 }
 
                 sFile newFile = unpacked.files[i];
-                newFile.name = unpacked.files[i].name.Remove(unpacked.files[i].name.LastIndexOf('.'));
+                //newFile.name = unpacked.files[i].name.Remove(unpacked.files[i].name.LastIndexOf('.'));
                 newFile.size = (uint)subFile.Length;
                 newFile.offset = offset;
+                newFile.path = fileOut;
                 offset += newFile.size;
                 unpacked.files[i] = newFile;
                 packedFiles.Write(subFile, 0, subFile.Length);
@@ -101,7 +112,7 @@ namespace BLOODBAHAMUT
             headerWriter.Write(numberOfFiles);
             for (int i = 0; i < numberOfFiles; i++)
             {
-                headerWriter.Write(uint.Parse(unpacked.files[i].name));
+                headerWriter.Write(uint.Parse(unpacked.files[i].name.Remove(unpacked.files[i].name.LastIndexOf('.'))));
                 headerWriter.Write(unpacked.files[i].offset);
                 headerWriter.Write(unpacked.files[i].size);
             }

@@ -79,7 +79,7 @@ namespace LAYTON
             paleta.pltt.nColors = br.ReadUInt32();
             paleta.pltt.palettes = new NTFP[1];
             paleta.pltt.palettes[0].colors =
-                pluginHost.BGR555(br.ReadBytes((int)paleta.pltt.nColors * 2));
+                pluginHost.BGR555ToColor(br.ReadBytes((int)paleta.pltt.nColors * 2));
 
             // Tile, sin cabecera
             NCGR tile = new NCGR();
@@ -99,13 +99,13 @@ namespace LAYTON
             map.section.mapData = new NTFS[map.section.width * map.section.height / 64];
             for (int i = 0; i < map.section.width * map.section.height / 64; i++)
             {
-                string bits = pluginHost.BytesToBits(br.ReadBytes(2));
+                ushort parameters = br.ReadUInt16();
 
                 map.section.mapData[i] = new NTFS();
-                map.section.mapData[i].nPalette = Convert.ToByte(bits.Substring(0, 4), 2);
-                map.section.mapData[i].yFlip = Convert.ToByte(bits.Substring(4, 1), 2);
-                map.section.mapData[i].xFlip = Convert.ToByte(bits.Substring(5, 1), 2);
-                map.section.mapData[i].nTile = Convert.ToUInt16(bits.Substring(6, 10), 2);
+                map.section.mapData[i].nTile = (ushort)(parameters & 0x3FF);
+                map.section.mapData[i].xFlip = (byte)((parameters >> 10) & 1);
+                map.section.mapData[i].yFlip = (byte)((parameters >> 11) & 1);
+                map.section.mapData[i].nPalette = (byte)((parameters >> 12) & 0xF);
             }
 
             br.Close();

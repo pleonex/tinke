@@ -23,6 +23,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Windows.Forms;
+using System.Drawing;
 using PluginInterface;
 
 // Copied from:
@@ -436,10 +437,231 @@ namespace _3DModels
             catch { throw new NotSupportedException("There was an error reading the language file"); }
         }
 
+        public static System.Drawing.Bitmap GetTexture(IPluginHost pluginHost, sBTX0 btx0, int num)
+        {
+            int num_pal;
+            bool foundPal = false;
+            for (num_pal = 0; num_pal < btx0.texture.palInfo.num_objs; num_pal++)
+            {
+                if (btx0.texture.palInfo.names[num_pal] == btx0.texture.texInfo.names[num])
+                {
+                    foundPal = true;
+                    break;
+                }
+                else if (btx0.texture.palInfo.names[num_pal].Replace("_pl", "") == btx0.texture.texInfo.names[num])
+                {
+                    foundPal = true;
+                    break;
+                }
+            }
+
+            if (!foundPal)
+                num_pal = 0;
+
+            return GetTexture(pluginHost, btx0, num, num_pal);
+        }
+        public static System.Drawing.Bitmap GetTexture(IPluginHost pluginHost, sBTX0 btx0, int num_tex, int num_pal)
+        {
+            sBTX0.Texture.TextInfo texInfo = (sBTX0.Texture.TextInfo)btx0.texture.texInfo.infoBlock.infoData[num_tex];
+            sBTX0.Texture.PalInfo palInfo = (sBTX0.Texture.PalInfo)btx0.texture.palInfo.infoBlock.infoData[num_pal];
+
+            // Get texture data
+            BinaryReader br = new BinaryReader(File.OpenRead(btx0.file));
+            if (texInfo.format != 5)
+                br.BaseStream.Position = texInfo.tex_offset * 8 + btx0.header.offset[0] + btx0.texture.header.textData_offset;
+            else
+                br.BaseStream.Position = btx0.header.offset[0] + btx0.texture.header.textCompressedData_offset + texInfo.tex_offset * 8;
+            Byte[] tile_data = br.ReadBytes((int)(texInfo.width * texInfo.height * texInfo.depth / 8));
+
+            // Get palette data
+            br.BaseStream.Position = btx0.header.offset[0] + btx0.texture.header.paletteData_offset;
+            br.BaseStream.Position += palInfo.palette_offset * 8;
+            Byte[] palette_data = br.ReadBytes((int)PaletteSize[texInfo.format]);
+            Color[] palette = pluginHost.BGR555ToColor(palette_data);
+            br.Close();
+
+            Bitmap tex;
+            if (texInfo.format != 5)
+               tex = Draw_Texture(pluginHost, btx0, tile_data, texInfo, palette);
+            else
+                tex = Draw_CompressedTexture(pluginHost, btx0, tile_data, texInfo, num_pal);
+
+            return tex;
+        }
+
+        private static Bitmap Draw_Texture(IPluginHost pluginHost, sBTX0 btx0, 
+            byte[] data, sBTX0.Texture.TextInfo info, Color[] palette)
+        {
+            Bitmap imagen = new Bitmap(info.width, info.height);
+            if (info.format == 3) // 16-color 4 bits
+                data = pluginHost.Bit8ToBit4(data);
+            else if (info.format == 2) // 4-color 2 bits
+                data = Bit8ToBit2(data);
+
+            for (int h = 0; h < info.height; h++)
+            {
+                for (int w = 0; w < info.width; w++)
+                {
+                    Color color = Color.Black;
+                    try
+                    {
+                        if (info.format == 2 || info.format == 3 || info.format == 4) // 2-4-8 bits per color
+                            color = palette[data[w + h * info.width]];
+                        else if (info.format == 1) // A3I5 8-bit
+                        {
+                            int colorIndex = data[w + h * info.width] & 0x1F;
+                            int alpha = (data[w + h * info.width] >> 5);
+                            alpha = ((alpha * 4) + (alpha / 2)) * 8;
+                            color = Color.FromArgb(alpha,
+                                palette[colorIndex].R,
+                                palette[colorIndex].G,
+                                palette[colorIndex].B);
+                        }
+                        else if (info.format == 6) // A5I3 8-bit
+                        {
+                            int colorIndex = data[w + h * info.width] & 0x7;
+                            int alpha = (data[w + h * info.width] >> 3);
+                            alpha *= 8;
+                            color = Color.FromArgb(alpha,
+                                palette[colorIndex].R,
+                                palette[colorIndex].G,
+                                palette[colorIndex].B);
+                        }
+                        else if (info.format == 7) // Direct texture 16-bit (not tested)
+                        {
+                            ushort byteColor = BitConverter.ToUInt16(data, (w + h * info.width) * 2);
+                            color = Color.FromArgb(
+                                (byteColor >> 15) * 255,
+                                (byteColor & 0x1F) * 8,
+                                ((byteColor >> 5) & 0x1F) * 8,
+                                ((byteColor >> 10) & 0x1F) * 8);
+                        }
+                    }
+                    catch { }
+
+                    imagen.SetPixel(w, h, color);
+                }
+            }
+
+            if (info.color0 == 1)
+                imagen.MakeTransparent(palette[0]);
+
+            return imagen;
+        }
+        private static Bitmap Draw_CompressedTexture(IPluginHost pluginHost, sBTX0 btx0,
+            byte[] data, sBTX0.Texture.TextInfo info, int num_pal)
+        {
+            sBTX0.Texture.PalInfo palInfo = (sBTX0.Texture.PalInfo)btx0.texture.palInfo.infoBlock.infoData[num_pal];
+
+            BinaryReader br = new BinaryReader(File.OpenRead(btx0.file));
+            br.BaseStream.Position = btx0.header.offset[0] + btx0.texture.header.textCompressedInfoData_offset + info.compressedDataStart;
+
+            Bitmap image = new Bitmap(info.width, info.height);
+
+            for (int h = 0; h < info.height; h += 4)
+            {
+                for (int w = 0; w < info.width; w += 4)
+                {
+                    uint texData = BitConverter.ToUInt32(data, w + h * info.width / 4);
+
+                    // Get palette data for this block
+                    ushort pal_info = br.ReadUInt16();
+                    int pal_offset = pal_info & 0x3FFF;
+                    int pal_mode = (pal_info >> 14);
+
+                    long currPos = br.BaseStream.Position;
+                    br.BaseStream.Position = btx0.header.offset[0] + btx0.texture.header.paletteData_offset + palInfo.palette_offset * 8;
+                    br.BaseStream.Position += pal_offset * 4;
+                    if (br.BaseStream.Position >= br.BaseStream.Length)
+                        br.BaseStream.Position -= pal_offset * 4;
+
+                    Color[] palette = pluginHost.BGR555ToColor(br.ReadBytes(0x08));
+                    br.BaseStream.Position = currPos;
+
+                    for (int hTex = 0; hTex < 4; hTex++)
+                    {
+                        byte texel_row = (byte)((texData >> (hTex * 8)) & 0xFF);
+                        for (int wTex = 0; wTex < 4; wTex++)
+                        {
+                            byte texel = (byte)((texel_row >> (wTex * 2)) & 0x3);
+
+                            #region Get color from Texel and mode values
+                            Color color = Color.Black;
+                            if (palette.Length < 4)
+                                goto Draw;
+
+                            switch (pal_mode)
+                            {
+                                case 0:
+                                    if (texel == 0) color = palette[0];
+                                    else if (texel == 1) color = palette[1];
+                                    else if (texel == 2) color = palette[2];
+                                    else if (texel == 3) color = Color.FromArgb(0, 0, 0, 0);  // Transparent color
+                                    break;
+
+                                case 1:
+                                    if (texel == 0) color = palette[0];
+                                    else if (texel == 1) color = palette[1];
+                                    else if (texel == 2) color = SumColors(palette[0], palette[1], 1, 1);
+                                    else if (texel == 3) color = Color.FromArgb(0, 0, 0, 0); // Transparent color
+                                    break;
+
+                                case 2:
+                                    if (texel == 0) color = palette[0];
+                                    else if (texel == 1) color = palette[1];
+                                    else if (texel == 2) color = palette[2];
+                                    else if (texel == 3) color = palette[3];
+                                    break;
+
+                                case 3:
+                                    if (texel == 0) color = palette[0];
+                                    else if (texel == 1) color = palette[1];
+                                    else if (texel == 2) color = SumColors(palette[0], palette[1], 5, 3);
+                                    else if (texel == 3) color = SumColors(palette[0], palette[1], 3, 5);
+                                    break;
+                            }
+                            #endregion
+
+                        Draw:
+                            image.SetPixel(
+                                w + wTex,
+                                h + hTex,
+                                color);
+                        }
+                    }
+                }
+            }
+
+            br.Close();
+            return image;
+        }
+        private static Color SumColors(Color a, Color b, int wa, int wb)
+        {
+            return Color.FromArgb(
+                (a.R * wa + b.R * wb) / (wa + wb),
+                (a.G * wa + b.G * wb) / (wa + wb),
+                (a.B * wa + b.B * wb) / (wa + wb));
+        }
+        private static byte[] Bit8ToBit2(byte[] data)
+        {
+            List<Byte> bit2 = new List<byte>();
+
+            for (int i = 0; i < data.Length; i++)
+            {
+                bit2.Add((byte)(data[i] & 0x3));
+                bit2.Add((byte)((data[i] >> 2) & 0x3));
+                bit2.Add((byte)((data[i] >> 4) & 0x3));
+                bit2.Add((byte)((data[i] >> 6) & 0x3));
+            }
+
+            return bit2.ToArray();
+        }
 
 
         //                                              0  1  2  3  4  5  6  7
         public static byte[] FormatDepth = new byte[] { 0, 8, 2, 4, 8, 2, 8, 16 };
+
+        static int[] PaletteSize = new int[] { 0x00, 0x40, 0x08, 0x20, 0x200, 0x200, 0x10, 0x00 };
     }
 
     public struct sBTX0

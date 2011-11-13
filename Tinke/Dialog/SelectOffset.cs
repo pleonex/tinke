@@ -23,7 +23,7 @@ namespace Tinke.Dialog
         {
             try
             {
-                XElement xml = Tools.Helper.ObtenerTraduccion("Dialog");
+                XElement xml = Tools.Helper.GetTranslation("Dialog");
 
                 this.Text = xml.Element("S04").Value;
                 btnOK.Text = xml.Element("S01").Value;

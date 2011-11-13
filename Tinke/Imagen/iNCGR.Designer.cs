@@ -462,7 +462,6 @@ namespace Tinke
             this.pic.BackColor = System.Drawing.Color.Transparent;
             this.pic.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pic.Location = new System.Drawing.Point(0, 0);
-            this.pic.MaximumSize = new System.Drawing.Size(260, 459);
             this.pic.Name = "pic";
             this.pic.Size = new System.Drawing.Size(100, 100);
             this.pic.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;

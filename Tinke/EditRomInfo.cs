@@ -31,7 +31,7 @@ namespace Tinke
         }
         private void ReadLanguage()
         {
-            System.Xml.Linq.XElement xml = Tools.Helper.ObtenerTraduccion("EditRomInfo");
+            System.Xml.Linq.XElement xml = Tools.Helper.GetTranslation("EditRomInfo");
 
             this.Text = xml.Element("S00").Value;
             btnSave.Text = xml.Element("S01").Value;
@@ -225,10 +225,10 @@ namespace Tinke
                 {
                     PluginInterface.NCGR tile = Imagen_NCGR.BitmapToTile(o.FileName, PluginInterface.TileOrder.Horizontal);
                     if (tile.rahc.depth == ColorDepth.Depth8Bit)
-                        throw new NotSupportedException(Tools.Helper.ObtenerTraduccion("EditRomInfo", "S26"));
+                        throw new NotSupportedException(Tools.Helper.GetTranslation("EditRomInfo", "S26"));
 
                     banner.tileData = Convertir.TilesToBytes(tile.rahc.tileData.tiles);
-                    banner.tileData = Tools.Helper.Bits4ToBits8Rev(banner.tileData);
+                    banner.tileData = Tools.Helper.Bits4ToBits8(banner.tileData);
 
                     banner.palette = Convertir.ColorToBGR555(Imagen_NCLR.BitmapToPalette(o.FileName).pltt.palettes[0].colors);
 
@@ -367,7 +367,7 @@ namespace Tinke
 
         private void btnShowMakerCode_Click(object sender, EventArgs e)
         {
-            System.Xml.Linq.XElement xml = Tools.Helper.ObtenerTraduccion("EditRomInfo");
+            System.Xml.Linq.XElement xml = Tools.Helper.GetTranslation("EditRomInfo");
 
             Form ven = new Form();
             ven.AutoScroll = true;

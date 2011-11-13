@@ -62,7 +62,7 @@ namespace Images
             nclr.pltt.nColors = file_size / 2;
 			nclr.pltt.palettes = new NTFP[1];
 			// Rellenamos los colores en formato BGR555
-			nclr.pltt.palettes[0].colors = pluginHost.BGR555(br.ReadBytes((int)file_size));
+			//nclr.pltt.palettes[0].colors = pluginHost.BGR555(br.ReadBytes((int)file_size));
             nclr.pltt.nColors = (uint)nclr.pltt.palettes[0].colors.Length;
 
 			br.Close();

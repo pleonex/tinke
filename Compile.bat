@@ -52,5 +52,9 @@ REM Compilación de los plugins de formatos
 
 COPY "%cd%\changelog.txt" "%cd%\build\"
 COPY "%cd%\Licence.txt" "%cd%\build\"
+COPY "%cd%\Plugins\3DModels\OpenTK.dll" "%cd%\build\"
+COPY "%cd%\Plugins\3DModels\OpenTK.GLControl.dll" "%cd%\build\"
+
+DEL /S /Q "%cd%\build\*.pdb"
 
 PAUSE

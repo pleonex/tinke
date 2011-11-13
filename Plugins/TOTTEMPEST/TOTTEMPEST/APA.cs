@@ -50,7 +50,7 @@ namespace TOTTEMPEST
             nclr.pltt.palettes = new NTFP[file_size / 0x20];
             // Get colors
             for (int i = 0; i < nclr.pltt.palettes.Length; i++)
-                nclr.pltt.palettes[i].colors = pluginHost.BGR555(br.ReadBytes((int)0x20));
+                nclr.pltt.palettes[i].colors = pluginHost.BGR555ToColor(br.ReadBytes((int)0x20));
 
             br.Close();
             pluginHost.Set_NCLR(nclr);

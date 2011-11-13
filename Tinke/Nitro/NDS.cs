@@ -16,7 +16,7 @@ namespace Tinke.Nitro
 
             BinaryReader br = new BinaryReader(File.OpenRead(file));
             Console.WriteLine("<b>" +
-                Tools.Helper.ObtenerTraduccion("Messages", "S03") + "</b> "
+                Tools.Helper.GetTranslation("Messages", "S03") + "</b> "
                 + new FileInfo(file).Name);
 
             Rellenar_MakerCodes();
@@ -76,7 +76,7 @@ namespace Tinke.Nitro
             br.Close();
 
             Console.WriteLine("<b>" +
-                Tools.Helper.ObtenerTraduccion("Messages", "S04")
+                Tools.Helper.GetTranslation("Messages", "S04")
                 + "</b><br>" + new String(nds.gameTitle).Replace("\0", "") +
                 " (" + new String(nds.gameCode).Replace("\0", "") + ')');
 
@@ -87,7 +87,7 @@ namespace Tinke.Nitro
             BinaryWriter bw = new BinaryWriter(new FileStream(salida, FileMode.Create));
             BinaryReader br = new BinaryReader(File.OpenRead(romFile));
             br.BaseStream.Position = 0xC0;
-            Console.Write(Tools.Helper.ObtenerTraduccion("Messages", "S0A"));
+            Console.Write(Tools.Helper.GetTranslation("Messages", "S0A"));
 
             bw.Write(cabecera.gameTitle);
             bw.Write(cabecera.gameCode);
@@ -142,12 +142,12 @@ namespace Tinke.Nitro
             bw.Close();
             br.Close();
 
-            Console.WriteLine(Tools.Helper.ObtenerTraduccion("Messages", "S09"), new FileInfo(salida).Length);
+            Console.WriteLine(Tools.Helper.GetTranslation("Messages", "S09"), new FileInfo(salida).Length);
         }
         public static void EscribirCabecera(string salida, Estructuras.ROMHeader cabecera, byte[] nintendoLogo)
         {
             BinaryWriter bw = new BinaryWriter(new FileStream(salida, FileMode.Create));
-            Console.Write(Tools.Helper.ObtenerTraduccion("Messages", "S0A"));
+            Console.Write(Tools.Helper.GetTranslation("Messages", "S0A"));
 
             bw.Write(cabecera.gameTitle);
             bw.Write(cabecera.gameCode);
@@ -201,7 +201,7 @@ namespace Tinke.Nitro
             bw.Flush();
             bw.Close();
 
-            Console.WriteLine(Tools.Helper.ObtenerTraduccion("Messages", "S09"), new FileInfo(salida).Length);
+            Console.WriteLine(Tools.Helper.GetTranslation("Messages", "S09"), new FileInfo(salida).Length);
         }
 
 
@@ -250,7 +250,7 @@ namespace Tinke.Nitro
             bw.Write(StringToTitle(banner.spanishTitle));
             bw.Flush();
 
-            Console.WriteLine(Tools.Helper.ObtenerTraduccion("Messages", "S09"), bw.BaseStream.Length);
+            Console.WriteLine(Tools.Helper.GetTranslation("Messages", "S09"), bw.BaseStream.Length);
             bw.Close();
         }
         public static string TitleToString(byte[] data)
@@ -279,7 +279,7 @@ namespace Tinke.Nitro
             Bitmap imagen = new Bitmap(32, 32);
             Color[] paleta = Convertir.BGR555(paletteData);
 
-            tileData = Tools.Helper.BytesTo4BitsRev(tileData);
+            tileData = Tools.Helper.Bits8To4Bits(tileData);
             int i = 0;
             for (int hi = 0; hi < 4; hi++)
             {
@@ -304,7 +304,7 @@ namespace Tinke.Nitro
             BinaryWriter bw = new BinaryWriter(new FileStream(salida, FileMode.Create));
             BinaryReader br = new BinaryReader(new FileStream(romFile, FileMode.Open));
 
-            Console.Write(Tools.Helper.ObtenerTraduccion("Messages", "S0B"));
+            Console.Write(Tools.Helper.GetTranslation("Messages", "S0B"));
 
             for (int i = 0; i < nFiles; i++)
             {
@@ -332,7 +332,7 @@ namespace Tinke.Nitro
             bw.Flush();
             bw.Close();
             br.Close();
-            Console.WriteLine(Tools.Helper.ObtenerTraduccion("Messages", "S0C"), nFiles);
+            Console.WriteLine(Tools.Helper.GetTranslation("Messages", "S0C"), nFiles);
         }
         private static sFile BuscarArchivo(int id, sFolder currFolder)
         {

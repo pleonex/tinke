@@ -57,7 +57,7 @@ namespace AI_IGO_DS
             {
                 imagen.rahc.tileData.nPalette[i] = 0;
             }
-            imagen.rahc.tileData.tiles[0] = pluginHost.BytesTo4BitsRev(br.ReadBytes((int)imagen.rahc.size_tiledata));
+            imagen.rahc.tileData.tiles[0] = pluginHost.Bit8ToBit4(br.ReadBytes((int)imagen.rahc.size_tiledata));
 
 
             pluginHost.Set_NCGR(imagen);

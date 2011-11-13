@@ -14,8 +14,7 @@
  *   You should have received a copy of the GNU General Public License
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  *
- * Programador: pleoNeX
- * Fecha: 1/07/2011
+ * By: pleoNeX
  * 
  */
 using System;
@@ -23,49 +22,38 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using System.Drawing;
 using PluginInterface;
 
 namespace Images
 {
-    public class ntfp
-    {
-        IPluginHost pluginHost;
-		string archivo;
-        int id;
-		
-		public ntfp(IPluginHost pluginHost, string archivo, int id)
+    public class ntfp : PaletteBase
+    {		
+		public ntfp(IPluginHost pluginHost, string file, int id) : base(pluginHost)
 		{
 			this.pluginHost = pluginHost;
-			this.archivo = archivo;
             this.id = id;
+
+            Read(file);
 		}
 
-        public void Leer()
+        private void Read(string file)
         {
-            uint file_size = (uint)new FileInfo(archivo).Length;
-            BinaryReader br = new BinaryReader(File.OpenRead(archivo));
+            this.fileName = Path.GetFileName(file);
+            BinaryReader br = new BinaryReader(File.OpenRead(file));
 
-            NCLR nclr = new NCLR();
-            nclr.id = (uint)id;
-            // Ponemos una cabecera genérica
-            nclr.header.id = "NTFP".ToCharArray();
-            nclr.header.constant = 0x0100;
-            nclr.header.file_size = file_size;
-            nclr.header.header_size = 0x10;
-            // El archivo es PLTT raw, es decir, exclusivamente colores
-            nclr.pltt.ID = "PLTT".ToCharArray();
-            nclr.pltt.length = file_size;
-            nclr.pltt.depth = (file_size > 0x20) ? System.Windows.Forms.ColorDepth.Depth8Bit : System.Windows.Forms.ColorDepth.Depth4Bit;
-            nclr.pltt.unknown1 = 0x00000000;
-            nclr.pltt.paletteLength = file_size;
-            nclr.pltt.nColors = file_size / 2;
-            nclr.pltt.palettes = new NTFP[1];
-            // Rellenamos los colores en formato BGR555
-            nclr.pltt.palettes[0].colors = pluginHost.BGR555(br.ReadBytes((int)file_size));
+            // Color data
+            Color[][] palette = new Color[1][];
+            palette[0] = pluginHost.BGR555ToColor(br.ReadBytes((int)br.BaseStream.Length));
 
             br.Close();
-            pluginHost.Set_NCLR(nclr);
+
+            SetPalette(palette, false);
         }
 
+        public override void WritePalette(string fileOut)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

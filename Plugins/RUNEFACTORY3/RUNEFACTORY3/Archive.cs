@@ -56,7 +56,7 @@ namespace RUNEFACTORY3
             br.Close();
             return unpacked;
         }
-        public static void Pack(string fileOut, sFolder unpacked)
+        public static void Pack(string fileOut, ref sFolder unpacked)
         {
             BinaryWriter bw = new BinaryWriter(File.OpenWrite(fileOut));
 
@@ -69,6 +69,11 @@ namespace RUNEFACTORY3
             uint offset = 0x00;
             for (int i = 0; i < unpacked.files.Count; i++)
             {
+                sFile newFile = unpacked.files[i];
+                newFile.offset = offset;
+                newFile.path = fileOut;
+                unpacked.files[i] = newFile;
+
                 bw.Write(offset);
                 bw.Write(unpacked.files[i].size);
                 offset += unpacked.files[i].size;

@@ -79,7 +79,7 @@ namespace SF_FEATHER
             palette.pltt.nColors = palColors;
             palette.pltt.palettes = new NTFP[palColors / 0x10];
             for (int i = 0; i < palette.pltt.palettes.Length; i++)
-                palette.pltt.palettes[i].colors = pluginHost.BGR555(br.ReadBytes(32));
+                palette.pltt.palettes[i].colors = pluginHost.BGR555ToColor(br.ReadBytes(32));
 
             br.Close();
 
@@ -133,7 +133,7 @@ namespace SF_FEATHER
             palette.header.file_size = palColors * 2;
             palette.pltt.nColors = palColors;
             palette.pltt.palettes = new NTFP[1];
-            palette.pltt.palettes[0].colors = pluginHost.BGR555(br.ReadBytes((int)palColors * 2));
+            palette.pltt.palettes[0].colors = pluginHost.BGR555ToColor(br.ReadBytes((int)palColors * 2));
 
             br.Close();
 

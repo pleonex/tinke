@@ -80,8 +80,8 @@ namespace Images
 			{
                 if (ncgr.rahc.depth == System.Windows.Forms.ColorDepth.Depth8Bit)
                     ncgr.rahc.tileData.tiles[i] = br.ReadBytes(64);
-				else
-                    ncgr.rahc.tileData.tiles[i] = pluginsHost.BytesTo4BitsRev(br.ReadBytes(32));
+				//else
+                //    ncgr.rahc.tileData.tiles[i] = pluginsHost.BytesTo4BitsRev(br.ReadBytes(32));
 
                 ncgr.rahc.tileData.nPalette[i] = 0;
 			}

@@ -87,7 +87,7 @@ namespace _999HRPERDOOR
             palette.pltt.paletteLength = 0x200;
             palette.pltt.length = 0x200;
             palette.pltt.palettes = new NTFP[1];
-            palette.pltt.palettes[0].colors = pluginHost.BGR555(br.ReadBytes(0x200));
+            palette.pltt.palettes[0].colors = pluginHost.BGR555ToColor(br.ReadBytes(0x200));
 
             // Read tiles
             br.BaseStream.Position = info.info3.tile_offset;

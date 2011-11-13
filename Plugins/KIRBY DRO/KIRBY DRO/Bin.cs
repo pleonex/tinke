@@ -68,13 +68,13 @@ namespace KIRBY_DRO
                 paleta.pltt.nColors = 0x0100;
             paleta.pltt.palettes = new NTFP[(paleta.pltt.length / 2) / paleta.pltt.nColors];
             for (int i = 0; i < paleta.pltt.palettes.Length; i++)
-                paleta.pltt.palettes[i].colors = pluginHost.BGR555(br.ReadBytes((int)(paleta.pltt.nColors * 2)));
+                paleta.pltt.palettes[i].colors = pluginHost.BGR555ToColor(br.ReadBytes((int)(paleta.pltt.nColors * 2)));
 
             // Lectura de tiles
             tile.rahc.tileData.tiles = new byte[tile.rahc.nTiles][];
             for (int i = 0; i < tile.rahc.nTiles; i++)
                 if (paleta.pltt.depth == ColorDepth.Depth4Bit)
-                    tile.rahc.tileData.tiles[i] = pluginHost.BytesTo4BitsRev(br.ReadBytes(32));
+                    tile.rahc.tileData.tiles[i] = pluginHost.Bit8ToBit4(br.ReadBytes(32));
                 else
                     tile.rahc.tileData.tiles[i] = br.ReadBytes(64);
 
@@ -95,13 +95,13 @@ namespace KIRBY_DRO
                 }
                 else
                 {
-                    string bits = pluginHost.BytesToBits(br.ReadBytes(2));
+                    ushort parameters = br.ReadUInt16();
 
                     map.section.mapData[i] = new NTFS();
-                    map.section.mapData[i].nPalette = Convert.ToByte(bits.Substring(0, 4), 2);
-                    map.section.mapData[i].yFlip = Convert.ToByte(bits.Substring(4, 1), 2);
-                    map.section.mapData[i].xFlip = Convert.ToByte(bits.Substring(5, 1), 2);
-                    map.section.mapData[i].nTile = Convert.ToUInt16(bits.Substring(6, 10), 2);
+                    map.section.mapData[i].nTile = (ushort)(parameters & 0x3FF);
+                    map.section.mapData[i].xFlip = (byte)((parameters >> 10) & 1);
+                    map.section.mapData[i].yFlip = (byte)((parameters >> 11) & 1);
+                    map.section.mapData[i].nPalette = (byte)((parameters >> 12) & 0xF);
                 }
             }
             tile.rahc.tileData = pluginHost.Transform_NSCR(map, tile.rahc.tileData);

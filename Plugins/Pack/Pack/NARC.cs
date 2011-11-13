@@ -194,17 +194,17 @@ namespace Pack
         #endregion
 
         #region Pack methods
-        public String Pack(string file, sFolder unpacked)
+        public String Pack(string file, ref sFolder unpacked)
         {
             Unpack(file);
             String fileout = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + "Newpack_" + Path.GetFileName(file);
             if (File.Exists(fileout))
                 File.Delete(fileout);
 
-            Save_NARC(fileout, unpacked);
+            Save_NARC(fileout, ref unpacked);
             return fileout;
         }
-        private void Save_NARC(string fileout, sFolder decompressed)
+        private void Save_NARC(string fileout, ref sFolder decompressed)
         {
             /* Structure of the file
              * 
@@ -229,7 +229,7 @@ namespace Pack
             Write_BTAF(
                 btafTmp,
                 0x10 + narc.btaf.section_size + narc.btnf.section_size + 0x08,
-                decompressed);
+                ref decompressed);
 
             // Write the BTNF section
             String btnfTmp = Path.GetTempFileName();
@@ -266,7 +266,7 @@ namespace Pack
             File.Delete(btnfTmp);
             File.Delete(gmifTmp);
         }
-        private void Write_BTAF(string fileout, uint startOffset, sFolder decompressed)
+        private void Write_BTAF(string fileout, uint startOffset, ref sFolder decompressed)
         {
             BinaryWriter bw = new BinaryWriter(File.OpenWrite(fileout));
             uint offset = 0;
@@ -278,6 +278,8 @@ namespace Pack
             for (int i = 0; i < narc.btaf.nFiles; i++)
             {
                 sFile currFile = Search_File(i + decompressed.id, decompressed);
+                currFile.offset = offset;
+
                 bw.Write(offset);
                 offset += currFile.size;
                 bw.Write(offset);

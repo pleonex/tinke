@@ -69,13 +69,13 @@ namespace Images
 
             for (int i = 0; i < (file_size / 2); i++)
             {
-                string bits = pluginsHost.BytesToBits(br.ReadBytes(2));
+                //string bits = pluginsHost.BytesToBits(br.ReadBytes(2));
 
-                nscr.section.mapData[i] = new NTFS();
-                nscr.section.mapData[i].nPalette = Convert.ToByte(bits.Substring(0, 4), 2);
-                nscr.section.mapData[i].yFlip = Convert.ToByte(bits.Substring(4, 1), 2);
-                nscr.section.mapData[i].xFlip = Convert.ToByte(bits.Substring(5, 1), 2);
-                nscr.section.mapData[i].nTile = Convert.ToUInt16(bits.Substring(6, 10), 2);
+                //nscr.section.mapData[i] = new NTFS();
+                //nscr.section.mapData[i].nPalette = Convert.ToByte(bits.Substring(0, 4), 2);
+                //nscr.section.mapData[i].yFlip = Convert.ToByte(bits.Substring(4, 1), 2);
+                //nscr.section.mapData[i].xFlip = Convert.ToByte(bits.Substring(5, 1), 2);
+                //nscr.section.mapData[i].nTile = Convert.ToUInt16(bits.Substring(6, 10), 2);
             }
 
             br.Close();

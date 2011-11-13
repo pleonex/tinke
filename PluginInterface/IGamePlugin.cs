@@ -78,6 +78,6 @@ namespace PluginInterface
         /// <param name="file">Path where the original pack file is</param>
         /// <param name="id">Pack file ID</param>
         /// <returns>Path where the new pack file is</returns>
-        string Pack(sFolder unpacked, string file, int id);
+        string Pack(ref sFolder unpacked, string file, int id);
     }
 }

@@ -45,7 +45,7 @@ namespace Tinke
             }
             if (faltan != "")
             {
-                MessageBox.Show(Tools.Helper.ObtenerTraduccion("Messages", "S1F"), "", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(Tools.Helper.GetTranslation("Messages", "S1F"), "", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
             #endregion

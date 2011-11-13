@@ -39,7 +39,7 @@ namespace NINOKUNI
             br.Close();
             return unpacked;
         }
-        public static void Pack(string fileOut, string fileIn, sFolder unpacked, IPluginHost pluginHost)
+        public static void Pack(string fileOut, string fileIn, ref sFolder unpacked, IPluginHost pluginHost)
         {
             // I need the original file to read all unknown values
             List<uint> unknowns = new List<uint>();
@@ -64,6 +64,11 @@ namespace NINOKUNI
 
             for (int i = 0; i < unpacked.files.Count; i++)
             {
+                sFile newFile = unpacked.files[i];
+                newFile.offset = offset;
+                newFile.path = fileOut;
+                unpacked.files[i] = newFile;
+
                 bw.Write(unknowns[i]);
                 bw.Write(offset);
                 bw.Write(unpacked.files[i].size);

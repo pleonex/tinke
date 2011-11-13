@@ -71,6 +71,6 @@ namespace LASTWINDOW
 
             return new sFolder();
         }
-        public String Pack(sFolder unpacked, string file, int id) { return null; }
+        public String Pack(ref sFolder unpacked, string file, int id) { return null; }
     }
 }

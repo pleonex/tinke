@@ -34,7 +34,7 @@ namespace Tinke
         {
             InitializeComponent();
 
-            this.Text = Tools.Helper.ObtenerTraduccion("Sistema", "S3C");
+            this.Text = Tools.Helper.GetTranslation("Sistema", "S3C");
         }
     }
 }

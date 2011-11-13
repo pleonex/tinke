@@ -31,7 +31,7 @@ namespace Tinke
     {
         public static NCER Read(string file, int id)
         {
-            System.Xml.Linq.XElement xml = Tools.Helper.ObtenerTraduccion("NCER");
+            System.Xml.Linq.XElement xml = Tools.Helper.GetTranslation("NCER");
             BinaryReader br = new BinaryReader(File.OpenRead(file));
             NCER ncer = new NCER();
             ncer.id = (uint)id;
@@ -163,7 +163,7 @@ namespace Tinke
                 ncer.cebk.banks[i].cells = cells.ToArray();
 
                 // Calculate the next tileOffset if unknonw1 != 0
-                if (ncer.cebk.unknown1 != 0x00)
+                if (ncer.cebk.unknown1 != 0x00 && ncer.cebk.banks[i].nCells != 0x00)
                 {
                     Cell ultimaCelda = Get_LastCell(ncer.cebk.banks[i]);
 
@@ -350,9 +350,9 @@ namespace Tinke
                     if (blockSize < 4)
                     {
                         if (tile.order == TileOrder.NoTiled)
-                            celdas[i] = Imagen_NCGR.Crear_Imagen(tile, paleta, (int)tileOffset * 64, banco.cells[i].width, banco.cells[i].height, zoom);
+                            celdas[i] = Imagen_NCGR.Get_Image(tile, paleta, (int)tileOffset * 64, banco.cells[i].width, banco.cells[i].height, zoom);
                         else
-                            celdas[i] = Imagen_NCGR.Crear_Imagen(tile, paleta, (int)tileOffset * 64, banco.cells[i].width / 8, banco.cells[i].height / 8, zoom);
+                            celdas[i] = Imagen_NCGR.Get_Image(tile, paleta, (int)tileOffset * 64, banco.cells[i].width / 8, banco.cells[i].height / 8, zoom);
                     }
                     else
                     {
@@ -375,7 +375,7 @@ namespace Tinke
                         if (posY >= imageHeight)
                             posY = posY % imageHeight;
 
-                        celdas[i] = Imagen_NCGR.Crear_Imagen(tile, paleta, zoom).Clone(new Rectangle(posX * zoom, posY * zoom, banco.cells[i].width * zoom, banco.cells[i].height * zoom), System.Drawing.Imaging.PixelFormat.DontCare);
+                        celdas[i] = Imagen_NCGR.Get_Image(tile, paleta, zoom).Clone(new Rectangle(posX * zoom, posY * zoom, banco.cells[i].width * zoom, banco.cells[i].height * zoom), System.Drawing.Imaging.PixelFormat.DontCare);
                     }
 
                     #region Flip
@@ -446,9 +446,9 @@ namespace Tinke
                     if (blockSize < 4)
                     {
                         if (tile.order == TileOrder.NoTiled)
-                            celdas[i] = Imagen_NCGR.Crear_Imagen(tile, paleta, (int)tileOffset * 64, banco.cells[i].width, banco.cells[i].height, zoom);
+                            celdas[i] = Imagen_NCGR.Get_Image(tile, paleta, (int)tileOffset * 64, banco.cells[i].width, banco.cells[i].height, zoom);
                         else
-                            celdas[i] = Imagen_NCGR.Crear_Imagen(tile, paleta, (int)tileOffset * 64, banco.cells[i].width / 8, banco.cells[i].height / 8, zoom);
+                            celdas[i] = Imagen_NCGR.Get_Image(tile, paleta, (int)tileOffset * 64, banco.cells[i].width / 8, banco.cells[i].height / 8, zoom);
                     }
                     else
                     {
@@ -471,7 +471,7 @@ namespace Tinke
                         if (posY >= imageHeight)
                             posY = posY % imageHeight;
 
-                        celdas[i] = Imagen_NCGR.Crear_Imagen(tile, paleta, zoom).Clone(new Rectangle(posX * zoom, posY * zoom, banco.cells[i].width * zoom, banco.cells[i].height * zoom), System.Drawing.Imaging.PixelFormat.DontCare);
+                        celdas[i] = Imagen_NCGR.Get_Image(tile, paleta, zoom).Clone(new Rectangle(posX * zoom, posY * zoom, banco.cells[i].width * zoom, banco.cells[i].height * zoom), System.Drawing.Imaging.PixelFormat.DontCare);
                     }
 
                     #region Flip

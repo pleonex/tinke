@@ -45,33 +45,19 @@ namespace Tinke.Tools
         /// </summary>
         /// <param name="bytes">Array de bytes.</param>
         /// <returns>Array de bits.</returns>
-        public static byte[] BytesTo4BitsRev(byte[] bytes)
+        public static byte[] Bits8To4Bits(byte[] bytes)
         {
             byte[] bits = new Byte[bytes.Length * 2];
 
             for (int i = 0; i < bytes.Length; i++)
             {
-                bits[i * 2 + 1] = (byte)((bytes[i] & 0xF0) >> 4);
                 bits[i * 2] = (byte)(bytes[i] & 0x0F);
+                bits[i * 2 + 1] = (byte)((bytes[i] & 0xF0) >> 4);
             }
 
             return bits;
         }
-        /// <summary>
-        /// Convierte un byte en dos bits
-        /// </summary>
-        /// <param name="Byte">Byte para convertir</param>
-        /// <returns>2 bytes que corresponden a los bits.</returns>
-        public static byte[] ByteTo4Bits(byte Byte)
-        {
-            byte[] bits = new byte[2];
-
-            bits[0] = (byte)(Byte & 0x0F);
-            bits[1] = (byte)((Byte & 0xF0) >> 4);
-
-            return bits;
-        }
-        public static byte[] Bits4ToBits8Rev(byte[] bytes)
+        public static byte[] Bits4ToBits8(byte[] bytes)
         {
             List<Byte> bit8 = new List<byte>();
 
@@ -85,21 +71,35 @@ namespace Tinke.Tools
             return bit8.ToArray();
         }
 
-        public static string BytesToBits(byte[] bytes)
+        public static Byte[] BytesToBits(Byte[] bytes)
         {
-            string bits = "";
-            for (int i = 0; i < bytes.Length; i++)
-            {
-                bits = Convert.ToString(bytes[i], 2) + bits;
-                for (int j = 0; j < (8 * (i + 1)); j++)
-                    if (bits.Length == j)
-                        bits = '0' + bits;
-            }
-            return bits;
+            List<Byte> bits = new List<byte>();
 
+            for (int i = 0; i < bytes.Length; i++)
+                for (int j = 7; j >= 0; j--)
+                    bits.Add((byte)((bytes[i] >> j) & 1));
+
+            return bits.ToArray();
+        }
+        public static Byte[] BitsToBytes(Byte[] bits)
+        {
+            List<Byte> bytes = new List<byte>();
+
+            for (int i = 0; i < bits.Length; i += 8)
+            {
+                Byte newByte = 0;
+                int b = 0;
+                for (int j = 7; j >= 0; j--, b++)
+                {
+                    newByte += (byte)(bits[i + b] << j);
+                }
+                bytes.Add(newByte);
+            }
+
+            return bytes.ToArray();
         }
 
-        public static XElement ObtenerTraduccion(string arbol)
+        public static XElement GetTranslation(string treeS)
         {
             XElement tree = null;
             try
@@ -118,13 +118,13 @@ namespace Tinke.Tools
                         break;
                 }
 
-                tree = xml.Element(arbol);
+                tree = xml.Element(treeS);
             }
             catch { throw new Exception("There was an error in the XML file of language."); }
 
             return tree;
         }
-        public static String ObtenerTraduccion(string arbol, string codigo)
+        public static String GetTranslation(string tree, string code)
         {
             String message = "";
 
@@ -144,7 +144,7 @@ namespace Tinke.Tools
                         break;
                 }
                 
-                message = xml.Element(arbol).Element(codigo).Value;
+                message = xml.Element(tree).Element(code).Value;
             }
             catch { throw new Exception("There was an error in the XML language file."); }
 

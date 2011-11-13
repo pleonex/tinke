@@ -48,7 +48,7 @@ namespace AI_IGO_DS
             paleta.pltt.depth = (br.ReadUInt16() == 0x04) ? System.Windows.Forms.ColorDepth.Depth4Bit : System.Windows.Forms.ColorDepth.Depth8Bit;
                         
             paleta.pltt.palettes = new NTFP[1];
-            paleta.pltt.palettes[0].colors = pluginHost.BGR555(br.ReadBytes((int)(paleta.pltt.paletteLength)));
+            paleta.pltt.palettes[0].colors = pluginHost.BGR555ToColor(br.ReadBytes((int)(paleta.pltt.paletteLength)));
             pluginHost.Set_NCLR(paleta);
 
             br.Close();

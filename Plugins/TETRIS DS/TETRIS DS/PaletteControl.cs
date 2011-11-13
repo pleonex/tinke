@@ -212,7 +212,7 @@ namespace TETRIS_DS
             Byte[] temp = new Byte[data.Length - (int)numericStartByte.Value];
             Array.Copy(data, (int)numericStartByte.Value, temp, 0, temp.Length);
 
-            paleta.pltt.palettes[(int)nPaleta.Value - 1].colors = pluginHost.BGR555(temp);
+            paleta.pltt.palettes[(int)nPaleta.Value - 1].colors = pluginHost.BGR555ToColor(temp);
             pluginHost.Set_NCLR(paleta);
 
             ShowInfo();

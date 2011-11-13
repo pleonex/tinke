@@ -55,10 +55,10 @@ namespace Tinke
             }
             catch
             {
-                MessageBox.Show(Tools.Helper.ObtenerTraduccion("Messages", "S02"),
-                    Tools.Helper.ObtenerTraduccion("Messages", "S01"),
+                MessageBox.Show(Tools.Helper.GetTranslation("Messages", "S02"),
+                    Tools.Helper.GetTranslation("Messages", "S01"),
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
-                Console.WriteLine(Tools.Helper.ObtenerTraduccion("Messages", "S02") + ": " + archivo);
+                Console.WriteLine(Tools.Helper.GetTranslation("Messages", "S02") + ": " + archivo);
                 return;
             }
 
@@ -67,7 +67,7 @@ namespace Tinke
 
         public void LeerIdioma()
         {
-            System.Xml.Linq.XElement xml = Tools.Helper.ObtenerTraduccion("RomInfo");
+            System.Xml.Linq.XElement xml = Tools.Helper.GetTranslation("RomInfo");
 
             this.Text = xml.Element("S01").Value;
             groupBanner.Text = xml.Element("S02").Value;
@@ -209,7 +209,7 @@ namespace Tinke
 
             txtBannerVer.Text = banner.version.ToString();
             txtBannerCRC.Text = String.Format("{0:X}", banner.CRC16) + " (" +
-                (banner.checkCRC ? "OK)" : Tools.Helper.ObtenerTraduccion("RomInfo", "S39") + ')');
+                (banner.checkCRC ? "OK)" : Tools.Helper.GetTranslation("RomInfo", "S39") + ')');
             txtBannerReserved.Text = Tools.Helper.BytesToHexString(banner.reserved);
 
             titulos = new string[] { banner.japaneseTitle, banner.englishTitle, banner.frenchTitle, banner.germanTitle, banner.italianTitle, banner.spanishTitle };

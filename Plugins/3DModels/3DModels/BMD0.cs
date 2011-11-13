@@ -21,8 +21,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Drawing;
 using System.IO;
 using PluginInterface;
+using OpenTK;
+using OpenTK.Graphics.OpenGL;
 
 // Copied from:
 // http://llref.emutalk.net/docs/?file=xml/bmd0.xml#xml-doc
@@ -132,6 +135,7 @@ namespace _3DModels
                 #endregion
 
                 // Objetcs section
+                int objSecOffset = (int)br.BaseStream.Position;
                 #region 3DInfo
                 mdlInfo = new Info3D();
 
@@ -174,6 +178,7 @@ namespace _3DModels
                 for (int i = 0; i < data.objects.header.num_objs; i++)
                 {
                     sBMD0.Model.ModelData.Objects.ObjData objData = new sBMD0.Model.ModelData.Objects.ObjData();
+                    br.BaseStream.Position = objSecOffset + (uint)data.objects.header.infoBlock.infoData[i];
 
                     objData.transFlag = br.ReadUInt16();
                     objData.padding = br.ReadUInt16();
@@ -341,8 +346,8 @@ namespace _3DModels
 
                 // Material section
                 br.BaseStream.Position = modelOffset + data.header.materialOffset;
-                data.texOffset = br.ReadUInt16();
-                data.paletteOffset = br.ReadUInt16();
+                data.material.texOffset = br.ReadUInt16();
+                data.material.paletteOffset = br.ReadUInt16();
 
                 #region 3DInfo
                 Info3D info = new Info3D();
@@ -382,6 +387,7 @@ namespace _3DModels
                 data.material.definition = info;
                 #endregion
                 #region Texture Information
+                br.BaseStream.Position = modelOffset + data.header.materialOffset + data.material.texOffset;
                 info = new Info3D();
 
                 // Header
@@ -412,6 +418,13 @@ namespace _3DModels
                     texInfo.matching_data_offset = br.ReadUInt16();
                     texInfo.num_associated_mat = br.ReadByte();
                     texInfo.dummy0 = br.ReadByte();
+
+                    // Read the Matching data
+                    long currPos = br.BaseStream.Position;
+                    br.BaseStream.Position = modelOffset + data.header.materialOffset + texInfo.matching_data_offset;
+                    texInfo.ID = br.ReadByte();
+                    br.BaseStream.Position = currPos;
+
                     info.infoBlock.infoData[i] = texInfo;
                 }
 
@@ -423,6 +436,7 @@ namespace _3DModels
                 data.material.texture = info;
                 #endregion
                 #region Palette Information
+                br.BaseStream.Position = modelOffset + data.header.materialOffset + data.material.paletteOffset;
                 info = new Info3D();
 
                 // Header
@@ -453,6 +467,13 @@ namespace _3DModels
                     palInfo.matching_data_offset = br.ReadUInt16();
                     palInfo.num_associated_mat = br.ReadByte();
                     palInfo.dummy0 = br.ReadByte();
+
+                    // Read the matching data
+                    long currPos = br.BaseStream.Position;
+                    br.BaseStream.Position = modelOffset + data.header.materialOffset + palInfo.matching_data_offset;
+                    palInfo.ID = br.ReadByte();
+                    br.BaseStream.Position = currPos;
+
                     info.infoBlock.infoData[i] = palInfo;
                 }
 
@@ -468,6 +489,7 @@ namespace _3DModels
                 for (int i = 0; i < data.material.definition.num_objs; i++)
                 {
                     br.BaseStream.Position = modelOffset + data.header.materialOffset + (uint)data.material.definition.infoBlock.infoData[i];
+                    br.BaseStream.Position += 4 + 18;       // 0x04 for Texture and Palette offset, 18 unknown but it works :)
                     data.material.material[i].definition = br.ReadBytes(0x2E);
                 }
                 #endregion
@@ -652,23 +674,25 @@ namespace _3DModels
 
                     // Texture section
                     Console.WriteLine("*" + xml.Element("S2C").Value);
-                    Console.WriteLine(xml.Element("S28").Value, bmd.model.mdlData[m].texOffset.ToString("x"));
+                    Console.WriteLine(xml.Element("S28").Value, bmd.model.mdlData[m].material.texOffset.ToString("x"));
                     for (int i = 0; i < bmd.model.mdlData[m].material.texture.num_objs; i++)
                     {
                         sBMD0.Model.ModelData.Material.TexPalData texInfo = (sBMD0.Model.ModelData.Material.TexPalData)bmd.model.mdlData[m].material.texture.infoBlock.infoData[i];
                         Console.WriteLine(xml.Element("S2D").Value, i, bmd.model.mdlData[m].material.texture.names[i]);
                         Console.WriteLine("|__" + xml.Element("S2E").Value, texInfo.matching_data_offset.ToString("x"));
+                        Console.WriteLine("|__ID: 0x{0:X}", texInfo.ID);
                         Console.WriteLine("|__" + xml.Element("S2F").Value, texInfo.num_associated_mat.ToString());
                     }
 
                     // Palette section
                     Console.Write("*" + xml.Element("S30").Value);
-                    Console.WriteLine(xml.Element("S29").Value, bmd.model.mdlData[m].paletteOffset.ToString("x"));
+                    Console.WriteLine(xml.Element("S29").Value, bmd.model.mdlData[m].material.paletteOffset.ToString("x"));
                     for (int i = 0; i < bmd.model.mdlData[m].material.palette.num_objs; i++)
                     {
                         sBMD0.Model.ModelData.Material.TexPalData palInfo = (sBMD0.Model.ModelData.Material.TexPalData)bmd.model.mdlData[m].material.palette.infoBlock.infoData[i];
                         Console.WriteLine(xml.Element("S31").Value, i, bmd.model.mdlData[m].material.palette.names[i]);
                         Console.WriteLine("|__" + xml.Element("S2E").Value, palInfo.matching_data_offset.ToString("x"));
+                        Console.WriteLine("|__ID: 0x{0:X}", palInfo.ID);
                         Console.WriteLine("|__" + xml.Element("S2F").Value, palInfo.num_associated_mat.ToString());
                     }
 
@@ -724,6 +748,26 @@ namespace _3DModels
 
             return point;
         }
+        public static float Get_Double(int value, bool signed, int integer, int fractional)
+        {
+            // Integer part
+            int intengerMask = (int)Math.Pow(2, integer) - 1;
+            float point = ((value >> fractional) & intengerMask);
+            
+            // Fractional part
+            int fractionalMask = (int)Math.Pow(2, fractional) - 1;
+            point += (float)(value & fractionalMask) / (fractionalMask + 1);
+
+            // sign
+            if (signed)
+            {
+                if ((value >> (integer + fractional)) == 1)
+                    point = -point;
+            }
+
+            return point;
+        }
+
         public static int Get_CommandSize(byte cmd)
         {
             switch (cmd)
@@ -779,6 +823,179 @@ namespace _3DModels
                     return 0;
             }
         }
+
+        public static void GeometryCommands(List<Command> geoCmd)
+        {
+            OpenTK.Vector3 vector = new OpenTK.Vector3();
+
+            for (int i = 0; i < geoCmd.Count; i++)
+            {
+                switch ((GeometryCmd)geoCmd[i].cmd)
+                {
+                    case GeometryCmd.NOP:
+                        break;
+                    case GeometryCmd.MTX_MODE:
+                        break;
+                    case GeometryCmd.MTX_PUSH:
+                        break;
+                    case GeometryCmd.MTX_POP:
+                        break;
+                    case GeometryCmd.MTX_STORE:
+                        break;
+                    case GeometryCmd.MTX_RESTORE:
+                        break;
+                    case GeometryCmd.MTX_IDENTITY:
+                        break;
+                    case GeometryCmd.MTX_LOAD_4x4:
+                        break;
+                    case GeometryCmd.MTX_LOAD_4x3:
+                        break;
+                    case GeometryCmd.MTX_MULT_4x4:
+                        break;
+                    case GeometryCmd.MTX_MULT_4x3:
+                        break;
+                    case GeometryCmd.MTX_MULT_3x3:
+                        break;
+                    case GeometryCmd.MTX_SCALE:
+                        break;
+                    case GeometryCmd.MTX_TRANS:
+                        break;
+
+                    #region Vertex commands
+                        // Multiply by the clipmatrix
+                    case GeometryCmd.VTX_16:
+                        vector.X = Get_Double((int)(geoCmd[i].param[0] & 0xFFFF), true, 3, 12);
+                        vector.Y = Get_Double((int)(geoCmd[i].param[0] >> 16), true, 3, 12);
+                        vector.Z = Get_Double((int)(geoCmd[i].param[1] & 0xFFFF), true, 3, 12);
+                        
+                        GL.Vertex3(vector);
+                        break;
+
+                    case GeometryCmd.VTX_10:
+                        vector.X = Get_Double((int)(geoCmd[i].param[0] & 0x3FF), true, 3, 6);
+                        vector.Y = Get_Double((int)((geoCmd[i].param[0] >> 10) & 0x3FF), true, 3, 6);
+                        vector.Z = Get_Double((int)(geoCmd[i].param[0] >> 20), true, 3, 6);
+                        
+                        GL.Vertex3(vector);
+                        break;
+
+                    case GeometryCmd.VTX_XY:
+                        vector.X = Get_Double((int)(geoCmd[i].param[0] & 0xFFFF), true, 3, 12);
+                        vector.Y = Get_Double((int)(geoCmd[i].param[0] >> 16), true, 3, 12);
+                        
+                        GL.Vertex3(vector);
+
+                        break;
+
+                    case GeometryCmd.VTX_XZ:
+                        vector.X = Get_Double((int)(geoCmd[i].param[0] & 0xFFFF), true, 3, 12);
+                        vector.Z = Get_Double((int)(geoCmd[i].param[0] >> 16), true, 3, 12);
+                        
+                        GL.Vertex3(vector);
+
+                        break;
+
+                    case GeometryCmd.VTX_YZ:
+                        vector.Y = Get_Double((int)(geoCmd[i].param[0] & 0xFFFF), true, 3, 12);
+                        vector.Z = Get_Double((int)(geoCmd[i].param[0] >> 16), true, 3, 12);
+                        
+                        GL.Vertex3(vector);
+
+                        break;
+
+                    case GeometryCmd.VTX_DIFF:
+                        float diffX, diffY, diffZ;
+
+                        diffX = Get_Double((int)(geoCmd[i].param[0] & 0x3FF), true, 0, 9);
+                        diffY = Get_Double((int)((geoCmd[i].param[0] >> 10) & 0x3FFF), true, 0, 9);
+                        diffZ = Get_Double((int)(geoCmd[i].param[0] >> 20), true, 0, 9);
+
+                        vector.X += (diffX / 8);
+                        vector.Y += (diffY / 8);
+                        vector.Z += (diffZ / 8);
+                        
+                        GL.Vertex3(vector);
+                        break;
+                    #endregion
+
+                    case GeometryCmd.COLOR:
+                        // Convert the param to RGB555 color
+                        int r = ((int)geoCmd[i].param[0] & 0x001F) * 0x08;
+                        int g = (((int)geoCmd[i].param[0] & 0x03E0) >> 5) * 0x08;
+                        int b = (((int)geoCmd[i].param[0] & 0x7C00) >> 10) * 0x08;
+
+                        GL.Color3(Color.FromArgb(r, g, b));
+                        break;
+                    case GeometryCmd.POLYGON_ATTR:
+                        break;
+
+                    #region Texture attributes
+                    case GeometryCmd.TEXCOORD:
+                        double s, t;
+                        s = Get_Double((int)(geoCmd[i].param[0] & 0xFFFF), true, 11, 4);
+                        t = Get_Double((int)(geoCmd[i].param[0] >> 16), true, 11, 4);
+                        GL.TexCoord2(s, t);
+                        break;
+
+                    case GeometryCmd.TEXIMAGE_PARAM:
+                        break;
+                    case GeometryCmd.PLTT_BASE:
+                        break;
+                    #endregion
+
+                    case GeometryCmd.DIF_AMB:
+                        break;
+                    case GeometryCmd.SPE_EMI:
+                        break;
+                    case GeometryCmd.LIGHT_VECTOR:
+                        break;
+                    case GeometryCmd.LIGHT_COLOR:
+                        break;
+                    case GeometryCmd.SHININESS:
+                        break;
+
+                    case GeometryCmd.NORMAL:
+                        float x, y, z;
+                        x = Get_Double((int)(geoCmd[i].param[0] & 0x3FFF), true, 0, 9);
+                        y = Get_Double((int)((geoCmd[i].param[0] >> 10) & 0x3FFF), true, 0, 9);
+                        z = Get_Double((int)(geoCmd[i].param[0] >> 20), true, 0, 9);
+
+                        // Multiplay by the directional matrix
+                        GL.Normal3(x, y, z);
+                        break;
+
+                    case GeometryCmd.BEGIN_VTXS:
+                        if (geoCmd[i].param[0] == 0)
+                            GL.Begin(BeginMode.Triangles);
+                        else if (geoCmd[i].param[0] == 1)
+                            GL.Begin(BeginMode.Quads);
+                        else if (geoCmd[i].param[0] == 2)
+                            GL.Begin(BeginMode.TriangleStrip);
+                        else if (geoCmd[i].param[0] == 3)
+                            GL.Begin(BeginMode.QuadStrip);
+                        break;
+                    case GeometryCmd.END_VTXS:
+                        GL.End();
+                        break;
+
+                    case GeometryCmd.SWAP_BUFFERS:
+                        break;
+                    case GeometryCmd.VIEWPORT:
+                        break;
+                    case GeometryCmd.BOX_TEST:
+                        break;
+                    case GeometryCmd.POS_TEST:
+                        break;
+                    case GeometryCmd.VEC_TEST:
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            GL.Flush();
+        }
+
     }
 
     public struct sBMD0
@@ -812,8 +1029,6 @@ namespace _3DModels
                 public Objects objects;
                 public Bones bones;
 
-                public uint texOffset;
-                public uint paletteOffset;
                 public Material material;
 
                 public Polygon polygon;
@@ -900,6 +1115,9 @@ namespace _3DModels
                 }
                 public struct Material
                 {
+                    public uint texOffset;
+                    public uint paletteOffset;
+
                     public Info3D definition;
                     public Info3D texture;
                     public Info3D palette;
@@ -908,6 +1126,7 @@ namespace _3DModels
                     public struct TexPalData
                     {
                         public ushort matching_data_offset;
+                        public byte ID;
                         public byte num_associated_mat;
                         public byte dummy0;
                     }

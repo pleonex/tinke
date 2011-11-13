@@ -44,7 +44,7 @@ namespace TOKIMEKIGS3S
             return unpacked;
         }
 
-        public static String Pack(string original_file, sFolder unpacked, IPluginHost pluginHost)
+        public static String Pack(string original_file, ref sFolder unpacked, IPluginHost pluginHost)
         {
             String fileOut = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + "new_" + Path.GetFileName(original_file);
             BinaryWriter bw = new BinaryWriter(File.OpenWrite(fileOut));
@@ -57,6 +57,11 @@ namespace TOKIMEKIGS3S
             uint offset = (uint)unpacked.files.Count * 0x30 + 0x10;
             for (int i = 0; i < unpacked.files.Count; i++)
             {
+                sFile newFile = unpacked.files[i];
+                newFile.offset = offset;
+                newFile.path = fileOut;
+                unpacked.files[i] = newFile;
+
                 bw.Write(br.ReadBytes(0x18));   // File name and extension
                 bw.Write(unpacked.files[i].size);
                 bw.Write(offset);

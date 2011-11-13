@@ -70,13 +70,13 @@ namespace TETRIS_DS
 
             for (int i = 0; i < (file_size / 2); i++)
             {
-                string bits = pluginHost.BytesToBits(br.ReadBytes(2));
+                ushort parameters = br.ReadUInt16();
 
                 nscr.section.mapData[i] = new NTFS();
-                nscr.section.mapData[i].nPalette = Convert.ToByte(bits.Substring(0, 4), 2);
-                nscr.section.mapData[i].yFlip = Convert.ToByte(bits.Substring(4, 1), 2);
-                nscr.section.mapData[i].xFlip = Convert.ToByte(bits.Substring(5, 1), 2);
-                nscr.section.mapData[i].nTile = Convert.ToUInt16(bits.Substring(6, 10), 2);
+                nscr.section.mapData[i].nTile = (ushort)(parameters & 0x3FF);
+                nscr.section.mapData[i].xFlip = (byte)((parameters >> 10) & 1);
+                nscr.section.mapData[i].yFlip = (byte)((parameters >> 11) & 1);
+                nscr.section.mapData[i].nPalette = (byte)((parameters >> 12) & 0xF);
             }
 
             br.Close();

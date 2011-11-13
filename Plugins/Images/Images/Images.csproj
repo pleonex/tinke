@@ -106,17 +106,22 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CHAR.cs" />
+    <Compile Include="ImageBase.cs" />
     <Compile Include="ImageControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="ImageControl.designer.cs">
       <DependentUpon>ImageControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="MapBase.cs" />
     <Compile Include="nbfc.cs" />
     <Compile Include="nbfp.cs" />
     <Compile Include="nbfs.cs" />
+    <Compile Include="NCCG.cs" />
+    <Compile Include="NCCL.cs" />
     <Compile Include="ntfp.cs" />
     <Compile Include="ntft.cs" />
+    <Compile Include="PaletteBase.cs" />
     <Compile Include="PaletteControl.cs">
       <SubType>UserControl</SubType>
     </Compile>

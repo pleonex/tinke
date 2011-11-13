@@ -66,6 +66,6 @@ namespace DBK_ULTIMATE
 
             return new sFolder();
         }
-        public string Pack(sFolder unpacked, string file, int id) { return null; }
+        public string Pack(ref sFolder unpacked, string file, int id) { return null; }
     }
 }

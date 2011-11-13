@@ -110,7 +110,19 @@ namespace Tinke
 
             return newPalette;
         }
+        public static Color[][] Palette_4bppTo8bpp(Color[][] palette)
+        {
+            // Get the colours of all the palettes in BGR555 encoding
+            List<Color> paletteColor = new List<Color>();
+            for (int i = 0; i < palette.Length; i++)
+                paletteColor.AddRange(palette[i]);
 
+            // Set the colours in one palette
+            Color[][] newPal = new Color[1][];
+            newPal[0] = paletteColor.ToArray();
+
+            return newPal;
+        }
         public static TTLP Palette_8bppTo4bpp(TTLP palette)
         {
             TTLP newPalette = new TTLP();
@@ -150,8 +162,38 @@ namespace Tinke
 
             return newPalette;
         }
+        public static Color[][] Palette_8bppTo4bpp(Color[][] palette)
+        {
+            Color[][] newPal;
 
-        public static int Remove_NotDuplicatedColors(ref NTFP palette, ref byte[][] tiles)
+            int isExact = (int)palette[0].Length % 0x10;
+
+            if (isExact == 0)
+            {
+                newPal = new Color[palette[0].Length / 0x10][];
+                for (int i = 0; i < newPal.Length; i++)
+                {
+                    newPal[i] = new Color[0x10];
+                    Array.Copy(palette[0], i * 0x10, newPal[i], 0, 0x10);
+                }
+            }
+            else
+            {
+                newPal = new Color[(palette[0].Length / 0x10) + 1][];
+                for (int i = 0; i < newPal.Length - 1; i++)
+                {
+                    newPal[i] = new Color[0x10];
+                    Array.Copy(palette[0], i * 0x10, newPal[i], 0, 0x10);
+                }
+                Color[] temp = new Color[isExact];
+                Array.Copy(palette[0], palette[0].Length / 0x10, temp, 0, isExact);
+                newPal[newPal.Length - 1] = temp;
+            }
+
+            return newPal;
+        }
+
+        public static int Remove_DuplicatedColors(ref NTFP palette, ref byte[][] tiles)
         {
             List<Color> colors = new List<Color>();
             int first_duplicated_color = -1;
@@ -174,11 +216,51 @@ namespace Tinke
             palette.colors = colors.ToArray();
             return first_duplicated_color;
         }
+        public static int Remove_DuplicatedColors(ref Color[] palette, ref byte[][] tiles)
+        {
+            List<Color> colors = new List<Color>();
+            int first_duplicated_color = -1;
+
+            for (int i = 0; i < palette.Length; i++)
+            {
+                if (!colors.Contains(palette[i]))
+                    colors.Add(palette[i]);
+                else        // The color is duplicated
+                {
+                    int newIndex = colors.IndexOf(palette[i]);
+                    Replace_Color(ref tiles, i, newIndex);
+                    colors.Add(Color.FromArgb(248, 0, 248));
+
+                    if (first_duplicated_color == -1)
+                        first_duplicated_color = i;
+                }
+            }
+
+            palette = colors.ToArray();
+            return first_duplicated_color;
+        }
         public static int Remove_NotUsedColors(ref NTFP palette, ref byte[][] tiles)
         {
             int first_notUsed_color = -1;
             List<bool> colors = new List<bool>();
             for (int i = 0; i < palette.colors.Length; i++)
+                colors.Add(false);
+
+            for (int i = 0; i < tiles.Length; i++)
+                for (int j = 0; j < tiles[i].Length; j++)
+                    colors[tiles[i][j]] = true;
+
+            for (int i = 0; i < colors.Count; i++)
+                if (!colors[i])
+                    first_notUsed_color = i;
+
+            return first_notUsed_color;
+        }
+        public static int Remove_NotUsedColors(ref Color[] palette, ref byte[][] tiles)
+        {
+            int first_notUsed_color = -1;
+            List<bool> colors = new List<bool>();
+            for (int i = 0; i < palette.Length; i++)
                 colors.Add(false);
 
             for (int i = 0; i < tiles.Length; i++)

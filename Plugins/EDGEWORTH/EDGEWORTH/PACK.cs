@@ -57,7 +57,7 @@ namespace EDGEWORTH
             br.Close();
             return unpacked;
         }
-        public static void Pack(string output, sFolder unpackedFiles)
+        public static void Pack(string output, ref sFolder unpackedFiles)
         {
             BinaryWriter bw = new BinaryWriter(File.OpenWrite(output));
 
@@ -68,6 +68,11 @@ namespace EDGEWORTH
             currOffset += (uint)(unpackedFiles.files.Count + 1) * 4 + 4;
             for (int i = 0; i < unpackedFiles.files.Count; i++)
             {
+                sFile newFile = unpackedFiles.files[i];
+                newFile.offset = currOffset;
+                newFile.path = output;
+                unpackedFiles.files[i] = newFile;
+
                 bw.Write(currOffset);
                 currOffset += unpackedFiles.files[i].size + 4;
             }

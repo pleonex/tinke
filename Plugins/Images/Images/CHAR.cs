@@ -66,7 +66,7 @@ namespace Images
 
             for (int i = 0; i < ncgr.rahc.nTiles; i++)
             {
-                ncgr.rahc.tileData.tiles[i] = pluginsHost.BytesTo4BitsRev(br.ReadBytes(32));
+                //ncgr.rahc.tileData.tiles[i] = pluginsHost.BytesTo4BitsRev(br.ReadBytes(32));
                 ncgr.rahc.tileData.nPalette[i] = 0;
             }
 
