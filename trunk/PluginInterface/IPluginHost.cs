@@ -42,43 +42,49 @@ namespace PluginInterface
         void Set_Object(Object objects);
 
         
-        Color[] BGR555(byte[] data);
+        Color[] BGR555ToColor(byte[] data);
         Byte[] ColorToBGR555(Color[] color);
-        Byte[] BytesTo4BitsRev(byte[] data);
-        String BytesToBits(byte[] datos);
-        Byte[] Bit4ToBit8(byte[] bits4);
-        Byte[] Bit8ToBit4(byte[] bits8);
-        Byte[] TilesToBytes(byte[][] tiles);
+        Byte[] TilesToBytes(byte[][] tiles, int startByte = 0);
         Byte[][] BytesToTiles(byte[] bytes);
         Byte[][] BytesToTiles_NoChanged(byte[] bytes, int tilesX, int tilesY);
+        Byte[][] MergeImage(Byte[][] originalTile, Byte[][] newTiles, int startTile);
         TTLP Palette_4bppTo8bpp(TTLP palette);
         TTLP Palette_8bppTo4bpp(TTLP palette);
+        Color[][] Palette_4bppTo8bpp(Color[][] palette);
+        Color[][] Palette_8bppTo4bpp(Color[][] palette);
+        int Remove_DuplicatedColors(ref NTFP palette, ref byte[][] tiles);
+        int Remove_DuplicatedColors(ref Color[] palette, ref byte[][] tiles);
+        int Remove_NotUsedColors(ref NTFP palette, ref byte[][] tiles);
+        int Remove_NotUsedColors(ref Color[] palette, ref byte[][] tiles);
         void Change_Color(ref byte[][] tiles, int oldIndex, int newIndex);
+        void Replace_Color(ref byte[][] tiles, int oldIndex, int newIndex);
 
+        Bitmap Bitmaps_NCLR(Color[] colors);
         Bitmap[] Bitmaps_NCLR(NCLR nclr);
-        Bitmap Bitmap_NCGR(NCGR ncgr, NCLR nclr);
-        Bitmap Bitmap_NCGR(NCGR ncgr, NCLR nclr, int startTile);
-        Bitmap Bitmap_NCGR(NCGR ncgr, NCLR nclr, int startTile, int tilesX, int tilesY);
+        
+        Bitmap Bitmap_NCGR(NCGR ncgr, NCLR nclr, int zoom = 1);
+        Bitmap Bitmap_NCGR(NCGR ncgr, NCLR nclr, int startTile, int zoom = 1);
+        Bitmap Bitmap_NCGR(NCGR ncgr, NCLR nclr, int startTile, int tilesX, int tilesY, int zoom = 1);
+        Bitmap Bitmap_NTFT(NTFT tiles, Color[][] palette, TileOrder tileOrder, int startTile, int tilesX, int tilesY, int zoom = 1);
+
         NTFT Transform_NSCR(NSCR nscr, NTFT ntft, int startInfo = 0);
+        Byte[] XFlip(Byte[] tile);
+        Byte[] YFlip(Byte[] tile);
+
         Size Size_NCER(byte byte1, byte byte2);
         Bitmap Bitmap_NCER(Bank bank, uint blockSize, NCGR ncgr, NCLR nclr, bool guides, bool cell,
-            bool numbers, bool transparency, bool image);
+            bool numbers, bool transparency, bool image, int zoom = 1);
         Bitmap Bitmap_NCER(Bank bank, uint blockSize, NCGR tile, NCLR paleta,
-            bool guides, bool cell, bool numbers, bool transparency, bool image, int maxWidth, int maxHeight);
-        /// <summary>
-        /// Save an animation in a APNG file (Firefox supported)
-        /// </summary>
-        /// <param name="salida">The path of the output file</param>
-        /// <param name="frames">All frames (path of files or bitmaps)</param>
-        /// <param name="delay">The delay between frames (delay/1000)</param>
-        /// <param name="loops">The number of  loops (if 0 = infinite)</param>
-        void Create_APNG(string outFile, Bitmap[] frames, int delay, int loops);
-        void Create_APNG(string outFile, String[] frames, int delay, int loops);
+            bool guides, bool cell, bool numbers, bool transparency, bool image, int maxWidth, int maxHeight, int zoom = 1);   
 
-        // Decompressed files methods
-        void Set_Files(sFolder files);
+        Byte[] BytesToBits(byte[] bytes);
+        Byte[] BitsToBytes(byte[] bits);
+        Byte[] Bit4ToBit8(byte[] bits4);
+        Byte[] Bit8ToBit4(byte[] bits8);
+
+        void Set_Files(sFolder folder);
         sFolder Get_Files();
-        sFolder Get_DecompressedFiles(int id); // Get all the files and folder that have been decompressed (to compress them)
+        sFolder Get_DecompressedFiles(int id);
         String Search_File(int id); // Search file by id
         sFile Search_File(short id);
 
@@ -96,8 +102,23 @@ namespace PluginInterface
         /// <param name="newFile">The path where the new file is</param>
         void ChangeFile(int id, string newFile);
 
-        NCLR BitmapToPalette(string bitmap);
+        NCLR BitmapToPalette(string bitmap, int paletteIndex = 0);
         NCGR BitmapToTile(string bitmap, TileOrder tileOrder);
         NSCR Create_BasicMap(int nTiles, int width, int height);
+
+        /// <summary>
+        /// Save an animation in a APNG file (Firefox supported)
+        /// </summary>
+        /// <param name="salida">The path of the output file</param>
+        /// <param name="frames">All frames (path of files or bitmaps)</param>
+        /// <param name="delay">The delay between frames (delay/1000)</param>
+        /// <param name="loops">The number of  loops (if 0 = infinite)</param>
+        void Create_APNG(string outFile, Bitmap[] frames, int delay, int loops);
+        void Create_APNG(string outFile, String[] frames, int delay, int loops);
+
+        NCLR Read_WinPal(string file, System.Windows.Forms.ColorDepth depth);
+        Color[][] Read_WinPal2(string file, System.Windows.Forms.ColorDepth depth);
+        void Write_WinPal(string fileOut, NCLR palette);
+        void Write_WinPal(string fileOut, Color[][] palette);
     }
 }

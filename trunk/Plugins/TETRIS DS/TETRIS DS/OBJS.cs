@@ -108,7 +108,7 @@ namespace TETRIS_DS
             nclr.pltt.nColors = file_size / 2;
             nclr.pltt.palettes = new NTFP[1];
 
-            nclr.pltt.palettes[0].colors = pluginHost.BGR555(br.ReadBytes((int)file_size));
+            nclr.pltt.palettes[0].colors = pluginHost.BGR555ToColor(br.ReadBytes((int)file_size));
 
             pluginHost.Set_NCLR(nclr);
             #endregion

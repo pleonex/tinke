@@ -48,7 +48,7 @@ namespace AI_IGO_DS
             paleta.pltt.nColors = (pSize - 0x08) / 2;
             paleta.pltt.depth = ColorDepth.Depth8Bit;
             paleta.pltt.palettes = new NTFP[1];
-            paleta.pltt.palettes[0].colors = pluginHost.BGR555(br.ReadBytes((int)paleta.pltt.paletteLength));
+            paleta.pltt.palettes[0].colors = pluginHost.BGR555ToColor(br.ReadBytes((int)paleta.pltt.paletteLength));
             // Tile data
             br.BaseStream.Position = tileOffset;
             uint tCabeceraSize = br.ReadUInt32() * 4;
@@ -78,13 +78,13 @@ namespace AI_IGO_DS
             map.section.mapData = new NTFS[mSize / 2];
             for (int i = 0; i < map.section.mapData.Length; i++)
             {
-                string bits = pluginHost.BytesToBits(br.ReadBytes(2));
+                ushort parameters = br.ReadUInt16();
 
                 map.section.mapData[i] = new NTFS();
-                map.section.mapData[i].nPalette = Convert.ToByte(bits.Substring(0, 4), 2);
-                map.section.mapData[i].yFlip = Convert.ToByte(bits.Substring(4, 1), 2);
-                map.section.mapData[i].xFlip = Convert.ToByte(bits.Substring(5, 1), 2);
-                map.section.mapData[i].nTile = Convert.ToUInt16(bits.Substring(6, 10), 2);
+                map.section.mapData[i].nTile = (ushort)(parameters & 0x3FF);
+                map.section.mapData[i].xFlip = (byte)((parameters >> 10) & 1);
+                map.section.mapData[i].yFlip = (byte)((parameters >> 11) & 1);
+                map.section.mapData[i].nPalette = (byte)((parameters >> 12) & 0xF);
             }
 
             br.Close();

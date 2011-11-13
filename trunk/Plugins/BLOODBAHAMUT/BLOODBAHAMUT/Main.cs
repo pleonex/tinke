@@ -36,7 +36,7 @@ namespace BLOODBAHAMUT
         }
         public bool IsCompatible()
         {
-            if (gameCode == "CYJJ")
+            if (gameCode == "CYJJ" || gameCode == "CS7J")
                 return true;
 
             return false;
@@ -50,10 +50,10 @@ namespace BLOODBAHAMUT
             return Format.Unknown;
         }
 
-        public string Pack(sFolder unpacked, string file, int id)
+        public string Pack(ref sFolder unpacked, string file, int id)
         {
             if (file.ToUpper().EndsWith(".DPK"))
-                return DPK.Pack(unpacked, file, id);
+                return DPK.Pack(ref unpacked, file, id);
 
             return null;
         }

@@ -51,7 +51,7 @@ namespace RUNEFACTORY3
             return Format.Unknown;
         }
 
-        public string Pack(sFolder unpacked, string file, int id)
+        public string Pack(ref sFolder unpacked, string file, int id)
         {
             if (id == 0x14)
             {
@@ -59,7 +59,7 @@ namespace RUNEFACTORY3
                 if (System.IO.File.Exists(fileOut))
                     System.IO.File.Delete(fileOut);
 
-                Archive.Pack(fileOut, unpacked);
+                Archive.Pack(fileOut, ref unpacked);
                 return fileOut;
             }
 

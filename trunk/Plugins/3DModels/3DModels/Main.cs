@@ -41,7 +41,7 @@ namespace _3DModels
             if (ext == "BTX0")
                 return Format.Texture;
             else if (ext == "BMD0")
-                return Format.Texture;
+                return Format.Model3D;
 
             return Format.Unknown;
         }
@@ -61,16 +61,17 @@ namespace _3DModels
             {
                 sBMD0 bmd = BMD0.Read(archivo, id, pluginHost);
 
-                if (bmd.header.numSect == 2)
-                    return new TextureControl(pluginHost, bmd.texture, bmd.header.offset[1], bmd.filePath);
-                else
-                    System.Windows.Forms.MessageBox.Show("There is not texture section.");
+                //if (bmd.header.numSect == 2)
+                //    return new TextureControl(pluginHost, bmd.texture, bmd.header.offset[1], bmd.filePath);
+                //else
+                //    System.Windows.Forms.MessageBox.Show("There is not texture section.");
+                return new ModelControl(pluginHost, bmd);
             }
             
             return new System.Windows.Forms.Control();
         }
 
-        public String Pack(sFolder unpacked, string file) { return null; }
+        public String Pack(ref sFolder unpacked, string file) { return null; }
         public sFolder Unpack(string file) { return new sFolder(); }
     }
 }

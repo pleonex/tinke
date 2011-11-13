@@ -87,7 +87,7 @@ namespace TOTTEMPEST
             return new System.Windows.Forms.Control();
         }
 
-        public String Pack(sFolder unpacked, string file, int id) { return null; }
+        public String Pack(ref sFolder unpacked, string file, int id) { return null; }
         public sFolder Unpack(string file, int id) { return new sFolder(); }
     }
 }

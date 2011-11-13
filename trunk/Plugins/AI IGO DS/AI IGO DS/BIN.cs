@@ -59,7 +59,7 @@ namespace AI_IGO_DS
                 {
                     Byte[] paletteData = new Byte[paleta.pltt.paletteLength];
                     Array.Copy(defaultPaletteData, i * paleta.pltt.paletteLength, paletteData, 0, paleta.pltt.paletteLength);
-                    paleta.pltt.palettes[i].colors = pluginHost.BGR555(paletteData);
+                    paleta.pltt.palettes[i].colors = pluginHost.BGR555ToColor(paletteData);
                 }
                 goto Tile;
             }
@@ -78,7 +78,7 @@ namespace AI_IGO_DS
             paleta.pltt.depth = profundidad;
             paleta.pltt.palettes = new NTFP[(profundidad == ColorDepth.Depth4Bit ? (pSize - 0x08) / 0x20 : 1)];
             for (int i = 0; i < paleta.pltt.palettes.Length; i++)
-                paleta.pltt.palettes[i].colors = pluginHost.BGR555(br.ReadBytes((int)paleta.pltt.paletteLength));
+                paleta.pltt.palettes[i].colors = pluginHost.BGR555ToColor(br.ReadBytes((int)paleta.pltt.paletteLength));
             
             // Tile data
             Tile:
@@ -98,7 +98,7 @@ namespace AI_IGO_DS
             for (int i = 0; i < tile.rahc.nTiles; i++)
             {
                 if (profundidad == ColorDepth.Depth4Bit)
-                    tile.rahc.tileData.tiles[i] = pluginHost.BytesTo4BitsRev(br.ReadBytes(32));
+                    tile.rahc.tileData.tiles[i] = pluginHost.Bit8ToBit4(br.ReadBytes(32));
                 else
                     tile.rahc.tileData.tiles[i] = br.ReadBytes(64);
                 tile.rahc.tileData.nPalette[i] = 0;
@@ -136,13 +136,13 @@ namespace AI_IGO_DS
 
                 for (int j = 0; j < maps[i].section.mapData.Length; j++)
                 {
-                    string bits = pluginHost.BytesToBits(br.ReadBytes(2));
+                    ushort parameters = br.ReadUInt16();
 
-                    maps[i].section.mapData[j] = new NTFS();
-                    maps[i].section.mapData[j].nPalette = Convert.ToByte(bits.Substring(0, 4), 2);
-                    maps[i].section.mapData[j].yFlip = Convert.ToByte(bits.Substring(4, 1), 2);
-                    maps[i].section.mapData[j].xFlip = Convert.ToByte(bits.Substring(5, 1), 2);
-                    maps[i].section.mapData[j].nTile = Convert.ToUInt16(bits.Substring(6, 10), 2);
+                    maps[i].section.mapData[i] = new NTFS();
+                    maps[i].section.mapData[i].nTile = (ushort)(parameters & 0x3FF);
+                    maps[i].section.mapData[i].xFlip = (byte)((parameters >> 10) & 1);
+                    maps[i].section.mapData[i].yFlip = (byte)((parameters >> 11) & 1);
+                    maps[i].section.mapData[i].nPalette = (byte)((parameters >> 12) & 0xF);
                 }
 
                 tiles[i] = tile;

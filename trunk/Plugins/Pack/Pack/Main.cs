@@ -57,14 +57,14 @@ namespace Pack
             return new Control();
         }
 
-        public String Pack(sFolder unpacked, string file) 
+        public String Pack(ref sFolder unpacked, string file) 
         {
             System.IO.BinaryReader br = new System.IO.BinaryReader(System.IO.File.OpenRead(file));
             string type = new String(Encoding.ASCII.GetChars(br.ReadBytes(4)));
             br.Close();
 
             if (type == "NARC" || type == "CRAN")
-                return new NARC(pluginHost).Pack(file, unpacked);
+                return new NARC(pluginHost).Pack(file, ref unpacked);
 
             return null;
         }

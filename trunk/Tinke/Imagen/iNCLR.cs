@@ -54,7 +54,7 @@ namespace Tinke
             this.pluginHost = pluginHost;
             ShowInfo();
 
-            paletas = Imagen_NCLR.Mostrar(paleta);
+            paletas = Imagen_NCLR.Show(paleta);
             paletaBox.Image = paletas[0];
             nPaleta.Maximum = paletas.Length;
             nPaleta.Minimum = 1;
@@ -67,7 +67,7 @@ namespace Tinke
         {
             try
             {
-                System.Xml.Linq.XElement xml = Tools.Helper.ObtenerTraduccion("NCLR");
+                System.Xml.Linq.XElement xml = Tools.Helper.GetTranslation("NCLR");
 
                 label1.Text = xml.Element("S01").Value;
                 groupProp.Text = xml.Element("S02").Value;
@@ -111,7 +111,7 @@ namespace Tinke
             pluginHost.Set_NCLR(paleta);
 
             ShowInfo();
-            paletas = Imagen_NCLR.Mostrar(paleta);
+            paletas = Imagen_NCLR.Show(paleta);
             paletaBox.Image = paletas[0];
             nPaleta.Maximum = paleta.pltt.palettes.Length;
             nPaleta.Minimum = 1;
@@ -133,7 +133,7 @@ namespace Tinke
                 pluginHost.Set_NCLR(paleta);
 
                 ShowInfo();
-                paletas = Imagen_NCLR.Mostrar(paleta);
+                paletas = Imagen_NCLR.Show(paleta);
                 paletaBox.Image = paletas[0];
                 nPaleta.Maximum = 1;
                 nPaleta.Minimum = 1;
@@ -148,7 +148,7 @@ namespace Tinke
                 pluginHost.Set_NCLR(paleta);
 
                 ShowInfo();
-                paletas = Imagen_NCLR.Mostrar(paleta);
+                paletas = Imagen_NCLR.Show(paleta);
                 paletaBox.Image = paletas[0];
                 nPaleta.Maximum = paleta.pltt.palettes.Length;
                 nPaleta.Minimum = 1;
@@ -208,7 +208,7 @@ namespace Tinke
                 pluginHost.ChangeFile((int)paleta.id, paletteFile);
 
                 ShowInfo();
-                paletas = Imagen_NCLR.Mostrar(paleta);
+                paletas = Imagen_NCLR.Show(paleta);
                 paletaBox.Image = paletas[0];
                 nPaleta.Maximum = paletas.Length;
                 nPaleta.Minimum = 1;
@@ -228,7 +228,7 @@ namespace Tinke
         }
         private void btnShow_Click(object sender, EventArgs e)
         {
-            string trad = Tools.Helper.ObtenerTraduccion("NCLR").Element("S0C").Value;
+            string trad = Tools.Helper.GetTranslation("NCLR").Element("S0C").Value;
             Form ven = new Form();
             int xMax = 6 * 170;
             int x = 0;

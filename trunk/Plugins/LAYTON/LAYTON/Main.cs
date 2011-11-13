@@ -125,7 +125,7 @@ namespace LAYTON
 
             return new sFolder();
         }
-        public String Pack(sFolder unpacked, string file, int id)
+        public String Pack(ref sFolder unpacked, string file, int id)
         {
             return null;
         }

@@ -57,7 +57,7 @@ namespace TOTTEMPEST
             nclr.pltt.palettes = new NTFP[1];
             // Get colors
             for (int i = 0; i < nclr.pltt.palettes.Length; i++)
-                nclr.pltt.palettes[i].colors = pluginHost.BGR555(br.ReadBytes((int)nclr.pltt.paletteLength));
+                nclr.pltt.palettes[i].colors = pluginHost.BGR555ToColor(br.ReadBytes((int)nclr.pltt.paletteLength));
 
             // Tiles
             // Common header
@@ -84,7 +84,7 @@ namespace TOTTEMPEST
             ncgr.rahc.tileData.tiles = new byte[1][];
 
             if (ncgr.rahc.depth == System.Windows.Forms.ColorDepth.Depth4Bit)
-                ncgr.rahc.tileData.tiles[0] = pluginHost.BytesTo4BitsRev(br.ReadBytes(width * height / 2));
+                ncgr.rahc.tileData.tiles[0] = pluginHost.Bit8ToBit4(br.ReadBytes(width * height / 2));
             else
                 ncgr.rahc.tileData.tiles[0] = br.ReadBytes(width * height);
             ncgr.rahc.tileData.nPalette[0] = 0;

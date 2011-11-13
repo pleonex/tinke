@@ -116,8 +116,8 @@ namespace Tinke
                     if (e is BadImageFormatException) // The DLL is written in other language
                         continue;
 
-                    MessageBox.Show(String.Format(Tools.Helper.ObtenerTraduccion("Messages", "S20"), fileName, e.Message));
-                    Console.WriteLine(String.Format(Tools.Helper.ObtenerTraduccion("Messages", "S20"), fileName, e.Message));
+                    MessageBox.Show(String.Format(Tools.Helper.GetTranslation("Messages", "S20"), fileName, e.Message));
+                    Console.WriteLine(String.Format(Tools.Helper.GetTranslation("Messages", "S20"), fileName, e.Message));
                     continue;
                 }
 
@@ -318,7 +318,7 @@ namespace Tinke
                 }
                 else if (formato == Format.Tile)
                 {
-                    NCGR tile = Imagen_NCGR.Leer_Basico(tempFile, idSelect);
+                    NCGR tile = Imagen_NCGR.Read_Basic(tempFile, idSelect);
                     pluginHost.Set_NCGR(tile);
                     File.Delete(tempFile);
 
@@ -330,13 +330,13 @@ namespace Tinke
                     }
                     else
                     {
-                        MessageBox.Show(Tools.Helper.ObtenerTraduccion("Messages", "S1B"));
+                        MessageBox.Show(Tools.Helper.GetTranslation("Messages", "S1B"));
                         return new Control();
                     }
                 }
                 else if (formato == Format.Map)
                 {
-                    NSCR nscr = Imagen_NSCR.Leer_Basico(tempFile, idSelect);
+                    NSCR nscr = Imagen_NSCR.Read_Basic(tempFile, idSelect);
                     pluginHost.Set_NSCR(nscr);
                     File.Delete(tempFile);
 
@@ -348,7 +348,7 @@ namespace Tinke
                     }
                     else
                     {
-                        MessageBox.Show(Tools.Helper.ObtenerTraduccion("Messages", "S1C"));
+                        MessageBox.Show(Tools.Helper.GetTranslation("Messages", "S1C"));
                         return new Control();
                     }
                 }
@@ -576,6 +576,32 @@ namespace Tinke
                     Remove_File(id, subFolder);
         }
 
+        public void Change_Files(sFolder currFolder)
+        {
+            if (currFolder.files is List<sFile>)
+            {
+                for (int i = 0; i < currFolder.files.Count; i++)
+                {
+                    if (currFolder.files[i].tag is String)
+                    {
+                        // Restore the tag
+                        sFile newFile = currFolder.files[i];
+                        newFile.tag = String.Format("{0:X}", newFile.size).PadLeft(8, '0') +
+                            String.Format("{0:X}", newFile.offset).PadLeft(8, '0') + newFile.path;
+                        currFolder.files[i] = newFile;
+                    }
+                    Change_File(currFolder.files[i].id, currFolder.files[i], root);
+                }
+            }
+
+            if (currFolder.folders is List<sFolder>)
+            {
+                for (int i = 0; i < currFolder.folders.Count; i++)
+                {
+                    Change_Files(currFolder.folders[i]);
+                }
+            }
+        }
         public sFolder Change_Folder(sFolder folder, ushort idFolder, sFolder currFolder)
         {
             if (currFolder.id == idFolder)
@@ -1215,7 +1241,7 @@ namespace Tinke
 
             if (new String(Encoding.ASCII.GetChars(ext)) == "LZ77") // LZ77
             {
-                string tempFile2 = Path.GetTempPath() + Path.DirectorySeparatorChar + "c_" + name;
+                string tempFile2 = Path.GetTempPath() + Path.DirectorySeparatorChar + Path.GetRandomFileName() + "c_" + name;
                 Byte[] compressFile = new Byte[new FileInfo(file).Length - 4];
                 Array.Copy(File.ReadAllBytes(file), 4, compressFile, 0, compressFile.Length); ;
                 File.WriteAllBytes(tempFile2, compressFile);
@@ -1271,7 +1297,7 @@ namespace Tinke
                         goto Continuar;
                     }
                 }
-#endregion
+                #endregion
 
                 if (new String(Encoding.ASCII.GetChars(ext)) == "LZ77") // LZ77 header
                 {
@@ -1286,10 +1312,10 @@ namespace Tinke
                 if (compressFormat != FormatCompress.Invalid)
                 {
                     FileInfo info = new FileInfo(tempFile);
-                    String uncompFile = info.DirectoryName + Path.DirectorySeparatorChar + "de_" + info.Name;
+                    String uncompFile = info.DirectoryName + Path.DirectorySeparatorChar + "de_" + selectedFile.id + info.Name;
                     DSDecmp.Main.Decompress(tempFile, uncompFile, compressFormat);
                     if (!File.Exists(uncompFile))
-                        throw new Exception(Tools.Helper.ObtenerTraduccion("Sistema", "S36"));
+                        throw new Exception(Tools.Helper.GetTranslation("Sistema", "S36"));
 
                     sFile newFile = new sFile();
                     newFile.name = selectedFile.name;
@@ -1359,7 +1385,7 @@ namespace Tinke
 
                     DSDecmp.Main.Decompress(compressedFile, uncompFile, compressFormat);
                     if (!File.Exists(uncompFile))
-                        throw new Exception(Tools.Helper.ObtenerTraduccion("Sistema", "S36"));
+                        throw new Exception(Tools.Helper.GetTranslation("Sistema", "S36"));
 
                     sFile newFile = new sFile();
                     newFile.name = name;
@@ -1432,6 +1458,7 @@ namespace Tinke
         Continuar:
             return;
         }
+
         sFolder pluginHost_event_GetDecompressedFiles(int id)
         {
             sFolder compresFile = Search_Folder(id);
@@ -1520,7 +1547,7 @@ namespace Tinke
                     f = gamePlugin.Get_Format(selectedFile.name, ext, idSelect);
                     if (f == Format.Compressed || f == Format.Pack)
                     {
-                        packFile = gamePlugin.Pack(unpacked, original_packfile, id);
+                        packFile = gamePlugin.Pack(ref unpacked, original_packfile, id);
                         goto Continue;
                     }
                 }
@@ -1529,24 +1556,27 @@ namespace Tinke
                     f = plugin.Get_Format(selectedFile.name, ext);
                     if (f == Format.Compressed || f == Format.Pack)
                     {
-                        packFile = plugin.Pack(unpacked, original_packfile);
+                        packFile = plugin.Pack(ref unpacked, original_packfile);
                         goto Continue;
                     }
                 }
 
                 #region Common compression
-                String fileToCompress = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + "oldPack_" + selectedFile.name;
+                String fileToCompress = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + Path.GetRandomFileName() + selectedFile.name;
 
                 if (new String(Encoding.ASCII.GetChars(ext)) == "LZ77") // LZ77 header
                 {
-                    String compFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + "pack_" + selectedFile.name;
+                    Save_File(unpacked.files[0], fileToCompress);
+                    String compFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + Path.GetRandomFileName() + selectedFile.name;
+                    if (File.Exists(compFile))
+                        File.Delete(compFile);
 
                     DSDecmp.Main.Compress(fileToCompress, compFile, FormatCompress.LZ10);
                     if (!File.Exists(compFile))
-                        throw new Exception(Tools.Helper.ObtenerTraduccion("Sistema", "S43"));
+                        throw new Exception(Tools.Helper.GetTranslation("Sistema", "S43"));
 
                     // Write the header LZ77
-                    String packFilePath = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + "lz10_" + selectedFile.name;
+                    String packFilePath = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + Path.GetRandomFileName() + selectedFile.name;
                     BinaryReader br = new BinaryReader(File.OpenRead(compFile));
                     BinaryWriter bw = new BinaryWriter(File.OpenWrite(packFilePath));
                     bw.Write(new char[] { 'L', 'Z', '7', '7' });
@@ -1567,11 +1597,13 @@ namespace Tinke
                 if (compressFormat != FormatCompress.Invalid)
                 {
                     Save_File(unpacked.files[0], fileToCompress);
-                    String compFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + "pack_" + selectedFile.name;
+                    String compFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + Path.GetRandomFileName() + selectedFile.name;
+                    if (File.Exists(compFile))
+                        File.Delete(compFile);
 
                     DSDecmp.Main.Compress(fileToCompress, compFile, compressFormat);
                     if (!File.Exists(compFile))
-                        throw new Exception(Tools.Helper.ObtenerTraduccion("Sistema", "S43"));
+                        throw new Exception(Tools.Helper.GetTranslation("Sistema", "S43"));
 
                     packFile = compFile;
                 }
@@ -1589,12 +1621,14 @@ namespace Tinke
         Continue:
             if (!(packFile is String) || packFile == "")
             {
-                MessageBox.Show(Tools.Helper.ObtenerTraduccion("Messages", "S23"));
-                Console.WriteLine(Tools.Helper.ObtenerTraduccion("Messages", "S25"));
+                MessageBox.Show(Tools.Helper.GetTranslation("Messages", "S23"));
+                Console.WriteLine(Tools.Helper.GetTranslation("Messages", "S25"));
                 return;
             }
 
             pluginHost_ChangeFile_Event(id, packFile);
+            
+            Change_Files(unpacked);
         }
 
         public void Save_File(int id, string outFile)
@@ -1609,7 +1643,7 @@ namespace Tinke
         public String Save_File(int id)
         {
             sFile selectFile = Search_File(id);
-            String outFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + id + selectFile.name;
+            String outFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + Path.GetRandomFileName() + selectFile.name;
             if (File.Exists(outFile))
                 File.Delete(outFile);
 
@@ -1622,6 +1656,8 @@ namespace Tinke
         }
         public void Save_File(sFile currfile, string outFile)
         {
+            if (File.Exists(outFile))
+                File.Delete(outFile);
             if (currfile.size == new FileInfo(currfile.path).Length)
             {
                 File.Copy(currfile.path, outFile);
@@ -1696,7 +1732,7 @@ namespace Tinke
                 }
                 if (new String(Encoding.ASCII.GetChars(ext)) == "NCGR" || new String(Encoding.ASCII.GetChars(ext)) == "RGCN")
                 {
-                    NCGR tile = Imagen_NCGR.Leer(tempFile, idSelect);
+                    NCGR tile = Imagen_NCGR.Read(tempFile, idSelect);
                     pluginHost.Set_NCGR(tile);
 
                     if (pluginHost.Get_NCLR().header.file_size != 0x00)
@@ -1706,13 +1742,13 @@ namespace Tinke
                     }
                     else
                     {
-                        MessageBox.Show(Tools.Helper.ObtenerTraduccion("Messages", "S1B"));
+                        MessageBox.Show(Tools.Helper.GetTranslation("Messages", "S1B"));
                         return new Control();
                     }
                 }
                 else if (new String(Encoding.ASCII.GetChars(ext)) == "NSCR" || new String(Encoding.ASCII.GetChars(ext)) == "RCSN")
                 {
-                    pluginHost.Set_NSCR(Imagen_NSCR.Leer(tempFile, idSelect));
+                    pluginHost.Set_NSCR(Imagen_NSCR.Read(tempFile, idSelect));
 
                     if (pluginHost.Get_NCGR().header.file_size != 0x00 && pluginHost.Get_NCLR().header.file_size != 0x00)
                     {
@@ -1721,7 +1757,7 @@ namespace Tinke
                     }
                     else
                     {
-                        MessageBox.Show(Tools.Helper.ObtenerTraduccion("Messages", "S1C"));
+                        MessageBox.Show(Tools.Helper.GetTranslation("Messages", "S1C"));
                         return new Control();
                     }
                 }
@@ -1736,7 +1772,7 @@ namespace Tinke
                     }
                     else
                     {
-                        MessageBox.Show(Tools.Helper.ObtenerTraduccion("Messages", "S1C"));
+                        MessageBox.Show(Tools.Helper.GetTranslation("Messages", "S1C"));
                         return new Control();
                     }
                 }
@@ -1752,7 +1788,7 @@ namespace Tinke
                     }
                     else
                     {
-                        MessageBox.Show(Tools.Helper.ObtenerTraduccion("Messages", "S1E"));
+                        MessageBox.Show(Tools.Helper.GetTranslation("Messages", "S1E"));
                         return new Control();
                     }
                 }
@@ -1784,7 +1820,7 @@ namespace Tinke
             }
             #endregion
 
-            Console.WriteLine(Tools.Helper.ObtenerTraduccion("Messages", "S25"));
+            Console.WriteLine(Tools.Helper.GetTranslation("Messages", "S25"));
             return new Control();
         }
         public Control See_File(String archivo)
@@ -1838,7 +1874,7 @@ namespace Tinke
                 }
                 if (new String(Encoding.ASCII.GetChars(ext)) == "NCGR" || new String(Encoding.ASCII.GetChars(ext)) == "RGCN")
                 {
-                    NCGR tile = Imagen_NCGR.Leer(archivo, idSelect);
+                    NCGR tile = Imagen_NCGR.Read(archivo, idSelect);
                     pluginHost.Set_NCGR(tile);
 
                     if (pluginHost.Get_NCLR().header.file_size != 0x00)
@@ -1849,13 +1885,13 @@ namespace Tinke
                     }
                     else
                     {
-                        MessageBox.Show(Tools.Helper.ObtenerTraduccion("Messages", "S1B"));
+                        MessageBox.Show(Tools.Helper.GetTranslation("Messages", "S1B"));
                         return new Control();
                     }
                 }
                 else if (new String(Encoding.ASCII.GetChars(ext)) == "NSCR" || new String(Encoding.ASCII.GetChars(ext)) == "RCSN")
                 {
-                    pluginHost.Set_NSCR(Imagen_NSCR.Leer(archivo, idSelect));
+                    pluginHost.Set_NSCR(Imagen_NSCR.Read(archivo, idSelect));
 
                     if (pluginHost.Get_NCGR().header.file_size != 0x00 && pluginHost.Get_NCLR().header.file_size != 0x00)
                     {
@@ -1865,7 +1901,7 @@ namespace Tinke
                     }
                     else
                     {
-                        MessageBox.Show(Tools.Helper.ObtenerTraduccion("Messages", "S1C"));
+                        MessageBox.Show(Tools.Helper.GetTranslation("Messages", "S1C"));
                         return new Control();
                     }
                 }
@@ -1882,7 +1918,7 @@ namespace Tinke
                     }
                     else
                     {
-                        MessageBox.Show(Tools.Helper.ObtenerTraduccion("Messages", "S1C"));
+                        MessageBox.Show(Tools.Helper.GetTranslation("Messages", "S1C"));
                         return new Control();
                     }
                 }
@@ -1900,7 +1936,7 @@ namespace Tinke
                     }
                     else
                     {
-                        MessageBox.Show(Tools.Helper.ObtenerTraduccion("Messages", "S1E"));
+                        MessageBox.Show(Tools.Helper.GetTranslation("Messages", "S1E"));
                         return new Control();
                     }
                 }
@@ -1930,7 +1966,7 @@ namespace Tinke
             }
             #endregion
 
-            Console.WriteLine(Tools.Helper.ObtenerTraduccion("Messages", "S25"));
+            Console.WriteLine(Tools.Helper.GetTranslation("Messages", "S25"));
             return new Control();
         }
         public void Read_File()
@@ -1988,13 +2024,13 @@ namespace Tinke
                 }
                 if (new String(Encoding.ASCII.GetChars(ext)) == "NCGR" || new String(Encoding.ASCII.GetChars(ext)) == "RGCN")
                 {
-                    pluginHost.Set_NCGR(Imagen_NCGR.Leer(tempFile, idSelect));
+                    pluginHost.Set_NCGR(Imagen_NCGR.Read(tempFile, idSelect));
                     File.Delete(tempFile);
                     return;
                 }
                 else if (new String(Encoding.ASCII.GetChars(ext)) == "NSCR" || new String(Encoding.ASCII.GetChars(ext)) == "RCSN")
                 {
-                    pluginHost.Set_NSCR(Imagen_NSCR.Leer(tempFile, idSelect));
+                    pluginHost.Set_NSCR(Imagen_NSCR.Read(tempFile, idSelect));
                     File.Delete(tempFile);
                     return;
                 }
@@ -2012,7 +2048,7 @@ namespace Tinke
                 }
 
                 if (DSDecmp.Main.Get_Format(tempFile) != FormatCompress.Invalid)
-                    MessageBox.Show(Tools.Helper.ObtenerTraduccion("Messages", "S1A"), "", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show(Tools.Helper.GetTranslation("Messages", "S1A"), "", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception e)
             {
@@ -2023,7 +2059,7 @@ namespace Tinke
 
             try { File.Delete(tempFile); }
             catch { }
-            Console.WriteLine(Tools.Helper.ObtenerTraduccion("Messages", "S25"));
+            Console.WriteLine(Tools.Helper.GetTranslation("Messages", "S25"));
         }
     }
 

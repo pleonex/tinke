@@ -149,7 +149,7 @@ namespace Fonts
 
                 font.pamc.Add(pamc);
                 br.BaseStream.Position = nextOffset - 0x08;
-            } while (nextOffset != 0x00);
+            } while (nextOffset != 0x00 && (nextOffset - 0x08) < br.BaseStream.Length);
 
             WriteInfo(font, lang);
             font.plgc.rotateMode = 0;

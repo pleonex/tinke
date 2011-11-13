@@ -57,7 +57,7 @@ namespace SF_FEATHER
         }
 
 
-        public string Pack(sFolder unpacked, string file, int id)
+        public string Pack(ref sFolder unpacked, string file, int id)
         {
             throw new NotImplementedException();
         }

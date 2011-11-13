@@ -99,7 +99,7 @@ namespace LAYTON
             paleta.offset = (ulong)rdr.BaseStream.Position;
             paleta.datos = rdr.ReadBytes((int)paleta.length);                    // Paleta en binario
             paleta.colores = new Color[paleta.length];                           // Declaramos el tamaño
-            paleta.colores = pluginHost.BGR555(paleta.datos);     // Paleta en colores
+            paleta.colores = pluginHost.BGR555ToColor(paleta.datos);     // Paleta en colores
 
             rdr.Close();
 
@@ -164,7 +164,7 @@ namespace LAYTON
             else
             {
                 parte.length = (uint)(parte.width * parte.height) / 2;
-                parte.datos = pluginHost.BytesTo4BitsRev(rdr.ReadBytes((int)parte.length));
+                parte.datos = pluginHost.Bit8ToBit4(rdr.ReadBytes((int)parte.length));
             }
 
             rdr.Close();
@@ -461,7 +461,7 @@ namespace LAYTON
             else
             {
                 parte.length = (uint)(parte.width * parte.height) / 2;
-                parte.datos = pluginHost.BytesTo4BitsRev(rdr.ReadBytes((int)parte.length));
+                parte.datos = pluginHost.Bit8ToBit4(rdr.ReadBytes((int)parte.length));
             }
 
             rdr.Close();
@@ -485,7 +485,7 @@ namespace LAYTON
             paleta.offset = (ulong)rdr.BaseStream.Position;
             paleta.datos = rdr.ReadBytes((int)paleta.length);                    // Paleta en binario
             paleta.colores = new Color[paleta.length];                           // Declaramos el tamaño
-            paleta.colores = pluginHost.BGR555(paleta.datos);     // Paleta en colores
+            paleta.colores = pluginHost.BGR555ToColor(paleta.datos);     // Paleta en colores
 
             rdr.Close();
 

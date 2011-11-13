@@ -56,7 +56,7 @@ namespace SDAT
 
             return new iSDAT(Informacion(id), pluginHost);
         }
-        public String Pack(sFolder unpacked, string file) { return null; }
+        public String Pack(ref sFolder unpacked, string file) { return null; }
         public sFolder Unpack(string file) { return new sFolder(); }
         #endregion
 

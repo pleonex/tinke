@@ -28,7 +28,7 @@ namespace Tinke.Dialog
         {
             try
             {
-                System.Xml.Linq.XElement xml = Tools.Helper.ObtenerTraduccion("NSCR");
+                System.Xml.Linq.XElement xml = Tools.Helper.GetTranslation("NSCR");
 
                 this.Text = xml.Element("S00").Value;
                 label1.Text = xml.Element("S01").Value;

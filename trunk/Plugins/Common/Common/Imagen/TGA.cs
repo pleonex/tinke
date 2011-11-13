@@ -146,7 +146,7 @@ namespace Common
                     break;
 
                 case TGA.ImageType.Uncompressed_TrueColor:
-                    colores = pluginHost.BGR555(br.ReadBytes(tga.header.image_spec.height * tga.header.image_spec.width * 2));
+                    colores = pluginHost.BGR555ToColor(br.ReadBytes(tga.header.image_spec.height * tga.header.image_spec.width * 2));
                     for (int y = tga.header.image_spec.height - 1; y > 0; y--)
                     {
                         for (int x = 0; x < tga.header.image_spec.width; x++)

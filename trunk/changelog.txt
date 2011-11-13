@@ -1,3 +1,6 @@
+0.8.3
+** Fixed problem packing two or more times the same file.
+
 0.8.2 public release (rev117)
 *** Improved Hexadecimal editor -> Now using Be.HexEditor (by Bernhard Elbl)
 *** Read BMD0 files and show the textures (if any)

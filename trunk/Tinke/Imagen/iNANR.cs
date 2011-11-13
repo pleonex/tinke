@@ -96,7 +96,7 @@ namespace Tinke
         {
             try
             {
-                System.Xml.Linq.XElement xml = Tools.Helper.ObtenerTraduccion("NANR");
+                System.Xml.Linq.XElement xml = Tools.Helper.GetTranslation("NANR");
 
                 label2.Text = xml.Element("S01").Value;
                 label1.Text = xml.Element("S02").Value;
@@ -248,7 +248,7 @@ namespace Tinke
             Form ventana = new Form();
             ventana.FormBorderStyle = FormBorderStyle.FixedSingle;
             ventana.Size = new System.Drawing.Size(512, 512);
-            ventana.Text = Tools.Helper.ObtenerTraduccion("NANR", "S1D");
+            ventana.Text = Tools.Helper.GetTranslation("NANR", "S1D");
             ventana.MaximizeBox = false;
             ventana.ShowIcon = false;
             ventana.BackColor = SystemColors.GradientInactiveCaption;

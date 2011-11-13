@@ -18,7 +18,7 @@ namespace SUBARASHIKI
         }
         public bool IsCompatible()
         {
-            if (gameCode == "AWLJ")
+            if (gameCode == "AWLJ" ||gameCode == "AWLP")
                 return true;
 
             return false;
@@ -42,7 +42,7 @@ namespace SUBARASHIKI
             return new System.Windows.Forms.Control();
         }
 
-        public String Pack(sFolder unpacked, string file, int id) 
+        public String Pack(ref sFolder unpacked, string file, int id) 
         { 
             return null;
         }

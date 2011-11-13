@@ -90,7 +90,7 @@ namespace Tinke
         {
             try
             {
-                System.Xml.Linq.XElement xml = Tools.Helper.ObtenerTraduccion("Autores");
+                System.Xml.Linq.XElement xml = Tools.Helper.GetTranslation("Autores");
 
                 this.Text = xml.Element("S01").Value + ' ' + AssemblyTitle;
 

@@ -64,7 +64,7 @@ namespace Tinke
             if (!(this.tile.other is int))
                 this.tile.other = 0;
 
-            pic.Image = Imagen_NCGR.Crear_Imagen(tile, paleta, (int)this.tile.other);
+            pic.Image = Imagen_NCGR.Get_Image(tile, paleta, (int)this.tile.other);
             this.numericWidth.Value = pic.Image.Width;
             this.numericHeight.Value = pic.Image.Height;
             this.comboDepth.Text = (tile.rahc.depth == ColorDepth.Depth4Bit ? "4 bpp" : "8 bpp");
@@ -256,10 +256,10 @@ namespace Tinke
                 NCGR newTile = tile;
                 newTile.rahc.tileData.tiles = Convertir.BytesToTiles(Convertir.TilesToBytes(newTile.rahc.tileData.tiles, (int)tile.other));
                 newTile.rahc.tileData = pluginHost.Transform_NSCR(map, newTile.rahc.tileData, (int)map.other);
-                image = Imagen_NCGR.Crear_Imagen(newTile, paleta, 0, trackZoom.Value);
+                image = Imagen_NCGR.Get_Image(newTile, paleta, 0, trackZoom.Value);
             }
             else
-                image = Imagen_NCGR.Crear_Imagen(tile, paleta, (int)tile.other, trackZoom.Value);
+                image = Imagen_NCGR.Get_Image(tile, paleta, (int)tile.other, trackZoom.Value);
                 
             pic.Image = image;
             return image;
@@ -269,7 +269,7 @@ namespace Tinke
         {
             try
             {
-                System.Xml.Linq.XElement xml = Tools.Helper.ObtenerTraduccion("NCGR");
+                System.Xml.Linq.XElement xml = Tools.Helper.GetTranslation("NCGR");
 
                 label5.Text = xml.Element("S01").Value;
                 groupProp.Text = xml.Element("S02").Value;
@@ -562,7 +562,7 @@ namespace Tinke
 
             ven.Controls.Add(pcBox);
             ven.BackColor = SystemColors.GradientInactiveCaption;
-            ven.Text = Tools.Helper.ObtenerTraduccion("NCGR", "S19");
+            ven.Text = Tools.Helper.GetTranslation("NCGR", "S19");
             ven.AutoScroll = true;
             ven.MaximumSize = new Size(1024, 700);
             ven.ShowIcon = false;
@@ -670,14 +670,14 @@ namespace Tinke
         {
             // Search for unused or duplicated colors to change them with transparency color
             // Search for duplicated colors
-            int result = Convertir.Remove_NotDuplicatedColors(ref paleta.pltt.palettes[0], ref tile.rahc.tileData.tiles);
+            int result = Convertir.Remove_DuplicatedColors(ref paleta.pltt.palettes[0], ref tile.rahc.tileData.tiles);
             if (result == -1)
             {
                 // Try another way: search for not used colors
                 result = Convertir.Remove_NotUsedColors(ref paleta.pltt.palettes[0], ref tile.rahc.tileData.tiles);
                 if (result == -1)
                 {
-                    MessageBox.Show(Tools.Helper.ObtenerTraduccion("Messages", "S24"));
+                    MessageBox.Show(Tools.Helper.GetTranslation("Messages", "S24"));
                     return;  // Nothing found.
                 }
             }

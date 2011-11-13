@@ -66,7 +66,7 @@ namespace TOTTEMPEST
             for (int i = 0; i < ncgr.rahc.nTiles; i++)
             {
                 if (ncgr.rahc.depth == System.Windows.Forms.ColorDepth.Depth4Bit)
-                    ncgr.rahc.tileData.tiles[i] = pluginHost.BytesTo4BitsRev(br.ReadBytes(32));
+                    ncgr.rahc.tileData.tiles[i] = pluginHost.Bit8ToBit4(br.ReadBytes(32));
                 else
                     ncgr.rahc.tileData.tiles[i] = br.ReadBytes(64);
                 ncgr.rahc.tileData.nPalette[i] = 0;

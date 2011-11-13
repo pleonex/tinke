@@ -36,12 +36,12 @@ namespace TOKIMEKIGS3S
             return Format.Unknown;
         }
 
-        public string Pack(sFolder unpacked, string file, int id)
+        public string Pack(ref sFolder unpacked, string file, int id)
         {
             if (file.ToUpper().EndsWith(".LZS"))
                 return LZS.Compress(unpacked.files[0].path, file, pluginHost);
             else if (file.ToUpper().EndsWith(".RESC"))
-                return RESC.Pack(file, unpacked, pluginHost);
+                return RESC.Pack(file, ref unpacked, pluginHost);
 
             return null;
         }

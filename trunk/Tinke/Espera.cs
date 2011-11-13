@@ -20,7 +20,7 @@ namespace Tinke
         {
             InitializeComponent();
 
-            System.Xml.Linq.XElement xml = Tools.Helper.ObtenerTraduccion("Espera");
+            System.Xml.Linq.XElement xml = Tools.Helper.GetTranslation("Espera");
             this.Text = xml.Element("S01").Value;
             label1.Text = xml.Element(label).Value;
             
@@ -32,7 +32,7 @@ namespace Tinke
         {
             InitializeComponent();
 
-            System.Xml.Linq.XElement xml = Tools.Helper.ObtenerTraduccion("Espera");
+            System.Xml.Linq.XElement xml = Tools.Helper.GetTranslation("Espera");
             this.Text = xml.Element("S01").Value;
             label1.Text = xml.Element(label).Value;
 
@@ -51,7 +51,7 @@ namespace Tinke
 
         private void LeerIdioma()
         {
-                System.Xml.Linq.XElement xml = Tools.Helper.ObtenerTraduccion("Espera");
+                System.Xml.Linq.XElement xml = Tools.Helper.GetTranslation("Espera");
 
                 this.Text = xml.Element("S01").Value;
                 label1.Text = xml.Element("S01").Value;

@@ -45,10 +45,10 @@ namespace Tinke
 
         public void LeerIdioma()
         {
-            System.Xml.Linq.XElement xml = Tools.Helper.ObtenerTraduccion("Sistema");
+            System.Xml.Linq.XElement xml = Tools.Helper.GetTranslation("Sistema");
             this.Text = xml.Element("S03").Value;
 
-            xml = Tools.Helper.ObtenerTraduccion("Messages");
+            xml = Tools.Helper.GetTranslation("Messages");
             contextMenuStrip1.Items[0].Text = xml.Element("S0E").Value;
         }
 

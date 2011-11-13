@@ -64,7 +64,7 @@ namespace EDGEWORTH
             return new Control();
         }
 
-        public string Pack(sFolder unpacked, string file, int id)
+        public string Pack(ref sFolder unpacked, string file, int id)
         {
             if (file.ToUpper().EndsWith("ROMFILE.BIN"))
             {
@@ -72,7 +72,7 @@ namespace EDGEWORTH
                 if (File.Exists(packFile))
                     File.Delete(packFile);
 
-                PACK.Pack(packFile, unpacked);
+                PACK.Pack(packFile, ref unpacked);
                 return packFile;
             }
 

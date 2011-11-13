@@ -73,7 +73,7 @@ namespace Common
             return new Control();
         }
 
-        public string Pack(sFolder unpacked, string file) { return null; }
+        public string Pack(ref sFolder unpacked, string file) { return null; }
         public sFolder Unpack(string file) { return new sFolder(); }
     }
 }

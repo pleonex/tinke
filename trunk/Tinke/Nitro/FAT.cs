@@ -57,7 +57,7 @@ namespace Tinke.Nitro
 
             bw.Flush();
             bw.Close();
-            Console.WriteLine(Tools.Helper.ObtenerTraduccion("Messages", "S09"), new FileInfo(salida).Length);
+            Console.WriteLine(Tools.Helper.GetTranslation("Messages", "S09"), new FileInfo(salida).Length);
         }
 
         private static sFile BuscarArchivo(int id, sFolder currFolder)

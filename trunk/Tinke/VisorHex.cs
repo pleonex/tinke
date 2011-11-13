@@ -77,9 +77,9 @@ namespace Tinke
         {
             try
             {
-                System.Xml.Linq.XElement xml = Tools.Helper.ObtenerTraduccion("VisorHex");
+                System.Xml.Linq.XElement xml = Tools.Helper.GetTranslation("VisorHex");
 
-                this.Text = Tools.Helper.ObtenerTraduccion("Sistema", "S41");
+                this.Text = Tools.Helper.GetTranslation("Sistema", "S41");
                 fileToolStripMenuItem.Text = xml.Element("S00").Value;
                 saveToolStripMenuItem.Text = xml.Element("S01").Value;
                 toolsToolStripMenuItem.Text = xml.Element("S02").Value;
@@ -142,7 +142,7 @@ namespace Tinke
         }
         private void hexBox1_SelectionLengthChanged(object sender, EventArgs e)
         {
-            toolStripSelect.Text = String.Format(Tools.Helper.ObtenerTraduccion("VisorHex", "S0C"),
+            toolStripSelect.Text = String.Format(Tools.Helper.GetTranslation("VisorHex", "S0C"),
                 hexBox1.SelectionStart.ToString("x"), hexBox1.SelectionLength.ToString("x"));
         }
         private void goToolStripMenuItem1_Click(object sender, EventArgs e)
