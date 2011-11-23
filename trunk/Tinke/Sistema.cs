@@ -176,28 +176,31 @@ namespace Tinke
         {
             DateTime startTime = DateTime.Now;
 
-            romInfo = new RomInfo(file);  // Se obtienen datos de la cabecera
+            romInfo = new RomInfo(file);  // Read the header and banner
             DateTime t1 = DateTime.Now;
             accion = new Acciones(file, new String(romInfo.Cabecera.gameCode));
             DateTime t2 = DateTime.Now;
 
-            // Obtenemos el sistema de archivos
-            sFolder root = FNT(file, romInfo.Cabecera.fileNameTableOffset, romInfo.Cabecera.fileNameTableSize);
+            // Read File Allocation Table (offset and size)
+            Nitro.Estructuras.sFAT[] fat = Nitro.FAT.ReadFAT(file, romInfo.Cabecera.FAToffset, romInfo.Cabecera.FATsize);
             DateTime t3 = DateTime.Now;
-            if (!(root.folders is List<sFolder>))
-                root.folders = new List<sFolder>();
-            root.folders.Add(Añadir_Sistema());
+
+            // Read the File Name Table and get the directory hierarchy
+            sFolder root = Nitro.FNT.ReadFNT(file, romInfo.Cabecera.fileNameTableOffset, fat);
             DateTime t4 = DateTime.Now;
 
-            // Añadimos los offset a cada archivo
-            root = FAT(file, romInfo.Cabecera.FAToffset, romInfo.Cabecera.FATsize, root);
+            // Add system files (fnt.bin, banner.bin, overlays, arm9 and arm7)
+            if (!(root.folders is List<sFolder>))
+                root.folders = new List<sFolder>();
+            root.folders.Add(Add_SystemFiles(fat));
             DateTime t5 = DateTime.Now;
+
             accion.Root = root;
             DateTime t6 = DateTime.Now;
 
             Set_Formato(root);
             DateTime t7 = DateTime.Now;
-            treeSystem.Nodes.Add(Jerarquizar_Nodos(root)); // Mostramos el árbol
+            treeSystem.Nodes.Add(Jerarquizar_Nodos(root)); // Get the node hierarchy
             DateTime t8 = DateTime.Now;
             treeSystem.Nodes[0].Expand();
 
@@ -209,9 +212,9 @@ namespace Tinke
             Console.WriteLine("<li>" + xml.Element("S10").Value + (t9 - startTime).ToString() + "</li>");
             Console.WriteLine("<li>" + xml.Element("S11").Value + (t1 - startTime).ToString() + "</li>");
             Console.WriteLine("<li>" + xml.Element("S12").Value + (t2 - t1).ToString() + "</li>");
-            Console.WriteLine("<li>" + xml.Element("S13").Value + (t3 - t2).ToString() + "</li>");
+            Console.WriteLine("<li>" + xml.Element("S15").Value + (t3 - t2).ToString() + "</li>");
             Console.WriteLine("<li>" + xml.Element("S14").Value + (t4 - t3).ToString() + "</li>");
-            Console.WriteLine("<li>" + xml.Element("S15").Value + (t5 - t4).ToString() + "</li>");
+            Console.WriteLine("<li>" + xml.Element("S13").Value + (t5 - t4).ToString() + "</li>");
             Console.WriteLine("<li>" + xml.Element("S16").Value + (t6 - t5).ToString() + "</li>");
             Console.WriteLine("<li>" + xml.Element("S17").Value + (t7 - t6).ToString() + "</li>");
             Console.WriteLine("<li>" + xml.Element("S18").Value + (t8 - t7).ToString() + "</li>");
@@ -452,34 +455,17 @@ namespace Tinke
             MessageBox.Show(Tools.Helper.GetTranslation("Messages", "S07"));
         }
 
-        private sFolder FNT(string file, UInt32 offset, UInt32 size)
-        {
-            sFolder root = Nitro.FNT.LeerFNT(file, offset);
-            accion.Root = root;
-
-            return root;
-        }
-        private sFile[] ARMOverlay(string file, UInt32 offset, UInt32 size, bool ARM9)
-        {
-            return Nitro.Overlay.LeerOverlaysBasico(file, offset, size, ARM9);
-        }
-        private sFolder FAT(string file, UInt32 offset, UInt32 size, sFolder root)
-        {
-            return Nitro.FAT.LeerFAT(file, offset, size, root);
-        }
-        private sFolder Añadir_Sistema()
+        private sFolder Add_SystemFiles(Nitro.Estructuras.sFAT[] fatTable)
         {
             sFolder ftc = new sFolder();
             ftc.name = "ftc";
             ftc.id = (ushort)accion.LastFolderID;
             accion.LastFolderID++;
             ftc.files = new List<sFile>();
-            ftc.files.AddRange(
-                ARMOverlay(accion.ROMFile, romInfo.Cabecera.ARM9overlayOffset, romInfo.Cabecera.ARM9overlaySize, true)
-                );
-            ftc.files.AddRange(
-                ARMOverlay(accion.ROMFile, romInfo.Cabecera.ARM7overlayOffset, romInfo.Cabecera.ARM7overlaySize, false)
-                );
+            ftc.files.AddRange(Nitro.Overlay.ReadBasicOverlays(
+                accion.ROMFile, romInfo.Cabecera.ARM9overlayOffset, romInfo.Cabecera.ARM9overlaySize, true, fatTable));
+            ftc.files.AddRange(Nitro.Overlay.ReadBasicOverlays(
+                accion.ROMFile, romInfo.Cabecera.ARM7overlayOffset, romInfo.Cabecera.ARM7overlaySize, false, fatTable));
 
             sFile rom = new sFile();
             rom.name = "rom.nds";

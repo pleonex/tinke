@@ -44,6 +44,8 @@ namespace PluginInterface
         
         Color[] BGR555ToColor(byte[] data);
         Byte[] ColorToBGR555(Color[] color);
+        NTFS MapInfo(ushort value);
+        ushort MapInfo(NTFS map);
         Byte[] TilesToBytes(byte[][] tiles, int startByte = 0);
         Byte[][] BytesToTiles(byte[] bytes);
         Byte[][] BytesToTiles_NoChanged(byte[] bytes, int tilesX, int tilesY);

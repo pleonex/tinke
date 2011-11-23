@@ -1,4 +1,23 @@
-﻿using System;
+﻿/*
+ * Copyright (C) 2011  pleoNeX
+ *
+ *   This program is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+ *
+ * By: pleoNeX
+ * 
+ */
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -35,9 +54,19 @@ namespace Images
         public PaletteBase(IPluginHost pluginHost, Color[][] pal, bool editable)
         {
             this.pluginHost = pluginHost;
-            SetPalette(pal, editable);
+            Set_Palette(pal, editable);
         }
-        public abstract void WritePalette(string fileOut);
+        public PaletteBase(IPluginHost pluginHost, string fileIn, int id)
+        {
+            this.pluginHost = pluginHost;
+            this.fileName = System.IO.Path.GetFileName(fileIn);
+            this.id = id;
+
+            Read(fileIn);
+        }
+
+        public abstract void Read(string fileInt);
+        public abstract void Write_Palette(string fileOut);
 
         public NCLR Get_NCLR()
         {
@@ -70,7 +99,7 @@ namespace Images
             return nclr;
         }
 
-        public Image GetPaletteImage(int index)
+        public Image Get_PaletteImage(int index)
         {
             if (index >= palette.Length)
                 return null;
@@ -78,7 +107,7 @@ namespace Images
             return pluginHost.Bitmaps_NCLR(palette[index]);
         }
 
-        private void ChangePaletteDepth(ColorDepth newDepth)
+        private void Change_PaletteDepth(ColorDepth newDepth)
         {
             if (newDepth == depth)
                 return;
@@ -91,7 +120,7 @@ namespace Images
 
             pluginHost.Set_NCLR(Get_NCLR());
         }
-        private void ChangeStartByte(int start)
+        private void Change_StartByte(int start)
         {
             if (start < 0 || start >= original.Length)
                 return;
@@ -125,7 +154,7 @@ namespace Images
             pluginHost.Set_NCLR(Get_NCLR());
         }
 
-        public void SetPalette(Color[][] palette, bool editable)
+        public void Set_Palette(Color[][] palette, bool editable)
         {
             this.palette = palette;
             canEdit = editable;
@@ -149,12 +178,12 @@ namespace Images
         public int StartByte
         {
             get { return startByte; }
-            set { ChangeStartByte(value); }
+            set { Change_StartByte(value); }
         }
         public ColorDepth Depth
         {
             get { return depth; }
-            set { ChangePaletteDepth(value); }
+            set { Change_PaletteDepth(value); }
         }
         public int NumberOfPalettes
         {

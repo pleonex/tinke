@@ -1,23 +1,4 @@
-﻿/*
- * Copyright (C) 2011  pleoNeX
- *
- *   This program is free software: you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation, either version 3 of the License, or
- *   (at your option) any later version.
- *
- *   This program is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU General Public License for more details.
- *
- *   You should have received a copy of the GNU General Public License
- *   along with this program.  If not, see <http://www.gnu.org/licenses/>. 
- *
- * Programador: pleoNeX
- * 
- */
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -26,7 +7,7 @@ using System.Drawing;
 using PluginInterface;
 using System.IO;
 
-namespace Common
+namespace Comun
 {
     class TGA
     {
@@ -41,13 +22,13 @@ namespace Common
 
         public Control Show_Info()
         {
-            return new BasicControl(Leer(), pluginHost);
+            return new BasicControl(Leer());
         }
 
         private Bitmap Leer()
         {
-            Bitmap imagen;
-
+        	Bitmap imagen;
+        	
             BinaryReader br = new BinaryReader(File.OpenRead(archivo));
             sTGA tga = new sTGA();
 
@@ -56,7 +37,7 @@ namespace Common
             tga.header.colorMap = br.ReadBoolean();
             #region Image Type
             switch (br.ReadByte())
-            {
+            { 
                 case 0x00:
                     tga.header.image_type = ImageType.none;
                     break;
@@ -95,35 +76,24 @@ namespace Common
             tga.imageData.image_id = new String(br.ReadChars(tga.header.image_id_length));
             if (tga.header.colorMap)
             {
-                tga.imageData.colorMap = new Color[tga.header.colorMap_spec.length / (tga.header.colorMap_spec.entry_size / 8)];
-                switch (tga.header.colorMap_spec.entry_size)
-                {
-                    case 24:
-                        for (int c = 0; c < tga.imageData.colorMap.Length; c++)
-                        {
-                            Color newColor = Color.FromArgb(br.ReadByte(), br.ReadByte(), br.ReadByte());
-                            tga.imageData.colorMap[c] = newColor;
-                        }
-                        br.ReadBytes(tga.header.colorMap_spec.length - tga.imageData.colorMap.Length * 3);
-                        break;
-                }
+            	br.ReadBytes(tga.header.colorMap_spec.length);
+            	// TODO: Añadir campo, generalmente no aparece
             }
             imagen = new Bitmap(tga.header.image_spec.width, tga.header.image_spec.height);
             #region Obtener colores de pixels
             Color[] colores = new Color[tga.header.image_spec.height * tga.header.image_spec.width];
-            int i = 0;
-            switch (tga.header.image_type)
-            {
+            
+            switch (tga.header.image_type) {
 
-                case TGA.ImageType.RLE_TrueColor:
-                    // Primero descomprimimos
-                    long pos = br.BaseStream.Position;
-                    br.Close();
-                    tga.imageData.image = RLE.Descomprimir_Pixel(archivo, ref pos, tga.header.image_spec.depth,
-                                                          tga.header.image_spec.width, tga.header.image_spec.height);
-                    br = new BinaryReader(File.OpenRead(archivo));
-                    br.BaseStream.Position = pos;
-                    // Luego convertimos los colores
+				case TGA.ImageType.RLE_TrueColor:
+            		// Primero descomprimimos
+            		long pos = br.BaseStream.Position;
+            		br.Close();
+            		tga.imageData.image = RLE.Descomprimir_Pixel(archivo, ref pos, tga.header.image_spec.depth,
+            		                                      tga.header.image_spec.width, tga.header.image_spec.height);
+            		br = new BinaryReader(File.OpenRead(archivo));
+            		br.BaseStream.Position = pos;
+            		// Luego convertimos los colores
                     for (int j = 0; j < colores.Length; j++)
                     {
                         if (tga.header.image_spec.depth == 0x20)
@@ -134,49 +104,31 @@ namespace Common
                             colores[j] = Color.FromArgb(255, tga.imageData.image[3 * j],
                                                         tga.imageData.image[3 * j + 1], tga.imageData.image[3 * j + 2]);
                     }
-                    // Set pixels colors
-                    for (int y = tga.header.image_spec.height - 1; y > 0; y--)
-                    {
-                        for (int x = 0; x < tga.header.image_spec.width; x++)
-                        {
-                            imagen.SetPixel(x, y, colores[i]);
-                            i++;
-                        }
-                    }
-                    break;
-
-                case TGA.ImageType.Uncompressed_TrueColor:
-                    colores = pluginHost.BGR555ToColor(br.ReadBytes(tga.header.image_spec.height * tga.header.image_spec.width * 2));
-                    for (int y = tga.header.image_spec.height - 1; y > 0; y--)
-                    {
-                        for (int x = 0; x < tga.header.image_spec.width; x++)
-                        {
-                            imagen.SetPixel(x, y, colores[i]);
-                            i++;
-                        }
-                    }
-
-                    break;
-
-                case TGA.ImageType.Uncompressed_ColorMapped:
-                    for (int y = 0; y < tga.header.image_spec.height; y++)
-                    {
-                        for (int x = 0; x < tga.header.image_spec.width; x++)
-                        {
-                            imagen.SetPixel(x, y, tga.imageData.colorMap[br.ReadByte()]);
-                            i++;
-                        }
-                    }
-                    break;
-                case TGA.ImageType.Uncompressed_BlackWhite:
-                case TGA.ImageType.RLE_BlackWhite:
-                case TGA.ImageType.RLE_ColorMapped:
-                case TGA.ImageType.noSopported:
-                default:
-                    throw new Exception("Invalid value for ImageType");
+					break;
+					
+            	case TGA.ImageType.Uncompressed_TrueColor:
+            		colores = pluginHost.BGR555(br.ReadBytes(tga.header.image_spec.height * tga.header.image_spec.width * 2));
+            		break;
+            		
+            	case TGA.ImageType.Uncompressed_BlackWhite:            		
+            	case TGA.ImageType.RLE_BlackWhite:
+            	case TGA.ImageType.RLE_ColorMapped:  
+            	case TGA.ImageType.Uncompressed_ColorMapped:            		
+            	case TGA.ImageType.noSopported:
+            	default:
+            		throw new Exception("Invalid value for ImageType");
             }
             #endregion
-
+            int i = 0;
+            for (int y = tga.header.image_spec.height - 1; y > 0; y--)
+            {
+            	for (int x = 0; x < tga.header.image_spec.width; x++)
+            	{
+            		imagen.SetPixel(x, y, colores[i]);
+            		i++;
+            	}
+            }
+            
             br.Close();
             return imagen;
         }
@@ -197,7 +149,7 @@ namespace Common
         struct ImageData
         {
             public string image_id;
-            public Color[] colorMap;
+            public byte[] colorMap;
             public byte[] image;
         }
 
@@ -220,13 +172,13 @@ namespace Common
         }
         struct Image_Spec
         {
-            public ushort posX;
-            public ushort posY;
-            public ushort width;
-            public ushort height;
-            public byte depth;
-            public byte descriptor;
-
+        	public ushort posX;
+        	public ushort posY;
+        	public ushort width;
+        	public ushort height;
+        	public byte depth;
+        	public byte descriptor;
+        	
         }
     }
 }

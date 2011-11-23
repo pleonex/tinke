@@ -67,7 +67,7 @@ namespace LASTWINDOW
         public sFolder Unpack(string file, int id)
         {
             if (file.ToUpper().EndsWith(".PACK"))
-                PACK.Leer(pluginHost, file);
+                return PACK.Leer(pluginHost, file);
 
             return new sFolder();
         }

@@ -9,6 +9,23 @@ namespace Tinke.Nitro
 {
     public static class FAT
     {
+
+        public static Estructuras.sFAT[] ReadFAT(string romFile, uint fatOffset, uint fatSize)
+        {
+            Estructuras.sFAT[] fat = new Estructuras.sFAT[fatSize / 0x08];    // Number of files
+
+            BinaryReader br = new BinaryReader(File.OpenRead(romFile));
+            br.BaseStream.Position = fatOffset;
+
+            for (int i = 0; i < fat.Length; i++)
+            {
+                fat[i].offset = br.ReadUInt32();
+                fat[i].size = br.ReadUInt32() - fat[i].offset;
+            }
+
+            br.Close();
+            return fat;
+        }
         public static sFolder LeerFAT(string file, UInt32 offset, UInt32 size, sFolder root)
         {
             BinaryReader br = new BinaryReader(File.OpenRead(file));

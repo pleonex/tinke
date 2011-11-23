@@ -50,7 +50,7 @@ namespace Images
 
             ReadLanguage();
 
-            picPalette.Image = palette.GetPaletteImage(0);
+            picPalette.Image = palette.Get_PaletteImage(0);
 
             numericPalette.Maximum = palette.NumberOfPalettes - 1;
             label3.Text = "of " + (palette.NumberOfPalettes - 1).ToString();
@@ -71,19 +71,19 @@ namespace Images
 
         private void numericPalette_ValueChanged(object sender, EventArgs e)
         {
-            picPalette.Image = palette.GetPaletteImage((int)numericPalette.Value);
+            picPalette.Image = palette.Get_PaletteImage((int)numericPalette.Value);
         }
         private void numericStartByte_ValueChanged(object sender, EventArgs e)
         {
             palette.StartByte = (int)numericStartByte.Value;
-            picPalette.Image = palette.GetPaletteImage((int)numericPalette.Value);
+            picPalette.Image = palette.Get_PaletteImage((int)numericPalette.Value);
             numericPalette.Maximum = palette.NumberOfPalettes - 1;
             label3.Text = "of " + (palette.NumberOfPalettes - 1).ToString();
         }
         private void comboDepth_SelectedIndexChanged(object sender, EventArgs e)
         {
             palette.Depth = (comboDepth.SelectedIndex == 0 ? ColorDepth.Depth4Bit : ColorDepth.Depth8Bit);
-            picPalette.Image = palette.GetPaletteImage((int)numericPalette.Value);
+            picPalette.Image = palette.Get_PaletteImage((int)numericPalette.Value);
             numericPalette.Value = 0;
             numericPalette.Maximum = palette.NumberOfPalettes - 1;
             label3.Text = "of " + (palette.NumberOfPalettes - 1).ToString();
@@ -111,7 +111,7 @@ namespace Images
                 pic.Size = new Size(160, 160);
                 pic.Location = new Point(x, y);
                 pic.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-                pic.Image = palette.GetPaletteImage(i);
+                pic.Image = palette.Get_PaletteImage(i);
                 Label lbl = new Label();
                 lbl.Text = "Palette " + (i + 1).ToString();
                 lbl.Location = new Point(x, y - 15);

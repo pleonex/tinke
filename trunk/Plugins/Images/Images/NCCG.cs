@@ -13,18 +13,14 @@ namespace Images
     {
         sNCCG nccg;
 
-        public NCCG(IPluginHost pluginHost, string file, int id) : base(pluginHost)
+        public NCCG(IPluginHost pluginHost, string file, int id) : base(pluginHost, file, id)
         {
-            this.id = id;
-            Read(file);
         }
 
-        private void Read(string file)
+        public override void Read(string file)
         {
             // Image with:
             // Horizontal as tile form
-
-            this.fileName = Path.GetFileName(file);
             BinaryReader br = new BinaryReader(File.OpenRead(file));
             nccg = new sNCCG();
 
@@ -74,12 +70,12 @@ namespace Images
 
             br.Close();
 
-            SetTiles(tiles, (int)nccg.charS.width, (int)nccg.charS.height,
+            Set_Tiles(tiles, (int)nccg.charS.width, (int)nccg.charS.height,
                 (nccg.charS.depth == 0 ? ColorDepth.Depth4Bit : ColorDepth.Depth8Bit),
                 TileOrder.Horizontal, false);
         }
 
-        public override void WriteTiles(string fileOut)
+        public override void Write_Tiles(string fileOut)
         {
             Console.WriteLine("Write Tiles - NCCG");
         }

@@ -56,7 +56,7 @@ namespace Images
             this.pluginHost = pluginHost;
             btnImport.Enabled = image.CanEdit;
 
-            pic.Image = image.GetImage(palette.Palette);
+            pic.Image = image.Get_Image(palette.Palette);
 
             this.numericWidth.Value = pic.Image.Width;
             this.numericHeight.Value = pic.Image.Height;
@@ -84,13 +84,14 @@ namespace Images
             InitializeComponent();
 
             stop = true;
+            this.pluginHost = pluginHost;
             this.isMap = true;
             this.palette = palette;
             this.image = image;
             this.map = map;
-            // btnImport.Enabled = map.CanEdit;
+            btnImport.Enabled = map.CanEdit;
 
-            //pic.Image = pluginHost.Bitmap_NCGR(newTile, paleta, 0);
+            pic.Image = map.Get_Image(image, palette);
 
             this.numericWidth.Value = pic.Image.Width;
             this.numericHeight.Value = pic.Image.Height;
@@ -112,8 +113,12 @@ namespace Images
             if (stop)
                 return;
 
-            image.StartByte = (int)numericStart.Value;
-            pic.Image = image.GetImage(palette.Palette);
+            if (!isMap)
+                image.StartByte = (int)numericStart.Value;
+            else
+                map.StartByte = (int)numericStart.Value;
+
+            Update_Image();
         }
         private void numericSize_ValueChanged(object sender, EventArgs e)
         {
@@ -122,7 +127,8 @@ namespace Images
 
             image.Height = (int)numericHeight.Value;
             image.Width = (int)numericWidth.Value;
-            pic.Image = image.GetImage(palette.Palette);
+
+            Update_Image();
         }
         private void comboDepth_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -130,10 +136,14 @@ namespace Images
                 return;
 
             image.Depth = (comboDepth.Text == "4 bpp" ? ColorDepth.Depth4Bit : ColorDepth.Depth8Bit);
-            pic.Image = image.GetImage(palette.Palette);
+
+            Update_Image();
         }
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
-        {            
+        {
+            if (stop)
+                return;
+
             switch (comboBox1.SelectedIndex)
             {
                 case 0:
@@ -152,18 +162,15 @@ namespace Images
                     break;
             }
 
-            pic.Image = image.GetImage(palette.Palette);
+            pic.Image = image.Get_Image(palette.Palette);
         }
-        private void UpdateImage()
+
+        private void Update_Image()
         {
-            //if (isMap)
-            //{
-            //    NCGR newTile = tile;
-            //    newTile.rahc.tileData = pluginHost.Transform_NSCR(map, tile.rahc.tileData);
-            //    pic.Image = pluginHost.Bitmap_NCGR(newTile, paleta, startTile);
-            //}
-            //else
-            //    pic.Image = pluginHost.Bitmap_NCGR(tile, paleta, startTile);
+            if (!isMap)
+                pic.Image = image.Get_Image(palette.Palette);
+            else
+                pic.Image = map.Get_Image(image, palette);
         }
 
         private void ReadLanguage()
@@ -207,7 +214,7 @@ namespace Images
                 String tileFile = System.IO.Path.GetTempFileName() + '.' + image.FileName;
                 // TODO: set new tile data
 
-                image.WriteTiles(tileFile);
+                image.Write_Tiles(tileFile);
                 pluginHost.ChangeFile(image.ID, tileFile);
 
                 if (isMap)
@@ -278,6 +285,7 @@ namespace Images
             bw.Flush();
             bw.Close();
         }
+
         private void btnSave_Click(object sender, EventArgs e)
         {
             SaveFileDialog o = new SaveFileDialog();
@@ -316,7 +324,7 @@ namespace Images
         private void trackZoom_Scroll(object sender, EventArgs e)
         {
             image.Zoom = trackZoom.Value;
-            pic.Image = image.GetImage(palette.Palette);
+            Update_Image();
         }
         private void checkTransparency_CheckedChanged(object sender, EventArgs e)
         {
@@ -327,7 +335,7 @@ namespace Images
                 pic.Image = imageT;
             }
             else
-                pic.Image = image.GetImage(palette.Palette);
+                Update_Image();
         }
         private void btnBgd_Click(object sender, EventArgs e)
         {
