@@ -59,7 +59,15 @@ namespace Images
             TileOrder tileOrder, bool editable)
         {
             this.pluginHost = pluginHost;
-            SetTiles(tiles, width, height, depth, tileOrder, editable);
+            Set_Tiles(tiles, width, height, depth, tileOrder, editable);
+        }
+        public ImageBase(IPluginHost pluginHost, string file, int id)
+        {
+            this.pluginHost = pluginHost;
+            this.id = id;
+            this.fileName = System.IO.Path.GetFileName(file);
+
+            Read(file);
         }
 
         public NCGR Get_NCGR()
@@ -96,14 +104,15 @@ namespace Images
             return ntft;
         }
 
-        public Image GetImage(Color[][] palette)
+        public Image Get_Image(Color[][] palette)
         {
             return pluginHost.Bitmap_NTFT(Get_NTFT(), palette, tileOrder, 0, width, height, zoom);
         }
 
-        public abstract void WriteTiles(string fileOut);
+        public abstract void Read(string fileIn);
+        public abstract void Write_Tiles(string fileOut);
 
-        public void ChangeTileDepth(ColorDepth newDepth)
+        public void Change_TileDepth(ColorDepth newDepth)
         {
             if (newDepth == depth)
                 return;
@@ -131,7 +140,7 @@ namespace Images
 
             pluginHost.Set_NCGR(Get_NCGR());
         }
-        public void ChangeTileOrder(TileOrder newTileOrder)
+        public void Change_TileOrder(TileOrder newTileOrder)
         {
             if (newTileOrder == tileOrder)
                 return;
@@ -143,41 +152,53 @@ namespace Images
                 tiles = new byte[1][];
                 tiles[0] = newData;
                 tilePal = new byte[tiles[0].Length];
+                width *= 8;
+                height *= 8;
             }
             else
             {
                 tiles = pluginHost.BytesToTiles(tiles[0]);
                 tilePal = new byte[tiles.Length];
+                width /= 8;
+                height /= 8;
             }
 
             pluginHost.Set_NCGR(Get_NCGR());
         }
-        public void ChangeStartByte(int start)
+        public void Change_StartByte(int start)
         {
             if (start < 0 || start >= original.Length)
                 return;
 
             startByte = start;
 
+            // Ge the original data and convert it to the correct depth
+            Byte[] newData;
+            if (depth == ColorDepth.Depth4Bit)
+                newData = pluginHost.Bit8ToBit4(original);
+            else
+                newData = original;
+
+
             if (tileOrder == TileOrder.NoTiled)
             {
                 tiles = new byte[1][];
-                tiles[0] = new byte[original.Length - start];
-                Array.Copy(original, start, tiles[0], 0, tiles[0].Length);
+                tiles[0] = new byte[newData.Length - start];
+                Array.Copy(newData, start, tiles[0], 0, tiles[0].Length);
                 tilePal = new byte[tiles[0].Length];
             }
             else if (tileOrder == TileOrder.Horizontal)
             {
-                Byte[] newData = new byte[original.Length - start];
-                Array.Copy(original, start, newData, 0, newData.Length);
-                tiles = pluginHost.BytesToTiles(newData);
+                Byte[] linealData = new byte[newData.Length - start];
+                Array.Copy(newData, start, linealData, 0, linealData.Length);
+                tiles = pluginHost.BytesToTiles(linealData);
                 tilePal = new byte[tiles.Length];
             }
 
             pluginHost.Set_NCGR(Get_NCGR());
         }
 
-        public void SetTiles(Byte[][] tiles, int width, int height, ColorDepth depth,
+        public void Set_Tiles(Byte[][] tiles, int width, int height, ColorDepth depth,
             TileOrder tileOrder, bool editable)
         {
             this.tiles = tiles;
@@ -198,7 +219,12 @@ namespace Images
             // Get the original data for changes in startByte
             List<Byte> tempBytes = new List<byte>();
             for (int i = 0; i < tiles.Length; i++)
-                tempBytes.AddRange(tiles[i]);
+            {
+                if (depth == ColorDepth.Depth4Bit)
+                    tempBytes.AddRange(pluginHost.Bit4ToBit8(tiles[i]));
+                else
+                    tempBytes.AddRange(tiles[i]);
+            }
             original = tempBytes.ToArray();
 
             pluginHost.Set_NCGR(Get_NCGR());
@@ -230,7 +256,7 @@ namespace Images
         public int StartByte
         {
             get { return startByte; }
-            set { ChangeStartByte(value); }
+            set { Change_StartByte(value); }
         }
         public int Height
         {
@@ -250,7 +276,7 @@ namespace Images
             set
             {
                 width = value;
-                if (tileOrder == TileOrder.NoTiled)
+                if (tileOrder == TileOrder.Horizontal)
                     width /= 8;
 
                 pluginHost.Set_NCGR(Get_NCGR());
@@ -259,12 +285,12 @@ namespace Images
         public ColorDepth Depth
         {
             get { return depth; }
-            set { ChangeTileDepth(value); }
+            set { Change_TileDepth(value); }
         }
         public TileOrder TileForm
         {
             get { return tileOrder; }
-            set { ChangeTileOrder(value); }
+            set { Change_TileOrder(value); }
         }
         public Byte[][] Tiles
         {
@@ -286,5 +312,22 @@ namespace Images
             }
         }
         #endregion
+    }
+
+    public class TestImage : ImageBase
+    {
+        public TestImage(IPluginHost pluginHost)
+            : base(pluginHost)
+        {
+        }
+
+        public override void Read(string fileIn)
+        {
+            throw new NotImplementedException();
+        }
+        public override void Write_Tiles(string fileOut)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

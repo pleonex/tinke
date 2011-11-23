@@ -75,6 +75,8 @@ namespace Tinke
 
         public Color[] BGR555ToColor(byte[] datos) { return Convertir.BGR555(datos); }
         public Byte[] ColorToBGR555(Color[] color) { return Convertir.ColorToBGR555(color); }
+        public NTFS MapInfo(ushort value) { return Convertir.MapInfo(value); }
+        public ushort MapInfo(NTFS map) { return Convertir.MapInfo(map); }
         public Byte[] TilesToBytes(byte[][] tiles, int startByte = 0) { return Convertir.TilesToBytes(tiles, startByte); }
         public Byte[][] BytesToTiles(byte[] bytes) { return Convertir.BytesToTiles(bytes); }
         public Byte[][] BytesToTiles_NoChanged(byte[] bytes, int tilesX, int tilesY) { return Convertir.BytesToTiles_NoChanged(bytes, tilesX, tilesY); }

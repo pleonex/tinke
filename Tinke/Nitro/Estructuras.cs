@@ -110,6 +110,12 @@ namespace Tinke.Nitro
             public sFolder subTable;         // SubTable que contiene los nombres de archivos y carpetas que contiene el directorio
         }
 
+        public struct sFAT
+        {
+            public uint offset;
+            public uint size;
+        }
+
         public struct ARMOverlay
         {
             public UInt32 OverlayID;

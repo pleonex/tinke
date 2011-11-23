@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ADX.cs" />
     <Compile Include="Compression\ADPCM.cs" />
     <Compile Include="Helper.cs" />
     <Compile Include="Main.cs" />
@@ -56,6 +57,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="SADL.cs" />
+    <Compile Include="SoundBase.cs" />
     <Compile Include="SoundControl.cs">
       <SubType>UserControl</SubType>
     </Compile>

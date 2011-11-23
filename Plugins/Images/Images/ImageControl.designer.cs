@@ -70,6 +70,7 @@ namespace Images
             this.numericStart = new System.Windows.Forms.NumericUpDown();
             this.label5 = new System.Windows.Forms.Label();
             this.pic = new System.Windows.Forms.PictureBox();
+            this.panel1 = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.numericWidth)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericHeight)).BeginInit();
             this.groupProp.SuspendLayout();
@@ -77,6 +78,7 @@ namespace Images
             ((System.ComponentModel.ISupportInitialize)(this.trackZoom)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericStart)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pic)).BeginInit();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // numericWidth
@@ -86,7 +88,7 @@ namespace Images
             0,
             0,
             0});
-            this.numericWidth.Location = new System.Drawing.Point(64, 40);
+            this.numericWidth.Location = new System.Drawing.Point(64, 84);
             this.numericWidth.Maximum = new decimal(new int[] {
             65536,
             0,
@@ -110,7 +112,7 @@ namespace Images
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(6, 42);
+            this.label1.Location = new System.Drawing.Point(6, 86);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(26, 13);
             this.label1.TabIndex = 2;
@@ -119,7 +121,7 @@ namespace Images
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(128, 42);
+            this.label2.Location = new System.Drawing.Point(128, 86);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(26, 13);
             this.label2.TabIndex = 3;
@@ -132,7 +134,7 @@ namespace Images
             0,
             0,
             0});
-            this.numericHeight.Location = new System.Drawing.Point(181, 40);
+            this.numericHeight.Location = new System.Drawing.Point(181, 84);
             this.numericHeight.Maximum = new decimal(new int[] {
             65536,
             0,
@@ -175,9 +177,10 @@ namespace Images
             this.groupProp.Controls.Add(this.numericWidth);
             this.groupProp.Controls.Add(this.label2);
             this.groupProp.Controls.Add(this.label1);
-            this.groupProp.Location = new System.Drawing.Point(269, 197);
+            this.groupProp.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.groupProp.Location = new System.Drawing.Point(0, 306);
             this.groupProp.Name = "groupProp";
-            this.groupProp.Size = new System.Drawing.Size(243, 315);
+            this.groupProp.Size = new System.Drawing.Size(512, 206);
             this.groupProp.TabIndex = 5;
             this.groupProp.TabStop = false;
             this.groupProp.Text = "S02";
@@ -185,7 +188,7 @@ namespace Images
             // btnImport
             // 
             this.btnImport.Enabled = false;
-            this.btnImport.Location = new System.Drawing.Point(135, 278);
+            this.btnImport.Location = new System.Drawing.Point(388, 171);
             this.btnImport.Name = "btnImport";
             this.btnImport.Size = new System.Drawing.Size(100, 32);
             this.btnImport.TabIndex = 23;
@@ -197,7 +200,7 @@ namespace Images
             // btnBgdTrans
             // 
             this.btnBgdTrans.Enabled = false;
-            this.btnBgdTrans.Location = new System.Drawing.Point(157, 151);
+            this.btnBgdTrans.Location = new System.Drawing.Point(410, 35);
             this.btnBgdTrans.Name = "btnBgdTrans";
             this.btnBgdTrans.Size = new System.Drawing.Size(78, 35);
             this.btnBgdTrans.TabIndex = 22;
@@ -208,7 +211,7 @@ namespace Images
             // pictureBgd
             // 
             this.pictureBgd.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pictureBgd.Location = new System.Drawing.Point(116, 151);
+            this.pictureBgd.Location = new System.Drawing.Point(369, 35);
             this.pictureBgd.Name = "pictureBgd";
             this.pictureBgd.Size = new System.Drawing.Size(35, 35);
             this.pictureBgd.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -217,7 +220,7 @@ namespace Images
             // 
             // btnBgd
             // 
-            this.btnBgd.Location = new System.Drawing.Point(8, 151);
+            this.btnBgd.Location = new System.Drawing.Point(261, 35);
             this.btnBgd.Name = "btnBgd";
             this.btnBgd.Size = new System.Drawing.Size(102, 35);
             this.btnBgd.TabIndex = 20;
@@ -228,7 +231,7 @@ namespace Images
             // checkTransparency
             // 
             this.checkTransparency.AutoSize = true;
-            this.checkTransparency.Location = new System.Drawing.Point(8, 95);
+            this.checkTransparency.Location = new System.Drawing.Point(9, 161);
             this.checkTransparency.Name = "checkTransparency";
             this.checkTransparency.Size = new System.Drawing.Size(46, 17);
             this.checkTransparency.TabIndex = 19;
@@ -239,7 +242,7 @@ namespace Images
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(211, 211);
+            this.label8.Location = new System.Drawing.Point(468, 85);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(19, 13);
             this.label8.TabIndex = 18;
@@ -248,7 +251,7 @@ namespace Images
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(6, 211);
+            this.label7.Location = new System.Drawing.Point(269, 85);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(13, 13);
             this.label7.TabIndex = 17;
@@ -258,7 +261,7 @@ namespace Images
             // 
             this.lblZoom.AutoSize = true;
             this.lblZoom.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblZoom.Location = new System.Drawing.Point(92, 200);
+            this.lblZoom.Location = new System.Drawing.Point(344, 74);
             this.lblZoom.Name = "lblZoom";
             this.lblZoom.Size = new System.Drawing.Size(34, 17);
             this.lblZoom.TabIndex = 16;
@@ -268,7 +271,7 @@ namespace Images
             // 
             this.trackZoom.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
             this.trackZoom.LargeChange = 2;
-            this.trackZoom.Location = new System.Drawing.Point(9, 227);
+            this.trackZoom.Location = new System.Drawing.Point(261, 101);
             this.trackZoom.Maximum = 20;
             this.trackZoom.Minimum = 1;
             this.trackZoom.Name = "trackZoom";
@@ -281,7 +284,7 @@ namespace Images
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(6, 69);
+            this.label6.Location = new System.Drawing.Point(6, 125);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(26, 13);
             this.label6.TabIndex = 11;
@@ -294,7 +297,7 @@ namespace Images
             this.comboBox1.Items.AddRange(new object[] {
             "S16",
             "S17"});
-            this.comboBox1.Location = new System.Drawing.Point(116, 66);
+            this.comboBox1.Location = new System.Drawing.Point(116, 122);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(119, 21);
             this.comboBox1.TabIndex = 10;
@@ -303,7 +306,7 @@ namespace Images
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(128, 16);
+            this.label4.Location = new System.Drawing.Point(128, 47);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(31, 13);
             this.label4.TabIndex = 9;
@@ -311,7 +314,7 @@ namespace Images
             // 
             // btnSave
             // 
-            this.btnSave.Location = new System.Drawing.Point(10, 278);
+            this.btnSave.Location = new System.Drawing.Point(261, 171);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(100, 32);
             this.btnSave.TabIndex = 6;
@@ -327,7 +330,7 @@ namespace Images
             this.comboDepth.Items.AddRange(new object[] {
             "4 bpp",
             "8 bpp"});
-            this.comboDepth.Location = new System.Drawing.Point(181, 13);
+            this.comboDepth.Location = new System.Drawing.Point(181, 44);
             this.comboDepth.Name = "comboDepth";
             this.comboDepth.Size = new System.Drawing.Size(54, 21);
             this.comboDepth.TabIndex = 8;
@@ -336,7 +339,7 @@ namespace Images
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(6, 16);
+            this.label3.Location = new System.Drawing.Point(6, 47);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(26, 13);
             this.label3.TabIndex = 7;
@@ -344,7 +347,7 @@ namespace Images
             // 
             // numericStart
             // 
-            this.numericStart.Location = new System.Drawing.Point(64, 14);
+            this.numericStart.Location = new System.Drawing.Point(64, 45);
             this.numericStart.Maximum = new decimal(new int[] {
             65535,
             0,
@@ -358,7 +361,7 @@ namespace Images
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(3, 462);
+            this.label5.Location = new System.Drawing.Point(6, 290);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(26, 13);
             this.label5.TabIndex = 6;
@@ -369,7 +372,6 @@ namespace Images
             this.pic.BackColor = System.Drawing.Color.Transparent;
             this.pic.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pic.Location = new System.Drawing.Point(0, 0);
-            this.pic.MaximumSize = new System.Drawing.Size(260, 459);
             this.pic.Name = "pic";
             this.pic.Size = new System.Drawing.Size(100, 100);
             this.pic.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
@@ -377,13 +379,23 @@ namespace Images
             this.pic.TabStop = false;
             this.pic.DoubleClick += new System.EventHandler(this.pic_DoubleClick);
             // 
+            // panel1
+            // 
+            this.panel1.AutoScroll = true;
+            this.panel1.Controls.Add(this.pic);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel1.Location = new System.Drawing.Point(0, 0);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(512, 287);
+            this.panel1.TabIndex = 7;
+            // 
             // ImageControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Transparent;
+            this.Controls.Add(this.panel1);
             this.Controls.Add(this.label5);
-            this.Controls.Add(this.pic);
             this.Controls.Add(this.groupProp);
             this.Name = "ImageControl";
             this.Size = new System.Drawing.Size(512, 512);
@@ -395,6 +407,8 @@ namespace Images
             ((System.ComponentModel.ISupportInitialize)(this.trackZoom)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericStart)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pic)).EndInit();
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -425,5 +439,6 @@ namespace Images
         private System.Windows.Forms.Button btnBgd;
         private System.Windows.Forms.Button btnBgdTrans;
         internal System.Windows.Forms.Button btnImport;
+        private System.Windows.Forms.Panel panel1;
     }
 }

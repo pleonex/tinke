@@ -14,9 +14,7 @@
  *   You should have received a copy of the GNU General Public License
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  *
- * Programador: pleoNeX
- * Programa utilizado: SharpDevelop
- * Fecha: 16/02/2011
+ * By: pleoNeX
  * 
  */
 using System;
@@ -36,7 +34,7 @@ namespace Images
 
         PaletteBase palette;
         ImageBase image;
-        
+        MapBase map;
 
 		public void Initialize(IPluginHost pluginHost)
 		{
@@ -73,6 +71,10 @@ namespace Images
             // Tiles
             if (ext == "NCCG")
                 return Format.Tile;
+
+            // Map
+            if (ext == "NCSC")
+                return Format.Map;
 			
 			return Format.Unknown;
 		}
@@ -86,6 +88,9 @@ namespace Images
 
             if (format == Format.Tile && palette.Loaded)
                 return new ImageControl(pluginHost, image, palette);
+
+            if (format == Format.Map && palette.Loaded && image.Loaded)
+                return new ImageControl(pluginHost, image, palette, map);
 
             /*if (archivo.ToUpper().EndsWith(".NBFP"))
             {
@@ -185,7 +190,7 @@ namespace Images
                 }
             }
 
-
+            // Palette
             if (ext == "NCCL")
             {
                 palette = new NCCL(pluginHost, file, id);
@@ -197,10 +202,23 @@ namespace Images
                 return Format.Palette;
             }
 
+            // Tile
             if (ext == "NCCG")
             {
                 image = new NCCG(pluginHost, file, id);
                 return Format.Tile;
+            }
+
+            // Map
+            if (ext == "NCSC")
+            {
+                map = new NCSC(pluginHost, file, id);
+                if (map.Width != 0)
+                    image.Width = map.Width;
+                if (map.Height != 0)
+                    image.Height = map.Height;
+
+                return Format.Map;
             }
 
             return Format.Unknown;

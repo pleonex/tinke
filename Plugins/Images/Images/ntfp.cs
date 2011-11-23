@@ -29,17 +29,12 @@ namespace Images
 {
     public class ntfp : PaletteBase
     {		
-		public ntfp(IPluginHost pluginHost, string file, int id) : base(pluginHost)
+		public ntfp(IPluginHost pluginHost, string file, int id) : base(pluginHost, file, id)
 		{
-			this.pluginHost = pluginHost;
-            this.id = id;
-
-            Read(file);
 		}
 
-        private void Read(string file)
+        public override void Read(string file)
         {
-            this.fileName = Path.GetFileName(file);
             BinaryReader br = new BinaryReader(File.OpenRead(file));
 
             // Color data
@@ -48,10 +43,10 @@ namespace Images
 
             br.Close();
 
-            SetPalette(palette, false);
+            Set_Palette(palette, false);
         }
 
-        public override void WritePalette(string fileOut)
+        public override void Write_Palette(string fileOut)
         {
             throw new NotImplementedException();
         }

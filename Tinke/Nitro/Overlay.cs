@@ -51,6 +51,28 @@ namespace Tinke.Nitro
             return overlays;
 
         }
+        public static sFile[] ReadBasicOverlays(string romFile, UInt32 offset, UInt32 size, bool arm9, Estructuras.sFAT[] fat)
+        {
+            sFile[] overlays = new sFile[size / 0x20];
+            BinaryReader br = new BinaryReader(File.OpenRead(romFile));
+            br.BaseStream.Position = offset;
+
+            for (int i = 0; i < overlays.Length; i++)
+            {
+                overlays[i] = new sFile();
+                overlays[i].name = "overlay" + (arm9 ? '9' : '7') + '_' + br.ReadUInt32();
+                br.ReadBytes(20);
+                overlays[i].id = (ushort)br.ReadUInt32();
+                br.ReadBytes(4);
+                overlays[i].offset = fat[overlays[i].id].offset;
+                overlays[i].size = fat[overlays[i].id].size;
+                overlays[i].path = romFile;
+
+            }
+
+            return overlays;
+        }
+
 
         public static void EscribirOverlays(string salida, sFolder overlays, string romFile)
         {

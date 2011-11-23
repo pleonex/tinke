@@ -12,13 +12,11 @@ namespace Images
     {
         sNCCL nccl;
 
-        public NCCL(IPluginHost pluginHost, string file, int id) : base(pluginHost)
+        public NCCL(IPluginHost pluginHost, string file, int id) : base(pluginHost, file, id)
         {
-            this.id = id;
-            Read(file);
         }
 
-        private void Read(string file)
+        public override void Read(string file)
         {
             BinaryReader br = new BinaryReader(File.OpenRead(file));
             nccl = new sNCCL();
@@ -55,11 +53,11 @@ namespace Images
 
             br.Close();
 
-            SetPalette(palette, false);
+            Set_Palette(palette, false);
             this.fileName = Path.GetFileName(file);
         }
 
-        public override void WritePalette(string fileOut)
+        public override void Write_Palette(string fileOut)
         {
             System.Windows.Forms.MessageBox.Show("Not supported");
         }

@@ -32,7 +32,7 @@ namespace Tinke
 {
     public static class Convertir
     {
-        #region Paleta
+        #region Palette
         /// <summary>
         /// A partir de un array de bytes devuelve un array de colores.
         /// </summary>
@@ -365,6 +365,29 @@ namespace Tinke
             }
         }
 
+        #endregion
+
+        #region Map
+        public static NTFS MapInfo(ushort value)
+        {
+            NTFS mapInfo = new NTFS();
+            
+            mapInfo.nTile = (ushort)(value & 0x3FF);
+            mapInfo.xFlip = (byte)((value >> 10) & 1);
+            mapInfo.yFlip = (byte)((value >> 11) & 1);
+            mapInfo.nPalette = (byte)((value >> 12) & 0xF);
+
+            return mapInfo;
+        }
+        public static ushort MapInfo(NTFS map)
+        {
+            int npalette = map.nPalette << 12;
+            int yFlip = map.yFlip << 11;
+            int xFlip = map.xFlip << 10;
+            int data = npalette + yFlip + xFlip + map.nTile;
+
+            return (ushort)data;
+        }
         #endregion
 
         /// <summary>
