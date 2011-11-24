@@ -1,5 +1,9 @@
 0.8.3
+*** 3D Model viewer for BMD0 (nsbmd)
+** Improved the perfomance reading roms
+** Improved image plugin.
 ** Fixed problem packing two or more times the same file.
+** Support for NCCL, NCCG and NCSC files
 
 0.8.2 public release (rev117)
 *** Improved Hexadecimal editor -> Now using Be.HexEditor (by Bernhard Elbl)

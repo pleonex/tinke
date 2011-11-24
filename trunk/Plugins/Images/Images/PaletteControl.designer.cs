@@ -78,7 +78,7 @@
             this.btnShow.Name = "btnShow";
             this.btnShow.Size = new System.Drawing.Size(160, 30);
             this.btnShow.TabIndex = 4;
-            this.btnShow.Text = "S0B";
+            this.btnShow.Text = "S02";
             this.btnShow.UseVisualStyleBackColor = true;
             this.btnShow.Click += new System.EventHandler(this.btnShow_Click);
             // 
@@ -88,7 +88,7 @@
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(95, 30);
             this.btnSave.TabIndex = 6;
-            this.btnSave.Text = "S0A";
+            this.btnSave.Text = "S03";
             this.btnSave.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnSave.UseVisualStyleBackColor = true;
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
@@ -109,7 +109,7 @@
             this.btnImport.Name = "btnImport";
             this.btnImport.Size = new System.Drawing.Size(106, 30);
             this.btnImport.TabIndex = 3;
-            this.btnImport.Text = "S13";
+            this.btnImport.Text = "S04";
             this.btnImport.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnImport.UseVisualStyleBackColor = true;
             this.btnImport.Click += new System.EventHandler(this.btnImport_Click);
@@ -117,11 +117,11 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(359, 97);
+            this.label2.Location = new System.Drawing.Point(313, 97);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(26, 13);
             this.label2.TabIndex = 1;
-            this.label2.Text = "S12";
+            this.label2.Text = "S05";
             // 
             // numericStartByte
             // 
@@ -141,9 +141,9 @@
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(135, 184);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(25, 13);
+            this.label3.Size = new System.Drawing.Size(26, 13);
             this.label3.TabIndex = 9;
-            this.label3.Text = "of 0";
+            this.label3.Text = "S02";
             // 
             // comboDepth
             // 
@@ -161,11 +161,11 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(350, 124);
+            this.label4.Location = new System.Drawing.Point(313, 124);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(39, 13);
+            this.label4.Size = new System.Drawing.Size(26, 13);
             this.label4.TabIndex = 11;
-            this.label4.Text = "Depth:";
+            this.label4.Text = "S06";
             // 
             // PaletteControl
             // 

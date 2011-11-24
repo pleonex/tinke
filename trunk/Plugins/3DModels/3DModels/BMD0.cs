@@ -750,20 +750,29 @@ namespace _3DModels
         }
         public static float Get_Double(int value, bool signed, int integer, int fractional)
         {
-            // Integer part
-            int intengerMask = (int)Math.Pow(2, integer) - 1;
-            float point = ((value >> fractional) & intengerMask);
-            
+            int integerMask = 0;
+            float point = 0;
+
+            if (signed)
+            {
+                if ((value >> (integer + fractional)) == 1)
+                {
+                    integerMask = (int)Math.Pow(2, integer + 1) - 1;
+                    int intPart = ((value >> fractional) & integerMask);
+                    point = intPart - (int)Math.Pow(2, integer + 1);
+                }
+                else
+                {
+                    integerMask = (int)Math.Pow(2, integer) - 1;
+                    point = ((value >> fractional) & integerMask);
+                }
+            }
+
+
             // Fractional part
             int fractionalMask = (int)Math.Pow(2, fractional) - 1;
             point += (float)(value & fractionalMask) / (fractionalMask + 1);
 
-            // sign
-            if (signed)
-            {
-                if ((value >> (integer + fractional)) == 1)
-                    point = -point;
-            }
 
             return point;
         }
@@ -1152,6 +1161,8 @@ namespace _3DModels
                     public struct Display
                     {
                         public List<Command> commands;
+                        public int materialAssoc;
+                        public int materialID;
                     }
                 }
             }

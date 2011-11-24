@@ -53,7 +53,7 @@ namespace Images
             nccg.attr.size = br.ReadUInt32();
             nccg.attr.width = br.ReadUInt32();
             nccg.attr.height = br.ReadUInt32();
-            nccg.attr.unknown = br.ReadBytes((int)(nccg.attr.width * nccg.attr.height));
+            nccg.attr.unknown = br.ReadBytes((int)nccg.attr.size - 0x10);
 
             // LINK section
             nccg.link.type = br.ReadChars(4);

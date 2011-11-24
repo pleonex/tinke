@@ -26,51 +26,36 @@ using PluginInterface;
 
 namespace Images
 {
-    public class ntft
-    {
-        IPluginHost pluginsHost;
-		string archivo;
-        int id;
-		
-		public ntft(IPluginHost pluginHost, string archivo, int id)
+    public class ntft : ImageBase
+    {		
+		public ntft(IPluginHost pluginHost, string archivo, int id) : base(pluginHost, archivo, id)
 		{
-			this.pluginsHost = pluginHost;
-			this.archivo = archivo;
-            this.id = id;
 		}
 		
-		public void Leer()
-		{
-			BinaryReader br = new BinaryReader(File.OpenRead(archivo));
-			uint file_size = (uint)new FileInfo(archivo).Length;
+        public override void Read(string fileIn)
+        {
+            BinaryReader br = new BinaryReader(File.OpenRead(fileIn));
+            int fileSize = (int)br.BaseStream.Length;
 
-			// Creamos un archivo NCGR genérico.
-			NCGR ncgr = new NCGR();
-            ncgr.id = (uint)id;
-			ncgr.header.id = "NTFT".ToCharArray();
-			ncgr.header.nSection = 1;
-			ncgr.header.constant = 0x0100;
-			ncgr.header.file_size = file_size;
-			// El archivo es NTFT raw, sin ninguna información.
-			ncgr.order = TileOrder.NoTiled;
-			ncgr.rahc.nTiles = (ushort)(0xC000);
-			ncgr.rahc.depth = System.Windows.Forms.ColorDepth.Depth8Bit;
-			ncgr.rahc.nTilesX = 0x0100;
-			ncgr.rahc.nTilesY = 0x00C0;
-			ncgr.rahc.tiledFlag = 0x00000001;
-			ncgr.rahc.size_section = file_size;
-			ncgr.rahc.tileData = new NTFT();
-			ncgr.rahc.tileData.nPalette = new byte[ncgr.rahc.nTiles];
-			ncgr.rahc.tileData.tiles = new byte[1][];
-            ncgr.rahc.tileData.tiles[0] = br.ReadBytes((int)ncgr.rahc.nTiles);
+            Byte[][] tiles = new byte[1][];
+            tiles[0] = br.ReadBytes(fileSize);
 
-			for (int i = 0; i < ncgr.rahc.nTiles; i++)
-			{
-				ncgr.rahc.tileData.nPalette[i] = 0;
-			}
-			
-			br.Close();
-			pluginsHost.Set_NCGR(ncgr);
-		}
+            int width = (fileSize < 0x100 ? fileSize : 0x0100);
+            int height = fileSize / width;
+            if (height == 0)
+                height = 1;
+
+            if (fileSize == 512)
+                width = height = 32;
+
+            br.Close();
+
+            Set_Tiles(tiles, width, height, System.Windows.Forms.ColorDepth.Depth8Bit, TileOrder.NoTiled, false);
+        }
+
+        public override void Write_Tiles(string fileOut)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
