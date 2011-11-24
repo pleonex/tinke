@@ -2,9 +2,7 @@
 <Language>
   <Español>
     <ImageControl>
-      <S01>
-        Haga doble click en la imagen para verla a tamaño real.
-      </S01>
+      <S01>Haga doble click en la imagen para verla a tamaño real.</S01>
       <S02>Propiedades</S02>
       <S03>Posición</S03>
       <S04>Campo</S04>
@@ -41,51 +39,29 @@
       <S23>¿Seleccionar color haciendo click en la imagen?</S23>
     </ImageControl>
     <PaletteControl>
-      <S01>Nº de paleta:</S01>
-      <S02>Propiedades</S02>
-      <S03>Campo</S03>
-      <S04>Valor</S04>
-      <S05>Número de paletas</S05>
-      <S06>Profundidad del color</S06>
-      <S07>Padding</S07>
-      <S08>Nº de colores por paleta</S08>
-      <S09>Tamaño de paleta</S09>
-      <S0A>Guardar</S0A>
-      <S0B>Mostrar todas las paletas</S0B>
-      <S0C>Paleta</S0C>
-      <S0D>Analizando paleta NCLR:</S0D>
-      <S0E>No hay secciones o hay de más ¿?: </S0E>
-      <S0F>paletas encontradas</S0F>
-      <S10>colores.</S10>
-      <S11>Modificar</S11>
-      <S12>Byte de inicio:</S12>
-      <S13>Importar</S13>
-      <S14>Cambiar de profundidad</S14>
+      <S00>Nº de paleta:</S00>
+      <S01>de </S01>
+      <S02>Mostrar todas las paletas</S02>
+      <S03>Guardar</S03>
+      <S04>Importar</S04>
+      <S05>Byte de inicio:</S05>
+      <S06>Profundidad:</S06>
+      <S07>Visor de paletas</S07>
+      <S08>Paleta </S08>
     </PaletteControl>
   </Español>
   <English>
     <PaletteControl>
-      <S01># palette:</S01>
-      <S02>Properties</S02>
-      <S03>Property</S03>
-      <S04>Content</S04>
-      <S05># palettes</S05>
-      <S06>Depth</S06>
-      <S07>Padding</S07>
-      <S08>Colors per palette</S08>
-      <S09>Palette length</S09>
-      <S0A>Save</S0A>
-      <S0B>Show all palettes</S0B>
-      <S0C>Palette</S0C>
-      <S0D>Analyzing NCLR palette:</S0D>
-      <S0E>Strange number of sections ¿?: </S0E>
-      <S0F>palettes found</S0F>
-      <S10>colors.</S10>
-      <S11>Modify</S11>
-      <S12>Start byte:</S12>
-      <S13>Import</S13>
-      <S14>Change the depth</S14>
-    </PaletteControl>
+      <S00>Number of palette:</S00>
+      <S01>of </S01>
+      <S02>Show all palettes</S02>
+      <S03>Save</S03>
+      <S04>Import</S04>
+      <S05>Offset:</S05>
+      <S06>Depth:</S06>
+      <S07>Palettes viewer</S07>
+      <S08>Palette </S08>
+   </PaletteControl>
     <ImageControl>
       <S01>Double-click to see the full image.</S01>
       <S02>Properties</S02>
@@ -126,26 +102,15 @@
   </English>
   <Français>
     <PaletteControl>
-      <S01>Numéro de palette :</S01>
-      <S02>Propriétés</S02>
-      <S03>Champ</S03>
-      <S04>Valeur</S04>
-      <S05>Nombre de palettes</S05>
-      <S06>Profondeur des couleurs</S06>
-      <S07>Padding</S07>
-      <S08>Nombre de couleurs par palette</S08>
-      <S09>Taille de la palette</S09>
-      <S0A>Sauvegarder</S0A>
-      <S0B>Montrer toutes les palettes</S0B>
-      <S0C>Palette</S0C>
-      <S0D>Analyser la palette NCLR :</S0D>
-      <S0E>Nombre étrange de sections ? :</S0E>
-      <S0F>palettes trouvées</S0F>
-      <S10>couleurs.</S10>
-      <S11>Modifier</S11>
-      <S12>Octet de départ :</S12>
-      <S13>Importer</S13>
-      <S14>Changer la profondeur</S14>
+      <S00>Numéro de palette :</S00>
+      <S01>de </S01>
+      <S02>Montrer toutes les palettes</S02>
+      <S03>Sauvegarder</S03>
+      <S04>Importer</S04>
+      <S05>Octet de départ :</S05>
+      <S06>Profondeur</S06>
+      <S07>Palettes viewer</S07>
+      <S08>Palette </S08>
     </PaletteControl>
     <ImageControl>
       <S01>

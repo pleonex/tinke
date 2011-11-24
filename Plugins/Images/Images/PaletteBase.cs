@@ -158,10 +158,26 @@ namespace Images
         {
             this.palette = palette;
             canEdit = editable;
-            if (palette.Length == 1)
+            if (palette.Length == 1 && palette[0].Length > 16)
                 depth = ColorDepth.Depth8Bit;
             else
                 depth = ColorDepth.Depth4Bit;
+
+            loaded = true;
+            pluginHost.Set_NCLR(Get_NCLR());
+
+            // Convert the palette to bytes, to store the original palette
+            List<Color> colors = new List<Color>();
+            for (int i = 0; i < palette.Length; i++)
+                colors.AddRange(palette[i]);
+            original = pluginHost.ColorToBGR555(colors.ToArray());
+            startByte = 0;
+        }
+        public void Set_Palette(Color[][] palette, ColorDepth depth, bool editable)
+        {
+            this.palette = palette;
+            canEdit = editable;
+            this.depth = depth;
 
             loaded = true;
             pluginHost.Set_NCLR(Get_NCLR());

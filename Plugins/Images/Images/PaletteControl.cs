@@ -35,6 +35,7 @@ namespace Images
     {
         IPluginHost pluginHost;
         PaletteBase palette;
+        string[] translation;
 
         public PaletteControl()
         {
@@ -65,6 +66,18 @@ namespace Images
                 XElement xml = XElement.Load(Application.StartupPath + Path.DirectorySeparatorChar + "Plugins" +
                     Path.DirectorySeparatorChar + "ImagesLang.xml");
                 xml = xml.Element(pluginHost.Get_Language()).Element("PaletteControl");
+
+                label1.Text = xml.Element("S00").Value;
+                btnShow.Text = xml.Element("S02").Value;
+                btnSave.Text = xml.Element("S03").Value;
+                btnImport.Text = xml.Element("S04").Value;
+                label2.Text = xml.Element("S05").Value;
+                label4.Text = xml.Element("S06").Value;
+
+                translation = new string[3];
+                translation[0] = xml.Element("S01").Value;
+                translation[1] = xml.Element("S07").Value;
+                translation[2] = xml.Element("S08").Value;
             }
             catch { throw new Exception("There was an error reading the XML file of language."); }
         }
@@ -78,7 +91,7 @@ namespace Images
             palette.StartByte = (int)numericStartByte.Value;
             picPalette.Image = palette.Get_PaletteImage((int)numericPalette.Value);
             numericPalette.Maximum = palette.NumberOfPalettes - 1;
-            label3.Text = "of " + (palette.NumberOfPalettes - 1).ToString();
+            label3.Text = translation[0] + (palette.NumberOfPalettes - 1).ToString();
         }
         private void comboDepth_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -86,7 +99,7 @@ namespace Images
             picPalette.Image = palette.Get_PaletteImage((int)numericPalette.Value);
             numericPalette.Value = 0;
             numericPalette.Maximum = palette.NumberOfPalettes - 1;
-            label3.Text = "of " + (palette.NumberOfPalettes - 1).ToString();
+            label3.Text = translation[0] + (palette.NumberOfPalettes - 1).ToString();
         }
 
         private void picPalette_MouseClick(object sender, MouseEventArgs e)
@@ -113,7 +126,7 @@ namespace Images
                 pic.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
                 pic.Image = palette.Get_PaletteImage(i);
                 Label lbl = new Label();
-                lbl.Text = "Palette " + (i + 1).ToString();
+                lbl.Text = translation[2] + (i + 1).ToString();
                 lbl.Location = new Point(x, y - 15);
 
                 ven.Controls.Add(pic);
@@ -127,7 +140,7 @@ namespace Images
                 }
             }
 
-            ven.Text = "Palette viewer";
+            ven.Text = translation[1];
             ven.BackColor = SystemColors.GradientInactiveCaption;
             ven.MaximumSize = new Size(1024, 760);
             ven.ShowIcon = false;

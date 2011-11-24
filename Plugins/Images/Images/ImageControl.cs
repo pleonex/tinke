@@ -58,18 +58,26 @@ namespace Images
 
             pic.Image = image.Get_Image(palette.Palette);
 
-            this.numericWidth.Value = pic.Image.Width;
-            this.numericHeight.Value = pic.Image.Height;
             this.comboDepth.Text = (image.Depth == ColorDepth.Depth4Bit ? "4 bpp" : "8 bpp");
             switch (image.TileForm)
             {
                 case TileOrder.NoTiled:
                     comboBox1.SelectedIndex = 0;
+                    numericHeight.Minimum = 1;
+                    numericWidth.Minimum = 1;
+                    numericWidth.Increment = 1;
+                    numericHeight.Increment = 1;
                     break;
                 case TileOrder.Horizontal:
                     comboBox1.SelectedIndex = 1;
+                    numericHeight.Minimum = 8;
+                    numericWidth.Minimum = 8;
+                    numericWidth.Increment = 8;
+                    numericHeight.Increment = 8;
                     break;
             }
+            this.numericWidth.Value = pic.Image.Width;
+            this.numericHeight.Value = pic.Image.Height;
 
             this.comboDepth.SelectedIndexChanged += new EventHandler(comboDepth_SelectedIndexChanged);
             this.numericWidth.ValueChanged += new EventHandler(numericSize_ValueChanged);

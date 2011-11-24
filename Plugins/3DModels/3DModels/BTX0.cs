@@ -439,6 +439,9 @@ namespace _3DModels
 
         public static System.Drawing.Bitmap GetTexture(IPluginHost pluginHost, sBTX0 btx0, int num)
         {
+            if (num >= btx0.texture.texInfo.names.Length)
+                num = 0;
+
             int num_pal;
             bool foundPal = false;
             for (num_pal = 0; num_pal < btx0.texture.palInfo.num_objs; num_pal++)

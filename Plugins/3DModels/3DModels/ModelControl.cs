@@ -36,7 +36,9 @@ namespace _3DModels
     {
         IPluginHost pluginHost;
         sBMD0 model;
-        int texInd;
+
+        Dictionary<int, int> texturesGL;
+        Dictionary<int, int> textureID;
 
         PolygonMode pm = PolygonMode.Fill;
 
@@ -61,9 +63,46 @@ namespace _3DModels
             GL.ClearColor(0.0f, 0.0f, 0.0f, 0.0f);
             GL.Viewport(this.ClientRectangle);
 
-            //texInd = LoadTextures(0);
-
             glControl1.SwapBuffers();
+            LoadAllTex();
+            ProcessBones();
+        }
+
+        private void LoadAllTex()
+        {
+            texturesGL = new Dictionary<int,int>();
+            textureID = new Dictionary<int, int>();
+
+            for (int i = 0; i < model.model.mdlData[0].material.texture.num_objs; i++)
+            {
+                sBMD0.Model.ModelData.Material.TexPalData texInfo = (sBMD0.Model.ModelData.Material.TexPalData)model.model.mdlData[0].material.texture.infoBlock.infoData[i];
+                texturesGL.Add(texInfo.ID, LoadTextures(texInfo.ID));
+                textureID.Add(texInfo.ID, i);
+            }
+        }
+        private void ProcessBones()
+        {
+            for (int c = 0; c < model.model.mdlData[0].bones.commands.Count; c++)
+            {
+                sBMD0.Model.ModelData.Bones.Command cmd = model.model.mdlData[0].bones.commands[c];
+                switch (cmd.command)
+                {
+                    case 0x44:
+                    case 0x24:
+                    case 0x04:
+                        int currTex = 0;
+                        if (texturesGL.ContainsKey(cmd.parameters[0]))
+                            currTex = cmd.parameters[0];
+                        else
+                            texturesGL.TryGetValue(1, out currTex);
+                        
+                        model.model.mdlData[0].polygon.display[cmd.parameters[2]].materialAssoc = texturesGL[currTex];
+                        model.model.mdlData[0].polygon.display[cmd.parameters[2]].materialID = textureID[currTex];
+                        break;
+                    default:
+                        break;
+                }
+            }
         }
 
         private void Render()
@@ -83,13 +122,13 @@ namespace _3DModels
             label1.Text = "X: " + x.ToString() + " Y: " + y.ToString() + " Z: " + z.ToString() + "\r\n" +
                 "AngleX: " + angleX.ToString() + " AngleY: " + angleY.ToString() + " Distance: " + distance.ToString();
 
+            // TODO: Draw box
+
             // Edges
             DrawEdges();
 
-            // TODO: Draw box
-
-            // TODO: Ejecutar por cada poligono que tendrá ligada una textura
             GL.Enable(EnableCap.CullFace);
+            GL.DepthFunc(DepthFunction.Less);
             GL.Enable(EnableCap.DepthTest);
             GL.Enable(EnableCap.Texture2D);
 
@@ -97,24 +136,26 @@ namespace _3DModels
             GL.AlphaFunc(AlphaFunction.Greater, 0.5f);
             GL.Enable(EnableCap.AlphaTest);
             GL.Enable(EnableCap.Blend);
+            //GL.Color4(1.0f, 1.0f, 1.0f, 0.5f);
+            //GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
 
             if (!checkBox1.Checked)
             {
-                for (int i = 0; i < model.model.mdlData[0].polygon.header.num_objs && i < model.texture.texInfo.num_objs; i++)
+                for (int i = 0; i < model.model.mdlData[0].polygon.header.num_objs; i++)
                 {
-                    texInd = LoadTextures(i);
-                    sBTX0.Texture.TextInfo texInfo = (sBTX0.Texture.TextInfo)model.texture.texInfo.infoBlock.infoData[i];
+                    sBMD0.Model.ModelData.Polygon.Display poly = model.model.mdlData[0].polygon.display[i];
+                    sBTX0.Texture.TextInfo texInfo = (sBTX0.Texture.TextInfo)model.texture.texInfo.infoBlock.infoData[poly.materialID];
 
                     GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.TextureEnvMode, (int)OpenTK.Graphics.OpenGL.TextureEnvMode.Decal);
-                    GL.BindTexture(TextureTarget.Texture2D, texInd);
-
+                    GL.BindTexture(TextureTarget.Texture2D, poly.materialAssoc);
+                    
                     GL.PolygonMode(MaterialFace.FrontAndBack, pm);
 
                     GL.MatrixMode(MatrixMode.Texture);
                     GL.LoadIdentity();
 
                     GL.Scale(1.0f / (float)texInfo.width, 1.0f / (float)texInfo.height, 1.0f); // Scale the texture to fill the polygon
-                    BMD0.GeometryCommands(model.model.mdlData[0].polygon.display[i].commands);
+                    BMD0.GeometryCommands(poly.commands);
                 }
             }
             else

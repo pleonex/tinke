@@ -71,6 +71,8 @@ namespace Images
             // Tiles
             if (ext == "NCCG")
                 return Format.Tile;
+            if (name.EndsWith(".NTFT"))
+                return Format.Tile;
 
             // Map
             if (ext == "NCSC")
@@ -206,6 +208,14 @@ namespace Images
             if (ext == "NCCG")
             {
                 image = new NCCG(pluginHost, file, id);
+                return Format.Tile;
+            }
+            else if (file.ToUpper().EndsWith(".NTFT"))
+            {
+                image = new ntft(pluginHost, file, id);
+                if (palette.Depth == ColorDepth.Depth4Bit)
+                    image.Depth = ColorDepth.Depth4Bit;
+
                 return Format.Tile;
             }
 

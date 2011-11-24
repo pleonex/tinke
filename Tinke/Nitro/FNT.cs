@@ -151,7 +151,7 @@ namespace Tinke.Nitro
             }
 
             root = Jerarquizar_Carpetas(mains, 0, "root");
-            root.id = 0xF000;
+            root.id = mains[0].idParentFolder;
 
             br.Close();
 

@@ -136,11 +136,6 @@ namespace Tinke
             set
             {
                 root = value;
-                Set_LastFileID(root);
-                lastFileId++;
-
-                Set_LastFolderID(root);
-                lastFolderId++;
             }
         }
         public int IDSelect

@@ -189,6 +189,10 @@ namespace Tinke
             sFolder root = Nitro.FNT.ReadFNT(file, romInfo.Cabecera.fileNameTableOffset, fat);
             DateTime t4 = DateTime.Now;
 
+            accion.LastFileID = fat.Length;
+            accion.LastFolderID = root.id + 0xF000;
+            root.id = 0xF000;
+
             // Add system files (fnt.bin, banner.bin, overlays, arm9 and arm7)
             if (!(root.folders is List<sFolder>))
                 root.folders = new List<sFolder>();
@@ -1234,16 +1238,21 @@ namespace Tinke
         private void AbrirComo(Format formato)
         {
             sFile selectedFile = accion.Select_File();
+            string savedFile = "";
 
             if (formato == Format.Text)
-                accion.Save_File(accion.IDSelect, selectedFile.path + ".txt");
+            {
+                savedFile = accion.Save_File(accion.IDSelect);
+                File.Move(savedFile, savedFile + ".txt");
+                savedFile += ".txt";
+            }
 
             if (toolStripVentana.Checked)
             {
                 Visor visor = new Visor();
                 Control control;
                 if (formato == Format.Text)
-                    control = accion.See_File(selectedFile.path + ".txt");
+                    control = accion.See_File(savedFile);
                 else
                     control = accion.Set_PicturesSaved(formato);
                 visor.Controls.Add(control);
@@ -1255,7 +1264,7 @@ namespace Tinke
                 panelObj.Controls.Clear();
                 Control control;
                 if (formato == Format.Text)
-                    control = accion.See_File(selectedFile.path + ".txt");
+                    control = accion.See_File(savedFile);
                 else
                     control = accion.Set_PicturesSaved(formato);
 
