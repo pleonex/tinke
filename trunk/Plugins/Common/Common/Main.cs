@@ -1,39 +1,56 @@
-﻿using System;
+﻿/*
+ * Copyright (C) 2011  pleoNeX
+ *
+ *   This program is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+ *
+ * Programador: pleoNeX
+ * 
+ */
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using PluginInterface;
 using System.Windows.Forms;
 
-namespace Comun
+namespace Common
 {
     public class Main : IPlugin 
     {
         IPluginHost pluginHost;
 
-        public Formato Get_Formato(string nombre, byte[] magic)
+        public Format Get_Format(string nombre, byte[] magic)
         {
             nombre = nombre.ToUpper();
             string ext = new String(Encoding.ASCII.GetChars(magic));
 
             if (nombre.EndsWith(".TGA") || nombre.EndsWith(".JPG") || nombre.EndsWith(".PNG") || nombre.EndsWith(".BMP"))
-                return Formato.ImagenCompleta;
+                return Format.FullImage;
             else if (nombre.EndsWith(".WAV") || ext == "RIFF")
-                return Formato.Sonido;
+                return Format.Sound;
             
-            return Formato.Desconocido;
+            return Format.Unknown;
         }
 
-        public void Inicializar(IPluginHost pluginHost)
+        public void Initialize(IPluginHost pluginHost)
         {
             this.pluginHost = pluginHost;
         }
 
-        public void Leer(string archivo, int id)
+        public void Read(string archivo, int id)
         {
-            MessageBox.Show("Estos archivos no pueden guardar información.");
         }
-
         public Control Show_Info(string archivo, int id)
         {
             System.IO.BinaryReader br = new System.IO.BinaryReader(System.IO.File.OpenRead(archivo));
@@ -55,5 +72,8 @@ namespace Comun
 
             return new Control();
         }
+
+        public string Pack(ref sFolder unpacked, string file) { return null; }
+        public sFolder Unpack(string file) { return new sFolder(); }
     }
 }

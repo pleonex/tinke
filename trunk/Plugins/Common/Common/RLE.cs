@@ -24,7 +24,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace Comun
+namespace Common
 {
 	/// <summary>
 	/// Métodos para datos comprimidos con RLE (Run-Length Encodign)

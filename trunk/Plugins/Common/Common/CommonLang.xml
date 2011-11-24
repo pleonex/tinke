@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Language>
+  <Español>
+    <BasicControl>
+      <S00>Guardar</S00>
+    </BasicControl>
+    <iWav>
+      <S00>Reproducir</S00>
+      <S01>Parar</S01>
+    </iWav>
+  </Español>
+  <English>
+    <BasicControl>
+      <S00>Save</S00>
+    </BasicControl>
+    <iWav>
+      <S00>Play</S00>
+      <S01>Stop</S01>
+    </iWav>
+  </English>
+  <Français>
+    <BasicControl>
+      <S00>Enregistrer</S00>
+    </BasicControl>
+    <iWav>
+      <S00>Lancer</S00>
+      <S01>Arrêter</S01>
+    </iWav>
+  </Français>
+</Language>
