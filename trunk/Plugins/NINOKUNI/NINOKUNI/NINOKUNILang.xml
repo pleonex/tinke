@@ -26,14 +26,14 @@
   </English>
   <Français>
     <BMPControl>
-      <S00>Export</S00>
-      <S01>Import</S01>
+      <S00>Exporter</S00>
+      <S01>Importer</S01>
     </BMPControl>
     <SQcontrol>
-      <S00>Translated text:</S00>
-      <S01>Original text:</S01>
-      <S02>Blocks</S02>
-      <S03>Write file</S03>
+      <S00>Texte traduit :</S00>
+      <S01>Texte original :</S01>
+      <S02>Blocs</S02>
+      <S03>Écrire l'archive</S03>
     </SQcontrol>
   </Français>
 </Language>

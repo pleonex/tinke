@@ -39,14 +39,14 @@ namespace Pack
         }
 
         #region Unpack methods
-        public sFolder Unpack(string archivo)
+        public sFolder Unpack(string file)
         {
             ARC arc = new ARC();
-            narcFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + "pack_" + new FileInfo(archivo).Name;
-            File.Copy(archivo, narcFile, true);
-            BinaryReader br = new BinaryReader(System.IO.File.OpenRead(archivo));
+            narcFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + "narc_" + Path.GetRandomFileName();
+            File.Copy(file, narcFile, true);
+            BinaryReader br = new BinaryReader(System.IO.File.OpenRead(file));
 
-            // Lee cabecera genérica e inicial:
+            // Nitro generic header
             arc.id = br.ReadChars(4);
             arc.id_endian = br.ReadUInt16();
             if (arc.id_endian == 0xFFFE)
@@ -56,7 +56,7 @@ namespace Pack
             arc.header_size = br.ReadUInt16();
             arc.nSections = br.ReadUInt16();
 
-            // Lee primera sección BTAF (File Allocation TaBle)
+            // BTAF (File Allocation TaBle)
             arc.btaf.id = br.ReadChars(4);
             arc.btaf.section_size = br.ReadUInt32();
             arc.btaf.nFiles = br.ReadUInt32();
@@ -67,13 +67,21 @@ namespace Pack
                 arc.btaf.entries[i].end_offset = br.ReadUInt32();
             }
 
-            // Lee la segunda sección BTNF (File Name TaBle)
+            // BTNF (File Name TaBle)
             arc.btnf.id = br.ReadChars(4);
             arc.btnf.section_size = br.ReadUInt32();
             arc.btnf.entries = new List<BTNF_MainEntry>();
-            long pos = br.BaseStream.Position;
-            #region Obtener carpeta root
-            do
+
+            long mainTables_offset = br.BaseStream.Position;
+            uint gmif_offset = (uint)br.BaseStream.Position + arc.btnf.section_size;
+
+            #region Get root folder
+
+            br.BaseStream.Position += 6;
+            ushort num_mains = br.ReadUInt16();
+            br.BaseStream.Position -= 8;
+
+            for (int m = 0; m < num_mains; m++)
             {
                 BTNF_MainEntry main = new BTNF_MainEntry();
                 main.offset = br.ReadUInt32();
@@ -81,43 +89,55 @@ namespace Pack
                 main.parent = br.ReadUInt16();
                 uint idFile = main.first_pos;
 
-                if (main.offset < 0x8)  // No hay nombres, juegos como el pokemon
+                if (main.offset < 0x8)  // There aren't names (in Pokemon games)
                 {
-
                     for (int i = 0; i < arc.btaf.nFiles; i++)
                     {
                         sFile currFile = new sFile();
-                        currFile.id = (ushort)idFile; idFile++;
-                        currFile.name = "file" + idFile.ToString();
+                        currFile.id = (ushort)idFile++;
+                        currFile.name = "File" + idFile.ToString() + ".bin";
+
+                        // FAT data
+                        currFile.path = narcFile;
+                        currFile.offset = arc.btaf.entries[currFile.id].start_offset + gmif_offset;
+                        currFile.size = (arc.btaf.entries[currFile.id].end_offset - arc.btaf.entries[currFile.id].start_offset);
+
                         if (!(main.files is List<sFile>))
                             main.files = new List<sFile>();
                         main.files.Add(currFile);
                     }
-                    br.BaseStream.Position = main.offset + pos; // Para que funcione la condición while
+
                     arc.btnf.entries.Add(main);
                     continue;
                 }
-                long posmain = br.BaseStream.Position;
-                br.BaseStream.Position = main.offset + pos;
-                int id = br.ReadByte();
 
-                while (id != 0x0)   // Indicador de fin de subtable
+                long posmain = br.BaseStream.Position;
+                br.BaseStream.Position = main.offset + mainTables_offset;
+
+                int id = br.ReadByte();
+                while (id != 0x0)   // Indicate the end of the subtable
                 {
-                    if (id < 0x80)  // Es archivo
+                    if ((id & 0x80) == 0)  // File
                     {
                         sFile currFile = new sFile();
-                        currFile.id = (ushort)idFile;
-                        idFile++;
+                        currFile.id = (ushort)idFile++;
                         currFile.name = new String(br.ReadChars(id));
+
+                        // FAT data
+                        currFile.path = narcFile;
+                        currFile.offset = arc.btaf.entries[currFile.id].start_offset + gmif_offset;
+                        currFile.size = (arc.btaf.entries[currFile.id].end_offset - arc.btaf.entries[currFile.id].start_offset);
+
                         if (!(main.files is List<sFile>))
                             main.files = new List<sFile>();
                         main.files.Add(currFile);
                     }
-                    else if (id > 0x80) // Es carpeta
+                    else  // Directory
                     {
                         sFolder currFolder = new sFolder();
                         currFolder.name = new String(br.ReadChars(id - 0x80));
                         currFolder.id = br.ReadUInt16();
+
                         if (!(main.folders is List<sFolder>))
                             main.folders = new List<sFolder>();
                         main.folders.Add(currFolder);
@@ -127,29 +147,21 @@ namespace Pack
                 }
                 arc.btnf.entries.Add(main);
                 br.BaseStream.Position = posmain;
+            }
 
-            } while (arc.btnf.entries[0].offset + pos != br.BaseStream.Position);
-
-            br.BaseStream.Position = pos - 8 + arc.btnf.section_size;
-            sFolder root = Jerarquizar_Carpetas(arc.btnf.entries, 0xF000, "root");
+            sFolder root = Create_TreeFolders(arc.btnf.entries, 0xF000, "root");
             #endregion
 
-            // Lee tercera sección GMIF (File IMaGe)
+            // GMIF (File IMaGe)
             arc.gmif.id = br.ReadChars(4);
             arc.gmif.section_size = br.ReadUInt32();
-            pos = br.BaseStream.Position;
-            for (int i = 0; i < arc.btaf.nFiles; i++)
-            {
-                Asignar_Archivos(root, i,
-                    arc.btaf.entries[i].end_offset - arc.btaf.entries[i].start_offset,
-                    (uint)pos + arc.btaf.entries[i].start_offset);
-            }
+            // Files data
 
             br.Close();
             narc = arc;
             return root;
         }
-        private sFolder Jerarquizar_Carpetas(List<BTNF_MainEntry> entries, int idFolder, string nameFolder)
+        private sFolder Create_TreeFolders(List<BTNF_MainEntry> entries, int idFolder, string nameFolder)
         {
             sFolder currFolder = new sFolder();
 
@@ -157,39 +169,15 @@ namespace Pack
             currFolder.id = (ushort)idFolder;
             currFolder.files = entries[idFolder & 0xFFF].files;
 
-            if (entries[idFolder & 0xFFF].folders is List<sFolder>) // Si tiene carpetas dentro.
+            if (entries[idFolder & 0xFFF].folders is List<sFolder>) // If there are folders
             {
                 currFolder.folders = new List<sFolder>();
 
                 foreach (sFolder subFolder in entries[idFolder & 0xFFF].folders)
-                    currFolder.folders.Add(Jerarquizar_Carpetas(entries, subFolder.id, subFolder.name));
+                    currFolder.folders.Add(Create_TreeFolders(entries, subFolder.id, subFolder.name));
             }
 
             return currFolder;
-        }
-        private void Asignar_Archivos(sFolder currFolder, int idFile, UInt32 size, UInt32 offset)
-        {
-            if (currFolder.files is List<sFile>)
-            {
-                for (int i = 0; i < currFolder.files.Count; i++)
-                {
-                    if (currFolder.files[i].id == idFile)
-                    {
-                        sFile newFile = currFolder.files[i];
-                        newFile.size = size;
-                        newFile.offset = offset;
-                        newFile.path = narcFile;
-                        currFolder.files.RemoveAt(i);
-                        currFolder.files.Insert(i, newFile);
-                        return;
-                    }
-
-                }
-            }
-
-            if (currFolder.folders is List<sFolder>) // Si tiene carpetas dentro.
-                foreach (sFolder subFolder in currFolder.folders)
-                    Asignar_Archivos(subFolder, idFile, size, offset);
         }
         #endregion
 

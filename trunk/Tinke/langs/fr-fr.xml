@@ -87,7 +87,7 @@
       Désolé, vous ne pouvez pas écraser l'archive
       ouverte actuellement.
     </S44>
-    <S45>Refresh messages</S45>
+    <S45>Rafraïchir les messages</S45>
   </Sistema>
   <RomInfo>
     <S01>Informations de la ROM</S01>
@@ -228,7 +228,8 @@
     <S22>Le dossier temporaire (temp) ne peut pas être supprimé.</S22>
     <S23>Il y a une erreur de tentative à la compression de l'archive.</S23>
     <S24>Toutes les couleurs sont utilisées par l'image.</S24>
-    <S25>Nothing to do.</S25>
+    <S25>Rien à faire.</S25>
+    <S26>Clear log</S26>
   </Messages>
   <NCLR>
     <S01>Nombre de la palette :</S01>
@@ -305,10 +306,10 @@
     <S06>Accepter</S06>
     <S07>Longeur d'image :</S07>
     <S08>Hauteur d'image :</S08>
-    <S09>Subimages</S09>
-    <S0A>Start offset:</S0A>
-    <S0B>Number of palette:</S0B>
-    <S0C>Cancel</S0C>
+    <S09>Sous images</S09>
+    <S0A>Offset de début :</S0A>
+    <S0B>Numéro de palette :</S0B>
+    <S0C>Annuler</S0C>
   </NSCR>
   <NCER>
     <S01>Banques :</S01>
@@ -550,18 +551,18 @@
     <S1C>Accepter</S1C>
   </Dialog>
   <VisorHex>
-    <S00>File</S00>
-    <S01>Save</S01>
-    <S02>Tools</S02>
-    <S03>Goto (0x)</S03>
-    <S04>Select range</S04>
-    <S05>Go</S05>
-    <S06>Start offset (0x)</S06>
-    <S07>End offset (0x)</S07>
-    <S08>Relative</S08>
-    <S09>Search</S09>
+    <S00>Archive</S00>
+    <S01>Sauvegarder</S01>
+    <S02>Outils</S02>
+    <S03>Aller vers (0x)</S03>
+    <S04>Sélection du bloc</S04>
+    <S05>Aller</S05>
+    <S06>Offset de début (0x)</S06>
+    <S07>Offset de fin (0x)</S07>
+    <S08>Relatif</S08>
+    <S09>Chercher</S09>
     <S0A>Options</S0A>
-    <S0B>Encoding</S0B>
-    <S0C>Selected at 0x{0} with length 0x{1}</S0C>
+    <S0B>Codage</S0B>
+    <S0C>Sélectionné depuis 0x{0} avec une longueur de 0x{1}</S0C>
   </VisorHex>
 </Language>

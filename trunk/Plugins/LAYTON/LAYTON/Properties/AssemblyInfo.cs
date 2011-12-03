@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("LAYTON")]
 [assembly: AssemblyDescription("Professor Layton games")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("pleoNeX")]
+[assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("Tinke")]
-[assembly: AssemblyCopyright("pleoNeX")]
+[assembly: AssemblyCopyright("pleoNeX, CUE")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

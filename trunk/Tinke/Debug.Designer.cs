@@ -30,8 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Debug));
-            if (System.Type.GetType("Mono.Runtime") == null)
-                this.txtInfo = new System.Windows.Forms.WebBrowser();
+            this.txtInfo = new System.Windows.Forms.WebBrowser();
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.s0EToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip1.SuspendLayout();
@@ -39,19 +38,16 @@
             // 
             // txtInfo
             // 
-            if (System.Type.GetType("Mono.Runtime") == null)
-            {
-                this.txtInfo.AllowWebBrowserDrop = false;
-                this.txtInfo.ContextMenuStrip = this.contextMenuStrip1;
-                this.txtInfo.Dock = System.Windows.Forms.DockStyle.Fill;
-                this.txtInfo.IsWebBrowserContextMenuEnabled = false;
-                this.txtInfo.Location = new System.Drawing.Point(0, 0);
-                this.txtInfo.MinimumSize = new System.Drawing.Size(20, 20);
-                this.txtInfo.Name = "txtInfo";
-                this.txtInfo.ScriptErrorsSuppressed = true;
-                this.txtInfo.Size = new System.Drawing.Size(644, 152);
-                this.txtInfo.TabIndex = 0;
-            }
+            this.txtInfo.AllowWebBrowserDrop = false;
+            this.txtInfo.ContextMenuStrip = this.contextMenuStrip1;
+            this.txtInfo.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.txtInfo.IsWebBrowserContextMenuEnabled = false;
+            this.txtInfo.Location = new System.Drawing.Point(0, 0);
+            this.txtInfo.MinimumSize = new System.Drawing.Size(20, 20);
+            this.txtInfo.Name = "txtInfo";
+            this.txtInfo.ScriptErrorsSuppressed = true;
+            this.txtInfo.Size = new System.Drawing.Size(644, 152);
+            this.txtInfo.TabIndex = 0;
             // 
             // contextMenuStrip1
             // 
@@ -72,16 +68,11 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
             this.ClientSize = new System.Drawing.Size(644, 152);
             this.ContextMenuStrip = this.contextMenuStrip1;
-            this.ControlBox = true;
-            if (System.Type.GetType("Mono.Runtime") == null)
-                this.Controls.Add(this.txtInfo);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
+            this.Controls.Add(this.txtInfo);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MaximizeBox = true;
-            this.MinimizeBox = true;
-            this.ShowIcon = true;
             this.Name = "Debug";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;

@@ -4,6 +4,13 @@
 ** Improved image plugin.
 ** Fixed problem packing two or more times the same file.
 ** Support for NCCL, NCCG and NCSC files
+* Encoding support in NFTR fonts
+* Layton London Life supported:
+   - Unpack files DARC and DENC (by CUE)
+   - Unpack file kihira.archive
+* Support for INFO section in SDAT
+* Show GROUP record in SDAT
+
 
 0.8.2 public release (rev117)
 *** Improved Hexadecimal editor -> Now using Be.HexEditor (by Bernhard Elbl)

@@ -68,6 +68,7 @@ namespace SDAT
             this.btnStop = new System.Windows.Forms.Button();
             this.btnReproducir = new System.Windows.Forms.Button();
             this.btnExtract = new System.Windows.Forms.Button();
+            this.btnInfoSect = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // treeFiles
@@ -261,11 +262,24 @@ namespace SDAT
             this.btnExtract.UseVisualStyleBackColor = true;
             this.btnExtract.Click += new System.EventHandler(this.btnExtract_Click);
             // 
+            // btnInfoSect
+            // 
+            this.btnInfoSect.Image = global::SDAT.Properties.Resources.tag_blue_edit;
+            this.btnInfoSect.Location = new System.Drawing.Point(251, 126);
+            this.btnInfoSect.Name = "btnInfoSect";
+            this.btnInfoSect.Size = new System.Drawing.Size(100, 34);
+            this.btnInfoSect.TabIndex = 13;
+            this.btnInfoSect.Text = "Info section";
+            this.btnInfoSect.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnInfoSect.UseVisualStyleBackColor = true;
+            this.btnInfoSect.Click += new System.EventHandler(this.btnInfoSect_Click);
+            // 
             // iSDAT
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
             this.BackColor = System.Drawing.Color.Transparent;
             this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.Controls.Add(this.btnInfoSect);
             this.Controls.Add(this.btnInfo);
             this.Controls.Add(this.btnChangeFile);
             this.Controls.Add(this.btnCreate);
@@ -304,5 +318,6 @@ namespace SDAT
         private System.Windows.Forms.Button btnCreate;
         private System.Windows.Forms.Button btnChangeFile;
         private System.Windows.Forms.Button btnInfo;
+        private System.Windows.Forms.Button btnInfoSect;
     }
 }

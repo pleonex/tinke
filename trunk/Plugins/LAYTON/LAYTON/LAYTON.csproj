@@ -48,6 +48,7 @@
   <ItemGroup>
     <Compile Include="Ani.cs" />
     <Compile Include="Bg.cs" />
+    <Compile Include="DARC.cs" />
     <Compile Include="InfoAni.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -84,6 +85,7 @@
     <Compile Include="iText.Designer.cs">
       <DependentUpon>iText.cs</DependentUpon>
     </Compile>
+    <Compile Include="LAYTON4.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="PCK2.cs" />
     <Compile Include="PCM.cs" />

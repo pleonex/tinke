@@ -34,8 +34,6 @@ namespace Tinke
     /// </summary>
     public class Acciones
     {
-        const byte LZ77_TAG = 0x10, LZSS_TAG = 0x11, RLE_TAG = 0x30, HUFF_TAG = 0x20;
-
         string file;
         string gameCode;
         sFolder root;
@@ -60,14 +58,14 @@ namespace Tinke
             pluginHost.event_GetDecompressedFiles += new Func<int, sFolder>(pluginHost_event_GetDecompressedFiles);
             pluginHost.event_SearchFile += new Func<int, String>(Save_File);
             pluginHost.event_SearchFile2 += new Func<int, sFile>(Search_File);
-            Cargar_Plugins();
+            Load_Plugins();
         }
         public void Dispose()
         {
             pluginHost.Dispose();
         }
 
-        public void Cargar_Plugins()
+        public void Load_Plugins()
         {
             if (!Directory.Exists(Application.StartupPath + Path.DirectorySeparatorChar + "Plugins"))
                 return;
@@ -124,12 +122,8 @@ namespace Tinke
             } // end foreach
 
         }
-        public void Liberar_Plugins()
-        { // IT DOESN'T WORK
-            formatList.Clear();
-            gamePlugin = null;
-        }
 
+        #region Properties
         public sFolder Root
         {
             get { return root; }
@@ -166,6 +160,7 @@ namespace Tinke
         {
             get { return pluginHost.Get_TempFolder(); }
         }
+        #endregion
 
         public int ImageFormatFile(Format name)
         {
@@ -257,6 +252,7 @@ namespace Tinke
                 foreach (sFolder subFolder in currFolder.folders)
                     Set_LastFolderID(subFolder);
         }
+
         public void Delete_PicturesSaved()
         {
             pluginHost.Set_NCLR(new NCLR());
@@ -265,9 +261,9 @@ namespace Tinke
             pluginHost.Set_NCER(new NCER());
             pluginHost.Set_NANR(new NANR());
         }
-        public void Delete_PicturesSaved(Format formato)
+        public void Delete_PicturesSaved(Format format)
         {
-            switch (formato)
+            switch (format)
             {
                 case Format.Palette:
                     pluginHost.Set_NCLR(new NCLR());
@@ -285,9 +281,9 @@ namespace Tinke
                     break;
             }
         }
-        public Control Set_PicturesSaved(Format formato)
+        public Control Set_PicturesSaved(Format format)
         {
-            sFile selectFile = Select_File();
+            sFile selectFile = Selected_File();
 
             string tempFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + selectFile.id + selectFile.name;
             BinaryReader br = new BinaryReader(File.OpenRead(selectFile.path));
@@ -301,7 +297,7 @@ namespace Tinke
             #region Common image format
             try
             {
-                if (formato == Format.Palette)
+                if (format == Format.Palette)
                 {
                     NCLR paleta = Imagen_NCLR.Leer_Basico(tempFile, idSelect);
                     pluginHost.Set_NCLR(paleta);
@@ -311,7 +307,7 @@ namespace Tinke
                     control.btnImport.Enabled = false;
                     return control;
                 }
-                else if (formato == Format.Tile)
+                else if (format == Format.Tile)
                 {
                     NCGR tile = Imagen_NCGR.Read_Basic(tempFile, idSelect);
                     pluginHost.Set_NCGR(tile);
@@ -329,7 +325,7 @@ namespace Tinke
                         return new Control();
                     }
                 }
-                else if (formato == Format.Map)
+                else if (format == Format.Map)
                 {
                     NSCR nscr = Imagen_NSCR.Read_Basic(tempFile, idSelect);
                     pluginHost.Set_NSCR(nscr);
@@ -362,6 +358,7 @@ namespace Tinke
             return new Control();
         }
 
+        #region Add, remove and change files methods
         public void Add_Files(ref sFolder files, int id)
         {
             sFile file = Search_File(id); // Compress or Pack file
@@ -372,7 +369,7 @@ namespace Tinke
                 String.Format("{0:X}", file.offset).PadLeft(8, '0') + file.path;
 
             files = Add_ID(files);  // Set the ID of each file and folder
-            Set_Formato(ref files); // Set the format of each file
+            Set_Format(ref files); // Set the format of each file
             root = FileToFolder(root, files); // Convert the pack or compressed file to a folder
         }
         private sFolder Add_ID(sFolder currFolder)
@@ -404,26 +401,26 @@ namespace Tinke
 
             return currFolder;
         }
-        private void Set_Formato(ref sFolder carpeta)
+        private void Set_Format(ref sFolder folder)
         {
-            if (carpeta.files is List<sFile>)
+            if (folder.files is List<sFile>)
             {
-                for (int i = 0; i < carpeta.files.Count; i++)
+                for (int i = 0; i < folder.files.Count; i++)
                 {
-                    sFile newFile = carpeta.files[i];
-                    newFile.format = Get_Format(newFile, -1);
-                    carpeta.files[i] = newFile;
+                    sFile newFile = folder.files[i];
+                    newFile.format = Get_Format(newFile);
+                    folder.files[i] = newFile;
                 }
             }
 
 
-            if (carpeta.folders is List<sFolder>)
+            if (folder.folders is List<sFolder>)
             {
-                for (int i = 0; i < carpeta.folders.Count; i++)
+                for (int i = 0; i < folder.folders.Count; i++)
                 {
-                    sFolder currFolder = carpeta.folders[i];
-                    Set_Formato(ref currFolder);
-                    carpeta.folders[i] = currFolder;
+                    sFolder currFolder = folder.folders[i];
+                    Set_Format(ref currFolder);
+                    folder.folders[i] = currFolder;
                 }
             }
         }
@@ -540,23 +537,23 @@ namespace Tinke
 
             return currFolder;
         }
-        private void Recursivo_RemoveNullFiles(sFolder carpeta)
+        private void Recursive_RemoveNullFiles(sFolder folder)
         {
-            if (carpeta.files is List<sFile>)
+            if (folder.files is List<sFile>)
             {
-                for (int i = 0; i < carpeta.files.Count; i++)
+                for (int i = 0; i < folder.files.Count; i++)
                 {
-                    if (carpeta.files[i].size == 0x00)
+                    if (folder.files[i].size == 0x00)
                     {
-                        carpeta.files.RemoveAt(i);
+                        folder.files.RemoveAt(i);
                         i--;
                     }
                 }
             }
 
-            if (carpeta.folders is List<sFolder>)
-                foreach (sFolder subCarpeta in carpeta.folders)
-                    Recursivo_RemoveNullFiles(subCarpeta);
+            if (folder.folders is List<sFolder>)
+                foreach (sFolder subCarpeta in folder.folders)
+                    Recursive_RemoveNullFiles(subCarpeta);
         }
         public void Remove_File(int id, sFolder currFolder)
         {
@@ -674,20 +671,22 @@ namespace Tinke
 
             Change_File(id, newFile, root);
         }
+        #endregion
 
-        public sFile Select_File()
+        #region Search methods
+        public sFile Selected_File()
         {
-            return Recursivo_Archivo(idSelect, root);
+            return Recursive_File(idSelect, root);
         }
         public sFile Search_File(int id)
         {
-            return Recursivo_Archivo(id, root);
+            return Recursive_File(id, root);
         }
         public sFolder Search_File(string name)
         {
             sFolder carpeta = new sFolder();
             carpeta.files = new List<sFile>();
-            Recursivo_Archivo(name, root, carpeta);
+            Recursive_File(name, root, carpeta);
             return carpeta;
         }
         public sFolder Search_FileName(string name)
@@ -709,14 +708,14 @@ namespace Tinke
             sFolder carpeta = new sFolder();
             carpeta.files = new List<sFile>();
             carpeta.folders = new List<sFolder>();
-            Recursivo_Archivo(formato, root, carpeta);
+            Recursive_File(formato, root, carpeta);
             return carpeta;
         }
         public sFolder Search_FileLength(int length)
         {
             sFolder carpeta = new sFolder();
             carpeta.files = new List<sFile>();
-            Recursivo_Archivo(length, root, carpeta);
+            Recursive_File(length, root, carpeta);
             return carpeta;
         }
         public sFolder Search_FileOffset(int offset)
@@ -728,18 +727,20 @@ namespace Tinke
         }
         public sFolder Search_Folder(string name)
         {
-            return Recursivo_Carpeta(name, root);
+            return Recursive_Folder(name, root);
         }
-        public sFolder Select_Folder()
+        public sFolder Selected_Folder()
         {
-            return Recursivo_Carpeta(idSelect, root);
+            return Recursive_Folder(idSelect, root);
         }
         public sFolder Search_Folder(int id)
         {
-            return Recursivo_Carpeta(id, root);
+            return Recursive_Folder(id, root);
         }
+        #endregion
 
-        private sFile Recursivo_Archivo(int id, sFolder currFolder)
+        #region Recursive methods
+        private sFile Recursive_File(int id, sFolder currFolder)
         {
             if (currFolder.id == id) // Archivos descomprimidos
             {
@@ -749,7 +750,7 @@ namespace Tinke
                 folderFile.size = Convert.ToUInt32(((String)currFolder.tag).Substring(0, 8), 16);
                 folderFile.offset = Convert.ToUInt32(((String)currFolder.tag).Substring(8, 8), 16);
                 folderFile.path = ((string)currFolder.tag).Substring(16);
-                folderFile.format = Get_Format(folderFile, folderFile.id);
+                folderFile.format = Get_Format(folderFile);
                 folderFile.tag = "Descomprimido"; // Tag para indicar que ya ha sido procesado
 
                 return folderFile;
@@ -765,7 +766,7 @@ namespace Tinke
             {
                 foreach (sFolder subFolder in currFolder.folders)
                 {
-                    sFile currFile = Recursivo_Archivo(id, subFolder);
+                    sFile currFile = Recursive_File(id, subFolder);
                     if (currFile.name is string)
                         return currFile;
                 }
@@ -773,11 +774,11 @@ namespace Tinke
 
             return new sFile();
         }
-        private sFile Recursivo_Archivo(Format formato, string name, sFolder currFolder)
+        private sFile Recursive_File(Format format, string name, sFolder currFolder)
         {
             if (currFolder.files is List<sFile>)
                 foreach (sFile archivo in currFolder.files)
-                    if (archivo.format == formato && archivo.name.Contains('.')) // Previene de archivos sin extensión (ie: file1)
+                    if (archivo.format == format && archivo.name.Contains('.')) // Previene de archivos sin extensión (ie: file1)
                         if (archivo.name.Remove(archivo.name.LastIndexOf('.')) == name)
                             return archivo;
 
@@ -786,7 +787,7 @@ namespace Tinke
             {
                 foreach (sFolder subFolder in currFolder.folders)
                 {
-                    sFile currFile = Recursivo_Archivo(formato, name, subFolder);
+                    sFile currFile = Recursive_File(format, name, subFolder);
                     if (currFile.name is string)
                         return currFile;
                 }
@@ -794,59 +795,59 @@ namespace Tinke
 
             return new sFile();
         }
-        private void Recursivo_Archivo(int length, sFolder currFolder, sFolder carpeta)
+        private void Recursive_File(int length, sFolder currFolder, sFolder folder)
         {
             if (currFolder.files is List<sFile>)
                 foreach (sFile archivo in currFolder.files)
                     if (archivo.size == length)
-                        carpeta.files.Add(archivo);
+                        folder.files.Add(archivo);
 
 
             if (currFolder.folders is List<sFolder>)
                 foreach (sFolder subFolder in currFolder.folders)
-                    Recursivo_Archivo(length, subFolder, carpeta);
+                    Recursive_File(length, subFolder, folder);
 
         }
-        private void Recursive_FileOffset(int offset, sFolder currFolder, sFolder carpeta)
+        private void Recursive_FileOffset(int offset, sFolder currFolder, sFolder folder)
         {
             if (currFolder.files is List<sFile>)
                 foreach (sFile archivo in currFolder.files)
                     if (archivo.offset <= offset && archivo.offset + archivo.size >= offset)
-                        carpeta.files.Add(archivo);
+                        folder.files.Add(archivo);
 
 
             if (currFolder.folders is List<sFolder>)
                 foreach (sFolder subFolder in currFolder.folders)
-                    Recursive_FileOffset(offset, subFolder, carpeta);
+                    Recursive_FileOffset(offset, subFolder, folder);
 
         }
-        private void Recursivo_Archivo(string name, sFolder currFolder, sFolder carpeta)
+        private void Recursive_File(string name, sFolder currFolder, sFolder folder)
         {
             if (currFolder.files is List<sFile>)
                 foreach (sFile archivo in currFolder.files)
                     if (archivo.name.Contains(name))
-                        carpeta.files.Add(archivo);
+                        folder.files.Add(archivo);
 
 
             if (currFolder.folders is List<sFolder>)
                 foreach (sFolder subFolder in currFolder.folders)
-                    Recursivo_Archivo(name, subFolder, carpeta);
+                    Recursive_File(name, subFolder, folder);
 
         }
-        private void Recursive_FileName(string name, sFolder currFolder, sFolder carpeta)
+        private void Recursive_FileName(string name, sFolder currFolder, sFolder folder)
         {
             if (currFolder.files is List<sFile>)
                 foreach (sFile archivo in currFolder.files)
                     if (archivo.name == name)
-                        carpeta.files.Add(archivo);
+                        folder.files.Add(archivo);
 
 
             if (currFolder.folders is List<sFolder>)
                 foreach (sFolder subFolder in currFolder.folders)
-                    Recursive_FileName(name, subFolder, carpeta);
+                    Recursive_FileName(name, subFolder, folder);
 
         }
-        private void Recursivo_Archivo(Format formato, sFolder currFolder, sFolder carpeta)
+        private void Recursive_File(Format formato, sFolder currFolder, sFolder folder)
         {
             if (currFolder.files is List<sFile>)
             {
@@ -872,15 +873,15 @@ namespace Tinke
                             switch (formato)
                             {
                                 case Format.Animation:
-                                    pal = Recursivo_Archivo(Format.Palette, name, root);
+                                    pal = Recursive_File(Format.Palette, name, root);
                                     if (!(pal.name is String))
                                         goto No_Valido;
                                     fm.files.Add(pal);
-                                    til = Recursivo_Archivo(Format.Tile, name, root);
+                                    til = Recursive_File(Format.Tile, name, root);
                                     if (!(til.name is String))
                                         goto No_Valido;
                                     fm.files.Add(til);
-                                    cel = Recursivo_Archivo(Format.Cell, name, root);
+                                    cel = Recursive_File(Format.Cell, name, root);
                                     if (!(cel.name is String))
                                         goto No_Valido;
                                     fm.files.Add(cel);
@@ -889,11 +890,11 @@ namespace Tinke
                                     break;
 
                                 case Format.Cell:
-                                    pal = Recursivo_Archivo(Format.Palette, name, root);
+                                    pal = Recursive_File(Format.Palette, name, root);
                                     if (!(pal.name is String))
                                         goto No_Valido;
                                     fm.files.Add(pal);
-                                    til = Recursivo_Archivo(Format.Tile, name, root);
+                                    til = Recursive_File(Format.Tile, name, root);
                                     if (!(til.name is String))
                                         goto No_Valido;
                                     fm.files.Add(til);
@@ -902,11 +903,11 @@ namespace Tinke
                                     break;
 
                                 case Format.Map:
-                                    pal = Recursivo_Archivo(Format.Palette, name, root);
+                                    pal = Recursive_File(Format.Palette, name, root);
                                     if (!(pal.name is String))
                                         goto No_Valido;
                                     fm.files.Add(pal);
-                                    til = Recursivo_Archivo(Format.Tile, name, root);
+                                    til = Recursive_File(Format.Tile, name, root);
                                     if (!(til.name is String))
                                         goto No_Valido;
                                     fm.files.Add(til);
@@ -915,7 +916,7 @@ namespace Tinke
                                     break;
 
                                 case Format.Tile:
-                                    pal = Recursivo_Archivo(Format.Palette, name, root);
+                                    pal = Recursive_File(Format.Palette, name, root);
                                     if (!(pal.name is String))
                                         goto No_Valido;
                                     fm.files.Add(pal);
@@ -925,14 +926,14 @@ namespace Tinke
                             }
 
                             if (fm.files.Count > 0)
-                                carpeta.folders.Add(fm);
+                                folder.folders.Add(fm);
 
                         No_Valido: // No se han encontrado todos los archivos necesario y no se añade
                             continue;
                             #endregion
                         }
                         else
-                            carpeta.files.Add(archivo);
+                            folder.files.Add(archivo);
 
                     }
                 }
@@ -941,10 +942,10 @@ namespace Tinke
 
             if (currFolder.folders is List<sFolder>)
                 foreach (sFolder subFolder in currFolder.folders)
-                    Recursivo_Archivo(formato, subFolder, carpeta);
+                    Recursive_File(formato, subFolder, folder);
 
         }
-        private sFolder Recursivo_Carpeta(int id, sFolder currFolder)
+        private sFolder Recursive_Folder(int id, sFolder currFolder)
         {
             if (currFolder.id == id)
                 return currFolder;
@@ -956,7 +957,7 @@ namespace Tinke
                     if (subFolder.id == id)
                         return subFolder;
 
-                    sFolder folder = Recursivo_Carpeta(id, subFolder);
+                    sFolder folder = Recursive_Folder(id, subFolder);
                     if (folder.name is string)
                         return folder;
                 }
@@ -964,7 +965,7 @@ namespace Tinke
 
             return new sFolder();
         }
-        private sFolder Recursivo_Carpeta(string name, sFolder currFolder)
+        private sFolder Recursive_Folder(string name, sFolder currFolder)
         {
             // Not recommend method to use, can be more than one directory with the same folder
             if (currFolder.name == name)
@@ -977,7 +978,7 @@ namespace Tinke
                     if (subFolder.name == name)
                         return subFolder;
 
-                    sFolder folder = Recursivo_Carpeta(name, subFolder);
+                    sFolder folder = Recursive_Folder(name, subFolder);
                     if (folder.name is string)
                         return folder;
                 }
@@ -985,36 +986,36 @@ namespace Tinke
 
             return new sFolder();
         }
+        #endregion
 
+        #region Get header
         public Byte[] Get_MagicID(int id)
         {
             sFile currFile = Search_File(id);
-            if (currFile.size < 0x04)
-                return null;
 
+            byte[] ext;
             BinaryReader br = new BinaryReader(File.OpenRead(currFile.path));
             br.BaseStream.Position = currFile.offset;
 
             if (br.BaseStream.Length < 0x04)
-                return null;
-
-            byte[] ext = br.ReadBytes(4);
+                ext = br.ReadBytes((int)br.BaseStream.Length);
+            else
+                ext = br.ReadBytes(4);
             br.Close();
 
             return ext;
         }
         public Byte[] Get_MagicID(sFile currFile)
         {
-            if (currFile.size < 0x04)
-                return null;
+            byte[] ext;
 
             BinaryReader br = new BinaryReader(File.OpenRead(currFile.path));
             br.BaseStream.Position = currFile.offset;
 
             if (br.BaseStream.Length < 0x04)
-                return null;
-
-            byte[] ext = br.ReadBytes(4);
+                ext = br.ReadBytes((int)br.BaseStream.Length);
+            else
+                ext = br.ReadBytes(4);
             br.Close();
 
             return ext;
@@ -1022,43 +1023,58 @@ namespace Tinke
         public Byte[] Get_MagicID(string file)
         {
             BinaryReader br = new BinaryReader(File.OpenRead(file));
+            Byte[] ext;
 
             if (br.BaseStream.Length < 0x04)
-                return null;
-
-            byte[] ext = br.ReadBytes(4);
+                ext = br.ReadBytes((int)br.BaseStream.Length);
+            else
+                ext = br.ReadBytes(4);
             br.Close();
 
             return ext;
         }
-        public String Get_MagicIDS(int id)
+        public String Get_MagicIDS(sFile currFile)
         {
-            sFile currFile = Search_File(id);
-            if (currFile.size < 0x04)
-                return "";
-
             BinaryReader br = new BinaryReader(File.OpenRead(currFile.path));
             br.BaseStream.Position = currFile.offset;
 
+            byte[] ext;
             if (br.BaseStream.Length < 0x04)
-                return "";
-
-            byte[] ext = br.ReadBytes(4);
+                ext = br.ReadBytes((int)br.BaseStream.Length);
+            else
+                ext = br.ReadBytes(4);
             br.Close();
-            if (ext.Length < 4)
-                return "";
 
             string fin = new String(Encoding.ASCII.GetChars(ext));
-            if (fin.Length < 4)
-                return "";
 
-            for (int i = 0; i < 4; i++)             // En caso de no ser extensión
+            for (int i = 0; i < fin.Length; i++)
                 if (!Char.IsLetterOrDigit(fin[i]) && fin[i] != ' ')
                     return "";
 
             return fin;
         }
+        public String Get_MagicIDS(Stream stream, uint size)
+        {
+            Byte[] buffer = new byte[4];
+            if (size < 0x04)
+            {
+                buffer = new byte[size];
+                stream.Read(buffer, 0, (int)size);
+            }
+            else
+                stream.Read(buffer, 0, 4);
 
+            string ext = new String(Encoding.ASCII.GetChars(buffer));
+
+            for (int i = 0; i < ext.Length; i++)
+                if (!Char.IsLetterOrDigit(ext[i]) && ext[i] != ' ')
+                    return "";
+
+            return ext;
+        }
+        #endregion
+
+        #region Get format
         public Format Get_Format()
         {
             return Get_Format(idSelect);
@@ -1126,7 +1142,7 @@ namespace Tinke
 
             return Format.Unknown;
         }
-        public Format Get_Format(sFile currFile, int id)
+        public Format Get_Format(sFile currFile)
         {
             if (currFile.size == 0x00)
                 return Format.Unknown;
@@ -1138,7 +1154,7 @@ namespace Tinke
             try
             {
                 if (gamePlugin is IGamePlugin)
-                    tipo = gamePlugin.Get_Format(currFile.name, ext, id);
+                    tipo = gamePlugin.Get_Format(currFile.name, ext, currFile.id);
                 if (tipo != Format.Unknown)
                     return tipo;
 
@@ -1167,9 +1183,7 @@ namespace Tinke
                 return Format.Cell;
             else if (new String(Encoding.ASCII.GetChars(ext)) == "NANR" || new String(Encoding.ASCII.GetChars(ext)) == "RNAN")
                 return Format.Animation;
-            else if (currFile.name == "FNT.BIN" || currFile.name == "FAT.BIN" || currFile.name.StartsWith("OVERLAY9_") || currFile.name.StartsWith("OVERLAY7_") ||
-                currFile.name == "ARM9.BIN" || currFile.name == "ARM7.BIN" || currFile.name == "Y9.BIN" || currFile.name == "Y7.BIN" ||
-                currFile.name.EndsWith(".SRL") || currFile.name.EndsWith(".NDS"))
+            else if (currFile.name.EndsWith(".SRL") || currFile.name.EndsWith(".NDS"))
                 return Format.System;
 
             FileStream fs = File.OpenRead(currFile.path);
@@ -1184,6 +1198,11 @@ namespace Tinke
             }
             fs.Close();
             fs.Dispose();
+
+            if (currFile.name == "FNT.BIN" || currFile.name == "FAT.BIN" || currFile.name.StartsWith("OVERLAY9_") || currFile.name.StartsWith("OVERLAY7_") ||
+                currFile.name == "ARM9.BIN" || currFile.name == "ARM7.BIN" || currFile.name == "Y9.BIN" || currFile.name == "Y7.BIN")
+                    return Format.System;
+
 
             return Format.Unknown;
         }
@@ -1247,7 +1266,77 @@ namespace Tinke
 
             return Format.Unknown;
         }
+        public Format Get_Format(Stream stream, string name, int id, uint size)
+        {
+            if (size == 0x00)
+                return Format.Unknown;
 
+            Format tipo = Format.Unknown;
+            // Extension
+            Byte[] ext = new byte[4];
+            if (size < 0x04)
+            {
+                ext = new byte[size];
+                stream.Read(ext, 0, (int)size);
+                stream.Position -= size;
+            }
+            else
+            {
+                stream.Read(ext, 0, 4);
+                stream.Position -= 4;
+            }
+
+            #region Calling to plugins
+            try
+            {
+                if (gamePlugin is IGamePlugin)
+                    tipo = gamePlugin.Get_Format(name, ext, id);
+                if (tipo != Format.Unknown)
+                    return tipo;
+
+                foreach (IPlugin formato in formatList)
+                {
+                    tipo = formato.Get_Format(name, ext);
+                    if (tipo != Format.Unknown)
+                        return tipo;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return Format.Unknown;
+            }
+            #endregion
+
+            name = name.ToUpper();
+            if (new String(Encoding.ASCII.GetChars(ext)) == "NCLR" || new String(Encoding.ASCII.GetChars(ext)) == "RLCN")
+                return Format.Palette;
+            else if (new String(Encoding.ASCII.GetChars(ext)) == "NCGR" || new String(Encoding.ASCII.GetChars(ext)) == "RGCN")
+                return Format.Tile;
+            else if (new String(Encoding.ASCII.GetChars(ext)) == "NSCR" || new String(Encoding.ASCII.GetChars(ext)) == "RCSN")
+                return Format.Map;
+            else if (new String(Encoding.ASCII.GetChars(ext)) == "NCER" || new String(Encoding.ASCII.GetChars(ext)) == "RECN")
+                return Format.Cell;
+            else if (new String(Encoding.ASCII.GetChars(ext)) == "NANR" || new String(Encoding.ASCII.GetChars(ext)) == "RNAN")
+                return Format.Animation;
+            else if (name.EndsWith(".SRL") || name.EndsWith(".NDS"))
+                return Format.System;
+
+            FileStream fs = (FileStream)stream;
+            if (new String(Encoding.ASCII.GetChars(ext)) == "LZ77") // LZ77
+                fs.Seek(4, SeekOrigin.Current);
+            if (DSDecmp.Main.Get_Format(fs, (name == "ARM9.BIN" ? true : false)) != FormatCompress.Invalid)
+                return Format.Compressed;
+
+            if (name == "FNT.BIN" || name == "FAT.BIN" || name.StartsWith("OVERLAY9_") || name.StartsWith("OVERLAY7_") ||
+                name == "ARM9.BIN" || name == "ARM7.BIN" || name == "Y9.BIN" || name == "Y7.BIN" )
+                    return Format.System;
+
+            return Format.Unknown;
+        }
+        #endregion
+
+        #region Pack / Unpack methods
         public sFolder Unpack()
         {
             return Unpack(idSelect);
@@ -1520,6 +1609,7 @@ namespace Tinke
                 foreach (sFolder subFolder in currFolder.folders)
                     Get_LowestID(subFolder, ref id);
         }
+        
         public void Pack()
         {
             Pack(idSelect);
@@ -1625,51 +1715,11 @@ namespace Tinke
             
             Change_Files(unpacked);
         }
-
-        public void Save_File(int id, string outFile)
-        {
-            sFile selectFile = Search_File(id);
-
-            BinaryReader br = new BinaryReader(File.OpenRead(selectFile.path));
-            br.BaseStream.Position = selectFile.offset;
-            File.WriteAllBytes(outFile, br.ReadBytes((int)selectFile.size));
-            br.Close();
-        }
-        public String Save_File(int id)
-        {
-            sFile selectFile = Search_File(id);
-            String outFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + Path.GetRandomFileName() + selectFile.name;
-            if (File.Exists(outFile))
-                File.Delete(outFile);
-
-            BinaryReader br = new BinaryReader(File.OpenRead(selectFile.path));
-            br.BaseStream.Position = selectFile.offset;
-            File.WriteAllBytes(outFile, br.ReadBytes((int)selectFile.size));
-            br.Close();
-
-            return outFile;
-        }
-        public void Save_File(sFile currfile, string outFile)
-        {
-            if (File.Exists(outFile))
-                File.Delete(outFile);
-            if (currfile.size == new FileInfo(currfile.path).Length)
-            {
-                File.Copy(currfile.path, outFile);
-            }
-            else
-            {
-                BinaryReader br = new BinaryReader(File.OpenRead(currfile.path));
-                br.BaseStream.Position = currfile.offset;
-                File.WriteAllBytes(outFile, br.ReadBytes((int)currfile.size));
-                br.Close();
-            }
-        }
-
+        #endregion
 
         public Control See_File()
         {
-            sFile selectFile = Select_File();
+            sFile selectFile = Selected_File();
             if (selectFile.name == "rom.nds")
                 goto NDS;
 
@@ -1795,7 +1845,7 @@ namespace Tinke
                     return resultado;
                 }
 
-                if (selectFile.name.ToUpper().EndsWith(".SRL"))
+                if (selectFile.name.ToUpper().EndsWith(".SRL") || selectFile.name.ToUpper().EndsWith(".NDS"))
                 {
                     System.Diagnostics.Process.Start(Application.ExecutablePath, '\"' + tempFile + '\"');
                     return new Control();
@@ -1818,12 +1868,12 @@ namespace Tinke
             Console.WriteLine(Tools.Helper.GetTranslation("Messages", "S25"));
             return new Control();
         }
-        public Control See_File(String archivo)
+        public Control See_File(String file)
         {
-            BinaryReader br = new BinaryReader(File.OpenRead(archivo));
+            BinaryReader br = new BinaryReader(File.OpenRead(file));
             byte[] ext = br.ReadBytes(4);
             br.Close();
-            string name = Path.GetFileName(archivo);
+            string name = Path.GetFileName(file);
 
             #region Calling to plugins
             try
@@ -1832,7 +1882,7 @@ namespace Tinke
                 {
                     if (gamePlugin.Get_Format(name, ext, idSelect) != Format.Unknown)
                     {
-                        Control resultado = gamePlugin.Show_Info(archivo, idSelect);
+                        Control resultado = gamePlugin.Show_Info(file, idSelect);
                         return resultado;
                     }
                 }
@@ -1841,7 +1891,7 @@ namespace Tinke
                 {
                     if (plugin.Get_Format(name, ext) != Format.Unknown)
                     {
-                        Control resultado = plugin.Show_Info(archivo, idSelect);
+                        Control resultado = plugin.Show_Info(file, idSelect);
                         return resultado;
                     }
                 }
@@ -1849,7 +1899,7 @@ namespace Tinke
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
-                try { File.Delete(archivo); }
+                try { File.Delete(file); }
                 catch { }
                 return new Control();
             }
@@ -1860,7 +1910,7 @@ namespace Tinke
             {
                 if (new String(Encoding.ASCII.GetChars(ext)) == "NCLR" || new String(Encoding.ASCII.GetChars(ext)) == "RLCN")
                 {
-                    NCLR nclr = Imagen_NCLR.Leer(archivo, idSelect);
+                    NCLR nclr = Imagen_NCLR.Leer(file, idSelect);
                     pluginHost.Set_NCLR(nclr);
 
                     iNCLR control = new iNCLR(nclr, pluginHost);
@@ -1869,7 +1919,7 @@ namespace Tinke
                 }
                 if (new String(Encoding.ASCII.GetChars(ext)) == "NCGR" || new String(Encoding.ASCII.GetChars(ext)) == "RGCN")
                 {
-                    NCGR tile = Imagen_NCGR.Read(archivo, idSelect);
+                    NCGR tile = Imagen_NCGR.Read(file, idSelect);
                     pluginHost.Set_NCGR(tile);
 
                     if (pluginHost.Get_NCLR().header.file_size != 0x00)
@@ -1886,7 +1936,7 @@ namespace Tinke
                 }
                 else if (new String(Encoding.ASCII.GetChars(ext)) == "NSCR" || new String(Encoding.ASCII.GetChars(ext)) == "RCSN")
                 {
-                    pluginHost.Set_NSCR(Imagen_NSCR.Read(archivo, idSelect));
+                    pluginHost.Set_NSCR(Imagen_NSCR.Read(file, idSelect));
 
                     if (pluginHost.Get_NCGR().header.file_size != 0x00 && pluginHost.Get_NCLR().header.file_size != 0x00)
                     {
@@ -1902,7 +1952,7 @@ namespace Tinke
                 }
                 else if (new String(Encoding.ASCII.GetChars(ext)) == "NCER" || new String(Encoding.ASCII.GetChars(ext)) == "RECN")
                 {
-                    pluginHost.Set_NCER(Imagen_NCER.Read(archivo, idSelect));
+                    pluginHost.Set_NCER(Imagen_NCER.Read(file, idSelect));
 
                     if (pluginHost.Get_NCGR().header.file_size != 0x00 && pluginHost.Get_NCLR().header.file_size != 0x00)
                     {
@@ -1919,7 +1969,7 @@ namespace Tinke
                 }
                 else if (new String(Encoding.ASCII.GetChars(ext)) == "NANR" || new String(Encoding.ASCII.GetChars(ext)) == "RNAN")
                 {
-                    pluginHost.Set_NANR(Imagen_NANR.Leer(archivo, idSelect));
+                    pluginHost.Set_NANR(Imagen_NANR.Leer(file, idSelect));
 
                     if (pluginHost.Get_NCER().header.file_size != 0x00 && pluginHost.Get_NCGR().header.file_size != 0x00 &&
                         pluginHost.Get_NCLR().header.file_size != 0x00)
@@ -1936,21 +1986,21 @@ namespace Tinke
                     }
                 }
 
-                FormatCompress compressFormat = DSDecmp.Main.Get_Format(archivo);
+                FormatCompress compressFormat = DSDecmp.Main.Get_Format(file);
                 if (compressFormat != FormatCompress.Invalid)
                 {
                     Control resultado = new DSDecmp.CompressionControl(idSelect, compressFormat, pluginHost);
                     return resultado;
                 }
 
-                if (Path.GetFileName(archivo).ToUpper().EndsWith(".SRL"))
+                if (Path.GetFileName(file).ToUpper().EndsWith(".SRL"))
                 {
-                    System.Diagnostics.Process.Start(Application.ExecutablePath, '\"' + archivo + '\"');
+                    System.Diagnostics.Process.Start(Application.ExecutablePath, '\"' + file + '\"');
                     return new Control();
                 }
-                else if (Path.GetFileName(archivo).ToUpper().EndsWith(".NDS"))
+                else if (Path.GetFileName(file).ToUpper().EndsWith(".NDS"))
                 {
-                    System.Diagnostics.Process.Start(Application.ExecutablePath, '\"' + archivo + '\"');
+                    System.Diagnostics.Process.Start(Application.ExecutablePath, '\"' + file + '\"');
                     return new Control();
                 }
             }
@@ -1964,9 +2014,10 @@ namespace Tinke
             Console.WriteLine(Tools.Helper.GetTranslation("Messages", "S25"));
             return new Control();
         }
+ 
         public void Read_File()
         {
-            sFile selectFile = Select_File();
+            sFile selectFile = Selected_File();
 
             // Save the file
             string tempFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + selectFile.id + selectFile.name;
@@ -2055,6 +2106,47 @@ namespace Tinke
             try { File.Delete(tempFile); }
             catch { }
             Console.WriteLine(Tools.Helper.GetTranslation("Messages", "S25"));
+        }
+
+
+        public void Save_File(int id, string outFile)
+        {
+            sFile selectFile = Search_File(id);
+
+            BinaryReader br = new BinaryReader(File.OpenRead(selectFile.path));
+            br.BaseStream.Position = selectFile.offset;
+            File.WriteAllBytes(outFile, br.ReadBytes((int)selectFile.size));
+            br.Close();
+        }
+        public String Save_File(int id)
+        {
+            sFile selectFile = Search_File(id);
+            String outFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + Path.GetRandomFileName() + selectFile.name;
+            if (File.Exists(outFile))
+                File.Delete(outFile);
+
+            BinaryReader br = new BinaryReader(File.OpenRead(selectFile.path));
+            br.BaseStream.Position = selectFile.offset;
+            File.WriteAllBytes(outFile, br.ReadBytes((int)selectFile.size));
+            br.Close();
+
+            return outFile;
+        }
+        public void Save_File(sFile currfile, string outFile)
+        {
+            if (File.Exists(outFile))
+                File.Delete(outFile);
+            if (currfile.size == new FileInfo(currfile.path).Length)
+            {
+                File.Copy(currfile.path, outFile);
+            }
+            else
+            {
+                BinaryReader br = new BinaryReader(File.OpenRead(currfile.path));
+                br.BaseStream.Position = currfile.offset;
+                File.WriteAllBytes(outFile, br.ReadBytes((int)currfile.size));
+                br.Close();
+            }
         }
     }
 

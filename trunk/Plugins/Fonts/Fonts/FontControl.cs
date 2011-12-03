@@ -14,7 +14,7 @@
  *   You should have received a copy of the GNU General Public License
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  *
- * Programador: pleoNeX
+ * By: pleoNeX
  * 
  */
 using System;
@@ -59,7 +59,7 @@ namespace Fonts
             Fill_CharTile();
 
             comboChar.SelectedIndex = 0;
-            comboEncoding.SelectedIndex = 0;
+            comboEncoding.SelectedIndex = font.fnif.encoding;
         }
 
         private void ReadLanguage()
@@ -131,6 +131,7 @@ namespace Fonts
         private void comboEncoding_SelectedIndexChanged(object sender, EventArgs e)
         {
             txtBox_TextChanged(txtBox, null);
+            font.fnif.encoding = (byte)comboEncoding.SelectedIndex;
         }
         private void txtBox_TextChanged(object sender, EventArgs e)
         {
@@ -150,12 +151,14 @@ namespace Fonts
                 }
 
                 byte[] codes = new byte[1];
-                if (comboEncoding.SelectedIndex == 0)
-                    codes = Encoding.GetEncoding("shift-jis").GetBytes(new char[] { txtBox.Text[i] }).Reverse().ToArray();
+                if (comboEncoding.SelectedIndex == 2)
+                    codes = Encoding.GetEncoding("shift_jis").GetBytes(new char[] { txtBox.Text[i] }).Reverse().ToArray();
                 else if (comboEncoding.SelectedIndex == 1)
-                    codes = Encoding.Unicode.GetBytes(new char[] { txtBox.Text[i] });
-                else if (comboEncoding.SelectedIndex == 2)
-                    codes = Encoding.BigEndianUnicode.GetBytes(new char[] { txtBox.Text[i] });
+                    codes = Encoding.GetEncoding("utf-16").GetBytes(new char[] { txtBox.Text[i] });
+                else if (comboEncoding.SelectedIndex == 0)
+                    codes = Encoding.UTF8.GetBytes(new char[] { txtBox.Text[i] });
+                else if (comboEncoding.SelectedIndex == 3)
+                    codes = Encoding.GetEncoding(1252).GetBytes(new char[] { txtBox.Text[i] });
 
                 int charCode = (codes.Length == 2 ? BitConverter.ToUInt16(codes, 0) : codes[0]);
 

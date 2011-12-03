@@ -11,7 +11,7 @@
       <S06>Posición PLGC: 0x{0}</S06>
       <S07>Posición HDWC: 0x{0}</S07>
       <S08>Posición PAMC: 0x{0}</S08>
-      <S09>Desconocido 3: 0x{0}</S09>
+      <S09>Desconocido 5: 0x{0}</S09>
       <S0A>Ancho de tile: {0}</S0A>
       <S0B>Alto de tile: {0}</S0B>
       <S0C>Longitud de tile: {0}</S0C>
@@ -32,6 +32,15 @@
       <S1B>Número de caracteres: {0}</S1B>
       <S1C>Código de caracter {0}: 0x{1}</S1C>
       <S1D>Caracter {0}: {1}</S1D>
+      <S1E>Altura: 0x{0}</S1E>
+      <S1F>Desconocido 3: 0x{0}</S1F>
+      <S20>Desconocido 4: 0x{0}</S20>
+      <S21>Ancho: 0x{0}</S21>
+      <S22>Ancho (duplicado): 0x{0}</S22>
+      <S23>Codificación: 0x{0}</S23>
+      <S24>Altura: 0x{0}</S24>
+      <S25>Ancho: 0x{0}</S25>
+      <S26>Bearing Y: 0x{0}</S26>
     </NFTR>
     <FontControl>
       <S00>Guardar nueva fuente</S00>
@@ -74,7 +83,7 @@
       <S06>PLGC offset: 0x{0}</S06>
       <S07>HDWC offset: 0x{0}</S07>
       <S08>PAMC offset: 0x{0}</S08>
-      <S09>Unknown 3: 0x{0}</S09>
+      <S09>Unknown 5: 0x{0}</S09>
       <S0A>Tile width: {0}</S0A>
       <S0B>Tile height: {0}</S0B>
       <S0C>Tile length: {0}</S0C>
@@ -95,6 +104,15 @@
       <S1B>Number of chars: {0}</S1B>
       <S1C>Char code {0}: 0x{1}</S1C>
       <S1D>Char {0}: {1}</S1D>
+      <S1E>Height: 0x{0}</S1E>
+      <S1F>Unknown 3: 0x{0}</S1F>
+      <S20>Unknown 4: 0x{0}</S20>
+      <S21>Width: 0x{0}</S21>
+      <S22>Width (bis): 0x{0}</S22>
+      <S23>Encoding: 0x{0}</S23>
+      <S24>Height: 0x{0}</S24>
+      <S25>Width: 0x{0}</S25>
+      <S26>Bearing Y: 0x{0}</S26>
     </NFTR>
     <FontControl>
       <S00>Save new font</S00>
@@ -158,15 +176,24 @@
       <S1B>Nombre de caractères : {0}</S1B>
       <S1C>Code du caractère {0} : 0x{1}</S1C>
       <S1D>Caractère {0} : {1}</S1D>
+      <S1E>Height: 0x{0}</S1E>
+      <S1F>Unknown 3: 0x{0}</S1F>
+      <S20>Unknown 4: 0x{0}</S20>
+      <S21>Width: 0x{0}</S21>
+      <S22>Width (bis): 0x{0}</S22>
+      <S23>Encoding: 0x{0}</S23>
+      <S24>Height: 0x{0}</S24>
+      <S25>Width: 0x{0}</S25>
+      <S26>Bearing Y: 0x{0}</S26>
     </NFTR>
     <FontControl>
       <S00>Sauver la nouvelle police (font)</S00>
       <S01>Appliquer les changements</S01>
       <S02>Codage :</S02>
-      <S03>Add char</S03>
-      <S04>Remove char</S04>
-      <S05>Use custom palette</S05>
-      <S06>Change Map char</S06>
+      <S03>Ajouter un caractère</S03>
+      <S04>Enlever un caractère</S04>
+      <S05>Utiliser une palette personnalisée</S05>
+      <S06>Changer de caractère de la Map</S06>
     </FontControl>
     <CharControl>
       <S00>Largeur :</S00>
@@ -175,18 +202,18 @@
       <S03>Code :</S03>
     </CharControl>
     <MapChar>
-      <S00>Character map</S00>
+      <S00>Map du caractère</S00>
       <S01>Section</S01>
-      <S02>of {0}</S02>
-      <S03>Accept</S03>
-      <S04>Map info</S04>
-      <S05>Type:</S05>
-      <S06>First char:</S06>
-      <S07>Last char:</S07>
-      <S08>Add section</S08>
-      <S09>Remove section</S09>
-      <S0A>Number of image</S0A>
-      <S0B>Char code</S0B>
+      <S02>de {0}</S02>
+      <S03>Accepter</S03>
+      <S04>Info de la Map</S04>
+      <S05>Type :</S05>
+      <S06>Premier caractère :</S06>
+      <S07>Dernier caractère :</S07>
+      <S08>Ajouter une section</S08>
+      <S09>Enlever une section</S09>
+      <S0A>Nombre d'image</S0A>
+      <S0B>Code du caractère</S0B>
     </MapChar>
   </Français>
 </Language>

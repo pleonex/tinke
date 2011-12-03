@@ -56,6 +56,8 @@ namespace SDAT
             this.pluginHost = pluginHost;
             ReadLanguage();
 
+            Add_Group();
+
             treeFiles.Nodes.Add(CarpetaToNodo(sdat.files.root));
             treeFiles.Nodes[0].Expand();
 
@@ -1111,5 +1113,74 @@ namespace SDAT
             ven.Show();
         }
 
+        private void btnInfoSect_Click(object sender, EventArgs e)
+        {
+            InfoForm win = new InfoForm(sdat.info);
+            win.FormClosed += new FormClosedEventHandler(win_FormClosed);
+            win.Show();
+        }
+        void win_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            if (((InfoForm)sender).DialogResult != DialogResult.OK)
+                return;
+
+            sdat.info = ((InfoForm)sender).Info;
+            sdat.files.root.folders.RemoveAt(sdat.files.root.folders.Count - 1);
+            Add_Group();
+            treeFiles.Nodes.Clear();
+            treeFiles.Nodes.Add(CarpetaToNodo(sdat.files.root));
+            treeFiles.Nodes[0].Expand();
+
+        }
+
+        private void Add_Group()
+        {
+            Folder group = new Folder();
+            group = new Folder();
+            group.name = "GROUP";
+            group.id = 0x0F007;
+            group.folders = new List<Folder>();
+
+            // Add files to GROUP folder
+            for (int i = 0; i < sdat.info.block[5].nEntries; i++)
+            {
+                Info.GROUP entry = (Info.GROUP)sdat.info.block[5].entries[i];
+                Folder entryFld = new Folder();
+                entryFld.name = "Entry " + i.ToString();
+                entryFld.id = (uint)(0x0F008 + i);
+                entryFld.files = new List<Sound>();
+                for (int n = 0; n < entry.nCount; n++)
+                {
+                    switch (entry.subgroup[n].type)
+                    {
+                        case 0x700: // SSEQ
+                            if (sdat.files.root.folders[0].files.Count > entry.subgroup[n].nEntry)
+                                entryFld.files.Add(sdat.files.root.folders[0].files[(int)entry.subgroup[n].nEntry]);
+                            break;
+
+                        case 0x803: // SSAR
+                            if (sdat.files.root.folders[1].files.Count > entry.subgroup[n].nEntry)
+                                entryFld.files.Add(sdat.files.root.folders[1].files[(int)entry.subgroup[n].nEntry]);
+                            break;
+
+                        case 0x601: // SBNK
+                            if (sdat.files.root.folders[2].files.Count > entry.subgroup[n].nEntry)
+                                entryFld.files.Add(sdat.files.root.folders[2].files[(int)entry.subgroup[n].nEntry]);
+                            break;
+
+                        case 0x402: // SWAR
+                            if (sdat.files.root.folders[3].files.Count > entry.subgroup[n].nEntry)
+                                entryFld.files.Add(sdat.files.root.folders[3].files[(int)entry.subgroup[n].nEntry]);
+                            break;
+
+                        default:
+                            break;
+                    }
+                }
+                group.folders.Add(entryFld);
+            }
+
+            sdat.files.root.folders.Add(group);
+        }
     }
 }
