@@ -206,7 +206,7 @@
     <S0F>Cálculo de tiempos:</S0F>
     <S10>Tiempo total:</S10>
     <S11>Tiempo en obtener cabecera:</S11>
-    <S12>Tiempo en inicializar Acciones.cs:</S12>
+    <S12>Tiempo en inicializar clase Acciones:</S12>
     <S13>Tiempo en leer FNT:</S13>
     <S14>Tiempo en añadir archivos del sistema:</S14>
     <S15>Tiempo en leer FAT:</S15>
@@ -245,6 +245,7 @@
     <S23>Hubo un fallo al intentar comprimir el archivo</S23>
     <S24>La imagen utiliza todos los colores, no puede ser eliminado ninguno</S24>
     <S25>No se encontraron operaciones para realizar.</S25>
+    <S26>Limpiar log</S26>
   </Messages>
   <NCLR>
     <S01>Nº de paleta:</S01>

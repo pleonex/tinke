@@ -28,6 +28,9 @@ using PluginInterface;
 
 namespace Fonts
 {
+
+    // Credits to CUE and Lyan53 in romxhack, thanks:
+    // http://romxhack.esforos.com/fuentes-nftr-de-nds-t67
     public static class NFTR
     {
         public static sNFTR Read(string file, int id, string lang)
@@ -47,15 +50,27 @@ namespace Fonts
             // Font INFo section
             font.fnif.type = br.ReadChars(4);
             font.fnif.block_size = br.ReadUInt32();
-            font.fnif.unknown1 = br.ReadUInt32();
-            font.fnif.unknown2 = br.ReadUInt32();
+
+            font.fnif.unknown1 = br.ReadByte();
+            font.fnif.height = br.ReadByte();
+            font.fnif.unknown2 = br.ReadByte();
+            font.fnif.unknown3 = br.ReadByte();
+            font.fnif.unknown4 = br.ReadByte();
+            font.fnif.width = br.ReadByte();
+            font.fnif.width_bis = br.ReadByte();
+            font.fnif.encoding = br.ReadByte();
+
             font.fnif.offset_plgc = br.ReadUInt32();
             font.fnif.offset_hdwc = br.ReadUInt32();
             font.fnif.offset_pamc = br.ReadUInt32();
+
             if (font.fnif.block_size == 0x20)
-                font.fnif.unknown3 = br.ReadUInt32();
-            else
-                font.fnif.unknown3 = 0xFFFF;    // It doesn't exit
+            {
+                font.fnif.height_font = br.ReadByte();
+                font.fnif.widht_font = br.ReadByte();
+                font.fnif.bearing_y = br.ReadByte();
+                font.fnif.unknown5 = br.ReadByte();
+            }
 
             // Character Graphics LP
             br.BaseStream.Position = font.fnif.offset_plgc - 0x08;
@@ -65,10 +80,8 @@ namespace Fonts
             font.plgc.tile_height = br.ReadByte();
             font.plgc.tile_length = br.ReadUInt16();
             font.plgc.unknown = br.ReadUInt16();
-            ushort value = br.ReadUInt16();
-            font.plgc.depth = (ushort)(value & 0xFF);
-            font.plgc.rotateMode = (byte)((value >> 8) & 0x3);
-            font.plgc.unknown2 = (byte)(value >> 10);
+            font.plgc.depth = br.ReadByte();
+            font.plgc.rotateMode = br.ReadByte();
 
             font.plgc.tiles = new Byte[(font.plgc.block_size - 0x10) / font.plgc.tile_length][];
             for (int i = 0; i < font.plgc.tiles.Length; i++)
@@ -160,9 +173,6 @@ namespace Fonts
         public static void Write(sNFTR font, string fileout)
         {
             // Calculate de size of each block
-            font.fnif.block_size = 0x1C;
-            if (font.fnif.unknown3 != 0xFFFF)
-                font.fnif.block_size += 4;
             font.plgc.block_size = (uint)(0x10 + font.plgc.tiles.Length * font.plgc.tile_length);
             font.hdwc.block_size = (uint)(0x10 + font.hdwc.info.Count * 3) + 0x02;
             uint pacm_totalSize = 0x00;
@@ -190,12 +200,23 @@ namespace Fonts
             bw.Write(font.fnif.type);
             bw.Write(font.fnif.block_size);
             bw.Write(font.fnif.unknown1);
+            bw.Write(font.fnif.height);
             bw.Write(font.fnif.unknown2);
+            bw.Write(font.fnif.unknown3);
+            bw.Write(font.fnif.unknown4);
+            bw.Write(font.fnif.width);
+            bw.Write(font.fnif.width_bis);
+            bw.Write(font.fnif.encoding);
             bw.Write(font.fnif.offset_plgc);
             bw.Write(font.fnif.offset_hdwc);
             bw.Write(font.fnif.offset_pamc);
-            if (font.fnif.unknown3 != 0xFFFF)
-                bw.Write(font.fnif.unknown3);
+            if (font.fnif.block_size == 0x20)
+            {
+                bw.Write(font.fnif.height_font);
+                bw.Write(font.fnif.widht_font);
+                bw.Write(font.fnif.bearing_y);
+                bw.Write(font.fnif.unknown5);
+            }
 
             // Write the PLGC section
             bw.Write(font.plgc.type);
@@ -205,6 +226,7 @@ namespace Fonts
             bw.Write(font.plgc.tile_length);
             bw.Write(font.plgc.unknown);
             bw.Write(font.plgc.depth);
+            bw.Write(font.plgc.rotateMode);
             for (int i = 0; i < font.plgc.tiles.Length; i++)
                 bw.Write(BitsToBytes(font.plgc.tiles[i]));
 
@@ -280,12 +302,23 @@ namespace Fonts
                 Console.WriteLine("<b>" + xml.Element("S02").Value + "</b>", new String(font.fnif.type));
                 Console.WriteLine(xml.Element("S03").Value, font.fnif.block_size.ToString("x"));
                 Console.WriteLine(xml.Element("S04").Value, font.fnif.unknown1.ToString("x"));
+                Console.WriteLine(xml.Element("S1E").Value, font.fnif.height.ToString("x"));
                 Console.WriteLine(xml.Element("S05").Value, font.fnif.unknown2.ToString("x"));
+                Console.WriteLine(xml.Element("S1F").Value, font.fnif.unknown3.ToString("x"));
+                Console.WriteLine(xml.Element("S20").Value, font.fnif.unknown4.ToString("x"));
+                Console.WriteLine(xml.Element("S21").Value, font.fnif.width.ToString("x"));
+                Console.WriteLine(xml.Element("S22").Value, font.fnif.width_bis.ToString("x"));
+                Console.WriteLine(xml.Element("S23").Value, font.fnif.encoding.ToString("x"));
                 Console.WriteLine(xml.Element("S06").Value, font.fnif.offset_plgc.ToString("x"));
                 Console.WriteLine(xml.Element("S07").Value, font.fnif.offset_hdwc.ToString("x"));
                 Console.WriteLine(xml.Element("S08").Value, font.fnif.offset_pamc.ToString("x"));
                 if (font.fnif.block_size == 0x20)
-                    Console.WriteLine(xml.Element("S09").Value, font.fnif.unknown3.ToString("x"));
+                {
+                    Console.WriteLine(xml.Element("S24").Value, font.fnif.height_font.ToString("x"));
+                    Console.WriteLine(xml.Element("S25").Value, font.fnif.widht_font.ToString("x"));
+                    Console.WriteLine(xml.Element("S26").Value, font.fnif.bearing_y.ToString("x"));
+                    Console.WriteLine(xml.Element("S09").Value, font.fnif.unknown5.ToString("x"));
+                }
 
 
                 Console.WriteLine("<b>" + xml.Element("S02").Value + "</b>", new String(font.plgc.type));
@@ -296,7 +329,7 @@ namespace Fonts
                 Console.WriteLine(xml.Element("S0D").Value, font.plgc.unknown.ToString("x"));
                 Console.WriteLine(xml.Element("S0E").Value, font.plgc.depth.ToString());
                 Console.WriteLine(xml.Element("S0F").Value, font.plgc.rotateMode.ToString());
-                Console.WriteLine(xml.Element("S10").Value, font.plgc.unknown2.ToString());
+                //Console.WriteLine(xml.Element("S10").Value, font.plgc.unknown2.ToString());
 
                 Console.WriteLine("<b>" + xml.Element("S02").Value + "</b>", new String(font.hdwc.type));
                 Console.WriteLine(xml.Element("S03").Value, font.hdwc.block_size.ToString("x"));
@@ -550,12 +583,24 @@ namespace Fonts
         {
             public char[] type;
             public uint block_size;
-            public uint unknown1;
-            public uint unknown2;
+
+            public byte unknown1;       // Usually 0x00
+            public byte height;
+            public byte unknown2;       
+            public byte unknown3;       // Usually 0x00
+            public byte unknown4;       // Usually 0x00
+            public byte width;
+            public byte width_bis;
+            public byte encoding;       // Could be 0(utf-8), 1(utf-16), 2(s-jis) or 3(cp1252)
+
             public uint offset_plgc;
             public uint offset_hdwc;
             public uint offset_pamc;
-            public uint unknown3;
+
+            public byte height_font;
+            public byte widht_font;
+            public byte bearing_y;
+            public byte unknown5;       // Usually 0x00
         }
         public struct PLGC // Character Graphics LP
         {
@@ -565,9 +610,8 @@ namespace Fonts
             public byte tile_height;
             public ushort tile_length;
             public ushort unknown;
-            public ushort depth;
+            public byte depth;
             public byte rotateMode;
-            public byte unknown2;
             public byte[][] tiles; // tiles of each char
         }
         public struct HDWC // Character Width DH

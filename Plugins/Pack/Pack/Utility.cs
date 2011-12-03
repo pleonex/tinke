@@ -14,7 +14,7 @@
  *   You should have received a copy of the GNU General Public License
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  *
- * Programador: pleoNeX
+ * By: pleoNeX
  * 
  */
 using System;
@@ -36,10 +36,11 @@ namespace Pack
             this.pluginHost = pluginHost;
         }
 
+        #region Unpack methods
         public sFolder Unpack(string archivo)
         {
             ARC arc = new ARC();
-            utilityFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + "pack_" + new FileInfo(archivo).Name;
+            utilityFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + "utility_" + Path.GetRandomFileName();
             File.Copy(archivo, utilityFile, true);
             BinaryReader br = new BinaryReader(System.IO.File.OpenRead(archivo));
 
@@ -63,7 +64,7 @@ namespace Pack
             br.BaseStream.Position = fntOffset;
             arc.btnf.entries = new List<BTNF_MainEntry>();
      
-            #region Obtener carpeta root
+            #region Get root directory
             do
             {
                 BTNF_MainEntry main = new BTNF_MainEntry();
@@ -76,19 +77,25 @@ namespace Pack
                 br.BaseStream.Position = main.offset + fntOffset;
                 int id = br.ReadByte();
 
-                while (id != 0x0)   // Indicador de fin de subtable
+                while (id != 0x0)   // End of subtable
                 {
-                    if (id < 0x80)  // Es archivo
+                    if ((id & 0x80) == 0)  // File
                     {
                         sFile currFile = new sFile();
                         currFile.id = (ushort)idFile;
                         idFile++;
                         currFile.name = new String(br.ReadChars(id));
+                        
+                        // Add the fat data
+                        currFile.path = utilityFile;
+                        currFile.offset = arc.btaf.entries[currFile.id].start_offset;
+                        currFile.size = (arc.btaf.entries[currFile.id].end_offset - currFile.offset);
+
                         if (!(main.files is List<sFile>))
                             main.files = new List<sFile>();
                         main.files.Add(currFile);
                     }
-                    else if (id > 0x80) // Es carpeta
+                    else                // Directory
                     {
                         sFolder currFolder = new sFolder();
                         currFolder.name = new String(br.ReadChars(id - 0x80));
@@ -105,24 +112,13 @@ namespace Pack
 
             } while (fntOffset + arc.btnf.entries[0].offset != br.BaseStream.Position);
 
-            sFolder root = Jerarquizar_Carpetas(arc.btnf.entries, 0xF000, "root");
+            sFolder root = Create_TreeFolders(arc.btnf.entries, 0xF000, "root");
             #endregion
 
-            // Archivos
-            br.BaseStream.Position = fatOffset + fatSize;
-            for (int i = 0; i < arc.btaf.nFiles; i++)
-            {
-                br.BaseStream.Position = arc.btaf.entries[i].start_offset;
-                Asignar_Archivos(root, i,
-                    arc.btaf.entries[i].end_offset - arc.btaf.entries[i].start_offset,
-                    arc.btaf.entries[i].start_offset);
-            }
             br.Close();
-
-            pluginHost.Set_Files(root);
             return root;
         }
-        public sFolder Jerarquizar_Carpetas(List<BTNF_MainEntry> entries, int idFolder, string nameFolder)
+        public sFolder Create_TreeFolders(List<BTNF_MainEntry> entries, int idFolder, string nameFolder)
         {
             sFolder currFolder = new sFolder();
 
@@ -130,39 +126,33 @@ namespace Pack
             currFolder.id = (ushort)idFolder;
             currFolder.files = entries[idFolder & 0xFFF].files;
 
-            if (entries[idFolder & 0xFFF].folders is List<sFolder>) // Si tiene carpetas dentro.
+            if (entries[idFolder & 0xFFF].folders is List<sFolder>) // If there is folders inside.
             {
                 currFolder.folders = new List<sFolder>();
 
                 foreach (sFolder subFolder in entries[idFolder & 0xFFF].folders)
-                    currFolder.folders.Add(Jerarquizar_Carpetas(entries, subFolder.id, subFolder.name));
+                    currFolder.folders.Add(Create_TreeFolders(entries, subFolder.id, subFolder.name));
             }
 
             return currFolder;
         }
-        public void Asignar_Archivos(sFolder currFolder, int idFile, UInt32 size, UInt32 offset)
+        #endregion
+
+        #region Pack methods
+        public String Pack(string fileIn, ref sFolder unpacked)
         {
-            if (currFolder.files is List<sFile>)
-            {
-                for (int i = 0; i < currFolder.files.Count; i++)
-                {
-                    if (currFolder.files[i].id == idFile)
-                    {
-                        sFile newFile = currFolder.files[i];
-                        newFile.size = size;
-                        newFile.offset = offset;
-                        newFile.path = utilityFile;
-                        currFolder.files.RemoveAt(i);
-                        currFolder.files.Insert(i, newFile);
-                        return;
-                    }
+            String fileOut = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + "newUtility_" + Path.GetRandomFileName();
 
-                }
-            }
 
-            if (currFolder.folders is List<sFolder>) // Si tiene carpetas dentro.
-                foreach (sFolder subFolder in currFolder.folders)
-                    Asignar_Archivos(subFolder, idFile, size, offset);
+
+            return fileOut;
         }
+        public Stream Write_FAT(ref sFolder unpacked)
+        {
+            MemoryStream ms = new MemoryStream();
+
+            return ms;
+        }
+        #endregion
     }
 }

@@ -389,6 +389,7 @@ namespace Tinke.Nitro
             diccionario.Add("41", "Ubisoft");
             diccionario.Add("4F", "Eidos");
             diccionario.Add("4Q", "Disney Interactive Studios");
+            diccionario.Add("4Z", "Crave Entertainment");
             diccionario.Add("52", "Activision");
             diccionario.Add("54", "ROCKSTAR GAMES");
             diccionario.Add("5D", "Midway");
@@ -396,6 +397,7 @@ namespace Tinke.Nitro
             diccionario.Add("64", "LucasArts Entertainment");
             diccionario.Add("69", "Electronic Arts Inc.");
             diccionario.Add("6V", "JoWooD Entertainment");
+            diccionario.Add("70", "Atari");
             diccionario.Add("78", "THQ");
             diccionario.Add("7D", "Vivendi Universal Games");
             diccionario.Add("7J", "Zoo Digital Publishing Ltd");
@@ -405,11 +407,13 @@ namespace Tinke.Nitro
             diccionario.Add("99", "Rising Star Games");
             diccionario.Add("A4", "Konami Digital Entertainment");
             diccionario.Add("AF", "Namco");
+            diccionario.Add("EB", "Atlus USA");
             diccionario.Add("FH", "Foreign Media Games");
             diccionario.Add("FK", "The Game Factory");
             diccionario.Add("FR", "dtp young");
             diccionario.Add("G9", "D3Publisher of America");
             diccionario.Add("GD", "SQUARE ENIX");
+            diccionario.Add("GL", "gameloft");
             diccionario.Add("GN", "Oxygen Interactive");
             diccionario.Add("GR", "GSP");
             diccionario.Add("GT", "505 Games");
@@ -417,6 +421,8 @@ namespace Tinke.Nitro
             diccionario.Add("GY", "The Game Factory");
             diccionario.Add("H3", "Zen");
             diccionario.Add("H4", "SNK PLAYMORE");
+            diccionario.Add("H6", "MYCOM");
+            diccionario.Add("HC", "Plato");
             diccionario.Add("HF", "Level 5");
             diccionario.Add("HG", "Graffiti Entertainment");
             diccionario.Add("HM", "HMH - INTERACTIVE");

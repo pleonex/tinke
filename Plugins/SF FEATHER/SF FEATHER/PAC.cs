@@ -47,23 +47,53 @@ namespace SF_FEATHER
                 newFile.size = br.ReadUInt32() * 0x10;
                 newFile.path = file;
 
+                // Extension check
                 if (newFile.size != 0x00)
                 {
-                    // Check if this file is pac
-                    long currPos = br.BaseStream.Position;
-                    br.BaseStream.Position = newFile.offset + 0x04;
-                    uint currType = br.ReadUInt32();
-                    br.BaseStream.Position++;
-                    uint currType2 = br.ReadUInt32();
-                    br.BaseStream.Position = currPos;
+                    bool compressed = false;
 
-                    if (currType == 0x04 || currType2 == 0x04)
+                    // Check if this file is pac, it searches the extension
+                    long currPos = br.BaseStream.Position;
+                    br.BaseStream.Position = newFile.offset;
+                    byte cInd = br.ReadByte();
+                    uint cSize = br.ReadUInt32();
+                    if ((cInd == 0x11 || cInd == 0x10) && cSize < 0x2000000)
+                        compressed = true;
+
+                    // Search the indicator of the pac file
+                    if (compressed)
+                        br.BaseStream.Position = newFile.offset + 9;
+                    else
+                        br.BaseStream.Position = newFile.offset + 4;
+                    uint currType = br.ReadUInt32();
+
+                    if (currType == 0x04)
                         newFile.name += ".pac";
                     else
-                        newFile.name += ".bin";
+                    {
+                        // Search for the header extension
+                        if (compressed)
+                            br.BaseStream.Position = newFile.offset + 5;
+                        else
+                            br.BaseStream.Position = newFile.offset;
+                           
+                        currType = br.ReadUInt32();
+                        char[] ext = Encoding.ASCII.GetChars(BitConverter.GetBytes(currType));
+                        String extS = ".";
+                        for (int s = 0; s < 4; s++)
+                            if (Char.IsLetterOrDigit(ext[s]) || ext[s] == 0x20)
+                                extS += ext[s];
+
+                        if (extS != "." && extS.Length == 5)
+                            newFile.name += extS;
+                        else
+                            newFile.name += ".bin";
+                    }
+
+                    br.BaseStream.Position = currPos;
                 }
                 else
-                    newFile.name += "_empty.bin";
+                    continue;
 
                 unpacked.files.Add(newFile);
             }            

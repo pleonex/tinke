@@ -86,7 +86,7 @@ namespace Tinke.Nitro
 
             return root;
         }
-        public static sFolder ReadFNT(string romFile, uint fntOffset, Estructuras.sFAT[] fat)
+        public static sFolder ReadFNT(string romFile, uint fntOffset, Estructuras.sFAT[] fat, Acciones accion)
         {
             sFolder root = new sFolder();
             List<Estructuras.MainFNT> mains = new List<Estructuras.MainFNT>();
@@ -94,10 +94,11 @@ namespace Tinke.Nitro
             BinaryReader br = new BinaryReader(File.OpenRead(romFile));
             br.BaseStream.Position = fntOffset;
 
-            long offsetSubTable = br.ReadUInt32();  // Offset donde comienzan las SubTable y terminan las MainTables.
-            br.BaseStream.Position = fntOffset;     // Volvemos al principio de la primera MainTable
+            br.BaseStream.Position += 6;
+            ushort number_directories = br.ReadUInt16();  // Get the total number of directories (mainTables)
+            br.BaseStream.Position = fntOffset;
 
-            while (br.BaseStream.Position < fntOffset + offsetSubTable)
+            for (int i = 0; i < number_directories; i++)
             {
                 Estructuras.MainFNT main = new Estructuras.MainFNT();
                 main.offset = br.ReadUInt32();
@@ -113,7 +114,7 @@ namespace Tinke.Nitro
 
                 while (id != 0x0)   // Indicador de fin de la SubTable
                 {
-                    if (id < 0x80)  // Archivo
+                    if (id < 0x80)  // File
                     {
                         sFile currFile = new sFile();
 
@@ -123,9 +124,17 @@ namespace Tinke.Nitro
                         int lengthName = id;
                         currFile.name = new String(Encoding.GetEncoding("shift_jis").GetChars(br.ReadBytes(lengthName)));
                         currFile.id = idFile; idFile++;
+
+                        // FAT part
                         currFile.offset = fat[currFile.id].offset;
                         currFile.size = fat[currFile.id].size;
                         currFile.path = romFile;
+
+                        // Get the format
+                        long pos = br.BaseStream.Position;
+                        br.BaseStream.Position = currFile.offset;
+                        currFile.format = accion.Get_Format(br.BaseStream, currFile.name, currFile.id, currFile.size);
+                        br.BaseStream.Position = pos;
 
                         main.subTable.files.Add(currFile);
                     }

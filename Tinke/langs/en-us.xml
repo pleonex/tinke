@@ -232,6 +232,7 @@
     <S23>There was an error attempting to compress/pack the file.</S23>
     <S24>All the colors are used by the image.</S24>
     <S25>Nothing to do.</S25>
+    <S26>Clear log</S26>
   </Messages>
   <NCLR>
     <S01># palette:</S01>

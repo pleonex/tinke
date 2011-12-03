@@ -49,7 +49,7 @@ namespace TXT
                 || nombre.EndsWith(".C") || nombre.EndsWith("MAKEFILE") || nombre.EndsWith(".BSF")
                 || nombre.EndsWith(".LUA") || nombre.EndsWith(".CSV") || nombre.EndsWith(".SMAP")
                 || nombre.EndsWith("BUILDTIME") || nombre.EndsWith(".LUA~") || nombre.EndsWith(".INI.TEMPLATE")
-                || nombre.EndsWith("LUA.BAK"))
+                || nombre.EndsWith("LUA.BAK") || nombre.EndsWith(".NAIX"))
                 return Format.Text;
             else if (ext == "MESG")
                 return Format.Text;

@@ -226,62 +226,62 @@
   </Español>
   <Français>
     <BMD0>
-      <S00>Read BMD0 file</S00>
-      <S01>MDL0 section</S01>
-      <S02>Number of sections: {0}</S02>
-      <S03>Number of models: {0}</S03>
-      <S04>Model {0} ({1})</S04>
-      <S05>Header:</S05>
-      <S06>Bones offset: 0x{0}</S06>
-      <S07>Material offset: 0x{0}</S07>
-      <S08>Polygon start offset: 0x{0}</S08>
-      <S09>Polygon end offset: 0x{0}</S09>
-      <S0A>Unknown 1: 0x{0}</S0A>
-      <S0B>Unknown 2: 0x{0}</S0B>
-      <S0C>Unknown 3: 0x{0}</S0C>
-      <S0D>Number of objects: 0x{0}</S0D>
-      <S0E>Number of materials: 0x{0}</S0E>
-      <S0F>Number of polygons: 0x{0}</S0F>
-      <S10>Unknown 4: 0x{0}</S10>
-      <S11>Scale mode: 0x{0}</S11>
-      <S12>Unknown 5: 0x{0}</S12>
-      <S13>Number of vertices: 0x{0}</S13>
-      <S14>Number of surfaces: 0x{0}</S14>
-      <S15>Number of triangles: 0x{0}</S15>
-      <S16>Number of quads: 0x{0}</S16>
-      <S17>Bounding box X: {0}</S17>
-      <S18>Bounding box Y: {0}</S18>
-      <S19>Bounding box Z: {0}</S19>
-      <S1A>Bounding box width: {0}</S1A>
-      <S1B>Bounding box height: {0}</S1B>
-      <S1C>Bounding box depth: {0}</S1C>
-      <S1D>Object {0} ({1})</S1D>
-      <S1E>Translation flag: 0x{0}</S1E>
-      <S1F>Parameters-> N: {0}, P: {1}, S: {2}, R: {3}, T: {4}</S1F>
-      <S20>Translation XYZ-> X: {0}, Y: {1}, Z: {2}</S20>
-      <S21>Pivot-> Value1: {0}, Value2: {1}</S21>
-      <S22>Scale XYZ-> X: {0}, Y: {1}, Z: {2}</S22>
-      <S23>Rotation-> 1: {0}, 2: {1}, 3: {2}, 4: {3}, 5: {4}, 6: {5}, 7: {6}, 8: {7}</S23>
-      <S24>Object section:</S24>
-      <S25>Bones commands:</S25>
-      <S26>Cmd {0}-> ID: {1}, Size: {2}, Parameters: {3}</S26>
-      <S27>Material section:</S27>
-      <S28>Texture offset: 0x{0}</S28>
-      <S29>Palette offset: 0x{0}</S29>
-      <S2A>Material {0} ({1})</S2A>
-      <S2B>Definition: {0}</S2B>
-      <S2C>Texture section:</S2C>
+      <S00>Lecture des archives BMD0</S00>
+      <S01>Section MDL0</S01>
+      <S02>Nombre de sections : {0}</S02>
+      <S03>Nombre de modèles : {0}</S03>
+      <S04>Modèle {0} ({1})</S04>
+      <S05>En-tête :</S05>
+      <S06>Offset de l'ossature : 0x{0}</S06>
+      <S07>Offset du matériel : 0x{0}</S07>
+      <S08>Offset du début du polygone : 0x{0}</S08>
+      <S09>Offset de fin du polygone : 0x{0}</S09>
+      <S0A>Inconnu 1 : 0x{0}</S0A>
+      <S0B>Inconnu 2 : 0x{0}</S0B>
+      <S0C>Inconnu 3 : 0x{0}</S0C>
+      <S0D>Nombre d'objets : 0x{0}</S0D>
+      <S0E>Nombre de matériels : 0x{0}</S0E>
+      <S0F>Nombre de polygones : 0x{0}</S0F>
+      <S10>Inconnu 4 : 0x{0}</S10>
+      <S11>Mode échelle : 0x{0}</S11>
+      <S12>Inconnu 5 : 0x{0}</S12>
+      <S13>Nombre de sommets : 0x{0}</S13>
+      <S14>Nombre de surfaces : 0x{0}</S14>
+      <S15>Nombre de triangles : 0x{0}</S15>
+      <S16>Nombre de quadrilatères : 0x{0}</S16>
+      <S17>Limite de la boîte X : {0}</S17>
+      <S18>Limite de la boîte Y : {0}</S18>
+      <S19>Limite de la boîte Z : {0}</S19>
+      <S1A>Largeur de la limite de la boîte : {0}</S1A>
+      <S1B>Hauteur de la limite de la boîte : {0}</S1B>
+      <S1C>Profondeur de la limite de la boîte : {0}</S1C>
+      <S1D>Objet {0} ({1})</S1D>
+      <S1E>Indicateur de transformation : 0x{0}</S1E>
+      <S1F>Paramètres -> N : {0}, P : {1}, S : {2}, R : {3}, T : {4}</S1F>
+      <S20>Traduction XYZ -> X : {0}, Y : {1}, Z : {2}</S20>
+      <S21>Pivot -> Valeur1 : {0}, Valeur2 : {1}</S21>
+      <S22>Échelle XYZ -> X : {0}, Y : {1}, Z : {2}</S22>
+      <S23>Basculement -> 1 : {0}, 2 : {1}, 3 : {2}, 4 : {3}, 5 : {4}, 6 : {5}, 7 : {6}, 8 : {7}</S23>
+      <S24>Section de l'objet :</S24>
+      <S25>Commandes de l'ossature :</S25>
+      <S26>Cmd {0} -> ID : {1}, Taille : {2}, Paramètres : {3}</S26>
+      <S27>Section du matériel :</S27>
+      <S28>Offset de la texture : 0x{0}</S28>
+      <S29>Offset de la palette : 0x{0}</S29>
+      <S2A>Matériel {0} ({1})</S2A>
+      <S2B>Définition : {0}</S2B>
+      <S2C>Section de la texture :</S2C>
       <S2D>Texture {0} ({1})</S2D>
-      <S2E>Matching data offset: {0}</S2E>
-      <S2F>Associated material number: {0}</S2F>
-      <S30>Palette section:</S30>
+      <S2E>Offset des données correspondantes : {0}</S2E>
+      <S2F>Nombre associé au matériel : {0}</S2F>
+      <S30>Section de la palette :</S30>
       <S31>Palette {0} ({1})</S31>
-      <S32>Polygon section:</S32>
-      <S33>Polygon {0} ({1})</S33>
-      <S34>Display-> offset: {0}, size: {1}, unknown1: {2}, unknown2: {3}</S34>
-      <S35>Geometry commands:</S35>
-      <S36>Parameters: </S36>
-      <S37>End of section</S37>
+      <S32>Section du polygone :</S32>
+      <S33>Polygone {0} ({1})</S33>
+      <S34>Affichage -> offset : {0}, taille : {1}, inconnu1 : {2}, inconnu2 : {3}</S34>
+      <S35>Commandes de géométrie :</S35>
+      <S36>Paramètres :</S36>
+      <S37>Fin de section</S37>
     </BMD0>
     <BTX0>
       <S00>Lecture des archives BTX0</S00>

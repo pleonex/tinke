@@ -33,20 +33,21 @@ namespace SDAT
         string archivo;
 
         #region Plugin
+        public void Initialize(IPluginHost pluginHost)
+        {
+            this.pluginHost = pluginHost;
+        }
         public Format Get_Format(string nombre, byte[] magic)
         {
             nombre = nombre.ToUpper();
             string ext = new String(System.Text.Encoding.ASCII.GetChars(magic));
 
-            if (ext == "SDAT" || (nombre.EndsWith(".SWAV") || ext == "SWAV"))
+            if (ext == "SDAT" || ext == "SWAV")
                 return Format.Sound;
 
             return Format.Unknown;
         }
-        public void Initialize(IPluginHost pluginHost)
-        {
-            this.pluginHost = pluginHost;
-        }
+ 
         public void Read(string archivo, int id)
         {
         }
@@ -54,13 +55,14 @@ namespace SDAT
         {
             this.archivo = archivo;
 
-            return new iSDAT(Informacion(id), pluginHost);
+            return new iSDAT(Read(id), pluginHost);
         }
+  
         public String Pack(ref sFolder unpacked, string file) { return null; }
         public sFolder Unpack(string file) { return new sFolder(); }
         #endregion
 
-        private sSDAT Informacion(int id)
+        private sSDAT Read(int id)
         {
             sSDAT sdat = new sSDAT();
             sdat.id = id;
@@ -393,14 +395,37 @@ namespace SDAT
 
             FileSystem(ref sdat);
 
-            Asignar_Datos(ref sdat);
+            Set_Data(ref sdat);
 
             return sdat;
         }
 
+        private Sound SearchFile(int id, Folder currentFolder)
+        {
+            if (currentFolder.files is List<Sound>)
+                foreach (Sound sound in currentFolder.files)
+                    if (sound.id == id)
+                        return sound;
+
+
+            if (currentFolder.folders is List<Folder>)
+            {
+                foreach (Folder subFolder in currentFolder.folders)
+                {
+                    Sound currFile = SearchFile(id, subFolder);
+                    if (currFile.name is String)
+                        return currFile;
+                }
+            }
+
+
+            return new Sound();
+        }
+
+
         private void FileSystem(ref sSDAT sdat)
         {
-            #region Definición de carpetas
+            #region Folder declaration
             Folder root = new Folder();
             root.name = "SDAT";
             root.id = 0x0F000;
@@ -483,7 +508,7 @@ namespace SDAT
 
             sdat.files.root = root;
         }
-        private void Asignar_Datos(ref sSDAT sdat)
+        private void Set_Data(ref sSDAT sdat)
         {
             int nFile = 0;
             List<uint> oldIDs = new List<uint>();
@@ -493,15 +518,15 @@ namespace SDAT
             {
                 uint id = ((Info.SEQ)sdat.info.block[0].entries[i]).fileID;
                 
-                if (id != 0x4E49) // Parece ser el valor nulo
+                if (id != 0x4E49) // Null value
                 {
-                    if (oldIDs.Contains(id)) // Si ya existe saltar
+                    if (oldIDs.Contains(id)) // If it exits
                         continue;
                     oldIDs.Add(id);
 
                     Sound newSound = sdat.files.root.folders[0].files[nFile];
                     newSound.id = id;
-                    if (sdat.cabecera.symbSize != 0x00) // Si existe la sección SYMBOL
+                    if (sdat.cabecera.symbSize != 0x00) // If there is SYMBOL section
                         newSound.name = sdat.symbol.records[0].entries[i] + ".SSEQ"; 
                     sdat.files.root.folders[0].files[nFile] = newSound;
                 }
@@ -518,16 +543,16 @@ namespace SDAT
             {
                 uint id = ((Info.SEQARC)sdat.info.block[1].entries[i]).fileID;
 
-                if (id != 0x4E49) // Parece ser el valor nulo
+                if (id != 0x4E49) // Null value
                 {
-                    if (oldIDs.Contains(id)) // Si ya existe saltar
+                    if (oldIDs.Contains(id)) // If it exits
                         continue;
                     oldIDs.Add(id);
 
                     Sound newSound = sdat.files.root.folders[1].files[nFile];
                     newSound.id = id;
-                    if (sdat.cabecera.symbSize != 0x00) // Si existe la sección SYMBOL
-                        newSound.name = sdat.symbol.record2.group[i].groupName + ".SSAR"; // TODO: SYMBOL SSAR
+                    if (sdat.cabecera.symbSize != 0x00) // If there is SYMBOL section
+                        newSound.name = sdat.symbol.record2.group[i].groupName + ".SSAR";
                     sdat.files.root.folders[1].files[nFile] = newSound;
                 }
                 else
@@ -543,15 +568,15 @@ namespace SDAT
             {
                 uint id = ((Info.BANK)sdat.info.block[2].entries[i]).fileID;
 
-                if (id != 0x4E49) // Parece ser el valor nulo
+                if (id != 0x4E49) // Null value
                 {
-                    if (oldIDs.Contains(id)) // Si ya existe saltar
+                    if (oldIDs.Contains(id)) // If it exits
                         continue;
                     oldIDs.Add(id);
 
                     Sound newSound = sdat.files.root.folders[2].files[nFile];
                     newSound.id = id;
-                    if (sdat.cabecera.symbSize != 0x00) // Si existe la sección SYMBOL
+                    if (sdat.cabecera.symbSize != 0x00) // If there is SYMBOL section
                         newSound.name = sdat.symbol.records[1].entries[i] + ".SBNK";
                     sdat.files.root.folders[2].files[nFile] = newSound;
                 }
@@ -568,15 +593,15 @@ namespace SDAT
             {
                 uint id = ((Info.WAVEARC)sdat.info.block[3].entries[i]).fileID;
 
-                if (id != 0x4E49) // Parece ser el valor nulo
+                if (id != 0x4E49) // Null value
                 {
-                    if (oldIDs.Contains(id)) // Si ya existe saltar
+                    if (oldIDs.Contains(id)) // If it exits
                         continue;
                     oldIDs.Add(id);
 
                     Sound newSound = sdat.files.root.folders[3].files[nFile];
                     newSound.id = id;
-                    if (sdat.cabecera.symbSize != 0x00) // Si existe la sección SYMBOL
+                    if (sdat.cabecera.symbSize != 0x00) // If there is SYMBOL section
                         newSound.name = sdat.symbol.records[2].entries[i] + ".SWAR";
                     sdat.files.root.folders[3].files[nFile] = newSound;
                 }
@@ -593,15 +618,15 @@ namespace SDAT
             {
                 uint id = ((Info.STRM)sdat.info.block[7].entries[i]).fileID;
 
-                if (id != 0x4E49) // Parece ser el valor nulo
+                if (id != 0x4E49) // Null value
                 {
-                    if (oldIDs.Contains(id)) // Si ya existe saltar
+                    if (oldIDs.Contains(id)) // If it exits
                         continue;
                     oldIDs.Add(id);
 
                     Sound newSound = sdat.files.root.folders[4].files[nFile];
                     newSound.id = id;
-                    if (sdat.cabecera.symbSize != 0x00) // Si existe la sección SYMBOL
+                    if (sdat.cabecera.symbSize != 0x00) // If there is SYMBOL section
                         newSound.name = sdat.symbol.records[6].entries[i] + ".STRM";
                     sdat.files.root.folders[4].files[nFile] = newSound;
                 }

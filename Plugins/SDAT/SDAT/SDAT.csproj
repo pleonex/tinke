@@ -48,6 +48,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IMA-ADPCM.cs" />
+    <Compile Include="InfoForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="InfoForm.Designer.cs">
+      <DependentUpon>InfoForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="iSDAT.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -68,12 +74,16 @@
     </Compile>
     <Compile Include="SDAT.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SSEQ.cs" />
     <Compile Include="STRM.cs" />
     <Compile Include="SWAR.cs" />
     <Compile Include="SWAV.cs" />
     <Compile Include="WAV.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="InfoForm.resx">
+      <DependentUpon>InfoForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="iSDAT.resx">
       <DependentUpon>iSDAT.cs</DependentUpon>
     </EmbeddedResource>
@@ -90,6 +100,7 @@
     <None Include="Resources\information.png" />
     <None Include="Resources\accept.png" />
     <None Include="Resources\package_add.png" />
+    <None Include="Resources\tag_blue_edit.png" />
     <Content Include="SDATLang.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

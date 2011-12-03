@@ -70,6 +70,7 @@ namespace Tinke.Nitro
 
             }
 
+            br.Close();
             return overlays;
         }
 

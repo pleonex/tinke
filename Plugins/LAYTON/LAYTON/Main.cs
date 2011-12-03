@@ -14,7 +14,7 @@
  *   You should have received a copy of the GNU General Public License
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  *
- * Programador: pleoNeX
+ * By: pleoNeX
  * 
  */
 using System;
@@ -39,7 +39,7 @@ namespace LAYTON
 
         public bool IsCompatible()
         {
-            if (gameCode == "A5FP" || gameCode == "A5FE" || gameCode == "YLTS")
+            if (gameCode == "A5FP" || gameCode == "A5FE" || gameCode == "YLTS" || gameCode == "BLFE")
                 return true;
             else
                 return false;
@@ -67,6 +67,14 @@ namespace LAYTON
                         return new Ani(pluginHost, gameCode, "").Get_Formato(nombre);
                     else if (id >= 0x409 & id <= 0x808)
                         return new Bg(pluginHost, gameCode, "").Get_Formato(nombre);
+                    break;
+                case "BLFE":
+                    if (nombre.EndsWith(".DARC"))
+                        return Format.Pack;
+                    else if (nombre.EndsWith(".DENC"))
+                        return Format.Compressed;
+                    else if (nombre.EndsWith(".ARCHIVE"))
+                        return Format.Pack;
                     break;
             }
 
@@ -122,6 +130,12 @@ namespace LAYTON
                 return PCK2.Read(file, id, pluginHost);
             else if (file.ToUpper().EndsWith(".PCM"))
                 return PCM.Unpack(file, pluginHost);
+            else if (file.ToUpper().EndsWith(".DARC"))
+                return DARC.Unpack(file);
+            else if (file.ToUpper().EndsWith(".DENC"))
+                return DENC.Unpack(file, pluginHost);
+            else if (file.ToUpper().EndsWith(".ARCHIVE"))
+                return LAYTON4.Unpack_ARCHIVE(file);
 
             return new sFolder();
         }
