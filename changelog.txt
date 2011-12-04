@@ -10,6 +10,10 @@
    - Unpack file kihira.archive
 * Support for INFO section in SDAT
 * Show GROUP record in SDAT
+* Added table support in hexadecimal editor.
+* Pack Utility.bin
+* New depth support: 1bpp
+* Removed fixed location of the main windows
 
 
 0.8.2 public release (rev117)

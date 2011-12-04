@@ -109,12 +109,12 @@
       <S04>Importer</S04>
       <S05>Octet de départ :</S05>
       <S06>Profondeur</S06>
-      <S07>Palettes viewer</S07>
+      <S07>Visionneuse de palettes</S07>
       <S08>Palette </S08>
     </PaletteControl>
     <ImageControl>
       <S01>
-        Double-cliquez sur l'image pour la voir en taille réelle.
+		Double-cliquez sur l'image pour la voir en taille réelle.
       </S01>
       <S02>Propriétés</S02>
       <S03>Position</S03>

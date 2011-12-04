@@ -14,59 +14,36 @@
  *   You should have received a copy of the GNU General Public License
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  *
- * Programador: pleoNeX
- * Programa utilizado: SharpDevelop
- * Fecha: 16/02/2011
+ * By: pleoNeX
  * 
  */
 using System;
 using System.IO;
+using System.Drawing;
 using PluginInterface;
 
 namespace Images
 {
-	/// <summary>
-	/// Description of nbfp.
-	/// </summary>
-	public class nbfp
-	{
-		IPluginHost pluginHost;
-		string archivo;
-        int id;
+	public class nbfp : PaletteBase
+	{		
+		public nbfp(IPluginHost pluginHost, string file, int id) : base(pluginHost, file, id) { }
 		
-		public nbfp(IPluginHost pluginHost, string archivo, int id)
-		{
-			this.pluginHost = pluginHost;
-			this.archivo = archivo;
-            this.id = id;
-		}
-		
-		public void Leer()
-		{
-			uint file_size = (uint)new FileInfo(archivo).Length;
-			BinaryReader br = new BinaryReader(File.OpenRead(archivo));
-			
-			NCLR nclr = new NCLR();
-            nclr.id = (uint)id;
-			// Ponemos una cabecera genérica
-			nclr.header.id = "NBFP".ToCharArray();
-			nclr.header.constant = 0x0100;
-			nclr.header.file_size = file_size;
-			nclr.header.header_size = 0x10;
-			// El archivo es PLTT raw, es decir, exclusivamente colores
-			nclr.pltt.ID = "PLTT".ToCharArray();
-			nclr.pltt.length = file_size;
-			nclr.pltt.depth = (file_size > 0x20) ? System.Windows.Forms.ColorDepth.Depth8Bit : System.Windows.Forms.ColorDepth.Depth4Bit;
-			nclr.pltt.unknown1 = 0x00000000;
-			nclr.pltt.paletteLength = file_size;
-            nclr.pltt.nColors = file_size / 2;
-			nclr.pltt.palettes = new NTFP[1];
-			// Rellenamos los colores en formato BGR555
-			//nclr.pltt.palettes[0].colors = pluginHost.BGR555(br.ReadBytes((int)file_size));
-            nclr.pltt.nColors = (uint)nclr.pltt.palettes[0].colors.Length;
+        public override void Read(string fileIn)
+        {
+            uint file_size = (uint)new FileInfo(fileIn).Length;
+            BinaryReader br = new BinaryReader(File.OpenRead(fileIn));
 
-			br.Close();
-			pluginHost.Set_NCLR(nclr);
-		}
-	}
+            // Color data
+            Color[][] palette = new Color[1][];
+            palette[0] = pluginHost.BGR555ToColor(br.ReadBytes((int)br.BaseStream.Length));
+
+            br.Close();
+            Set_Palette(palette, false);
+        }
+
+        public override void Write_Palette(string fileOut)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }

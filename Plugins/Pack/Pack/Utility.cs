@@ -138,21 +138,101 @@ namespace Pack
         }
         #endregion
 
-        #region Pack methods
         public String Pack(string fileIn, ref sFolder unpacked)
         {
             String fileOut = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + "newUtility_" + Path.GetRandomFileName();
 
+            BinaryReader br = new BinaryReader(File.OpenRead(fileIn));      // Old pack file
+            BinaryWriter bw = new BinaryWriter(File.OpenWrite(fileOut));    // New pack file
+            List<byte> buffer = new List<byte>();   // Buffer with file data
 
+            // By the moment, as we can not add files, the FNT section won't change, only repointing
+
+            uint fntOffset = br.ReadUInt32();
+            uint fntSize = br.ReadUInt32();
+            uint fatOffset = br.ReadUInt32();
+            uint fatSize = br.ReadUInt32();
+
+            bw.Write(fntOffset);  
+            bw.Write(fntSize);  
+            bw.Write(fatOffset); 
+            bw.Write(fatSize); 
+
+            // Write FNT section
+            br.BaseStream.Position = fntOffset;
+            bw.Write(br.ReadBytes((int)fntSize));
+            bw.Write((ulong)0x00);  // Padding
+            bw.Flush();
+            br.Close();
+
+            // Write FAT section
+            uint offset = fatOffset + fatSize + 0x10;
+            for (int i = 0; i < fatSize / 8; i++)
+            {
+                bw.Write(offset);
+                sFile currFile = Get_File(i + unpacked.id, offset, fileOut, unpacked);
+                offset += currFile.size;
+                bw.Write(offset);
+
+                // Write the file to the buffer
+                br = new BinaryReader(File.OpenRead(currFile.path));
+                br.BaseStream.Position = currFile.offset;
+                buffer.AddRange(br.ReadBytes((int)currFile.size));
+                br.Close();
+
+                // Padding
+                if (offset % 4 != 0)
+                {
+                    for (int r = 0; r < 4 - (offset % 4); r++)
+                        buffer.Add(0xFF);
+
+                    offset += 4 - (offset % 4);
+                }
+            }
+            bw.Write((ulong)0x00);
+            bw.Write((ulong)0x00);
+
+            // Write files
+            bw.Write(buffer.ToArray());
+            bw.Flush();
+            bw.Close();
+
+            buffer.Clear();
 
             return fileOut;
         }
-        public Stream Write_FAT(ref sFolder unpacked)
+        private sFile Get_File(int id, uint newOffset, string path, sFolder currFolder)
         {
-            MemoryStream ms = new MemoryStream();
+            if (currFolder.files is List<sFile>)
+            {
+                for (int i = 0; i < currFolder.files.Count; i++)
+                {
+                    if (currFolder.files[i].id == id)
+                    {
+                        sFile original = currFolder.files[i];
+                        sFile newFile = currFolder.files[i];
+                        newFile.offset = newOffset;
+                        newFile.path = path;
+                        currFolder.files[i] = newFile;
 
-            return ms;
+                        return original;
+                    }
+                }
+            }
+
+
+            if (currFolder.folders is List<sFolder>)
+            {
+                foreach (sFolder subFolder in currFolder.folders)
+                {
+                    sFile currFile = Get_File(id, newOffset, path, subFolder);
+                    if (currFile.name is string)
+                        return currFile;
+                }
+            }
+
+            return new sFile();
+
         }
-        #endregion
     }
 }

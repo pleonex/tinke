@@ -58,7 +58,13 @@ namespace Images
 
             pic.Image = image.Get_Image(palette.Palette);
 
-            this.comboDepth.Text = (image.Depth == ColorDepth.Depth4Bit ? "4 bpp" : "8 bpp");
+            if (image.Depth == ColorDepth.Depth32Bit)   // 1bpp
+                comboDepth.Text = "1 bpp";
+            else if (image.Depth == ColorDepth.Depth4Bit)
+                comboDepth.Text = "4 bpp";
+            else if (image.Depth == ColorDepth.Depth8Bit)
+                comboDepth.Text = "8 bpp";
+
             switch (image.TileForm)
             {
                 case TileOrder.NoTiled:
@@ -103,7 +109,14 @@ namespace Images
 
             this.numericWidth.Value = pic.Image.Width;
             this.numericHeight.Value = pic.Image.Height;
-            this.comboDepth.Text = (image.Depth == ColorDepth.Depth4Bit ? "4 bpp" : "8 bpp");
+         
+            if (image.Depth == ColorDepth.Depth32Bit)   // 1bpp
+                comboDepth.Text = "1 bpp";
+            else if (image.Depth == ColorDepth.Depth4Bit)
+                comboDepth.Text = "4 bpp";
+            else if (image.Depth == ColorDepth.Depth8Bit)
+                comboDepth.Text = "8 bpp";
+ 
             this.comboBox1.SelectedIndex = 1;
             this.comboBox1.Enabled = false;
 
@@ -143,7 +156,12 @@ namespace Images
             if (stop)
                 return;
 
-            image.Depth = (comboDepth.Text == "4 bpp" ? ColorDepth.Depth4Bit : ColorDepth.Depth8Bit);
+            if (comboDepth.Text == "1 bpp")
+                image.Depth = ColorDepth.Depth32Bit;    // 1 bpp
+            else if (comboDepth.Text == "4 bpp")
+                image.Depth = ColorDepth.Depth4Bit;
+            else if (comboDepth.Text == "8 bpp")
+                image.Depth = ColorDepth.Depth8Bit;
 
             Update_Image();
         }

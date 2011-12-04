@@ -443,7 +443,6 @@ namespace Tinke
             this.MinimumSize = new System.Drawing.Size(710, 380);
             this.Name = "RomInfo";
             this.ShowInTaskbar = false;
-            this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "S01";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.RomInfo_FormClosing);
             this.Resize += new System.EventHandler(this.RomInfo_Resize);

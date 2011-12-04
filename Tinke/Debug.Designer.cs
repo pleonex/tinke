@@ -75,7 +75,6 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "Debug";
             this.ShowInTaskbar = false;
-            this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "Mensajes";
             this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);

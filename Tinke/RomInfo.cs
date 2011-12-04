@@ -14,9 +14,7 @@
  *   You should have received a copy of the GNU General Public License
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  *
- * Programador: pleoNeX
- * Programa utilizado: Microsoft Visual C# 2010 Express
- * Fecha: 20/02/2011
+ * By: pleoNeX
  * 
  */
 using System;
@@ -44,7 +42,6 @@ namespace Tinke
         public RomInfo(string archivo)
         {
             InitializeComponent();
-            this.Location = new Point(670, 10);
             this.btnBannerGuardar.Image = Properties.Resources.picture_save;
 
             try

@@ -14,72 +14,40 @@
  *   You should have received a copy of the GNU General Public License
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  *
- * Programador: pleoNeX
- * Programa utilizado: SharpDevelop
- * Fecha: 16/02/2011
+ * By: pleoNeX
  * 
  */
 using System;
 using System.IO;
+using System.Drawing;
 using PluginInterface;
 
 namespace Images
 {
-	/// <summary>
-	/// Description of nbfs.
-	/// </summary>
-	public class nbfs
+	public class nbfs : MapBase
 	{
-		IPluginHost pluginsHost;
-		string archivo;
-        int id;
 		
-		public nbfs(IPluginHost pluginHost, string archivo, int id)
-		{
-			this.pluginsHost = pluginHost;
-			this.archivo = archivo;
-            this.id = id;
-		}
+		public nbfs(IPluginHost pluginHost, string file, int id) : base(pluginHost, file, id) {	}
 		
-		public void Leer()
-		{
-			BinaryReader br = new BinaryReader(File.OpenRead(archivo));
-			uint file_size = (uint)new FileInfo(archivo).Length;
-			
-			// Su formato es NTFS raw, sin información, nos la inventamos por tanto
-            NSCR nscr = new NSCR();
-            nscr.id = (uint)id;
+        public override void Read(string fileIn)
+        {
+            BinaryReader br = new BinaryReader(File.OpenRead(fileIn));
+            uint file_size = (uint)br.BaseStream.Length;
 
-            // Lee cabecera genérica
-            nscr.header.id = "NBFS".ToCharArray();
-            nscr.header.endianess = 0xFEFF;
-            nscr.header.constant = 0x0100;
-            nscr.header.file_size = file_size;
-            nscr.header.header_size = 0x10;
-            nscr.header.nSection = 1;
+            NTFS[] map = new NTFS[file_size / 2];
+            for (int i = 0; i < map.Length; i++)
+                map[i] = pluginHost.MapInfo(br.ReadUInt16());
 
-            // Lee primera y única sección:
-            nscr.section.id = "NSCR".ToCharArray();
-            nscr.section.section_size = file_size;
-            nscr.section.width = 0x0100;
-            nscr.section.height = 0x00C0;
-            nscr.section.padding = 0x00000000;
-            nscr.section.data_size = file_size;
-            nscr.section.mapData = new NTFS[file_size / 2];
-
-            for (int i = 0; i < (file_size / 2); i++)
-            {
-                //string bits = pluginsHost.BytesToBits(br.ReadBytes(2));
-
-                //nscr.section.mapData[i] = new NTFS();
-                //nscr.section.mapData[i].nPalette = Convert.ToByte(bits.Substring(0, 4), 2);
-                //nscr.section.mapData[i].yFlip = Convert.ToByte(bits.Substring(4, 1), 2);
-                //nscr.section.mapData[i].xFlip = Convert.ToByte(bits.Substring(5, 1), 2);
-                //nscr.section.mapData[i].nTile = Convert.ToUInt16(bits.Substring(6, 10), 2);
-            }
+            int width = (map.Length * 8 >= 0x100 ? 0x100 : map.Length * 8);
+            int height = (map.Length / (width / 8)) * 8;
 
             br.Close();
-            pluginsHost.Set_NSCR(nscr);
-		}
-	}
+            Set_Map(map, false, width, height);
+        }
+
+        public override void Write_Map(string fileOut)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }

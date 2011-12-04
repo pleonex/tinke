@@ -446,12 +446,17 @@ namespace Tinke
                             {
                                 if (tile.tiles[0].Length == 0)
                                     goto Fin;
+
+                                Color color;
+                                if (palette[tile.nPalette[0]].Length <= tile.tiles[0][w + h * width + salto])
+                                    goto Fin;
+                                else
+                                    color = palette[tile.nPalette[0]][tile.tiles[0][w + h * width + salto]];
+
                                 image.SetPixel(
                                     w * zoom + wzoom,
                                     h * zoom + hzoom,
-                                    palette[tile.nPalette[0]][
-                                        tile.tiles[0][w + h * width + salto]
-                                        ]);
+                                    color);
                             }
                             catch { goto Fin; }
                         }

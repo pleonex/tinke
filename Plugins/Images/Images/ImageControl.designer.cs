@@ -328,6 +328,7 @@ namespace Images
             this.comboDepth.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboDepth.FormattingEnabled = true;
             this.comboDepth.Items.AddRange(new object[] {
+            "1 bpp",
             "4 bpp",
             "8 bpp"});
             this.comboDepth.Location = new System.Drawing.Point(181, 44);

@@ -14,7 +14,7 @@
  *   You should have received a copy of the GNU General Public License
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  *
- * Programador: pleoNeX
+ * By: pleoNeX
  * 
  */
 using System;
@@ -36,6 +36,7 @@ namespace _3DModels
     {
         IPluginHost pluginHost;
         sBMD0 model;
+        sBTX0 tex;
 
         Dictionary<int, int> texturesGL;
         Dictionary<int, int> textureID;
@@ -52,9 +53,22 @@ namespace _3DModels
             this.label1.Parent = glControl1;
             this.pluginHost = pluginHost;
             this.model = model;
+            this.tex = Get_BTX0();
 
             numericUpDown1.Maximum = model.texture.texInfo.num_objs;
             numericUpDown2.Maximum = model.model.mdlData[0].polygon.header.num_objs;
+        }
+        public ModelControl(IPluginHost pluginHost, sBMD0 model, sBTX0 tex)
+        {
+            InitializeComponent();
+            this.label1.Parent = glControl1;
+            this.pluginHost = pluginHost;
+            this.model = model;
+            this.tex = tex;
+
+            numericUpDown1.Maximum = model.texture.texInfo.num_objs;
+            numericUpDown2.Maximum = model.model.mdlData[0].polygon.header.num_objs;
+
         }
         private void ModelControl_Load(object sender, EventArgs e)
         {
@@ -144,7 +158,7 @@ namespace _3DModels
                 for (int i = 0; i < model.model.mdlData[0].polygon.header.num_objs; i++)
                 {
                     sBMD0.Model.ModelData.Polygon.Display poly = model.model.mdlData[0].polygon.display[i];
-                    sBTX0.Texture.TextInfo texInfo = (sBTX0.Texture.TextInfo)model.texture.texInfo.infoBlock.infoData[poly.materialID];
+                    sBTX0.Texture.TextInfo texInfo = (sBTX0.Texture.TextInfo)tex.texture.texInfo.infoBlock.infoData[poly.materialID];
 
                     GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.TextureEnvMode, (int)OpenTK.Graphics.OpenGL.TextureEnvMode.Decal);
                     GL.BindTexture(TextureTarget.Texture2D, poly.materialAssoc);
@@ -161,7 +175,7 @@ namespace _3DModels
             else
             {
                 int texInd = LoadTextures((int)numericUpDown1.Value);
-                sBTX0.Texture.TextInfo texInfo = (sBTX0.Texture.TextInfo)model.texture.texInfo.infoBlock.infoData[(int)numericUpDown1.Value];
+                sBTX0.Texture.TextInfo texInfo = (sBTX0.Texture.TextInfo)tex.texture.texInfo.infoBlock.infoData[(int)numericUpDown1.Value];
 
                 GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.TextureEnvMode, (int)OpenTK.Graphics.OpenGL.TextureEnvMode.Decal);
                 GL.BindTexture(TextureTarget.Texture2D, texInd);
@@ -214,7 +228,7 @@ namespace _3DModels
             int id = GL.GenTexture();
             GL.BindTexture(TextureTarget.Texture2D, id);
 
-            Bitmap bmp = BTX0.GetTexture(pluginHost, Get_BTX0(), num_tex);
+            Bitmap bmp = BTX0.GetTexture(pluginHost, tex, num_tex);
             System.Drawing.Imaging.BitmapData bmp_data = bmp.LockBits(new Rectangle(0, 0, bmp.Width, bmp.Height), ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
 
             GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, bmp_data.Width, bmp_data.Height, 0,
@@ -332,7 +346,7 @@ namespace _3DModels
         private void button1_Click(object sender, EventArgs e)
         {
             Form ven = new Form();
-            TextureControl texCon = new TextureControl(pluginHost, Get_BTX0());
+            TextureControl texCon = new TextureControl(pluginHost, tex);
             texCon.Dock = DockStyle.Fill;
             ven.Size = new Size(530, 530);
             ven.FormBorderStyle = FormBorderStyle.FixedDialog;

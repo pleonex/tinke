@@ -48,10 +48,9 @@ namespace Tinke
         public Sistema()
         {
             InitializeComponent();
-            this.Location = new Point(10, 10);
             this.Text = "Tinke " + Application.ProductVersion + " - romhacking by pleoNeX";
 
-            // Modo debug donde se muestran los mensajes en otra ventana en caso de no ejecutarse en Mono
+            // The IE control of the Debug windows doesn't work in Mono
             isMono = (Type.GetType("Mono.Runtime") != null) ? true : false;
 
             sb = new StringBuilder();
@@ -60,7 +59,7 @@ namespace Tinke
             if (!isMono)
                 Console.SetOut(tw);
 
-            #region Idioma
+            #region Language
             if (!File.Exists(Application.StartupPath + Path.DirectorySeparatorChar + "Tinke.xml"))
             {
                 File.WriteAllText(Application.StartupPath + Path.DirectorySeparatorChar + "Tinke.xml", "<?xml version=\"1.0\" encoding=\"utf-8\"?>" +
@@ -103,7 +102,6 @@ namespace Tinke
         }
         void Sistema_Load(object sender, EventArgs e)
         {
-            // Iniciamos la lectura del archivo.
             string[] filesToRead = new string[1];
             if (Environment.GetCommandLineArgs().Length == 1)
             {
@@ -234,7 +232,7 @@ namespace Tinke
             accion.Root = root;
             DateTime t6 = DateTime.Now;
 
-            Stream stream = new FileStream(file, FileMode.Open);
+            Stream stream = File.OpenRead(file);
             treeSystem.Nodes.Add(Create_Nodes(root, stream)); // Get the node hierarchy
             stream.Close();
             stream.Dispose();

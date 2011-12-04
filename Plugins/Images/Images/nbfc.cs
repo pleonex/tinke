@@ -14,81 +14,44 @@
  *   You should have received a copy of the GNU General Public License
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  *
- * Programador: pleoNeX
- * Programa utilizado: SharpDevelop
- * Fecha: 16/02/2011
+ * By: pleoNeX
  * 
  */
 using System;
 using System.IO;
+using System.Drawing;
 using PluginInterface;
 
 namespace Images
 {
-	/// <summary>
-	/// Description of nbfc.
-	/// </summary>
-	public class nbfc
-	{
-		IPluginHost pluginsHost;
-		string archivo;
-        int id;
-		
-		public nbfc(IPluginHost pluginHost, string archivo, int id)
-		{
-			this.pluginsHost = pluginHost;
-			this.archivo = archivo;
-            this.id = id;
-		}
-		
-		public void Leer()
-		{
-			BinaryReader br = new BinaryReader(File.OpenRead(archivo));
-			uint file_size = (uint)new FileInfo(archivo).Length;
+	public class nbfc : ImageBase
+	{		
+		public nbfc(IPluginHost pluginHost, string file, int id) : base(pluginHost, file, id) {	}
 
-			// Creamos un archivo NCGR genérico.
-			NCGR ncgr = new NCGR();
-            ncgr.id = (uint)id;
-			ncgr.header.id = "NBFC".ToCharArray();
-			ncgr.header.nSection = 1;
-			ncgr.header.constant = 0x0100;
-			ncgr.header.file_size = file_size;
-			// El archivo es NTFT raw, sin ninguna información.
-			ncgr.order = TileOrder.Horizontal;
+        public override void Read(string fileIn)
+        {
+            BinaryReader br = new BinaryReader(File.OpenRead(fileIn));
+            int fileSize = (int)br.BaseStream.Length;
 
-            if (file_size == 512)
-            {
-                ncgr.rahc.depth = System.Windows.Forms.ColorDepth.Depth4Bit;
-                ncgr.rahc.nTiles = (ushort)(file_size / 32);
-                ncgr.rahc.nTilesX = 0x04;
-                ncgr.rahc.nTilesY = 0x04;
-            }
-            else
-            {
-                ncgr.rahc.depth = System.Windows.Forms.ColorDepth.Depth8Bit;
-                ncgr.rahc.nTiles = (ushort)(file_size / 64);
-                ncgr.rahc.nTilesX = 0x0020;
-                ncgr.rahc.nTilesY = 0x0018;
-            }
-			ncgr.rahc.tiledFlag = 0x00000000;
-			ncgr.rahc.size_section = file_size;
-			ncgr.rahc.tileData = new NTFT();
-			ncgr.rahc.tileData.nPalette = new byte[ncgr.rahc.nTiles];
-			ncgr.rahc.tileData.tiles = new byte[ncgr.rahc.nTiles][];
-			
-			for (int i = 0; i < ncgr.rahc.nTiles; i++)
-			{
-                if (ncgr.rahc.depth == System.Windows.Forms.ColorDepth.Depth8Bit)
-                    ncgr.rahc.tileData.tiles[i] = br.ReadBytes(64);
-				//else
-                //    ncgr.rahc.tileData.tiles[i] = pluginsHost.BytesTo4BitsRev(br.ReadBytes(32));
+            Byte[][] tiles = new byte[fileSize / 0x40][];
+            for (int i = 0; i < tiles.Length; i++)
+                tiles[i] = br.ReadBytes(0x40);
 
-                ncgr.rahc.tileData.nPalette[i] = 0;
-			}
-			
-			br.Close();
-			pluginsHost.Set_NCGR(ncgr);
-		}
-		
-	}
+            int width = (tiles.Length < 0x20 ? 0x04 : 0x20);
+            int height = tiles.Length / width;
+            if (height == 0)
+                height = 8;
+
+            if (fileSize == 0x200)
+                width = height = 0x04;
+
+            br.Close();
+            Set_Tiles(tiles, width, height, System.Windows.Forms.ColorDepth.Depth8Bit, TileOrder.Horizontal, false);
+        }
+
+        public override void Write_Tiles(string fileOut)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }

@@ -599,7 +599,6 @@ namespace Tinke
             this.KeyPreview = true;
             this.MaximizeBox = false;
             this.Name = "Sistema";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "Form1";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Sistema_FormClosing);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Sistema_KeyDown);

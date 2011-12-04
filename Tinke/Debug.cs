@@ -16,7 +16,6 @@ namespace Tinke
         {
             InitializeComponent();
             ReadLanguage();
-            this.Location = new Point(10, 585);
             this.FormClosing += new FormClosingEventHandler(Debug_FormClosing);
             txtInfo.Navigating += new WebBrowserNavigatingEventHandler(txtInfo_Navigating);
 

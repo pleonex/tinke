@@ -124,6 +124,12 @@ namespace Tinke
         private void VisorHex_Resize(object sender, EventArgs e)
         {
             hexBox1.Height = this.Height - 83;
+
+            tableGrid.Width = this.Width - 652;
+
+            if (tableGrid.Visible) hexBox1.Width = this.Width - (tableGrid.Width + 15);
+            else hexBox1.Width = this.Width - 16;
+            
         }
 
         private void comboBoxEncoding_SelectedIndexChanged(object sender, EventArgs e)
@@ -195,8 +201,165 @@ namespace Tinke
             hexBox1.Find(search, hexBox1.SelectionStart + hexBox1.SelectionLength);
             this.Cursor = Cursors.Default;
         }
+
+        private void openTabletblToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog o = new OpenFileDialog();
+            o.CheckFileExists = true;
+            o.DefaultExt = ".tbl";
+            o.Filter = "TaBLe (*.tbl)|*.tbl|" +
+                       "All files (*.*)|*.*";
+            o.Multiselect = false;
+            if (o.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                hexBox1.ByteCharConverter = new ByteCharTable(o.FileName);
+            o.Dispose();
+        }
+
+        private void hideToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            tableGrid.Hide();
+            hexBox1.Width = this.Width - 16;
+        }
+        private void showToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            hexBox1.Width = this.Width - (tableGrid.Width + 15);
+            tableGrid.Show();
+        }
+
+        private void tableGrid_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+        {
+            List<byte> codes = new List<byte>();
+            List<char> charas = new List<char>();
+
+            for (int i = 0; i < tableGrid.RowCount; i++)
+            {
+                if (!(tableGrid.Rows[i].Cells[0].Value is object) ||
+                    !(tableGrid.Rows[i].Cells[1].Value is object))
+                    continue;
+
+                codes.Add(Convert.ToByte((string)tableGrid.Rows[i].Cells[0].Value, 16));
+                charas.Add(Convert.ToChar(tableGrid.Rows[i].Cells[1].Value));
+            }
+            hexBox1.ByteCharConverter = new ByteCharTable(codes.ToArray(), charas.ToArray());
+        }
+
+        private void saveToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog s = new SaveFileDialog();
+            s.DefaultExt = ".tbl";
+            s.Filter = "TaBLe (*.tbl)|*.tbl|" +
+                       "All files (*.*)|*.*";
+            s.OverwritePrompt = true;
+            if (s.ShowDialog() != System.Windows.Forms.DialogResult.OK)
+                return;
+
+            BinaryWriter bw = new BinaryWriter(File.OpenWrite(s.FileName));
+
+            for (int i = 0; i < tableGrid.RowCount; i++)
+            {
+                if (!(tableGrid.Rows[i].Cells[0].Value is object) ||
+                    !(tableGrid.Rows[i].Cells[1].Value is object))
+                    continue;
+
+                bw.Write(((string)tableGrid.Rows[i].Cells[0].Value).ToCharArray());
+                bw.Write('=');
+                bw.Write(Convert.ToChar(tableGrid.Rows[i].Cells[1].Value));
+                bw.Write('\n');
+            }
+
+            bw.Flush();
+            bw.Close();
+        }
+
+        private void openOneToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog o = new OpenFileDialog();
+            o.CheckFileExists = true;
+            o.DefaultExt = ".tbl";
+            o.Filter = "TaBLe (*.tbl)|*.tbl|" +
+                       "All files (*.*)|*.*";
+            o.Multiselect = false;
+            if (o.ShowDialog() != System.Windows.Forms.DialogResult.OK)
+                return;
+
+            tableGrid.Rows.Clear();
+            String[] lines = File.ReadAllLines(o.FileName);
+            for (int i = 0; i < lines.Length; i++)
+            {
+                int sign_pos = lines[i].IndexOf('=');
+                byte code = Convert.ToByte(lines[i].Substring(0, sign_pos), 16);
+                char chara = lines[i].Substring(sign_pos + 1)[0];
+
+                tableGrid.Rows.Add(code.ToString(), chara);
+            }
+
+            tableGrid_CellEndEdit(null, null);
+            showToolStripMenuItem_Click(null, null);
+            o.Dispose();
+        }
+        private void createBasicToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            tableGrid.Rows.Clear();
+            for (int i = 0x20; i < 0x7F; i++)
+            {
+                tableGrid.Rows.Add(i.ToString("x"), (char)i);
+            }
+
+            tableGrid_CellEndEdit(null, null);
+            showToolStripMenuItem_Click(null, null);
+        }
     }
 
+    public class ByteCharTable : IByteCharConverter
+    {
+        Dictionary<byte, char> tableChar;
+        Dictionary<char, byte> tableByte;
+
+        public ByteCharTable(string tablePath)
+        {
+            tableChar = new Dictionary<byte, char>();
+            tableByte = new Dictionary<char, byte>();
+
+            String[] lines = File.ReadAllLines(tablePath);
+            for (int i = 0; i < lines.Length; i++)
+            {
+                int sign_pos = lines[i].IndexOf('=');
+                byte code = Convert.ToByte(lines[i].Substring(0, sign_pos), 16);
+                char chara = lines[i].Substring(sign_pos + 1)[0];
+
+                tableChar.Add(code, chara);
+                tableByte.Add(chara, code);
+            }
+        }
+        public ByteCharTable(Byte[] codes, char[] charas)
+        {
+            tableByte = new Dictionary<char, byte>();
+            tableChar = new Dictionary<byte, char>();
+
+            for (int i = 0; i < codes.Length; i++)
+            {
+                if (tableByte.ContainsKey(charas[i]) || tableChar.ContainsKey(codes[i]))
+                    continue;
+                tableByte.Add(charas[i], codes[i]);
+                tableChar.Add(codes[i], charas[i]);
+            }
+        }
+
+        public char ToChar(byte b)
+        {
+            if (tableChar.ContainsKey(b))
+                return tableChar[b];
+            else
+                return '.';
+        }
+        public byte ToByte(char c)
+        {
+            if (tableByte.ContainsKey(c))
+                return tableByte[c];
+            else
+                return 0;
+        }
+    }
     public class ByteCharConveter : IByteCharConverter
     {
         Encoding encoding;

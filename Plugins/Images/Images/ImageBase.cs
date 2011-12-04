@@ -113,17 +113,27 @@ namespace Images
         public abstract void Write_Tiles(string fileOut);
 
         public void Change_TileDepth(ColorDepth newDepth)
-        {
+        { 
             if (newDepth == depth)
                 return;
 
+            Byte[] rawTiles = new byte[0];
+            if (depth == ColorDepth.Depth4Bit)
+                rawTiles = pluginHost.Bit4ToBit8(pluginHost.TilesToBytes(tiles));
+            else if (depth == ColorDepth.Depth8Bit)
+                rawTiles = pluginHost.TilesToBytes(tiles);
+            else if (depth == ColorDepth.Depth32Bit)    // 1 bpp
+                rawTiles = pluginHost.BitsToBytes(pluginHost.TilesToBytes(tiles));
+
             depth = newDepth;
 
-            Byte[] newData;
+            Byte[] newData = new byte[0];
             if (depth == ColorDepth.Depth4Bit)
-                newData = pluginHost.Bit8ToBit4(pluginHost.TilesToBytes(tiles));
-            else
-                newData = pluginHost.Bit4ToBit8(pluginHost.TilesToBytes(tiles));
+                newData = pluginHost.Bit8ToBit4(rawTiles);
+            else if (depth == ColorDepth.Depth8Bit)
+                newData = rawTiles;
+            else if (depth == ColorDepth.Depth32Bit)    // 1 bpp
+                newData = pluginHost.BytesToBits(rawTiles);
 
             if (tileOrder != TileOrder.NoTiled)
             {
@@ -172,12 +182,14 @@ namespace Images
 
             startByte = start;
 
-            // Ge the original data and convert it to the correct depth
-            Byte[] newData;
+            // Get the original data and convert it to the correct depth
+            Byte[] newData = new byte[0];
             if (depth == ColorDepth.Depth4Bit)
                 newData = pluginHost.Bit8ToBit4(original);
-            else
+            else if (depth == ColorDepth.Depth8Bit)
                 newData = original;
+            else if (depth == ColorDepth.Depth32Bit)    // 1 bpp
+                newData = pluginHost.BytesToBits(original);
 
 
             if (tileOrder == TileOrder.NoTiled)
@@ -222,8 +234,10 @@ namespace Images
             {
                 if (depth == ColorDepth.Depth4Bit)
                     tempBytes.AddRange(pluginHost.Bit4ToBit8(tiles[i]));
-                else
+                else if (depth == ColorDepth.Depth8Bit)
                     tempBytes.AddRange(tiles[i]);
+                else if (depth == ColorDepth.Depth32Bit)    // 1 bpp
+                    tempBytes.AddRange(pluginHost.BitsToBytes(tiles[i]));
             }
             original = tempBytes.ToArray();
 
