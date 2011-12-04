@@ -18,20 +18,15 @@
  * 
  */
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.IO;
 using System.Drawing;
+using System.IO;
 using PluginInterface;
 
 namespace Images
 {
     public class ntfp : PaletteBase
     {		
-		public ntfp(IPluginHost pluginHost, string file, int id) : base(pluginHost, file, id)
-		{
-		}
+		public ntfp(IPluginHost pluginHost, string file, int id) : base(pluginHost, file, id) {	}
 
         public override void Read(string file)
         {

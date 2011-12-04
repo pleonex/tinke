@@ -14,7 +14,7 @@
  *   You should have received a copy of the GNU General Public License
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  *
- * Programador: pleoNeX
+ * By: pleoNeX
  * 
  */
 using System;
@@ -28,6 +28,8 @@ namespace _3DModels
     public class Main : IPlugin
     {
         IPluginHost pluginHost;
+        sBMD0 bmd;
+        sBTX0 btx;
 
         public void Initialize(IPluginHost pluginHost)
         {
@@ -49,23 +51,25 @@ namespace _3DModels
         public void Read(string archivo, int id)
         {
         }
-        public System.Windows.Forms.Control Show_Info(string archivo, int id)
+        public System.Windows.Forms.Control Show_Info(string file, int id)
         {
-            BinaryReader br = new BinaryReader(File.OpenRead(archivo));
+            BinaryReader br = new BinaryReader(File.OpenRead(file));
             string ext = new String(br.ReadChars(4));
             br.Close();
 
             if (ext == "BTX0")
-                return new TextureControl(pluginHost, BTX0.Read(archivo, id, pluginHost));
+            {
+                btx = BTX0.Read(file, id, pluginHost);
+                return new TextureControl(pluginHost, btx);
+            }
             else if (ext == "BMD0")
             {
-                sBMD0 bmd = BMD0.Read(archivo, id, pluginHost);
+                sBMD0 bmd = BMD0.Read(file, id, pluginHost);
 
-                //if (bmd.header.numSect == 2)
-                //    return new TextureControl(pluginHost, bmd.texture, bmd.header.offset[1], bmd.filePath);
-                //else
-                //    System.Windows.Forms.MessageBox.Show("There is not texture section.");
-                return new ModelControl(pluginHost, bmd);
+                if (bmd.header.numSect == 2)
+                    return new ModelControl(pluginHost, bmd);
+                else
+                    return new ModelControl(pluginHost, bmd, btx);
             }
             
             return new System.Windows.Forms.Control();

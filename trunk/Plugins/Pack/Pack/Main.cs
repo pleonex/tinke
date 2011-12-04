@@ -65,6 +65,8 @@ namespace Pack
 
             if (type == "NARC" || type == "CRAN")
                 return new NARC(pluginHost).Pack(file, ref unpacked);
+            else if (file.ToUpper().EndsWith("UTILITY.BIN"))
+                return new Utility(pluginHost).Pack(file, ref unpacked);
 
             return null;
         }

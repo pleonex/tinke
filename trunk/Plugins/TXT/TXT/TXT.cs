@@ -35,21 +35,21 @@ namespace TXT
         {
             this.pluginHost = pluginHost;
         }
-        public Format Get_Format(string nombre, byte[] magic)
+        public Format Get_Format(string name, byte[] magic)
         {
-            nombre = nombre.ToUpper();
+            name = name.ToUpper();
             string ext = new String(Encoding.ASCII.GetChars(magic));
 
-            if ((nombre.EndsWith("LZ.TXT") || nombre.EndsWith("LZ.XML")) && magic[0] == 0x10)
+            if ((name.EndsWith("LZ.TXT") || name.EndsWith("LZ.XML")) && magic[0] == 0x10)
                 return Format.Unknown;
 
-            if (nombre.EndsWith(".TXT") || nombre.EndsWith(".SADL") || nombre.EndsWith(".XML")
-                || nombre.EndsWith(".INI") || nombre.EndsWith(".H") || nombre.EndsWith(".XSADL")
-                || nombre.EndsWith(".BAT") || nombre.EndsWith(".SARC") || nombre.EndsWith(".SBDL")
-                || nombre.EndsWith(".C") || nombre.EndsWith("MAKEFILE") || nombre.EndsWith(".BSF")
-                || nombre.EndsWith(".LUA") || nombre.EndsWith(".CSV") || nombre.EndsWith(".SMAP")
-                || nombre.EndsWith("BUILDTIME") || nombre.EndsWith(".LUA~") || nombre.EndsWith(".INI.TEMPLATE")
-                || nombre.EndsWith("LUA.BAK") || nombre.EndsWith(".NAIX"))
+            if (name.EndsWith(".TXT") || name.EndsWith(".SADL") || name.EndsWith(".XML")
+                || name.EndsWith(".INI") || name.EndsWith(".H") || name.EndsWith(".XSADL")
+                || name.EndsWith(".BAT") || name.EndsWith(".SARC") || name.EndsWith(".SBDL")
+                || name.EndsWith(".C") || name.EndsWith("MAKEFILE") || name.EndsWith(".BSF")
+                || name.EndsWith(".LUA") || name.EndsWith(".CSV") || name.EndsWith(".SMAP")
+                || name.EndsWith("BUILDTIME") || name.EndsWith(".LUA~") || name.EndsWith(".INI.TEMPLATE")
+                || name.EndsWith("LUA.BAK") || name.EndsWith(".NAIX") || name.EndsWith(".NBSD"))
                 return Format.Text;
             else if (ext == "MESG")
                 return Format.Text;
