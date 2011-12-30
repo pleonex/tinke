@@ -14,7 +14,7 @@
  *   You should have received a copy of the GNU General Public License
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  *
- * Programador: pleoNeX
+ * By: pleoNeX
  * 
  */
 using System;
@@ -121,6 +121,115 @@ namespace Tinke
 
             } // end foreach
 
+        }
+        public String[] Get_PluginsList()
+        {
+            List<String> list = new List<String>();
+
+            for (int i = 0; i < formatList.Count; i++)
+                list.Add(formatList[i].ToString());
+            if (gamePlugin is IGamePlugin)
+                list.Add(gamePlugin.ToString());
+
+            return list.ToArray();
+        }
+        public Object Call_Plugin(sFile file, string name, string ext, int id, string header, int action)
+        {
+            string tempFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + file.id + file.name;
+            Save_File(file, tempFile);
+
+            if (gamePlugin is IGamePlugin)
+            {
+                if (gamePlugin.ToString() == name)
+                {
+                    try
+                    {
+                        switch (action)
+                        {
+                            case 0:
+                                gamePlugin.Read(tempFile, id);
+                                return null;
+
+                            case 1:
+                                return gamePlugin.Show_Info(tempFile, id);
+
+                            case 2:
+                                sFolder unpacked = gamePlugin.Unpack(tempFile, id);
+                                Add_Files(ref unpacked, id);
+                                return unpacked;
+
+                            case 3:
+                                sFolder unpack = pluginHost_event_GetDecompressedFiles(id);
+                                String packFile = gamePlugin.Pack(ref unpack, tempFile, id);
+
+                                if (!(packFile is String) || packFile == "")
+                                {
+                                    MessageBox.Show(Tools.Helper.GetTranslation("Messages", "S23"));
+                                    Console.WriteLine(Tools.Helper.GetTranslation("Messages", "S25"));
+                                    throw new NotSupportedException();
+                                }
+
+                                pluginHost_ChangeFile_Event(id, packFile);
+                                Change_Files(unpack);
+                                return null;
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        MessageBox.Show(Tools.Helper.GetTranslation("Messages", "S25"));
+                        Console.WriteLine(e.Message);
+                        return null;
+                    }
+                }
+            }
+
+            foreach (IPlugin plugin in formatList)
+            {
+                if (plugin.ToString() != name)
+                    continue;
+
+                try
+                {
+                    switch (action)
+                    {
+                        case 0:
+                            plugin.Read(tempFile, id);
+                            return null;
+
+                        case 1:
+                            return plugin.Show_Info(tempFile, id);
+
+                        case 2: // Unpack
+                            sFolder unpacked = plugin.Unpack(tempFile);
+                            Add_Files(ref unpacked, id);
+                            return unpacked;
+
+                        case 3: // Pack
+                            sFolder unpack = pluginHost_event_GetDecompressedFiles(id);
+                            String packFile = plugin.Pack(ref unpack, tempFile);
+
+                            if (!(packFile is String) || packFile == "")
+                            {
+                                MessageBox.Show(Tools.Helper.GetTranslation("Messages", "S23"));
+                                Console.WriteLine(Tools.Helper.GetTranslation("Messages", "S25"));
+                                throw new NotSupportedException();
+                            }
+
+                            pluginHost_ChangeFile_Event(id, packFile);
+                            Change_Files(unpack);
+                            return null;
+                    }
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show(Tools.Helper.GetTranslation("Messages", "S25"));
+                    Console.WriteLine(e.Message);
+                    return null;
+                }
+            }
+
+            Console.WriteLine("Plugin not found");
+            return null;
         }
 
         #region Properties
@@ -1201,7 +1310,7 @@ namespace Tinke
 
             if (currFile.name == "FNT.BIN" || currFile.name == "FAT.BIN" || currFile.name.StartsWith("OVERLAY9_") || currFile.name.StartsWith("OVERLAY7_") ||
                 currFile.name == "ARM9.BIN" || currFile.name == "ARM7.BIN" || currFile.name == "Y9.BIN" || currFile.name == "Y7.BIN")
-                    return Format.System;
+                return Format.System;
 
 
             return Format.Unknown;
@@ -1249,7 +1358,7 @@ namespace Tinke
             else if (new String(Encoding.ASCII.GetChars(ext)) == "NANR" || new String(Encoding.ASCII.GetChars(ext)) == "RNAN")
                 return Format.Animation;
             else if (name == "FNT.BIN" || name == "FAT.BIN" || name.StartsWith("OVERLAY9_") || name.StartsWith("OVERLAY7_") ||
-                name == "ARM9.BIN" || name == "ARM7.BIN" || name == "Y9.BIN" || name == "Y7.BIN"|| name.EndsWith(".SRL") ||
+                name == "ARM9.BIN" || name == "ARM7.BIN" || name == "Y9.BIN" || name == "Y7.BIN" || name.EndsWith(".SRL") ||
                 name.EndsWith(".NDS"))
                 return Format.System;
 
@@ -1329,8 +1438,8 @@ namespace Tinke
                 return Format.Compressed;
 
             if (name == "FNT.BIN" || name == "FAT.BIN" || name.StartsWith("OVERLAY9_") || name.StartsWith("OVERLAY7_") ||
-                name == "ARM9.BIN" || name == "ARM7.BIN" || name == "Y9.BIN" || name == "Y7.BIN" )
-                    return Format.System;
+                name == "ARM9.BIN" || name == "ARM7.BIN" || name == "Y9.BIN" || name == "Y7.BIN")
+                return Format.System;
 
             return Format.Unknown;
         }
@@ -1580,7 +1689,7 @@ namespace Tinke
                     currDecompressed.id = subFolder.id;
                     currDecompressed.name = subFolder.name;
 
-                    if ((String)subFolder.tag !=  "" && subFolder.tag is String) // Decompressed file
+                    if ((String)subFolder.tag != "" && subFolder.tag is String) // Decompressed file
                     {
                         sFile file = Search_File(subFolder.id);
                         decompressedFiles.files.Add(file);
@@ -1609,7 +1718,7 @@ namespace Tinke
                 foreach (sFolder subFolder in currFolder.folders)
                     Get_LowestID(subFolder, ref id);
         }
-        
+
         public void Pack()
         {
             Pack(idSelect);
@@ -1712,7 +1821,7 @@ namespace Tinke
             }
 
             pluginHost_ChangeFile_Event(id, packFile);
-            
+
             Change_Files(unpacked);
         }
         #endregion
@@ -2014,7 +2123,7 @@ namespace Tinke
             Console.WriteLine(Tools.Helper.GetTranslation("Messages", "S25"));
             return new Control();
         }
- 
+
         public void Read_File()
         {
             sFile selectFile = Selected_File();

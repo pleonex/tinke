@@ -112,15 +112,17 @@
     <Compile Include="ImageControl.designer.cs">
       <DependentUpon>ImageControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="iNCER.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="iNCER.designer.cs">
+      <DependentUpon>iNCER.cs</DependentUpon>
+    </Compile>
     <Compile Include="MapBase.cs" />
-    <Compile Include="nbfc.cs" />
-    <Compile Include="nbfp.cs" />
-    <Compile Include="nbfs.cs" />
     <Compile Include="NCCG.cs" />
     <Compile Include="NCCL.cs" />
+    <Compile Include="NCE.cs" />
     <Compile Include="NCSC.cs" />
-    <Compile Include="ntfp.cs" />
-    <Compile Include="ntft.cs" />
     <Compile Include="PaletteBase.cs" />
     <Compile Include="PaletteControl.cs">
       <SubType>UserControl</SubType>
@@ -139,6 +141,9 @@
   <ItemGroup>
     <EmbeddedResource Include="ImageControl.resx">
       <DependentUpon>ImageControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="iNCER.resx">
+      <DependentUpon>iNCER.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="PaletteControl.resx">
       <DependentUpon>PaletteControl.cs</DependentUpon>

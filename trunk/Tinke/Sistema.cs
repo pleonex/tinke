@@ -356,6 +356,9 @@ namespace Tinke
             accion = new Acciones("", "NO GAME");
             DateTime t1 = DateTime.Now;
 
+            accion.LastFileID = files.Length;
+            accion.LastFolderID = 0xF000;
+
             // Obtenemos el sistema de archivos
             sFolder root = new sFolder();
             root.name = "root";
@@ -407,6 +410,9 @@ namespace Tinke
 
             accion = new Acciones("", "NO GAME");
             DateTime t1 = DateTime.Now;
+
+            accion.LastFileID = 0;
+            accion.LastFolderID = 0xF000;
 
             // Obtenemos el sistema de archivos
             sFolder root = new sFolder();
@@ -606,7 +612,7 @@ namespace Tinke
                 {
                     int nImage = accion.ImageFormatFile(archivo.format);
                     string ext = "";
-                   
+
                     if (archivo.format == Format.Unknown)
                     {
                         stream.Position = archivo.offset;
@@ -988,8 +994,9 @@ namespace Tinke
                 for (int i = 0; i < panelObj.Controls.Count; i++)
                     panelObj.Controls[i].Dispose();
                 panelObj.Controls.Clear();
+
                 Control control = accion.See_File();
-                if (control.Size.Height != 0 && control.Size.Width != 0) // Si no sería nulo
+                if (control.Size.Height != 0 && control.Size.Width != 0)
                 {
                     panelObj.Controls.Add(control);
                     if (btnDesplazar.Text == ">>>>>")
@@ -1053,11 +1060,19 @@ namespace Tinke
             btnPack.Enabled = true;
 
             Get_SupportedFiles();
+            Add_TreeNodes(uncompress);
 
+            if (!isMono)
+                debug.Add_Text(sb.ToString());
+            sb.Length = 0;
+            this.Cursor = Cursors.Default;
+        }
+        private void Add_TreeNodes(sFolder unpacked)
+        {
             // Add new files to the main tree
             TreeNode selected = treeSystem.SelectedNode;
             selected.Nodes.Clear();
-            FolderToNode(uncompress, ref selected);
+            FolderToNode(unpacked, ref selected);
             selected.ImageIndex = accion.ImageFormatFile(accion.Selected_File().format);
             selected.SelectedImageIndex = selected.ImageIndex;
 
@@ -1069,22 +1084,6 @@ namespace Tinke
             treeSystem.SelectedNode.Nodes.AddRange((TreeNode[])nodos);
             treeSystem.SelectedNode.Expand();
             treeSystem.Focus();
-
-            if (!isMono)
-                debug.Add_Text(sb.ToString());
-            sb.Length = 0;
-            this.Cursor = Cursors.Default;
-        }
-        private void btnPack_Click(object sender, EventArgs e)
-        {
-            this.Cursor = Cursors.WaitCursor;
-
-            accion.Pack();
-
-            if (!isMono)
-                debug.Add_Text(sb.ToString());
-            sb.Length = 0;
-            this.Cursor = Cursors.Default;
         }
         private void UnpackFolder()
         {
@@ -1130,6 +1129,18 @@ namespace Tinke
                         accion.Unpack(archivo.id);
             }
         }
+        private void btnPack_Click(object sender, EventArgs e)
+        {
+            this.Cursor = Cursors.WaitCursor;
+
+            accion.Pack();
+
+            if (!isMono)
+                debug.Add_Text(sb.ToString());
+            sb.Length = 0;
+            this.Cursor = Cursors.Default;
+        }
+
 
         private void btnExtraer_Click(object sender, EventArgs e)
         {
@@ -1561,7 +1572,7 @@ namespace Tinke
         private void stripRefreshMsg_Click(object sender, EventArgs e)
         {
             if (!isMono)
-            debug.Add_Text(sb.ToString());
+                debug.Add_Text(sb.ToString());
             sb.Length = 0;
         }
         private void toolStripInfoRom_Click(object sender, EventArgs e)
@@ -1640,7 +1651,7 @@ namespace Tinke
         #endregion
 
         #region Menu-> Open as...
-        private void AbrirComo(Format formato)
+        private void OpenAs(Format formato)
         {
             sFile selectedFile = accion.Selected_File();
             string savedFile = "";
@@ -1685,20 +1696,20 @@ namespace Tinke
             }
 
             if (!isMono)
-            debug.Add_Text(sb.ToString());
+                debug.Add_Text(sb.ToString());
             sb.Length = 0;
         }
         private void toolAbrirComoItemPaleta_Click(object sender, EventArgs e)
         {
-            AbrirComo(Format.Palette);
+            OpenAs(Format.Palette);
         }
         private void toolAbrirComoItemTile_Click(object sender, EventArgs e)
         {
-            AbrirComo(Format.Tile);
+            OpenAs(Format.Tile);
         }
         private void toolAbrirComoItemScreen_Click(object sender, EventArgs e)
         {
-            AbrirComo(Format.Map);
+            OpenAs(Format.Map);
         }
         private void s2AToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -1744,12 +1755,12 @@ namespace Tinke
             treeSystem.Focus();
 
             if (!isMono)
-            debug.Add_Text(sb.ToString());
+                debug.Add_Text(sb.ToString());
             sb.Length = 0;
         }
         private void toolStripAbrirTexto_Click(object sender, EventArgs e)
         {
-            AbrirComo(Format.Text);
+            OpenAs(Format.Text);
         }
         private void toolStripAbrirFat_Click(object sender, EventArgs e)
         {
@@ -1805,6 +1816,80 @@ namespace Tinke
                 debug.Add_Text(sb.ToString());
             }
             sb.Length = 0;
+        }
+        private void callPluginToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            sFile opFile = accion.Selected_File();
+
+            Dialog.CallPlugin win = new Dialog.CallPlugin(accion.Get_PluginsList());
+            if (opFile.name.Contains('.'))
+                win.Extension = opFile.name.Substring(opFile.name.IndexOf('.') + 1);
+            win.ID = opFile.id;
+            win.Header = accion.Get_MagicIDS(opFile);
+
+            if (win.ShowDialog() != System.Windows.Forms.DialogResult.OK)
+                return;
+
+            this.Cursor = Cursors.WaitCursor;
+            Object action = accion.Call_Plugin(opFile, win.Plugin, win.Extension, win.ID, win.Header, win.Action);
+
+            if (!isMono)
+                debug.Add_Text(sb.ToString());
+            sb.Length = 0;
+
+
+            switch (win.Action)
+            {
+                case 1: // Show_Info
+                    if (action == null)
+                        break;
+
+                    if (toolStripVentana.Checked)
+                    {
+                        Visor visor = new Visor();
+                        visor.Controls.Add((Control)action);
+                        visor.Text += " - " + opFile.name;
+                        visor.Show();
+                    }
+                    else
+                    {
+                        for (int i = 0; i < panelObj.Controls.Count; i++)
+                            panelObj.Controls[i].Dispose();
+                        panelObj.Controls.Clear();
+
+                        Control control = (Control)action;
+                        if (control.Size.Height != 0 && control.Size.Width != 0)
+                        {
+                            panelObj.Controls.Add(control);
+                            if (btnDesplazar.Text == ">>>>>")
+                                btnDesplazar.PerformClick();
+                        }
+                        else
+                            if (btnDesplazar.Text == "<<<<<")
+                                btnDesplazar.PerformClick();
+                    }
+                    break;
+
+                case 2:     // Unpack
+                    if (action == null)
+                        break;
+
+                    sFolder unpacked = (sFolder)action;
+                    if (!(unpacked.files is List<sFile>) && !(unpacked.folders is List<sFolder>))
+                    {
+                        MessageBox.Show(Tools.Helper.GetTranslation("Sistema", "S36"));
+                        break;
+                    }
+
+                    toolStripOpenAs.Enabled = false;
+
+                    Get_SupportedFiles();
+                    Add_TreeNodes(unpacked);
+                    break;
+            }
+
+            this.Cursor = Cursors.Default;
+            win.Dispose();
         }
         #endregion
 
@@ -1943,5 +2028,6 @@ namespace Tinke
                 btnDesplazar.Text = ">>>>>";
             }
         }
+
     }
 }

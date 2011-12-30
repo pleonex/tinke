@@ -52,6 +52,8 @@ namespace SF_FEATHER
                 return Format.FullImage;
             else if (ext == "SC4 " || ext == "SC8 ")
                 return Format.Map;
+            else if (ext == "PSI3")
+                return Format.Script;
 
             return Format.Unknown;
         }
@@ -59,7 +61,11 @@ namespace SF_FEATHER
 
         public string Pack(ref sFolder unpacked, string file, int id)
         {
-            throw new NotImplementedException();
+            string fileOut = pluginHost.Get_TempFolder() + System.IO.Path.DirectorySeparatorChar +
+                System.IO.Path.GetRandomFileName();
+            PAC.Pack(file, fileOut, ref unpacked);
+
+            return fileOut;
         }
         public sFolder Unpack(string file, int id)
         {

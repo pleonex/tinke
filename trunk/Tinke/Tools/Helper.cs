@@ -149,5 +149,16 @@ namespace Tinke.Tools
             return message;
         }
 
+        public static byte[] StringToBytes(string text, int num_bytes)
+        {
+            string hexText = text.Replace("-", "");
+            hexText = hexText.PadRight(num_bytes * 2, '0');
+
+            List<Byte> hex = new List<byte>();
+            for (int i = 0; i < hexText.Length; i += 2)
+                hex.Add(Convert.ToByte(hexText.Substring(i, 2), 16));
+
+            return hex.ToArray();
+        }
     }
 }

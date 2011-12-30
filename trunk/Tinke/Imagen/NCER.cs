@@ -153,6 +153,7 @@ namespace Tinke
                     Console.WriteLine("    " + xml.Element("S21").Value + ": {0}", ncer.cebk.banks[i].cells[j].obj2.index_palette.ToString());
                     Console.WriteLine("    " + xml.Element("S22").Value + ": {0}", (obj2 & 0x03FF).ToString());
                     Console.WriteLine("    " + xml.Element("S23").Value + ": {0}", ncer.cebk.banks[i].cells[j].obj2.tileOffset.ToString());
+                    Console.WriteLine("    " + "Object priority" + ": {0}", ncer.cebk.banks[i].cells[j].obj2.priority.ToString());
                 }
                 #endregion
 
@@ -506,8 +507,15 @@ namespace Tinke
                 return 1;
             else if (c1.obj2.priority > c2.obj2.priority)
                 return -1;
-            else
-                return 0;
+            else   // Same priority
+            {
+                if (c1.num_cell < c2.num_cell)
+                    return 1;
+                else if (c1.num_cell > c2.num_cell)
+                    return -1;
+                else // Same cell
+                    return 0;
+            }
         }
         private static Cell Get_LastCell(Bank bank)
         {

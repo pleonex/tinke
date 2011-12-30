@@ -35,6 +35,7 @@ namespace Images
         PaletteBase palette;
         ImageBase image;
         MapBase map;
+        NCER ncer;  // TEMPORALY
 
 		public void Initialize(IPluginHost pluginHost)
 		{
@@ -56,6 +57,8 @@ namespace Images
                 return Format.Palette;
             if (name.EndsWith(".NBFP"))
                 return Format.Palette;
+            if (name.EndsWith(".NCL.L") && magic[0] != 0x10)
+                return Format.Palette;
 
             // Tiles
             if (ext == "NCCG")
@@ -64,13 +67,21 @@ namespace Images
                 return Format.Tile;
             if (name.EndsWith(".NBFC"))
                 return Format.Tile;
+            if (name.EndsWith(".NCG.L") && magic[0] != 0x10)
+                return Format.Tile;
 
             // Map
             if (ext == "NCSC")
                 return Format.Map;
             if (name.EndsWith(".NBFS"))
                 return Format.Map;
-			
+            if (name.EndsWith(".NSC.L") && magic[0] != 0x10)
+                return Format.Map;
+
+            // Cells
+            if (name.EndsWith(".NCE.L") && magic[0] != 0x10)
+                return Format.Cell;
+
 			return Format.Unknown;
 		}
 		
@@ -87,6 +98,10 @@ namespace Images
             if (format == Format.Map && palette.Loaded && image.Loaded)
                 return new ImageControl(pluginHost, image, palette, map);
 			
+            // TEMPORALY
+            if (format == Format.Cell && palette.Loaded && image.Loaded)
+                return new iNCER(ncer, image.Get_NCGR(), palette.Get_NCLR(), pluginHost);
+
 			return new Control();
 		}		
 		public void Read(string file, int id)
@@ -113,12 +128,17 @@ namespace Images
             }
             else if (file.ToUpper().EndsWith(".NTFP") || file.ToUpper().EndsWith(".PLT"))
             {
-                palette = new ntfp(pluginHost, file, id);
+                palette = new RawPalette(pluginHost, file, id, false, 0, -1);
                 return Format.Palette;
             }
             else if (file.ToUpper().EndsWith(".NBFP"))
             {
-                palette = new nbfp(pluginHost, file, id);
+                palette = new RawPalette(pluginHost, file, id, false, 0, -1);
+                return Format.Palette;
+            }
+            else if (file.ToUpper().EndsWith(".NCL.L") && ext[0] != '\x10')
+            {
+                palette = new RawPalette(pluginHost, file, id, false, 0, -1);
                 return Format.Palette;
             }
 
@@ -128,17 +148,28 @@ namespace Images
                 image = new NCCG(pluginHost, file, id);
                 return Format.Tile;
             }
-            else if (file.ToUpper().EndsWith(".NTFT") || file.ToUpper().EndsWith(".CHAR"))
+            else if (file.ToUpper().EndsWith(".NTFT"))
             {
-                image = new ntft(pluginHost, file, id);
+                image = new RawImage(pluginHost, file, id, TileOrder.NoTiled, ColorDepth.Depth8Bit, false,
+                    0, -1);
                 if (palette.Depth == ColorDepth.Depth4Bit)
                     image.Depth = ColorDepth.Depth4Bit;
 
                 return Format.Tile;
             }
-            else if (file.ToUpper().EndsWith(".NBFC"))
+            else if (file.ToUpper().EndsWith(".NBFC") || file.ToUpper().EndsWith(".CHAR"))
             {
-                image = new nbfc(pluginHost, file, id);
+                image = new RawImage(pluginHost, file, id, TileOrder.Horizontal, ColorDepth.Depth8Bit, false,
+                    0, -1);
+                if (palette.Depth == ColorDepth.Depth4Bit)
+                    image.Depth = ColorDepth.Depth4Bit;
+
+                return Format.Tile;
+            }
+            else if (file.ToUpper().EndsWith(".NCG.L") && ext[0] != '\x10')
+            {
+                image = new RawImage(pluginHost, file, id, TileOrder.Horizontal, ColorDepth.Depth8Bit, false,
+                    0, -1);
                 if (palette.Depth == ColorDepth.Depth4Bit)
                     image.Depth = ColorDepth.Depth4Bit;
 
@@ -158,13 +189,31 @@ namespace Images
             }
             else if (file.ToUpper().EndsWith(".NBFS"))
             {
-                map = new nbfs(pluginHost, file, id);
+                map = new RawMap(pluginHost, file, id,
+                    0, -1, false);
                 if (map.Width != 0)
                     image.Width = map.Width;
                 if (map.Height != 0)
                     image.Height = map.Height;
 
                 return Format.Map;
+            }
+            else if (file.ToUpper().EndsWith(".NSC.L") && ext[0] != '\x10')
+            {
+                map = new RawMap(pluginHost, file, id, 0, -1, false);
+                if (map.Width != 0)
+                    image.Width = map.Width;
+                if (map.Height != 0)
+                    image.Height = map.Height;
+
+                return Format.Map;
+            }
+
+            // Cell
+            if (file.ToUpper().EndsWith(".NCE.L") && ext[0] != '\x10')
+            {
+                ncer = NCE.Read(file, pluginHost);
+                return Format.Cell;
             }
 
             return Format.Unknown;

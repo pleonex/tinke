@@ -24,6 +24,7 @@ using System.Text;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Windows.Forms;
+using System.IO;
 using PluginInterface;
 
 namespace Images
@@ -65,7 +66,7 @@ namespace Images
         {
             this.pluginHost = pluginHost;
             this.id = id;
-            this.fileName = System.IO.Path.GetFileName(file);
+            this.fileName = Path.GetFileName(file);
 
             Read(file);
         }
@@ -113,7 +114,7 @@ namespace Images
         public abstract void Write_Tiles(string fileOut);
 
         public void Change_TileDepth(ColorDepth newDepth)
-        { 
+        {
             if (newDepth == depth)
                 return;
 
@@ -214,10 +215,10 @@ namespace Images
             TileOrder tileOrder, bool editable)
         {
             this.tiles = tiles;
-            this.width = width;
-            this.height = height;
             this.depth = depth;
             this.tileOrder = tileOrder;
+            Width = width;
+            Height = height;
             this.canEdit = editable;
             if (tileOrder == TileOrder.Horizontal)
                 tilePal = new byte[tiles.Length];
@@ -274,7 +275,7 @@ namespace Images
         }
         public int Height
         {
-            get { return height; }
+            get { return height * 8; }
             set
             {
                 height = value;
@@ -286,7 +287,7 @@ namespace Images
         }
         public int Width
         {
-            get { return width; }
+            get { return width * 8; }
             set
             {
                 width = value;
@@ -341,6 +342,99 @@ namespace Images
         }
         public override void Write_Tiles(string fileOut)
         {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class RawImage : ImageBase
+    {
+        // Unknown data - Needed to write the file
+        byte[] prev_data;
+        byte[] next_data;
+
+        public RawImage(IPluginHost pluginHost, String file, int id,
+            TileOrder tileOrder, ColorDepth depth, bool editable,
+            int offset, int size)
+            : base(pluginHost)
+        {
+            this.pluginHost = pluginHost;
+            this.id = id;
+            this.fileName = Path.GetFileName(file);
+
+            Read(file, tileOrder, depth, editable, offset, size);
+        }
+
+        public override void Read(string fileIn)
+        {
+            Read(fileIn, TileOrder.Horizontal, ColorDepth.Depth4Bit, false, 0, -1);
+        }
+        public void Read(string fileIn, TileOrder tileOrder, ColorDepth depth, bool editable,
+            int offset, int fileSize)
+        {
+            BinaryReader br = new BinaryReader(File.OpenRead(fileIn));
+            prev_data = br.ReadBytes(offset);   // Save the previous data to write them then.
+
+            if (fileSize <= 0)
+                fileSize = (int)br.BaseStream.Length;
+
+            // Read the tiles
+            Byte[][] tiles = new byte[0][];
+
+            if (tileOrder == TileOrder.NoTiled)
+            {
+                tiles = new byte[1][];
+
+                if (depth == ColorDepth.Depth4Bit)
+                    tiles[0] = pluginHost.Bit8ToBit4(br.ReadBytes(fileSize));
+                else if (depth == ColorDepth.Depth8Bit)
+                    tiles[0] = br.ReadBytes(fileSize);
+                else if (depth == ColorDepth.Depth32Bit)    // 1 bpp
+                    tiles[0] = pluginHost.BytesToBits(br.ReadBytes(fileSize));
+            }
+            else if (tileOrder == TileOrder.Horizontal)
+            {
+                if (depth == ColorDepth.Depth4Bit)
+                {
+                    tiles = new byte[fileSize / 0x20][];
+                    for (int i = 0; i < tiles.Length; i++)
+                        tiles[i] = pluginHost.Bit8ToBit4(br.ReadBytes(0x20));
+                }
+                else if (depth == ColorDepth.Depth8Bit)
+                {
+                    tiles = new byte[fileSize / 0x40][];
+                    for (int i = 0; i < tiles.Length; i++)
+                        tiles[i] = br.ReadBytes(0x40);
+                }
+                else if (depth == ColorDepth.Depth32Bit)    // 1 bpp
+                {
+                    tiles = new byte[fileSize / 0x08][];
+                    for (int i = 0; i < tiles.Length; i++)
+                        tiles[i] = pluginHost.BytesToBits(br.ReadBytes(0x08));
+                }
+            }
+
+            next_data = br.ReadBytes((int)(br.BaseStream.Length - fileSize));   // Save the next data to write them then
+
+            #region Calculate the image size
+            int width = (fileSize < 0x100 ? fileSize : 0x0100);
+            int height = fileSize / width;
+
+            if (height == 0)
+                height = 1;
+
+            if (fileSize == 512)
+                width = height = 32;
+            #endregion
+
+            br.Close();
+
+            Set_Tiles(tiles, width, height, depth, tileOrder, editable);
+
+        }
+
+        public override void Write_Tiles(string fileOut)
+        {
+            // TODO: Write raw images
             throw new NotImplementedException();
         }
     }

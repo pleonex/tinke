@@ -151,6 +151,12 @@
     <Compile Include="Debug.Designer.cs">
       <DependentUpon>Debug.cs</DependentUpon>
     </Compile>
+    <Compile Include="Dialog\CallPlugin.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialog\CallPlugin.Designer.cs">
+      <DependentUpon>CallPlugin.cs</DependentUpon>
+    </Compile>
     <Compile Include="Dialog\FATExtract.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -263,6 +269,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Debug.resx">
       <DependentUpon>Debug.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialog\CallPlugin.resx">
+      <DependentUpon>CallPlugin.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Dialog\FATExtract.resx">
       <DependentUpon>FATExtract.cs</DependentUpon>

@@ -101,5 +101,82 @@ namespace SF_FEATHER
             br.Close();
             return unpacked;
         }
+
+        public static void Pack(string file_original, string fileOut, ref sFolder unpacked)
+        {
+            BinaryReader br = new BinaryReader(File.OpenRead(file_original));
+            BinaryWriter bw = new BinaryWriter(File.OpenWrite(fileOut));
+            List<byte> buffer = new List<byte>();
+
+
+            ushort num_element = br.ReadUInt16();
+            bw.Write(num_element);
+            bw.Write(br.ReadUInt16());  // Unknown
+            bw.Write(br.ReadUInt32());  // Type of element
+
+            uint offset = (uint)num_element * 8 + 8;
+            uint size;
+            int f = 0;  // Pointer to the unpacked.files array
+
+            // Write the final padding of the FAT section
+            if (offset % 0x10 != 0)
+            {
+                for (int r = 0; r < 0x10 - (offset % 0x10); r++)
+                    buffer.Add(0x00);
+
+                offset += 0x10 - (offset % 0x10);
+            }
+
+
+            for (int i = 0; i < num_element; i++)
+            {
+                uint older_offset = br.ReadUInt32();
+                size = br.ReadUInt32();
+
+                // If it's a null file
+                if (size == 0)
+                {
+                    bw.Write(older_offset);
+                    bw.Write(size);
+                    continue;
+                }
+
+                // Get a normalized size
+                size = unpacked.files[f].size;
+                if (size % 0x10 != 0)
+                    size += 0x10 - (size % 0x10);
+
+                // Write the FAT section
+                bw.Write((uint)(offset / 0x10));
+                bw.Write((uint)(size / 0x10));
+
+                // Write file
+                BinaryReader fileRead = new BinaryReader(File.OpenRead(unpacked.files[f].path));
+                fileRead.BaseStream.Position = unpacked.files[f].offset;
+                buffer.AddRange(fileRead.ReadBytes((int)unpacked.files[f].size));                
+                fileRead.Close();
+
+                // Write the padding
+                for (int r = 0; r < (size - unpacked.files[f].size); r++)
+                    buffer.Add(0x00);
+
+                // Set the new offset
+                sFile newFile = unpacked.files[f];
+                newFile.offset = offset;
+                newFile.path = fileOut;
+                unpacked.files[f] = newFile;
+
+                // Set new offset
+                offset += size;
+                f++;
+            }
+            bw.Flush();
+
+            bw.Write(buffer.ToArray());     
+
+            br.Close();
+            bw.Flush();
+            bw.Close();
+        }
     }
 }
