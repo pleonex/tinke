@@ -43,6 +43,7 @@ namespace Pack
         {
             ARC arc = new ARC();
             narcFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + "narc_" + Path.GetRandomFileName();
+            arc.file = narcFile;
             File.Copy(file, narcFile, true);
             BinaryReader br = new BinaryReader(System.IO.File.OpenRead(file));
 
@@ -95,12 +96,28 @@ namespace Pack
                     {
                         sFile currFile = new sFile();
                         currFile.id = (ushort)idFile++;
-                        currFile.name = "File" + idFile.ToString() + ".bin";
+                        currFile.name = "File" + idFile.ToString();
 
                         // FAT data
                         currFile.path = narcFile;
                         currFile.offset = arc.btaf.entries[currFile.id].start_offset + gmif_offset;
                         currFile.size = (arc.btaf.entries[currFile.id].end_offset - arc.btaf.entries[currFile.id].start_offset);
+
+                        // Get the extension
+                        long currPos = br.BaseStream.Position;
+                        br.BaseStream.Position = currFile.offset;
+                        char[] ext = Encoding.ASCII.GetChars(br.ReadBytes(4));
+                        String extS = ".";
+                        for (int s = 0; s < 4; s++)
+                            if (Char.IsLetterOrDigit(ext[s]) || ext[s] == 0x20)
+                                extS += ext[s];
+
+                        if (extS != "." && extS.Length == 5 && currFile.size >= 4)
+                            currFile.name += extS;
+                        else
+                            currFile.name += ".bin";
+                        br.BaseStream.Position = currPos;
+
 
                         if (!(main.files is List<sFile>))
                             main.files = new List<sFile>();

@@ -65,7 +65,7 @@ namespace Images
             Read(fileIn);
         }
 
-        public abstract void Read(string fileInt);
+        public abstract void Read(string fileIn);
         public abstract void Write_Palette(string fileOut);
 
         public NCLR Get_NCLR()
@@ -230,5 +230,93 @@ namespace Images
             get { return id; }
         }
         #endregion
+    }
+
+    public class RawPalette : PaletteBase
+    {
+        // Unknown data
+        byte[] prev_data;
+        byte[] next_data;
+
+        public RawPalette(IPluginHost pluginHost, string file, int id,
+            bool editable, ColorDepth depth, int offset, int size)
+            : base(pluginHost)
+        {
+            this.pluginHost = pluginHost;
+            this.fileName = System.IO.Path.GetFileName(file);
+            this.id = id;
+
+            Read(file, editable, depth, offset, size);
+        }
+        public RawPalette(IPluginHost pluginHost, string file, int id,
+            bool editable, int offset, int size)     : base(pluginHost)
+        {
+            this.pluginHost = pluginHost;
+            this.fileName = System.IO.Path.GetFileName(file);
+            this.id = id;
+
+            Read(file, editable, offset, size);
+        }
+
+
+        public override void Read(string fileIn)
+        {
+            Read(fileIn, false, 0, -1);
+        }
+        public void Read(string fileIn, bool editable, ColorDepth depth, int offset, int fileSize)
+        {
+            BinaryReader br = new BinaryReader(File.OpenRead(fileIn));
+            prev_data = br.ReadBytes(offset);
+
+            if (fileSize <= 0)
+                fileSize = (int)br.BaseStream.Length;
+
+            // Color data
+            Color[][] palette = new Color[0][];
+            if (depth == ColorDepth.Depth8Bit)
+            {
+                palette = new Color[1][];
+                palette[0] = pluginHost.BGR555ToColor(br.ReadBytes(fileSize));
+            }
+            else if (depth == ColorDepth.Depth4Bit)
+            {
+                palette = new Color[fileSize / 0x20][];
+                for (int i = 0; i < palette.Length; i++)
+                    palette[i] = pluginHost.BGR555ToColor(br.ReadBytes(0x20));
+            }
+
+            next_data = br.ReadBytes((int)(br.BaseStream.Length - fileSize));
+
+            br.Close();
+
+            Set_Palette(palette, depth, editable);
+        }
+        public void Read(string fileIn, bool editable, int offset, int fileSize)
+        {
+            BinaryReader br = new BinaryReader(File.OpenRead(fileIn));
+            prev_data = br.ReadBytes(offset);
+
+            if (fileSize <= 0)
+                fileSize = (int)br.BaseStream.Length;
+
+            // Color data
+            Color[][] palette = new Color[1][];
+            palette[0] = pluginHost.BGR555ToColor(br.ReadBytes(fileSize));
+
+            if (palette[0].Length < 0x100)
+                palette = pluginHost.Palette_8bppTo4bpp(palette);
+
+            next_data = br.ReadBytes((int)(br.BaseStream.Length - fileSize));
+
+            br.Close();
+
+            Set_Palette(palette, editable);
+        }
+
+        public override void Write_Palette(string fileOut)
+        {
+            // TODO: write raw palette.
+            throw new NotImplementedException();
+        }
     }
 }

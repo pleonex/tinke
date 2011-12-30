@@ -70,7 +70,7 @@ namespace Images
 
             br.Close();
 
-            Set_Tiles(tiles, (int)nccg.charS.width, (int)nccg.charS.height,
+            Set_Tiles(tiles, (int)nccg.charS.width * 8, (int)nccg.charS.height * 8,
                 (nccg.charS.depth == 0 ? ColorDepth.Depth4Bit : ColorDepth.Depth8Bit),
                 TileOrder.Horizontal, false);
         }

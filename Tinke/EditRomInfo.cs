@@ -150,17 +150,17 @@ namespace Tinke
         // Control events
         private void txtBanReserved_Leave(object sender, EventArgs e)
         {
-            banner.reserved = StringToBytes(txtBanReserved.Text, 28);
+            banner.reserved = Tools.Helper.StringToBytes(txtBanReserved.Text, 28);
             txtBanReserved.Text = BitConverter.ToString(banner.reserved);
         }
         private void txtReserved_Leave(object sender, EventArgs e)
         {
-            header.reserved = StringToBytes(txtReserved.Text, 9);
+            header.reserved = Tools.Helper.StringToBytes(txtReserved.Text, 9);
             txtReserved.Text = BitConverter.ToString(header.reserved);
         }
         private void txtReserved2_Leave(object sender, EventArgs e)
         {
-            header.reserved2 = StringToBytes(txtReserved2.Text, 56);
+            header.reserved2 = Tools.Helper.StringToBytes(txtReserved2.Text, 56);
             txtReserved2.Text = BitConverter.ToString(header.reserved2);
         }
 
@@ -337,18 +337,6 @@ namespace Tinke
         }
 
 
-        // Helper methods
-        private byte[] StringToBytes(string text, int num_bytes)
-        {
-            string hexText = text.Replace("-", "");
-            hexText = hexText.PadRight(num_bytes * 2, '0');
-
-            List<Byte> hex = new List<byte>();
-            for (int i = 0; i < hexText.Length; i += 2)
-                hex.Add(Convert.ToByte(hexText.Substring(i, 2), 16));
-
-            return hex.ToArray();
-        }
         byte[] nintendoLogo = {
 	        0x24, 0xFF, 0xAE, 0x51, 0x69, 0x9A, 0xA2, 0x21, 0x3D, 0x84, 0x82, 0x0A,
 	        0x84, 0xE4, 0x09, 0xAD, 0x11, 0x24, 0x8B, 0x98, 0xC0, 0x81, 0x7F, 0x21,

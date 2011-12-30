@@ -57,7 +57,7 @@
             // 
             // numericPalette
             // 
-            this.numericPalette.Location = new System.Drawing.Point(94, 182);
+            this.numericPalette.Location = new System.Drawing.Point(101, 182);
             this.numericPalette.Name = "numericPalette";
             this.numericPalette.Size = new System.Drawing.Size(37, 20);
             this.numericPalette.TabIndex = 2;
@@ -139,7 +139,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(135, 184);
+            this.label3.Location = new System.Drawing.Point(142, 184);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(26, 13);
             this.label3.TabIndex = 9;

@@ -21,6 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.IO;
 using PluginInterface;
 using System.Drawing;
 
@@ -182,5 +183,57 @@ namespace Images
         }
         #endregion
 
+    }
+
+    public class RawMap : MapBase
+    {
+        // Unknown data
+        byte[] prev_data;
+        byte[] next_data;
+
+        public RawMap(IPluginHost pluginHost, string file, int id,
+            int offset, int size, bool editable)
+            : base(pluginHost)
+        {
+            this.pluginHost = pluginHost;
+            this.id = id;
+            this.fileName = System.IO.Path.GetFileName(file);
+
+            Read(file, offset, size, editable);
+        }
+
+        public override void Read(string fileIn)
+        {
+            Read(fileIn, 0, -1, false);
+        }
+        public void Read(string fileIn, int offset, int size, bool editable)
+        {
+            BinaryReader br = new BinaryReader(File.OpenRead(fileIn));
+            prev_data = br.ReadBytes(offset);
+
+            int file_size;
+            if (size <= 0)
+                file_size = (int)br.BaseStream.Length;
+            else
+                file_size = size;
+
+            NTFS[] map = new NTFS[file_size / 2];
+            for (int i = 0; i < map.Length; i++)
+                map[i] = pluginHost.MapInfo(br.ReadUInt16());
+
+            next_data = br.ReadBytes((int)(br.BaseStream.Length - file_size));
+
+            int width = (map.Length * 8 >= 0x100 ? 0x100 : map.Length * 8);
+            int height = (map.Length / (width / 8)) * 8;
+
+            br.Close();
+            Set_Map(map, editable, width, height);
+        }
+
+        public override void Write_Map(string fileOut)
+        {
+            // TODO: write raw map
+            throw new NotImplementedException();
+        }
     }
 }
