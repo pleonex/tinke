@@ -141,27 +141,11 @@ namespace Tinke.Dialog
 
             try
             {
-                uint offsetLen;
-                if (radioOffsetEnd.Checked || radioOffsetStart.Checked)
-                    offsetLen = 0x04;
-                else
-                    offsetLen = 0x08;
+                uint offsetLen = (uint)numericOffsetLen.Value;
+                if (!radioOffsetEnd.Checked && !radioOffsetStart.Checked)
+                    offsetLen *= 2;
 
-                if (radioOffsetEnd.Checked)
-                {
-                    fat.num_files = (uint)(numericRelativeOffset.Value - numericOffsetStart.Value) / offsetLen;
-                }
-                else
-                {
-                    if (checkNumBigEndian.Checked)
-                    {
-                        fat.num_files = BitConverter.ToUInt32(br.ReadBytes(4).Reverse().ToArray(), 0) / offsetLen;
-                    }
-                    else
-                    {
-                        fat.num_files = (br.ReadUInt32() / offsetLen);
-                    }
-                }
+                    fat.num_files = (uint)(Get_OffsetValue(ref br) - numericOffsetStart.Value) / offsetLen;
             }
             catch { fat.num_files = 0; numericNumFiles.Value = 0; }
             finally { br.Close(); }
@@ -196,28 +180,21 @@ namespace Tinke.Dialog
                 for (int i = 0; i < fat.num_files; i++)
                 {
                     sFile currFile = new sFile();
-                    currFile.name = "File " + i.ToString();
+                    currFile.name = "File " + i.ToString(); // TODO: add extension
                     currFile.path = file;
 
                     // Gets the offset and size
                     if (radioOffsetStart.Checked)
                     {
                         // Start offset
-                        if (checkOffsetBigEndian.Checked)
-                            currFile.offset = BitConverter.ToUInt32(br.ReadBytes((int)numericOffsetLen.Value).Reverse().ToArray(), 0) +
-                                (uint)numericRelativeOffset.Value;
-                        else
-                            currFile.offset = BitConverter.ToUInt32(br.ReadBytes((int)numericOffsetLen.Value), 0) +
-                                (uint)numericRelativeOffset.Value;
+                        currFile.offset = Get_OffsetValue(ref br) + (uint)numericRelativeOffset.Value;
 
                         // Start offset of the next file
                         uint nextOffset;
                         if (i + 1 == fat.num_files)
                             nextOffset = (uint)br.BaseStream.Length;
-                        else if (checkOffsetBigEndian.Checked)
-                            nextOffset = BitConverter.ToUInt32(br.ReadBytes((int)numericOffsetLen.Value).Reverse().ToArray(), 0);
                         else
-                            nextOffset = BitConverter.ToUInt32(br.ReadBytes((int)numericOffsetLen.Value), 0);
+                            nextOffset = Get_OffsetValue(ref br);
 
                         currFile.size = nextOffset - currFile.offset;
                         br.BaseStream.Position -= (long)numericOffsetLen.Value;
@@ -225,42 +202,20 @@ namespace Tinke.Dialog
                     else if (radioOffsetStartEnd.Checked)
                     {
                         // Start offset
-                        if (checkOffsetBigEndian.Checked)
-                            currFile.offset = BitConverter.ToUInt32(br.ReadBytes((int)numericOffsetLen.Value).Reverse().ToArray(), 0) +
-                                (uint)numericRelativeOffset.Value;
-                        else
-                            currFile.offset = BitConverter.ToUInt32(br.ReadBytes((int)numericOffsetLen.Value), 0) +
-                                (uint)numericRelativeOffset.Value;
+                        currFile.offset = Get_OffsetValue(ref br) + (uint)numericRelativeOffset.Value;
 
                         // End offset
-                        uint endOffset;
-                        if (checkOffsetBigEndian.Checked)
-                            endOffset = BitConverter.ToUInt32(br.ReadBytes((int)numericOffsetLen.Value).Reverse().ToArray(), 0) + 
-                                (uint)numericRelativeOffset.Value;
-                        else
-                            endOffset = BitConverter.ToUInt32(br.ReadBytes((int)numericOffsetLen.Value), 0) +
-                                (uint)numericRelativeOffset.Value;
+                        uint endOffset = Get_OffsetValue(ref br) + (uint)numericRelativeOffset.Value;
 
                         currFile.size = endOffset - currFile.offset;
                     }
                     else if (radioOffsetStartSize.Checked)
                     {
                         // Start offset
-                        if (checkOffsetBigEndian.Checked)
-                            currFile.offset = BitConverter.ToUInt32(br.ReadBytes((int)numericOffsetLen.Value).Reverse().ToArray(), 0) +
-                                (uint)numericRelativeOffset.Value;
-                        else
-                            currFile.offset = BitConverter.ToUInt32(br.ReadBytes((int)numericOffsetLen.Value), 0) +
-                                (uint)numericRelativeOffset.Value;
+                        currFile.offset = Get_OffsetValue(ref br) + (uint)numericRelativeOffset.Value;
 
                         // Size
-                        uint size;
-                        if (checkOffsetBigEndian.Checked)
-                            size = BitConverter.ToUInt32(br.ReadBytes((int)numericOffsetLen.Value).Reverse().ToArray(), 0);
-                        else
-                            size = BitConverter.ToUInt32(br.ReadBytes((int)numericOffsetLen.Value), 0);
-
-                        currFile.size = size;
+                        currFile.size = BitConverter.ToUInt32(br.ReadBytes((int)numericOffsetLen.Value), 0);
                     }
                     else if (radioOffsetEnd.Checked)
                     {
@@ -270,13 +225,7 @@ namespace Tinke.Dialog
                             currFile.offset = (uint)(fat.files[i - 1].offset + fat.files[i - 1].size);
 
                         // End offset
-                        uint endOffset;
-                        if (checkOffsetBigEndian.Checked)
-                            endOffset = BitConverter.ToUInt32(br.ReadBytes((int)numericOffsetLen.Value).Reverse().ToArray(), 0) +
-                                (uint)numericRelativeOffset.Value;
-                        else
-                            endOffset = BitConverter.ToUInt32(br.ReadBytes((int)numericOffsetLen.Value), 0) +
-                                (uint)numericRelativeOffset.Value;
+                        uint endOffset = Get_OffsetValue(ref br) + (uint)numericRelativeOffset.Value;
 
                         currFile.size = endOffset - currFile.offset;
                     }
@@ -284,11 +233,31 @@ namespace Tinke.Dialog
                     if (currFile.size >= br.BaseStream.Length || currFile.size + currFile.offset > br.BaseStream.Length)
                         currFile.size = 0;
 
+                    // Get the extension
+                    long currPos = br.BaseStream.Position;
+                    br.BaseStream.Position = currFile.offset;
+                    char[] ext;
+                    if (currFile.size < 4)
+                        ext = Encoding.ASCII.GetChars(br.ReadBytes((int)currFile.size));
+                    else
+                        ext = Encoding.ASCII.GetChars(br.ReadBytes(4));
+
+                    String extS = ".";
+                    for (int s = 0; s < ext.Length; s++)
+                        if (Char.IsLetterOrDigit(ext[s]) || ext[s] == 0x20)
+                            extS += ext[s];
+
+                    if (extS != "." && extS.Length == 5 && currFile.size >= 4)
+                        currFile.name += extS;
+                    else
+                        currFile.name += ".bin";
+                    br.BaseStream.Position = currPos;
+
                     fat.files.Add(currFile);
                 }
 
                 for (int i = 0; i < fat.num_files; i++)
-                    listBoxFiles.Items.Add("File " + i.ToString());
+                    listBoxFiles.Items.Add(fat.files[i].name);
             }
             catch { }
             finally { br.Close(); }
@@ -305,7 +274,45 @@ namespace Tinke.Dialog
         }
         #endregion
 
+        private uint Get_OffsetValue(ref BinaryReader br)
+        {
+            if (checkOffsetBigEndian.Checked)
+            {
+                switch ((int)numericOffsetLen.Value)
+                {
+                    case 1:
+                        return br.ReadByte();
+                    case 2:
+                        return BitConverter.ToUInt16(br.ReadBytes(2).Reverse().ToArray(), 0);
+                    case 4:
+                        return BitConverter.ToUInt32(br.ReadBytes(4).Reverse().ToArray(), 0);
+                    case 8:
+                        return (uint)BitConverter.ToUInt64(br.ReadBytes(8).Reverse().ToArray(), 0);
+                }
+            }
+            else
+            {
+                switch ((int)numericOffsetLen.Value)
+                {
+                    case 1:
+                        return br.ReadByte();
+                    case 2:
+                        return br.ReadUInt16();
+                    case 4:
+                        return br.ReadUInt32();
+                    case 8:
+                        return (uint)br.ReadUInt64();
+                }
+            }
+
+            return 0;
+        }
+
         private void btnAccept_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+        private void btnCancel_Click(object sender, EventArgs e)
         {
             this.Close();
         }
@@ -330,9 +337,9 @@ namespace Tinke.Dialog
         }
         public String TempFolder
         {
-            set 
-            { 
-                folder = value + Path.DirectorySeparatorChar + new FileInfo(file).Name;
+            set
+            {
+                folder = value + Path.DirectorySeparatorChar + Path.GetFileNameWithoutExtension(file);
                 Directory.CreateDirectory(folder);
             }
         }
@@ -342,5 +349,6 @@ namespace Tinke.Dialog
             public uint num_files;
             public List<sFile> files;
         }
+
     }
 }

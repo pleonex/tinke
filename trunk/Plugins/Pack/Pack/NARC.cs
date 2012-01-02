@@ -106,9 +106,14 @@ namespace Pack
                         // Get the extension
                         long currPos = br.BaseStream.Position;
                         br.BaseStream.Position = currFile.offset;
-                        char[] ext = Encoding.ASCII.GetChars(br.ReadBytes(4));
+                        char[] ext;
+                        if (currFile.size < 4)
+                            ext = Encoding.ASCII.GetChars(br.ReadBytes((int)currFile.size));
+                        else
+                            ext = Encoding.ASCII.GetChars(br.ReadBytes(4));
+
                         String extS = ".";
-                        for (int s = 0; s < 4; s++)
+                        for (int s = 0; s < ext.Length; s++)
                             if (Char.IsLetterOrDigit(ext[s]) || ext[s] == 0x20)
                                 extS += ext[s];
 

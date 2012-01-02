@@ -36,7 +36,7 @@ namespace _3DModels
             this.pluginHost = pluginHost;
         }
 
-        public Format Get_Format(string nombre, byte[] magic)
+        public Format Get_Format(string nombre, byte[] magic, int id)
         {
             string ext = new String(Encoding.ASCII.GetChars(magic));
 
@@ -68,8 +68,10 @@ namespace _3DModels
 
                 if (bmd.header.numSect == 2)
                     return new ModelControl(pluginHost, bmd);
-                else
+                else if (btx.texture.texInfo.num_objs != 0)
                     return new ModelControl(pluginHost, bmd, btx);
+                else
+                    System.Windows.Forms.MessageBox.Show("There aren't textures.");
             }
             
             return new System.Windows.Forms.Control();

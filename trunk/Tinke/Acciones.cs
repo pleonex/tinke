@@ -42,8 +42,8 @@ namespace Tinke
         int lastFolderId;
         bool isNewRom;
 
-        IList<IPlugin> formatList;
-        IGamePlugin gamePlugin;
+        List<IPlugin> formatList;
+        List<IGamePlugin> gamePlugin;
         PluginHost pluginHost;
 
         public Acciones(string file, string name)
@@ -52,6 +52,7 @@ namespace Tinke
             gameCode = name.Replace("\0", "");
 
             formatList = new List<IPlugin>();
+            gamePlugin = new List<IGamePlugin>();
             pluginHost = new PluginHost();
             pluginHost.DescompressEvent += new Action<string>(pluginHost_DescomprimirEvent);
             pluginHost.ChangeFile_Event += new Action<int, string>(pluginHost_ChangeFile_Event);
@@ -65,6 +66,7 @@ namespace Tinke
             pluginHost.Dispose();
         }
 
+        #region Plugins
         public void Load_Plugins()
         {
             if (!Directory.Exists(Application.StartupPath + Path.DirectorySeparatorChar + "Plugins"))
@@ -102,7 +104,7 @@ namespace Tinke
                                 IGamePlugin plugin = (IGamePlugin)Activator.CreateInstance(assembly.GetType(pluginType.ToString()));
                                 plugin.Initialize(pluginHost, gameCode);
                                 if (plugin.IsCompatible())
-                                    gamePlugin = plugin;
+                                    gamePlugin.Add(plugin);
 
                                 break;
                             } // end if
@@ -135,51 +137,55 @@ namespace Tinke
         }
         public Object Call_Plugin(sFile file, string name, string ext, int id, string header, int action)
         {
-            string tempFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + file.id + file.name;
+            string tempFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + file.id;
+            if (file.name.Contains('.'))
+                tempFile += file.name.Substring(0, file.name.IndexOf('.') + 1) + ext;
+            else
+                tempFile += file.name + '.' + ext;
             Save_File(file, tempFile);
 
-            if (gamePlugin is IGamePlugin)
+            foreach (IGamePlugin plugin in gamePlugin)
             {
-                if (gamePlugin.ToString() == name)
+                if (plugin.ToString() != name)
+                    continue;
+
+                try
                 {
-                    try
+                    switch (action)
                     {
-                        switch (action)
-                        {
-                            case 0:
-                                gamePlugin.Read(tempFile, id);
-                                return null;
+                        case 0:
+                            plugin.Read(tempFile, id);
+                            return null;
 
-                            case 1:
-                                return gamePlugin.Show_Info(tempFile, id);
+                        case 1:
+                            return plugin.Show_Info(tempFile, id);
 
-                            case 2:
-                                sFolder unpacked = gamePlugin.Unpack(tempFile, id);
-                                Add_Files(ref unpacked, id);
-                                return unpacked;
+                        case 2:
+                            sFolder unpacked = plugin.Unpack(tempFile, id);
+                            Add_Files(ref unpacked, id);
+                            return unpacked;
 
-                            case 3:
-                                sFolder unpack = pluginHost_event_GetDecompressedFiles(id);
-                                String packFile = gamePlugin.Pack(ref unpack, tempFile, id);
+                        case 3:
+                            sFolder unpack = pluginHost_event_GetDecompressedFiles(id);
+                            String packFile = plugin.Pack(ref unpack, tempFile, id);
 
-                                if (!(packFile is String) || packFile == "")
-                                {
-                                    MessageBox.Show(Tools.Helper.GetTranslation("Messages", "S23"));
-                                    Console.WriteLine(Tools.Helper.GetTranslation("Messages", "S25"));
-                                    throw new NotSupportedException();
-                                }
+                            if (!(packFile is String) || packFile == "")
+                            {
+                                MessageBox.Show(Tools.Helper.GetTranslation("Messages", "S23"));
+                                Console.WriteLine(Tools.Helper.GetTranslation("Messages", "S25"));
+                                throw new NotSupportedException();
+                            }
 
-                                pluginHost_ChangeFile_Event(id, packFile);
-                                Change_Files(unpack);
-                                return null;
-                        }
+                            pluginHost_ChangeFile_Event(id, packFile);
+                            Change_Files(unpack);
+                            return null;
                     }
-                    catch (Exception e)
-                    {
-                        MessageBox.Show(Tools.Helper.GetTranslation("Messages", "S25"));
-                        Console.WriteLine(e.Message);
-                        return null;
-                    }
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show(Tools.Helper.GetTranslation("Messages", "S25"));
+                    Console.WriteLine(e.Message);
+                    return null;
                 }
             }
 
@@ -231,6 +237,7 @@ namespace Tinke
             Console.WriteLine("Plugin not found");
             return null;
         }
+        #endregion
 
         #region Properties
         public sFolder Root
@@ -812,20 +819,27 @@ namespace Tinke
             Recursive_FileName(name, folder, carpeta);
             return carpeta;
         }
-        public sFolder Search_File(Format formato)
+        public sFolder Search_File(Format format)
         {
             sFolder carpeta = new sFolder();
             carpeta.files = new List<sFile>();
             carpeta.folders = new List<sFolder>();
-            Recursive_File(formato, root, carpeta);
+            Recursive_File(format, root, carpeta);
             return carpeta;
         }
         public sFolder Search_FileLength(int length)
         {
-            sFolder carpeta = new sFolder();
-            carpeta.files = new List<sFile>();
-            Recursive_File(length, root, carpeta);
-            return carpeta;
+            sFolder folder = new sFolder();
+            folder.files = new List<sFile>();
+            Recursive_File(length, root, folder);
+            return folder;
+        }
+        public sFolder Search_File(byte[] header)
+        {
+            sFolder folder = new sFolder();
+            folder.files = new List<sFile>();
+            Recursive_File(header, root, folder);
+            return folder;
         }
         public sFolder Search_FileOffset(int offset)
         {
@@ -1054,6 +1068,35 @@ namespace Tinke
                     Recursive_File(formato, subFolder, folder);
 
         }
+        private void Recursive_File(byte[] header, sFolder currFolder, sFolder folder)
+        {
+            if (currFolder.files is List<sFile>)
+            {
+                foreach (sFile currFile in currFolder.files)
+                {
+                    byte[] ext = Get_MagicID(currFile, header.Length);
+                    if (ext.Length != header.Length)
+                        continue;
+
+                    bool equal = true;
+                    for (int i = 0; i < ext.Length; i++)
+                    {
+                        if (ext[i] != header[i])
+                        {
+                            equal = false;
+                            break;
+                        }
+                    }
+
+                    if (equal)
+                        folder.files.Add(currFile);
+                }
+            }
+
+            if (currFolder.folders is List<sFolder>)
+                foreach (sFolder subFolder in currFolder.folders)
+                    Recursive_File(header, subFolder, folder);
+        }
         private sFolder Recursive_Folder(int id, sFolder currFolder)
         {
             if (currFolder.id == id)
@@ -1106,8 +1149,8 @@ namespace Tinke
             BinaryReader br = new BinaryReader(File.OpenRead(currFile.path));
             br.BaseStream.Position = currFile.offset;
 
-            if (br.BaseStream.Length < 0x04)
-                ext = br.ReadBytes((int)br.BaseStream.Length);
+            if (currFile.size < 0x04)
+                ext = br.ReadBytes((int)currFile.size);
             else
                 ext = br.ReadBytes(4);
             br.Close();
@@ -1121,10 +1164,25 @@ namespace Tinke
             BinaryReader br = new BinaryReader(File.OpenRead(currFile.path));
             br.BaseStream.Position = currFile.offset;
 
-            if (br.BaseStream.Length < 0x04)
-                ext = br.ReadBytes((int)br.BaseStream.Length);
+            if (currFile.size < 0x04)
+                ext = br.ReadBytes((int)currFile.size);
             else
                 ext = br.ReadBytes(4);
+            br.Close();
+
+            return ext;
+        }
+        public Byte[] Get_MagicID(sFile currFile, int length)
+        {
+            byte[] ext;
+
+            BinaryReader br = new BinaryReader(File.OpenRead(currFile.path));
+            br.BaseStream.Position = currFile.offset;
+
+            if (currFile.size < length)
+                ext = br.ReadBytes((int)currFile.size);
+            else
+                ext = br.ReadBytes(length);
             br.Close();
 
             return ext;
@@ -1148,8 +1206,8 @@ namespace Tinke
             br.BaseStream.Position = currFile.offset;
 
             byte[] ext;
-            if (br.BaseStream.Length < 0x04)
-                ext = br.ReadBytes((int)br.BaseStream.Length);
+            if (currFile.size < 0x04)
+                ext = br.ReadBytes((int)currFile.size);
             else
                 ext = br.ReadBytes(4);
             br.Close();
@@ -1200,14 +1258,16 @@ namespace Tinke
             #region Calling to plugins
             try
             {
-                if (gamePlugin is IGamePlugin)
-                    tipo = gamePlugin.Get_Format(currFile.name, ext, id);
-                if (tipo != Format.Unknown)
-                    return tipo;
-
-                foreach (IPlugin formato in formatList)
+                foreach (IGamePlugin format in gamePlugin)
                 {
-                    tipo = formato.Get_Format(currFile.name, ext);
+                    tipo = format.Get_Format(currFile.name, ext, id);
+                    if (tipo != Format.Unknown)
+                        return tipo;
+                }
+
+                foreach (IPlugin format in formatList)
+                {
+                    tipo = format.Get_Format(currFile.name, ext, id);
                     if (tipo != Format.Unknown)
                         return tipo;
                 }
@@ -1262,14 +1322,16 @@ namespace Tinke
             #region Calling to plugins
             try
             {
-                if (gamePlugin is IGamePlugin)
-                    tipo = gamePlugin.Get_Format(currFile.name, ext, currFile.id);
-                if (tipo != Format.Unknown)
-                    return tipo;
+                foreach (IGamePlugin plugin in gamePlugin)
+                {
+                    tipo = plugin.Get_Format(currFile.name, ext, currFile.id);
+                    if (tipo != Format.Unknown)
+                        return tipo;
+                }
 
                 foreach (IPlugin formato in formatList)
                 {
-                    tipo = formato.Get_Format(currFile.name, ext);
+                    tipo = formato.Get_Format(currFile.name, ext, currFile.id);
                     if (tipo != Format.Unknown)
                         return tipo;
                 }
@@ -1327,14 +1389,16 @@ namespace Tinke
             #region Calling to plugins
             try
             {
-                if (gamePlugin is IGamePlugin)
-                    tipo = gamePlugin.Get_Format(name, ext, -1);
-                if (tipo != Format.Unknown)
-                    return tipo;
+                foreach (IGamePlugin plugin in gamePlugin)
+                {
+                    tipo = plugin.Get_Format(name, ext, -1);
+                    if (tipo != Format.Unknown)
+                        return tipo;
+                }
 
                 foreach (IPlugin formato in formatList)
                 {
-                    tipo = formato.Get_Format(name, ext);
+                    tipo = formato.Get_Format(name, ext, -1);
                     if (tipo != Format.Unknown)
                         return tipo;
                 }
@@ -1398,14 +1462,16 @@ namespace Tinke
             #region Calling to plugins
             try
             {
-                if (gamePlugin is IGamePlugin)
-                    tipo = gamePlugin.Get_Format(name, ext, id);
-                if (tipo != Format.Unknown)
-                    return tipo;
+                foreach (IGamePlugin plugin in gamePlugin)
+                {
+                    tipo = plugin.Get_Format(name, ext, id);
+                    if (tipo != Format.Unknown)
+                        return tipo;
+                }
 
                 foreach (IPlugin formato in formatList)
                 {
-                    tipo = formato.Get_Format(name, ext);
+                    tipo = formato.Get_Format(name, ext, id);
                     if (tipo != Format.Unknown)
                         return tipo;
                 }
@@ -1472,18 +1538,18 @@ namespace Tinke
             {
                 Format f;
                 #region Calling to plugins
-                if (gamePlugin is IGamePlugin)
+                foreach (IGamePlugin plugin in gamePlugin)
                 {
-                    f = gamePlugin.Get_Format(selectedFile.name, ext, idSelect);
+                    f = plugin.Get_Format(selectedFile.name, ext, id);
                     if (f == Format.Compressed || f == Format.Pack)
                     {
-                        desc = gamePlugin.Unpack(tempFile, idSelect);
+                        desc = plugin.Unpack(tempFile, id);
                         goto Continuar;
                     }
                 }
                 foreach (IPlugin plugin in formatList)
                 {
-                    f = plugin.Get_Format(selectedFile.name, ext);
+                    f = plugin.Get_Format(selectedFile.name, ext, id);
                     if (f == Format.Compressed || f == Format.Pack)
                     {
                         desc = plugin.Unpack(tempFile);
@@ -1542,18 +1608,18 @@ namespace Tinke
             try
             {
                 Format f;
-                if (gamePlugin is IGamePlugin)
+                foreach (IGamePlugin plugin in gamePlugin)
                 {
-                    f = gamePlugin.Get_Format(name, ext, idSelect);
+                    f = plugin.Get_Format(name, ext, id);
                     if (f == Format.Compressed || f == Format.Pack)
                     {
-                        desc = gamePlugin.Unpack(compressedFile, idSelect);
+                        desc = plugin.Unpack(compressedFile, id);
                         goto Continuar;
                     }
                 }
                 foreach (IPlugin plugin in formatList)
                 {
-                    f = plugin.Get_Format(name, ext);
+                    f = plugin.Get_Format(name, ext, id);
                     if (f == Format.Compressed || f == Format.Pack)
                     {
                         desc = plugin.Unpack(compressedFile);
@@ -1612,7 +1678,7 @@ namespace Tinke
                 Format f;
                 foreach (IPlugin plugin in formatList)
                 {
-                    f = plugin.Get_Format(new FileInfo(arg).Name, ext);
+                    f = plugin.Get_Format(new FileInfo(arg).Name, ext, -1);
                     if (f == Format.Compressed || f == Format.Pack)
                     {
                         plugin.Read(arg, -1);
@@ -1736,18 +1802,18 @@ namespace Tinke
             try
             {
                 Format f;
-                if (gamePlugin is IGamePlugin)
+                foreach (IGamePlugin plugin in gamePlugin)
                 {
-                    f = gamePlugin.Get_Format(selectedFile.name, ext, idSelect);
+                    f = plugin.Get_Format(selectedFile.name, ext, id);
                     if (f == Format.Compressed || f == Format.Pack)
                     {
-                        packFile = gamePlugin.Pack(ref unpacked, original_packfile, id);
+                        packFile = plugin.Pack(ref unpacked, original_packfile, id);
                         goto Continue;
                     }
                 }
                 foreach (IPlugin plugin in formatList)
                 {
-                    f = plugin.Get_Format(selectedFile.name, ext);
+                    f = plugin.Get_Format(selectedFile.name, ext, id);
                     if (f == Format.Compressed || f == Format.Pack)
                     {
                         packFile = plugin.Pack(ref unpacked, original_packfile);
@@ -1846,18 +1912,18 @@ namespace Tinke
             #region Calling to plugins
             try
             {
-                if (gamePlugin is IGamePlugin)
+                foreach (IGamePlugin plugin in gamePlugin)
                 {
-                    if (gamePlugin.Get_Format(selectFile.name, ext, idSelect) != Format.Unknown)
+                    if (plugin.Get_Format(selectFile.name, ext, idSelect) != Format.Unknown)
                     {
-                        Control resultado = gamePlugin.Show_Info(tempFile, idSelect);
+                        Control resultado = plugin.Show_Info(tempFile, idSelect);
                         return resultado;
                     }
                 }
 
                 foreach (IPlugin plugin in formatList)
                 {
-                    if (plugin.Get_Format(selectFile.name, ext) != Format.Unknown)
+                    if (plugin.Get_Format(selectFile.name, ext, idSelect) != Format.Unknown)
                     {
                         Control resultado = plugin.Show_Info(tempFile, idSelect);
                         return resultado;
@@ -1987,18 +2053,18 @@ namespace Tinke
             #region Calling to plugins
             try
             {
-                if (gamePlugin is IGamePlugin)
+                foreach (IGamePlugin plugin in gamePlugin)
                 {
-                    if (gamePlugin.Get_Format(name, ext, idSelect) != Format.Unknown)
+                    if (plugin.Get_Format(name, ext, idSelect) != Format.Unknown)
                     {
-                        Control resultado = gamePlugin.Show_Info(file, idSelect);
+                        Control resultado = plugin.Show_Info(file, idSelect);
                         return resultado;
                     }
                 }
 
                 foreach (IPlugin plugin in formatList)
                 {
-                    if (plugin.Get_Format(name, ext) != Format.Unknown)
+                    if (plugin.Get_Format(name, ext, idSelect) != Format.Unknown)
                     {
                         Control resultado = plugin.Show_Info(file, idSelect);
                         return resultado;
@@ -2141,11 +2207,11 @@ namespace Tinke
             #region Calling to plugins
             try
             {
-                if (gamePlugin is IGamePlugin)
+                foreach (IGamePlugin plugin in gamePlugin)
                 {
-                    if (gamePlugin.Get_Format(selectFile.name, ext, idSelect) != Format.Unknown)
+                    if (plugin.Get_Format(selectFile.name, ext, idSelect) != Format.Unknown)
                     {
-                        gamePlugin.Read(tempFile, idSelect);
+                        plugin.Read(tempFile, idSelect);
                         File.Delete(tempFile);
                         return;
                     }
@@ -2153,7 +2219,7 @@ namespace Tinke
 
                 foreach (IPlugin plugin in formatList)
                 {
-                    if (plugin.Get_Format(selectFile.name, ext) != Format.Unknown)
+                    if (plugin.Get_Format(selectFile.name, ext, idSelect) != Format.Unknown)
                     {
                         plugin.Read(tempFile, idSelect);
                         File.Delete(tempFile);

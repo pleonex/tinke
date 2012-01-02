@@ -34,12 +34,12 @@ namespace Pack
         {
             this.pluginHost = pluginHost;
         }
-        public Format Get_Format(string nombre, byte[] magic)
+        public Format Get_Format(string nombre, byte[] magic, int id)
         {
             nombre = nombre.ToUpper();
-            string id = new String(Encoding.ASCII.GetChars(magic));
+            string type = new String(Encoding.ASCII.GetChars(magic));
 
-            if (id == "NARC" || id == "CRAN" || (nombre.EndsWith("UTILITY.BIN") && magic[0] == 0x10))
+            if (type == "NARC" || type == "CRAN" || (nombre.EndsWith("UTILITY.BIN") && magic[0] == 0x10))
                 return Format.Pack;
 
             return Format.Unknown;

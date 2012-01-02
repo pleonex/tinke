@@ -17,7 +17,7 @@ namespace Sounds
             this.pluginHost = pluginHost;
         }
 
-        public Format Get_Format(string nombre, byte[] magic)
+        public Format Get_Format(string nombre, byte[] magic, int id)
         {
             string ext = new String(Encoding.ASCII.GetChars(magic));
 

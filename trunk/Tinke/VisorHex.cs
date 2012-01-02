@@ -39,6 +39,8 @@ namespace Tinke
         string hexFile;
         bool allowEdit;
 
+        int last_search;
+
         public VisorHex(sFile file, bool edit)
         {
             InitializeComponent();
@@ -131,6 +133,30 @@ namespace Tinke
             else hexBox1.Width = this.Width - 16;
             
         }
+        private void VisorHex_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.F3)
+            {
+                switch (last_search)
+                {
+                    case 0:
+                        rawBytesToolStripMenuItem.PerformClick();
+                        break;
+                    case 1:
+                        shiftjisToolStripMenuItem.PerformClick();
+                        break;
+                    case 2:
+                        defaultCharsToolStripMenuItem.PerformClick();
+                        break;
+                    case 3:
+                        unicodeToolStripMenuItem.PerformClick();
+                        break;
+                    case 4:
+                        unicodeBigEndianToolStripMenuItem.PerformClick();
+                        break;
+                }
+            }
+        }
 
         private void comboBoxEncoding_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -166,6 +192,8 @@ namespace Tinke
         private void rawBytesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.Cursor = Cursors.WaitCursor;
+            last_search = 0;
+
             List<byte> search = new List<byte>();
             for (int i = 0; i < toolStripSearchBox.Text.Length; i += 2)
                 search.Add(Convert.ToByte(toolStripSearchBox.Text.Substring(i, 2), 16));
@@ -176,6 +204,8 @@ namespace Tinke
         private void shiftjisToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.Cursor = Cursors.WaitCursor;
+            last_search = 1;
+
             byte[] search = Encoding.GetEncoding("shift_jis").GetBytes(toolStripSearchBox.Text.ToCharArray());
             hexBox1.Find(search, hexBox1.SelectionStart + hexBox1.SelectionLength);
             this.Cursor = Cursors.Default;
@@ -183,6 +213,8 @@ namespace Tinke
         private void defaultCharsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.Cursor = Cursors.WaitCursor;
+            last_search = 2;
+
             byte[] search = Encoding.Default.GetBytes(toolStripSearchBox.Text.ToCharArray());
             hexBox1.Find(search, hexBox1.SelectionStart + hexBox1.SelectionLength);
             this.Cursor = Cursors.Default;
@@ -190,6 +222,8 @@ namespace Tinke
         private void unicodeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.Cursor = Cursors.WaitCursor;
+            last_search = 3;
+
             byte[] search = Encoding.Unicode.GetBytes(toolStripSearchBox.Text.ToCharArray());
             hexBox1.Find(search, hexBox1.SelectionStart + hexBox1.SelectionLength);
             this.Cursor = Cursors.Default;
@@ -197,6 +231,8 @@ namespace Tinke
         private void unicodeBigEndianToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.Cursor = Cursors.WaitCursor;
+            last_search = 4;
+
             byte[] search = Encoding.BigEndianUnicode.GetBytes(toolStripSearchBox.Text.ToCharArray());
             hexBox1.Find(search, hexBox1.SelectionStart + hexBox1.SelectionLength);
             this.Cursor = Cursors.Default;

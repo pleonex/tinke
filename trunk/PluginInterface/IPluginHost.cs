@@ -87,8 +87,10 @@ namespace PluginInterface
         void Set_Files(sFolder folder);
         sFolder Get_Files();
         sFolder Get_DecompressedFiles(int id);
+
         String Search_File(int id); // Search file by id
         sFile Search_File(short id);
+        Byte[] Get_Bytes(int id, int offset, int length);
 
         string Get_Language();
         string Get_TempFolder();

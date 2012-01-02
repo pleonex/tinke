@@ -48,7 +48,10 @@ namespace Tinke.Dialog
 
         public String Extension
         {
-            get { return txtExt.Text; }
+            get 
+            {
+                return txtExt.Text;
+            }
             set 
             {
                 txtExt.Text = value;
@@ -57,7 +60,12 @@ namespace Tinke.Dialog
         }
         public String Header
         {
-            get { return txtHeader.Text; }
+            get 
+            {
+                if (txtHeader.TextLength != 4)
+                    txtHeader.Text = txtHeader.Text.PadRight(4, ' ');
+                return txtHeader.Text;
+            }
             set { txtHeader.Text = value; }
         }
         public String Plugin
