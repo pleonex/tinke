@@ -42,7 +42,7 @@ namespace Images
 			this.pluginHost = pluginHost;
 		}
 		
-		public Format Get_Format(string name, byte[] magic)
+		public Format Get_Format(string name, byte[] magic, int id)
 		{
             name = name.ToUpper();
 

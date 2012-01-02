@@ -168,10 +168,15 @@ namespace Tinke
         }
         public event Func<int, sFolder> event_GetDecompressedFiles;
         public sFolder Get_DecompressedFiles(int id) { return event_GetDecompressedFiles(id); }
+        
         public event Func<int, String> event_SearchFile;
         public String Search_File(int id) { return event_SearchFile(id); }
         public event Func<int, sFile> event_SearchFile2;
         public sFile Search_File(short id) { return event_SearchFile2(id); }
+        public Byte[] Get_Bytes(int id, int offset, int length)
+        {
+            return Tools.Helper.Get_Bytes(offset, length, Search_File((short)id));
+        }
 
         public string Get_TempFolder()
         {

@@ -160,5 +160,16 @@ namespace Tinke.Tools
 
             return hex.ToArray();
         }
+
+        public static byte[] Get_Bytes(int offset, int length, PluginInterface.sFile file)
+        {
+            BinaryReader br = new BinaryReader(File.OpenRead(file.path));
+            br.BaseStream.Position = file.offset + offset;
+
+            byte[] bytes = br.ReadBytes(length);
+            br.Close();
+
+            return bytes;
+        }
     }
 }

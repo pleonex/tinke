@@ -427,10 +427,12 @@ namespace Tinke
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.menuStripTop);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.KeyPreview = true;
             this.MainMenuStrip = this.menuStripTop;
             this.Name = "VisorHex";
             this.Text = "S41";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.VisorHex_FormClosed);
+            this.KeyUp += new System.Windows.Forms.KeyEventHandler(this.VisorHex_KeyUp);
             this.Resize += new System.EventHandler(this.VisorHex_Resize);
             this.menuStripTop.ResumeLayout(false);
             this.menuStripTop.PerformLayout();

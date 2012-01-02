@@ -76,6 +76,7 @@ namespace Tinke.Dialog
             this.btnAccept = new System.Windows.Forms.Button();
             this.listBoxFiles = new System.Windows.Forms.ListBox();
             this.btnHex = new System.Windows.Forms.Button();
+            this.btnCancel = new System.Windows.Forms.Button();
             this.groupOptions.SuspendLayout();
             this.groupOffset.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericOffsetLen)).BeginInit();
@@ -414,7 +415,7 @@ namespace Tinke.Dialog
             // 
             this.btnAccept.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.btnAccept.Image = global::Tinke.Properties.Resources.accept;
-            this.btnAccept.Location = new System.Drawing.Point(12, 412);
+            this.btnAccept.Location = new System.Drawing.Point(13, 319);
             this.btnAccept.Name = "btnAccept";
             this.btnAccept.Size = new System.Drawing.Size(90, 40);
             this.btnAccept.TabIndex = 4;
@@ -444,12 +445,26 @@ namespace Tinke.Dialog
             this.btnHex.UseVisualStyleBackColor = true;
             this.btnHex.Click += new System.EventHandler(this.btnHex_Click);
             // 
+            // btnCancel
+            // 
+            this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.btnCancel.Image = global::Tinke.Properties.Resources.cancel;
+            this.btnCancel.Location = new System.Drawing.Point(110, 319);
+            this.btnCancel.Name = "btnCancel";
+            this.btnCancel.Size = new System.Drawing.Size(90, 40);
+            this.btnCancel.TabIndex = 5;
+            this.btnCancel.Text = "Cancel";
+            this.btnCancel.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnCancel.UseVisualStyleBackColor = true;
+            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
+            // 
             // FATExtract
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
-            this.ClientSize = new System.Drawing.Size(716, 464);
+            this.ClientSize = new System.Drawing.Size(716, 365);
+            this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnHex);
             this.Controls.Add(this.listBoxFiles);
             this.Controls.Add(this.btnAccept);
@@ -511,5 +526,6 @@ namespace Tinke.Dialog
         private System.Windows.Forms.RadioButton radioOffsetEnd;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.NumericUpDown numericNumFiles;
+        private System.Windows.Forms.Button btnCancel;
     }
 }

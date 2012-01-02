@@ -1764,8 +1764,9 @@ namespace Tinke
         }
         private void toolStripAbrirFat_Click(object sender, EventArgs e)
         {
-            string fileToRead = Path.GetTempFileName();
-            accion.Save_File(accion.Selected_File(), fileToRead);
+            sFile currFile = accion.Selected_File();
+            string fileToRead = accion.TempFolder + Path.DirectorySeparatorChar + Path.GetRandomFileName();
+            accion.Save_File(currFile, fileToRead);
 
             Dialog.FATExtract dialog = new Dialog.FATExtract(fileToRead);
             dialog.TempFolder = accion.TempFolder;
@@ -1788,6 +1789,10 @@ namespace Tinke
                 return;
             }
 
+            currFile.format = Format.Pack;
+            bool edit = accion.IsNewRom;
+            accion.Change_File(currFile.id, currFile, accion.Root);
+            accion.IsNewRom = edit;
             accion.Add_Files(ref uncompress, accion.IDSelect);
 
             #region Add files to the treeList
@@ -1950,6 +1955,13 @@ namespace Tinke
             }
             else if (txtSearch.Text.StartsWith("Offset: ") && txtSearch.Text.Length > 8 && txtSearch.Text.Length < 17)
                 resul = accion.Search_FileOffset(Convert.ToInt32(txtSearch.Text.Substring(8), 16));
+            else if (txtSearch.Text.StartsWith("Header: "))
+            {
+                List<byte> search = new List<byte>();
+                for (int i = 8; i < txtSearch.Text.Length; i += 2)
+                    search.Add(Convert.ToByte(txtSearch.Text.Substring(i, 2), 16));
+                resul = accion.Search_File(search.ToArray());
+            }
             else
                 resul = accion.Search_File(txtSearch.Text);
 

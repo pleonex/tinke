@@ -36,8 +36,9 @@ namespace PluginInterface
         /// </summary>
         /// <param name="fileName">The file name</param>
         /// <param name="magic">First four bytes of the file</param>
+        /// <param name="id">ID to do operation using PluginHost with the file</param>
         /// <returns>File format</returns>
-        Format Get_Format(string fileName, byte[] magic);
+        Format Get_Format(string fileName, byte[] magic, int id);
 
         /// <summary>
         /// This method is called when the user click on button "view", it will return a control with the file information

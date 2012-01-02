@@ -30,7 +30,7 @@ namespace Common
     {
         IPluginHost pluginHost;
 
-        public Format Get_Format(string nombre, byte[] magic)
+        public Format Get_Format(string nombre, byte[] magic, int id)
         {
             nombre = nombre.ToUpper();
             string ext = new String(Encoding.ASCII.GetChars(magic));
