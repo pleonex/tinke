@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.IO;
 
 namespace Sounds
 {
@@ -9,19 +10,87 @@ namespace Sounds
     public class ADX : SoundBase
     {
         ADX_Header adx_header;
-        int past_samples;       // Previously decoded samples from each channel, zeroed at start (size = 2*channel_count)
+        int[] past_samples;       // Previously decoded samples from each channel, zeroed at start (size = 2*channel_count)
         uint sample_index;      // sample_index is the index of sample set that needs to be decoded next
         double[] coefficient;
 
+        string file;
+        byte[] buffer;
 
-        public ADX()
+        public ADX(string file)
         {
+            this.file = file;
+            Read_Header();
+        }
 
+        private ushort Get_ushort(ref BinaryReader br)
+        {
+            return BitConverter.ToUInt16(br.ReadBytes(2).Reverse().ToArray(), 0);
+        }
+        private uint Get_uint(ref BinaryReader br)
+        {
+            return BitConverter.ToUInt32(br.ReadBytes(4).Reverse().ToArray(), 0);
         }
 
         private void Read_Header()
         {
+            adx_header = new ADX_Header();
 
+            // Read the file
+            BinaryReader br = new BinaryReader(File.OpenRead(file));
+
+            byte b1 = br.ReadByte();  // 0x80
+            byte b2 = br.ReadByte();  // 0x00
+
+            adx_header.copyright_offset = Get_ushort(ref br);
+            adx_header.encoding = br.ReadByte();
+            adx_header.block_size = br.ReadByte();
+            adx_header.sample_bitdepth = br.ReadByte();
+            adx_header.channel_count = br.ReadByte();
+            adx_header.sample_rate = Get_uint(ref br);
+            adx_header.total_samples = Get_uint(ref br);
+            adx_header.highpass_frequency = Get_ushort(ref br);
+            adx_header.version = br.ReadByte();
+            adx_header.flags = br.ReadByte();
+            adx_header.unknown = Get_uint(ref br);
+
+            switch (adx_header.version)
+            {
+                case 3:
+                    adx_header.loop_enabled = Get_uint(ref br);
+                    adx_header.loop_begin_sample_index = Get_uint(ref br);
+                    adx_header.loop_begin_byte_index = Get_uint(ref br);
+                    adx_header.loop_end_sample_index = Get_uint(ref br);
+                    adx_header.loop_end_byte_index = Get_uint(ref br);
+                    break;
+
+                case 4:
+                    br.BaseStream.Position += 0x0C;
+                    adx_header.loop_enabled = Get_uint(ref br);
+                    adx_header.loop_begin_sample_index = Get_uint(ref br);
+                    adx_header.loop_begin_byte_index = Get_uint(ref br);
+                    adx_header.loop_end_sample_index = Get_uint(ref br);
+                    adx_header.loop_end_byte_index = Get_uint(ref br);
+                    break;
+            }
+
+            br.BaseStream.Position = adx_header.copyright_offset - 2;
+            adx_header.copyright = br.ReadChars(6);
+
+            br.BaseStream.Position = 0;
+            buffer = br.ReadBytes((int)br.BaseStream.Length);
+
+            br.Close();
+        }
+
+        public sWAV ToWAV()
+        {
+            Initialize();
+
+            List<byte> out_buffer;
+            Decode_Standard(out out_buffer, adx_header.total_samples, false);
+
+            return WAV.Create(adx_header.channel_count, adx_header.sample_rate, 16, out_buffer.ToArray());
         }
 
         private void Initialize()
@@ -34,6 +103,8 @@ namespace Sounds
             coefficient = new double[2];
             coefficient[0] = c * 2.0;
             coefficient[1] = -(c * c);
+
+            past_samples = new int[2 * adx_header.channel_count];
         }
 
         /// <summary>
@@ -44,8 +115,11 @@ namespace Sounds
         /// <param name="samples_needed">samples_needed states how many sample 'sets' (one sample from every channel) need to be decoded to fill the buffer</param>
         /// <param name="looping_enabled">looping_enabled is a boolean flag to control use of the built-in loop</param>
         /// <returns>Returns the number of sample 'sets' in the buffer that could not be filled (EOS)</returns>
-        private uint Decode_Standard(List<short> buffer, uint samples_needed, bool looping_enabled)
+        private uint Decode_Standard(out List<byte> bufferOut, uint samples_needed, bool looping_enabled)
         {
+            BitReader bit_reader = new BitReader(buffer);
+            bufferOut = new List<byte>();
+
             uint samples_per_block = (uint)((adx_header.block_size - 2) * 8 / adx_header.sample_bitdepth);
             short[] scale = new short[adx_header.channel_count];
 
@@ -74,66 +148,60 @@ namespace Sounds
                     sample_index / samples_per_block * adx_header.block_size * adx_header.channel_count) * 8;
 
                 // Read the scale values from the start of each block in this frame
+                for (uint i = 0; i < adx_header.channel_count; ++i)
+                {
+                    bit_reader.Seek((int)(started_at + adx_header.block_size * i * 8));
+                    scale[i] = bit_reader.Read_Short();
+                }
 
+                // Pre-calculate the stop value for sample_offset
+                uint sample_endoffset = sample_offset + samples_can_get;
+
+                // Save the bitstream address of the first sample immediately after the scale in the first block of the frame
+                started_at += 16;
+                while (sample_offset < sample_endoffset)
+                {
+                    for (uint i = 0; i < adx_header.channel_count; ++i)
+                    {
+                        // Predict the next sample
+                        double sample_prediction = coefficient[0] * past_samples[i * 2 + 0] + coefficient[1] * past_samples[i * 2 + 1];
+
+                        // Seek to the sample offset, read and sign extend it to a 32bit integer
+                        bit_reader.Seek((int)((int)started_at + adx_header.sample_bitdepth * sample_offset + adx_header.block_size * 8 * i));
+                        int sample_error = 0;
+                        if (adx_header.sample_bitdepth == 4)
+                            sample_error = bit_reader.Read_4Bits();
+
+                        // Scale the error correction value
+                        sample_error *= scale[i];
+
+                        // Calculate the sample by combining the prediction with the error correction
+                        int sample = sample_error + (int)sample_prediction;
+
+                        // Update the past samples with the newer sample
+                        past_samples[i * 2 + 1] = past_samples[i * 2 + 0];
+                        past_samples[i * 2 + 0] = sample;
+
+                        // Clamp the decoded sample to the valid range for a 16bit integer
+                        if (sample > 32767)
+                            sample = 32767;
+                        else if (sample < -32768)
+                            sample = -32768;
+
+                        bufferOut.AddRange(BitConverter.GetBytes((short)sample));
+                    }
+
+                    ++sample_offset;  // We've decoded one sample from every block, advance block offset by 1
+                    ++sample_index;   // This also means we're one sample further into the stream
+                    --samples_needed; // And so there is one less set of samples that need to be decoded
+                }
             }
-            /*    
-     // Read the scale values from the start of each block in this frame
-     for (unsigned i = 0 ; i < adx_header->channel_count ; ++i)
-     {
-        bitstream_seek( started_at + adx_header->block_size * i * 8 );
-        scale[i] = ntohs( bitstream_read( 16 ) );
-     }
- 
-     // Pre-calculate the stop value for sample_offset
-     unsigned sample_endoffset = sample_offset + samples_can_get;
- 
-     // Save the bitstream address of the first sample immediately after the scale in the first block of the frame
-     started_at += 16;
-     while ( sample_offset < sample_endoffset )
-     {
-        for (unsigned i = 0 ; i < adx_header->channel_count ; ++i)
-        {
-           // Predict the next sample
-           double sample_prediction = coefficient[0] * past_samples[i*2 + 0] + coefficient[1] * past_samples[i*2 + 1];
- 
-           // Seek to the sample offset, read and sign extend it to a 32bit integer
-           // Implementing sign extension is left as an exercise for the reader
-           // The sign extension will also need to include a endian adjustment if there are more than 8 bits
-           bitstream_seek( started_at + adx_header->sample_bitdepth * sample_offset + \
-                           adx_header->block_size * 8 * i );
-           int_fast32_t sample_error = bitstream_read( adx_header->sample_bitdepth );
-           sample_error = sign_extend( sample_error, adx_header->sample_bitdepth );
- 
-           // Scale the error correction value
-           sample_error *= scale[i];
- 
-           // Calculate the sample by combining the prediction with the error correction
-           int_fast32_t sample = sample_error + (int_fast32_t)sample_prediction;
- 
-           // Update the past samples with the newer sample
-           past_samples[i*2 + 1] = past_samples[i*2 + 0];
-           past_samples[i*2 + 0] = sample;
- 
-           // Clamp the decoded sample to the valid range for a 16bit integer
-           if (sample > 32767)
-              sample = 32767;
-           else if (sample < -32768)
-              sample = -32768;
- 
-           // Save the sample to the buffer then advance one place
-           *buffer++ = sample;
-        }
-        ++sample_offset;  // We've decoded one sample from every block, advance block offset by 1
-        ++sample_index;   // This also means we're one sample further into the stream
-        --samples_needed; // And so there is one less set of samples that need to be decoded
-    }
- 
-    // Check if we hit the loop end marker, if we did we need to jump to the loop start
-    if (looping_enabled && sample_index == adx_header->loop_end_index)
-       sample_index = adx_header->loop_start_index;
-  }*/
- 
-  return samples_needed;
+
+            // Check if we hit the loop end marker, if we did we need to jump to the loop start
+            if (looping_enabled && sample_index == adx_header.loop_end_sample_index)
+                sample_index = adx_header.loop_begin_sample_index;
+
+            return samples_needed;
         }
 
         public struct ADX_Header

@@ -790,7 +790,7 @@ namespace Tinke
                 listFile.Items[1].SubItems.Add("0x" + String.Format("{0:X}", selectFile.id));
                 listFile.Items[2].SubItems.Add("0x" + String.Format("{0:X}", selectFile.offset));
                 listFile.Items[3].SubItems.Add(selectFile.size.ToString());
-                #region Obtener tipo de archivo traducido
+                #region Get type of file
                 switch (selectFile.format)
                 {
                     case Format.Palette:
@@ -1651,40 +1651,20 @@ namespace Tinke
         #endregion
 
         #region Menu-> Open as...
-        private void OpenAs(Format formato)
+        private void ShowControl(Control control, string name)
         {
-            sFile selectedFile = accion.Selected_File();
-            string savedFile = "";
-
-            if (formato == Format.Text)
-            {
-                savedFile = accion.Save_File(accion.IDSelect);
-                File.Move(savedFile, savedFile + ".txt");
-                savedFile += ".txt";
-            }
-
             if (toolStripVentana.Checked)
             {
                 Visor visor = new Visor();
-                Control control;
-                if (formato == Format.Text)
-                    control = accion.See_File(savedFile);
-                else
-                    control = accion.Set_PicturesSaved(formato);
                 visor.Controls.Add(control);
-                visor.Text += " - " + accion.Selected_File().name;
+                visor.Text += " - " + name;
                 visor.Show();
             }
             else
             {
                 panelObj.Controls.Clear();
-                Control control;
-                if (formato == Format.Text)
-                    control = accion.See_File(savedFile);
-                else
-                    control = accion.Set_PicturesSaved(formato);
 
-                if (control.Size.Height != 0 && control.Size.Width != 0) // Si no sería nulo
+                if (control.Size.Height != 0 && control.Size.Width != 0)
                 {
                     panelObj.Controls.Add(control);
                     if (btnDesplazar.Text == ">>>>>")
@@ -1694,22 +1674,54 @@ namespace Tinke
                     if (btnDesplazar.Text == "<<<<<")
                         btnDesplazar.PerformClick();
             }
+        }
+        private void toolAbrirComoItemPaleta_Click(object sender, EventArgs e)
+        {
+            sFile selectedFile = accion.Selected_File();
+            String[] pluginList = accion.Get_PluginsList();
+
+            Control control = new Control();
+
+            if (pluginList.Contains("Images.Main"))
+                control = (Control)accion.Call_Plugin(selectedFile, "Images.Main", "ntfp", selectedFile.id, "", 1);
 
             if (!isMono)
                 debug.Add_Text(sb.ToString());
             sb.Length = 0;
-        }
-        private void toolAbrirComoItemPaleta_Click(object sender, EventArgs e)
-        {
-            OpenAs(Format.Palette);
+
+            ShowControl(control, selectedFile.name);
         }
         private void toolAbrirComoItemTile_Click(object sender, EventArgs e)
         {
-            OpenAs(Format.Tile);
+            sFile selectedFile = accion.Selected_File();
+            String[] pluginList = accion.Get_PluginsList();
+
+            Control control = new Control();
+
+            if (pluginList.Contains("Images.Main"))
+                control = (Control)accion.Call_Plugin(selectedFile, "Images.Main", "ntft", selectedFile.id, "", 1);
+
+            if (!isMono)
+                debug.Add_Text(sb.ToString());
+            sb.Length = 0;
+
+            ShowControl(control, selectedFile.name);
         }
         private void toolAbrirComoItemScreen_Click(object sender, EventArgs e)
         {
-            OpenAs(Format.Map);
+            sFile selectedFile = accion.Selected_File();
+            String[] pluginList = accion.Get_PluginsList();
+
+            Control control = new Control();
+
+            if (pluginList.Contains("Images.Main"))
+                control = (Control)accion.Call_Plugin(selectedFile, "Images.Main", "nbfs", selectedFile.id, "", 1);
+
+            if (!isMono)
+                debug.Add_Text(sb.ToString());
+            sb.Length = 0;
+
+            ShowControl(control, selectedFile.name);
         }
         private void s2AToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -1730,7 +1742,7 @@ namespace Tinke
 
             sFolder uncompress = accion.Unpack(tempFile, accion.IDSelect);
 
-            if (!(uncompress.files is List<sFile>) && !(uncompress.folders is List<sFolder>)) // En caso de que falle la extracción
+            if (!(uncompress.files is List<sFile>) && !(uncompress.folders is List<sFolder>))
             {
                 MessageBox.Show(Tools.Helper.GetTranslation("Sistema", "S36"));
                 return;
@@ -1744,7 +1756,7 @@ namespace Tinke
             selected.ImageIndex = accion.ImageFormatFile(accion.Selected_File().format);
             selected.SelectedImageIndex = selected.ImageIndex;
 
-            // Agregamos los nodos al árbol
+            // Add nodes
             TreeNode[] nodos = new TreeNode[selected.Nodes.Count]; selected.Nodes.CopyTo(nodos, 0);
             treeSystem.SelectedNode.Tag = selected.Tag;
             accion.IDSelect = Convert.ToInt32(selected.Tag);
@@ -1760,7 +1772,19 @@ namespace Tinke
         }
         private void toolStripAbrirTexto_Click(object sender, EventArgs e)
         {
-            OpenAs(Format.Text);
+            sFile selectedFile = accion.Selected_File();
+            String[] pluginList = accion.Get_PluginsList();
+
+            Control control = new Control();
+
+            if (pluginList.Contains("TXT.TXT"))
+                control = (Control)accion.Call_Plugin(selectedFile, "TXT.TXT", "txt", selectedFile.id, "", 1);
+
+            if (!isMono)
+                debug.Add_Text(sb.ToString());
+            sb.Length = 0;
+
+            ShowControl(control, selectedFile.name);
         }
         private void toolStripAbrirFat_Click(object sender, EventArgs e)
         {
@@ -1909,10 +1933,15 @@ namespace Tinke
                 return;
             }
 
+            Thread waiting = new System.Threading.Thread(ThreadEspera);
+            if (!isMono)
+                waiting.Start("S07");
+
             sFolder resul = new sFolder();
             resul.files = new List<sFile>();
             resul.folders = new List<sFolder>();
 
+            #region Search type
             if (txtSearch.Text == "<Ani>")
                 resul = accion.Search_File(Format.Animation);
             else if (txtSearch.Text == "<Cell>")
@@ -1955,15 +1984,18 @@ namespace Tinke
             }
             else if (txtSearch.Text.StartsWith("Offset: ") && txtSearch.Text.Length > 8 && txtSearch.Text.Length < 17)
                 resul = accion.Search_FileOffset(Convert.ToInt32(txtSearch.Text.Substring(8), 16));
-            else if (txtSearch.Text.StartsWith("Header: "))
+            else if (txtSearch.Text.StartsWith("Header: ") && txtSearch.Text.Length > 8)
             {
                 List<byte> search = new List<byte>();
-                for (int i = 8; i < txtSearch.Text.Length; i += 2)
+                for (int i = 8; i + 1 < txtSearch.Text.Length; i += 2)
                     search.Add(Convert.ToByte(txtSearch.Text.Substring(i, 2), 16));
-                resul = accion.Search_File(search.ToArray());
+
+                if (search.Count != 0)
+                    resul = accion.Search_File(search.ToArray());
             }
             else
                 resul = accion.Search_File(txtSearch.Text);
+            #endregion
 
             resul.id = (ushort)accion.LastFolderID;
             accion.LastFolderID++;
@@ -1983,6 +2015,9 @@ namespace Tinke
             nodo.Name = Tools.Helper.GetTranslation("Sistema", "S2D");
             treeSystem.Nodes.Add(nodo);
             treeSystem.ExpandAll();
+
+            if (!isMono)
+                waiting.Abort();
         }
         private void txtSearch_TextChanged(object sender, EventArgs e)
         {
