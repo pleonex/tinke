@@ -176,6 +176,7 @@
     <S04>Decompressing files...</S04>
     <S05>Creating new ROM...</S05>
     <S06>Saving new ROM...</S06>
+    <S07>Searching files...</S07>
   </Espera>
   <Messages>
     <S01>Error</S01>

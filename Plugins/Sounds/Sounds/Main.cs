@@ -23,6 +23,8 @@ namespace Sounds
 
             if (ext == "sadl")
                 return Format.Sound;
+            else if (nombre.ToUpper().EndsWith(".ADX"))
+                return Format.Sound;
 
             return Format.Unknown;
         }
@@ -39,6 +41,14 @@ namespace Sounds
             if (archivo.ToUpper().EndsWith(".SAD"))
             {
                 sWAV wav = SADL.ConvertToWAV(SADL.Read(archivo, id, pluginHost.Get_Language()));
+
+                waiting.Abort();
+                return new SoundControl(wav, pluginHost);
+            }
+            else if (archivo.ToUpper().EndsWith(".ADX"))
+            {
+                ADX adx = new ADX(archivo);
+                sWAV wav = adx.ToWAV();
 
                 waiting.Abort();
                 return new SoundControl(wav, pluginHost);

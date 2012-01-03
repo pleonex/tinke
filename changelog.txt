@@ -4,6 +4,7 @@
 ** Improved image plugin.
 ** Fixed problem packing two or more times the same file.
 ** Support for NCCL, NCCG and NCSC files
+** Support ADX sound files.
 * Encoding support in NFTR fonts
 * Layton London Life supported:
    - Unpack files DARC and DENC (by CUE)
@@ -14,6 +15,9 @@
 * Pack Utility.bin
 * New depth support: 1bpp
 * Removed fixed location of the main windows
+* New windows Call Plugin to force a plugin to load a file.
+* Fixed problems with "Open as->Pack"
+* New search pattern: "Header: XXXX" where XX are a byte in hexadecimal.
 
 
 0.8.2 public release (rev117)

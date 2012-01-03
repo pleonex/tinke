@@ -105,6 +105,16 @@ namespace Tinke.Nitro
                 main.idFirstFile = br.ReadUInt16();
                 main.idParentFolder = br.ReadUInt16();
 
+                if (i != 0)
+                {
+                    if (br.BaseStream.Position > fntOffset + mains[0].offset)
+                    {                                      //  Error, in some cases the number of directories is wrong
+                        number_directories--;              // Found in FF Four Heroes of Light, Tetris Party deluxe
+                        i--;
+                        continue;
+                    }
+                }
+
                 long currOffset = br.BaseStream.Position;           // Posición guardada donde empieza la siguienta maintable
                 br.BaseStream.Position = fntOffset + main.offset;      // SubTable correspondiente
 
@@ -160,7 +170,7 @@ namespace Tinke.Nitro
             }
 
             root = Jerarquizar_Carpetas(mains, 0, "root");
-            root.id = mains[0].idParentFolder;
+            root.id = number_directories;
 
             br.Close();
 
