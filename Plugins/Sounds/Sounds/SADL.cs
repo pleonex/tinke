@@ -8,17 +8,22 @@ using System.Windows.Forms;
 
 namespace Sounds
 {
-    public static class SADL
+    public class SADL : SoundBase
     {
-        public  static sSADL Read(string filein, int id, string lang)
+        sSADL sadl;
+        string lang;
+
+        public SADL(string lang, string file, int id)
+            : base(file, id, "SADL", "vgmstream", false) { this.lang = lang; }
+
+        public override byte[] Read_File()
         {
             XElement xml = XElement.Load(Application.StartupPath + Path.DirectorySeparatorChar + "Plugins" +
                 Path.DirectorySeparatorChar + "SoundLang.xml");
-            xml = xml.Element(lang).Element("SoundControl");
+            xml = xml.Element(lang).Element("Messages");
 
-            sSADL sadl = new sSADL();
-            sadl.file_id = id;
-            BinaryReader br = new BinaryReader(File.OpenRead(filein));
+            sadl = new sSADL();
+            BinaryReader br = new BinaryReader(File.OpenRead(soundFile));
 
             sadl.id = br.ReadChars(4);
 
@@ -28,7 +33,7 @@ namespace Sounds
 
             byte coding = br.ReadByte();
             sadl.coding = (Coding)(coding & 0xF0);
-            Console.WriteLine(xml.Element("S0D").Value + ' ' + sadl.coding);
+            Console.WriteLine(xml.Element("S03").Value + ' ' + sadl.coding.ToString());
             switch (coding & 0x06)
             {
                 case 4:
@@ -59,67 +64,99 @@ namespace Sounds
                     sadl.loopOffset = (br.ReadUInt32() - startOffset) / sadl.channel / 16 * 30;
             }
 
+            // Set the data
+            total_samples = sadl.num_samples;
+            sample_rate = sadl.sample_rate;
+            channels = sadl.channel;
+            block_size = sadl.interleave_block_size;
+            sample_bitdepth = 4;
+
+            loop_enabled = (sadl.loopFlag != 0 ? true : false);
+            loop_begin_sample = sadl.loopOffset;
+            loop_end_sample = sadl.num_samples;
+
+            br.BaseStream.Position = 0;
+            byte[] buffer = br.ReadBytes((int)br.BaseStream.Length);
+            br.Close();
+
+            return buffer;
+        }
+        public override byte[] Decode(byte[] encoded, bool loop_enabled)
+        {
+            int start_offset = 0x100;
+            int pos;
+
+            if (!loop_enabled)
+                pos = start_offset;
+            else
+                pos = (int)(start_offset + loop_begin_sample * 2 * block_size);
 
             // Getting channel data
-            br.BaseStream.Position = startOffset;
-            sadl.left_channel = new List<byte>();
-            sadl.right_channel = new List<byte>();
-            sadl.data = new List<byte>();
-            for (int i = 0; i < (sadl.file_size - startOffset) / sadl.interleave_block_size; i += 2)
+            List<byte> left_channel = new List<byte>();
+            List<byte> right_channel = new List<byte>();
+            List<byte> data = new List<byte>();
+
+            for ( ; pos < encoded.Length; )
             {
-                if (sadl.channel == 2)
+                if (sadl.channel == 2)   // Stereo
                 {
-                    sadl.left_channel.AddRange(br.ReadBytes((int)sadl.interleave_block_size));
-                    sadl.right_channel.AddRange(br.ReadBytes((int)sadl.interleave_block_size));
+                    Byte[] buffer = new byte[sadl.interleave_block_size];
+
+                    Array.Copy(encoded, pos, buffer, 0, buffer.Length);
+                    pos += buffer.Length;
+                    left_channel.AddRange(buffer);
+
+                    Array.Copy(encoded, pos, buffer, 0, buffer.Length);
+                    pos += buffer.Length;
+                    right_channel.AddRange(buffer);
                 }
-                else
-                    sadl.data.AddRange(br.ReadBytes((int)sadl.interleave_block_size * 2));
+                else   // Mono
+                {
+                    Byte[] buffer = new byte[sadl.interleave_block_size * 2];
+                    Array.Copy(encoded, pos, buffer, 0, buffer.Length);
+                    pos += buffer.Length;
+                    data.AddRange(buffer);
+                }
             }
 
             // Decompressing channels
-            Byte[] dLeft_channel = new Byte[1]; // Make the compiler happy :)
-            Byte[] dRight_channel = new Byte[1];
             if (sadl.coding == Coding.INT_IMA)
             {
                 if (sadl.channel == 2)
                 {
-                    dLeft_channel = Compression.ADPCM.Decompress(sadl.left_channel.ToArray());
-                    sadl.left_channel.Clear();
-                    sadl.left_channel.AddRange(dLeft_channel);
-                    dRight_channel = Compression.ADPCM.Decompress(sadl.right_channel.ToArray());
-                    sadl.right_channel.Clear();
-                    sadl.right_channel.AddRange(dRight_channel);
+                    Byte[] dLeft_channel = new Byte[1]; // Make the compiler happy :)
+                    Byte[] dRight_channel = new Byte[1];
 
-                    sadl.data.AddRange(Helper.MergeChannels(dLeft_channel, dRight_channel));
+                    dLeft_channel = Compression.IMA_ADPCM.Decompress(left_channel.ToArray());
+
+                    dRight_channel = Compression.IMA_ADPCM.Decompress(right_channel.ToArray());
+
+                    data.AddRange(Helper.MergeChannels(dLeft_channel, dRight_channel));
                 }
                 else
                 {
-                    dLeft_channel = Compression.ADPCM.Decompress(sadl.data.ToArray());
-                    sadl.data.Clear();
-                    sadl.data.AddRange(dLeft_channel);
+                    Byte[] buffer = Compression.IMA_ADPCM.Decompress(data.ToArray());
+                    data.Clear();
+                    data.AddRange(buffer);
                 }
             }
 
-
-            br.Close();
-            return sadl;
+            return data.ToArray();
         }
 
-        public static sWAV ConvertToWAV(sSADL sadl)
+        public override void Write_File(string fileOut, byte[] data)
         {
-            sWAV wav = WAV.Create((ushort)sadl.channel, sadl.sample_rate, 0x10, sadl.data.ToArray());
-            wav.loopOffset = sadl.loopOffset;
-            wav.loopFlag = sadl.loopFlag;
-            wav.file_id = sadl.file_id;
-
-            return wav;
+            throw new NotImplementedException();
+        }
+        public override byte[] Encode()
+        {
+            throw new NotImplementedException();
         }
     }
 
     public struct sSADL
     {
-        // Obtained from vgmstream
-        public int file_id;
+        // Get from vgmstream
         public char[] id;
         public uint file_size;
         public byte loopFlag;
@@ -129,10 +166,6 @@ namespace Sounds
         public uint sample_rate;
         public uint num_samples;
         public uint interleave_block_size;
-
-        public List<byte> left_channel;
-        public List<byte> right_channel;
-        public List<byte> data;
     }
     public enum Coding : byte
     {

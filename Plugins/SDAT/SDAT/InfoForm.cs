@@ -48,28 +48,68 @@ namespace SDAT
         private void ReadInfo()
         {
             // SSEQ record
-            numericSSEQrecord.Maximum = info.block[0].nEntries - 1;
-            labelSSEQtotal.Text = "of " + (info.block[0].nEntries - 1);
-            ReadRecord(0);
+            if (info.block[0].nEntries != 0)
+            {
+                numericSSEQrecord.Maximum = info.block[0].nEntries - 1;
+                labelSSEQtotal.Text = "of " + (info.block[0].nEntries - 1);
+                ReadRecord(0);
+            }
+            else
+            {
+                numericSSEQrecord.Maximum = 0;
+                labelSSEQtotal.Text = "of 0";
+            }
 
             // SSAR record
-            numericSSARrecord.Maximum = info.block[1].nEntries - 1;
-            labelSSARtotal.Text = "of " + (info.block[1].nEntries - 1);
+            if (info.block[1].nEntries != 0)
+            {
+                numericSSARrecord.Maximum = info.block[1].nEntries - 1;
+                labelSSARtotal.Text = "of " + (info.block[1].nEntries - 1);
+            }
+            else
+            {
+                numericSSARrecord.Maximum = 0;
+                labelSSARtotal.Text = "of none";
+            }
             ReadRecord(1);
 
             // SBNK record
-            numericSBNKrecord.Maximum = info.block[2].nEntries - 1;
-            labelSBNKtotal.Text = "of " + (info.block[2].nEntries - 1);
+            if (info.block[2].nEntries != 0)
+            {
+                numericSBNKrecord.Maximum = info.block[2].nEntries - 1;
+                labelSBNKtotal.Text = "of " + (info.block[2].nEntries - 1);
+            }
+            else
+            {
+                numericSBNKrecord.Maximum = 0;
+                labelSBNKtotal.Text = "of none";
+            }
             ReadRecord(2);
 
             // SWAR record
-            numericSWARrecord.Maximum = info.block[3].nEntries - 1;
-            labelSWARtotal.Text = "of " + (info.block[3].nEntries - 1);
+            if (info.block[3].nEntries != 0)
+            {
+                numericSWARrecord.Maximum = info.block[3].nEntries - 1;
+                labelSWARtotal.Text = "of " + (info.block[3].nEntries - 1);
+            }
+            else
+            {
+                numericSWARrecord.Maximum = 0;
+                labelSWARtotal.Text = "of none";
+            }
             ReadRecord(3);
 
             // PLAYER record
-            numericPLAYERrecord.Maximum = info.block[4].nEntries - 1;
-            labelPLAYERtotal.Text = "of " + (info.block[4].nEntries - 1);
+            if (info.block[4].nEntries != 0)
+            {
+                numericPLAYERrecord.Maximum = info.block[4].nEntries - 1;
+                labelPLAYERtotal.Text = "of " + (info.block[4].nEntries - 1);
+            }
+            else
+            {
+                numericPLAYERrecord.Maximum = 0;
+                labelPLAYERtotal.Text = "of none";
+            }
             ReadRecord(4);
 
             // GROUP record
@@ -77,19 +117,38 @@ namespace SDAT
             {
                 numericGROUPrecord.Maximum = info.block[5].nEntries - 1;
                 labelGROUPtotal.Text = "of " + (info.block[5].nEntries - 1);
-                ReadRecord(5);
             }
             else
-                tabPage8.Hide();
+            {
+                numericGROUPrecord.Maximum = 0;
+                labelGROUPtotal.Text = "of none";
+            }
+            ReadRecord(5);
 
             // PLAYER2 record
-            numericPLAYER2record.Maximum = info.block[6].nEntries - 1;
-            labelPLAYER2total.Text = "of " + (info.block[6].nEntries - 1);
+            if (info.block[6].nEntries != 0)
+            {
+                numericPLAYER2record.Maximum = info.block[6].nEntries - 1;
+                labelPLAYER2total.Text = "of " + (info.block[6].nEntries - 1);
+            }
+            else
+            {
+                numericPLAYER2record.Maximum = 0;
+                labelPLAYER2total.Text = "of none";
+            }
             ReadRecord(6);
 
             // STRM record
-            numericSTRMrecord.Maximum = info.block[7].nEntries - 1;
-            labelSTRMtotal.Text = "of " + (info.block[7].nEntries - 1);
+            if (info.block[7].nEntries != 0)
+            {
+                numericSTRMrecord.Maximum = info.block[7].nEntries - 1;
+                labelSTRMtotal.Text = "of " + (info.block[7].nEntries - 1);
+            }
+            else
+            {
+                numericSTRMrecord.Maximum = 0;
+                labelSTRMtotal.Text = "of none";
+            }
             ReadRecord(7);
         }
         private void ReadRecord(int page)
@@ -97,6 +156,19 @@ namespace SDAT
             switch (page)
             {
                 case 0:
+                    if (info.block[0].nEntries == 0)
+                    {
+                        numericSSEQfileID.Enabled = false;
+                        numericSSEQunknown.Enabled = false;
+                        numericSSEQBnk.Enabled = false;
+                        numericSSEQVol.Enabled = false;
+                        numericSSEQcpr.Enabled = false;
+                        numericSSEQppr.Enabled = false;
+                        numericSSEQply.Enabled = false;
+
+                        return;
+                    }
+
                     Info.SEQ seq = (Info.SEQ)info.block[0].entries[(int)numericSSEQrecord.Value];
                     numericSSEQfileID.Value = seq.fileID;
                     numericSSEQunknown.Value = seq.unknown;
@@ -108,12 +180,32 @@ namespace SDAT
                     break;
 
                 case 1:
+                    if (info.block[1].nEntries == 0)
+                    {
+                        numericSSARfileID.Enabled = false;
+                        numericSSARunknown.Enabled = false;
+
+                        return;
+                    }
+
                     Info.SEQARC ssar = (Info.SEQARC)info.block[1].entries[(int)numericSSARrecord.Value];
                     numericSSARfileID.Value = ssar.fileID;
                     numericSSARunknown.Value = ssar.unknown;
                     break;
 
                 case 2:
+                    if (info.block[2].nEntries == 0)
+                    {
+                        numericSBNKfileID.Enabled = false;
+                        numericSBNKunknown.Enabled = false;
+                        numericSBNKwa1.Enabled = false;
+                        numericSBNKwa2.Enabled = false;
+                        numericSBNKwa3.Enabled = false;
+                        numericSBNKwa4.Enabled = false;
+
+                        return;
+                    }
+
                     Info.BANK sbnk = (Info.BANK)info.block[2].entries[(int)numericSBNKrecord.Value];
                     numericSBNKfileID.Value = sbnk.fileID;
                     numericSBNKunknown.Value = sbnk.unknown;
@@ -124,25 +216,113 @@ namespace SDAT
                     break;
 
                 case 3:
+                    if (info.block[3].nEntries == 0)
+                        return;
+
                     Info.WAVEARC swar = (Info.WAVEARC)info.block[3].entries[(int)numericSWARrecord.Value];
                     numericSWARfileID.Value = swar.fileID;
                     numericSWARunknown.Value = swar.unknown;
                     break;
 
                 case 4:
+                    if (info.block[4].nEntries == 0)
+                    {
+                        btnPLAYERremove.Enabled = false;
+                        numericPLAYERunknown.Enabled = false;
+                        numericPLAYERunknown2.Enabled = false;
+                        return;
+                    }
+                    btnPLAYERremove.Enabled = true;
+                    numericPLAYERunknown.Enabled = true;
+                    numericPLAYERunknown2.Enabled = true;
+
                     Info.PLAYER player = (Info.PLAYER)info.block[4].entries[(int)numericPLAYERrecord.Value];
                     numericPLAYERunknown.Value = player.unknown;
                     numericPLAYERunknown2.Value = player.unknown2;
                     break;
 
                 case 5:
+                    if (info.block[5].nEntries == 0)
+                    {
+                        btnGROUPremove.Enabled = false;
+                        btnGROUPsubgroupAdd.Enabled = false;
+                        btnGROUPsubgroupRemove.Enabled = false;
+                        labelGROUPsubgroupTotal.Text = "no group";
+                        numericGROUPcurrentSubgroup.Enabled = false;
+                        comboBoxGROUPtype.Enabled = false;
+                        numericGROUPentry.Enabled = false;
+
+                        return;
+                    }
+                    btnGROUPremove.Enabled = true;
+                    btnGROUPsubgroupRemove.Enabled = true;
+                    btnGROUPsubgroupAdd.Enabled = true;
+                    numericGROUPcurrentSubgroup.Enabled = true;
+                    comboBoxGROUPtype.Enabled = true;
+                    numericGROUPentry.Enabled = true;
+
                     Info.GROUP group = (Info.GROUP)info.block[5].entries[(int)numericGROUPrecord.Value];
+
+                    if (group.nCount == 0)
+                    {
+                        btnGROUPsubgroupRemove.Enabled = false;
+                        comboBoxGROUPtype.Enabled = false;
+                        numericGROUPentry.Enabled = false;
+                        labelGROUPsubgroupTotal.Text = "of none";
+                        numericGROUPcurrentSubgroup.Enabled = false;
+                        return;
+                    }
+
                     labelGROUPsubgroupTotal.Text = "of " + (group.nCount - 1);
                     numericGROUPcurrentSubgroup.Maximum = group.nCount - 1;
                     numericGROUPcurrentSubgroup.Value = 0;
+                    numericGROUPcurrentGroup_ValueChanged(null, null);
                     break;
 
                 case 6:
+                    if (info.block[6].nEntries == 0)
+                    {
+                        btnPLAYER2remove.Enabled = false;
+                        numericPLAYER2count.Enabled = false;
+                        numericPLAYER2v1.Enabled = false;
+                        numericPLAYER2v2.Enabled = false;
+                        numericPLAYER2v3.Enabled = false;
+                        numericPLAYER2v4.Enabled = false;
+                        numericPLAYER2v5.Enabled = false;
+                        numericPLAYER2v6.Enabled = false;
+                        numericPLAYER2v7.Enabled = false;
+                        numericPLAYER2v8.Enabled = false;
+                        numericPLAYER2v9.Enabled = false;
+                        numericPLAYER2v10.Enabled = false;
+                        numericPLAYER2v11.Enabled = false;
+                        numericPLAYER2v12.Enabled = false;
+                        numericPLAYER2v13.Enabled = false;
+                        numericPLAYER2v14.Enabled = false;
+                        numericPLAYER2v15.Enabled = false;
+                        numericPLAYER2v16.Enabled = false;
+
+                        return;
+                    }
+                    btnPLAYER2remove.Enabled = true;
+                    numericPLAYER2count.Enabled = true;
+                    numericPLAYER2v1.Enabled = true;
+                    numericPLAYER2v2.Enabled = true;
+                    numericPLAYER2v3.Enabled = true;
+                    numericPLAYER2v4.Enabled = true;
+                    numericPLAYER2v5.Enabled = true;
+                    numericPLAYER2v6.Enabled = true;
+                    numericPLAYER2v7.Enabled = true;
+                    numericPLAYER2v8.Enabled = true;
+                    numericPLAYER2v9.Enabled = true;
+                    numericPLAYER2v10.Enabled = true;
+                    numericPLAYER2v11.Enabled = true;
+                    numericPLAYER2v12.Enabled = true;
+                    numericPLAYER2v13.Enabled = true;
+                    numericPLAYER2v14.Enabled = true;
+                    numericPLAYER2v15.Enabled = true;
+                    numericPLAYER2v16.Enabled = true;
+
+
                     Info.PLAYER2 player2 = (Info.PLAYER2)info.block[6].entries[(int)numericPLAYER2record.Value];
                     numericPLAYER2count.Value = player2.nCount;
                     numericPLAYER2v1.Value = player2.v[0];
@@ -164,6 +344,17 @@ namespace SDAT
                     break;
 
                 case 7:
+                    if (info.block[7].nEntries == 0)
+                    {
+                        numericSTRMfileID.Enabled = false;
+                        numericSTRMunknown.Enabled = false;
+                        numericSTRMpri.Enabled = false;
+                        numericSTRMvol.Enabled = false;
+                        numericSTRMply.Enabled = false;
+
+                        return;
+                    }
+
                     Info.STRM strm = (Info.STRM)info.block[7].entries[(int)numericSTRMrecord.Value];
                     numericSTRMfileID.Value = strm.fileID;
                     numericSTRMunknown.Value = strm.unknown;
@@ -174,12 +365,24 @@ namespace SDAT
             }
         }
 
+        public Info Info
+        {
+            get { return info; }
+        }
+        private void btnAccept_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
         private void numericSSEQrecord_ValueChanged(object sender, EventArgs e)
         {
             ReadRecord(0);
         }
         private void numericSSEQ_ValueChanged(object sender, EventArgs e)
         {
+            if (info.block[0].nEntries == 0)
+                return;
+
             Info.SEQ seq = new Info.SEQ();
             seq.fileID = (ushort)numericSSEQfileID.Value;
             seq.unknown = (ushort)numericSSEQunknown.Value;
@@ -192,23 +395,15 @@ namespace SDAT
             info.block[0].entries[(int)numericSSEQrecord.Value] = seq;
         }
 
-        public Info Info
-        {
-            get { return info; }
-        }
-
-        private void btnAccept_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
-
-
         private void numericSSARrecord_ValueChanged(object sender, EventArgs e)
         {
             ReadRecord(1);
         }
         private void numericSSAR_ValueChanged(object sender, EventArgs e)
         {
+            if (info.block[1].nEntries == 0)
+                return;
+
             Info.SEQARC ssar = new Info.SEQARC();
             ssar.fileID = (ushort)numericSSARfileID.Value;
             ssar.unknown = (ushort)numericSSARunknown.Value;
@@ -221,6 +416,9 @@ namespace SDAT
         }
         private void numericSBNK_ValueChanged(object sender, EventArgs e)
         {
+            if (info.block[2].nEntries == 0)
+                return;
+
             Info.BANK sbnk = new Info.BANK();
             sbnk.fileID = (ushort)numericSBNKfileID.Value;
             sbnk.unknown = (ushort)numericSBNKunknown.Value;
@@ -238,6 +436,9 @@ namespace SDAT
         }
         private void numericSWAR_ValueChanged(object sender, EventArgs e)
         {
+            if (info.block[3].nEntries == 0)
+                return;
+
             Info.WAVEARC swar = new Info.WAVEARC();
             swar.fileID = (ushort)numericSWARfileID.Value;
             swar.unknown = (ushort)numericSWARunknown.Value;
@@ -250,6 +451,9 @@ namespace SDAT
         }
         private void numericSTRM_ValueChanged(object sender, EventArgs e)
         {
+            if (info.block[7].nEntries == 0)
+                return;
+
             Info.STRM strm = new Info.STRM();
             strm.fileID = (ushort)numericSTRMfileID.Value;
             strm.unknown = (ushort)numericSTRMunknown.Value;
@@ -266,6 +470,9 @@ namespace SDAT
         }
         private void numericPLAYER_ValueChanged(object sender, EventArgs e)
         {
+            if (info.block[4].nEntries == 0)
+                return;
+
             Info.PLAYER player = new Info.PLAYER();
             player.unknown = (byte)numericPLAYERunknown.Value;
             player.unknown2 = (byte)numericPLAYERunknown2.Value;
@@ -300,6 +507,9 @@ namespace SDAT
         }
         private void numericPLAYER2_ValueChanged(object sender, EventArgs e)
         {
+            if (info.block[6].nEntries == 0)
+                return;
+
             Info.PLAYER2 player2 = new Info.PLAYER2();
             player2.nCount = (byte)numericPLAYER2count.Value;
             player2.v = new byte[16];
@@ -326,7 +536,11 @@ namespace SDAT
         {
             Object[] entries = new object[++info.block[6].nEntries];
             Array.Copy(info.block[6].entries, 0, entries, 0, info.block[6].entries.Length);
-            entries[entries.Length - 1] = new Info.PLAYER2();
+
+            Info.PLAYER2 newPlay = new Info.PLAYER2();
+            newPlay.v = new byte[0x10];
+            entries[entries.Length - 1] = newPlay;
+
             info.block[6].entries = entries;
             ReadInfo();
             numericPLAYER2record.Value = numericPLAYER2record.Maximum;
@@ -343,13 +557,16 @@ namespace SDAT
             info.block[6].entries = entries;
             ReadInfo();
         }
-      
+
         private void numericGROUPrecord_ValueChanged(object sender, EventArgs e)
         {
             ReadRecord(5);
         }
         private void numericGROUPcurrentGroup_ValueChanged(object sender, EventArgs e)
         {
+            if (info.block[5].nEntries == 0)
+                return;
+
             Info.GROUP group = (Info.GROUP)info.block[5].entries[(int)numericGROUPrecord.Value];
             numericGROUPentry.Value = group.subgroup[(int)numericGROUPcurrentSubgroup.Value].nEntry;
             switch (group.subgroup[(int)numericGROUPcurrentSubgroup.Value].type)
@@ -374,17 +591,21 @@ namespace SDAT
             Info.GROUP group = (Info.GROUP)info.block[5].entries[(int)numericGROUPrecord.Value];
 
             Info.GROUP.Subgroup[] entries = new Info.GROUP.Subgroup[++group.nCount];
-            Array.Copy(group.subgroup, 0, entries, 0, group.subgroup.Length);
+            if (group.subgroup is Info.GROUP.Subgroup[])
+                Array.Copy(group.subgroup, 0, entries, 0, group.subgroup.Length);
             entries[entries.Length - 1] = new Info.GROUP.Subgroup();
             group.subgroup = entries;
 
             info.block[5].entries[(int)numericGROUPrecord.Value] = group;
+            numericGROUPcurrentSubgroup.Maximum = group.nCount - 1;
             numericGROUPcurrentSubgroup.Value = numericGROUPcurrentSubgroup.Maximum;
+
+            ReadInfo();
         }
         private void btnGROUPentryRemove_Click(object sender, EventArgs e)
         {
             Info.GROUP group = (Info.GROUP)info.block[5].entries[(int)numericGROUPrecord.Value];
-            
+
             Info.GROUP.Subgroup[] entries = new Info.GROUP.Subgroup[--group.nCount];
             for (int i = 0, j = 0; i < group.subgroup.Length; i++)
             {
@@ -394,16 +615,20 @@ namespace SDAT
             }
             group.subgroup = entries;
             info.block[5].entries[(int)numericGROUPrecord.Value] = group;
+
+            ReadInfo();
         }
-  
+
         private void btnGROUPadd_Click(object sender, EventArgs e)
         {
             Object[] entries = new object[++info.block[5].nEntries];
             Array.Copy(info.block[5].entries, 0, entries, 0, info.block[5].entries.Length);
             entries[entries.Length - 1] = new Info.GROUP();
             info.block[5].entries = entries;
-            ReadInfo();
+
             numericGROUPrecord.Value = numericGROUPrecord.Maximum;
+
+            ReadInfo();
         }
         private void btnGROUPremove_Click(object sender, EventArgs e)
         {
@@ -444,5 +669,5 @@ namespace SDAT
             }
             info.block[5].entries[(int)numericGROUPrecord.Value] = group;
         }
-     }
+    }
 }

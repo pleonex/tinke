@@ -173,7 +173,7 @@
     <S04>Décompression des fichiers...</S04>
     <S05>Création d'une nouvelle ROM...</S05>
     <S06>Sauvegarde d'une nouvelle ROM...</S06>
-    <S07>Searching files...</S07>
+    <S07>Recherche des fichiers...</S07>
   </Espera>
   <Messages>
     <S01>Erreur</S01>
@@ -230,7 +230,7 @@
     <S23>Il y a une erreur de tentative à la compression de l'archive.</S23>
     <S24>Toutes les couleurs sont utilisées par l'image.</S24>
     <S25>Rien à faire.</S25>
-    <S26>Clear log</S26>
+    <S26>Effacer le registre</S26>
   </Messages>
   <NCLR>
     <S01>Nombre de la palette :</S01>

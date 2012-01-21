@@ -43,17 +43,17 @@
             // 
             // progress
             // 
-            this.progress.Location = new System.Drawing.Point(15, 56);
+            this.progress.Location = new System.Drawing.Point(15, 50);
             this.progress.Name = "progress";
             this.progress.Size = new System.Drawing.Size(257, 23);
-            this.progress.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
+            this.progress.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
             this.progress.TabIndex = 1;
             // 
             // Waiting
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
             this.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
-            this.ClientSize = new System.Drawing.Size(284, 85);
+            this.ClientSize = new System.Drawing.Size(280, 76);
             this.ControlBox = false;
             this.Controls.Add(this.progress);
             this.Controls.Add(this.lblText);

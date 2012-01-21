@@ -24,9 +24,8 @@ using System.Text;
 using System.IO;
 using System.Drawing;
 using System.Windows.Forms;
-using PluginInterface;
 
-namespace Images
+namespace PluginInterface
 {
     public abstract class PaletteBase
     {

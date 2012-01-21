@@ -105,31 +105,16 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ImageBase.cs" />
-    <Compile Include="ImageControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="ImageControl.designer.cs">
-      <DependentUpon>ImageControl.cs</DependentUpon>
-    </Compile>
     <Compile Include="iNCER.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="iNCER.designer.cs">
       <DependentUpon>iNCER.cs</DependentUpon>
     </Compile>
-    <Compile Include="MapBase.cs" />
     <Compile Include="NCCG.cs" />
     <Compile Include="NCCL.cs" />
     <Compile Include="NCE.cs" />
     <Compile Include="NCSC.cs" />
-    <Compile Include="PaletteBase.cs" />
-    <Compile Include="PaletteControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="PaletteControl.designer.cs">
-      <DependentUpon>PaletteControl.cs</DependentUpon>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -139,14 +124,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="ImageControl.resx">
-      <DependentUpon>ImageControl.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="iNCER.resx">
       <DependentUpon>iNCER.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="PaletteControl.resx">
-      <DependentUpon>PaletteControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

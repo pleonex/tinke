@@ -5,8 +5,8 @@ using System.Runtime.InteropServices;
 // La información general sobre un ensamblado se controla mediante el siguiente 
 // conjunto de atributos. Cambie estos atributos para modificar la información
 // asociada con un ensamblado.
-[assembly: AssemblyTitle("Sounds")]
-[assembly: AssemblyDescription("Sound file support")]
+[assembly: AssemblyTitle("DEATHNOTEDS")]
+[assembly: AssemblyDescription("Death Note DS games")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("Tinke")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // El siguiente GUID sirve como identificador de typelib si este proyecto se expone a COM
-[assembly: Guid("1fc1e2c7-acd9-4450-82b5-eb7507bd1172")]
+[assembly: Guid("b92f7162-6c8f-4d45-af45-695b4b32498a")]
 
 // La información de versión de un ensamblado consta de los cuatro valores siguientes:
 //

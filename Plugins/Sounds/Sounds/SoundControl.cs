@@ -16,37 +16,40 @@ namespace Sounds
 {
     public partial class SoundControl : UserControl
     {
-        sWAV sound;
-        string wavFile;
-        string loopFile;
+        SoundBase soundBase;
         IPluginHost pluginHost;
 
         SoundPlayer soundPlayer;
+        string wav_file;
+        string wav_loop_file;
         Thread loop;
 
         public SoundControl()
         {
             InitializeComponent();
         }
-        public SoundControl(sWAV sound, IPluginHost pluginHost)
+        public SoundControl(SoundBase sb, IPluginHost pluginHost)
         {
             InitializeComponent();
 
+            this.soundBase = sb;
             this.pluginHost = pluginHost;
+
+            this.wav_file = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + Path.GetRandomFileName();
+            soundBase.Save_WAV(wav_file, false);
+            if (soundBase.CanLoop)
+            {
+                wav_loop_file = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + Path.GetRandomFileName();
+                soundBase.Save_WAV(wav_loop_file, true);
+            }
+  
+            checkLoop.Enabled = soundBase.CanLoop;
+            btnImport.Enabled = soundBase.CanEdit;
+
             ReadLanguage();
-
-            this.sound = sound;
-
-            wavFile = Path.GetTempFileName();
-            WAV.Write(sound, wavFile);
-
-            if (sound.loopFlag != 0)
-                WAV.Write_Loop(sound, loopFile);
-            else
-                checkLoop.Enabled = false;
-
             Information();
         }
+
         private void ReadLanguage()
         {
             try
@@ -71,15 +74,9 @@ namespace Sounds
                 listProp.Items[7].Text = xml.Element("S0D").Value;
                 listProp.Items[8].Text = xml.Element("S0E").Value;
                 listProp.Items[9].Text = xml.Element("S0F").Value;
-                listProp.Items[10].Text = xml.Element("S10").Value;
-                listProp.Items[11].Text = xml.Element("S11").Value;
-                listProp.Items[12].Text = xml.Element("S12").Value;
-                listProp.Items[13].Text = xml.Element("S13").Value;
-                listProp.Items[14].Text = xml.Element("S14").Value;
             }
-            catch { throw new Exception("There was an error reading the XML file of language."); } 
+            catch { throw new Exception("There was an error reading the XML file of language."); }
         }
-
         private void Information()
         {
             // Remove older values
@@ -87,37 +84,36 @@ namespace Sounds
                 for (int i = 0; i < listProp.Items.Count; i++)
                     listProp.Items[i].SubItems.RemoveAt(1);
 
-            listProp.Items[0].SubItems.Add(new String(sound.chunkID));
-            listProp.Items[1].SubItems.Add(sound.chunkSize.ToString());
-            listProp.Items[2].SubItems.Add(sound.loopFlag.ToString());
-            listProp.Items[3].SubItems.Add("0x" + String.Format("{0:X}", sound.loopOffset));
-            listProp.Items[4].SubItems.Add(new String(sound.format));
-            listProp.Items[5].SubItems.Add(new String(sound.wave.fmt.chunkID));
-            listProp.Items[6].SubItems.Add(sound.wave.fmt.chunkSize.ToString());
-            listProp.Items[7].SubItems.Add(Enum.GetName(typeof(WaveFormat), sound.wave.fmt.audioFormat));
-            listProp.Items[8].SubItems.Add(sound.wave.fmt.numChannels.ToString());
-            listProp.Items[9].SubItems.Add(sound.wave.fmt.sampleRate.ToString() + " Hz");
-            listProp.Items[10].SubItems.Add("0x" + String.Format("{0:X}" ,sound.wave.fmt.byteRate));
-            listProp.Items[11].SubItems.Add(sound.wave.fmt.blockAlign.ToString());
-            listProp.Items[12].SubItems.Add(sound.wave.fmt.bitsPerSample.ToString());
-            listProp.Items[13].SubItems.Add(new String(sound.wave.data.chunkID));
-            listProp.Items[14].SubItems.Add(sound.wave.data.chunkSize.ToString());
+            listProp.Items[0].SubItems.Add(soundBase.Format);
+            listProp.Items[1].SubItems.Add(soundBase.Channels.ToString());
+            listProp.Items[2].SubItems.Add(soundBase.CanLoop.ToString());
+            if (soundBase.CanLoop)
+            {
+                listProp.Items[3].SubItems.Add("0x" + soundBase.LoopBegin.ToString("x"));
+                listProp.Items[4].SubItems.Add("0x" + soundBase.LoopEnd.ToString("x"));
+            }
+            listProp.Items[5].SubItems.Add(soundBase.SampleRate + " Hz");
+            listProp.Items[6].SubItems.Add("0x" + soundBase.NumberSamples.ToString("x"));
+            listProp.Items[7].SubItems.Add("0x" + soundBase.BlockSize.ToString("x"));
+            listProp.Items[8].SubItems.Add("0x" + soundBase.SampleBitDepth.ToString("x"));
+            listProp.Items[9].SubItems.Add(soundBase.Copyright);
         }
 
         private void btnPlay_Click(object sender, EventArgs e)
         {
             btnStop.PerformClick();
 
-            if (checkLoop.Checked)
+            if (!checkLoop.Checked)
             {
-                loop = new Thread(Thread_Loop);
-                loop.Start(new String[] { wavFile, loopFile });
+                soundPlayer = new SoundPlayer(wav_file);
+                soundPlayer.Play();
             }
             else
             {
-                soundPlayer = new SoundPlayer(wavFile);
-                soundPlayer.Play();
+                loop = new Thread(Thread_Loop);
+                loop.Start(new String[] { wav_file, wav_loop_file });
             }
+
         }
         private void Thread_Loop(Object e)
         {
@@ -148,17 +144,43 @@ namespace Sounds
             o.Filter = "WAVE audio (*.wav)|*.wav";
             o.OverwritePrompt = true;
             if (o.ShowDialog() == DialogResult.OK)
-                File.Copy(wavFile, o.FileName, true);
+                soundBase.Save_WAV(o.FileName, false);
 
-            if (sound.loopFlag != 0)
+            if (soundBase.CanLoop)
             {
                 XElement xml = XElement.Load(Application.StartupPath + Path.DirectorySeparatorChar + "Plugins" +
                     Path.DirectorySeparatorChar + "SoundLang.xml");
                 xml = xml.Element(pluginHost.Get_Language()).Element("SoundControl");
                 if (MessageBox.Show(xml.Element("S05").Value, "", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                {
                     if (o.ShowDialog() == DialogResult.OK)
-                        File.Copy(loopFile, o.FileName, true);
+                    {
+                        string path = Path.GetDirectoryName(o.FileName) + Path.DirectorySeparatorChar + 
+                            Path.GetFileNameWithoutExtension(o.FileName) + "_loop.wav";
+                        soundBase.Save_WAV(path, true);
+                    }
+                }
             }
+        }
+
+        private void btnImport_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog o = new OpenFileDialog();
+            o.CheckFileExists = true;
+            o.DefaultExt = ".wav";
+            o.Filter = "WAV sound file (*.wav)|*.wav";
+            o.Multiselect = false;
+
+            if (o.ShowDialog() != DialogResult.OK)
+                return;
+
+            string imported = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + Path.GetRandomFileName();
+            soundBase.Import(wav_file);
+
+            byte[] enc_data = soundBase.Encode();
+            soundBase.Write_File(wav_file, enc_data);
+
+            wav_file = imported;
         }
     }
 }

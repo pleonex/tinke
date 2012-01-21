@@ -52,6 +52,8 @@ namespace SF_FEATHER
                 return Format.FullImage;
             else if (ext == "SC4 " || ext == "SC8 ")
                 return Format.Map;
+            else if (ext == "CGT ")
+                return Format.FullImage;
             else if (ext == "PSI3")
                 return Format.Script;
 
@@ -99,6 +101,12 @@ namespace SF_FEATHER
                 return new ImageControl(pluginHost, false);
             else if (ext == "SC4 " || ext == "SC8 ")
                 return new ImageControl(pluginHost, true);
+            else if (ext == "CGT ")
+            {
+                CGT cgt = new CGT(pluginHost, file, id);
+                cgt.Read();
+                return new ImageControl(cgt.Draw_Texture());
+            }
 
         return new System.Windows.Forms.Control();
         }

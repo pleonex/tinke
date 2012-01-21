@@ -14,63 +14,48 @@ namespace Sounds
         uint sample_index;      // sample_index is the index of sample set that needs to be decoded next
         double[] coefficient;
 
-        string file;
-        byte[] buffer;
+        public ADX(string file, int id) : base(file, id, "ADX", "Wikipedia", false)  { }
 
-        public ADX(string file)
-        {
-            this.file = file;
-            Read_Header();
-        }
 
-        private ushort Get_ushort(ref BinaryReader br)
-        {
-            return BitConverter.ToUInt16(br.ReadBytes(2).Reverse().ToArray(), 0);
-        }
-        private uint Get_uint(ref BinaryReader br)
-        {
-            return BitConverter.ToUInt32(br.ReadBytes(4).Reverse().ToArray(), 0);
-        }
-
-        private void Read_Header()
+        public override byte[] Read_File()
         {
             adx_header = new ADX_Header();
 
             // Read the file
-            BinaryReader br = new BinaryReader(File.OpenRead(file));
+            BinaryReader br = new BinaryReader(File.OpenRead(soundFile));
 
             byte b1 = br.ReadByte();  // 0x80
             byte b2 = br.ReadByte();  // 0x00
 
-            adx_header.copyright_offset = Get_ushort(ref br);
+            adx_header.copyright_offset = Helper.Get_ushort(ref br);
             adx_header.encoding = br.ReadByte();
             adx_header.block_size = br.ReadByte();
             adx_header.sample_bitdepth = br.ReadByte();
             adx_header.channel_count = br.ReadByte();
-            adx_header.sample_rate = Get_uint(ref br);
-            adx_header.total_samples = Get_uint(ref br);
-            adx_header.highpass_frequency = Get_ushort(ref br);
+            adx_header.sample_rate = Helper.Get_uint(ref br);
+            adx_header.total_samples = Helper.Get_uint(ref br);
+            adx_header.highpass_frequency = Helper.Get_ushort(ref br);
             adx_header.version = br.ReadByte();
             adx_header.flags = br.ReadByte();
-            adx_header.unknown = Get_uint(ref br);
+            adx_header.unknown = Helper.Get_uint(ref br);
 
             switch (adx_header.version)
             {
                 case 3:
-                    adx_header.loop_enabled = Get_uint(ref br);
-                    adx_header.loop_begin_sample_index = Get_uint(ref br);
-                    adx_header.loop_begin_byte_index = Get_uint(ref br);
-                    adx_header.loop_end_sample_index = Get_uint(ref br);
-                    adx_header.loop_end_byte_index = Get_uint(ref br);
+                    adx_header.loop_enabled = Helper.Get_uint(ref br);
+                    adx_header.loop_begin_sample_index = Helper.Get_uint(ref br);
+                    adx_header.loop_begin_byte_index = Helper.Get_uint(ref br);
+                    adx_header.loop_end_sample_index = Helper.Get_uint(ref br);
+                    adx_header.loop_end_byte_index = Helper.Get_uint(ref br);
                     break;
 
                 case 4:
                     br.BaseStream.Position += 0x0C;
-                    adx_header.loop_enabled = Get_uint(ref br);
-                    adx_header.loop_begin_sample_index = Get_uint(ref br);
-                    adx_header.loop_begin_byte_index = Get_uint(ref br);
-                    adx_header.loop_end_sample_index = Get_uint(ref br);
-                    adx_header.loop_end_byte_index = Get_uint(ref br);
+                    adx_header.loop_enabled = Helper.Get_uint(ref br);
+                    adx_header.loop_begin_sample_index = Helper.Get_uint(ref br);
+                    adx_header.loop_begin_byte_index = Helper.Get_uint(ref br);
+                    adx_header.loop_end_sample_index = Helper.Get_uint(ref br);
+                    adx_header.loop_end_byte_index = Helper.Get_uint(ref br);
                     break;
             }
 
@@ -78,22 +63,26 @@ namespace Sounds
             adx_header.copyright = br.ReadChars(6);
 
             br.BaseStream.Position = 0;
-            buffer = br.ReadBytes((int)br.BaseStream.Length);
+            byte[] buffer = br.ReadBytes((int)br.BaseStream.Length);
 
             br.Close();
+
+            // Save values
+            loop_enabled = Convert.ToBoolean(adx_header.loop_enabled);
+            loop_begin_sample = adx_header.loop_begin_sample_index;
+            loop_end_sample = adx_header.loop_end_sample_index;
+
+            total_samples = adx_header.total_samples;
+            sample_rate = adx_header.sample_rate;
+            channels = adx_header.channel_count;
+            block_size = adx_header.block_size;
+            sample_bitdepth = adx_header.sample_bitdepth;
+
+            return buffer;
         }
 
-        public sWAV ToWAV()
-        {
-            Initialize();
 
-            List<byte> out_buffer;
-            Decode_Standard(out out_buffer, adx_header.total_samples, false);
-
-            return WAV.Create(adx_header.channel_count, adx_header.sample_rate, 16, out_buffer.ToArray());
-        }
-
-        private void Initialize()
+        private void Initialize_Decode()
         {
             double a, b, c;
             a = Math.Sqrt(2.0) - Math.Cos(2.0 * Math.Acos(-1.0) * ((double)adx_header.highpass_frequency / adx_header.sample_rate));
@@ -109,22 +98,30 @@ namespace Sounds
 
         /// <summary>
         /// Decode the standard format.
-        /// Copied from: http://en.wikipedia.org/wiki/ADX_(file_format)
+        /// Copied from: "http://en.wikipedia.org/wiki/ADX_(file_format)"
         /// </summary>
         /// <param name="buffer">buffer is where the decoded samples will be put</param>
         /// <param name="samples_needed">samples_needed states how many sample 'sets' (one sample from every channel) need to be decoded to fill the buffer</param>
         /// <param name="looping_enabled">looping_enabled is a boolean flag to control use of the built-in loop</param>
         /// <returns>Returns the number of sample 'sets' in the buffer that could not be filled (EOS)</returns>
-        private uint Decode_Standard(out List<byte> bufferOut, uint samples_needed, bool looping_enabled)
+        public override byte[] Decode(byte[] encoded, bool looping_enabled)
         {
-            BitReader bit_reader = new BitReader(buffer);
-            bufferOut = new List<byte>();
+            BitReader bit_reader = new BitReader(encoded, true);
+            List<byte> bufferOut = new List<byte>();
+
+            Initialize_Decode();
+
+            // Param:
+            uint samples_needed = adx_header.total_samples;
 
             uint samples_per_block = (uint)((adx_header.block_size - 2) * 8 / adx_header.sample_bitdepth);
             short[] scale = new short[adx_header.channel_count];
 
             if (looping_enabled && adx_header.loop_enabled == 0)
                 looping_enabled = false;
+
+            if (looping_enabled)    // Mine
+                sample_index = adx_header.loop_begin_sample_index;
 
             // Loop until the requested number of samples are decoded, or the end of file is reached
             while (samples_needed > 0 && sample_index < adx_header.total_samples)
@@ -195,13 +192,15 @@ namespace Sounds
                     ++sample_index;   // This also means we're one sample further into the stream
                     --samples_needed; // And so there is one less set of samples that need to be decoded
                 }
+
+                // Check if we hit the loop end marker, if we did we need to jump to the loop start
+                if (looping_enabled && sample_index == adx_header.loop_end_sample_index)
+                    //sample_index = adx_header.loop_begin_sample_index;
+                    break;
             }
 
-            // Check if we hit the loop end marker, if we did we need to jump to the loop start
-            if (looping_enabled && sample_index == adx_header.loop_end_sample_index)
-                sample_index = adx_header.loop_begin_sample_index;
-
-            return samples_needed;
+            //return samples_needed;
+            return bufferOut.ToArray();
         }
 
         public struct ADX_Header
@@ -233,5 +232,13 @@ namespace Sounds
             AHX2 = 0x11
         }
 
+        public override void Write_File(string fileOut, byte[] data)
+        {
+            throw new NotImplementedException();
+        }
+        public override byte[] Encode()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

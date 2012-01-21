@@ -49,6 +49,7 @@
     <Compile Include="Ani.cs" />
     <Compile Include="Bg.cs" />
     <Compile Include="DARC.cs" />
+    <Compile Include="GDS.cs" />
     <Compile Include="InfoAni.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -95,6 +96,12 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="ScriptControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ScriptControl.Designer.cs">
+      <DependentUpon>ScriptControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="Text.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -119,6 +126,9 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ScriptControl.resx">
+      <DependentUpon>ScriptControl.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

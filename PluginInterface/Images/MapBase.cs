@@ -22,10 +22,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
-using PluginInterface;
 using System.Drawing;
 
-namespace Images
+namespace PluginInterface
 {
     public abstract class MapBase
     {

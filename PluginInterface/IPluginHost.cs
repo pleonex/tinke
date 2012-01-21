@@ -34,6 +34,10 @@ namespace PluginInterface
         NANR Get_NANR();
         Object Get_Object();
 
+        ImageBase Get_Image();
+        PaletteBase Get_Palette();
+        MapBase Get_Map();
+
         void Set_NCLR(NCLR nclr);
         void Set_NCGR(NCGR ncgr);
         void Set_NSCR(NSCR nscr);
@@ -41,6 +45,9 @@ namespace PluginInterface
         void Set_NANR(NANR nanr);
         void Set_Object(Object objects);
 
+        void Set_Image(ImageBase image);
+        void Set_Palette(PaletteBase palette);
+        void Set_Map(MapBase map);
         
         Color[] BGR555ToColor(byte[] data);
         Byte[] ColorToBGR555(Color[] color);

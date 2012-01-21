@@ -43,7 +43,7 @@ namespace LAYTON
 
         public Format Get_Formato(string nombre)
         {
-            if (nombre.EndsWith(".ARC"))
+            if (nombre.EndsWith(".ARC") || nombre.EndsWith(".BGX") || nombre.EndsWith(".ARB"))
                 return Format.FullImage;
 
             return Format.Unknown;
@@ -55,14 +55,17 @@ namespace LAYTON
         public Control Show_Info()
         {
             // Los archivos tienen compresión LZ77, descomprimimos primero.
-            string temp = archivo + "nn";
-            Byte[] compressFile = new Byte[(new FileInfo(archivo).Length) - 4];
-            Array.Copy(File.ReadAllBytes(archivo), 4, compressFile, 0, compressFile.Length); ;
-            File.WriteAllBytes(temp, compressFile);
+            if (archivo.ToUpper().EndsWith(".ARC"))
+            {
+                string temp = archivo + "nn";
+                Byte[] compressFile = new Byte[(new FileInfo(archivo).Length) - 4];
+                Array.Copy(File.ReadAllBytes(archivo), 4, compressFile, 0, compressFile.Length); ;
+                File.WriteAllBytes(temp, compressFile);
 
-            pluginHost.Decompress(temp);
-            archivo = pluginHost.Get_Files().files[0].path;
-            File.Delete(temp);
+                pluginHost.Decompress(temp);
+                archivo = pluginHost.Get_Files().files[0].path;
+                File.Delete(temp);
+            }
 
             InfoBG control = new InfoBG(pluginHost, Obtener_Background());
             File.Delete(archivo);

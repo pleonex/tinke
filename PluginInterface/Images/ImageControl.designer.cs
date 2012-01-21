@@ -17,7 +17,7 @@
  * Programador: pleoNeX
  * 
  */
-namespace Images
+namespace PluginInterface
 {
     partial class ImageControl
     {

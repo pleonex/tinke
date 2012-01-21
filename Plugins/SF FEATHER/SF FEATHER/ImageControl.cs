@@ -35,7 +35,9 @@ namespace SF_FEATHER
         NCLR palette;
         NCGR tile;
         NSCR map;
+
         bool isMap;
+        bool editable;
 
         public ImageControl()
         {
@@ -46,6 +48,7 @@ namespace SF_FEATHER
             InitializeComponent();
             this.pluginHost = pluginHost;
             this.isMap = isMap;
+            this.editable = true;
 
             palette = pluginHost.Get_NCLR();
             tile = pluginHost.Get_NCGR();
@@ -60,9 +63,22 @@ namespace SF_FEATHER
             numericHeight.ValueChanged += new EventHandler(ChangeSize);
             numericWidth.ValueChanged += new EventHandler(ChangeSize);
         }
+        public ImageControl(Image image)
+        {
+            InitializeComponent();
+            this.editable = false;
+
+            picBox.Image = image;
+
+            numericHeight.Enabled = false;
+            numericWidth.Enabled = false;
+        }
 
         private void UpdateImage()
         {
+            if (!editable)
+                return;
+
             if (isMap)
             {
                 NCGR newTile = tile;
@@ -109,10 +125,21 @@ namespace SF_FEATHER
 
         private void ChangeSize(object sender, EventArgs e)
         {
+            if (!editable)
+                return;
+
             tile.rahc.nTilesX = (ushort)(numericWidth.Value / 8);
             tile.rahc.nTilesY = (ushort)(numericHeight.Value / 8);
 
             UpdateImage();
+        }
+
+        private void checkTrans_CheckedChanged(object sender, EventArgs e)
+        {
+            Bitmap image = (Bitmap)picBox.Image;
+            image.MakeTransparent();
+            picBox.Image = image;
+            checkTrans.Enabled = false;
         }
     }
 }

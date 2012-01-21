@@ -243,10 +243,7 @@ namespace Tinke
         public sFolder Root
         {
             get { return root; }
-            set
-            {
-                root = value;
-            }
+            set { root = value; }
         }
         public int IDSelect
         {
@@ -1898,7 +1895,7 @@ namespace Tinke
             if (selectFile.name == "rom.nds")
                 goto NDS;
 
-            string tempFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + selectFile.id + selectFile.name;
+            string tempFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + Path.GetRandomFileName() + selectFile.name;
             if (File.Exists(tempFile))
                 File.Delete(tempFile);
             BinaryReader br = new BinaryReader(File.OpenRead(selectFile.path));
@@ -2037,152 +2034,6 @@ namespace Tinke
             {
                 System.Diagnostics.Process.Start(Application.ExecutablePath, '\"' + ROMFile + '\"');
                 return new Control();
-            }
-            #endregion
-
-            Console.WriteLine(Tools.Helper.GetTranslation("Messages", "S25"));
-            return new Control();
-        }
-        public Control See_File(String file)
-        {
-            BinaryReader br = new BinaryReader(File.OpenRead(file));
-            byte[] ext = br.ReadBytes(4);
-            br.Close();
-            string name = Path.GetFileName(file);
-
-            #region Calling to plugins
-            try
-            {
-                foreach (IGamePlugin plugin in gamePlugin)
-                {
-                    if (plugin.Get_Format(name, ext, idSelect) != Format.Unknown)
-                    {
-                        Control resultado = plugin.Show_Info(file, idSelect);
-                        return resultado;
-                    }
-                }
-
-                foreach (IPlugin plugin in formatList)
-                {
-                    if (plugin.Get_Format(name, ext, idSelect) != Format.Unknown)
-                    {
-                        Control resultado = plugin.Show_Info(file, idSelect);
-                        return resultado;
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-                try { File.Delete(file); }
-                catch { }
-                return new Control();
-            }
-            #endregion
-
-            #region Common form
-            try
-            {
-                if (new String(Encoding.ASCII.GetChars(ext)) == "NCLR" || new String(Encoding.ASCII.GetChars(ext)) == "RLCN")
-                {
-                    NCLR nclr = Imagen_NCLR.Leer(file, idSelect);
-                    pluginHost.Set_NCLR(nclr);
-
-                    iNCLR control = new iNCLR(nclr, pluginHost);
-                    control.Dock = DockStyle.Fill;
-                    return control; ;
-                }
-                if (new String(Encoding.ASCII.GetChars(ext)) == "NCGR" || new String(Encoding.ASCII.GetChars(ext)) == "RGCN")
-                {
-                    NCGR tile = Imagen_NCGR.Read(file, idSelect);
-                    pluginHost.Set_NCGR(tile);
-
-                    if (pluginHost.Get_NCLR().header.file_size != 0x00)
-                    {
-                        iNCGR control = new iNCGR(tile, pluginHost.Get_NCLR(), pluginHost);
-                        control.Dock = DockStyle.Fill;
-                        return control;
-                    }
-                    else
-                    {
-                        MessageBox.Show(Tools.Helper.GetTranslation("Messages", "S1B"));
-                        return new Control();
-                    }
-                }
-                else if (new String(Encoding.ASCII.GetChars(ext)) == "NSCR" || new String(Encoding.ASCII.GetChars(ext)) == "RCSN")
-                {
-                    pluginHost.Set_NSCR(Imagen_NSCR.Read(file, idSelect));
-
-                    if (pluginHost.Get_NCGR().header.file_size != 0x00 && pluginHost.Get_NCLR().header.file_size != 0x00)
-                    {
-                        iNCGR control = new iNCGR(pluginHost.Get_NCGR(), pluginHost.Get_NCLR(), pluginHost.Get_NSCR(), pluginHost);
-                        control.Dock = DockStyle.Fill;
-                        return control;
-                    }
-                    else
-                    {
-                        MessageBox.Show(Tools.Helper.GetTranslation("Messages", "S1C"));
-                        return new Control();
-                    }
-                }
-                else if (new String(Encoding.ASCII.GetChars(ext)) == "NCER" || new String(Encoding.ASCII.GetChars(ext)) == "RECN")
-                {
-                    pluginHost.Set_NCER(Imagen_NCER.Read(file, idSelect));
-
-                    if (pluginHost.Get_NCGR().header.file_size != 0x00 && pluginHost.Get_NCLR().header.file_size != 0x00)
-                    {
-                        iNCER control = new iNCER(pluginHost.Get_NCER(), pluginHost.Get_NCGR(), pluginHost.Get_NCLR(), pluginHost);
-                        control.Dock = DockStyle.Fill;
-
-                        return control;
-                    }
-                    else
-                    {
-                        MessageBox.Show(Tools.Helper.GetTranslation("Messages", "S1C"));
-                        return new Control();
-                    }
-                }
-                else if (new String(Encoding.ASCII.GetChars(ext)) == "NANR" || new String(Encoding.ASCII.GetChars(ext)) == "RNAN")
-                {
-                    pluginHost.Set_NANR(Imagen_NANR.Leer(file, idSelect));
-
-                    if (pluginHost.Get_NCER().header.file_size != 0x00 && pluginHost.Get_NCGR().header.file_size != 0x00 &&
-                        pluginHost.Get_NCLR().header.file_size != 0x00)
-                    {
-                        iNANR control = new iNANR(pluginHost.Get_NCLR(), pluginHost.Get_NCGR(), pluginHost.Get_NCER(), pluginHost.Get_NANR());
-                        control.Dock = DockStyle.Fill;
-
-                        return control;
-                    }
-                    else
-                    {
-                        MessageBox.Show(Tools.Helper.GetTranslation("Messages", "S1E"));
-                        return new Control();
-                    }
-                }
-
-                FormatCompress compressFormat = DSDecmp.Main.Get_Format(file);
-                if (compressFormat != FormatCompress.Invalid)
-                {
-                    Control resultado = new DSDecmp.CompressionControl(idSelect, compressFormat, pluginHost);
-                    return resultado;
-                }
-
-                if (Path.GetFileName(file).ToUpper().EndsWith(".SRL"))
-                {
-                    System.Diagnostics.Process.Start(Application.ExecutablePath, '\"' + file + '\"');
-                    return new Control();
-                }
-                else if (Path.GetFileName(file).ToUpper().EndsWith(".NDS"))
-                {
-                    System.Diagnostics.Process.Start(Application.ExecutablePath, '\"' + file + '\"');
-                    return new Control();
-                }
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show(e.Message);
-                Console.WriteLine(e.Message);
             }
             #endregion
 

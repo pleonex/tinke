@@ -67,6 +67,8 @@ namespace Tinke
             br.ReadUInt16();
             pltt.unknown1 = br.ReadUInt32();
             pltt.paletteLength = br.ReadUInt32();
+            if (pltt.paletteLength == 0)
+                pltt.paletteLength = pltt.length - 0x18;
             uint colors_startOffset = br.ReadUInt32();
             pltt.nColors = (pltt.depth == ColorDepth.Depth4Bit) ? 0x10 : pltt.paletteLength / 2;
 

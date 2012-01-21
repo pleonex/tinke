@@ -30,7 +30,7 @@ namespace Sounds
                 this.Text = xml.Element("S01").Value;
                 lblText.Text = xml.Element("S00").Value;
             }
-            catch { throw new Exception("There was an error reading the XML file of language."); } 
+            catch { throw new Exception("There was an error reading the XML file of language."); }
         }
     }
 }

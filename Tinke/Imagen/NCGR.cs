@@ -447,11 +447,21 @@ namespace Tinke
                                 if (tile.tiles[0].Length == 0)
                                     goto Fin;
 
-                                Color color;
-                                if (palette[tile.nPalette[0]].Length <= tile.tiles[0][w + h * width + salto])
-                                    goto Fin;
+                                int num_pal;
+                                if (tile.nPalette.Length > (w + h * width + salto))
+                                    num_pal = tile.nPalette[w + h * width + salto];
                                 else
-                                    color = palette[tile.nPalette[0]][tile.tiles[0][w + h * width + salto]];
+                                    num_pal = 0;
+
+                                if (num_pal >= palette.Length)
+                                    num_pal = 0;
+
+                                Color color;
+                                if (palette[num_pal].Length <= tile.tiles[0][w + h * width + salto])
+                                    color = Color.Transparent; // Debug
+                                    //goto fin;
+                                else
+                                    color = palette[num_pal][tile.tiles[0][w + h * width + salto]];
 
                                 image.SetPixel(
                                     w * zoom + wzoom,

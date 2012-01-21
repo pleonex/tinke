@@ -53,9 +53,12 @@ namespace SF_FEATHER
             this.numericWidth = new System.Windows.Forms.NumericUpDown();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.checkTrans = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.picBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericHeight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericWidth)).BeginInit();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // picBox
@@ -152,21 +155,44 @@ namespace SF_FEATHER
             this.label2.TabIndex = 5;
             this.label2.Text = "Height:";
             // 
+            // panel1
+            // 
+            this.panel1.AutoScroll = true;
+            this.panel1.Controls.Add(this.picBox);
+            this.panel1.Location = new System.Drawing.Point(3, 3);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(509, 401);
+            this.panel1.TabIndex = 6;
+            // 
+            // checkTrans
+            // 
+            this.checkTrans.AutoSize = true;
+            this.checkTrans.Location = new System.Drawing.Point(266, 412);
+            this.checkTrans.Name = "checkTrans";
+            this.checkTrans.Size = new System.Drawing.Size(91, 17);
+            this.checkTrans.TabIndex = 7;
+            this.checkTrans.Text = "Transparency";
+            this.checkTrans.UseVisualStyleBackColor = true;
+            this.checkTrans.CheckedChanged += new System.EventHandler(this.checkTrans_CheckedChanged);
+            // 
             // ImageControl
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
             this.BackColor = System.Drawing.Color.Transparent;
+            this.Controls.Add(this.checkTrans);
+            this.Controls.Add(this.panel1);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.numericWidth);
             this.Controls.Add(this.numericHeight);
             this.Controls.Add(this.btnSave);
-            this.Controls.Add(this.picBox);
             this.Name = "ImageControl";
             this.Size = new System.Drawing.Size(512, 512);
             ((System.ComponentModel.ISupportInitialize)(this.picBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericHeight)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericWidth)).EndInit();
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -180,5 +206,7 @@ namespace SF_FEATHER
         private System.Windows.Forms.NumericUpDown numericWidth;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.CheckBox checkTrans;
     }
 }

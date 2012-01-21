@@ -31,9 +31,13 @@ namespace Tinke
     {
         NCLR paleta;
         NCGR tile;
-        NSCR map;
+        NSCR map_old;
         NCER celda;
         NANR animacion;
+
+        ImageBase image;
+        PaletteBase palette;
+        MapBase map;
         Object objects;
 
         sFolder extraidos;
@@ -61,14 +65,22 @@ namespace Tinke
 
         public NCLR Get_NCLR() { return paleta; }
         public NCGR Get_NCGR() { return tile; }
-        public NSCR Get_NSCR() { return map; }
+        public NSCR Get_NSCR() { return map_old; }
         public NCER Get_NCER() { return celda; }
         public NANR Get_NANR() { return animacion; }
         public Object Get_Object() { return objects; }
 
+        public ImageBase Get_Image() { return image; }
+        public PaletteBase Get_Palette() { return palette; }
+        public MapBase Get_Map() { return map; }
+
+        public void Set_Image(ImageBase image) { this.image = image; }
+        public void Set_Palette(PaletteBase palette) { this.palette = palette; }
+        public void Set_Map(MapBase map) { this.map = map; }
+
         public void Set_NCLR(NCLR nclr) { paleta = nclr; }
         public void Set_NCGR(NCGR ncgr) { tile = ncgr; }
-        public void Set_NSCR(NSCR nscr) { map = nscr; }
+        public void Set_NSCR(NSCR nscr) { map_old = nscr; }
         public void Set_NCER(NCER ncer) { celda = ncer; }
         public void Set_NANR(NANR nanr) { animacion = nanr; }
         public void Set_Object(Object objects) { this.objects = objects; }
