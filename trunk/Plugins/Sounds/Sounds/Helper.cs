@@ -54,101 +54,29 @@ namespace Sounds
 
             return bit4.ToArray();
         }
-        public static short BitsToShort(byte[] bits)
+
+        public static ushort Get_ushort(ref BinaryReader br)
         {
-            byte[] bytes = new byte[2];
-            for (int i = 0; i < 16; i += 8)
-            {
-                Byte newByte = 0;
-                int b = 0;
-                for (int j = 7; j >= 0; j--, b++)
-                {
-                    newByte += (byte)(bits[i + b] << j);
-                }
-                bytes[i / 8] = newByte;
-            }
-
-            return BitConverter.ToInt16(bytes, 0);
+            return BitConverter.ToUInt16(br.ReadBytes(2).Reverse().ToArray(), 0);
         }
-        public static short BitsToShortBE(byte[] bits)
+        public static uint Get_uint(ref BinaryReader br)
         {
-            byte[] bytes = new byte[2];
-            for (int i = 0; i < 16; i += 8)
-            {
-                Byte newByte = 0;
-                int b = 0;
-                for (int j = 7; j >= 0; j--, b++)
-                {
-                    newByte += (byte)(bits[i + b] << j);
-                }
-                bytes[i / 8] = newByte;
-            }
-
-            Array.Reverse(bytes, 0, bytes.Length);
-            return BitConverter.ToInt16(bytes, 0);
+            return BitConverter.ToUInt32(br.ReadBytes(4).Reverse().ToArray(), 0);
         }
-        public static short BitsToInt(byte[] bits)
-        {
-            byte[] bytes = new byte[4];
-            for (int i = 0; i < 32; i += 8)
-            {
-                Byte newByte = 0;
-                int b = 0;
-                for (int j = 7; j >= 0; j--, b++)
-                {
-                    newByte += (byte)(bits[i + b] << j);
-                }
-                bytes[i / 8] = newByte;
-            }
 
-            return BitConverter.ToInt16(bytes, 0);
-        }
-        public static Byte[] BytesToBits(Byte[] bytes)
-        {
-            List<Byte> bits = new List<byte>();
-
-            for (int i = 0; i < bytes.Length; i++)
-                for (int j = 7; j >= 0; j--)
-                    bits.Add((byte)((bytes[i] >> j) & 1));
-
-            return bits.ToArray();
-        }
-        public static Byte[] BitsToBytes(Byte[] bits)
-        {
-            List<Byte> bytes = new List<byte>();
-
-            for (int i = 0; i < bits.Length; i += 8)
-            {
-                Byte newByte = 0;
-                int b = 0;
-                for (int j = 7; j >= 0; j--, b++)
-                {
-                    newByte += (byte)(bits[i + b] << j);
-                }
-                bytes.Add(newByte);
-            }
-
-            return bytes.ToArray();
-        }
-        public static Byte[] ShortsToBytes(short[] shorts)
-        {
-            List<byte> bytes = new List<byte>();
-            for (int i = 0; i < shorts.Length; i++)
-                bytes.AddRange(BitConverter.GetBytes(shorts[i]));
-
-            return bytes.ToArray();
-        }
     }
 
     public class BitReader
     {
+        bool big_endian;
         byte[] buffer;
         int pos;
 
-        public BitReader(byte[] buffer)
+        public BitReader(byte[] buffer, bool big_endian)
         {
-            this.buffer = Helper.BytesToBits(buffer);
+            this.buffer = BytesToBits(buffer);
             pos = 0;
+            this.big_endian = big_endian;
         }
 
         public void Seek(int length)
@@ -169,24 +97,129 @@ namespace Sounds
 
         public short Read_Short()
         {
-            return Helper.BitsToShortBE(Read(16));
+            if (big_endian)
+                return BitsToShort_BigEndian(Read(16));
+            else
+                return BitsToShort(Read(16));
         }
         public int Read_Int()
         {
-            return Helper.BitsToInt(Read(32));
+            if (big_endian)
+                return BitsToInt_BigEndian(Read(32));
+            else
+                return BitsToInt(Read(32));
         }
         public int Read_4Bits()
         {
             byte[] bits = Read(4);
+
             byte b = (byte)(bits[0] << 3);
-            //byte b = 0;
             b += (byte)(bits[1] << 2);
             b += (byte)(bits[2] << 1);
             b += (byte)bits[3];
+
+            // Sign
             if (bits[0] == 1)
                 return b-16;
             else
                 return b;
+        }
+
+        private short BitsToShort_BigEndian(byte[] bits)
+        {
+            byte[] bytes = new byte[2];
+            for (int i = 0; i < 16; i += 8)
+            {
+                Byte newByte = 0;
+                int b = 0;
+                for (int j = 7; j >= 0; j--, b++)
+                {
+                    newByte += (byte)(bits[i + b] << j);
+                }
+                bytes[i / 8] = newByte;
+            }
+
+            Array.Reverse(bytes);
+            return BitConverter.ToInt16(bytes, 0);
+        }
+        private short BitsToShort(byte[] bits)
+        {
+            byte[] bytes = new byte[2];
+            for (int i = 0; i < 16; i += 8)
+            {
+                Byte newByte = 0;
+                int b = 0;
+                for (int j = 7; j >= 0; j--, b++)
+                {
+                    newByte += (byte)(bits[i + b] << j);
+                }
+                bytes[i / 8] = newByte;
+            }
+
+            return BitConverter.ToInt16(bytes, 0);
+        }
+
+        private int BitsToInt(byte[] bits)
+        {
+            byte[] bytes = new byte[4];
+            for (int i = 0; i < 32; i += 8)
+            {
+                Byte newByte = 0;
+                int b = 0;
+                for (int j = 7; j >= 0; j--, b++)
+                {
+                    newByte += (byte)(bits[i + b] << j);
+                }
+                bytes[i / 8] = newByte;
+            }
+
+            return BitConverter.ToInt32(bytes, 0);
+        }
+        private int BitsToInt_BigEndian(byte[] bits)
+        {
+            byte[] bytes = new byte[4];
+            for (int i = 0; i < 32; i += 8)
+            {
+                Byte newByte = 0;
+                int b = 0;
+                for (int j = 7; j >= 0; j--, b++)
+                {
+                    newByte += (byte)(bits[i + b] << j);
+                }
+                bytes[i / 8] = newByte;
+            }
+
+            Array.Reverse(bytes);
+            return BitConverter.ToInt32(bytes, 0);
+        }
+
+
+        private Byte[] BytesToBits(Byte[] bytes)
+        {
+            List<Byte> bits = new List<byte>();
+
+            for (int i = 0; i < bytes.Length; i++)
+                for (int j = 7; j >= 0; j--)
+                    bits.Add((byte)((bytes[i] >> j) & 1));
+
+            return bits.ToArray();
+        }
+        private Byte[] BitsToBytes(Byte[] bits)
+        {
+            List<Byte> bytes = new List<byte>();
+
+            for (int i = 0; i < bits.Length; i += 8)
+            {
+                Byte newByte = 0;
+                int b = 0;
+                for (int j = 7; j >= 0; j--, b++)
+                {
+                    newByte += (byte)(bits[i + b] << j);
+                }
+                bytes.Add(newByte);
+            }
+
+            return bytes.ToArray();
         }
     }
 }

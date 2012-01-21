@@ -153,7 +153,11 @@ namespace Images
                 image = new RawImage(pluginHost, file, id, TileOrder.NoTiled, ColorDepth.Depth8Bit, false,
                     0, -1);
                 if (palette.Depth == ColorDepth.Depth4Bit)
+                {
                     image.Depth = ColorDepth.Depth4Bit;
+                    if (image.Height != 32 && image.Width != 32)
+                        image.Height *= 2;
+                }
 
                 return Format.Tile;
             }
@@ -162,7 +166,11 @@ namespace Images
                 image = new RawImage(pluginHost, file, id, TileOrder.Horizontal, ColorDepth.Depth8Bit, false,
                     0, -1);
                 if (palette.Depth == ColorDepth.Depth4Bit)
+                {
                     image.Depth = ColorDepth.Depth4Bit;
+                    if (image.Height != 32 && image.Width != 32)
+                        image.Height *= 2;
+                }
 
                 return Format.Tile;
             }

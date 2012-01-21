@@ -39,7 +39,8 @@ namespace LAYTON
 
         public bool IsCompatible()
         {
-            if (gameCode == "A5FP" || gameCode == "A5FE" || gameCode == "YLTS" || gameCode == "BLFE")
+            if (gameCode == "A5FP" || gameCode == "A5FE" || gameCode == "YLTS" || gameCode == "BLFE" ||
+                gameCode == "YLTE" || gameCode == "YLTP")
                 return true;
             else
                 return false;
@@ -55,19 +56,38 @@ namespace LAYTON
                         return new Ani(pluginHost, gameCode, "").Get_Formato(nombre);
                     else if (id >= 0x02CD && id <= 0x0765)
                         return new Bg(pluginHost, gameCode, "").Get_Formato(nombre);
+                    else if (id == 0x0766)
+                        return Format.System;   // The same as id 0xB73 in A5FP
                     break;
                 case "A5FP":
                     if (id >= 0x0001 && id <= 0x04E7)
                         return new Ani(pluginHost, gameCode, "").Get_Formato(nombre);
                     else if (id >= 0x04E8 && id <= 0x0B72)
                         return new Bg(pluginHost, gameCode, "").Get_Formato(nombre);
+                    else if (id == 0x0B73)
+                        return Format.System;   // Dummy, it was text to test the puzzle system, nothing interesing and not used
                     break;
-                case "YLTS":
+
+                // Professor Layton and the Diabolical Box
+                case "YLTS":    
                     if (id >= 0x37 && id <= 0x408)
                         return new Ani(pluginHost, gameCode, "").Get_Formato(nombre);
                     else if (id >= 0x409 & id <= 0x808)
                         return new Bg(pluginHost, gameCode, "").Get_Formato(nombre);
                     break;
+                case "YLTE":
+                    if (id >= 0x37 && id <= 0x412)
+                        return new Ani(pluginHost, gameCode, "").Get_Formato(nombre);
+                    else if (id >= 0x413 && id <= 0x818)
+                        return new Bg(pluginHost, gameCode, "").Get_Formato(nombre);
+                    break;
+                case "YLTP":
+                    if (id >= 0x37 && id <= 0x408)
+                        return new Ani(pluginHost, gameCode, "").Get_Formato(nombre);
+                    else if (id >= 0x409 && id <= 0x808)
+                        return new Bg(pluginHost, gameCode, "").Get_Formato(nombre);
+                    break;
+                
                 case "BLFE":
                     if (nombre.EndsWith(".DARC"))
                         return Format.Pack;
@@ -84,7 +104,10 @@ namespace LAYTON
                 return Format.Pack;
             if (nombre.EndsWith(".PCM") && BitConverter.ToInt32(magic, 0) == 0x00000010)
                 return Format.Pack;
-
+            if (nombre.EndsWith(".GDS"))
+                return Format.Script;
+            if (nombre.EndsWith("_DATABAS_LE.BIN"))
+                return Format.System;
             
             return Format.Unknown;
         }
@@ -108,7 +131,21 @@ namespace LAYTON
                     else if (id >= 0x04E8 && id <= 0x0B72)
                         return new Bg(pluginHost, gameCode, archivo).Show_Info();
                     break;
+
+                // Professor Layton and the Diabolical Box
                 case "YLTS":
+                    if (id >= 0x37 && id <= 0x408)
+                        return new Ani(pluginHost, gameCode, archivo).Show_Info();
+                    else if (id >= 0x409 && id <= 0x808)
+                        return new Bg(pluginHost, gameCode, archivo).Show_Info();
+                    break;
+                case "YLTE":
+                    if (id >= 0x37 && id <= 0x412)
+                        return new Ani(pluginHost, gameCode, archivo).Show_Info();
+                    else if (id >= 0x413 && id <= 0x818)
+                        return new Bg(pluginHost, gameCode, archivo).Show_Info();
+                    break;
+                case "YLTP":
                     if (id >= 0x37 && id <= 0x408)
                         return new Ani(pluginHost, gameCode, archivo).Show_Info();
                     else if (id >= 0x409 && id <= 0x808)
@@ -120,6 +157,8 @@ namespace LAYTON
                 return new Text(pluginHost, gameCode, archivo).Show_Info(id);
             else if (archivo.ToUpper().EndsWith(".PLZ"))
                 return new Control();
+            else if (archivo.ToUpper().EndsWith(".GDS"))
+                return new ScriptControl(GDS.Read(archivo));         
 
             return new Control();
         }

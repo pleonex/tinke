@@ -89,6 +89,7 @@ namespace Tinke.Nitro
         public static sFolder ReadFNT(string romFile, uint fntOffset, Estructuras.sFAT[] fat, Acciones accion)
         {
             sFolder root = new sFolder();
+            root.files = new List<sFile>();
             List<Estructuras.MainFNT> mains = new List<Estructuras.MainFNT>();
 
             BinaryReader br = new BinaryReader(File.OpenRead(romFile));
@@ -140,6 +141,10 @@ namespace Tinke.Nitro
                         currFile.size = fat[currFile.id].size;
                         currFile.path = romFile;
 
+                        // Temporaly, for plugins (Get_Format):
+                        root.files.Add(currFile);
+                        accion.Root = root;
+
                         // Get the format
                         long pos = br.BaseStream.Position;
                         br.BaseStream.Position = currFile.offset;
@@ -168,6 +173,10 @@ namespace Tinke.Nitro
                 mains.Add(main);
                 br.BaseStream.Position = currOffset;
             }
+
+            // Clear previous values
+            root = new sFolder();
+            accion.Root = new sFolder();
 
             root = Jerarquizar_Carpetas(mains, 0, "root");
             root.id = number_directories;

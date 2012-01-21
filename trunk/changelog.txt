@@ -5,6 +5,8 @@
 ** Fixed problem packing two or more times the same file.
 ** Support for NCCL, NCCG and NCSC files
 ** Support ADX sound files.
+** Support script files in Layton1 (gds)
+** Support Death Note game
 * Encoding support in NFTR fonts
 * Layton London Life supported:
    - Unpack files DARC and DENC (by CUE)

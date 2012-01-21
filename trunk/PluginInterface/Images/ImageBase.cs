@@ -25,9 +25,8 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Windows.Forms;
 using System.IO;
-using PluginInterface;
 
-namespace Images
+namespace PluginInterface
 {
     public abstract class ImageBase
     {
@@ -275,7 +274,7 @@ namespace Images
         }
         public int Height
         {
-            get { return height * 8; }
+            get { return (tileOrder == TileOrder.Horizontal ? height * 8 : height); }
             set
             {
                 height = value;
@@ -287,7 +286,7 @@ namespace Images
         }
         public int Width
         {
-            get { return width * 8; }
+            get { return (tileOrder == TileOrder.Horizontal ? width * 8 : width); }
             set
             {
                 width = value;

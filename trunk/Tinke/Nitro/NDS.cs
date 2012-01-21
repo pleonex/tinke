@@ -388,6 +388,7 @@ namespace Tinke.Nitro
             diccionario.Add("20", "Destination Software");
             diccionario.Add("36", "Codemasters");
             diccionario.Add("41", "Ubisoft");
+            diccionario.Add("4A", "Gakken");
             diccionario.Add("4F", "Eidos");
             diccionario.Add("4Q", "Disney Interactive Studios");
             diccionario.Add("4Z", "Crave Entertainment");
@@ -412,6 +413,7 @@ namespace Tinke.Nitro
             diccionario.Add("A4", "Konami Digital Entertainment");
             diccionario.Add("AF", "Namco");
             diccionario.Add("B2", "Bandai");
+            diccionario.Add("E9", "Natsume");
             diccionario.Add("EB", "Atlus");
             diccionario.Add("FH", "Foreign Media Games");
             diccionario.Add("FK", "The Game Factory");
