@@ -17,7 +17,7 @@
  * Programador: pleoNeX
  * 
  */
-namespace PluginInterface
+namespace PluginInterface.Images
 {
     partial class ImageControl
     {
@@ -88,7 +88,7 @@ namespace PluginInterface
             0,
             0,
             0});
-            this.numericWidth.Location = new System.Drawing.Point(64, 84);
+            this.numericWidth.Location = new System.Drawing.Point(48, 84);
             this.numericWidth.Maximum = new decimal(new int[] {
             65536,
             0,
@@ -100,7 +100,7 @@ namespace PluginInterface
             0,
             0});
             this.numericWidth.Name = "numericWidth";
-            this.numericWidth.Size = new System.Drawing.Size(55, 20);
+            this.numericWidth.Size = new System.Drawing.Size(71, 20);
             this.numericWidth.TabIndex = 1;
             this.numericWidth.Value = new decimal(new int[] {
             8,
@@ -134,7 +134,7 @@ namespace PluginInterface
             0,
             0,
             0});
-            this.numericHeight.Location = new System.Drawing.Point(181, 84);
+            this.numericHeight.Location = new System.Drawing.Point(165, 84);
             this.numericHeight.Maximum = new decimal(new int[] {
             65536,
             0,
@@ -146,7 +146,7 @@ namespace PluginInterface
             0,
             0});
             this.numericHeight.Name = "numericHeight";
-            this.numericHeight.Size = new System.Drawing.Size(55, 20);
+            this.numericHeight.Size = new System.Drawing.Size(71, 20);
             this.numericHeight.TabIndex = 4;
             this.numericHeight.Value = new decimal(new int[] {
             8,
@@ -328,12 +328,16 @@ namespace PluginInterface
             this.comboDepth.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboDepth.FormattingEnabled = true;
             this.comboDepth.Items.AddRange(new object[] {
-            "1 bpp",
-            "4 bpp",
-            "8 bpp"});
-            this.comboDepth.Location = new System.Drawing.Point(181, 44);
+            "4bpp (16 colors)",
+            "8bpp (256 colors)",
+            "1bpp (2 colors)",
+            "Direct (16 bpp)",
+            "A3I5",
+            "A5I3",
+            "2bpp (4 colors)"});
+            this.comboDepth.Location = new System.Drawing.Point(165, 44);
             this.comboDepth.Name = "comboDepth";
-            this.comboDepth.Size = new System.Drawing.Size(54, 21);
+            this.comboDepth.Size = new System.Drawing.Size(71, 21);
             this.comboDepth.TabIndex = 8;
             this.comboDepth.SelectedIndexChanged += new System.EventHandler(this.comboDepth_SelectedIndexChanged);
             // 
@@ -348,14 +352,14 @@ namespace PluginInterface
             // 
             // numericStart
             // 
-            this.numericStart.Location = new System.Drawing.Point(64, 45);
+            this.numericStart.Location = new System.Drawing.Point(48, 45);
             this.numericStart.Maximum = new decimal(new int[] {
             65535,
             0,
             0,
             0});
             this.numericStart.Name = "numericStart";
-            this.numericStart.Size = new System.Drawing.Size(55, 20);
+            this.numericStart.Size = new System.Drawing.Size(71, 20);
             this.numericStart.TabIndex = 6;
             this.numericStart.ValueChanged += new System.EventHandler(this.numericStart_ValueChanged);
             // 

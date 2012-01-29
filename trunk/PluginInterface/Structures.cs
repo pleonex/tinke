@@ -43,12 +43,67 @@ namespace PluginInterface
         public Object tag;                 // Extra information
     }
 
+
+    public enum Format
+    {
+        Palette,
+        Tile,
+        Map,
+        Cell,
+        Animation,
+        FullImage,
+        Text,
+        Video,
+        Sound,
+        Font,
+        Compressed,
+        Unknown,
+        System,
+        Script,
+        Pack,
+        Model3D,
+        Texture
+    }
+    public enum FormatCompress // From DSDecmp
+    {
+        LZOVL, // keep this as the first one, as only the end of a file may be LZ-ovl-compressed (and overlay files are oftenly double-compressed)
+        LZ10,
+        LZ11,
+        HUFF4,
+        HUFF8,
+        RLE,
+        HUFF,
+        NDS,
+        GBA,
+        Invalid
+    }
+
+    public struct NTFS              // Nintedo Tile Format Screen
+    {
+        public byte nPalette;        // The parameters (two bytes) is PPPP Y X NNNNNNNNNN
+        public byte xFlip;
+        public byte yFlip;
+        public ushort nTile;
+    }
+    public struct NTFT              // Nintendo Tile Format Tile
+    {
+        public byte[][] tiles;
+        public byte[] nPalette;     // Number of the palette that this tile uses
+    }
+
+    #region Obsolet
+    public enum TileOrder
+    {
+        NoTiled,
+        Horizontal,
+        Vertical
+    }
     public struct Header    // Generic Header
     {
-        public char[] id;                   
+        public char[] id;
         public UInt16 endianess;            // 0xFFFE -> little endian
         public UInt16 constant;             // Always 0x0100
-        public UInt32 file_size;            
+        public UInt32 file_size;
         public UInt16 header_size;          // Always 0x10
         public UInt16 nSection;             // Number of sections
     }
@@ -64,7 +119,7 @@ namespace PluginInterface
     public struct TTLP  // PaLeTTe
     {
         public char[] ID;
-        public UInt32 length;       
+        public UInt32 length;
         public ColorDepth depth;
         public UInt32 unknown1;    // padding?
         public UInt32 paletteLength;
@@ -119,11 +174,6 @@ namespace PluginInterface
         public UInt16 charSize;
         public UInt16 nChar;
     }
-    public struct NTFT              // Nintendo Tile Format Tile
-    {
-        public byte[][] tiles;
-        public byte[] nPalette;     // Number of the palette that this tile uses
-    }
     #endregion
     #region NSCR
     public struct NSCR      // Nintendo SCreen Resource
@@ -136,19 +186,12 @@ namespace PluginInterface
     public struct NSCR_Section
     {
         public char[] id;                   // NRCS = 0x4E524353
-        public UInt32 section_size;         
-        public UInt16 width;                
-        public UInt16 height;               
+        public UInt32 section_size;
+        public UInt16 width;
+        public UInt16 height;
         public UInt32 padding;              // Always 0x0
-        public UInt32 data_size;          
+        public UInt32 data_size;
         public NTFS[] mapData;
-    }
-    public struct NTFS              // Nintedo Tile Format Screen
-    {
-        public byte nPalette;        // The parameters (two bytes) is PPPP Y X NNNNNNNNNN
-        public byte xFlip;           
-        public byte yFlip;
-        public ushort nTile;
     }
     #endregion
     #region NCER
@@ -291,44 +334,5 @@ namespace PluginInterface
         public UInt32 section_size;
         public UInt32 unknown;
     }
-
-    public enum Format
-    {
-        Palette,
-        Tile,
-        Map,
-        Cell,
-        Animation,
-        FullImage,
-        Text,
-        Video,
-        Sound,
-        Font,
-        Compressed,
-        Unknown,
-        System,
-        Script,
-        Pack,
-        Model3D,
-        Texture
-    }
-    public enum FormatCompress // From DSDecmp
-    {
-        LZOVL, // keep this as the first one, as only the end of a file may be LZ-ovl-compressed (and overlay files are oftenly double-compressed)
-        LZ10,
-        LZ11,
-        HUFF4,
-        HUFF8,
-        RLE,
-        HUFF,
-        NDS,
-        GBA,
-        Invalid
-    }
-    public enum TileOrder
-    {
-        NoTiled,
-        Horizontal,
-        Vertical
-    }
+#endregion
 }

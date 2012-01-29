@@ -558,8 +558,13 @@ namespace Tinke
 
             if (oldImage.order == TileOrder.Horizontal)
             {
-                uint tileOffset = (oldImage.rahc.depth == System.Windows.Forms.ColorDepth.Depth4Bit ? cell.obj2.tileOffset * 2 : cell.obj2.tileOffset);
-                tileOffset *= (blockSize != 0x00 ? blockSize : 1);
+                uint tileOffset = cell.obj2.tileOffset;
+                if (blockSize > 4)
+                    blockSize = 4;
+                if (oldImage.rahc.depth == System.Windows.Forms.ColorDepth.Depth4Bit)
+                    tileOffset = (uint)(tileOffset << (byte)blockSize);
+                else
+                    tileOffset = (uint)(tileOffset << (byte)blockSize) / 2;
 
                 for (int i = 0; i < tileOffset; i++)
                     result.Add(oldImage.rahc.tileData.tiles[i]);
@@ -571,8 +576,13 @@ namespace Tinke
             }
             else if (oldImage.order == TileOrder.NoTiled)
             {
-                uint tileOffset = (oldImage.rahc.depth == System.Windows.Forms.ColorDepth.Depth4Bit ? cell.obj2.tileOffset * 2 : cell.obj2.tileOffset) * 0x40;
-                tileOffset *= (blockSize != 0x00 ? blockSize : 1);
+                uint tileOffset = cell.obj2.tileOffset;
+                if (blockSize > 4)
+                    blockSize = 4;
+                if (oldImage.rahc.depth == System.Windows.Forms.ColorDepth.Depth4Bit)
+                    tileOffset = (uint)(tileOffset << (byte)blockSize);
+                else
+                    tileOffset = (uint)(tileOffset << (byte)blockSize) / 2;
 
                 for (int i = 0; i < tileOffset; i++)
                     temp.Add(oldImage.rahc.tileData.tiles[0][i]);
@@ -594,8 +604,13 @@ namespace Tinke
 
             if (image.order == TileOrder.Horizontal)
             {
-                uint tileOffset = (image.rahc.depth == System.Windows.Forms.ColorDepth.Depth4Bit ? cell.obj2.tileOffset * 2 : cell.obj2.tileOffset);
-                tileOffset *= (blockSize != 0x00 ? blockSize : 1);
+                uint tileOffset = cell.obj2.tileOffset;
+                if (blockSize > 4)
+                    blockSize = 4;
+                if (image.rahc.depth == System.Windows.Forms.ColorDepth.Depth4Bit)
+                    tileOffset = (uint)(tileOffset << (byte)blockSize);
+                else
+                    tileOffset = (uint)(tileOffset << (byte)blockSize) / 2;
 
                 for (int i = 0; i < image.rahc.tileData.tiles.Length; i++)
                 {
@@ -619,8 +634,13 @@ namespace Tinke
             }
             else if (image.order == TileOrder.NoTiled)
             {
-                uint tileOffset = (image.rahc.depth == System.Windows.Forms.ColorDepth.Depth4Bit ? cell.obj2.tileOffset * 2 : cell.obj2.tileOffset) * 0x40;
-                tileOffset *= (blockSize != 0x00 ? blockSize : 1);
+                uint tileOffset = cell.obj2.tileOffset;
+                if (blockSize > 4)
+                    blockSize = 4;
+                if (image.rahc.depth == System.Windows.Forms.ColorDepth.Depth4Bit)
+                    tileOffset = (uint)(tileOffset << (byte)blockSize);
+                else
+                    tileOffset = (uint)(tileOffset << (byte)blockSize) / 2;
 
                 for (int i = 0; i < image.rahc.tileData.tiles[0].Length; i++)
                 {

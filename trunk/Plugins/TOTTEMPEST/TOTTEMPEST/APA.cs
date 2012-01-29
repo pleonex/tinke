@@ -63,6 +63,9 @@ namespace TOTTEMPEST
             for (int i = 0; i < palette.pltt.palettes.Length; i++)
                 bw.Write(pluginHost.ColorToBGR555(palette.pltt.palettes[i].colors));
 
+            for (; bw.BaseStream.Length != 0x200; )
+                bw.Write((byte)0x00);
+
             bw.Flush();
             bw.Close();
         }

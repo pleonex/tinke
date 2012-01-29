@@ -23,6 +23,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using PluginInterface;
+using PluginInterface.Images;
 
 namespace Images
 {
@@ -118,7 +119,7 @@ namespace Images
             br.Close();
             Set_Map(map, false, (int)ncsc.scrn.width, (int)ncsc.scrn.height);
         }
-        public override void Write_Map(string fileOut)
+        public override void Write(string fileOut)
         {
         }
 

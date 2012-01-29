@@ -180,7 +180,7 @@ namespace Tinke.Dialog
                 for (int i = 0; i < fat.num_files; i++)
                 {
                     sFile currFile = new sFile();
-                    currFile.name = "File " + i.ToString(); // TODO: add extension
+                    currFile.name = "File " + i.ToString(); 
                     currFile.path = file;
 
                     // Gets the offset and size

@@ -22,6 +22,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Drawing;
+using PluginInterface.Images;
 
 namespace PluginInterface
 {
