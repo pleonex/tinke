@@ -28,7 +28,7 @@ using System.Windows.Forms;
 using System.IO;
 using System.Xml.Linq;
 
-namespace PluginInterface
+namespace PluginInterface.Images
 {
     public partial class ImageControl : UserControl
     {
@@ -55,25 +55,44 @@ namespace PluginInterface
             this.pluginHost = pluginHost;
             btnImport.Enabled = image.CanEdit;
 
-            pic.Image = image.Get_Image(palette.Palette);
+            pic.Image = image.Get_Image();
 
-            if (image.Depth == ColorDepth.Depth32Bit)   // 1bpp
-                comboDepth.Text = "1 bpp";
-            else if (image.Depth == ColorDepth.Depth4Bit)
-                comboDepth.Text = "4 bpp";
-            else if (image.Depth == ColorDepth.Depth8Bit)
-                comboDepth.Text = "8 bpp";
+
+            switch (image.ColorFormat)
+            {
+                case ColorFormat.A3I5:
+                    comboDepth.SelectedIndex = 4;
+                    break;
+                case ColorFormat.A5I3:
+                    comboDepth.SelectedIndex = 5;
+                    break;
+                case ColorFormat.colors4:
+                    comboDepth.SelectedIndex = 6;
+                    break;
+                case ColorFormat.colors16:
+                    comboDepth.SelectedIndex = 0;
+                    break;
+                case ColorFormat.colors256:
+                    comboDepth.SelectedIndex = 1;
+                    break;
+                case ColorFormat.direct:
+                    comboDepth.SelectedIndex = 3;
+                    break;
+                case ColorFormat.colors2:
+                    comboDepth.SelectedIndex = 2;
+                    break;
+            }
 
             switch (image.TileForm)
             {
-                case TileOrder.NoTiled:
+                case TileForm.Lineal:
                     comboBox1.SelectedIndex = 0;
                     numericHeight.Minimum = 1;
                     numericWidth.Minimum = 1;
                     numericWidth.Increment = 1;
                     numericHeight.Increment = 1;
                     break;
-                case TileOrder.Horizontal:
+                case TileForm.Horizontal:
                     comboBox1.SelectedIndex = 1;
                     numericHeight.Minimum = 8;
                     numericWidth.Minimum = 8;
@@ -95,8 +114,8 @@ namespace PluginInterface
         public ImageControl(IPluginHost pluginHost, ImageBase image, PaletteBase palette, MapBase map)
         {
             InitializeComponent();
-
             stop = true;
+
             this.pluginHost = pluginHost;
             this.isMap = true;
             this.palette = palette;
@@ -104,17 +123,34 @@ namespace PluginInterface
             this.map = map;
             btnImport.Enabled = map.CanEdit;
 
-            pic.Image = map.Get_Image(image, palette);
-
+            pic.Image = map.Get_Image();
             this.numericWidth.Value = pic.Image.Width;
             this.numericHeight.Value = pic.Image.Height;
-         
-            if (image.Depth == ColorDepth.Depth32Bit)   // 1bpp
-                comboDepth.Text = "1 bpp";
-            else if (image.Depth == ColorDepth.Depth4Bit)
-                comboDepth.Text = "4 bpp";
-            else if (image.Depth == ColorDepth.Depth8Bit)
-                comboDepth.Text = "8 bpp";
+
+            switch (image.ColorFormat)
+            {
+                case ColorFormat.A3I5:
+                    comboDepth.SelectedIndex = 4;
+                    break;
+                case ColorFormat.A5I3:
+                    comboDepth.SelectedIndex = 5;
+                    break;
+                case ColorFormat.colors4:
+                    comboDepth.SelectedIndex = 6;
+                    break;
+                case ColorFormat.colors16:
+                    comboDepth.SelectedIndex = 0;
+                    break;
+                case ColorFormat.colors256:
+                    comboDepth.SelectedIndex = 1;
+                    break;
+                case ColorFormat.direct:
+                    comboDepth.SelectedIndex = 3;
+                    break;
+                case ColorFormat.colors2:
+                    comboDepth.SelectedIndex = 2;
+                    break;
+            }
  
             this.comboBox1.SelectedIndex = 1;
             this.comboBox1.Enabled = false;
@@ -155,12 +191,16 @@ namespace PluginInterface
             if (stop)
                 return;
 
-            if (comboDepth.Text == "1 bpp")
-                image.Depth = ColorDepth.Depth32Bit;    // 1 bpp
-            else if (comboDepth.Text == "4 bpp")
-                image.Depth = ColorDepth.Depth4Bit;
-            else if (comboDepth.Text == "8 bpp")
-                image.Depth = ColorDepth.Depth8Bit;
+            switch (comboDepth.SelectedIndex)
+            {
+                case 0: image.ColorFormat = ColorFormat.colors16; break;
+                case 1: image.ColorFormat = ColorFormat.colors256; break;
+                case 2: image.ColorFormat = ColorFormat.colors2; break;
+                case 3: image.ColorFormat = ColorFormat.direct; break;
+                case 4: image.ColorFormat = ColorFormat.A3I5; break;
+                case 5: image.ColorFormat = ColorFormat.A5I3; break;
+                case 6: image.ColorFormat = ColorFormat.colors4; break;
+            }
 
             Update_Image();
         }
@@ -172,14 +212,14 @@ namespace PluginInterface
             switch (comboBox1.SelectedIndex)
             {
                 case 0:
-                    image.TileForm = TileOrder.NoTiled;
+                    image.TileForm = TileForm.Lineal;
                     numericHeight.Minimum = 1;
                     numericWidth.Minimum = 1;
                     numericWidth.Increment = 1;
                     numericHeight.Increment = 1;
                     break;
                 case 1:
-                    image.TileForm = TileOrder.Horizontal;
+                    image.TileForm = TileForm.Horizontal;
                     numericHeight.Minimum = 8;
                     numericWidth.Minimum = 8;
                     numericWidth.Increment = 8;
@@ -187,19 +227,27 @@ namespace PluginInterface
                     break;
             }
 
-            pic.Image = image.Get_Image(palette.Palette);
+            Update_Image();
         }
 
         private void Update_Image()
         {
+            Bitmap bitmap;
+
             if (!isMap)
-                pic.Image = image.Get_Image(palette.Palette);
+                bitmap = (Bitmap)image.Get_Image();
             else
-                pic.Image = map.Get_Image(image, palette);
+                bitmap = (Bitmap)map.Get_Image();
+
+            if (checkTransparency.Checked)
+                bitmap.MakeTransparent(palette.Palette[image.TilesPalette[0]][0]);
+
+            pic.Image = bitmap;
         }
 
         private void ReadLanguage()
         {
+            // TODO
             try
             {
                 XElement xml = XElement.Load(Application.StartupPath + Path.DirectorySeparatorChar + "Plugins" +
@@ -226,6 +274,7 @@ namespace PluginInterface
 
         private void btnImport_Click(object sender, EventArgs e)
         {
+            // TODO
             OpenFileDialog o = new OpenFileDialog();
             o.CheckFileExists = true;
             o.DefaultExt = "bmp";
@@ -239,7 +288,7 @@ namespace PluginInterface
                 String tileFile = System.IO.Path.GetTempFileName() + '.' + image.FileName;
                 // TODO: set new tile data
 
-                image.Write_Tiles(tileFile);
+                image.Write(tileFile);
                 pluginHost.ChangeFile(image.ID, tileFile);
 
                 if (isMap)
@@ -255,11 +304,11 @@ namespace PluginInterface
                     //map = newMap;
 
                     //pluginHost.Set_NSCR(map);
-                    //Write_Map(mapFile, map, pluginHost);
+                    //Write(mapFile, map, pluginHost);
                     //pluginHost.ChangeFile((int)map.id, mapFile);
                 }
 
-                if (image.TileForm == TileOrder.NoTiled)
+                if (image.TileForm == TileForm.Lineal)
                 {
                     numericWidth.Value = image.Width;
                     numericHeight.Value = image.Height;
@@ -283,6 +332,7 @@ namespace PluginInterface
         }
         public static void Write_Tiles(string fileout, NCGR tiles, IPluginHost pluginHost)
         {
+            // Obsolet
             BinaryWriter bw = new BinaryWriter(File.OpenWrite(fileout));
 
             for (int i = 0; i < tiles.rahc.tileData.tiles.Length; i++)
@@ -296,6 +346,7 @@ namespace PluginInterface
         }
         public static void Write_Map(string fileout, NSCR map, IPluginHost pluginHost)
         {
+            // Obsolet
             BinaryWriter bw = new BinaryWriter(File.OpenWrite(fileout));
 
             for (int i = 0; i < map.section.mapData.Length; i++)
@@ -316,14 +367,33 @@ namespace PluginInterface
             SaveFileDialog o = new SaveFileDialog();
             o.AddExtension = true;
             o.DefaultExt = "bmp";
-            o.Filter = "BitMaP (*.bmp)|*.bmp";
+            o.Filter = "BitMaP (*.bmp)|*.bmp|" +
+                       "Portable Network Graphic (*.png)|*.png|" +
+                       "JPEG (*.jpg)|*.jpg;*.jpeg|" +
+                       "Tagged Image File Format (*.tiff)|*.tiff;*.tif|" +
+                       "Graphic Interchange Format (*.gif)|*.gif|" +
+                       "Icon (*.ico)|*.ico;*.icon";
             o.OverwritePrompt = true;
             if (o.ShowDialog() == DialogResult.OK)
-                pic.Image.Save(o.FileName, System.Drawing.Imaging.ImageFormat.Bmp);
+            {
+                if (o.FilterIndex == 1)
+                    pic.Image.Save(o.FileName, System.Drawing.Imaging.ImageFormat.Bmp);
+                else if (o.FilterIndex == 2)
+                    pic.Image.Save(o.FileName, System.Drawing.Imaging.ImageFormat.Png);
+                else if (o.FilterIndex == 3)
+                    pic.Image.Save(o.FileName, System.Drawing.Imaging.ImageFormat.Jpeg);
+                else if (o.FilterIndex == 4)
+                    pic.Image.Save(o.FileName, System.Drawing.Imaging.ImageFormat.Tiff);
+                else if (o.FilterIndex == 5)
+                    pic.Image.Save(o.FileName, System.Drawing.Imaging.ImageFormat.Gif);
+                else if (o.FilterIndex == 6)
+                    pic.Image.Save(o.FileName, System.Drawing.Imaging.ImageFormat.Icon);
+            }
             o.Dispose();
         }
         private void pic_DoubleClick(object sender, EventArgs e)
         {
+            // TODO: language
             XElement xml = XElement.Load(Application.StartupPath + Path.DirectorySeparatorChar + "Plugins" +
                 Path.DirectorySeparatorChar + "ImagesLang.xml");
             xml = xml.Element(pluginHost.Get_Language()).Element("ImageControl");

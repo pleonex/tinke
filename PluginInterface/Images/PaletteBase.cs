@@ -25,7 +25,7 @@ using System.IO;
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace PluginInterface
+namespace PluginInterface.Images
 {
     public abstract class PaletteBase
     {
@@ -39,7 +39,7 @@ namespace PluginInterface
         int startByte;
 
         Color[][] palette;
-        ColorDepth depth;
+        ColorFormat depth;
         bool canEdit;
 
         Object obj;
@@ -103,21 +103,19 @@ namespace PluginInterface
             if (index >= palette.Length)
                 return null;
 
-            return pluginHost.Bitmaps_NCLR(palette[index]);
+            return Actions.Get_Image(palette[index]);
         }
 
-        private void Change_PaletteDepth(ColorDepth newDepth)
+        private void Change_PaletteDepth(ColorFormat newDepth)
         {
             if (newDepth == depth)
                 return;
 
             depth = newDepth;
-            if (depth == ColorDepth.Depth8Bit)
-                palette = pluginHost.Palette_4bppTo8bpp(palette);
+            if (depth == ColorFormat.colors256)
+                palette = Actions.Palette_16To256(palette);
             else
-                palette = pluginHost.Palette_8bppTo4bpp(palette);
-
-            pluginHost.Set_NCLR(Get_NCLR());
+                palette = Actions.Palette_256To16(palette);
         }
         private void Change_StartByte(int start)
         {
@@ -133,7 +131,7 @@ namespace PluginInterface
             List<Color> colors = new List<Color>();
             colors.AddRange(pluginHost.BGR555ToColor(data));
 
-            if (depth == ColorDepth.Depth4Bit)
+            if (depth == ColorFormat.colors16)
             {
                 bool isExact = (colors.Count % 16 == 0 ? true : false);
                 palette = new Color[(colors.Count / 16) + (isExact ? 0 : 1)][];
@@ -149,8 +147,6 @@ namespace PluginInterface
                 palette = new Color[1][];
                 palette[0] = colors.ToArray();
             }
-
-            pluginHost.Set_NCLR(Get_NCLR());
         }
 
         public void Set_Palette(Color[][] palette, bool editable)
@@ -158,12 +154,11 @@ namespace PluginInterface
             this.palette = palette;
             canEdit = editable;
             if (palette.Length == 1 && palette[0].Length > 16)
-                depth = ColorDepth.Depth8Bit;
+                depth = ColorFormat.colors256;
             else
-                depth = ColorDepth.Depth4Bit;
+                depth = ColorFormat.colors16;
 
             loaded = true;
-            pluginHost.Set_NCLR(Get_NCLR());
 
             // Convert the palette to bytes, to store the original palette
             List<Color> colors = new List<Color>();
@@ -172,14 +167,13 @@ namespace PluginInterface
             original = pluginHost.ColorToBGR555(colors.ToArray());
             startByte = 0;
         }
-        public void Set_Palette(Color[][] palette, ColorDepth depth, bool editable)
+        public void Set_Palette(Color[][] palette, ColorFormat depth, bool editable)
         {
             this.palette = palette;
             canEdit = editable;
             this.depth = depth;
 
             loaded = true;
-            pluginHost.Set_NCLR(Get_NCLR());
 
             // Convert the palette to bytes, to store the original palette
             List<Color> colors = new List<Color>();
@@ -195,7 +189,7 @@ namespace PluginInterface
             get { return startByte; }
             set { Change_StartByte(value); }
         }
-        public ColorDepth Depth
+        public ColorFormat Depth
         {
             get { return depth; }
             set { Change_PaletteDepth(value); }
@@ -231,91 +225,4 @@ namespace PluginInterface
         #endregion
     }
 
-    public class RawPalette : PaletteBase
-    {
-        // Unknown data
-        byte[] prev_data;
-        byte[] next_data;
-
-        public RawPalette(IPluginHost pluginHost, string file, int id,
-            bool editable, ColorDepth depth, int offset, int size)
-            : base(pluginHost)
-        {
-            this.pluginHost = pluginHost;
-            this.fileName = System.IO.Path.GetFileName(file);
-            this.id = id;
-
-            Read(file, editable, depth, offset, size);
-        }
-        public RawPalette(IPluginHost pluginHost, string file, int id,
-            bool editable, int offset, int size)     : base(pluginHost)
-        {
-            this.pluginHost = pluginHost;
-            this.fileName = System.IO.Path.GetFileName(file);
-            this.id = id;
-
-            Read(file, editable, offset, size);
-        }
-
-
-        public override void Read(string fileIn)
-        {
-            Read(fileIn, false, 0, -1);
-        }
-        public void Read(string fileIn, bool editable, ColorDepth depth, int offset, int fileSize)
-        {
-            BinaryReader br = new BinaryReader(File.OpenRead(fileIn));
-            prev_data = br.ReadBytes(offset);
-
-            if (fileSize <= 0)
-                fileSize = (int)br.BaseStream.Length;
-
-            // Color data
-            Color[][] palette = new Color[0][];
-            if (depth == ColorDepth.Depth8Bit)
-            {
-                palette = new Color[1][];
-                palette[0] = pluginHost.BGR555ToColor(br.ReadBytes(fileSize));
-            }
-            else if (depth == ColorDepth.Depth4Bit)
-            {
-                palette = new Color[fileSize / 0x20][];
-                for (int i = 0; i < palette.Length; i++)
-                    palette[i] = pluginHost.BGR555ToColor(br.ReadBytes(0x20));
-            }
-
-            next_data = br.ReadBytes((int)(br.BaseStream.Length - fileSize));
-
-            br.Close();
-
-            Set_Palette(palette, depth, editable);
-        }
-        public void Read(string fileIn, bool editable, int offset, int fileSize)
-        {
-            BinaryReader br = new BinaryReader(File.OpenRead(fileIn));
-            prev_data = br.ReadBytes(offset);
-
-            if (fileSize <= 0)
-                fileSize = (int)br.BaseStream.Length;
-
-            // Color data
-            Color[][] palette = new Color[1][];
-            palette[0] = pluginHost.BGR555ToColor(br.ReadBytes(fileSize));
-
-            if (palette[0].Length < 0x100)
-                palette = pluginHost.Palette_8bppTo4bpp(palette);
-
-            next_data = br.ReadBytes((int)(br.BaseStream.Length - fileSize));
-
-            br.Close();
-
-            Set_Palette(palette, editable);
-        }
-
-        public override void Write_Palette(string fileOut)
-        {
-            // TODO: write raw palette.
-            throw new NotImplementedException();
-        }
-    }
 }

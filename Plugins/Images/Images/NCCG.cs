@@ -6,6 +6,7 @@ using System.IO;
 using System.Drawing;
 using System.Windows.Forms;
 using PluginInterface;
+using PluginInterface.Images;
 
 namespace Images
 {
@@ -39,14 +40,9 @@ namespace Images
             nccg.charS.height = br.ReadUInt32();
             nccg.charS.depth = br.ReadUInt32();
 
-            byte[][] tiles = new byte[nccg.charS.width * nccg.charS.height][];
-            for (int i = 0; i < tiles.Length; i++)
-            {
-                if (nccg.charS.depth == 0)
-                    tiles[i] = pluginHost.Bit8ToBit4(br.ReadBytes(0x20));
-                else
-                    tiles[i] = br.ReadBytes(0x40);
-            }
+            byte[] tiles = br.ReadBytes((int)(nccg.charS.width * nccg.charS.height * 64));
+            tiles = Actions.LinealToHorizontal(tiles, (int)nccg.charS.width, (int)nccg.charS.height,
+                (nccg.charS.depth == 0 ? 4 : 8));
 
             // ATTR section
             nccg.attr.type = br.ReadChars(4);
@@ -71,11 +67,11 @@ namespace Images
             br.Close();
 
             Set_Tiles(tiles, (int)nccg.charS.width * 8, (int)nccg.charS.height * 8,
-                (nccg.charS.depth == 0 ? ColorDepth.Depth4Bit : ColorDepth.Depth8Bit),
-                TileOrder.Horizontal, false);
+                (nccg.charS.depth == 0 ? ColorFormat.colors16 : ColorFormat.colors256),
+                TileForm.Horizontal, false);
         }
 
-        public override void Write_Tiles(string fileOut)
+        public override void Write(string fileOut)
         {
             Console.WriteLine("Write Tiles - NCCG");
         }

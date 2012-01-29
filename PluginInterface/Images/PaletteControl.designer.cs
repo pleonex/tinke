@@ -17,7 +17,7 @@
  * By: pleoNeX
  * 
  */
-namespace PluginInterface
+namespace PluginInterface.Images
 {
     partial class PaletteControl
     {

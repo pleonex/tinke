@@ -24,7 +24,7 @@ using System.Text;
 using System.IO;
 using System.Drawing;
 
-namespace PluginInterface
+namespace PluginInterface.Images
 {
     public abstract class MapBase
     {
@@ -41,6 +41,9 @@ namespace PluginInterface
         NTFS[] map;
         int width, height;
         bool canEdit;
+
+        bool custom_img;
+        ImageBase img;
 
         Object obj;
         #endregion
@@ -64,7 +67,7 @@ namespace PluginInterface
         }
 
         public abstract void Read(string fileIn);
-        public abstract void Write_Map(string fileOut);
+        public abstract void Write(string fileOut);
 
         public NSCR Get_NSCR()
         {
@@ -90,16 +93,31 @@ namespace PluginInterface
             return nscr;
         }
 
-        public Image Get_Image(ImageBase image, PaletteBase palette)
+        public Image Get_Image()
         {
-            NTFT newTiles = pluginHost.Transform_NSCR(Get_NSCR(), image.Get_NTFT());
+            ImageBase image;
+            if (custom_img)
+                image = img;
+            else if (pluginHost.Get_Image().Loaded)
+                image = pluginHost.Get_Image();
+            else
+            {
+                System.Windows.Forms.MessageBox.Show("There isn't image loaded");
+                return new Bitmap(1, 1);
+            }
+
+            if (image.TileForm == TileForm.Lineal)
+                image.TileForm = TileForm.Horizontal;
+
+            Byte[] tiles, tile_pal;
+            tiles = Actions.Apply_Map(Get_NSCR().section.mapData, image.Tiles, out tile_pal, image.TileWidth);
 
             ImageBase newImage = new TestImage(pluginHost);
-            newImage.Set_Tiles(newTiles.tiles, image.Width, image.Height, image.Depth, image.TileForm, image.CanEdit);
-            newImage.TilesPalette = newTiles.nPalette;
+            newImage.Set_Tiles(tiles, image.Width, image.Height, image.ColorFormat, image.TileForm, image.CanEdit);
+            newImage.TilesPalette = tile_pal;
             newImage.Zoom = image.Zoom;
 
-            return newImage.Get_Image(palette.Palette);
+            return newImage.Get_Image();
         }
 
         public void Set_Map(NTFS[] mapInfo, bool editable, int width = 0, int height = 0)
@@ -180,59 +198,17 @@ namespace PluginInterface
                 pluginHost.Set_NSCR(Get_NSCR());
             }
         }
+
+        public bool CustomImage
+        {
+            get { return custom_img; }
+        }
+        public ImageBase Image
+        {
+            get { return img; }
+        }
         #endregion
 
     }
 
-    public class RawMap : MapBase
-    {
-        // Unknown data
-        byte[] prev_data;
-        byte[] next_data;
-
-        public RawMap(IPluginHost pluginHost, string file, int id,
-            int offset, int size, bool editable)
-            : base(pluginHost)
-        {
-            this.pluginHost = pluginHost;
-            this.id = id;
-            this.fileName = System.IO.Path.GetFileName(file);
-
-            Read(file, offset, size, editable);
-        }
-
-        public override void Read(string fileIn)
-        {
-            Read(fileIn, 0, -1, false);
-        }
-        public void Read(string fileIn, int offset, int size, bool editable)
-        {
-            BinaryReader br = new BinaryReader(File.OpenRead(fileIn));
-            prev_data = br.ReadBytes(offset);
-
-            int file_size;
-            if (size <= 0)
-                file_size = (int)br.BaseStream.Length;
-            else
-                file_size = size;
-
-            NTFS[] map = new NTFS[file_size / 2];
-            for (int i = 0; i < map.Length; i++)
-                map[i] = pluginHost.MapInfo(br.ReadUInt16());
-
-            next_data = br.ReadBytes((int)(br.BaseStream.Length - file_size));
-
-            int width = (map.Length * 8 >= 0x100 ? 0x100 : map.Length * 8);
-            int height = (map.Length / (width / 8)) * 8;
-
-            br.Close();
-            Set_Map(map, editable, width, height);
-        }
-
-        public override void Write_Map(string fileOut)
-        {
-            // TODO: write raw map
-            throw new NotImplementedException();
-        }
-    }
 }

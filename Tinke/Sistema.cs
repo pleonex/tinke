@@ -233,7 +233,9 @@ namespace Tinke
             DateTime t6 = DateTime.Now;
 
             Stream stream = File.OpenRead(file);
+            treeSystem.BeginUpdate();
             treeSystem.Nodes.Add(Create_Nodes(root, stream)); // Get the node hierarchy
+            treeSystem.EndUpdate();
             stream.Close();
             stream.Dispose();
 
@@ -382,7 +384,9 @@ namespace Tinke
 
             Set_Format(root);
             DateTime t4 = DateTime.Now;
-            treeSystem.Nodes.Add(Create_Nodes(root)); // Mostramos el árbol
+            treeSystem.BeginUpdate();
+            treeSystem.Nodes.Add(Create_Nodes(root)); // Show files
+            treeSystem.EndUpdate();
             DateTime t5 = DateTime.Now;
             treeSystem.Nodes[0].Expand();
 
@@ -428,7 +432,9 @@ namespace Tinke
 
             Set_Format(root);
             DateTime t4 = DateTime.Now;
-            treeSystem.Nodes.Add(Create_Nodes(root)); // Mostramos el árbol
+            treeSystem.BeginUpdate();
+            treeSystem.Nodes.Add(Create_Nodes(root)); // Show files
+            treeSystem.EndUpdate();
             DateTime t5 = DateTime.Now;
             treeSystem.Nodes[0].Expand();
 
@@ -751,12 +757,15 @@ namespace Tinke
 
         private void ThreadEspera(Object name)
         {
+            Espera espera = new Espera((string)name, false);
+
             try
             {
-                Espera espera = new Espera((string)name, false);
                 espera.ShowDialog();
             }
-            catch { }
+            catch
+            {
+            }
         }
 
         private void treeSystem_AfterSelect(object sender, TreeViewEventArgs e)
@@ -1070,6 +1079,8 @@ namespace Tinke
         private void Add_TreeNodes(sFolder unpacked)
         {
             // Add new files to the main tree
+            treeSystem.BeginUpdate();
+
             TreeNode selected = treeSystem.SelectedNode;
             selected.Nodes.Clear();
             FolderToNode(unpacked, ref selected);
@@ -1083,6 +1094,8 @@ namespace Tinke
 
             treeSystem.SelectedNode.Nodes.AddRange((TreeNode[])nodos);
             treeSystem.SelectedNode.Expand();
+
+            treeSystem.EndUpdate();
             treeSystem.Focus();
         }
         private void UnpackFolder()
@@ -1098,9 +1111,14 @@ namespace Tinke
 
             Recursivo_UnpackFolder(folderSelected);
             Get_SupportedFiles();
+
+            treeSystem.BeginUpdate();
+
             treeSystem.Nodes.Clear();
             treeSystem.Nodes.Add(Create_Nodes(accion.Root));
             treeSystem.Nodes[0].Expand();
+
+            treeSystem.EndUpdate();
 
             if (!isMono)
             {
@@ -1660,7 +1678,7 @@ namespace Tinke
                 visor.Text += " - " + name;
                 visor.Show();
             }
-            else
+            else if (control is Control)
             {
                 panelObj.Controls.Clear();
 
@@ -1927,15 +1945,15 @@ namespace Tinke
         {
             if (txtSearch.Text == "")
             {
+                treeSystem.BeginUpdate();
                 treeSystem.Nodes.Clear();
                 treeSystem.Nodes.Add(Create_Nodes(accion.Root));
                 treeSystem.Nodes[0].Expand();
+                treeSystem.EndUpdate();
                 return;
             }
 
             Thread waiting = new System.Threading.Thread(ThreadEspera);
-            if (!isMono)
-                waiting.Start("S07");
 
             sFolder resul = new sFolder();
             resul.files = new List<sFile>();
@@ -1986,6 +2004,9 @@ namespace Tinke
                 resul = accion.Search_FileOffset(Convert.ToInt32(txtSearch.Text.Substring(8), 16));
             else if (txtSearch.Text.StartsWith("Header: ") && txtSearch.Text.Length > 8)
             {
+                if (!isMono)
+                    waiting.Start("S07");
+
                 List<byte> search = new List<byte>();
                 for (int i = 8; i + 1 < txtSearch.Text.Length; i += 2)
                     search.Add(Convert.ToByte(txtSearch.Text.Substring(i, 2), 16));
@@ -2011,12 +2032,15 @@ namespace Tinke
 
             TreeNode nodo = new TreeNode(Tools.Helper.GetTranslation("Sistema", "S2D"));
             FolderToNode(resul, ref nodo);
+
+            treeSystem.BeginUpdate();
             treeSystem.Nodes.Clear();
             nodo.Name = Tools.Helper.GetTranslation("Sistema", "S2D");
             treeSystem.Nodes.Add(nodo);
             treeSystem.ExpandAll();
+            treeSystem.EndUpdate();
 
-            if (!isMono)
+            if (!isMono && waiting.ThreadState == ThreadState.Running)
                 waiting.Abort();
         }
         private void txtSearch_TextChanged(object sender, EventArgs e)

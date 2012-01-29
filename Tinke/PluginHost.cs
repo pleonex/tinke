@@ -24,6 +24,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Drawing;
 using PluginInterface;
+using PluginInterface.Images;
 
 namespace Tinke
 {

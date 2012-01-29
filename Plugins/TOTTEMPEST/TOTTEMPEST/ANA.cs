@@ -43,7 +43,7 @@ namespace TOTTEMPEST
             
             // RAHC section
             ncgr.order = TileOrder.Horizontal;
-            ncgr.rahc.nTiles = (ushort)br.ReadUInt16();
+            ncgr.rahc.nTiles = br.ReadUInt16();
             ncgr.rahc.depth = (br.ReadUInt16() == 0x01 ? System.Windows.Forms.ColorDepth.Depth8Bit : System.Windows.Forms.ColorDepth.Depth4Bit);
             if (file_size - 4 == ncgr.rahc.nTiles * 0x40)
                 ncgr.rahc.depth = System.Windows.Forms.ColorDepth.Depth8Bit;
@@ -88,7 +88,7 @@ namespace TOTTEMPEST
         {
             BinaryWriter bw = new BinaryWriter(File.OpenWrite(fileout));
         
-            bw.Write(tile.rahc.nTiles);
+            bw.Write((ushort)tile.rahc.nTiles);
             bw.Write((ushort)(tile.rahc.depth == System.Windows.Forms.ColorDepth.Depth4Bit ? 0x00 : 0x01));
             // Write the tile data
             for (int i = 0; i < tile.rahc.tileData.tiles.Length; i++)

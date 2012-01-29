@@ -768,7 +768,7 @@ namespace Tinke
             newFile.name = oldFile.name;
             newFile.id = (ushort)id;
             newFile.offset = 0x00;
-            if (ROMFile == "")
+            if (ROMFile == "" && (oldFile.offset == 0x00 && new FileInfo(oldFile.path).Length == oldFile.size))
             {
                 File.Copy(newFilePath, oldFile.path, true);
                 newFile.path = oldFile.path;
@@ -1518,7 +1518,7 @@ namespace Tinke
             sFile selectedFile = Search_File(id);
 
             // Save the file
-            string tempFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + id + selectedFile.name;
+            string tempFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + Path.GetRandomFileName() + selectedFile.name;
             if (File.Exists(tempFile))
                 File.Delete(tempFile);
 

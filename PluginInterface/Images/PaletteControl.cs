@@ -28,7 +28,7 @@ using System.Windows.Forms;
 using System.IO;
 using System.Xml.Linq;
 
-namespace PluginInterface
+namespace PluginInterface.Images
 {
     public partial class PaletteControl : UserControl
     {
@@ -55,7 +55,7 @@ namespace PluginInterface
             numericPalette.Maximum = palette.NumberOfPalettes - 1;
             label3.Text = "of " + (palette.NumberOfPalettes - 1).ToString();
             numericStartByte.Maximum = palette.NumberOfColors * palette.NumberOfPalettes * 2;
-            comboDepth.SelectedIndex = (palette.Depth == ColorDepth.Depth4Bit ? 0 : 1);
+            comboDepth.SelectedIndex = (palette.Depth == ColorFormat.colors16 ? 0 : 1);
         }
 
         private void ReadLanguage()
@@ -94,7 +94,7 @@ namespace PluginInterface
         }
         private void comboDepth_SelectedIndexChanged(object sender, EventArgs e)
         {
-            palette.Depth = (comboDepth.SelectedIndex == 0 ? ColorDepth.Depth4Bit : ColorDepth.Depth8Bit);
+            palette.Depth = (comboDepth.SelectedIndex == 0 ? ColorFormat.colors16 : ColorFormat.colors256);
             picPalette.Image = palette.Get_PaletteImage((int)numericPalette.Value);
             numericPalette.Value = 0;
             numericPalette.Maximum = palette.NumberOfPalettes - 1;
