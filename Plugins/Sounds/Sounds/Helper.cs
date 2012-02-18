@@ -64,6 +64,25 @@ namespace Sounds
             return BitConverter.ToUInt32(br.ReadBytes(4).Reverse().ToArray(), 0);
         }
 
+        /* signed nibbles come up a lot */
+        public static int[] nibble_to_int = new int[] { 0, 1, 2, 3, 4, 5, 6, 7, -8, -7, -6, -5, -4, -3, -2, -1 };
+        public static int get_high_nibble_signed(byte n)
+        {
+            /*return ((n&0x70)-(n&0x80))>>4;*/
+            return nibble_to_int[n >> 4];
+        }
+        public static int get_low_nibble_signed(byte n)
+        {
+            /*return (n&7)-(n&8);*/
+            return nibble_to_int[n & 0xf];
+        }
+        public static int clamp16(int val)
+        {
+            if (val > 32767) return 32767;
+            if (val < -32768) return -32768;
+            return val;
+        }
+
     }
 
     public class BitReader

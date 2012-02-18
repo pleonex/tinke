@@ -13,7 +13,9 @@ namespace TOKIMEKIGS3S
         {
             sFile decompressed;
 
-            string temp = file + ".resc";
+            string parent_name = Path.GetFileNameWithoutExtension(file).Substring(12);
+
+            string temp = parent_name + ".resc";
             Byte[] compressFile = new Byte[(new FileInfo(file).Length) - 0x10];
             Array.Copy(File.ReadAllBytes(file), 0x10, compressFile, 0, compressFile.Length); ;
             File.WriteAllBytes(temp, compressFile);

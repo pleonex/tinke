@@ -345,8 +345,9 @@ namespace Tinke
 
                 if (image)
                 {
-                    for (int j = 0; j < tile.rahc.tileData.nPalette.Length; j++)
-                        tile.rahc.tileData.nPalette[j] = banco.cells[i].obj2.index_palette;
+                    if (tile.rahc.depth == System.Windows.Forms.ColorDepth.Depth4Bit)
+                        for (int j = 0; j < tile.rahc.tileData.nPalette.Length; j++)
+                            tile.rahc.tileData.nPalette[j] = banco.cells[i].obj2.index_palette;
 
                     if (blockSize < 4)
                     {
@@ -441,8 +442,9 @@ namespace Tinke
 
                 if (image)
                 {
-                    for (int j = 0; j < tile.rahc.tileData.nPalette.Length; j++)
-                        tile.rahc.tileData.nPalette[j] = banco.cells[i].obj2.index_palette;
+                    if (tile.rahc.depth == System.Windows.Forms.ColorDepth.Depth4Bit)
+                        for (int j = 0; j < tile.rahc.tileData.nPalette.Length; j++)
+                            tile.rahc.tileData.nPalette[j] = banco.cells[i].obj2.index_palette;
 
                     if (blockSize < 4)
                     {

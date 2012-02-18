@@ -89,7 +89,11 @@ namespace PluginInterface.Images
 
             Byte[] img_tiles;
             if (tileForm == Images.TileForm.Horizontal)
+            {
+                if (height < 8) height = 8;
                 img_tiles = Actions.LinealToHorizontal(tiles, width / 8, height / 8, tile_width);
+                tilePal = Actions.LinealToHorizontal(tilePal, width / 8, height / 8, 8);
+            }
             else
                 img_tiles = tiles;
 
@@ -127,8 +131,6 @@ namespace PluginInterface.Images
             Height = height;
             this.canEdit = editable;
 
-            tilePal = new byte[tiles.Length];
-
             zoom = 1;
             startByte = 0;
             loaded = true;
@@ -143,6 +145,7 @@ namespace PluginInterface.Images
             else if (format == Images.ColorFormat.direct)
                 tile_width = 16;
 
+            tilePal = new byte[tiles.Length * (8 / tile_width)];
 
             // Get the original data for changes in startByte
             original = (byte[])tiles.Clone();
@@ -213,6 +216,8 @@ namespace PluginInterface.Images
                     tile_width = 16;
                 else
                     tile_width = 8;
+
+                tilePal = new byte[tiles.Length * (8 / tile_width)];
             }
         }
         public TileForm TileForm

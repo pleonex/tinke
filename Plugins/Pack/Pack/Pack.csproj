@@ -45,6 +45,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Games\4HEROSLIGHT.cs" />
+    <Compile Include="Games\RR3BACE.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="NARC.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

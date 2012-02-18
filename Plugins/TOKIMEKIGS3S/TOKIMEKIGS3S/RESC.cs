@@ -55,13 +55,10 @@ namespace TOKIMEKIGS3S
 
             // Write pointer table
             uint offset = (uint)unpacked.files.Count * 0x30 + 0x10;
+            uint[] offset_files = new uint[unpacked.files.Count];
             for (int i = 0; i < unpacked.files.Count; i++)
             {
-                sFile newFile = unpacked.files[i];
-                newFile.offset = offset;
-                newFile.path = fileOut;
-                unpacked.files[i] = newFile;
-
+                offset_files[i] = offset;
                 bw.Write(br.ReadBytes(0x18));   // File name and extension
                 bw.Write(unpacked.files[i].size);
                 bw.Write(offset);
@@ -82,6 +79,11 @@ namespace TOKIMEKIGS3S
                 bw.Write(br.ReadBytes((int)unpacked.files[i].size));
                 bw.Flush();
                 br.Close();
+
+                sFile newFile = unpacked.files[i];
+                newFile.offset = offset_files[i];
+                newFile.path = fileOut;
+                unpacked.files[i] = newFile;
             }
             bw.Flush();
             bw.Close();

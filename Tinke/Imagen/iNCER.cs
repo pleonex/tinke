@@ -129,7 +129,7 @@ namespace Tinke
             o.Filter = "BitMaP (*.bmp)|*.bmp|" +
                        "Portable Network Graphic (*.png)|*.png|" +
                        "JPEG (*.jpg)|*.jpg;*.jpeg|" +
-                       "Tagged Image File Format (*.tiff)|*.tiff;*.tif|" + 
+                       "Tagged Image File Format (*.tiff)|*.tiff;*.tif|" +
                        "Graphic Interchange Format (*.gif)|*.gif|" +
                        "Icon (*.ico)|*.ico;*.icon";
             o.OverwritePrompt = true;
@@ -286,35 +286,38 @@ namespace Tinke
                 {
                     tempImage.Dispose();
                     // Convert the image to bmp format
-                    using (System.IO.MemoryStream ms = new System.IO.MemoryStream())
+                    string memoryFile = System.IO.Path.GetTempFileName();
+                    // Convert to BMP
+                    Image.FromFile(filePath).Save(memoryFile, System.Drawing.Imaging.ImageFormat.Bmp);
+                    Bitmap bmp = (Bitmap)Image.FromFile(memoryFile);
+
+                    // Convert to indexed colors (palette+tiles)
+                    Bitmap cbmp;
+                    if (tile.rahc.depth == ColorDepth.Depth4Bit)
                     {
-                        // Convert to BMP
-                        Image.FromFile(filePath).Save(ms, System.Drawing.Imaging.ImageFormat.Bmp);
-                        Bitmap bmp = (Bitmap)Image.FromStream(ms);
-
-                        // Convert to indexed colors (palette+tiles)
-                        if (tile.rahc.depth == ColorDepth.Depth4Bit)
-                        {
-                            bmp = bmp.Clone(
-                                new Rectangle(new Point(0, 0), bmp.Size),
-                                System.Drawing.Imaging.PixelFormat.Format4bppIndexed);
-                        }
-                        else
-                        {
-                            bmp = bmp.Clone(
-                                new Rectangle(new Point(0, 0), bmp.Size),
-                                System.Drawing.Imaging.PixelFormat.Format8bppIndexed);
-
-                        }
-
-                        // Save the new file
-                        filePath = pluginHost.Get_TempFolder() + System.IO.Path.DirectorySeparatorChar + "bmp_" +
-                            System.IO.Path.GetFileName(filePath);
-                        if (System.IO.File.Exists(filePath))
-                            System.IO.File.Delete(filePath);
-
-                        bmp.Save(filePath, System.Drawing.Imaging.ImageFormat.Bmp);
+                        cbmp = bmp.Clone(
+                            new Rectangle(new Point(0, 0), bmp.Size),
+                            System.Drawing.Imaging.PixelFormat.Format4bppIndexed);
                     }
+                    else
+                    {
+                        cbmp = bmp.Clone(
+                            new Rectangle(new Point(0, 0), bmp.Size),
+                            System.Drawing.Imaging.PixelFormat.Format8bppIndexed);
+
+                    }
+
+                    // Save the new file
+                    filePath = pluginHost.Get_TempFolder() + System.IO.Path.DirectorySeparatorChar + "bmp_" +
+                        System.IO.Path.GetFileName(filePath);
+                    if (System.IO.File.Exists(filePath))
+                        System.IO.File.Delete(filePath);
+
+                    cbmp.Save(filePath, System.Drawing.Imaging.ImageFormat.Bmp);
+
+                    bmp.Dispose();
+                    cbmp.Dispose();
+                    System.IO.File.Delete(memoryFile);
                 }
                 tempImage.Dispose();
                 #endregion

@@ -318,10 +318,9 @@ namespace PluginInterface.Images
             {
                 for (int w = 0; w < width; w++)
                 {
-                    if (tile_pal.Length <= w + h * width)
-                        continue;
-
-                    int num_pal = tile_pal[w + h * width];
+                    int num_pal = 0;
+                    if (tile_pal.Length > w + h * width)
+                        num_pal = tile_pal[w + h * width];
 
                     if (num_pal >= palette.Length)
                         num_pal = 0;
@@ -342,6 +341,7 @@ namespace PluginInterface.Images
             switch (format)
             {
                 case ColorFormat.A3I5:
+                    if (data.Length <= pos) break;
                     index = data[pos] & 0x1F;
                     alpha = (data[pos] >> 5);
                     alpha = ((alpha * 4) + (alpha / 2)) * 8;
@@ -354,6 +354,7 @@ namespace PluginInterface.Images
                     pos++;
                     break;
                 case ColorFormat.A5I3:
+                    if (data.Length <= pos) break;
                     index = data[pos] & 0x7;
                     alpha = (data[pos] >> 3);
                     alpha *= 8;
@@ -367,6 +368,7 @@ namespace PluginInterface.Images
                     break;
 
                 case ColorFormat.colors2:
+                    if (data.Length <= (pos / 8)) break;
                     byte bit1 = data[pos / 8];
                     index = ByteToBits(bit1)[pos % 8];
                         if (palette.Length > index)
@@ -374,6 +376,7 @@ namespace PluginInterface.Images
                     pos++;
                     break;
                 case ColorFormat.colors4:
+                    if (data.Length <= (pos / 4)) break;
                     byte bit2 = data[pos / 4];
                     index = ByteToBit2(bit2)[pos % 4];
                     if (palette.Length > index)
@@ -381,6 +384,7 @@ namespace PluginInterface.Images
                     pos++;
                     break;
                 case ColorFormat.colors16:
+                    if (data.Length <= (pos / 2)) break;
                     byte bit4 = data[pos / 2];
                     index = ByteToBit4(bit4)[pos % 2];
                     if (palette.Length > index)
@@ -388,7 +392,7 @@ namespace PluginInterface.Images
                     pos++;
                     break;
                 case ColorFormat.colors256:
-                    if (palette.Length > data[pos])
+                    if (data.Length > pos && palette.Length > data[pos])
                         color = palette[data[pos]];
                     pos++;
                     break;

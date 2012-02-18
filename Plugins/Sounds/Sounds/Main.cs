@@ -24,7 +24,7 @@ namespace Sounds
             if (ext == "sadl")
             {
                 byte coding = pluginHost.Get_Bytes(id, 0x33, 1)[0];
-                if ((coding & 0xF0) == 0x70)
+                if ((coding & 0xF0) == 0x70 || (coding & 0xF0) == 0xB0)
                     return Format.Sound;
             }
 

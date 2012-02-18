@@ -17,7 +17,7 @@
       <S0C>Número de muestras</S0C>
       <S0D>Tamaño por bloque</S0D>
       <S0E>Tamaño de muestra (bits)</S0E>
-      <S0F>Copyright</S0F>
+      <S0F>Créditos</S0F>
     </SoundControl>
     <Messages>
       <S00>Convirtiendo archivos de audio</S00>
@@ -43,7 +43,7 @@
       <S0C>Number of samples</S0C>
       <S0D>Block size</S0D>
       <S0E>Sample bit depth</S0E>
-      <S0F>Copyright</S0F>
+      <S0F>Credits</S0F>
     </SoundControl>
     <Messages>
       <S00>Converting sound file</S00>
@@ -69,7 +69,7 @@
       <S0C>Number of samples</S0C>
       <S0D>Block size</S0D>
       <S0E>Sample bit depth</S0E>
-      <S0F>Copyright</S0F>
+      <S0F>Credits</S0F>
     </SoundControl>
     <Messages>
       <S00>Conversion de l'archive en boucle</S00>

@@ -34,16 +34,32 @@ namespace INAZUMA11
             sFolder unpacked = new sFolder();
             unpacked.files = new List<sFile>();
 
+            bool images = true;
             string parent_name = Path.GetFileNameWithoutExtension(file).Substring(12);
             uint num_files = br.ReadUInt32();
 
             for (int i = 0; i < num_files; i++)
             {
                 sFile newFile = new sFile();
-                newFile.name = parent_name + " - " + i.ToString() + ".bin";
+                newFile.name = parent_name + " - " + i.ToString();
                 newFile.offset = br.ReadUInt32();
                 newFile.size = br.ReadUInt32();
                 newFile.path = file;
+
+                if ((num_files == 3 || num_files == 2 || num_files == 4) && images)
+                {
+                    long currPos = br.BaseStream.Position;
+                    br.BaseStream.Position = newFile.offset;
+                    string ext = new String(Encoding.ASCII.GetChars(br.ReadBytes(4)));
+                    br.BaseStream.Position = currPos;
+
+                    if (ext == "BMD0" || ext == "BCA0" || ext == "CTB\0" || ext == "BMA0" || ext == "BTP0" || ext == "BTA0")
+                        images = false;
+                    if (newFile.size == 0 && i != 1)
+                        images = false;
+                    if (i == 0 && num_files == 3 && newFile.size > 0x200)
+                        images = false;
+                }
 
                 unpacked.files.Add(newFile);
             }
@@ -51,6 +67,28 @@ namespace INAZUMA11
             uint fat_size = br.ReadUInt32();
 
             br.Close();
+
+            // Set extension
+            for (int i = 0; i < num_files; i++)
+            {
+                sFile newFile = unpacked.files[i];
+                if (num_files == 2 && images)
+                {
+                    if (i == 1) newFile.name += ".nbfp";
+                    if (i == 0) newFile.name += ".nbfc";
+                }
+                else if ((num_files == 3 ||num_files == 4) && images)
+                {
+                    if (i == 0) newFile.name += ".nbfp";
+                    if (i == 1) newFile.name += ".nbfs";
+                    if (i == 2) newFile.name += ".nbfc";
+                    if (i == 3) newFile.name += ".bin";
+                }
+                else
+                    newFile.name += ".bin";
+                unpacked.files[i] = newFile;
+            }
+
             return unpacked;
         }
     }

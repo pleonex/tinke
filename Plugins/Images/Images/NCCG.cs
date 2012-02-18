@@ -40,9 +40,7 @@ namespace Images
             nccg.charS.height = br.ReadUInt32();
             nccg.charS.depth = br.ReadUInt32();
 
-            byte[] tiles = br.ReadBytes((int)(nccg.charS.width * nccg.charS.height * 64));
-            tiles = Actions.LinealToHorizontal(tiles, (int)nccg.charS.width, (int)nccg.charS.height,
-                (nccg.charS.depth == 0 ? 4 : 8));
+            byte[] tiles = br.ReadBytes((int)(nccg.charS.size - 0x14));
 
             // ATTR section
             nccg.attr.type = br.ReadChars(4);
