@@ -73,6 +73,8 @@ namespace LAYTON
             sFolder decode = new sFolder();
             decode.files = new List<sFile>();
 
+            string parent_name = Path.GetFileNameWithoutExtension(file).Substring(12);
+
             char[] type = br.ReadChars(4);
             uint decoded_length = br.ReadUInt32();
             bool coded = (new String(br.ReadChars(4)) == "LZSS" ? true : false);
@@ -81,7 +83,7 @@ namespace LAYTON
             if (!coded)
             {
                 sFile newFile = new sFile();
-                newFile.name = Path.GetFileNameWithoutExtension(file);
+                newFile.name = parent_name;
                 newFile.offset = (uint)br.BaseStream.Position;
                 newFile.size = decoded_length;
                 newFile.path = file;
@@ -92,11 +94,54 @@ namespace LAYTON
             }
             else
             {
-                // ENCODING UNKNOWN. It is not the same as normal LZSS.
+                sFile newFile = new sFile();
+                newFile.name = parent_name;
+                newFile.offset = 0;
+                newFile.size = decoded_length;
+                newFile.path = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + "dec_" + Path.GetRandomFileName() + newFile.name;
+
+                Decode_LZSS(br.ReadBytes((int)coded_length), newFile.path, (int)decoded_length);
+
+                br.Close();
+                br = new BinaryReader(File.OpenRead(newFile.path));
+                newFile.name += '.' + new String(br.ReadChars(4));
+
+                decode.files.Add(newFile);
             }
 
             br.Close();
             return decode;
+        }
+
+        public static void Decode_LZSS(byte[] encoded, string fileOut, int decode_length)
+        {
+            Byte[] buffer = new byte[decode_length];
+            int pos_buf = 0;
+            int pos_enc = 0;
+
+            while (pos_buf < decode_length)
+            {
+                int length = 0;
+                if ((encoded[pos_enc] & 1) == 0)    // No coded, just copy
+                {
+                    length = encoded[pos_enc++] >> 1;
+                    for (int i = 0; i < length; i++)
+                        buffer[pos_buf++] = encoded[pos_enc++];
+                }
+                else                                // Coded, go back and copy
+                {
+                    ushort value = BitConverter.ToUInt16(encoded, pos_enc);
+                    pos_enc += 2;
+
+                    length = (value >> 0xC) + 2;
+                    int cod_pos = pos_buf - ((value & 0xFFF) >> 1);
+
+                    for (int i = 0; i < length; i++)
+                        buffer[pos_buf++] = buffer[cod_pos++];
+                }
+            }
+
+            File.WriteAllBytes(fileOut, buffer);
         }
     }
 }

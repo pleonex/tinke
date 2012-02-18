@@ -38,7 +38,8 @@ namespace INAZUMA11
         }
         public bool IsCompatible()
         {
-            if (gameCode == "BEBJ" || gameCode == "BOEJ" || gameCode == "BEEJ")
+			if (gameCode == "BEBJ" || gameCode == "BOEJ" || gameCode == "BEEJ" || 
+				gameCode == "YEEP" || gameCode == "YEEJ" || gameCode == "BE8J" || gameCode == "BEZJ")
                 return true;
 
             return false;
@@ -54,7 +55,7 @@ namespace INAZUMA11
                 return Format.Pack;
             else if (fileName.ToUpper().EndsWith(".PKH"))
                 return Format.System;
-            else if (fileName.ToUpper().EndsWith(".SPF_"))
+            else if (fileName.ToUpper().EndsWith(".SPF_") && ext == "SFP\0")
                 return Format.Pack;
             else if (fileName.ToUpper().EndsWith(".SPD"))
                 return Format.Pack;

@@ -49,6 +49,7 @@
     <Compile Include="ADX.cs" />
     <Compile Include="Compression\IMA-ADPCM.cs" />
     <Compile Include="Compression\PCM.cs" />
+    <Compile Include="Compression\Procyon.cs" />
     <Compile Include="Helper.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

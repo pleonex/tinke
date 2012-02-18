@@ -11,7 +11,7 @@ IF errorlevel 1 set plat=x86
 IF errorlevel 2 set plat=x64
 IF errorlevel 3 set plat=Any CPU
 
-CHOICE /C SN /M "You have choosen the configuration %conf% and the platform %plat%, Is this correct?"
+CHOICE /C YN /M "You have choosen the configuration %conf% and the platform %plat%, Is this correct?"
 IF errorlevel 2 goto start
 
 RMDIR /S /Q "%cd%\build"

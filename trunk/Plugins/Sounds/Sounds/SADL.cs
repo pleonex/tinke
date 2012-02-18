@@ -83,6 +83,10 @@ namespace Sounds
         }
         public override byte[] Decode(byte[] encoded, bool loop_enabled)
         {
+            if (sadl.coding == Coding.NDS_PROCYON)
+                return Decode_Procyon(encoded);
+
+            // IMA_ADPCM encoding:
             int start_offset = 0x100;
             int pos;
 
@@ -96,7 +100,7 @@ namespace Sounds
             List<byte> right_channel = new List<byte>();
             List<byte> data = new List<byte>();
 
-            for ( ; pos < encoded.Length; )
+            for (; pos < encoded.Length; )
             {
                 if (sadl.channel == 2)   // Stereo
                 {
@@ -142,6 +146,57 @@ namespace Sounds
             }
 
             return data.ToArray();
+        }
+
+        public byte[] Decode_Procyon(byte[] encoded)
+        {
+            int start_offset = 0x100;
+
+            byte[][] buffer = new byte[2][];
+            int[][] hist = new int[channels][];
+            int[] length = new int[2];
+            int[] offset = new int[channels];
+            for (int i = 0; i < channels; i++)
+            {
+                offset[i] = (int)(start_offset + block_size * i);
+                buffer[i] = new byte[NumberSamples * 2];
+                length[i] = 0;
+                hist[i] = new int[2];
+            }
+
+            int samples_written = 0;
+            int samples_to_do = 0;
+
+            while (samples_written < NumberSamples)
+            {
+                samples_to_do = 30;
+                if (samples_written + samples_to_do > NumberSamples)
+                    samples_to_do = (int)total_samples - samples_written;
+
+                for (int chan = 0; chan < channels; chan++)
+                {
+                    byte[] temp = Compression.Procyon.Decode(encoded,
+                        offset[chan],
+                        samples_to_do,
+                        ref hist[chan],
+                        (int)channels);
+
+                    Array.Copy(temp, 0, buffer[chan], length[chan], temp.Length);
+                    length[chan] += temp.Length;
+
+                    offset[chan] += (int)(block_size * channels);
+                }
+
+                samples_written += samples_to_do;
+            }
+
+            byte[] mus;
+            if (channels == 1)
+                mus = buffer[0];
+            else
+                mus = Helper.MergeChannels(buffer[0], buffer[1]);
+
+            return mus;
         }
 
         public override void Write_File(string fileOut, byte[] data)

@@ -113,15 +113,15 @@ namespace Images
             }
 
             // Palette
-            if (ext == "NCCL")
+            if (file.ToUpper().EndsWith(".NTFP") || file.ToUpper().EndsWith(".PLT"))
             {
-                NCCL palette = new NCCL(pluginHost, file, id);
+                RawPalette palette = new RawPalette(pluginHost, file, id, false, 0, -1);
                 pluginHost.Set_Palette(palette);
                 return Format.Palette;
             }
-            else if (file.ToUpper().EndsWith(".NTFP") || file.ToUpper().EndsWith(".PLT"))
+            else if (ext == "NCCL")
             {
-                RawPalette palette = new RawPalette(pluginHost, file, id, false, 0, -1);
+                NCCL palette = new NCCL(pluginHost, file, id);
                 pluginHost.Set_Palette(palette);
                 return Format.Palette;
             }
@@ -139,13 +139,7 @@ namespace Images
             }
 
             // Tile
-            if (ext == "NCCG")
-            {
-                NCCG image = new NCCG(pluginHost, file, id);
-                pluginHost.Set_Image(image);
-                return Format.Tile;
-            }
-            else if (file.ToUpper().EndsWith(".NTFT"))
+            if (file.ToUpper().EndsWith(".NTFT"))
             {
                 RawImage image = new RawImage(pluginHost, file, id, TileForm.Lineal, ColorFormat.colors256, false,
                     0, -1);
@@ -155,6 +149,12 @@ namespace Images
                     if (image.Height != 32 && image.Width != 32)
                         image.Height *= 2;
                 }
+                pluginHost.Set_Image(image);
+                return Format.Tile;
+            }
+            else if (ext == "NCCG")
+            {
+                NCCG image = new NCCG(pluginHost, file, id);
                 pluginHost.Set_Image(image);
                 return Format.Tile;
             }
@@ -182,21 +182,7 @@ namespace Images
             }
 
             // Map
-            if (ext == "NCSC")
-            {
-                NCSC map = new NCSC(pluginHost, file, id);
-                ImageBase image = pluginHost.Get_Image();
-
-                if (map.Width != 0)
-                    image.Width = map.Width;
-                if (map.Height != 0)
-                    image.Height = map.Height;
-
-                pluginHost.Set_Image(image);
-                pluginHost.Set_Map(map);
-                return Format.Map;
-            }
-            else if (file.ToUpper().EndsWith(".NBFS"))
+            if (file.ToUpper().EndsWith(".NBFS"))
             {
                 RawMap map = new RawMap(pluginHost, file, id,
                     0, -1, false);
@@ -209,6 +195,20 @@ namespace Images
 
                 pluginHost.Set_Map(map);
                 pluginHost.Set_Image(image);
+                return Format.Map;
+            }
+            else if (ext == "NCSC")
+            {
+                NCSC map = new NCSC(pluginHost, file, id);
+                ImageBase image = pluginHost.Get_Image();
+
+                if (map.Width != 0)
+                    image.Width = map.Width;
+                if (map.Height != 0)
+                    image.Height = map.Height;
+
+                pluginHost.Set_Image(image);
+                pluginHost.Set_Map(map);
                 return Format.Map;
             }
             else if (file.ToUpper().EndsWith(".NSC.L") && ext[0] != '\x10')

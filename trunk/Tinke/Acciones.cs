@@ -93,8 +93,6 @@ namespace Tinke
                             IPlugin plugin = (IPlugin)Activator.CreateInstance(assembly.GetType(pluginType.ToString()));
                             plugin.Initialize(pluginHost);
                             formatList.Add(plugin);
-
-                            break;
                         } // end if
                         else
                         {
@@ -105,8 +103,6 @@ namespace Tinke
                                 plugin.Initialize(pluginHost, gameCode);
                                 if (plugin.IsCompatible())
                                     gamePlugin.Add(plugin);
-
-                                break;
                             } // end if
                         } //end else
                     } //end foreach

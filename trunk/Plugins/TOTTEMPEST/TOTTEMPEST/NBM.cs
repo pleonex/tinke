@@ -105,8 +105,6 @@ namespace TOTTEMPEST
 
             // Palette section
             bw.Write(pluginHost.ColorToBGR555(palette.pltt.palettes[0].colors));
-            if (palette.pltt.depth == System.Windows.Forms.ColorDepth.Depth4Bit) // If 4bpp there is an unused extra palette
-                bw.Write(extraPaletteData);
 
             // Tile section
             if (tile.rahc.depth == System.Windows.Forms.ColorDepth.Depth4Bit)
@@ -117,13 +115,5 @@ namespace TOTTEMPEST
             bw.Flush();
             bw.Close();
         }
-
-        private static byte[] extraPaletteData = {
-	        0x44, 0x02, 0x00, 0x42, 0x24, 0x00, 0x20, 0x44, 0x44, 0x02, 0x42, 0x44,
-	        0x44, 0x24, 0x00, 0x20, 0x44, 0x02, 0x42, 0x44, 0x44, 0x24, 0x00, 0x42,
-	        0x44, 0x02, 0x42, 0x44, 0x44, 0x24, 0x20, 0x44, 0x44, 0x02, 0x20, 0x44,
-	        0x44, 0x02
-            };
-
     }
 }

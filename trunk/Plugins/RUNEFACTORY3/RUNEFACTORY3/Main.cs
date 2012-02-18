@@ -45,8 +45,12 @@ namespace RUNEFACTORY3
 
         public Format Get_Format(string fileName, byte[] magic, int id)
         {
+            string ext = new String(Encoding.ASCII.GetChars(magic));
+
             if (id == 0x14)
                 return Format.Pack;
+            else if (ext == "TEXT")
+                return Format.Text;
 
             return Format.Unknown;
         }
