@@ -14,7 +14,7 @@
  *   You should have received a copy of the GNU General Public License
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  *
- * Programador: pleoNeX
+ * By: pleoNeX
  * 
  */
 using System;
@@ -22,19 +22,26 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using System.Drawing;
 using PluginInterface;
+using PluginInterface.Images;
 
 namespace _999HRPERDOOR
 {
-    public static class SIR0
+    public class SIR0_Sprite : SpriteBase
     {
-        public static void Read(string file, int id, IPluginHost pluginHost)
+        SIR0_Info info;
+
+        public SIR0_Sprite(IPluginHost pluginHost, string file, int id) : base(pluginHost, file, id) { }
+
+        public override void Read(string file)
         {
             BinaryReader br = new BinaryReader(File.OpenRead(file));
-            SIR0_Info info = new SIR0_Info();
-            NCLR palette = new NCLR();
-            NCGR tiles = new NCGR();
-            NCER cells = new NCER();
+            info = new SIR0_Info();
+
+            PaletteBase palette;
+            ImageBase image;
+            PluginInterface.Images.Bank bank;
 
             // Read header
             char[] file_id = br.ReadChars(4);
@@ -78,68 +85,46 @@ namespace _999HRPERDOOR
 
             // Read palette
             br.BaseStream.Position = info.info3.palette_offset;
-            palette.header.file_size = 0x200;
-            palette.header.id = "SIR0".ToCharArray();
-            palette.id = (uint)id;
-            palette.pltt.ID = "SIR0".ToCharArray();
-            palette.pltt.depth = System.Windows.Forms.ColorDepth.Depth8Bit;
-            palette.pltt.nColors = 0x100;
-            palette.pltt.paletteLength = 0x200;
-            palette.pltt.length = 0x200;
-            palette.pltt.palettes = new NTFP[1];
-            palette.pltt.palettes[0].colors = pluginHost.BGR555ToColor(br.ReadBytes(0x200));
+            Color[][] colors = new Color[1][];
+            colors[0] = pluginHost.BGR555ToColor(br.ReadBytes(0x200));
+            palette = new RawPalette(pluginHost, colors, false, ColorFormat.colors256);
 
             // Read tiles
             br.BaseStream.Position = info.info3.tile_offset;
-            tiles.id = (uint)id;
-            tiles.header.id = "SIR0".ToCharArray();
-            tiles.rahc.id = "SIR0".ToCharArray();
-            tiles.header.file_size = info.info3.tile_size;
-            tiles.rahc.size_section = info.info3.tile_size;
-            tiles.rahc.size_tiledata = info.info3.tile_size;
-            tiles.order = TileOrder.NoTiled;
-            tiles.rahc.depth = System.Windows.Forms.ColorDepth.Depth8Bit;
-            tiles.rahc.nTiles = info.info3.tile_size;
-            tiles.rahc.nTilesX = 0x40;
-            tiles.rahc.nTilesY = (ushort)(tiles.rahc.nTiles / tiles.rahc.nTilesX);
-            tiles.rahc.tileData.nPalette = new byte[info.info3.tile_size];
-            tiles.rahc.tileData.tiles = new byte[1][];
-            tiles.rahc.tileData.tiles[0] = br.ReadBytes((int)info.info3.tile_size);
-            for (int i = 0; i < info.info3.tile_size; i++)
-                tiles.rahc.tileData.nPalette[i] = 0;
+            byte[] tiles = new byte[info.info3.tile_size];
+            tiles = br.ReadBytes((int)info.info3.tile_size);
+            image = new RawImage(pluginHost, tiles, TileForm.Lineal, ColorFormat.colors256, 0x40,
+                (int)(info.info3.tile_size / 0x40), false);
 
             // Read cell info
-            uint cell_size;
+            uint bank_size;
             if (info.info3.unknown5 != 0x00)
-                cell_size = info.info3.unknown5 - info.info3.cell_offset - 0x06;
+                bank_size = info.info3.unknown5 - info.info3.cell_offset - 0x06;
             else
-                cell_size = info.info1.info3_offset - info.info3.cell_offset - 0x06;
-            br.BaseStream.Position = info.info3.cell_offset;
-            cells.id = (uint)id;
-            cells.header.id = "SIR0".ToCharArray();
-            cells.cebk.id = "SIR0".ToCharArray();
-            cells.header.file_size = cell_size;
-            cells.cebk.section_size = cell_size;
-            cells.cebk.block_size = 0;
-            cells.cebk.nBanks = 1;
-            cells.cebk.tBank = 0;
-            cells.cebk.banks = new Bank[1];
-            cells.cebk.banks[0].nCells = (ushort)(cell_size / 0x0A);
-            cells.cebk.banks[0].cells = new Cell[cells.cebk.banks[0].nCells];
-            for (int i = 0; i < cells.cebk.banks[0].nCells; i++)
-            {
-                cells.cebk.banks[0].cells[i].width = br.ReadUInt16();
-                cells.cebk.banks[0].cells[i].height = br.ReadUInt16();
-                cells.cebk.banks[0].cells[i].obj1.xOffset = br.ReadUInt16() - 0x80;
-                cells.cebk.banks[0].cells[i].obj0.yOffset = br.ReadUInt16() - 0x80;
-                cells.cebk.banks[0].cells[i].obj2.tileOffset = (uint)(br.ReadUInt16() / 0x20);
-                cells.cebk.banks[0].cells[i].num_cell = (ushort)i;
-            }
+                bank_size = info.info1.info3_offset - info.info3.cell_offset - 0x06;
 
+            br.BaseStream.Position = info.info3.cell_offset;
+            bank = new PluginInterface.Images.Bank();
+            bank.oams = new OAM[bank_size / 0x0A];
+            for (int i = 0; i < bank.oams.Length; i++)
+            {
+                bank.oams[i].width = br.ReadUInt16();
+                bank.oams[i].height = br.ReadUInt16();
+                bank.oams[i].obj1.xOffset = br.ReadUInt16() - 0x80;
+                bank.oams[i].obj0.yOffset = br.ReadUInt16() - 0x80;
+                bank.oams[i].obj2.tileOffset = (uint)(br.ReadUInt16() / 0x40);
+                bank.oams[i].num_cell = (ushort)i;
+            }
+            Set_Banks(new PluginInterface.Images.Bank[] { bank }, 0, false);
             br.Close();
-            pluginHost.Set_NCLR(palette);
-            pluginHost.Set_NCGR(tiles);
-            pluginHost.Set_NCER(cells);
+
+            pluginHost.Set_Palette(palette);
+            pluginHost.Set_Image(image);
+            pluginHost.Set_Sprite(this);
+        }
+        public override void Write(string fileOut, ImageBase image, PaletteBase palette)
+        {
+            throw new NotImplementedException();
         }
     }
 

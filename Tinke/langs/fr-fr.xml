@@ -566,4 +566,18 @@
     <S0B>Codage</S0B>
     <S0C>Sélectionné depuis 0x{0} avec une longueur de 0x{1}</S0C>
   </VisorHex>
+
+  <!-- PluginInterface controls -->
+  <PaletteControl>
+    <S01>Number of palette:</S01>
+    <S02>Display all palettes</S02>
+    <S03>Export</S03>
+    <S04>Import</S04>
+    <S05>Start byte:</S05>
+    <S06>Depth:</S06>
+    <S07>of </S07>
+    <S08>Palettes</S08>
+    <S09>Palette</S09>
+  </PaletteControl>
+
 </Language>

@@ -40,6 +40,23 @@ namespace PluginInterface.Images
         {
             InitializeComponent();
         }
+        public PaletteControl(IPluginHost pluginHost)
+        {
+            InitializeComponent();
+
+            this.pluginHost = pluginHost;
+            this.palette = pluginHost.Get_Palette();
+            btnImport.Enabled = palette.CanEdit;
+
+            ReadLanguage();
+
+            picPalette.Image = palette.Get_Image(0);
+
+            numericPalette.Maximum = palette.NumberOfPalettes - 1;
+            label3.Text = translation[0] + (palette.NumberOfPalettes - 1).ToString();
+            numericStartByte.Maximum = palette.NumberOfColors * palette.NumberOfPalettes * 2;
+            comboDepth.SelectedIndex = (palette.Depth == ColorFormat.colors16 ? 0 : 1);
+        }
         public PaletteControl(IPluginHost pluginHost, PaletteBase palette)
         {
             InitializeComponent();
@@ -50,10 +67,10 @@ namespace PluginInterface.Images
 
             ReadLanguage();
 
-            picPalette.Image = palette.Get_PaletteImage(0);
+            picPalette.Image = palette.Get_Image(0);
 
             numericPalette.Maximum = palette.NumberOfPalettes - 1;
-            label3.Text = "of " + (palette.NumberOfPalettes - 1).ToString();
+            label3.Text = translation[0] + (palette.NumberOfPalettes - 1).ToString();
             numericStartByte.Maximum = palette.NumberOfColors * palette.NumberOfPalettes * 2;
             comboDepth.SelectedIndex = (palette.Depth == ColorFormat.colors16 ? 0 : 1);
         }
@@ -62,20 +79,19 @@ namespace PluginInterface.Images
         {
             try
             {
-                XElement xml = XElement.Load(Application.StartupPath + Path.DirectorySeparatorChar + "Plugins" +
-                    Path.DirectorySeparatorChar + "ImagesLang.xml");
-                xml = xml.Element(pluginHost.Get_Language()).Element("PaletteControl");
+                XElement xml = XElement.Load(pluginHost.Get_LangXML());
+                xml = xml.Element("PaletteControl");
 
-                label1.Text = xml.Element("S00").Value;
+                label1.Text = xml.Element("S01").Value;
                 btnShow.Text = xml.Element("S02").Value;
-                btnSave.Text = xml.Element("S03").Value;
+                btnExport.Text = xml.Element("S03").Value;
                 btnImport.Text = xml.Element("S04").Value;
                 label2.Text = xml.Element("S05").Value;
                 label4.Text = xml.Element("S06").Value;
 
                 translation = new string[3];
-                translation[0] = xml.Element("S01").Value;
-                translation[1] = xml.Element("S07").Value;
+                translation[0] = xml.Element("S07").Value;
+                translation[1] = xml.Element("S09").Value;
                 translation[2] = xml.Element("S08").Value;
             }
             catch { throw new Exception("There was an error reading the XML file of language."); }
@@ -83,19 +99,21 @@ namespace PluginInterface.Images
 
         private void numericPalette_ValueChanged(object sender, EventArgs e)
         {
-            picPalette.Image = palette.Get_PaletteImage((int)numericPalette.Value);
+            picPalette.Image = palette.Get_Image((int)numericPalette.Value);
         }
         private void numericStartByte_ValueChanged(object sender, EventArgs e)
         {
             palette.StartByte = (int)numericStartByte.Value;
-            picPalette.Image = palette.Get_PaletteImage((int)numericPalette.Value);
+            picPalette.Image = palette.Get_Image((int)numericPalette.Value);
+            
             numericPalette.Maximum = palette.NumberOfPalettes - 1;
             label3.Text = translation[0] + (palette.NumberOfPalettes - 1).ToString();
         }
         private void comboDepth_SelectedIndexChanged(object sender, EventArgs e)
         {
             palette.Depth = (comboDepth.SelectedIndex == 0 ? ColorFormat.colors16 : ColorFormat.colors256);
-            picPalette.Image = palette.Get_PaletteImage((int)numericPalette.Value);
+            picPalette.Image = palette.Get_Image((int)numericPalette.Value);
+
             numericPalette.Value = 0;
             numericPalette.Maximum = palette.NumberOfPalettes - 1;
             label3.Text = translation[0] + (palette.NumberOfPalettes - 1).ToString();
@@ -108,11 +126,10 @@ namespace PluginInterface.Images
                 Color color = ((Bitmap)picPalette.Image).GetPixel(e.X, e.Y);
                 lblRGB.Text = "RGB: " + color.R + ", " + color.G + ", " + color.B;
             }
-
         }
         private void btnShow_Click(object sender, EventArgs e)
         {
-            Form ven = new Form();
+            Form win = new Form();
             int xMax = 6 * 170;
             int x = 0;
             int y = 15;
@@ -122,14 +139,14 @@ namespace PluginInterface.Images
                 PictureBox pic = new PictureBox();
                 pic.Size = new Size(160, 160);
                 pic.Location = new Point(x, y);
-                pic.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-                pic.Image = palette.Get_PaletteImage(i);
+                pic.BorderStyle = BorderStyle.FixedSingle;
+                pic.Image = palette.Get_Image(i);
                 Label lbl = new Label();
                 lbl.Text = translation[2] + (i + 1).ToString();
                 lbl.Location = new Point(x, y - 15);
 
-                ven.Controls.Add(pic);
-                ven.Controls.Add(lbl);
+                win.Controls.Add(pic);
+                win.Controls.Add(lbl);
 
                 x += 170;
                 if (x >= xMax)
@@ -139,40 +156,39 @@ namespace PluginInterface.Images
                 }
             }
 
-            ven.Text = translation[1];
-            ven.BackColor = SystemColors.GradientInactiveCaption;
-            ven.MaximumSize = new Size(1024, 760);
-            ven.ShowIcon = false;
-            ven.AutoSize = true;
-            ven.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            ven.MaximizeBox = false;
-            ven.Show();
+            win.Text = translation[1];
+            win.BackColor = SystemColors.GradientInactiveCaption;
+            win.MaximumSize = new Size(1024, 760);
+            win.ShowIcon = false;
+            win.AutoSize = true;
+            win.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            win.MaximizeBox = false;
+            win.Show();
         }
 
-        private void btnSave_Click(object sender, EventArgs e)
+        private void btnExport_Click(object sender, EventArgs e)
         {
             SaveFileDialog o = new SaveFileDialog();
             o.AddExtension = true;
             o.CheckPathExists = true;
-            o.DefaultExt = ".png";
-            o.Filter = "Portable Network Graphics (*.png)|*.png|" +
-                "Windows Palette (*.pal)|*.pal";
+            o.DefaultExt = ".pal";
+            o.Filter = "Windows Palette (*.pal)|*.pal|" +
+                       "Portable Network Graphics (*.png)|*.png";
             o.OverwritePrompt = true;
 
             if (o.ShowDialog() != DialogResult.OK)
                 return;
 
-            if (o.FilterIndex == 1)
+            if (o.FilterIndex == 2)
                 picPalette.Image.Save(o.FileName, System.Drawing.Imaging.ImageFormat.Png);
-            else if (o.FilterIndex == 2)
-                pluginHost.Write_WinPal(o.FileName, palette.Palette);
+            else if (o.FilterIndex == 1)
+                pluginHost.Write_WinPal(o.FileName, palette.Palette[(int)numericPalette.Value]);
         }
         private void btnImport_Click(object sender, EventArgs e)
         {
-            //String fileOut = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + Path.GetRandomFileName() + palette.FileName;
-            //palette.WritePalette(fileOut);
-            //pluginHost.ChangeFile(palette.ID, fileOut);
+            String fileOut = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + Path.GetRandomFileName() + palette.FileName;
+            palette.Write(fileOut);
+            pluginHost.ChangeFile(palette.ID, fileOut);
         }
-
     }
 }

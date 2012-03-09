@@ -27,6 +27,7 @@ using System.Text;
 using System.IO;
 using System.Windows.Forms;
 using PluginInterface;
+using PluginInterface.Images;
 
 namespace _3DModels
 {
@@ -172,11 +173,8 @@ namespace _3DModels
 
             picTex.Image = Draw_Texture(tile_data, texInfo, palette);
 
-            NCLR nclr = new NCLR();
-            nclr.pltt.nColors = (uint)palette.Length;
-            nclr.pltt.palettes = new NTFP[1];
-            nclr.pltt.palettes[0].colors = palette;
-            picPalette.Image = pluginHost.Bitmaps_NCLR(nclr)[0];
+            PaletteBase p = new RawPalette(pluginHost, new Color[][] { palette }, false, ColorFormat.colors256);
+            picPalette.Image = p.Get_Image(0);
 
             Info(num_tex, num_pal);
         }

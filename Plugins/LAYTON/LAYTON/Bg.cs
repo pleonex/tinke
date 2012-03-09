@@ -25,21 +25,16 @@ using System.IO;
 using System.Drawing;
 using System.Windows.Forms;
 using PluginInterface;
+using PluginInterface.Images;
 
 namespace LAYTON
 {
-    public class Bg
+    public class Bg : MapBase
     {
-        IPluginHost pluginHost;
-        string gameCode;
-        string archivo;
+        ImageBase image;
+        PaletteBase palette;
 
-        public Bg(IPluginHost pluginHost, string gameCode, string archivo)
-        {
-            this.pluginHost = pluginHost;
-            this.gameCode = gameCode;
-            this.archivo = archivo;
-        }
+        public Bg(IPluginHost pluginHost, string file, int id) : base(pluginHost, file, id) { }
 
         public Format Get_Formato(string nombre)
         {
@@ -49,72 +44,56 @@ namespace LAYTON
             return Format.Unknown;
         }
 
-        public void Leer()
+        public override void Read(string fileIn)
         {
+            // The file is compressed
+            string temp = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + Path.GetRandomFileName();
+            Byte[] compressFile = new Byte[(new FileInfo(fileIn).Length) - 4];
+            Array.Copy(File.ReadAllBytes(fileIn), 4, compressFile, 0, compressFile.Length); ;
+            File.WriteAllBytes(temp, compressFile);
+            pluginHost.Decompress(temp);
+
+            // Get the decompressed file
+            fileIn = pluginHost.Get_Files().files[0].path;
+            File.Delete(temp);
+
+            Get_Image(fileIn);
         }
-        public Control Show_Info()
+        public override void Write(string fileOut, ImageBase image, PaletteBase palette)
         {
-            // Los archivos tienen compresión LZ77, descomprimimos primero.
-            if (archivo.ToUpper().EndsWith(".ARC"))
-            {
-                string temp = archivo + "nn";
-                Byte[] compressFile = new Byte[(new FileInfo(archivo).Length) - 4];
-                Array.Copy(File.ReadAllBytes(archivo), 4, compressFile, 0, compressFile.Length); ;
-                File.WriteAllBytes(temp, compressFile);
-
-                pluginHost.Decompress(temp);
-                archivo = pluginHost.Get_Files().files[0].path;
-                File.Delete(temp);
-            }
-
-            InfoBG control = new InfoBG(pluginHost, Obtener_Background());
-            File.Delete(archivo);
-
-            return control;
+            throw new NotImplementedException();
         }
 
-        public Bitmap Obtener_Background()
+        public void Get_Image(string fileIn)
         {
-            BinaryReader br = new BinaryReader(File.OpenRead(archivo));
+            BinaryReader br = new BinaryReader(File.OpenRead(fileIn));
 
-            // Paleta, NCLR sin cabecera
-            NCLR paleta = new NCLR();
-            paleta.pltt.nColors = br.ReadUInt32();
-            paleta.pltt.palettes = new NTFP[1];
-            paleta.pltt.palettes[0].colors =
-                pluginHost.BGR555ToColor(br.ReadBytes((int)paleta.pltt.nColors * 2));
+            // Palette
+            uint num_colors = br.ReadUInt32();
+            Color[][] colors = new Color[1][];
+            colors[0] = pluginHost.BGR555ToColor(br.ReadBytes((int)num_colors * 2));
 
-            // Tile, sin cabecera
-            NCGR tile = new NCGR();
-            tile.rahc.depth = ColorDepth.Depth8Bit;
-            tile.rahc.nTiles = (ushort)br.ReadUInt32();
-            tile.rahc.tileData.tiles = new byte[tile.rahc.nTiles][];
-            for (int i = 0; i < tile.rahc.nTiles; i++)
-                tile.rahc.tileData.tiles[i] = br.ReadBytes(64);
-            tile.order = TileOrder.Horizontal;
+            // Image data
+            uint num_tiles = (ushort)br.ReadUInt32();
+            byte[] tiles = br.ReadBytes((int)num_tiles * 0x40);
 
-            // Tile Map Info
-            NSCR map = new NSCR();
-            map.section.width = (ushort)(br.ReadUInt16() * 8);
-            map.section.height = (ushort)(br.ReadUInt16() * 8);
-            tile.rahc.nTilesX = (ushort)(map.section.width / 8);
-            tile.rahc.nTilesY = (ushort)(map.section.height / 8);
-            map.section.mapData = new NTFS[map.section.width * map.section.height / 64];
-            for (int i = 0; i < map.section.width * map.section.height / 64; i++)
-            {
-                ushort parameters = br.ReadUInt16();
+            // Map Info
+            ushort width = (ushort)(br.ReadUInt16() * 8);
+            ushort height = (ushort)(br.ReadUInt16() * 8);
+            NTFS[] map = new NTFS[width * height / 0x40];
 
-                map.section.mapData[i] = new NTFS();
-                map.section.mapData[i].nTile = (ushort)(parameters & 0x3FF);
-                map.section.mapData[i].xFlip = (byte)((parameters >> 10) & 1);
-                map.section.mapData[i].yFlip = (byte)((parameters >> 11) & 1);
-                map.section.mapData[i].nPalette = (byte)((parameters >> 12) & 0xF);
-            }
+            for (int i = 0; i < map.Length; i++)
+                map[i] = pluginHost.MapInfo(br.ReadUInt16());
 
             br.Close();
 
-            tile.rahc.tileData = pluginHost.Transform_NSCR(map, tile.rahc.tileData);
-            return pluginHost.Bitmap_NCGR(tile, paleta);
+            palette = new RawPalette(pluginHost, colors, false, ColorFormat.colors256);
+            image = new RawImage(pluginHost, tiles, TileForm.Horizontal, ColorFormat.colors256, width, height, false);
+            Set_Map(map, false, width, height);
+        }
+        public Control Get_Control()
+        {
+            return new ImageControl(pluginHost, image, palette, this);
         }
     }
 }

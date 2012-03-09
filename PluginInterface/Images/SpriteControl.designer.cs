@@ -1,25 +1,6 @@
-﻿/*
- * Copyright (C) 2011  pleoNeX
- *
- *   This program is free software: you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation, either version 3 of the License, or
- *   (at your option) any later version.
- *
- *   This program is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU General Public License for more details.
- *
- *   You should have received a copy of the GNU General Public License
- *   along with this program.  If not, see <http://www.gnu.org/licenses/>. 
- *
- * Programador: pleoNeX
- * 
- */
-namespace TETRIS_DS
+﻿namespace PluginInterface.Images
 {
-    partial class CellControl
+    partial class SpriteControl
     {
         /// <summary> 
         /// Required designer variable.
@@ -47,23 +28,10 @@ namespace TETRIS_DS
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem(new string[] {
-            "S07"}, -1, System.Drawing.Color.Empty, System.Drawing.Color.Empty, new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0))));
-            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("S08");
-            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem("S09");
-            System.Windows.Forms.ListViewItem listViewItem4 = new System.Windows.Forms.ListViewItem("S0A");
-            System.Windows.Forms.ListViewItem listViewItem5 = new System.Windows.Forms.ListViewItem("S0B");
-            System.Windows.Forms.ListViewItem listViewItem6 = new System.Windows.Forms.ListViewItem("S0C");
-            System.Windows.Forms.ListViewItem listViewItem7 = new System.Windows.Forms.ListViewItem("S0D");
-            System.Windows.Forms.ListViewItem listViewItem8 = new System.Windows.Forms.ListViewItem("S0E");
             this.imgBox = new System.Windows.Forms.PictureBox();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.listProp = new System.Windows.Forms.ListView();
-            this.columnCampo = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnValor = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.label1 = new System.Windows.Forms.Label();
-            this.comboCelda = new System.Windows.Forms.ComboBox();
-            this.btnTodos = new System.Windows.Forms.Button();
+            this.comboBank = new System.Windows.Forms.ComboBox();
+            this.btnShowAll = new System.Windows.Forms.Button();
             this.btnSave = new System.Windows.Forms.Button();
             this.checkEntorno = new System.Windows.Forms.CheckBox();
             this.checkNumber = new System.Windows.Forms.CheckBox();
@@ -79,66 +47,22 @@ namespace TETRIS_DS
             this.lblZoom = new System.Windows.Forms.Label();
             this.trackZoom = new System.Windows.Forms.TrackBar();
             this.btnImport = new System.Windows.Forms.Button();
-            this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
-            this.label3 = new System.Windows.Forms.Label();
+            this.btnSetTrans = new System.Windows.Forms.Button();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
             ((System.ComponentModel.ISupportInitialize)(this.imgBox)).BeginInit();
-            this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBgd)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackZoom)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // imgBox
             // 
-            this.imgBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.imgBox.Location = new System.Drawing.Point(0, 0);
             this.imgBox.Name = "imgBox";
-            this.imgBox.Size = new System.Drawing.Size(256, 256);
+            this.imgBox.Size = new System.Drawing.Size(512, 256);
             this.imgBox.TabIndex = 0;
             this.imgBox.TabStop = false;
             this.imgBox.DoubleClick += new System.EventHandler(this.imgBox_DoubleClick);
-            // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.listProp);
-            this.groupBox1.Location = new System.Drawing.Point(262, 0);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(247, 256);
-            this.groupBox1.TabIndex = 1;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "S04";
-            // 
-            // listProp
-            // 
-            this.listProp.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnCampo,
-            this.columnValor});
-            this.listProp.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listProp.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem1,
-            listViewItem2,
-            listViewItem3,
-            listViewItem4,
-            listViewItem5,
-            listViewItem6,
-            listViewItem7,
-            listViewItem8});
-            this.listProp.Location = new System.Drawing.Point(3, 16);
-            this.listProp.Name = "listProp";
-            this.listProp.Size = new System.Drawing.Size(241, 237);
-            this.listProp.TabIndex = 0;
-            this.listProp.UseCompatibleStateImageBehavior = false;
-            this.listProp.View = System.Windows.Forms.View.Details;
-            // 
-            // columnCampo
-            // 
-            this.columnCampo.Text = "S05";
-            this.columnCampo.Width = 151;
-            // 
-            // columnValor
-            // 
-            this.columnValor.Text = "S06";
-            this.columnValor.Width = 86;
             // 
             // label1
             // 
@@ -149,32 +73,32 @@ namespace TETRIS_DS
             this.label1.TabIndex = 2;
             this.label1.Text = "S01";
             // 
-            // comboCelda
+            // comboBank
             // 
-            this.comboCelda.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboCelda.FormattingEnabled = true;
-            this.comboCelda.Location = new System.Drawing.Point(73, 263);
-            this.comboCelda.Name = "comboCelda";
-            this.comboCelda.Size = new System.Drawing.Size(183, 21);
-            this.comboCelda.TabIndex = 3;
-            this.comboCelda.SelectedIndexChanged += new System.EventHandler(this.comboCelda_SelectedIndexChanged);
+            this.comboBank.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBank.FormattingEnabled = true;
+            this.comboBank.Location = new System.Drawing.Point(73, 263);
+            this.comboBank.Name = "comboBank";
+            this.comboBank.Size = new System.Drawing.Size(183, 21);
+            this.comboBank.TabIndex = 3;
+            this.comboBank.SelectedIndexChanged += new System.EventHandler(this.comboBank_SelectedIndexChanged);
             // 
-            // btnTodos
+            // btnShowAll
             // 
-            this.btnTodos.Location = new System.Drawing.Point(73, 290);
-            this.btnTodos.Name = "btnTodos";
-            this.btnTodos.Size = new System.Drawing.Size(183, 23);
-            this.btnTodos.TabIndex = 4;
-            this.btnTodos.Text = "S02";
-            this.btnTodos.UseVisualStyleBackColor = true;
-            this.btnTodos.Click += new System.EventHandler(this.btnTodos_Click);
+            this.btnShowAll.Location = new System.Drawing.Point(73, 290);
+            this.btnShowAll.Name = "btnShowAll";
+            this.btnShowAll.Size = new System.Drawing.Size(183, 23);
+            this.btnShowAll.TabIndex = 4;
+            this.btnShowAll.Text = "S02";
+            this.btnShowAll.UseVisualStyleBackColor = true;
+            this.btnShowAll.Click += new System.EventHandler(this.btnShowAll_Click);
             // 
             // btnSave
             // 
             this.btnSave.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnSave.Location = new System.Drawing.Point(6, 483);
+            this.btnSave.Location = new System.Drawing.Point(320, 463);
             this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(86, 26);
+            this.btnSave.Size = new System.Drawing.Size(90, 40);
             this.btnSave.TabIndex = 5;
             this.btnSave.Text = "S03";
             this.btnSave.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
@@ -184,7 +108,7 @@ namespace TETRIS_DS
             // checkEntorno
             // 
             this.checkEntorno.AutoSize = true;
-            this.checkEntorno.Location = new System.Drawing.Point(265, 259);
+            this.checkEntorno.Location = new System.Drawing.Point(6, 22);
             this.checkEntorno.Name = "checkEntorno";
             this.checkEntorno.Size = new System.Drawing.Size(45, 17);
             this.checkEntorno.TabIndex = 6;
@@ -195,7 +119,7 @@ namespace TETRIS_DS
             // checkNumber
             // 
             this.checkNumber.AutoSize = true;
-            this.checkNumber.Location = new System.Drawing.Point(405, 282);
+            this.checkNumber.Location = new System.Drawing.Point(146, 45);
             this.checkNumber.Name = "checkNumber";
             this.checkNumber.Size = new System.Drawing.Size(45, 17);
             this.checkNumber.TabIndex = 7;
@@ -206,7 +130,7 @@ namespace TETRIS_DS
             // checkCelda
             // 
             this.checkCelda.AutoSize = true;
-            this.checkCelda.Location = new System.Drawing.Point(265, 282);
+            this.checkCelda.Location = new System.Drawing.Point(6, 45);
             this.checkCelda.Name = "checkCelda";
             this.checkCelda.Size = new System.Drawing.Size(45, 17);
             this.checkCelda.TabIndex = 8;
@@ -217,7 +141,7 @@ namespace TETRIS_DS
             // checkTransparencia
             // 
             this.checkTransparencia.AutoSize = true;
-            this.checkTransparencia.Location = new System.Drawing.Point(405, 259);
+            this.checkTransparencia.Location = new System.Drawing.Point(146, 22);
             this.checkTransparencia.Name = "checkTransparencia";
             this.checkTransparencia.Size = new System.Drawing.Size(45, 17);
             this.checkTransparencia.TabIndex = 9;
@@ -230,7 +154,7 @@ namespace TETRIS_DS
             this.checkImagen.AutoSize = true;
             this.checkImagen.Checked = true;
             this.checkImagen.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkImagen.Location = new System.Drawing.Point(265, 306);
+            this.checkImagen.Location = new System.Drawing.Point(6, 69);
             this.checkImagen.Name = "checkImagen";
             this.checkImagen.Size = new System.Drawing.Size(45, 17);
             this.checkImagen.TabIndex = 10;
@@ -241,7 +165,7 @@ namespace TETRIS_DS
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(98, 490);
+            this.label2.Location = new System.Drawing.Point(262, 266);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(26, 13);
             this.label2.TabIndex = 11;
@@ -281,26 +205,26 @@ namespace TETRIS_DS
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(466, 342);
+            this.label8.Location = new System.Drawing.Point(463, 306);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(25, 13);
+            this.label8.Size = new System.Drawing.Size(19, 13);
             this.label8.TabIndex = 26;
-            this.label8.Text = "800";
+            this.label8.Text = "20";
             // 
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(262, 343);
+            this.label7.Location = new System.Drawing.Point(259, 307);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(25, 13);
+            this.label7.Size = new System.Drawing.Size(13, 13);
             this.label7.TabIndex = 25;
-            this.label7.Text = "100";
+            this.label7.Text = "1";
             // 
             // lblZoom
             // 
             this.lblZoom.AutoSize = true;
             this.lblZoom.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblZoom.Location = new System.Drawing.Point(348, 331);
+            this.lblZoom.Location = new System.Drawing.Point(345, 295);
             this.lblZoom.Name = "lblZoom";
             this.lblZoom.Size = new System.Drawing.Size(33, 17);
             this.lblZoom.TabIndex = 24;
@@ -309,16 +233,14 @@ namespace TETRIS_DS
             // trackZoom
             // 
             this.trackZoom.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
-            this.trackZoom.LargeChange = 100;
-            this.trackZoom.Location = new System.Drawing.Point(265, 358);
-            this.trackZoom.Maximum = 800;
-            this.trackZoom.Minimum = 100;
+            this.trackZoom.LargeChange = 2;
+            this.trackZoom.Location = new System.Drawing.Point(262, 322);
+            this.trackZoom.Maximum = 20;
+            this.trackZoom.Minimum = 1;
             this.trackZoom.Name = "trackZoom";
             this.trackZoom.Size = new System.Drawing.Size(226, 45);
-            this.trackZoom.SmallChange = 50;
             this.trackZoom.TabIndex = 23;
-            this.trackZoom.TickFrequency = 50;
-            this.trackZoom.Value = 100;
+            this.trackZoom.Value = 1;
             this.trackZoom.Scroll += new System.EventHandler(this.trackZoom_Scroll);
             // 
             // btnImport
@@ -327,35 +249,41 @@ namespace TETRIS_DS
             this.btnImport.Name = "btnImport";
             this.btnImport.Size = new System.Drawing.Size(90, 40);
             this.btnImport.TabIndex = 30;
-            this.btnImport.Text = "Importar";
+            this.btnImport.Text = "S24";
             this.btnImport.UseVisualStyleBackColor = true;
-            this.btnImport.Click += new System.EventHandler(this.btnImport_Click);
             // 
-            // numericUpDown1
+            // btnSetTrans
             // 
-            this.numericUpDown1.Location = new System.Drawing.Point(176, 383);
-            this.numericUpDown1.Name = "numericUpDown1";
-            this.numericUpDown1.Size = new System.Drawing.Size(80, 20);
-            this.numericUpDown1.TabIndex = 31;
-            this.numericUpDown1.ValueChanged += new System.EventHandler(this.numericUpDown1_ValueChanged);
+            this.btnSetTrans.Location = new System.Drawing.Point(6, 363);
+            this.btnSetTrans.Name = "btnSetTrans";
+            this.btnSetTrans.Size = new System.Drawing.Size(118, 32);
+            this.btnSetTrans.TabIndex = 31;
+            this.btnSetTrans.Text = "S25";
+            this.btnSetTrans.UseVisualStyleBackColor = true;
             // 
-            // label3
+            // groupBox1
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(57, 385);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(27, 13);
-            this.label3.TabIndex = 32;
-            this.label3.Text = "S0B";
+            this.groupBox1.Controls.Add(this.checkCelda);
+            this.groupBox1.Controls.Add(this.checkEntorno);
+            this.groupBox1.Controls.Add(this.checkNumber);
+            this.groupBox1.Controls.Add(this.checkTransparencia);
+            this.groupBox1.Controls.Add(this.checkImagen);
+            this.groupBox1.Location = new System.Drawing.Point(6, 409);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(250, 100);
+            this.groupBox1.TabIndex = 33;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Options";
             // 
-            // CellControl
+            // SpriteControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Transparent;
             this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.numericUpDown1);
+            this.Controls.Add(this.imgBox);
+            this.Controls.Add(this.groupBox1);
+            this.Controls.Add(this.btnSetTrans);
             this.Controls.Add(this.btnImport);
             this.Controls.Add(this.btnBgdTrans);
             this.Controls.Add(this.pictureBgd);
@@ -365,24 +293,17 @@ namespace TETRIS_DS
             this.Controls.Add(this.lblZoom);
             this.Controls.Add(this.trackZoom);
             this.Controls.Add(this.label2);
-            this.Controls.Add(this.checkImagen);
-            this.Controls.Add(this.checkTransparencia);
-            this.Controls.Add(this.checkCelda);
-            this.Controls.Add(this.checkNumber);
-            this.Controls.Add(this.checkEntorno);
             this.Controls.Add(this.btnSave);
-            this.Controls.Add(this.btnTodos);
-            this.Controls.Add(this.comboCelda);
+            this.Controls.Add(this.btnShowAll);
+            this.Controls.Add(this.comboBank);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.imgBox);
-            this.Name = "CellControl";
+            this.Name = "SpriteControl";
             this.Size = new System.Drawing.Size(512, 512);
             ((System.ComponentModel.ISupportInitialize)(this.imgBox)).EndInit();
-            this.groupBox1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBgd)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackZoom)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -391,13 +312,9 @@ namespace TETRIS_DS
         #endregion
 
         private System.Windows.Forms.PictureBox imgBox;
-        private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.ListView listProp;
-        private System.Windows.Forms.ColumnHeader columnCampo;
-        private System.Windows.Forms.ColumnHeader columnValor;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.ComboBox comboCelda;
-        private System.Windows.Forms.Button btnTodos;
+        private System.Windows.Forms.ComboBox comboBank;
+        private System.Windows.Forms.Button btnShowAll;
         private System.Windows.Forms.Button btnSave;
         private System.Windows.Forms.CheckBox checkEntorno;
         private System.Windows.Forms.CheckBox checkNumber;
@@ -413,7 +330,7 @@ namespace TETRIS_DS
         private System.Windows.Forms.Label lblZoom;
         private System.Windows.Forms.TrackBar trackZoom;
         private System.Windows.Forms.Button btnImport;
-        private System.Windows.Forms.NumericUpDown numericUpDown1;
-        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Button btnSetTrans;
+        private System.Windows.Forms.GroupBox groupBox1;
     }
 }

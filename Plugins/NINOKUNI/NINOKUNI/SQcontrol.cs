@@ -51,43 +51,51 @@ namespace NINOKUNI
             catch { throw new NotSupportedException("There was an error reading the language file"); }
         }
 
-
         private void Read(string file)
         {
             BinaryReader br = new BinaryReader(File.OpenRead(file));
             original = new SQ();
             original.blocks = new List<SQ.Block>();
 
-            br.ReadUInt32();    // File ID
-            uint size = br.ReadUInt16();
+            original.id = br.ReadUInt32();    // File ID
 
-            for (int i = 0; br.BaseStream.Position < br.BaseStream.Length; i++)
+            // Read the first 3 blocks
+            for (int i = 0; i < 3; i++)
             {
                 SQ.Block block = new SQ.Block();
-
-                if (size == 0x00)
-                {
-                    block.type = SQ.Type.Unknown;
-                    size = 0xE;
-                }
-                else if (size == 0x0901)        // End Of File
-                {
-                    br.BaseStream.Position -= 2;
-                    block.type = SQ.Type.Unknown;
-                    size = 0xE;
-                }
-                else
-                    block.type = SQ.Type.Text;
+                block.size = br.ReadUInt16();
+                block.text = new String(Encoding.GetEncoding(932).GetChars(br.ReadBytes((int)block.size)));
 
                 listBlock.Items.Add("Block " + i.ToString());
-
-                block.data = br.ReadBytes((int)size);
                 original.blocks.Add(block);
-
-                if (br.BaseStream.Position + 1 == br.BaseStream.Length)
-                    break;
-                size = br.ReadUInt16();
             }
+
+            original.unknown = br.ReadBytes(0xF);   // Unknown data
+            original.final_blocks = br.ReadByte();
+
+            if (original.final_blocks != 2 && original.final_blocks != 3)
+                MessageBox.Show("FB");
+
+            for (int i = 0; i < original.final_blocks; i++)
+            {
+                SQ.Block block = new SQ.Block();
+                block.size = br.ReadUInt16();
+                block.text = new String(Encoding.GetEncoding(932).GetChars(br.ReadBytes((int)block.size)));
+
+                listBlock.Items.Add("Block " + (i + 4).ToString());
+                original.blocks.Add(block);
+            }
+
+            original.final = br.ReadByte();
+            if (original.final == 0)
+                original.final_data = new byte[0];
+            else if (original.final == 1)
+            {
+                byte size = br.ReadByte();
+                original.final_data = br.ReadBytes(size + 4);
+            }
+            else
+                MessageBox.Show("FD");
 
             br.Close();
         }
@@ -97,50 +105,44 @@ namespace NINOKUNI
 
             BinaryWriter bw = new BinaryWriter(File.OpenWrite(fileOut));
 
-            bw.Write((uint)0x001C080A);
-            for (int i = 0; i < translated.blocks.Count; i++)
-            {
-                if (i + 1 != translated.blocks.Count && translated.blocks[i].type != SQ.Type.Unknown)
-                    bw.Write((ushort)translated.blocks[i].data.Length);
+            //bw.Write((uint)0x001C080A);
+            //for (int i = 0; i < translated.blocks.Count; i++)
+            //{
+            //    if (i + 1 != translated.blocks.Count && translated.blocks[i].type != SQ.Type.Unknown)
+            //        bw.Write((ushort)translated.blocks[i].data.Length);
 
-                bw.Write(translated.blocks[i].data);
-            }
-            bw.Write((byte)0x00);
+            //    bw.Write(translated.blocks[i].data);
+            //}
+            //bw.Write((byte)0x00);
 
-            bw.Flush();
+            //bw.Flush();
             bw.Close();
             pluginHost.ChangeFile(id, fileOut);
         }
 
         private void listBlock_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (original.blocks[listBlock.SelectedIndex].type == SQ.Type.Text)
-            {
-                txtOriginal.Text = new String(Encoding.GetEncoding("shift_jis").GetChars(original.blocks[listBlock.SelectedIndex].data));
-                txtTranslated.Text = new String(Encoding.GetEncoding("shift_jis").GetChars(translated.blocks[listBlock.SelectedIndex].data));
-            }
-            else
-            {
-                txtOriginal.Text = "Unknown\r\n" + BitConverter.ToString(original.blocks[listBlock.SelectedIndex].data);
-                txtTranslated.Text = "";
-            }
+            txtOriginal.Text = original.blocks[listBlock.SelectedIndex].text.Replace("\n", "\r\n");
+            txtTranslated.Text = translated.blocks[listBlock.SelectedIndex].text;
         }
 
     }
 
     public struct SQ
     {
+        public uint id;
         public List<Block> blocks;
+
+        public byte[] unknown;  // 0x0F
+        public byte final_blocks;
 
         public struct Block
         {
-            public Type type;
-            public byte[] data;
+            public ushort size;
+            public string text;
         }
-        public enum Type
-        {
-            Text,
-            Unknown
-        }
+
+        public byte final;
+        public byte[] final_data;
     }
 }

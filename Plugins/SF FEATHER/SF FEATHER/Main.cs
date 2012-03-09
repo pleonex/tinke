@@ -21,6 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using PluginInterface;
+using PluginInterface.Images;
 
 namespace SF_FEATHER
 {
@@ -81,13 +82,15 @@ namespace SF_FEATHER
             br.Close();
 
             if (ext == "CG4 ")
-                CGx.CG4_Read(file, pluginHost);
+                new CGx(pluginHost, file, id, false);
             else if (ext == "CG8 ")
-                CGx.CG8_Read(file, pluginHost);
+                new CGx(pluginHost, file, id, true);
             else if (ext == "SC4 ")
-                SCx.SC4_Read(file, pluginHost);
+                new SCx(pluginHost, file, id);
             else if (ext == "SC8 ")
-                SCx.SC8_Read(file, pluginHost);
+                new SCx(pluginHost, file, id);
+            else if (ext == "CGT ")
+                new CGT(pluginHost, file, id);
         }
         public System.Windows.Forms.Control Show_Info(string file, int id)
         {
@@ -102,13 +105,9 @@ namespace SF_FEATHER
             else if (ext == "SC4 " || ext == "SC8 ")
                 return new ImageControl(pluginHost, true);
             else if (ext == "CGT ")
-            {
-                CGT cgt = new CGT(pluginHost, file, id);
-                cgt.Read();
-                return new ImageControl(cgt.Draw_Texture());
-            }
+                return new ImageControl(pluginHost, false);
 
-        return new System.Windows.Forms.Control();
+            return new System.Windows.Forms.Control();
         }
 
     }

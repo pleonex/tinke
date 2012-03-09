@@ -14,7 +14,7 @@
  *   You should have received a copy of the GNU General Public License
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  *
- * Programador: pleoNeX
+ * By: pleoNeX
  * 
  */
 using System;
@@ -24,13 +24,17 @@ using System.Text;
 using System.IO;
 using System.Drawing;
 using PluginInterface;
+using PluginInterface.Images;
 
 namespace TETRIS_DS
 {
-    public static class OBJS
+    public class OBJS : SpriteBase
     {
-        public static void Read(string file, IPluginHost pluginHost)
+        public OBJS(IPluginHost pluginHost, string file, int id) : base(pluginHost, file, id) { }
+
+        public override void Read(string file)
         {
+            // It's compressed
             pluginHost.Decompress(file);
             string dec_file;
             sFolder dec_folder = pluginHost.Get_Files();
@@ -50,151 +54,54 @@ namespace TETRIS_DS
 
             BinaryReader br = new BinaryReader(File.OpenRead(dec_file));
 
-            #region Cell
-            NCER cells = new NCER();
-            cells.header.id = "OBJS".ToCharArray();
-            cells.header.file_size = (uint)br.BaseStream.Length;
-
-            cells.cebk.nBanks = (ushort)br.ReadUInt32();
-            cells.cebk.banks = new Bank[cells.cebk.nBanks];
+            // Bank info
+            PluginInterface.Images.Bank[] banks = new PluginInterface.Images.Bank[br.ReadUInt32()];
             uint num_cells = br.ReadUInt32();
-            cells.cebk.unknown1 = br.ReadUInt32(); // Unknonwn
-            cells.cebk.block_size = 2;
+            uint unknown1 = br.ReadUInt32();
 
-            // Read bank information
-            for (int i = 0; i < cells.cebk.nBanks; i++)
+            for (int i = 0; i < banks.Length; i++)
             {
-                cells.cebk.banks[i].unknown1 = br.ReadUInt16();
-                cells.cebk.banks[i].nCells = br.ReadUInt16();
-                cells.cebk.banks[i].cells = new Cell[cells.cebk.banks[i].nCells];
+                uint unk = br.ReadUInt16();
+                banks[i].oams = new OAM[br.ReadUInt16()];
             }
 
             // Read cell information
-            for (int i = 0; i < cells.cebk.nBanks; i++)
+            for (int i = 0; i < banks.Length; i++)
             {
-                for (int j = 0; j < cells.cebk.banks[i].nCells; j++)
+                for (int j = 0; j < banks[i].oams.Length; j++)
                 {
-                    cells.cebk.banks[i].cells[j].obj1.xOffset = br.ReadInt16();
-                    cells.cebk.banks[i].cells[j].obj0.yOffset = br.ReadInt16();
+                    banks[i].oams[j].obj1.xOffset = br.ReadInt16();
+                    banks[i].oams[j].obj0.yOffset = br.ReadInt16();
 
-                    uint sizeByte = br.ReadUInt32();
-                    byte byte1 = (byte)((sizeByte & 0xF0) >> 4);
-                    byte byte2 = (byte)(sizeByte & 0x0F);
-                    System.Drawing.Size size = Obtener_Tamaño(byte1, byte2);
-                    cells.cebk.banks[i].cells[j].width = (ushort)size.Width;
-                    cells.cebk.banks[i].cells[j].height = (ushort)size.Height;
+                    uint size_b = br.ReadUInt32();
+                    byte b1 = (byte)(size_b & 0x03);
+                    byte b2 = (byte)((size_b & 0x0C) >> 2);
+                    System.Drawing.Size size = pluginHost.Size_NCER(b1, b2);
+                    banks[i].oams[j].width = (ushort)size.Width;
+                    banks[i].oams[j].height = (ushort)size.Height;
 
-                    cells.cebk.banks[i].cells[j].obj2.tileOffset = br.ReadUInt32();
-                    cells.cebk.banks[i].cells[j].obj2.index_palette = 0;
-                    cells.cebk.banks[i].cells[j].num_cell = (ushort)j;
+                    banks[i].oams[j].obj2.tileOffset = br.ReadUInt32();
+                    banks[i].oams[j].obj2.index_palette = 0;
+                    banks[i].oams[j].num_cell = (ushort)j;
                 }
             }
-            pluginHost.Set_NCER(cells);
-            #endregion
+            Set_Banks(banks, 2, false);
+            pluginHost.Set_Sprite(this);
 
-            #region Palette
-            NCLR nclr = new NCLR();
-            uint file_size = (uint)(br.BaseStream.Length - br.BaseStream.Position);
-            nclr.header.id = "OBJS".ToCharArray();
-            nclr.header.constant = 0x0100;
-            nclr.header.file_size = file_size;
-            nclr.header.header_size = 0x10;
+            // Palette
+            PaletteBase palette;
+            int palette_length = (int)(br.BaseStream.Length - br.BaseStream.Position);
+            Color[][] colors = new Color[1][];
+            colors[0] = pluginHost.BGR555ToColor(br.ReadBytes(palette_length));
 
-            nclr.pltt.ID = "PLZ ".ToCharArray();
-            nclr.pltt.length = file_size;
-            nclr.pltt.depth = (file_size > 0x20) ? System.Windows.Forms.ColorDepth.Depth8Bit : System.Windows.Forms.ColorDepth.Depth4Bit;
-            nclr.pltt.unknown1 = 0x00000000;
-            nclr.pltt.paletteLength = file_size;
-            nclr.pltt.nColors = file_size / 2;
-            nclr.pltt.palettes = new NTFP[1];
-
-            nclr.pltt.palettes[0].colors = pluginHost.BGR555ToColor(br.ReadBytes((int)file_size));
-
-            pluginHost.Set_NCLR(nclr);
-            #endregion
             br.Close();
-        }
 
-        public static Size Obtener_Tamaño(byte byte1, byte byte2)
+            palette = new RawPalette(pluginHost, colors, false, (palette_length > 0x20) ? ColorFormat.colors256 : ColorFormat.colors16);
+            pluginHost.Set_Palette(palette);
+        }
+        public override void Write(string fileOut, ImageBase image, PaletteBase palette)
         {
-            byte1 = (byte)((byte2 & 0x03) << 2);
-            byte2 = (byte)(byte2 & 0x0C);
-            Size tamaño = new Size();
-
-            switch (byte1)
-            {
-                case 0x00:
-                    switch (byte2)
-                    {
-                        case 0x00:
-                            tamaño = new Size(8, 8);
-                            break;
-                        case 0x04:
-                            tamaño = new Size(16, 16);
-                            break;
-                        case 0x08:
-                            tamaño = new Size(32, 32);
-                            break;
-                        case 0x0C:
-                            tamaño = new Size(64, 64);
-                            break;
-                    }
-                    break;
-                case 0x04:
-                    switch (byte2)
-                    {
-                        case 0x00:
-                            tamaño = new Size(16, 8);
-                            break;
-                        case 0x04:
-                            tamaño = new Size(32, 8);
-                            break;
-                        case 0x08:
-                            tamaño = new Size(32, 16);
-                            break;
-                        case 0x0C:
-                            tamaño = new Size(64, 32);
-                            break;
-                    }
-                    break;
-                case 0x08:
-                    switch (byte2)
-                    {
-                        case 0x00:
-                            tamaño = new Size(8, 16);
-                            break;
-                        case 0x04:
-                            tamaño = new Size(8, 32);
-                            break;
-                        case 0x08:
-                            tamaño = new Size(16, 32);
-                            break;
-                        case 0x0C:
-                            tamaño = new Size(32, 64);
-                            break;
-                    }
-                    break;
-                case 0x0C:
-                    switch (byte2)
-                    {
-                        case 0x00:
-                            tamaño = new Size(64, 128);
-                            break;
-                        case 0x04:
-                            tamaño = new Size(0, 0);
-                            break;
-                        case 0x08:
-                            tamaño = new Size(0, 0);
-                            break;
-                        case 0x0C:
-                            tamaño = new Size(0, 0);
-                            break;
-                    }
-                    break;
-            }
-
-            return tamaño;
+            throw new NotImplementedException();
         }
-
     }
 }

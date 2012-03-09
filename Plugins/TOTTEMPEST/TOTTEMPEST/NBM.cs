@@ -21,99 +21,73 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Drawing;
 using System.IO;
 using PluginInterface;
+using PluginInterface.Images;
 
 namespace TOTTEMPEST
 {
-    public static class NBM
+    public class NBM : ImageBase
     {
-        public static void Read(string file, int id, IPluginHost pluginHost)
+        PaletteBase palette;
+
+        public NBM(IPluginHost pluginHost, string file, int id) : base(pluginHost, file, id) { }
+
+        public override void Read(string file)
         {
-            uint file_size = (uint)(new FileInfo(file).Length);
             BinaryReader br = new BinaryReader(File.OpenRead(file));
-            NCLR nclr = new NCLR();
-            NCGR ncgr = new NCGR();
+            uint file_size = (uint)br.BaseStream.Length;
 
             // Read header values
             ushort depth = br.ReadUInt16();
             ushort width = br.ReadUInt16();
             ushort height = br.ReadUInt16();
-            ushort tileFlag = br.ReadUInt16();
+            ushort unknown = br.ReadUInt16();
+            ColorFormat format = (depth == 0x01) ? ColorFormat.colors256 : ColorFormat.colors16;
 
             // Palette
-            // Common header
-            nclr.header.id = "NBM ".ToCharArray();
-            nclr.header.constant = 0x0100;
-            nclr.header.file_size = (uint)(depth == 0x01 ? 0x100 : 0x10);
-            nclr.header.header_size = 0x02;
-            // TTLP section
-            nclr.pltt.ID = "NBM ".ToCharArray();
-            nclr.pltt.length = nclr.header.file_size;
-            nclr.pltt.depth = (depth == 0x01 ? System.Windows.Forms.ColorDepth.Depth8Bit : System.Windows.Forms.ColorDepth.Depth4Bit);
-            nclr.pltt.unknown1 = 0x00000000;
-            nclr.pltt.paletteLength = (uint)(depth == 0x01 ? 0x200 : 0x20);
-            nclr.pltt.nColors = (uint)(depth == 0x01 ? 0x100 : 0x10);
-            nclr.pltt.palettes = new NTFP[1];
-            // Get colors
-            for (int i = 0; i < nclr.pltt.palettes.Length; i++)
-                nclr.pltt.palettes[i].colors = pluginHost.BGR555ToColor(br.ReadBytes((int)nclr.pltt.paletteLength));
+            int palette_length = (depth == 0x01) ? 0x200 : 0x20;
+            Color[][] colors = new Color[1][];
+            colors[0] = pluginHost.BGR555ToColor(br.ReadBytes(palette_length));
+            palette = new RawPalette(pluginHost, colors, false, format);
 
             // Tiles
-            // Common header
-            ncgr.id = (uint)id;
-            ncgr.header.id = "NBM ".ToCharArray();
-            ncgr.header.nSection = 1;
-            ncgr.header.constant = 0x0100;
-            ncgr.header.file_size = file_size;
-
-            // RAHC section
-            ncgr.order = (tileFlag == 0x00 ? TileOrder.NoTiled : TileOrder.Horizontal);
-            ncgr.rahc.nTiles = (ushort)(width * height / 0x40);
-            ncgr.rahc.depth = (depth == 0x01 ? System.Windows.Forms.ColorDepth.Depth8Bit : System.Windows.Forms.ColorDepth.Depth4Bit);
-
-            ncgr.rahc.nTilesX = (ushort)(width);
-            ncgr.rahc.nTilesY = (ushort)(height);
-
-            ncgr.rahc.tiledFlag = tileFlag;
-            ncgr.rahc.size_section = file_size;
-
-            // Tile data
-            ncgr.rahc.tileData = new NTFT();
-            ncgr.rahc.tileData.nPalette = new byte[1];
-            ncgr.rahc.tileData.tiles = new byte[1][];
-
-            if (ncgr.rahc.depth == System.Windows.Forms.ColorDepth.Depth4Bit)
-                ncgr.rahc.tileData.tiles[0] = pluginHost.Bit8ToBit4(br.ReadBytes(width * height / 2));
-            else
-                ncgr.rahc.tileData.tiles[0] = br.ReadBytes(width * height);
-            ncgr.rahc.tileData.nPalette[0] = 0;
+            int tiles_length = width * height;
+            if (depth == 0)
+                tiles_length /= 2;
+            Byte[] tiles = br.ReadBytes(tiles_length);
 
             br.Close();
-            pluginHost.Set_NCLR(nclr);
-            pluginHost.Set_NCGR(ncgr);
+            Set_Tiles(tiles, width, height, format, TileForm.Lineal, true);
         }
-        public static void Write(NCLR palette, NCGR tile, string fileout, IPluginHost pluginHost)
+        public override void Write(string fileout, PaletteBase palette)
         {
+            this.palette = palette;
             BinaryWriter bw = new BinaryWriter(File.OpenWrite(fileout));
 
             // Header
-            bw.Write((ushort)(tile.rahc.depth == System.Windows.Forms.ColorDepth.Depth8Bit ? 0x01 : 0x00));
-            bw.Write(tile.rahc.nTilesX);
-            bw.Write(tile.rahc.nTilesY);
-            bw.Write((ushort)0x00);  // Tiled flag?, always 0x00 and no tiled
+            bw.Write((ushort)(ColorFormat == ColorFormat.colors256 ? 0x01 : 0x00));
+            bw.Write((ushort)Width);
+            bw.Write((ushort)Height);
+            bw.Write((ushort)0x00);
 
             // Palette section
-            bw.Write(pluginHost.ColorToBGR555(palette.pltt.palettes[0].colors));
+            bw.Write(pluginHost.ColorToBGR555(palette.Palette[0]));
 
             // Tile section
-            if (tile.rahc.depth == System.Windows.Forms.ColorDepth.Depth4Bit)
-                bw.Write(pluginHost.Bit4ToBit8(tile.rahc.tileData.tiles[0]));
+            if (ColorFormat == ColorFormat.colors16)
+                bw.Write(pluginHost.Bit8ToBit4(Tiles));
             else
-                bw.Write(tile.rahc.tileData.tiles[0]);
+                bw.Write(Tiles);
 
             bw.Flush();
             bw.Close();
+        }
+
+        public System.Windows.Forms.Control Get_Control()
+        {
+            return new ImageControl(pluginHost, this, palette);
         }
     }
 }

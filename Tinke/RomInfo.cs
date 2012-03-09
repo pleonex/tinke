@@ -161,7 +161,7 @@ namespace Tinke
                 listInfo.Items[3].SubItems.Add("0x" + String.Format("{0:X}", cabecera.unitCode) + " (Desconocido)");
             }
             listInfo.Items[4].SubItems.Add(Convert.ToString(cabecera.encryptionSeed));
-            listInfo.Items[5].SubItems.Add((cabecera.tamaño / 8388608).ToString() + " MB");
+            listInfo.Items[5].SubItems.Add((cabecera.tamaño / Math.Pow(2, 20)).ToString() + " MB");
             listInfo.Items[6].SubItems.Add(Tools.Helper.BytesToHexString(cabecera.reserved));
             listInfo.Items[7].SubItems.Add(Convert.ToString(cabecera.ROMversion));
             listInfo.Items[8].SubItems.Add(Convert.ToString(cabecera.internalFlags));

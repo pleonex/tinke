@@ -53,7 +53,7 @@ namespace _999HRPERDOOR
         public void Read(string archivo, int id)
         {
             if (id >= 0x13EF && id <= 0x1500)
-                SIR0.Read(archivo, id, pluginHost);
+                new SIR0_Sprite(pluginHost, archivo, id);
 
         }
         public System.Windows.Forms.Control Show_Info(string archivo, int id)
@@ -61,7 +61,7 @@ namespace _999HRPERDOOR
             Read(archivo, id);
 
             if (id >= 0x13EF && id <= 0x1500)
-                return new CellControl(pluginHost);
+                return new PluginInterface.Images.SpriteControl(pluginHost);
 
             return new System.Windows.Forms.Control();
         }

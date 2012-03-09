@@ -87,29 +87,6 @@ namespace Tinke
             return datos.ToArray();
         }
 
-        public static TTLP Palette_4bppTo8bpp(TTLP palette)
-        {
-            TTLP newPalette = new TTLP();
-
-            newPalette.ID = palette.ID;
-            newPalette.length = palette.length;
-            newPalette.unknown1 = palette.unknown1;
-
-            // Get the colours of all the palettes in BGR555 encoding
-            List<Color> paletteColor = new List<Color>();
-            for (int i = 0; i < palette.palettes.Length; i++)
-                paletteColor.AddRange(palette.palettes[i].colors);
-
-            // Set the colours in one palette
-            newPalette.palettes = new NTFP[1];
-            newPalette.palettes[0].colors = paletteColor.ToArray();
-
-            newPalette.nColors = (uint)newPalette.palettes[0].colors.Length;
-            newPalette.paletteLength = newPalette.nColors * 2;
-            newPalette.depth = System.Windows.Forms.ColorDepth.Depth8Bit;
-
-            return newPalette;
-        }
         public static Color[][] Palette_4bppTo8bpp(Color[][] palette)
         {
             // Get the colours of all the palettes in BGR555 encoding
@@ -122,45 +99,6 @@ namespace Tinke
             newPal[0] = paletteColor.ToArray();
 
             return newPal;
-        }
-        public static TTLP Palette_8bppTo4bpp(TTLP palette)
-        {
-            TTLP newPalette = new TTLP();
-
-            newPalette.ID = palette.ID;
-            newPalette.length = palette.length;
-            newPalette.unknown1 = palette.unknown1;
-            newPalette.nColors = 0x10;
-            newPalette.paletteLength = 0x20;
-            newPalette.depth = System.Windows.Forms.ColorDepth.Depth4Bit;
-
-            int isExact = (int)palette.nColors % 0x10;
-
-            if (isExact == 0)
-            {
-                newPalette.palettes = new NTFP[palette.nColors / 0x10];
-                for (int i = 0; i < newPalette.palettes.Length; i++)
-                {
-                    Color[] tempColor = new Color[0x10];
-                    Array.Copy(palette.palettes[0].colors, i * 0x10, tempColor, 0, 0x10);
-                    newPalette.palettes[i].colors = tempColor;
-                }
-            }
-            else
-            {
-                newPalette.palettes = new NTFP[(palette.nColors / 0x10) + 1];
-                for (int i = 0; i < newPalette.palettes.Length - 1; i++)
-                {
-                    Color[] tempColor = new Color[0x10];
-                    Array.Copy(palette.palettes[0].colors, i * 0x10, tempColor, 0, 0x10);
-                    newPalette.palettes[i].colors = tempColor;
-                }
-                Color[] temp = new Color[isExact];
-                Array.Copy(palette.palettes[0].colors, palette.nColors / 0x10, temp, 0, isExact);
-                newPalette.palettes[newPalette.palettes.Length - 1].colors = temp;
-            }
-
-            return newPalette;
         }
         public static Color[][] Palette_8bppTo4bpp(Color[][] palette)
         {
@@ -193,29 +131,6 @@ namespace Tinke
             return newPal;
         }
 
-        public static int Remove_DuplicatedColors(ref NTFP palette, ref byte[][] tiles)
-        {
-            List<Color> colors = new List<Color>();
-            int first_duplicated_color = -1;
-
-            for (int i = 0; i < palette.colors.Length; i++)
-            {
-                if (!colors.Contains(palette.colors[i]))
-                    colors.Add(palette.colors[i]);
-                else        // The color is duplicated
-                {
-                    int newIndex = colors.IndexOf(palette.colors[i]);
-                    Replace_Color(ref tiles, i, newIndex);
-                    colors.Add(Color.FromArgb(248, 0, 248));
-
-                    if (first_duplicated_color == -1)
-                        first_duplicated_color = i;
-                }
-            }
-
-            palette.colors = colors.ToArray();
-            return first_duplicated_color;
-        }
         public static int Remove_DuplicatedColors(ref Color[] palette, ref byte[][] tiles)
         {
             List<Color> colors = new List<Color>();
@@ -238,23 +153,6 @@ namespace Tinke
 
             palette = colors.ToArray();
             return first_duplicated_color;
-        }
-        public static int Remove_NotUsedColors(ref NTFP palette, ref byte[][] tiles)
-        {
-            int first_notUsed_color = -1;
-            List<bool> colors = new List<bool>();
-            for (int i = 0; i < palette.colors.Length; i++)
-                colors.Add(false);
-
-            for (int i = 0; i < tiles.Length; i++)
-                for (int j = 0; j < tiles[i].Length; j++)
-                    colors[tiles[i][j]] = true;
-
-            for (int i = 0; i < colors.Count; i++)
-                if (!colors[i])
-                    first_notUsed_color = i;
-
-            return first_notUsed_color;
         }
         public static int Remove_NotUsedColors(ref Color[] palette, ref byte[][] tiles)
         {

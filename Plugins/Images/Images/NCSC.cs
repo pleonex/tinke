@@ -119,7 +119,7 @@ namespace Images
             br.Close();
             Set_Map(map, false, (int)ncsc.scrn.width, (int)ncsc.scrn.height);
         }
-        public override void Write(string fileOut)
+        public override void Write(string fileOut, ImageBase image, PaletteBase palette)
         {
         }
 

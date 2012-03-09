@@ -230,6 +230,7 @@ namespace Tinke
             DateTime t5 = DateTime.Now;
 
             accion.Root = root;
+            accion.SortedIDs = Nitro.FAT.SortByOffset(fat);
             DateTime t6 = DateTime.Now;
 
             Stream stream = File.OpenRead(file);
@@ -502,13 +503,13 @@ namespace Tinke
                 listFile.Items[5].Text = xml.Element("S0E").Value;
                 listFile.Items[6].Text = xml.Element("S40").Value;
                 linkAboutBox.Text = xml.Element("S0F").Value;
-                toolStripDeleteChain.Text = xml.Element("S10").Value;
-                borrarPaletaToolStripMenuItem.Text = xml.Element("S11").Value;
-                borrarTileToolStripMenuItem.Text = xml.Element("S12").Value;
-                borrarScreenToolStripMenuItem.Text = xml.Element("S13").Value;
-                borrarCeldasToolStripMenuItem.Text = xml.Element("S14").Value;
-                borrarAnimaciónToolStripMenuItem.Text = xml.Element("S15").Value;
-                s10ToolStripMenuItem.Text = xml.Element("S10").Value;
+                //toolStripDeleteChain.Text = xml.Element("S10").Value;
+                //borrarPaletaToolStripMenuItem.Text = xml.Element("S11").Value;
+                //borrarTileToolStripMenuItem.Text = xml.Element("S12").Value;
+                //borrarScreenToolStripMenuItem.Text = xml.Element("S13").Value;
+                //borrarCeldasToolStripMenuItem.Text = xml.Element("S14").Value;
+                //borrarAnimaciónToolStripMenuItem.Text = xml.Element("S15").Value;
+                //s10ToolStripMenuItem.Text = xml.Element("S10").Value;
                 toolStripOpenAs.Text = xml.Element("S16").Value;
                 toolStripMenuItem1.Text = xml.Element("S17").Value;
                 toolStripMenuItem2.Text = xml.Element("S18").Value;
@@ -1273,74 +1274,113 @@ namespace Tinke
             if (!isMono)
                 espera.Start("S05");
 
-            #region Inializations
-            // Copia para no modificar el originial
-            List<sFile> origianlFiles = new List<sFile>();
-            origianlFiles.AddRange((sFile[])accion.Search_Folder("ftc").files.ToArray().Clone());
+            // Get special files
+            sFolder ftc = accion.Search_Folder("ftc");
 
-            // Quitamos archivos especiales que no cuentan en la ROM
-            int id = accion.Search_File("fnt.bin").files[0].id;
-            accion.Remove_File(id, accion.Root);
+            sFile fnt = ftc.files.Find(sFile => sFile.name == "fnt.bin");
+            sFile fat = ftc.files.Find(sFile => sFile.name == "fat.bin");
+            sFile arm9 = ftc.files.Find(sFile => sFile.name == "arm9.bin");
+            sFile arm7 = ftc.files.Find(sFile => sFile.name == "arm7.bin");
 
-            id = accion.Search_File("fat.bin").files[0].id;
-            accion.Remove_File(id, accion.Root);
-
-            id = accion.Search_File("arm9.bin").files[0].id;
-            accion.Remove_File(id, accion.Root);
-
-            id = accion.Search_File("arm7.bin").files[0].id;
-            accion.Remove_File(id, accion.Root);
-
-            sFolder y9 = accion.Search_File("y9.bin");
-            if (y9.files.Count > 0)
+            int index = ftc.files.FindIndex(sFile => sFile.name == "y9.bin");
+            sFile y9 = new sFile();
+            List<sFile> ov9 = new List<sFile>();
+            if (index != -1)
             {
-                id = y9.files[0].id;
-                accion.Remove_File(id, accion.Root);
+                y9 = ftc.files[index];
+                ov9 = ftc.files.FindAll(sFile => sFile.name.StartsWith("overlay9_"));
             }
 
-            sFolder y7 = accion.Search_File("y7.bin");
-            if (y7.files.Count > 0)
+            index = ftc.files.FindIndex(sFile => sFile.name == "y7.bin");
+            List<sFile> ov7 = new List<sFile>();
+            sFile y7 = new sFile();
+            if (index != -1)
             {
-                id = y7.files[0].id;
-                accion.Remove_File(id, accion.Root);
+                y7 = ftc.files[index];
+                ov7 = ftc.files.FindAll(sFile => sFile.name.StartsWith("overlay7_"));
             }
-
-            // Obtenemos el último ID de archivo sin los especiales
-            //accion.LastFileID = 0;
-            //accion.Set_LastFileID(accion.Root);
-            //accion.LastFolderID = 0;
-            //accion.Set_LastFolderID(accion.Root);
-            #endregion
 
             #region Get ROM sections
             BinaryReader br;
             Console.WriteLine(Tools.Helper.GetTranslation("Messages", "S08"));
-            Nitro.Estructuras.ROMHeader cabecera = romInfo.Cabecera;
+            Nitro.Estructuras.ROMHeader header = romInfo.Cabecera;
+            uint currPos = header.headerSize;
 
 
-            // Escribimos el ARM9 Binary
+            // Write ARM9
             string arm9Binary = Path.GetTempFileName();
             string overlays9 = Path.GetTempFileName();
             Console.Write("\tARM9 Binary...");
 
-            br = new BinaryReader(new FileStream(accion.ROMFile, FileMode.Open));
-            br.BaseStream.Position = romInfo.Cabecera.ARM9romOffset; // ARM9
-            BinaryWriter bw = new BinaryWriter(new FileStream(arm9Binary, FileMode.Create));
-            bw.Write(br.ReadBytes((int)romInfo.Cabecera.ARM9size));
-            bw.Flush();
-            cabecera.ARM9romOffset = cabecera.headerSize;
-
-            br.BaseStream.Position = romInfo.Cabecera.ARM9overlayOffset; // ARM9 Overlays Tables
-            bw.Write(br.ReadBytes((int)romInfo.Cabecera.ARM9overlaySize));
+            br = new BinaryReader(File.OpenRead(arm9.path));
+            br.BaseStream.Position = arm9.offset;
+            BinaryWriter bw = new BinaryWriter(File.OpenWrite(arm9Binary));
+            bw.Write(br.ReadBytes((int)arm9.size));
             bw.Flush();
             br.Close();
-            cabecera.ARM9overlayOffset = cabecera.ARM9romOffset + cabecera.ARM9size;
 
-            Nitro.Overlay.EscribirOverlays(overlays9, accion.Search_File("overlay9_"), accion.ROMFile);
-            bw.Write(File.ReadAllBytes(overlays9)); // ARM9 Overlays
+            header.ARM9romOffset = currPos;
+            header.ARM9size = arm9.size;
+            header.ARM9overlayOffset = 0;
+            uint arm9overlayOffset = 0;
+
+            currPos += arm9.size;
+
+            // Write the Nitrocode
+            br = new BinaryReader(File.OpenRead(accion.ROMFile));
+            br.BaseStream.Position = romInfo.Cabecera.ARM9romOffset + romInfo.Cabecera.ARM9size;
+            if (br.ReadUInt32() == 0xDEC00621)
+            {
+                // Nitrocode found
+                bw.Write(0xDEC00621);
+                bw.Write(br.ReadUInt32());
+                bw.Write(br.ReadUInt32());
+                currPos += 0x0C;
+                bw.Flush();
+            }
+            br.Close();
+
+            uint rem = currPos % 0x200;
+            if (rem != 0)
+            {
+                while (rem < 0x200)
+                {
+                    bw.Write((byte)0xFF);
+                    rem++;
+                    currPos++;
+                }
+            }
+
+            if (header.ARM9overlaySize != 0)
+            {
+                // ARM9 Overlays Tables
+                br = new BinaryReader(File.OpenRead(y9.path));
+                br.BaseStream.Position = y9.offset;
+                bw.Write(br.ReadBytes((int)y9.size));
+                bw.Flush();
+                br.Close();
+                header.ARM9overlayOffset = currPos;
+                header.ARM9overlaySize = y9.size;
+
+                currPos += y9.size;
+                rem = currPos % 0x200;
+                if (rem != 0)
+                {
+                    while (rem < 0x200)
+                    {
+                        bw.Write((byte)0xFF);
+                        rem++;
+                        currPos++;
+                    }
+                }
+
+                Nitro.Overlay.EscribirOverlays(overlays9, ov9, accion.ROMFile);
+                bw.Write(File.ReadAllBytes(overlays9)); // ARM9 Overlays
+                arm9overlayOffset = currPos;
+                currPos += (uint)new FileInfo(overlays9).Length;
+            }
             bw.Flush();
             bw.Close();
-            uint arm9overlayOffset = cabecera.ARM9overlayOffset + cabecera.ARM9overlaySize;
 
             Console.WriteLine(Tools.Helper.GetTranslation("Messages", "S09"), new FileInfo(arm9Binary).Length);
 
@@ -1348,32 +1388,62 @@ namespace Tinke
             // Escribismo el ARM7 Binary
             string arm7Binary = Path.GetTempFileName();
             string overlays7 = Path.GetTempFileName();
-
             Console.Write("\tARM7 Binary...");
-            br = new BinaryReader(new FileStream(accion.ROMFile, FileMode.Open));
-            br.BaseStream.Position = romInfo.Cabecera.ARM7romOffset; // ARM7
-            bw = new BinaryWriter(new FileStream(arm7Binary, FileMode.Create));
-            bw.Write(br.ReadBytes((int)romInfo.Cabecera.ARM7size));
+
+            br = new BinaryReader(File.OpenRead(arm7.path));
+            br.BaseStream.Position = arm7.offset;
+            bw = new BinaryWriter(File.OpenWrite(arm7Binary));
+            bw.Write(br.ReadBytes((int)arm7.size));
             bw.Flush();
             br.Close();
-            cabecera.ARM7romOffset = cabecera.ARM9romOffset + (uint)new FileInfo(arm9Binary).Length;
-            cabecera.ARM7overlayOffset = 0x00;
+
+            header.ARM7romOffset = currPos;
+            header.ARM7size = arm7.size;
+            header.ARM7overlayOffset = 0x00;
             uint arm7overlayOffset = 0x00;
+
+            currPos += arm7.size;
+            rem = currPos % 0x200;
+            if (rem != 0)
+            {
+                while (rem < 0x200)
+                {
+                    bw.Write((byte)0xFF);
+                    rem++;
+                    currPos++;
+                }
+            }
 
             if (romInfo.Cabecera.ARM7overlaySize != 0x00)
             {
-                br = new BinaryReader(new FileStream(accion.ROMFile, FileMode.Open));
-                br.BaseStream.Position = romInfo.Cabecera.ARM7overlayOffset; // ARM7 Overlays Tables
-                bw.Write(br.ReadBytes((int)romInfo.Cabecera.ARM7overlaySize));
+                // ARM7 Overlays Tables
+                br = new BinaryReader(File.OpenRead(y7.path));
+                br.BaseStream.Position = y7.offset;
+                bw.Write(br.ReadBytes((int)y7.size));
                 bw.Flush();
                 br.Close();
-                cabecera.ARM7overlayOffset = cabecera.ARM7romOffset + cabecera.ARM7size;
+                header.ARM7overlayOffset = currPos;
+                header.ARM7overlaySize = y7.size;
 
-                Nitro.Overlay.EscribirOverlays(overlays7, accion.Search_File("overlay7_"), accion.ROMFile);
+                currPos += y7.size;
+                rem = currPos % 0x200;
+                if (rem != 0)
+                {
+                    while (rem < 0x200)
+                    {
+                        bw.Write((byte)0xFF);
+                        rem++;
+                        currPos++;
+                    }
+                }
+
+                Nitro.Overlay.EscribirOverlays(overlays7, ov7, accion.ROMFile);
                 bw.Write(File.ReadAllBytes(overlays7)); // ARM7 Overlays
-                bw.Flush();
-                arm7overlayOffset = cabecera.ARM7overlayOffset + cabecera.ARM7overlaySize;
+
+                arm7overlayOffset = currPos;
+                currPos += (uint)new FileInfo(overlays7).Length;
             }
+            bw.Flush();
             bw.Close();
             Console.WriteLine(Tools.Helper.GetTranslation("Messages", "S09"), new FileInfo(arm7Binary).Length);
 
@@ -1381,43 +1451,66 @@ namespace Tinke
             // Escribimos el FNT (File Name Table)
             string fileFNT = Path.GetTempFileName();
             Console.Write("\tFile Name Table (FNT)...");
-            br = new BinaryReader(new FileStream(accion.ROMFile, FileMode.Open));
-            br.BaseStream.Position = romInfo.Cabecera.fileNameTableOffset;
-            File.WriteAllBytes(fileFNT, br.ReadBytes((int)romInfo.Cabecera.fileNameTableSize));
+
+            bw = new BinaryWriter(File.OpenWrite(fileFNT));
+            br = new BinaryReader(File.OpenRead(fnt.path));
+            br.BaseStream.Position = fnt.offset;
+            bw.Write(br.ReadBytes((int)fnt.size));
+            bw.Flush();
             br.Close();
+            header.fileNameTableSize = fnt.size;
+            header.fileNameTableOffset = currPos;
+
+            currPos += fnt.size;
+            rem = currPos % 0x200;
+            if (rem != 0)
+            {
+                while (rem < 0x200)
+                {
+                    bw.Write((byte)0xFF);
+                    rem++;
+                    currPos++;
+                }
+            }
+            bw.Flush();
+            bw.Close();
+
             Console.WriteLine(Tools.Helper.GetTranslation("Messages", "S09"), new FileInfo(fileFNT).Length);
-            cabecera.fileNameTableOffset = cabecera.ARM7romOffset + cabecera.ARM7size;
 
 
             // Escribimos el FAT (File Allocation Table)
-            cabecera.FAToffset = cabecera.fileNameTableOffset + cabecera.fileNameTableSize;
             string fileFAT = Path.GetTempFileName();
-            Nitro.FAT.EscribirFAT(fileFAT, accion.Root, (int)romInfo.Cabecera.FATsize / 0x08,
-                cabecera.FAToffset, arm9overlayOffset, arm7overlayOffset);
-
+            header.FAToffset = currPos;
+            Nitro.FAT.Write(fileFAT, accion.Root, header.FAToffset, accion.SortedIDs, arm9overlayOffset, arm7overlayOffset);
+            currPos += (uint)new FileInfo(fileFAT).Length;
 
             // Escribimos el banner
             string banner = Path.GetTempFileName();
             Nitro.NDS.EscribirBanner(banner, romInfo.Banner);
-            cabecera.bannerOffset = cabecera.FAToffset + cabecera.FATsize;
+            header.bannerOffset = currPos;
+            currPos += (uint)new FileInfo(banner).Length;
 
+            // Escribimos los archivos
+            string files = Path.GetTempFileName();
+            Nitro.NDS.Write_Files(files, accion.ROMFile, accion.Root, accion.SortedIDs);
+            currPos += (uint)new FileInfo(files).Length;
 
             // Escribimos cabecera
             // Get Header CRC
             string tempHeader = Path.GetTempFileName();
-            Nitro.NDS.EscribirCabecera(tempHeader, cabecera, accion.ROMFile);
+            Nitro.NDS.EscribirCabecera(tempHeader, header, accion.ROMFile);
             BinaryReader brHeader = new BinaryReader(File.OpenRead(tempHeader));
-            cabecera.headerCRC16 = (ushort)Tools.CRC16.Calcular(brHeader.ReadBytes(0x15E));
+            header.headerCRC16 = (ushort)Tools.CRC16.Calcular(brHeader.ReadBytes(0x15E));
             brHeader.Close();
             File.Delete(tempHeader);
-            // Write file
-            string header = Path.GetTempFileName();
-            Nitro.NDS.EscribirCabecera(header, cabecera, accion.ROMFile);
+
+            header.tamaño = (uint)Math.Ceiling(Math.Log(currPos, 2));
+            header.tamaño = (uint)Math.Pow(2, header.tamaño);
+            // Write header
+            string header_file = Path.GetTempFileName();
+            Nitro.NDS.EscribirCabecera(header_file, header, accion.ROMFile);
 
 
-            // Escribimos los archivos
-            string files = Path.GetTempFileName();
-            Nitro.NDS.EscribirArchivos(files, accion.ROMFile, accion.Root, (int)romInfo.Cabecera.FATsize / 0x08);
             Console.Write("<br>");
             #endregion
 
@@ -1447,7 +1540,7 @@ namespace Tinke
                 Console.WriteLine(Tools.Helper.GetTranslation("Messages", "S0D"), o.FileName);
                 bw = new BinaryWriter(new FileStream(o.FileName, FileMode.Create));
 
-                bw.Write(File.ReadAllBytes(header));
+                bw.Write(File.ReadAllBytes(header_file));
                 bw.Flush();
                 bw.Write(File.ReadAllBytes(arm9Binary));
                 bw.Flush();
@@ -1461,21 +1554,22 @@ namespace Tinke
                 bw.Flush();
                 bw.Write(File.ReadAllBytes(files));
                 bw.Flush();
+
+                rem = header.tamaño - (uint)bw.BaseStream.Position;
+                while (rem > 0)
+                {
+                    bw.Write((byte)0xFF);
+                    rem--;
+                }
+                bw.Flush();
                 bw.Close();
 
                 Console.WriteLine("<b>" + Tools.Helper.GetTranslation("Messages", "S09") + "</b>", new FileInfo(o.FileName).Length);
                 accion.IsNewRom = false;
             }
 
-            // Devolvemos sus valores buenos
-            //accion.Set_LastFileID(accion.Root);
-            //accion.Set_LastFolderID(accion.Root);
-            //accion.LastFileID++; accion.LastFolderID++;
-            accion.Search_Folder("ftc").files.Clear(); ;
-            accion.Search_Folder("ftc").files.AddRange(origianlFiles);
-
             // Borramos archivos ya innecesarios
-            File.Delete(header);
+            File.Delete(header_file);
             File.Delete(arm9Binary);
             File.Delete(overlays9);
             File.Delete(arm7Binary);
@@ -1638,33 +1732,6 @@ namespace Tinke
         void debug_FormClosing(object sender, FormClosingEventArgs e)
         {
             toolStripDebug.Checked = debug.Visible;
-        }
-        #endregion
-
-        #region Menu -> Remove chain
-        private void s10ToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            accion.Delete_PicturesSaved();
-        }
-        private void borrarPaletaToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            accion.Delete_PicturesSaved(Format.Palette);
-        }
-        private void borrarTileToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            accion.Delete_PicturesSaved(Format.Tile);
-        }
-        private void borrarScreenToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            accion.Delete_PicturesSaved(Format.Map);
-        }
-        private void borrarCeldasToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            accion.Delete_PicturesSaved(Format.Cell);
-        }
-        private void borrarAnimaciónToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            accion.Delete_PicturesSaved(Format.Animation);
         }
         #endregion
 

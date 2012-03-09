@@ -14,14 +14,12 @@
  *   You should have received a copy of the GNU General Public License
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  *
- * Programador: pleoNeX
- * Programa utilizado: Microsoft Visual C# 2010 Express
- * Fecha: 18/02/2011
+ * By: pleoNeX
  * 
  */
-namespace Tinke
+namespace Images
 {
-    partial class iNANR
+    partial class AnimationControl
     {
         /// <summary> 
         /// Required designer variable.
@@ -50,58 +48,8 @@ namespace Tinke
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem(new string[] {
-            "S0C",
-            "ABNK"}, -1, System.Drawing.Color.Empty, System.Drawing.Color.Empty, new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0))));
-            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("S0D");
-            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem("S0E");
-            System.Windows.Forms.ListViewItem listViewItem4 = new System.Windows.Forms.ListViewItem("S0F");
-            System.Windows.Forms.ListViewItem listViewItem5 = new System.Windows.Forms.ListViewItem("S10");
-            System.Windows.Forms.ListViewItem listViewItem6 = new System.Windows.Forms.ListViewItem(new string[] {
-            "S0C",
-            "S11"}, -1, System.Drawing.Color.Empty, System.Drawing.Color.Empty, new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0))));
-            System.Windows.Forms.ListViewItem listViewItem7 = new System.Windows.Forms.ListViewItem(new string[] {
-            "S12",
-            "00"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem8 = new System.Windows.Forms.ListViewItem(new string[] {
-            "S13",
-            "00"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem9 = new System.Windows.Forms.ListViewItem(new string[] {
-            "S14",
-            "00"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem10 = new System.Windows.Forms.ListViewItem(new string[] {
-            "S15",
-            "00"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem11 = new System.Windows.Forms.ListViewItem(new string[] {
-            "S16",
-            "00"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem12 = new System.Windows.Forms.ListViewItem(new string[] {
-            "S17",
-            "00"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem13 = new System.Windows.Forms.ListViewItem(new string[] {
-            "S0C",
-            "S18"}, -1, System.Drawing.Color.Empty, System.Drawing.Color.Empty, new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0))));
-            System.Windows.Forms.ListViewItem listViewItem14 = new System.Windows.Forms.ListViewItem(new string[] {
-            "S19",
-            "00"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem15 = new System.Windows.Forms.ListViewItem(new string[] {
-            "S15",
-            "00"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem16 = new System.Windows.Forms.ListViewItem(new string[] {
-            "S0F",
-            "00"}, -1);
-            System.Windows.Forms.ListViewItem listViewItem17 = new System.Windows.Forms.ListViewItem(new string[] {
-            "S0C",
-            "S1A"}, -1, System.Drawing.Color.Empty, System.Drawing.Color.Empty, new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0))));
-            System.Windows.Forms.ListViewItem listViewItem18 = new System.Windows.Forms.ListViewItem(new string[] {
-            "S1B",
-            "00"}, -1);
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(iNANR));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(AnimationControl));
             this.aniBox = new System.Windows.Forms.PictureBox();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.listProp = new System.Windows.Forms.ListView();
-            this.columnCampo = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnValor = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.tempo = new System.Windows.Forms.Timer(this.components);
             this.btnPlay = new System.Windows.Forms.Button();
             this.imageMedia = new System.Windows.Forms.ImageList(this.components);
@@ -122,71 +70,17 @@ namespace Tinke
             this.label3 = new System.Windows.Forms.Label();
             this.lblFullImage = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.aniBox)).BeginInit();
-            this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // aniBox
             // 
-            this.aniBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.aniBox.Location = new System.Drawing.Point(4, 4);
+            this.aniBox.Location = new System.Drawing.Point(0, 0);
             this.aniBox.Name = "aniBox";
-            this.aniBox.Size = new System.Drawing.Size(256, 256);
+            this.aniBox.Size = new System.Drawing.Size(512, 256);
             this.aniBox.TabIndex = 0;
             this.aniBox.TabStop = false;
             this.aniBox.DoubleClick += new System.EventHandler(this.aniBox_DoubleClick);
-            // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.listProp);
-            this.groupBox1.Location = new System.Drawing.Point(266, 0);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(243, 354);
-            this.groupBox1.TabIndex = 1;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "S09";
-            // 
-            // listProp
-            // 
-            this.listProp.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnCampo,
-            this.columnValor});
-            this.listProp.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.listProp.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem1,
-            listViewItem2,
-            listViewItem3,
-            listViewItem4,
-            listViewItem5,
-            listViewItem6,
-            listViewItem7,
-            listViewItem8,
-            listViewItem9,
-            listViewItem10,
-            listViewItem11,
-            listViewItem12,
-            listViewItem13,
-            listViewItem14,
-            listViewItem15,
-            listViewItem16,
-            listViewItem17,
-            listViewItem18});
-            this.listProp.Location = new System.Drawing.Point(3, 16);
-            this.listProp.Name = "listProp";
-            this.listProp.Size = new System.Drawing.Size(237, 335);
-            this.listProp.TabIndex = 0;
-            this.listProp.UseCompatibleStateImageBehavior = false;
-            this.listProp.View = System.Windows.Forms.View.Details;
-            // 
-            // columnCampo
-            // 
-            this.columnCampo.Text = "S0A";
-            this.columnCampo.Width = 146;
-            // 
-            // columnValor
-            // 
-            this.columnValor.Text = "S0B";
-            this.columnValor.Width = 83;
             // 
             // tempo
             // 
@@ -385,12 +279,11 @@ namespace Tinke
             this.lblFullImage.TabIndex = 13;
             this.lblFullImage.Text = "S1E";
             // 
-            // iNANR
+            // AnimationControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Transparent;
-            this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.Controls.Add(this.lblFullImage);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
@@ -403,12 +296,10 @@ namespace Tinke
             this.Controls.Add(this.btnNext);
             this.Controls.Add(this.comboAni);
             this.Controls.Add(this.btnPlay);
-            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.aniBox);
-            this.Name = "iNANR";
-            this.Size = new System.Drawing.Size(510, 510);
+            this.Name = "AnimationControl";
+            this.Size = new System.Drawing.Size(512, 512);
             ((System.ComponentModel.ISupportInitialize)(this.aniBox)).EndInit();
-            this.groupBox1.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.ResumeLayout(false);
@@ -419,8 +310,6 @@ namespace Tinke
         #endregion
 
         private System.Windows.Forms.PictureBox aniBox;
-        private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.ListView listProp;
         private System.Windows.Forms.Timer tempo;
         private System.Windows.Forms.Button btnPlay;
         private System.Windows.Forms.ComboBox comboAni;
@@ -438,8 +327,6 @@ namespace Tinke
         private System.Windows.Forms.MaskedTextBox txtTime;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.ColumnHeader columnCampo;
-        private System.Windows.Forms.ColumnHeader columnValor;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label lblFullImage;
     }

@@ -14,7 +14,7 @@
  *   You should have received a copy of the GNU General Public License
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  *
- * Programador: pleoNeX
+ * By: pleoNeX
  * 
  */
 using System;
@@ -22,14 +22,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using System.Drawing;
 using PluginInterface;
+using PluginInterface.Images;
 
 namespace TETRIS_DS
 {
-    public static class PLZ
+    public class PLZ : PaletteBase
     {
-        public static void Read(string file, int id, IPluginHost pluginHost)
+        public PLZ(IPluginHost pluginHost, string file, int id) : base(pluginHost, file, id) { }
+
+        public override void Read(string file)
         {
+            // Decompressed the file
             pluginHost.Decompress(file);
             string dec_file;
             sFolder dec_folder = pluginHost.Get_Files();
@@ -47,29 +52,19 @@ namespace TETRIS_DS
                 dec_file = pluginHost.Get_Files().files[0].path;
             }
 
-            uint file_size = (uint)new FileInfo(dec_file).Length;
             BinaryReader br = new BinaryReader(File.OpenRead(dec_file));
 
-            NCLR nclr = new NCLR();
-            nclr.id = (uint)id;
-
-            nclr.header.id = "PLZ ".ToCharArray();
-            nclr.header.constant = 0x0100;
-            nclr.header.file_size = file_size;
-            nclr.header.header_size = 0x10;
-
-            nclr.pltt.ID = "PLZ ".ToCharArray();
-            nclr.pltt.length = file_size;
-            nclr.pltt.depth = (file_size > 0x20) ? System.Windows.Forms.ColorDepth.Depth8Bit : System.Windows.Forms.ColorDepth.Depth4Bit;
-            nclr.pltt.unknown1 = 0x00000000;
-            nclr.pltt.paletteLength = file_size;
-            nclr.pltt.nColors = file_size / 2;
-            nclr.pltt.palettes = new NTFP[1];
-            
-            nclr.pltt.palettes[0].colors = pluginHost.BGR555ToColor(br.ReadBytes((int)file_size));
+            ColorFormat depth = (br.BaseStream.Length > 0x20) ? ColorFormat.colors256 : ColorFormat.colors16;
+            Color[][] colors = new Color[1][];
+            colors[0] = pluginHost.BGR555ToColor(br.ReadBytes((int)br.BaseStream.Length));
 
             br.Close();
-            pluginHost.Set_NCLR(nclr);
+            Set_Palette(colors, depth, false);
+            pluginHost.Set_Palette(this);
+        }
+        public override void Write(string fileOut)
+        {
+            throw new NotImplementedException();
         }
     }
 }

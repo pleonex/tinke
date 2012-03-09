@@ -39,11 +39,11 @@ namespace PluginInterface.Images
         A3I5 = 1,           // 8 bits-> 0-4: index; 5-7: alpha
         colors4 = 2,        // 2 bits for 4 colors
         colors16 = 3,       // 4 bits for 16 colors
-        colors256 = 4,     // 8 bits for 256 colors
+        colors256 = 4,      // 8 bits for 256 colors
         texel4x4 = 5,       // 32bits, 2bits per Texel (only in textures)
         A5I3 = 6,           // 8 bits-> 0-2: index; 3-7: alpha
         direct = 7,         // 16bits, color with BGR555 encoding
-        colors2 = 8          // 1 bit for 2 colors
+        colors2 = 8         // 1 bit for 2 colors
     }
 
     public static class Actions
@@ -306,14 +306,14 @@ namespace PluginInterface.Images
         }
 
         public static Bitmap Get_Image(Byte[] tiles, Byte[] tile_pal, Color[][] palette, ColorFormat format,
-            int width, int height)
+            int width, int height, int start = 0)
         {
             if (tiles.Length == 0)
                 return new Bitmap(1, 1);
 
             Bitmap image = new Bitmap(width, height);
 
-            int pos = 0;
+            int pos = start;
             for (int h = 0; h < height; h++)
             {
                 for (int w = 0; w < width; w++)
@@ -371,8 +371,8 @@ namespace PluginInterface.Images
                     if (data.Length <= (pos / 8)) break;
                     byte bit1 = data[pos / 8];
                     index = ByteToBits(bit1)[pos % 8];
-                        if (palette.Length > index)
-                    color = palette[index];
+                    if (palette.Length > index)
+                        color = palette[index];
                     pos++;
                     break;
                 case ColorFormat.colors4:
@@ -567,6 +567,168 @@ namespace PluginInterface.Images
             }
             return newTile;
         }
+        #endregion
+
+        #region OAM
+        public static Size Get_OAMSize(byte shape, byte size)
+        {
+            Size imageSize = new Size();
+
+            switch (shape)
+            {
+                case 0x00:  // Square
+                    switch (size)
+                    {
+                        case 0x00:
+                            imageSize = new Size(8, 8);
+                            break;
+                        case 0x01:
+                            imageSize = new Size(16, 16);
+                            break;
+                        case 0x02:
+                            imageSize = new Size(32, 32);
+                            break;
+                        case 0x03:
+                            imageSize = new Size(64, 64);
+                            break;
+                    }
+                    break;
+                case 0x01:  // Horizontal
+                    switch (size)
+                    {
+                        case 0x00:
+                            imageSize = new Size(16, 8);
+                            break;
+                        case 0x01:
+                            imageSize = new Size(32, 8);
+                            break;
+                        case 0x02:
+                            imageSize = new Size(32, 16);
+                            break;
+                        case 0x03:
+                            imageSize = new Size(64, 32);
+                            break;
+                    }
+                    break;
+                case 0x02:  // Vertical
+                    switch (size)
+                    {
+                        case 0x00:
+                            imageSize = new Size(8, 16);
+                            break;
+                        case 0x01:
+                            imageSize = new Size(8, 32);
+                            break;
+                        case 0x02:
+                            imageSize = new Size(16, 32);
+                            break;
+                        case 0x03:
+                            imageSize = new Size(32, 64);
+                            break;
+                    }
+                    break;
+            }
+
+            return imageSize;
+        }
+
+        public static Bitmap Get_Image(Bank bank, uint blockSize, ImageBase img, PaletteBase pal, int max_width, int max_height,
+                                       bool draw_grid, bool draw_cells, bool draw_numbers, bool trans, bool image, int zoom = 1)
+        {
+            Size size = new Size(max_width * zoom, max_height * zoom);
+            Bitmap bank_img = new Bitmap(size.Width, size.Height);
+            Graphics graphic = Graphics.FromImage(bank_img);
+
+            if (bank.oams.Length == 0)
+            {
+                graphic.DrawString("No OAM", SystemFonts.CaptionFont, Brushes.Black, new PointF(max_width / 2, max_height / 2));
+                return bank_img;
+            }
+
+            if (draw_grid)
+            {
+                for (int i = (0 - size.Width); i < size.Width; i += 8)
+                {
+                    graphic.DrawLine(Pens.LightBlue, (i + size.Width / 2) * zoom, 0, (i + size.Width / 2) * zoom, size.Height * zoom);
+                    graphic.DrawLine(Pens.LightBlue, 0, (i + size.Height / 2) * zoom, size.Width * zoom, (i + size.Height / 2) * zoom);
+                }
+                graphic.DrawLine(Pens.Blue, (max_width / 2) * zoom, 0, (max_width / 2) * zoom, max_height * zoom);
+                graphic.DrawLine(Pens.Blue, 0, (max_height / 2) * zoom, max_width * zoom, (max_height / 2) * zoom);
+            }
+
+
+            Image cell;
+            for (int i = 0; i < bank.oams.Length; i++)
+            {
+                if (bank.oams[i].width == 0x00 || bank.oams[i].height == 0x00)
+                    continue;
+
+                uint tileOffset = bank.oams[i].obj2.tileOffset;
+                tileOffset = (uint)(tileOffset << (byte)blockSize);
+
+                if (image)
+                {
+                    ImageBase cell_img = new TestImage(img.PluginHost);
+                    cell_img.Set_Tiles((byte[])img.Tiles.Clone(), bank.oams[i].width, bank.oams[i].height, img.ColorFormat,
+                                       img.TileForm, false);
+
+                    if (cell_img.ColorFormat != ColorFormat.colors16)
+                        cell_img.StartByte = (int)tileOffset * 0x20;
+                    else
+                        cell_img.StartByte = (int)tileOffset * 0x20;
+
+
+                    if (cell_img.ColorFormat == ColorFormat.colors16)
+                        for (int j = 0; j < cell_img.TilesPalette.Length; j++)
+                            cell_img.TilesPalette[j] = bank.oams[i].obj2.index_palette;
+
+                    cell = cell_img.Get_Image(pal);
+                    //else
+                    //{
+                    //    tileOffset /= (blockSize / 2);
+                    //    int imageWidth = img.Width;
+                    //    int imageHeight = img.Height;
+
+                    //    int posX = (int)(tileOffset % imageWidth);
+                    //    int posY = (int)(tileOffset / imageWidth);
+
+                    //    if (img.ColorFormat == ColorFormat.colors16)
+                    //        posY *= (int)blockSize * 2;
+                    //    else
+                    //        posY *= (int)blockSize;
+                    //    if (posY >= imageHeight)
+                    //        posY = posY % imageHeight;
+
+                    //    cells[i] = ((Bitmap)img.Get_Image(pal)).Clone(new Rectangle(posX * zoom, posY * zoom, bank.oams[i].width * zoom, bank.oams[i].height * zoom),
+                    //                                                System.Drawing.Imaging.PixelFormat.DontCare);
+                    //}
+
+                    #region Flip
+                    if (bank.oams[i].obj1.flipX == 1 && bank.oams[i].obj1.flipY == 1)
+                        cell.RotateFlip(RotateFlipType.RotateNoneFlipXY);
+                    else if (bank.oams[i].obj1.flipX == 1)
+                        cell.RotateFlip(RotateFlipType.RotateNoneFlipX);
+                    else if (bank.oams[i].obj1.flipY == 1)
+                        cell.RotateFlip(RotateFlipType.RotateNoneFlipY);
+                    #endregion
+
+                    if (trans)
+                        ((Bitmap)cell).MakeTransparent(pal.Palette[bank.oams[i].obj2.index_palette][0]);
+
+                    graphic.DrawImageUnscaled(cell, size.Width / 2 + bank.oams[i].obj1.xOffset * zoom, size.Height / 2 + bank.oams[i].obj0.yOffset * zoom);
+                }
+
+                if (draw_cells)
+                    graphic.DrawRectangle(Pens.Black, size.Width / 2 + bank.oams[i].obj1.xOffset * zoom, size.Height / 2 + bank.oams[i].obj0.yOffset * zoom,
+                        bank.oams[i].width * zoom, bank.oams[i].height * zoom);
+                if (draw_numbers)
+                    graphic.DrawString(bank.oams[i].num_cell.ToString(), SystemFonts.CaptionFont, Brushes.Black, size.Width / 2 + bank.oams[i].obj1.xOffset * zoom,
+                        size.Height / 2 + bank.oams[i].obj0.yOffset * zoom);
+            }
+
+            return bank_img;
+        }
+
         #endregion
     }
 }

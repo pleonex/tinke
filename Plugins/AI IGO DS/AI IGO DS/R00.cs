@@ -14,7 +14,7 @@
  *   You should have received a copy of the GNU General Public License
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  *
- * Programador: pleoNeX
+ * By: pleoNeX
  * 
  */
 using System;
@@ -22,74 +22,69 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using System.Drawing;
 using System.Windows.Forms;
 using PluginInterface;
+using PluginInterface.Images;
 
 namespace AI_IGO_DS
 {
-    public static class R00
+    public class R00 : MapBase
     {
-        public static Control Leer(string archivo, IPluginHost pluginHost)
-        {
-            BinaryReader br = new BinaryReader(new FileStream(archivo, FileMode.Open));
+        PaletteBase palette;
+        ImageBase image;
 
-            // Todos los offset del archivo han de ser multiplicados por 4
-            // Cabecera
+        public R00(IPluginHost pluginHost, string file, int id) : base(pluginHost, file, id) { }
+
+        public Control Get_Control()
+        {
+            return new ImageControl(pluginHost, image, palette, this);
+        }
+
+        public override void Read(string fileIn)
+        {
+            BinaryReader br = new BinaryReader(File.OpenRead(fileIn));
+
+            // Header
             uint paletaOffset = br.ReadUInt32() * 4;
             uint tileOffset = br.ReadUInt32() * 4;
             uint mapOffset = br.ReadUInt32() * 4;
+
             // Paleta
             br.BaseStream.Position = paletaOffset;
             uint pCabeceraSize = br.ReadUInt32() * 4;
             uint pSize = br.ReadUInt32() * 4;
-            NCLR paleta = new NCLR();
-            paleta.pltt.length = pSize - 0x08;
-            paleta.pltt.paletteLength = pSize - 0x08;
-            paleta.pltt.nColors = (pSize - 0x08) / 2;
-            paleta.pltt.depth = ColorDepth.Depth8Bit;
-            paleta.pltt.palettes = new NTFP[1];
-            paleta.pltt.palettes[0].colors = pluginHost.BGR555ToColor(br.ReadBytes((int)paleta.pltt.paletteLength));
-            // Tile data
+
+            Color[][] colors = new Color[1][];
+            colors[0] = pluginHost.BGR555ToColor(br.ReadBytes((int)(pSize - 0x08)));
+            palette = new RawPalette(pluginHost, colors, false, ColorFormat.colors256);
+
+            // Image data
             br.BaseStream.Position = tileOffset;
             uint tCabeceraSize = br.ReadUInt32() * 4;
             uint tSize = br.ReadUInt32() * 4;
-            NCGR tile = new NCGR();
-            tile.order = TileOrder.Horizontal;
-            tile.rahc.depth = System.Windows.Forms.ColorDepth.Depth8Bit;
-            tile.rahc.nTilesX = (ushort)(0x20);
-            tile.rahc.nTilesY = (ushort)(0x18);
-            tile.rahc.nTiles = (ushort)(tile.rahc.nTilesX * tile.rahc.nTilesY);
 
-            tile.rahc.tileData.tiles = new byte[tile.rahc.nTiles][];
-            tile.rahc.tileData.nPalette = new byte[tile.rahc.nTiles];
-            for (int i = 0; i < tile.rahc.nTiles; i++)
-            {
-                tile.rahc.tileData.tiles[i] = br.ReadBytes(64);
-                tile.rahc.tileData.nPalette[i] = 0;
-            }
-            // Map, innecesario y estropea la imagen
+            byte[] tiles = br.ReadBytes((int)(tSize - 0x08));
+            image = new RawImage(pluginHost, tiles, TileForm.Horizontal, ColorFormat.colors256, 256, 192, false);
+
+            // Map
             br.BaseStream.Position = mapOffset;
             uint mCabeceraSize = br.ReadUInt32() * 4;
             uint mSize = br.ReadUInt32() * 4;
-            NSCR map = new NSCR();
-            map.section.width = br.ReadUInt16();
-            map.section.height = br.ReadUInt16();
 
-            map.section.mapData = new NTFS[mSize / 2];
-            for (int i = 0; i < map.section.mapData.Length; i++)
-            {
-                ushort parameters = br.ReadUInt16();
+            ushort width = br.ReadUInt16();
+            ushort height = br.ReadUInt16();
 
-                map.section.mapData[i] = new NTFS();
-                map.section.mapData[i].nTile = (ushort)(parameters & 0x3FF);
-                map.section.mapData[i].xFlip = (byte)((parameters >> 10) & 1);
-                map.section.mapData[i].yFlip = (byte)((parameters >> 11) & 1);
-                map.section.mapData[i].nPalette = (byte)((parameters >> 12) & 0xF);
-            }
+            NTFS[] map = new NTFS[(mSize - 0x08) / 2];
+            for (int i = 0; i < map.Length; i++)
+                map[i] = pluginHost.MapInfo(br.ReadUInt16());
 
             br.Close();
-
-            return new BinControl(pluginHost, paleta, new NCGR[] { tile });
+            Set_Map(map, false, width * 8, height * 8);
+        }
+        public override void Write(string fileOut, ImageBase image, PaletteBase palette)
+        {
+            throw new NotImplementedException();
         }
     }
 }

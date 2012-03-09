@@ -14,7 +14,7 @@
  *   You should have received a copy of the GNU General Public License
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  *
- * Programador: pleoNeX
+ * By: pleoNeX
  * 
  */
 using System;
@@ -23,13 +23,17 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using PluginInterface;
+using PluginInterface.Images;
 
 namespace TETRIS_DS
 {
-    public static class BDZ
+    public class BDZ : ImageBase
     {
-        public static void Read(string file, int id, IPluginHost pluginHost)
+        public BDZ(IPluginHost pluginHost, string file, int id) : base(pluginHost, file, id) { }
+
+        public override void Read(string file)
         {
+            // It's compressed
             pluginHost.Decompress(file);
             string dec_file;
             sFolder dec_folder = pluginHost.Get_Files();
@@ -47,35 +51,16 @@ namespace TETRIS_DS
                 dec_file = pluginHost.Get_Files().files[0].path;
             }
 
-            uint file_size = (uint)new FileInfo(dec_file).Length;
             BinaryReader br = new BinaryReader(File.OpenRead(dec_file));
-
-            NCGR ncgr = new NCGR();
-            ncgr.id = (uint)id;
-            ncgr.header.id = "BDZ ".ToCharArray();
-            ncgr.header.nSection = 1;
-            ncgr.header.constant = 0x0100;
-            ncgr.header.file_size = file_size;
-
-            ncgr.order = TileOrder.Horizontal;
-            ncgr.rahc.nTiles = (file_size / 0x40);
-            ncgr.rahc.depth = System.Windows.Forms.ColorDepth.Depth8Bit;
-            ncgr.rahc.nTilesX = 0x0020;
-            ncgr.rahc.nTilesY = (ushort)(ncgr.rahc.nTiles / ncgr.rahc.nTilesX);
-            ncgr.rahc.tiledFlag = 0x00000001;
-            ncgr.rahc.size_section = file_size;
-            ncgr.rahc.tileData = new NTFT();
-            ncgr.rahc.tileData.nPalette = new byte[ncgr.rahc.nTiles];
-            ncgr.rahc.tileData.tiles = new byte[ncgr.rahc.nTiles][];
-
-            for (int i = 0; i < ncgr.rahc.nTiles; i++)
-            {
-                ncgr.rahc.tileData.tiles[i] = br.ReadBytes(0x40);
-                ncgr.rahc.tileData.nPalette[i] = 0;
-            }
-
+            byte[] tiles = br.ReadBytes((int)br.BaseStream.Length);
             br.Close();
-            pluginHost.Set_NCGR(ncgr);
+
+            Set_Tiles(tiles, 0x100, tiles.Length / 0x100, ColorFormat.colors256, TileForm.Horizontal, false);
+            pluginHost.Set_Image(this);
+        }
+        public override void Write(string fileOut, PaletteBase palette)
+        {
+            throw new NotImplementedException();
         }
     }
 }

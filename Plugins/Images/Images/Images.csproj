@@ -47,12 +47,13 @@
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>..\..\..\Tinke\bin\Debug\Plugins\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+    <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
     <FileAlignment>4096</FileAlignment>
     <DebugType>Full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
     <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
+    <ErrorReport>none</ErrorReport>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
     <OutputPath>bin\Release\</OutputPath>
@@ -105,16 +106,22 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="iNCER.cs">
+    <Compile Include="AnimationControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="iNCER.designer.cs">
-      <DependentUpon>iNCER.cs</DependentUpon>
+    <Compile Include="AnimationControl.designer.cs">
+      <DependentUpon>AnimationControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="NANR.cs" />
     <Compile Include="NCCG.cs" />
     <Compile Include="NCCL.cs" />
     <Compile Include="NCE.cs" />
+    <Compile Include="NCER.cs" />
+    <Compile Include="NCGR.cs" />
+    <Compile Include="NCLR.cs" />
+    <Compile Include="NCOB.cs" />
     <Compile Include="NCSC.cs" />
+    <Compile Include="NSCR.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -124,8 +131,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="iNCER.resx">
-      <DependentUpon>iNCER.cs</DependentUpon>
+    <EmbeddedResource Include="AnimationControl.resx">
+      <DependentUpon>AnimationControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

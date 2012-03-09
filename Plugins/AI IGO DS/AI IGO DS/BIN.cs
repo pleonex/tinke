@@ -14,7 +14,7 @@
  *   You should have received a copy of the GNU General Public License
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  *
- * Programador: pleoNeX
+ * By: pleoNeX
  * 
  */
 using System;
@@ -22,44 +22,66 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using System.Drawing;
 using System.Windows.Forms;
 using PluginInterface;
+using PluginInterface.Images;
 
 namespace AI_IGO_DS
 {
-    public static class BIN
+    public class BIN
     {
-        public static Control Leer(string archivo, IPluginHost pluginHost)
-        {
-            BinaryReader br = new BinaryReader(new FileStream(archivo, FileMode.Open));
+        IPluginHost pluginHost;
+        int id;
 
-            // Todos los offset del archivo han de ser multiplicados por 4
-            // Cabecera
+        bool hasMap;
+        MapBase[] maps;
+        ImageBase image;
+        PaletteBase palette;
+
+        public BIN(IPluginHost pluginHost, string file, int id) 
+        {
+            this.pluginHost = pluginHost;
+            this.id = id;
+
+            Read(file);
+        }
+
+        public Image Get_Image(int index)
+        {
+            if (hasMap)
+                return maps[index].Get_Image(image, palette);
+            else
+                return image.Get_Image(palette);
+        }
+
+        public void Read(string file)
+        {
+            BinaryReader br = new BinaryReader(File.OpenRead(file));
+
+            // Header 
             uint paletaOffset = br.ReadUInt32() * 4;
             uint tileOffset = br.ReadUInt32() * 4;
             uint mapOffset = br.ReadUInt32() * 4;
-            ColorDepth profundidad;
+            ColorFormat depth;
             br.BaseStream.Position = mapOffset;
             if (br.ReadUInt32() == 0x01)
-                profundidad = ColorDepth.Depth8Bit;
+                depth = ColorFormat.colors256;
             else
-                profundidad = ColorDepth.Depth4Bit;
+                depth = ColorFormat.colors16;
 
-            // Paleta
-            NCLR paleta = new NCLR();
-            if (paletaOffset == 0x00) // No hay paleta
+            // Palette
+            Color[][] colors;
+            if (paletaOffset == 0x00) // No palette
             {
-                profundidad = ColorDepth.Depth4Bit;
-                paleta.pltt.length = (uint)defaultPaletteData.Length;
-                paleta.pltt.paletteLength = (uint)0x20;
-                paleta.pltt.nColors = (uint)0x10;
-                paleta.pltt.depth = profundidad;
-                paleta.pltt.palettes = new NTFP[defaultPaletteData.Length / 0x20];
-                for (int i = 0; i < paleta.pltt.palettes.Length; i++)
+                depth = ColorFormat.colors16;
+                colors = new Color[defaultPaletteData.Length / 0x20][];
+
+                for (int i = 0; i < colors.Length; i++)
                 {
-                    Byte[] paletteData = new Byte[paleta.pltt.paletteLength];
-                    Array.Copy(defaultPaletteData, i * paleta.pltt.paletteLength, paletteData, 0, paleta.pltt.paletteLength);
-                    paleta.pltt.palettes[i].colors = pluginHost.BGR555ToColor(paletteData);
+                    Byte[] data = new Byte[0x20];
+                    Array.Copy(defaultPaletteData, i * 0x20, data, 0, 0x20);
+                    colors[i] = pluginHost.BGR555ToColor(data);
                 }
                 goto Tile;
             }
@@ -68,95 +90,85 @@ namespace AI_IGO_DS
             uint pCabeceraSize = br.ReadUInt32() * 4;
             uint pSize = br.ReadUInt32() * 4;
             if (pSize - 0x08 == 0x0200)
-                profundidad = ColorDepth.Depth8Bit;
+                depth = ColorFormat.colors256;
             else if (pSize - 0x08 == 0x20)
-                profundidad = ColorDepth.Depth4Bit;
+                depth = ColorFormat.colors16;
 
-            paleta.pltt.length = pSize - 0x08;
-            paleta.pltt.paletteLength = (profundidad == ColorDepth.Depth4Bit) ? 0x20 : pSize - 0x08;
-            paleta.pltt.nColors = (profundidad == ColorDepth.Depth4Bit) ? 0x10 : (pSize - 0x08) / 2;
-            paleta.pltt.depth = profundidad;
-            paleta.pltt.palettes = new NTFP[(profundidad == ColorDepth.Depth4Bit ? (pSize - 0x08) / 0x20 : 1)];
-            for (int i = 0; i < paleta.pltt.palettes.Length; i++)
-                paleta.pltt.palettes[i].colors = pluginHost.BGR555ToColor(br.ReadBytes((int)paleta.pltt.paletteLength));
+            colors = new Color[depth == ColorFormat.colors16 ? (pSize - 0x08) / 0x20 : 1][];
+            uint pal_length = (depth == ColorFormat.colors16) ? 0x20 : pSize - 0x08;
+            for (int i = 0; i < colors.Length; i++)
+                colors[i] = pluginHost.BGR555ToColor(br.ReadBytes((int)pal_length));
             
             // Tile data
             Tile:
             br.BaseStream.Position = tileOffset;
-            uint tCabeceraSize = br.ReadUInt32() * 4; // siempre 0x04
+            uint tCabeceraSize = br.ReadUInt32() * 4;
             uint tSize = br.ReadUInt32() * 4;
-            NCGR tile = new NCGR();
-            tile.order = TileOrder.Horizontal;
-            tile.rahc.depth = profundidad;
-            if (profundidad == ColorDepth.Depth4Bit)
-                tile.rahc.nTiles = (ushort)((tSize - 0x08) / 0x20);
-            else
-                tile.rahc.nTiles = (ushort)((tSize - 0x08) / 0x40);
-
-            tile.rahc.tileData.tiles = new byte[tile.rahc.nTiles][];
-            tile.rahc.tileData.nPalette = new byte[tile.rahc.nTiles];
-            for (int i = 0; i < tile.rahc.nTiles; i++)
-            {
-                if (profundidad == ColorDepth.Depth4Bit)
-                    tile.rahc.tileData.tiles[i] = pluginHost.Bit8ToBit4(br.ReadBytes(32));
-                else
-                    tile.rahc.tileData.tiles[i] = br.ReadBytes(64);
-                tile.rahc.tileData.nPalette[i] = 0;
-            }
-            NCGR[] tiles;
+            byte[] tiles = br.ReadBytes((int)(tSize - 0x08));
+            image = new RawImage(pluginHost, tiles, TileForm.Horizontal, depth, 0x40, tiles.Length / 0x40, false);
 
             // Map
             if (mapOffset == 0x00)
             {
-                tiles = new NCGR[1];
-                tiles[0] = tile;
-                tiles[0].rahc.nTilesX = 0x08;
-                tiles[0].rahc.nTilesY = (ushort)(tiles[0].rahc.nTiles / tiles[0].rahc.nTilesX);
-                goto Fin;
+                hasMap = false;
+                goto End;
             }
 
+            hasMap = true;
             br.BaseStream.Position = mapOffset;
-            uint mCabeceraSize = br.ReadUInt32() * 4; // Indica el número de subimages
+            uint mCabeceraSize = br.ReadUInt32() * 4;
             uint[] mSize = new uint[(int)mCabeceraSize / 4];
             for (int i = 0; i < mSize.Length; i++)
                 mSize[i] = (br.ReadUInt32() * 4) - mCabeceraSize - 4;
 
-            NSCR[] maps = new NSCR[mSize.Length];
-            tiles = new NCGR[mSize.Length];
+            maps = new MapBase[mSize.Length];
             for (int i = 0; i < maps.Length; i++)
             {
-                maps[i] = new NSCR();
-                maps[i].section.width = br.ReadUInt16();
-                maps[i].section.height = br.ReadUInt16();
+                ushort width = (ushort)(br.ReadUInt16() * 8);
+                ushort height = (ushort)(br.ReadUInt16() * 8);
 
+                NTFS[] map;
                 if (i != 0)
-                    maps[i].section.mapData = new NTFS[((mSize[i] - mSize[i - 1]) - 4) / 2];
+                    map = new NTFS[((mSize[i] - mSize[i - 1]) - 4) / 2];
                 else
-                    maps[i].section.mapData = new NTFS[(mSize[i] - 4) / 2];
+                    map = new NTFS[(mSize[i] - 4) / 2];
 
-                for (int j = 0; j < maps[i].section.mapData.Length; j++)
-                {
-                    ushort parameters = br.ReadUInt16();
+                for (int j = 0; j < map.Length; j++)
+                    map[j] = pluginHost.MapInfo(br.ReadUInt16());
 
-                    maps[i].section.mapData[i] = new NTFS();
-                    maps[i].section.mapData[i].nTile = (ushort)(parameters & 0x3FF);
-                    maps[i].section.mapData[i].xFlip = (byte)((parameters >> 10) & 1);
-                    maps[i].section.mapData[i].yFlip = (byte)((parameters >> 11) & 1);
-                    maps[i].section.mapData[i].nPalette = (byte)((parameters >> 12) & 0xF);
-                }
-
-                tiles[i] = tile;
-                tiles[i].rahc.tileData = pluginHost.Transform_NSCR(maps[i], tile.rahc.tileData);
-                tiles[i].rahc.nTilesX = maps[i].section.width;
-                tiles[i].rahc.nTilesY = maps[i].section.height;
-                tiles[i].rahc.nTiles = (ushort)(tiles[i].rahc.nTilesX * tiles[i].rahc.nTilesY);
+                maps[i] = new RawMap(pluginHost, map, width, height, false);
             }
 
-            Fin:
+            End:
             br.Close();
-            return new BinControl(pluginHost, paleta, tiles);
+
+            palette = new RawPalette(pluginHost, colors, false, depth);
         }
 
+        public Size Get_Size(int index)
+        {
+            if (hasMap)
+                return new Size(maps[index].Width, maps[index].Height);
+            else
+                return new Size(image.Width, image.Height);
+        }
+        public void Set_Size(Size size, int index)
+        {
+            maps[index].Width = size.Width;
+            maps[index].Height = size.Height;
+        }
+        public int NumImages
+        {
+            get
+            {
+                if (hasMap) return maps.Length;
+                else return 1;
+            }
+        }
+        public Color[] Get_Palette
+        {
+            get { return palette.Palette[0]; }
+        }
 
         public static byte[] defaultPaletteData = {
 	0xE0, 0x7F, 0x00, 0x00, 0x00, 0x00, 0x20, 0x00, 0x01, 0x00, 0x21, 0x00,

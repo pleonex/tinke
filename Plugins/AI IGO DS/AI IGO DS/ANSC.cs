@@ -14,7 +14,7 @@
  *   You should have received a copy of the GNU General Public License
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  *
- * Programador: pleoNeX
+ * By: pleoNeX
  * 
  */
 using System;
@@ -23,50 +23,31 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using PluginInterface;
+using PluginInterface.Images;
 
 namespace AI_IGO_DS
 {
-    public static class ANSC
+    public class ANSC : MapBase
     {
-        public static void Leer(string archivo, int id, IPluginHost pluginHost)
+        public ANSC(IPluginHost pluginHost, string file, int id) : base(pluginHost, file, id) { }
+
+        public override void Read(string fileIn)
         {
-            BinaryReader br = new BinaryReader(File.OpenRead(archivo));
+            BinaryReader br = new BinaryReader(File.OpenRead(fileIn));
 
-            // Su formato es NTFS raw, sin información, nos la inventamos por tanto
-            NSCR ansc = new NSCR();
-            ansc.id = (uint)id;
-
-            // Lee cabecera genérica
-            ansc.header.id = br.ReadChars(4);
-            ansc.header.endianess = 0xFEFF;
-            ansc.header.constant = 0x0100;
-            ansc.header.file_size = (uint)br.ReadUInt16() + 0x06;
-            ansc.header.header_size = 0x10;
-            ansc.header.nSection = 1;
-
-            // Lee primera y única sección:
-            ansc.section.id = "ANSC".ToCharArray();
-            ansc.section.section_size = ansc.header.file_size;
-            ansc.section.width = 0x0100;
-            ansc.section.height = 0x00C0;
-            ansc.section.padding = 0x00000000;
-            ansc.section.data_size = ansc.header.file_size - 0x06;
-            ansc.section.mapData = new NTFS[ansc.section.data_size / 2];
-
-            for (int i = 0; i < ansc.section.mapData.Length; i++)
-            {
-                ushort parameters = br.ReadUInt16();
-
-                ansc.section.mapData[i] = new NTFS();
-                ansc.section.mapData[i].nTile = (ushort)(parameters & 0x3FF);
-                ansc.section.mapData[i].xFlip = (byte)((parameters >> 10) & 1);
-                ansc.section.mapData[i].yFlip = (byte)((parameters >> 11) & 1);
-                ansc.section.mapData[i].nPalette = (byte)((parameters >> 12) & 0xF);
-            }
+            char[] header = br.ReadChars(4);
+            uint size = br.ReadUInt16();
+            NTFS[] map = new NTFS[(size + 2) / 2];
+            for (int i = 0; i < map.Length; i++)
+                map[i] = pluginHost.MapInfo(br.ReadUInt16());
 
             br.Close();
-
-            pluginHost.Set_NSCR(ansc);
+            Set_Map(map, false, 0x100, 0xB0);
+            pluginHost.Set_Map(this);
+        }
+        public override void Write(string fileOut, ImageBase image, PaletteBase palette)
+        {
+            throw new NotImplementedException();
         }
     }
 }

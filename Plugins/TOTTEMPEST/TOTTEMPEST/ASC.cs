@@ -23,65 +23,39 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using PluginInterface;
+using PluginInterface.Images;
 
 namespace TOTTEMPEST
 {
-    public static class ASC
+    public class ASC : MapBase
     {
-        public static void Read(string file, int id, IPluginHost pluginHost)
+        public ASC(IPluginHost pluginHost, string file, int id) : base(pluginHost, file, id) { }
+
+        public override void Read(string file)
         {
-            uint file_size = (uint)new FileInfo(file).Length;
             BinaryReader br = new BinaryReader(File.OpenRead(file));
+            uint file_size = (uint)br.BaseStream.Length;
 
-            NSCR nscr = new NSCR();
-            nscr.id = (uint)id;
+            ushort width = br.ReadUInt16();
+            ushort height = br.ReadUInt16();
+            NTFS[] map = new NTFS[(file_size - 4) / 2];
 
-            // Common header
-            nscr.header.id = "ASC ".ToCharArray();
-            nscr.header.endianess = 0xFEFF;
-            nscr.header.constant = 0x0100;
-            nscr.header.file_size = file_size;
-            nscr.header.header_size = 0x10;
-            nscr.header.nSection = 1;
-
-            // NTFS data
-            nscr.section.id = "ASC ".ToCharArray();
-            nscr.section.section_size = file_size;
-            nscr.section.width = (ushort)(br.ReadUInt16() * 8);
-            nscr.section.height = (ushort)(br.ReadUInt16() * 8);
-            nscr.section.padding = 0x00000000;
-            nscr.section.data_size = file_size - 4;
-            nscr.section.mapData = new NTFS[nscr.section.data_size / 2];
-
-            for (int i = 0; i < nscr.section.mapData.Length; i++)
-            {
-                ushort parameters = br.ReadUInt16();
-
-                nscr.section.mapData[i] = new NTFS();
-                nscr.section.mapData[i].nTile = (ushort)(parameters & 0x3FF);
-                nscr.section.mapData[i].xFlip = (byte)((parameters >> 10) & 1);
-                nscr.section.mapData[i].yFlip = (byte)((parameters >> 11) & 1);
-                nscr.section.mapData[i].nPalette = (byte)((parameters >> 12) & 0xF);
-            }
+            for (int i = 0; i < map.Length; i++)
+                map[i] = pluginHost.MapInfo(br.ReadUInt16());
 
             br.Close();
-            pluginHost.Set_NSCR(nscr);
+            Set_Map(map, true, width * 8, height * 8);
+            pluginHost.Set_Map(this);
         }
-        public static void Write(NSCR map, string fileout, IPluginHost pluginHost)
+        public override void Write(string fileout, ImageBase image, PaletteBase palette)
         {
             BinaryWriter bw = new BinaryWriter(File.OpenWrite(fileout));
 
-            bw.Write((ushort)(map.section.width / 0x08));
-            bw.Write((ushort)(map.section.height / 0x08));
-            // Write NTFS
-            for (int i = 0; i < map.section.mapData.Length; i++)
-            {
-                int npalette = map.section.mapData[i].nPalette << 12;
-                int yFlip = map.section.mapData[i].yFlip << 11;
-                int xFlip = map.section.mapData[i].xFlip << 10;
-                int data = npalette + yFlip + xFlip + map.section.mapData[i].nTile;
-                bw.Write((ushort)data);
-            }
+            bw.Write((ushort)(Width / 0x08));
+            bw.Write((ushort)(Height / 0x08));
+
+            for (int i = 0; i < Map.Length; i++)
+                bw.Write(pluginHost.MapInfo(Map[i]));
 
             bw.Flush();
             bw.Close();

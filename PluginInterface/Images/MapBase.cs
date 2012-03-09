@@ -42,9 +42,6 @@ namespace PluginInterface.Images
         int width, height;
         bool canEdit;
 
-        bool custom_img;
-        ImageBase img;
-
         Object obj;
         #endregion
 
@@ -67,57 +64,27 @@ namespace PluginInterface.Images
         }
 
         public abstract void Read(string fileIn);
-        public abstract void Write(string fileOut);
+        public abstract void Write(string fileOut, ImageBase image, PaletteBase palette);
 
-        public NSCR Get_NSCR()
+        public Image Get_Image(ImageBase image, PaletteBase palette)
         {
-            NSCR nscr = new NSCR();
-            nscr.id = (uint)id;
-
-            // Fill the generic header
-            nscr.header.id = "NSCR".ToCharArray();
-            nscr.header.endianess = 0xFFFE;
-            nscr.header.constant = 0x0100;
-            nscr.header.file_size = 1;
-            nscr.header.header_size = 0x10;
-            nscr.header.nSection = 1;
-
-            // Fill the SCRN section
-            nscr.section.id = "SCRN".ToCharArray();
-            nscr.section.section_size = 1;
-            nscr.section.data_size = 1;
-            nscr.section.height = (ushort)height;
-            nscr.section.width = (ushort)width;
-            nscr.section.mapData = map;
-
-            return nscr;
-        }
-
-        public Image Get_Image()
-        {
-            ImageBase image;
-            if (custom_img)
-                image = img;
-            else if (pluginHost.Get_Image().Loaded)
-                image = pluginHost.Get_Image();
-            else
-            {
-                System.Windows.Forms.MessageBox.Show("There isn't image loaded");
-                return new Bitmap(1, 1);
-            }
-
             if (image.TileForm == TileForm.Lineal)
                 image.TileForm = TileForm.Horizontal;
 
             Byte[] tiles, tile_pal;
-            tiles = Actions.Apply_Map(Get_NSCR().section.mapData, image.Tiles, out tile_pal, image.TileWidth);
+            tiles = Actions.Apply_Map(map, image.Tiles, out tile_pal, image.TileWidth);
 
             ImageBase newImage = new TestImage(pluginHost);
             newImage.Set_Tiles(tiles, image.Width, image.Height, image.ColorFormat, image.TileForm, image.CanEdit);
             newImage.TilesPalette = tile_pal;
             newImage.Zoom = image.Zoom;
 
-            return newImage.Get_Image();
+            if (height != 0)
+                newImage.Height = height;
+            if (width != 0)
+                newImage.Width = width;
+
+            return newImage.Get_Image(palette);
         }
 
         public void Set_Map(NTFS[] mapInfo, bool editable, int width = 0, int height = 0)
@@ -135,8 +102,6 @@ namespace PluginInterface.Images
             for (int i = 0; i < map.Length; i++)
                 data.AddRange(BitConverter.GetBytes(pluginHost.MapInfo(map[i])));
             original = data.ToArray();
-
-            pluginHost.Set_NSCR(Get_NSCR());
         }
 
         private void Change_StartByte(int newStart)
@@ -153,8 +118,6 @@ namespace PluginInterface.Images
             {
                 map[i] = pluginHost.MapInfo(BitConverter.ToUInt16(newData, i * 2));
             }
-
-            pluginHost.Set_NSCR(Get_NSCR());
         }
 
         #region Properties
@@ -183,29 +146,16 @@ namespace PluginInterface.Images
         public int Height
         {
             get { return height; }
-            set
-            {
-                height = value;
-                pluginHost.Set_NSCR(Get_NSCR());
-            }
+            set { height = value; }
         }
         public int Width
         {
             get { return width; }
-            set
-            {
-                width = value;
-                pluginHost.Set_NSCR(Get_NSCR());
-            }
+            set { width = value; }
         }
-
-        public bool CustomImage
+        public NTFS[] Map
         {
-            get { return custom_img; }
-        }
-        public ImageBase Image
-        {
-            get { return img; }
+            get { return map; }
         }
         #endregion
 

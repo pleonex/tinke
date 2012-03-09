@@ -43,6 +43,12 @@ namespace PluginInterface.Images
 
             Read(file, editable, depth, offset, size);
         }
+        public RawPalette(IPluginHost pluginHost, Color[][] colors, bool editable, ColorFormat depth)
+            : base(pluginHost)
+        {
+            this.pluginHost = pluginHost;
+            Set_Palette(colors, depth, editable);
+        }
         public RawPalette(IPluginHost pluginHost, string file, int id,
             bool editable, int offset, int size)
             : base(pluginHost)
@@ -109,7 +115,7 @@ namespace PluginInterface.Images
             Set_Palette(palette, editable);
         }
 
-        public override void Write_Palette(string fileOut)
+        public override void Write(string fileOut)
         {
             // TODO: write raw palette.
             throw new NotImplementedException();
@@ -131,6 +137,14 @@ namespace PluginInterface.Images
 
             Read(file, form, format, editable, offset, size);
         }
+        public RawImage(IPluginHost pluginHost, byte[] tiles, TileForm form, ColorFormat format, int width, int height,
+            bool editable)
+            : base(pluginHost)
+        {
+            this.pluginHost = pluginHost;
+            Set_Tiles(tiles, width, height, format, form, editable);
+        }
+
 
         public override void Read(string fileIn)
         {
@@ -166,7 +180,7 @@ namespace PluginInterface.Images
             Set_Tiles(tiles, width, height, format, form, editable);
         }
 
-        public override void Write(string fileOut)
+        public override void Write(string fileOut, PaletteBase palette)
         {
             // TODO: Write raw images
             throw new NotImplementedException();
@@ -188,6 +202,9 @@ namespace PluginInterface.Images
             this.fileName = System.IO.Path.GetFileName(file);
 
             Read(file, offset, size, editable);
+        }
+        public RawMap(IPluginHost pluginHost, NTFS[] map, int width, int height, bool editable) : base(pluginHost, map, editable, width, height)
+        {
         }
 
         public override void Read(string fileIn)
@@ -218,7 +235,7 @@ namespace PluginInterface.Images
             Set_Map(map, editable, width, height);
         }
 
-        public override void Write(string fileOut)
+        public override void Write(string fileOut, ImageBase image, PaletteBase palette)
         {
             // TODO: write raw map
             throw new NotImplementedException();

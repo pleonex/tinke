@@ -37,6 +37,7 @@ namespace Tinke
         string file;
         string gameCode;
         sFolder root;
+        ushort[] sortedIds;
         int idSelect;
         int lastFileId;
         int lastFolderId;
@@ -269,6 +270,11 @@ namespace Tinke
         {
             get { return pluginHost.Get_TempFolder(); }
         }
+        public ushort[] SortedIDs
+        {
+            get { return sortedIds; }
+            set { sortedIds = value; }
+        }
         #endregion
 
         public int ImageFormatFile(Format name)
@@ -360,111 +366,6 @@ namespace Tinke
             if (currFolder.folders is List<sFolder>)
                 foreach (sFolder subFolder in currFolder.folders)
                     Set_LastFolderID(subFolder);
-        }
-
-        public void Delete_PicturesSaved()
-        {
-            pluginHost.Set_NCLR(new NCLR());
-            pluginHost.Set_NCGR(new NCGR());
-            pluginHost.Set_NSCR(new NSCR());
-            pluginHost.Set_NCER(new NCER());
-            pluginHost.Set_NANR(new NANR());
-        }
-        public void Delete_PicturesSaved(Format format)
-        {
-            switch (format)
-            {
-                case Format.Palette:
-                    pluginHost.Set_NCLR(new NCLR());
-                    break;
-                case Format.Tile:
-                    pluginHost.Set_NCGR(new NCGR());
-                    break;
-                case Format.Map:
-                    pluginHost.Set_NSCR(new NSCR());
-                    break;
-                case Format.Cell:
-                    pluginHost.Set_NCER(new NCER());
-                    break;
-                case Format.Animation:
-                    break;
-            }
-        }
-        public Control Set_PicturesSaved(Format format)
-        {
-            sFile selectFile = Selected_File();
-
-            string tempFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + selectFile.id + selectFile.name;
-            BinaryReader br = new BinaryReader(File.OpenRead(selectFile.path));
-            br.BaseStream.Position = selectFile.offset;
-            File.WriteAllBytes(tempFile, br.ReadBytes((int)selectFile.size));
-
-            br.BaseStream.Position = selectFile.offset;
-            byte[] ext = br.ReadBytes(4);  // First four bytes (Type ID)
-            br.Close();
-
-            #region Common image format
-            try
-            {
-                if (format == Format.Palette)
-                {
-                    NCLR paleta = Imagen_NCLR.Leer_Basico(tempFile, idSelect);
-                    pluginHost.Set_NCLR(paleta);
-                    File.Delete(tempFile);
-
-                    iNCLR control = new iNCLR(paleta, pluginHost);
-                    control.btnImport.Enabled = false;
-                    return control;
-                }
-                else if (format == Format.Tile)
-                {
-                    NCGR tile = Imagen_NCGR.Read_Basic(tempFile, idSelect);
-                    pluginHost.Set_NCGR(tile);
-                    File.Delete(tempFile);
-
-                    if (pluginHost.Get_NCLR().header.file_size != 0x00)
-                    {
-                        iNCGR control = new iNCGR(tile, pluginHost.Get_NCLR(), pluginHost);
-                        control.btnImport.Enabled = false;
-                        return control;
-                    }
-                    else
-                    {
-                        MessageBox.Show(Tools.Helper.GetTranslation("Messages", "S1B"));
-                        return new Control();
-                    }
-                }
-                else if (format == Format.Map)
-                {
-                    NSCR nscr = Imagen_NSCR.Read_Basic(tempFile, idSelect);
-                    pluginHost.Set_NSCR(nscr);
-                    File.Delete(tempFile);
-
-                    if (pluginHost.Get_NCGR().header.file_size != 0x00 || pluginHost.Get_NCLR().header.file_size != 0x00)
-                    {
-                        iNCGR control = new iNCGR(pluginHost.Get_NCGR(), pluginHost.Get_NCLR(), nscr, pluginHost);
-                        control.btnImport.Enabled = false;
-                        return control;
-                    }
-                    else
-                    {
-                        MessageBox.Show(Tools.Helper.GetTranslation("Messages", "S1C"));
-                        return new Control();
-                    }
-                }
-
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show(e.Message);
-                Console.WriteLine(e.Message);
-            }
-            #endregion
-
-            try { File.Delete(tempFile); }
-            catch { }
-
-            return new Control();
         }
 
         #region Add, remove and change files methods
@@ -1273,17 +1174,7 @@ namespace Tinke
             #endregion
 
             currFile.name = currFile.name.ToUpper();
-            if (new String(Encoding.ASCII.GetChars(ext)) == "NCLR" || new String(Encoding.ASCII.GetChars(ext)) == "RLCN")
-                return Format.Palette;
-            else if (new String(Encoding.ASCII.GetChars(ext)) == "NCGR" || new String(Encoding.ASCII.GetChars(ext)) == "RGCN")
-                return Format.Tile;
-            else if (new String(Encoding.ASCII.GetChars(ext)) == "NSCR" || new String(Encoding.ASCII.GetChars(ext)) == "RCSN")
-                return Format.Map;
-            else if (new String(Encoding.ASCII.GetChars(ext)) == "NCER" || new String(Encoding.ASCII.GetChars(ext)) == "RECN")
-                return Format.Cell;
-            else if (new String(Encoding.ASCII.GetChars(ext)) == "NANR" || new String(Encoding.ASCII.GetChars(ext)) == "RNAN")
-                return Format.Animation;
-            else if (currFile.name == "FNT.BIN" || currFile.name == "FAT.BIN" || currFile.name.StartsWith("OVERLAY9_") || currFile.name.StartsWith("OVERLAY7_") ||
+            if (currFile.name == "FNT.BIN" || currFile.name == "FAT.BIN" || currFile.name.StartsWith("OVERLAY9_") || currFile.name.StartsWith("OVERLAY7_") ||
                 currFile.name == "ARM9.BIN" || currFile.name == "ARM7.BIN" || currFile.name == "Y9.BIN" || currFile.name == "Y7.BIN" ||
                 currFile.name.EndsWith(".SRL") || currFile.name.EndsWith(".NDS"))
                 return Format.System;
@@ -1337,17 +1228,7 @@ namespace Tinke
             #endregion
 
             currFile.name = currFile.name.ToUpper();
-            if (new String(Encoding.ASCII.GetChars(ext)) == "NCLR" || new String(Encoding.ASCII.GetChars(ext)) == "RLCN")
-                return Format.Palette;
-            else if (new String(Encoding.ASCII.GetChars(ext)) == "NCGR" || new String(Encoding.ASCII.GetChars(ext)) == "RGCN")
-                return Format.Tile;
-            else if (new String(Encoding.ASCII.GetChars(ext)) == "NSCR" || new String(Encoding.ASCII.GetChars(ext)) == "RCSN")
-                return Format.Map;
-            else if (new String(Encoding.ASCII.GetChars(ext)) == "NCER" || new String(Encoding.ASCII.GetChars(ext)) == "RECN")
-                return Format.Cell;
-            else if (new String(Encoding.ASCII.GetChars(ext)) == "NANR" || new String(Encoding.ASCII.GetChars(ext)) == "RNAN")
-                return Format.Animation;
-            else if (currFile.name.EndsWith(".SRL") || currFile.name.EndsWith(".NDS"))
+            if (currFile.name.EndsWith(".SRL") || currFile.name.EndsWith(".NDS"))
                 return Format.System;
 
             FileStream fs = File.OpenRead(currFile.path);
@@ -1404,17 +1285,7 @@ namespace Tinke
             #endregion
 
             name = name.ToUpper();
-            if (new String(Encoding.ASCII.GetChars(ext)) == "NCLR" || new String(Encoding.ASCII.GetChars(ext)) == "RLCN")
-                return Format.Palette;
-            else if (new String(Encoding.ASCII.GetChars(ext)) == "NCGR" || new String(Encoding.ASCII.GetChars(ext)) == "RGCN")
-                return Format.Tile;
-            else if (new String(Encoding.ASCII.GetChars(ext)) == "NSCR" || new String(Encoding.ASCII.GetChars(ext)) == "RCSN")
-                return Format.Map;
-            else if (new String(Encoding.ASCII.GetChars(ext)) == "NCER" || new String(Encoding.ASCII.GetChars(ext)) == "RECN")
-                return Format.Cell;
-            else if (new String(Encoding.ASCII.GetChars(ext)) == "NANR" || new String(Encoding.ASCII.GetChars(ext)) == "RNAN")
-                return Format.Animation;
-            else if (name == "FNT.BIN" || name == "FAT.BIN" || name.StartsWith("OVERLAY9_") || name.StartsWith("OVERLAY7_") ||
+            if (name == "FNT.BIN" || name == "FAT.BIN" || name.StartsWith("OVERLAY9_") || name.StartsWith("OVERLAY7_") ||
                 name == "ARM9.BIN" || name == "ARM7.BIN" || name == "Y9.BIN" || name == "Y7.BIN" || name.EndsWith(".SRL") ||
                 name.EndsWith(".NDS"))
                 return Format.System;
@@ -1477,17 +1348,7 @@ namespace Tinke
             #endregion
 
             name = name.ToUpper();
-            if (new String(Encoding.ASCII.GetChars(ext)) == "NCLR" || new String(Encoding.ASCII.GetChars(ext)) == "RLCN")
-                return Format.Palette;
-            else if (new String(Encoding.ASCII.GetChars(ext)) == "NCGR" || new String(Encoding.ASCII.GetChars(ext)) == "RGCN")
-                return Format.Tile;
-            else if (new String(Encoding.ASCII.GetChars(ext)) == "NSCR" || new String(Encoding.ASCII.GetChars(ext)) == "RCSN")
-                return Format.Map;
-            else if (new String(Encoding.ASCII.GetChars(ext)) == "NCER" || new String(Encoding.ASCII.GetChars(ext)) == "RECN")
-                return Format.Cell;
-            else if (new String(Encoding.ASCII.GetChars(ext)) == "NANR" || new String(Encoding.ASCII.GetChars(ext)) == "RNAN")
-                return Format.Animation;
-            else if (name.EndsWith(".SRL") || name.EndsWith(".NDS"))
+            if (name.EndsWith(".SRL") || name.EndsWith(".NDS"))
                 return Format.System;
 
             FileStream fs = (FileStream)stream;
@@ -1935,77 +1796,6 @@ namespace Tinke
             #region Common formats
             try
             {
-                if (new String(Encoding.ASCII.GetChars(ext)) == "NCLR" || new String(Encoding.ASCII.GetChars(ext)) == "RLCN")
-                {
-                    NCLR nclr = Imagen_NCLR.Leer(tempFile, idSelect);
-                    pluginHost.Set_NCLR(nclr);
-
-                    iNCLR control = new iNCLR(nclr, pluginHost);
-                    return control; ;
-                }
-                if (new String(Encoding.ASCII.GetChars(ext)) == "NCGR" || new String(Encoding.ASCII.GetChars(ext)) == "RGCN")
-                {
-                    NCGR tile = Imagen_NCGR.Read(tempFile, idSelect);
-                    pluginHost.Set_NCGR(tile);
-
-                    if (pluginHost.Get_NCLR().header.file_size != 0x00)
-                    {
-                        iNCGR control = new iNCGR(tile, pluginHost.Get_NCLR(), pluginHost);
-                        return control;
-                    }
-                    else
-                    {
-                        MessageBox.Show(Tools.Helper.GetTranslation("Messages", "S1B"));
-                        return new Control();
-                    }
-                }
-                else if (new String(Encoding.ASCII.GetChars(ext)) == "NSCR" || new String(Encoding.ASCII.GetChars(ext)) == "RCSN")
-                {
-                    pluginHost.Set_NSCR(Imagen_NSCR.Read(tempFile, idSelect));
-
-                    if (pluginHost.Get_NCGR().header.file_size != 0x00 && pluginHost.Get_NCLR().header.file_size != 0x00)
-                    {
-                        iNCGR control = new iNCGR(pluginHost.Get_NCGR(), pluginHost.Get_NCLR(), pluginHost.Get_NSCR(), pluginHost);
-                        return control;
-                    }
-                    else
-                    {
-                        MessageBox.Show(Tools.Helper.GetTranslation("Messages", "S1C"));
-                        return new Control();
-                    }
-                }
-                else if (new String(Encoding.ASCII.GetChars(ext)) == "NCER" || new String(Encoding.ASCII.GetChars(ext)) == "RECN")
-                {
-                    pluginHost.Set_NCER(Imagen_NCER.Read(tempFile, idSelect));
-
-                    if (pluginHost.Get_NCGR().header.file_size != 0x00 && pluginHost.Get_NCLR().header.file_size != 0x00)
-                    {
-                        iNCER control = new iNCER(pluginHost.Get_NCER(), pluginHost.Get_NCGR(), pluginHost.Get_NCLR(), pluginHost);
-                        return control;
-                    }
-                    else
-                    {
-                        MessageBox.Show(Tools.Helper.GetTranslation("Messages", "S1C"));
-                        return new Control();
-                    }
-                }
-                else if (new String(Encoding.ASCII.GetChars(ext)) == "NANR" || new String(Encoding.ASCII.GetChars(ext)) == "RNAN")
-                {
-                    pluginHost.Set_NANR(Imagen_NANR.Leer(tempFile, idSelect));
-
-                    if (pluginHost.Get_NCER().header.file_size != 0x00 && pluginHost.Get_NCGR().header.file_size != 0x00 &&
-                        pluginHost.Get_NCLR().header.file_size != 0x00)
-                    {
-                        iNANR control = new iNANR(pluginHost.Get_NCLR(), pluginHost.Get_NCGR(), pluginHost.Get_NCER(), pluginHost.Get_NANR());
-                        return control;
-                    }
-                    else
-                    {
-                        MessageBox.Show(Tools.Helper.GetTranslation("Messages", "S1E"));
-                        return new Control();
-                    }
-                }
-
                 FormatCompress compressFormat = DSDecmp.Main.Get_Format(tempFile);
                 if (compressFormat != FormatCompress.Invalid)
                 {
@@ -2084,37 +1874,6 @@ namespace Tinke
             #region Common image format
             try
             {
-                if (new String(Encoding.ASCII.GetChars(ext)) == "NCLR" || new String(Encoding.ASCII.GetChars(ext)) == "RLCN")
-                {
-                    pluginHost.Set_NCLR(Imagen_NCLR.Leer(tempFile, idSelect));
-                    File.Delete(tempFile);
-                    return;
-                }
-                if (new String(Encoding.ASCII.GetChars(ext)) == "NCGR" || new String(Encoding.ASCII.GetChars(ext)) == "RGCN")
-                {
-                    pluginHost.Set_NCGR(Imagen_NCGR.Read(tempFile, idSelect));
-                    File.Delete(tempFile);
-                    return;
-                }
-                else if (new String(Encoding.ASCII.GetChars(ext)) == "NSCR" || new String(Encoding.ASCII.GetChars(ext)) == "RCSN")
-                {
-                    pluginHost.Set_NSCR(Imagen_NSCR.Read(tempFile, idSelect));
-                    File.Delete(tempFile);
-                    return;
-                }
-                else if (new String(Encoding.ASCII.GetChars(ext)) == "NCER" || new String(Encoding.ASCII.GetChars(ext)) == "RECN")
-                {
-                    pluginHost.Set_NCER(Imagen_NCER.Read(tempFile, idSelect));
-                    File.Delete(tempFile);
-                    return;
-                }
-                else if (new String(Encoding.ASCII.GetChars(ext)) == "NANR" || new String(Encoding.ASCII.GetChars(ext)) == "RNAN")
-                {
-                    pluginHost.Set_NANR(Imagen_NANR.Leer(tempFile, idSelect));
-                    File.Delete(tempFile);
-                    return;
-                }
-
                 if (DSDecmp.Main.Get_Format(tempFile) != FormatCompress.Invalid)
                     MessageBox.Show(Tools.Helper.GetTranslation("Messages", "S1A"), "", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }

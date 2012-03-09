@@ -136,22 +136,44 @@ namespace _3DModels
             label1.Text = "X: " + x.ToString() + " Y: " + y.ToString() + " Z: " + z.ToString() + "\r\n" +
                 "AngleX: " + angleX.ToString() + " AngleY: " + angleY.ToString() + " Distance: " + distance.ToString();
 
+            GL.Disable(EnableCap.Texture2D);
             // TODO: Draw box
 
             // Edges
             DrawEdges();
 
-            GL.Enable(EnableCap.CullFace);
-            GL.DepthFunc(DepthFunction.Less);
-            GL.Enable(EnableCap.DepthTest);
+            //GL.DepthFunc(DepthFunction.Less);
+
+            GL.Enable(EnableCap.Blend);
+            GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
+
+            GL.Enable(EnableCap.AlphaTest);
+            GL.AlphaFunc(AlphaFunction.Greater, 0.5f);
             GL.Enable(EnableCap.Texture2D);
+            GL.Disable(EnableCap.CullFace);
+            GL.Enable(EnableCap.Dither);
 
             // Fix transparency problems
-            GL.AlphaFunc(AlphaFunction.Greater, 0.5f);
-            GL.Enable(EnableCap.AlphaTest);
-            GL.Enable(EnableCap.Blend);
+            //GL.Hint(HintTarget.PerspectiveCorrectionHint, HintMode.Nicest);
+            //GL.AlphaFunc(AlphaFunction.Greater, 0.5f);
+            //GL.Enable(EnableCap.AlphaTest);
+            //GL.Disable(EnableCap.Blend);
+            //GL.Enable(EnableCap.LineSmooth);
+            //GL.Enable(EnableCap.PolygonSmooth);
+            //GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.One);
+            //GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusDstAlpha);
             //GL.Color4(1.0f, 1.0f, 1.0f, 0.5f);
             //GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
+
+            GL.PolygonMode(MaterialFace.FrontAndBack, pm);
+
+            GL.MatrixMode(MatrixMode.Texture);
+            GL.LoadIdentity();
+
+            GL.Color3(1.0f, 1.0f, 1.0f);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Nearest);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Nearest);
+            GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.TextureEnvMode, (int)TextureEnvMode.Replace);
 
             if (!checkBox1.Checked)
             {
@@ -160,13 +182,8 @@ namespace _3DModels
                     sBMD0.Model.ModelData.Polygon.Display poly = model.model.mdlData[0].polygon.display[i];
                     sBTX0.Texture.TextInfo texInfo = (sBTX0.Texture.TextInfo)tex.texture.texInfo.infoBlock.infoData[poly.materialID];
 
-                    GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.TextureEnvMode, (int)OpenTK.Graphics.OpenGL.TextureEnvMode.Decal);
                     GL.BindTexture(TextureTarget.Texture2D, poly.materialAssoc);
                     
-                    GL.PolygonMode(MaterialFace.FrontAndBack, pm);
-
-                    GL.MatrixMode(MatrixMode.Texture);
-                    GL.LoadIdentity();
 
                     GL.Scale(1.0f / (float)texInfo.width, 1.0f / (float)texInfo.height, 1.0f); // Scale the texture to fill the polygon
                     BMD0.GeometryCommands(poly.commands);
@@ -177,7 +194,9 @@ namespace _3DModels
                 int texInd = LoadTextures((int)numericUpDown1.Value);
                 sBTX0.Texture.TextInfo texInfo = (sBTX0.Texture.TextInfo)tex.texture.texInfo.infoBlock.infoData[(int)numericUpDown1.Value];
 
-                GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.TextureEnvMode, (int)OpenTK.Graphics.OpenGL.TextureEnvMode.Decal);
+                GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.TextureEnvMode, (int)TextureEnvMode.Replace);
+                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Nearest);
+                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Nearest);
                 GL.BindTexture(TextureTarget.Texture2D, texInd);
 
                 GL.PolygonMode(MaterialFace.FrontAndBack, pm);
@@ -188,12 +207,15 @@ namespace _3DModels
                 GL.Scale(1.0f / (float)texInfo.width, 1.0f / (float)texInfo.height, 1.0f); // Scale the texture to fill the polygon
                 BMD0.GeometryCommands(model.model.mdlData[0].polygon.display[(int)numericUpDown2.Value].commands);
             }
+            GL.MatrixMode(MatrixMode.Modelview);
 
-            GL.Disable(EnableCap.Texture2D);
-            GL.Disable(EnableCap.AlphaTest);
+            //GL.Disable(EnableCap.Texture2D);
+            //GL.Disable(EnableCap.AlphaTest);
+            //GL.Disable(EnableCap.Blend);
+            //GL.Disable(EnableCap.CullFace);
+            //GL.Disable(EnableCap.DepthTest);
+            //  Reset the color back to white
             GL.Disable(EnableCap.Blend);
-            GL.Disable(EnableCap.CullFace);
-            GL.Disable(EnableCap.DepthTest);
 
             GL.PopMatrix();
 
@@ -229,10 +251,10 @@ namespace _3DModels
             GL.BindTexture(TextureTarget.Texture2D, id);
 
             Bitmap bmp = BTX0.GetTexture(pluginHost, tex, num_tex);
-            System.Drawing.Imaging.BitmapData bmp_data = bmp.LockBits(new Rectangle(0, 0, bmp.Width, bmp.Height), ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+            System.Drawing.Imaging.BitmapData bmp_data = bmp.LockBits(new Rectangle(0, 0, bmp.Width, bmp.Height), ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppRgb);
 
             GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, bmp_data.Width, bmp_data.Height, 0,
-                OpenTK.Graphics.OpenGL.PixelFormat.Rgba, PixelType.UnsignedByte, bmp_data.Scan0);
+                OpenTK.Graphics.OpenGL.PixelFormat.Bgra, PixelType.UnsignedByte, bmp_data.Scan0);
 
             bmp.UnlockBits(bmp_data);
 

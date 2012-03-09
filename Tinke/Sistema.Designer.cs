@@ -52,13 +52,13 @@ namespace Tinke
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Sistema));
-            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("S09");
-            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("S0A");
-            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem("S0B");
-            System.Windows.Forms.ListViewItem listViewItem4 = new System.Windows.Forms.ListViewItem("S0C");
-            System.Windows.Forms.ListViewItem listViewItem5 = new System.Windows.Forms.ListViewItem("S0D");
-            System.Windows.Forms.ListViewItem listViewItem6 = new System.Windows.Forms.ListViewItem("S0E");
-            System.Windows.Forms.ListViewItem listViewItem7 = new System.Windows.Forms.ListViewItem("S40");
+            System.Windows.Forms.ListViewItem listViewItem8 = new System.Windows.Forms.ListViewItem("S09");
+            System.Windows.Forms.ListViewItem listViewItem9 = new System.Windows.Forms.ListViewItem("S0A");
+            System.Windows.Forms.ListViewItem listViewItem10 = new System.Windows.Forms.ListViewItem("S0B");
+            System.Windows.Forms.ListViewItem listViewItem11 = new System.Windows.Forms.ListViewItem("S0C");
+            System.Windows.Forms.ListViewItem listViewItem12 = new System.Windows.Forms.ListViewItem("S0D");
+            System.Windows.Forms.ListViewItem listViewItem13 = new System.Windows.Forms.ListViewItem("S0E");
+            System.Windows.Forms.ListViewItem listViewItem14 = new System.Windows.Forms.ListViewItem("S40");
             this.iconos = new System.Windows.Forms.ImageList(this.components);
             this.btnExtract = new System.Windows.Forms.Button();
             this.btnSee = new System.Windows.Forms.Button();
@@ -78,13 +78,6 @@ namespace Tinke
             this.btnDesplazar = new System.Windows.Forms.Button();
             this.panelObj = new System.Windows.Forms.Panel();
             this.toolStrip2 = new System.Windows.Forms.ToolStrip();
-            this.toolStripDeleteChain = new System.Windows.Forms.ToolStripDropDownButton();
-            this.borrarPaletaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.borrarTileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.borrarScreenToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.borrarCeldasToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.borrarAnimaciónToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.s10ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripOpenAs = new System.Windows.Forms.ToolStripDropDownButton();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
@@ -92,6 +85,7 @@ namespace Tinke
             this.toolStripMenuComprimido = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripAbrirFat = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripAbrirTexto = new System.Windows.Forms.ToolStripMenuItem();
+            this.callPluginToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.linkAboutBox = new System.Windows.Forms.LinkLabel();
             this.txtSearch = new System.Windows.Forms.TextBox();
             this.btnSearch = new System.Windows.Forms.Button();
@@ -101,7 +95,6 @@ namespace Tinke
             this.btnImport = new System.Windows.Forms.Button();
             this.btnSaveROM = new System.Windows.Forms.Button();
             this.btnPack = new System.Windows.Forms.Button();
-            this.callPluginToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip1.SuspendLayout();
             this.toolStrip2.SuspendLayout();
             this.SuspendLayout();
@@ -182,13 +175,13 @@ namespace Tinke
             this.columnHeader1,
             this.columnHeader2});
             this.listFile.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem1,
-            listViewItem2,
-            listViewItem3,
-            listViewItem4,
-            listViewItem5,
-            listViewItem6,
-            listViewItem7});
+            listViewItem8,
+            listViewItem9,
+            listViewItem10,
+            listViewItem11,
+            listViewItem12,
+            listViewItem13,
+            listViewItem14});
             this.listFile.Location = new System.Drawing.Point(409, 28);
             this.listFile.Name = "listFile";
             this.listFile.Size = new System.Drawing.Size(197, 169);
@@ -319,10 +312,11 @@ namespace Tinke
             // 
             // panelObj
             // 
+            this.panelObj.AutoScroll = true;
             this.panelObj.BackColor = System.Drawing.Color.Transparent;
             this.panelObj.Location = new System.Drawing.Point(649, 25);
             this.panelObj.Name = "panelObj";
-            this.panelObj.Size = new System.Drawing.Size(512, 512);
+            this.panelObj.Size = new System.Drawing.Size(515, 515);
             this.panelObj.TabIndex = 10;
             // 
             // toolStrip2
@@ -331,80 +325,15 @@ namespace Tinke
             this.toolStrip2.Dock = System.Windows.Forms.DockStyle.None;
             this.toolStrip2.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.toolStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripDeleteChain,
             this.toolStripOpenAs});
             this.toolStrip2.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Table;
             this.toolStrip2.Location = new System.Drawing.Point(409, 309);
             this.toolStrip2.Name = "toolStrip2";
             this.toolStrip2.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
             this.toolStrip2.RightToLeft = System.Windows.Forms.RightToLeft.No;
-            this.toolStrip2.Size = new System.Drawing.Size(55, 65);
+            this.toolStrip2.Size = new System.Drawing.Size(55, 23);
             this.toolStrip2.TabIndex = 11;
             this.toolStrip2.Text = "toolStrip2";
-            // 
-            // toolStripDeleteChain
-            // 
-            this.toolStripDeleteChain.BackColor = System.Drawing.Color.Transparent;
-            this.toolStripDeleteChain.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.borrarPaletaToolStripMenuItem,
-            this.borrarTileToolStripMenuItem,
-            this.borrarScreenToolStripMenuItem,
-            this.borrarCeldasToolStripMenuItem,
-            this.borrarAnimaciónToolStripMenuItem,
-            this.s10ToolStripMenuItem});
-            this.toolStripDeleteChain.Image = ((System.Drawing.Image)(resources.GetObject("toolStripDeleteChain.Image")));
-            this.toolStripDeleteChain.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripDeleteChain.Name = "toolStripDeleteChain";
-            this.toolStripDeleteChain.Size = new System.Drawing.Size(54, 20);
-            this.toolStripDeleteChain.Text = "S10";
-            // 
-            // borrarPaletaToolStripMenuItem
-            // 
-            this.borrarPaletaToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("borrarPaletaToolStripMenuItem.Image")));
-            this.borrarPaletaToolStripMenuItem.Name = "borrarPaletaToolStripMenuItem";
-            this.borrarPaletaToolStripMenuItem.Size = new System.Drawing.Size(92, 22);
-            this.borrarPaletaToolStripMenuItem.Text = "S11";
-            this.borrarPaletaToolStripMenuItem.Click += new System.EventHandler(this.borrarPaletaToolStripMenuItem_Click);
-            // 
-            // borrarTileToolStripMenuItem
-            // 
-            this.borrarTileToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("borrarTileToolStripMenuItem.Image")));
-            this.borrarTileToolStripMenuItem.Name = "borrarTileToolStripMenuItem";
-            this.borrarTileToolStripMenuItem.Size = new System.Drawing.Size(92, 22);
-            this.borrarTileToolStripMenuItem.Text = "S12";
-            this.borrarTileToolStripMenuItem.Click += new System.EventHandler(this.borrarTileToolStripMenuItem_Click);
-            // 
-            // borrarScreenToolStripMenuItem
-            // 
-            this.borrarScreenToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("borrarScreenToolStripMenuItem.Image")));
-            this.borrarScreenToolStripMenuItem.Name = "borrarScreenToolStripMenuItem";
-            this.borrarScreenToolStripMenuItem.Size = new System.Drawing.Size(92, 22);
-            this.borrarScreenToolStripMenuItem.Text = "S13";
-            this.borrarScreenToolStripMenuItem.Click += new System.EventHandler(this.borrarScreenToolStripMenuItem_Click);
-            // 
-            // borrarCeldasToolStripMenuItem
-            // 
-            this.borrarCeldasToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("borrarCeldasToolStripMenuItem.Image")));
-            this.borrarCeldasToolStripMenuItem.Name = "borrarCeldasToolStripMenuItem";
-            this.borrarCeldasToolStripMenuItem.Size = new System.Drawing.Size(92, 22);
-            this.borrarCeldasToolStripMenuItem.Text = "S14";
-            this.borrarCeldasToolStripMenuItem.Click += new System.EventHandler(this.borrarCeldasToolStripMenuItem_Click);
-            // 
-            // borrarAnimaciónToolStripMenuItem
-            // 
-            this.borrarAnimaciónToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("borrarAnimaciónToolStripMenuItem.Image")));
-            this.borrarAnimaciónToolStripMenuItem.Name = "borrarAnimaciónToolStripMenuItem";
-            this.borrarAnimaciónToolStripMenuItem.Size = new System.Drawing.Size(92, 22);
-            this.borrarAnimaciónToolStripMenuItem.Text = "S15";
-            this.borrarAnimaciónToolStripMenuItem.Click += new System.EventHandler(this.borrarAnimaciónToolStripMenuItem_Click);
-            // 
-            // s10ToolStripMenuItem
-            // 
-            this.s10ToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("s10ToolStripMenuItem.Image")));
-            this.s10ToolStripMenuItem.Name = "s10ToolStripMenuItem";
-            this.s10ToolStripMenuItem.Size = new System.Drawing.Size(92, 22);
-            this.s10ToolStripMenuItem.Text = "S10";
-            this.s10ToolStripMenuItem.Click += new System.EventHandler(this.s10ToolStripMenuItem_Click);
             // 
             // toolStripOpenAs
             // 
@@ -428,7 +357,7 @@ namespace Tinke
             // 
             this.toolStripMenuItem1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripMenuItem1.Image")));
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(131, 22);
             this.toolStripMenuItem1.Text = "S17";
             this.toolStripMenuItem1.Click += new System.EventHandler(this.toolAbrirComoItemPaleta_Click);
             // 
@@ -436,7 +365,7 @@ namespace Tinke
             // 
             this.toolStripMenuItem2.Image = ((System.Drawing.Image)(resources.GetObject("toolStripMenuItem2.Image")));
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(152, 22);
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(131, 22);
             this.toolStripMenuItem2.Text = "S18";
             this.toolStripMenuItem2.Click += new System.EventHandler(this.toolAbrirComoItemTile_Click);
             // 
@@ -444,7 +373,7 @@ namespace Tinke
             // 
             this.toolStripMenuItem3.Image = ((System.Drawing.Image)(resources.GetObject("toolStripMenuItem3.Image")));
             this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(152, 22);
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(131, 22);
             this.toolStripMenuItem3.Text = "S19";
             this.toolStripMenuItem3.Click += new System.EventHandler(this.toolAbrirComoItemScreen_Click);
             // 
@@ -452,7 +381,7 @@ namespace Tinke
             // 
             this.toolStripMenuComprimido.Image = global::Tinke.Properties.Resources.compress;
             this.toolStripMenuComprimido.Name = "toolStripMenuComprimido";
-            this.toolStripMenuComprimido.Size = new System.Drawing.Size(152, 22);
+            this.toolStripMenuComprimido.Size = new System.Drawing.Size(131, 22);
             this.toolStripMenuComprimido.Text = "S2A";
             this.toolStripMenuComprimido.Click += new System.EventHandler(this.s2AToolStripMenuItem_Click);
             // 
@@ -460,7 +389,7 @@ namespace Tinke
             // 
             this.toolStripAbrirFat.Image = global::Tinke.Properties.Resources.package;
             this.toolStripAbrirFat.Name = "toolStripAbrirFat";
-            this.toolStripAbrirFat.Size = new System.Drawing.Size(152, 22);
+            this.toolStripAbrirFat.Size = new System.Drawing.Size(131, 22);
             this.toolStripAbrirFat.Text = "S3D";
             this.toolStripAbrirFat.Click += new System.EventHandler(this.toolStripAbrirFat_Click);
             // 
@@ -468,9 +397,17 @@ namespace Tinke
             // 
             this.toolStripAbrirTexto.Image = global::Tinke.Properties.Resources.page_white_text;
             this.toolStripAbrirTexto.Name = "toolStripAbrirTexto";
-            this.toolStripAbrirTexto.Size = new System.Drawing.Size(152, 22);
+            this.toolStripAbrirTexto.Size = new System.Drawing.Size(131, 22);
             this.toolStripAbrirTexto.Text = "S26";
             this.toolStripAbrirTexto.Click += new System.EventHandler(this.toolStripAbrirTexto_Click);
+            // 
+            // callPluginToolStripMenuItem
+            // 
+            this.callPluginToolStripMenuItem.Image = global::Tinke.Properties.Resources.plugin_go;
+            this.callPluginToolStripMenuItem.Name = "callPluginToolStripMenuItem";
+            this.callPluginToolStripMenuItem.Size = new System.Drawing.Size(131, 22);
+            this.callPluginToolStripMenuItem.Text = "Call plugin";
+            this.callPluginToolStripMenuItem.Click += new System.EventHandler(this.callPluginToolStripMenuItem_Click);
             // 
             // linkAboutBox
             // 
@@ -573,14 +510,6 @@ namespace Tinke
             this.btnPack.UseVisualStyleBackColor = true;
             this.btnPack.Click += new System.EventHandler(this.btnPack_Click);
             // 
-            // callPluginToolStripMenuItem
-            // 
-            this.callPluginToolStripMenuItem.Image = global::Tinke.Properties.Resources.plugin_go;
-            this.callPluginToolStripMenuItem.Name = "callPluginToolStripMenuItem";
-            this.callPluginToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.callPluginToolStripMenuItem.Text = "Call plugin";
-            this.callPluginToolStripMenuItem.Click += new System.EventHandler(this.callPluginToolStripMenuItem_Click);
-            // 
             // Sistema
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
@@ -643,17 +572,10 @@ namespace Tinke
         private System.Windows.Forms.ToolStrip toolStrip2;
         private System.Windows.Forms.ToolStripSplitButton toolStripLanguage;
         private System.Windows.Forms.LinkLabel linkAboutBox;
-        private System.Windows.Forms.ToolStripDropDownButton toolStripDeleteChain;
-        private System.Windows.Forms.ToolStripMenuItem borrarPaletaToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem borrarTileToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem borrarScreenToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem borrarCeldasToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem borrarAnimaciónToolStripMenuItem;
         private System.Windows.Forms.ToolStripDropDownButton toolStripOpenAs;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem2;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem3;
-        private System.Windows.Forms.ToolStripMenuItem s10ToolStripMenuItem;
         private System.Windows.Forms.TextBox txtSearch;
         private System.Windows.Forms.Button btnSearch;
         private System.Windows.Forms.CheckBox checkSearch;

@@ -14,7 +14,7 @@
  *   You should have received a copy of the GNU General Public License
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  *
- * Programador: pleoNeX
+ * By: pleoNeX
  * 
  */
 using System;
@@ -23,6 +23,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using PluginInterface;
+using PluginInterface.Images;
 
 namespace AI_IGO_DS
 {
@@ -67,32 +68,36 @@ namespace AI_IGO_DS
         public void Read(string archivo, int id)
         {
             if (archivo.ToUpper().EndsWith(".ANCL"))
-                ANCL.Leer(archivo, pluginHost);
+                new ANCL(pluginHost, archivo, id);
             else if (archivo.ToUpper().EndsWith(".ANCG"))
-                ANCG.Leer(archivo, pluginHost);
+                new ANCG(pluginHost, archivo, id);
             else if (archivo.ToUpper().EndsWith(".ANSC"))
-                ANSC.Leer(archivo, id, pluginHost);
+                new ANSC(pluginHost, archivo, id);
             else if (archivo.ToUpper().EndsWith(".ATEX"))
-                ATEX.Leer(archivo, pluginHost);
+                new ATEX(pluginHost, archivo, id);
         }
         public Control Show_Info(string archivo, int id)
         {
             Read(archivo, id);
 
             if (archivo.ToUpper().EndsWith(".ANCL"))
-                return new PaletteControl(pluginHost);
-            if (archivo.ToUpper().EndsWith(".ANCG") && pluginHost.Get_NCLR().header.file_size != 0x00)
-                return new BinControl(pluginHost, false);
-            if (archivo.ToUpper().EndsWith(".ANSC") && pluginHost.Get_NCLR().header.file_size != 0x00 &&
-                pluginHost.Get_NCGR().header.file_size != 0x00)
-                return new BinControl(pluginHost, true);
+                return new PaletteControl(pluginHost, pluginHost.Get_Palette());
+
+            if (archivo.ToUpper().EndsWith(".ANCG") && pluginHost.Get_Palette().Loaded)
+                return new ImageControl(pluginHost, pluginHost.Get_Image(), pluginHost.Get_Palette());
+
+            if (archivo.ToUpper().EndsWith(".ANSC") && pluginHost.Get_Palette().Loaded && pluginHost.Get_Image().Loaded)
+                return new ImageControl(pluginHost, pluginHost.Get_Image(), pluginHost.Get_Palette(), pluginHost.Get_Map());
+
+            if (archivo.ToUpper().EndsWith(".ATEX") && pluginHost.Get_Palette().Loaded)
+                return new ImageControl(pluginHost, pluginHost.Get_Image(), pluginHost.Get_Palette());
+
             if (archivo.ToUpper().EndsWith(".BIN") && !archivo.EndsWith("fat.bin") && !archivo.EndsWith("fnt.bin") &&
                 !archivo.EndsWith("arm9.bin") && !archivo.EndsWith("arm7.bin"))
-                return BIN.Leer(archivo, pluginHost);
+                return new BinControl(pluginHost, new BIN(pluginHost, archivo, id));
+
             if (archivo.ToUpper().EndsWith(".R00"))
-                return R00.Leer(archivo, pluginHost);
-            if (archivo.ToUpper().EndsWith(".ATEX") && pluginHost.Get_NCLR().header.file_size != 0x00)
-                return new BinControl(pluginHost, false);
+                return new R00(pluginHost, archivo, id).Get_Control();
 
             return new Control();
         }

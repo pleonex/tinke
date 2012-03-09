@@ -38,11 +38,11 @@ namespace PluginInterface.Images
         Byte[] original;
         int startByte;
 
-        Color[][] palette;
+        protected Color[][] palette;
         ColorFormat depth;
         bool canEdit;
 
-        Object obj;
+        protected Object obj;
         #endregion
 
         public PaletteBase(IPluginHost pluginHost)
@@ -65,40 +65,9 @@ namespace PluginInterface.Images
         }
 
         public abstract void Read(string fileIn);
-        public abstract void Write_Palette(string fileOut);
+        public abstract void Write(string fileOut);
 
-        public NCLR Get_NCLR()
-        {
-            if (palette.Length == 0)
-                return new NCLR();
-
-            NCLR nclr = new NCLR();
-
-            // Nitro generic header
-            nclr.id = (uint)id;
-            nclr.header.id = "NCLR".ToCharArray();
-            nclr.header.endianess = 0xFFFE;
-            nclr.header.constant = 0x0100;
-            nclr.header.file_size = (uint)palette[0].Length * 2;
-            nclr.header.header_size = 0x10;
-            nclr.header.nSection = 1;
-
-            // PLTT section
-            nclr.pltt.ID = "PLTT".ToCharArray();
-            nclr.pltt.length = nclr.header.file_size;
-            nclr.pltt.depth = (palette.Length == 1 ? ColorDepth.Depth8Bit : ColorDepth.Depth4Bit);
-            nclr.pltt.nColors = (uint)palette[0].Length;
-            nclr.pltt.paletteLength = (uint)palette.Length * nclr.pltt.nColors;
-
-            // Colors
-            nclr.pltt.palettes = new NTFP[palette.Length];
-            for (int i = 0; i < palette.Length; i++)
-                nclr.pltt.palettes[i].colors = palette[i];
-
-            return nclr;
-        }
-
-        public Image Get_PaletteImage(int index)
+        public Image Get_Image(int index)
         {
             if (index >= palette.Length)
                 return null;

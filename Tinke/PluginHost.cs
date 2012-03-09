@@ -30,15 +30,10 @@ namespace Tinke
 {
     public class PluginHost : IPluginHost
     {
-        NCLR paleta;
-        NCGR tile;
-        NSCR map_old;
-        NCER celda;
-        NANR animacion;
-
         ImageBase image;
         PaletteBase palette;
         MapBase map;
+        SpriteBase sprite;
         Object objects;
 
         sFolder extraidos;
@@ -64,26 +59,18 @@ namespace Tinke
             catch { MessageBox.Show(Tools.Helper.GetTranslation("Messages", "S22")); }
         }
 
-        public NCLR Get_NCLR() { return paleta; }
-        public NCGR Get_NCGR() { return tile; }
-        public NSCR Get_NSCR() { return map_old; }
-        public NCER Get_NCER() { return celda; }
-        public NANR Get_NANR() { return animacion; }
         public Object Get_Object() { return objects; }
 
         public ImageBase Get_Image() { return image; }
         public PaletteBase Get_Palette() { return palette; }
         public MapBase Get_Map() { return map; }
+        public SpriteBase Get_Sprite() { return sprite; }
 
         public void Set_Image(ImageBase image) { this.image = image; }
         public void Set_Palette(PaletteBase palette) { this.palette = palette; }
         public void Set_Map(MapBase map) { this.map = map; }
+        public void Set_Sprite(SpriteBase sprite) { this.sprite = sprite; }
 
-        public void Set_NCLR(NCLR nclr) { paleta = nclr; }
-        public void Set_NCGR(NCGR ncgr) { tile = ncgr; }
-        public void Set_NSCR(NSCR nscr) { map_old = nscr; }
-        public void Set_NCER(NCER ncer) { celda = ncer; }
-        public void Set_NANR(NANR nanr) { animacion = nanr; }
         public void Set_Object(Object objects) { this.objects = objects; }
 
         public Color[] BGR555ToColor(byte[] datos) { return Convertir.BGR555(datos); }
@@ -93,8 +80,6 @@ namespace Tinke
         public Byte[] TilesToBytes(byte[][] tiles, int startByte = 0) { return Convertir.TilesToBytes(tiles, startByte); }
         public Byte[][] BytesToTiles(byte[] bytes) { return Convertir.BytesToTiles(bytes); }
         public Byte[][] BytesToTiles_NoChanged(byte[] bytes, int tilesX, int tilesY) { return Convertir.BytesToTiles_NoChanged(bytes, tilesX, tilesY); }
-        public TTLP Palette_4bppTo8bpp(TTLP palette) { return Convertir.Palette_4bppTo8bpp(palette); }
-        public TTLP Palette_8bppTo4bpp(TTLP palette) { return Convertir.Palette_8bppTo4bpp(palette); }
         public Color[][] Palette_4bppTo8bpp(Color[][] palette) { return Convertir.Palette_4bppTo8bpp(palette); }
         public Color[][] Palette_8bppTo4bpp(Color[][] palette) { return Convertir.Palette_8bppTo4bpp(palette); }
         public void Change_Color(ref byte[][] tiles, int oldIndex, int newIndex) { Convertir.Change_Color(ref tiles, oldIndex, newIndex); }
@@ -104,19 +89,10 @@ namespace Tinke
         public byte[] BytesToBits(byte[] bytes) { return Tools.Helper.BytesToBits(bytes); }
         public byte[] BitsToBytes(byte[] bits) { return Tools.Helper.BitsToBytes(bits); }
 
-        public Bitmap Bitmaps_NCLR(Color[] colors) { return Imagen_NCLR.Show(colors); }
-        public Bitmap[] Bitmaps_NCLR(NCLR nclr) { return Imagen_NCLR.Show(nclr); }
-        public int Remove_DuplicatedColors(ref NTFP palette, ref byte[][] tiles)
-        {
-            return Convertir.Remove_DuplicatedColors(ref palette, ref tiles);
-        }
+        public Bitmap Bitmaps_NCLR(Color[] colors) { return Actions.Get_Image(colors); }
         public int Remove_DuplicatedColors(ref Color[] palette, ref byte[][] tiles)
         {
             return Convertir.Remove_DuplicatedColors(ref palette, ref tiles);
-        }
-        public int Remove_NotUsedColors(ref NTFP palette, ref byte[][] tiles)
-        {
-            return Convertir.Remove_NotUsedColors(ref palette, ref tiles);
         }
         public int Remove_NotUsedColors(ref Color[] palette, ref byte[][] tiles)
         {
@@ -127,47 +103,33 @@ namespace Tinke
             Convertir.Replace_Color(ref tiles, oldIndex, newIndex);
         }
 
-        public NTFT Transform_NSCR(NSCR nscr, NTFT ntft, int startInfo = 0) { return Imagen_NSCR.Transform_Tile(nscr, ntft, startInfo); }
+        public NTFT Transform_NSCR(NTFS[] map, ref NTFT ntft, int startInfo = 0)
+        {
+            byte[] num_palette;
+            ntft.tiles = Actions.Apply_Map(map, ntft.tiles, out num_palette, 8, startInfo);
+            ntft.nPalette = num_palette;
+
+            return ntft;
+        }
         public byte[] XFlip(byte[] tile)
         {
-            return Imagen_NSCR.XFlip(tile);
+            return Actions.XFlip(tile, 8);
         }
         public byte[] YFlip(byte[] tile)
         {
-            return Imagen_NSCR.YFlip(tile);
+            return Actions.YFlip(tile, 8);
         }
 
-        public Bitmap Bitmap_NCGR(NCGR ncgr, NCLR nclr, int zoom = 1)
+        public Bitmap Bitmap_NTFT(NTFT tiles, Color[][] palette, TileForm tileOrder, int startTile, int tilesX, int tilesY, int zoom = 1)
         {
-            return Imagen_NCGR.Get_Image(ncgr, nclr, zoom);
-        }
-        public Bitmap Bitmap_NCGR(NCGR ncgr, NCLR nclr, int startTile, int zoom = 1) 
-        { 
-            return Imagen_NCGR.Get_Image(ncgr, nclr, startTile, zoom);
-        }
-        public Bitmap Bitmap_NCGR(NCGR ncgr, NCLR nclr, int startTile, int tilesX, int tilesY, int zoom = 1)
-        { 
-            return Imagen_NCGR.Get_Image(ncgr, nclr, startTile, tilesX, tilesY, zoom);
-        }
-        public Bitmap Bitmap_NTFT(NTFT tiles, Color[][] palette, TileOrder tileOrder, int startTile, int tilesX, int tilesY, int zoom = 1)
-        {
-            return Imagen_NCGR.Get_Image(tiles, palette, tileOrder, startTile, tilesX, tilesY, zoom);
+            return null; // return Imagen_NCGR.Get_Image(tiles, palette, tileOrder, startTile, tilesX, tilesY, zoom);
         }
         public byte[][] MergeImage(byte[][] originalTile, byte[][] newTiles, int startTile)
         {
             return Imagen_NCGR.MergeImage(originalTile, newTiles, startTile);
         }
 
-        public Size Size_NCER(byte byte1, byte byte2) { return Imagen_NCER.Calculate_Size(byte1, byte2); }
-        public Bitmap Bitmap_NCER(Bank banco, uint blockSize, NCGR ncgr, NCLR nclr, bool entorno, bool celda, bool numero, bool transparencia, bool imagen, int zoom = 1) 
-        {
-            return Imagen_NCER.Get_Image(banco, blockSize, ncgr, nclr, entorno, celda, numero, transparencia, imagen, zoom);
-        }
-        public Bitmap Bitmap_NCER(Bank banco, uint blockSize, NCGR tile, NCLR paleta, bool entorno, bool celda, bool numero, bool transparencia,
-            bool image, int maxWidth, int maxHeight, int zoom = 1)
-        {
-            return Imagen_NCER.Get_Image(banco, blockSize, tile, paleta, entorno, celda, numero, transparencia, image, maxWidth, maxHeight, zoom);
-        }
+        public Size Get_OAMSize(byte byte1, byte byte2) { return Actions.Get_OAMSize(byte1, byte2); }
 
         public void Set_Files(sFolder archivos)
         {
@@ -195,6 +157,7 @@ namespace Tinke
         {
             return tempFolder;
         }
+        public string Get_LangXML() { return Tools.Helper.Get_LangXML(); }
         public string Get_Language()
         {
             System.Xml.Linq.XElement xml = System.Xml.Linq.XElement.Load(Application.StartupPath + System.IO.Path.DirectorySeparatorChar + "Tinke.xml");
@@ -218,16 +181,14 @@ namespace Tinke
         public event Action<int, string> ChangeFile_Event;
         public void ChangeFile(int id, string newFile) { ChangeFile_Event(id, newFile); }
 
-        public NCLR BitmapToPalette(string bitmap, int paletteIndex = 0) { return Imagen_NCLR.BitmapToPalette(bitmap, paletteIndex); }
-        public NCGR BitmapToTile(string bitmap, TileOrder tileOrder) { return Imagen_NCGR.BitmapToTile(bitmap, tileOrder); }
-        public NSCR Create_BasicMap(int nTiles, int width, int height) { return Imagen_NSCR.Create_BasicMap(nTiles, width, height); }
+        //public NCLR BitmapToPalette(string bitmap, int paletteIndex = 0) { return Imagen_NCLR.BitmapToPalette(bitmap, paletteIndex); }
+        //public NCGR BitmapToTile(string bitmap, TileForm tileOrder) { return Imagen_NCGR.BitmapToTile(bitmap, tileOrder); }
+        //public NSCR Create_BasicMap(int nTiles, int width, int height) { return Imagen_NSCR.Create_BasicMap(nTiles, width, height); }
 
         public void Create_APNG(string fileout, Bitmap[] frames, int delay, int loops) { Tools.APNG.Crear_APNG(frames, fileout, delay, loops); }
         public void Create_APNG(string fileout, String[] frames, int delay, int loops) { Tools.APNG.Crear_APNG(frames, fileout, delay, loops); }
 
-        public NCLR Read_WinPal(string fileIn, ColorDepth depth) { return Imagen_NCLR.Read_WinPal(fileIn, depth); }
         public Color[][] Read_WinPal2(string fileIn, ColorDepth depth) { return Imagen_NCLR.Read_WinPal2(fileIn, depth); }
-        public void Write_WinPal(string fileOut, NCLR palette) { Imagen_NCLR.Write_WinPal(fileOut, palette); }
-        public void Write_WinPal(string fileOut, Color[][] palette) { Imagen_NCLR.Write_WinPal(fileOut, palette); }
+        public void Write_WinPal(string fileOut, Color[] palette) { Imagen_NCLR.Write_WinPal(fileOut, palette); }
     }
 }

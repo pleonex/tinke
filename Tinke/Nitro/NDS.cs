@@ -27,7 +27,7 @@ namespace Tinke.Nitro
             nds.makerCode = br.ReadChars(2);
             nds.unitCode = br.ReadByte();
             nds.encryptionSeed = br.ReadByte();
-            nds.tamaño = (UInt32)Math.Pow(2, 20 + br.ReadByte());
+            nds.tamaño = (UInt32)Math.Pow(2, 17 + br.ReadByte());
             nds.reserved = br.ReadBytes(9);
             nds.ROMversion = br.ReadByte();
             nds.internalFlags = br.ReadByte();
@@ -84,7 +84,7 @@ namespace Tinke.Nitro
         }
         public static void EscribirCabecera(string salida, Estructuras.ROMHeader cabecera, string romFile)
         {
-            BinaryWriter bw = new BinaryWriter(new FileStream(salida, FileMode.Create));
+            BinaryWriter bw = new BinaryWriter(File.OpenWrite(salida));
             BinaryReader br = new BinaryReader(File.OpenRead(romFile));
             br.BaseStream.Position = 0xC0;
             Console.Write(Tools.Helper.GetTranslation("Messages", "S0A"));
@@ -94,7 +94,7 @@ namespace Tinke.Nitro
             bw.Write(cabecera.makerCode);
             bw.Write(cabecera.unitCode);
             bw.Write(cabecera.encryptionSeed);
-            bw.Write((byte)(Math.Log(cabecera.tamaño, 2) - 20));
+            bw.Write((byte)(Math.Log(cabecera.tamaño, 2) - 17));
             bw.Write(cabecera.reserved);
             bw.Write(cabecera.ROMversion);
             bw.Write(cabecera.internalFlags);
@@ -135,8 +135,9 @@ namespace Tinke.Nitro
             bw.Flush();
 
             int relleno = (int)(cabecera.headerSize - bw.BaseStream.Length);
+            br.BaseStream.Position = bw.BaseStream.Position;
             for (int i = 0; i < relleno; i++)
-                bw.Write((byte)0x00);
+                bw.Write(br.ReadByte());
 
             bw.Flush();
             bw.Close();
@@ -146,7 +147,7 @@ namespace Tinke.Nitro
         }
         public static void EscribirCabecera(string salida, Estructuras.ROMHeader cabecera, byte[] nintendoLogo)
         {
-            BinaryWriter bw = new BinaryWriter(new FileStream(salida, FileMode.Create));
+            BinaryWriter bw = new BinaryWriter(File.OpenWrite(salida));
             Console.Write(Tools.Helper.GetTranslation("Messages", "S0A"));
 
             bw.Write(cabecera.gameTitle);
@@ -154,7 +155,7 @@ namespace Tinke.Nitro
             bw.Write(cabecera.makerCode);
             bw.Write(cabecera.unitCode);
             bw.Write(cabecera.encryptionSeed);
-            bw.Write((byte)(Math.Log(cabecera.tamaño, 2) - 20));
+            bw.Write((byte)(Math.Log(cabecera.tamaño, 2) - 17));
             bw.Write(cabecera.reserved);
             bw.Write(cabecera.ROMversion);
             bw.Write(cabecera.internalFlags);
@@ -250,6 +251,17 @@ namespace Tinke.Nitro
             bw.Write(StringToTitle(banner.spanishTitle));
             bw.Flush();
 
+            int rem = (int)bw.BaseStream.Position % 0x200;
+            if (rem != 0)
+            {
+                while (rem < 0x200)
+                {
+                    bw.Write((byte)0xFF);
+                    rem++;
+                }
+            }
+            bw.Flush();
+
             Console.WriteLine(Tools.Helper.GetTranslation("Messages", "S09"), bw.BaseStream.Length);
             bw.Close();
         }
@@ -299,17 +311,20 @@ namespace Tinke.Nitro
             return imagen;
         }
 
-        public static void EscribirArchivos(string salida, string romFile, sFolder root, int nFiles)
+        public static void Write_Files(string fileOut, string romFile, sFolder root, ushort[] sortedIDs)
         {
-            BinaryWriter bw = new BinaryWriter(new FileStream(salida, FileMode.Create));
-            BinaryReader br = new BinaryReader(new FileStream(romFile, FileMode.Open));
+            BinaryWriter bw = new BinaryWriter(File.OpenWrite(fileOut));
+            BinaryReader br = new BinaryReader(File.OpenRead(romFile));
 
             Console.Write(Tools.Helper.GetTranslation("Messages", "S0B"));
 
-            for (int i = 0; i < nFiles; i++)
+            for (int i = 0; i < sortedIDs.Length; i++)
             {
-                sFile currFile = BuscarArchivo(i, root);
-                if (currFile.name.StartsWith("overlay")) // Los overlays no van en esta sección
+                if (i == 0 & sortedIDs[i] > sortedIDs.Length)
+                    continue;
+
+                sFile currFile = BuscarArchivo(sortedIDs[i], root);
+                if (!(currFile.name is string) || currFile.name.StartsWith("overlay")) // Los overlays no van en esta sección
                     continue;
 
                 if (currFile.path == romFile)
@@ -318,7 +333,7 @@ namespace Tinke.Nitro
                     bw.Write(br.ReadBytes((int)currFile.size));
                     bw.Flush();
                 }
-                else // El archivo es modificado y no está en la ROM
+                else
                 {
                     BinaryReader br2 = new BinaryReader(File.OpenRead(currFile.path));
                     br2.BaseStream.Position = currFile.offset;
@@ -327,12 +342,22 @@ namespace Tinke.Nitro
                     br2.Close();
                     bw.Flush();
                 }
+
+                int rem = (int)bw.BaseStream.Position % 0x200;
+                if (rem != 0)
+                {
+                    while (rem < 0x200)
+                    {
+                        bw.Write((byte)0xFF);
+                        rem++;
+                    }
+                }
             }
 
             bw.Flush();
             bw.Close();
             br.Close();
-            Console.WriteLine(Tools.Helper.GetTranslation("Messages", "S0C"), nFiles);
+            Console.WriteLine(Tools.Helper.GetTranslation("Messages", "S0C"), sortedIDs.Length);
         }
         private static sFile BuscarArchivo(int id, sFolder currFolder)
         {
