@@ -41,6 +41,7 @@ namespace Tinke.Nitro
             br.Close();
             return root;
         }
+
         public static void EscribirFAT(string salida, sFolder root, int nFiles, uint offsetFAT, uint offsetOverlay9,
             uint offsetOverlay7)
         {
@@ -51,7 +52,7 @@ namespace Tinke.Nitro
 
             for (int i = 0; i < nFiles; i++)
             {
-                sFile currFile = BuscarArchivo(i, root);
+                sFile currFile = Search_File(i, root);
                 if (currFile.name.StartsWith("overlay9"))
                 {
                     bw.Write(offsetOverlay9);
@@ -76,8 +77,89 @@ namespace Tinke.Nitro
             bw.Close();
             Console.WriteLine(Tools.Helper.GetTranslation("Messages", "S09"), new FileInfo(salida).Length);
         }
+        public static void Write(string fileOut, sFolder root, uint offsetFAT, ushort[] sortedIDs, uint offset_ov9, uint offset_ov7)
+        {
+            BinaryWriter bw = new BinaryWriter(File.OpenWrite(fileOut));
+            Console.Write("File Allocation Table (FAT)...");
 
-        private static sFile BuscarArchivo(int id, sFolder currFolder)
+            int num_files = sortedIDs.Length;
+
+            // Set the first file offset
+            uint offset = (uint)(offsetFAT + num_files * 0x08);
+            if ((offset % 0x200) != 0)
+                offset += 0x200 - (offset % 0x200);
+            offset += 0xA00;
+
+            byte[] buffer = new byte[num_files * 8];
+            int zero_files = 0;
+            byte[] temp;
+            for (int i = 0; i < num_files; i++)
+            {
+                sFile currFile = Search_File(sortedIDs[i], root);
+
+                if (!(currFile.name is string))
+                    zero_files++;
+                else if (currFile.name.StartsWith("overlay9"))
+                {
+                    temp = BitConverter.GetBytes(offset_ov9);
+                    Array.Copy(temp, 0, buffer, sortedIDs[i] * 8, 4);
+                    offset_ov9 += currFile.size;
+                    temp = BitConverter.GetBytes(offset_ov9);
+                    Array.Copy(temp, 0, buffer, sortedIDs[i] * 8 + 4, 4);
+
+                    if (offset_ov9 % 0x200 != 0)
+                        offset_ov9 += 0x200 - (offset_ov9 % 0x200);
+                }
+                else if (currFile.name.StartsWith("overlay7"))
+                {
+                    temp = BitConverter.GetBytes(offset_ov7);
+                    Array.Copy(temp, 0, buffer, sortedIDs[i] * 8, 4);
+                    offset_ov7 += currFile.size;
+                    temp = BitConverter.GetBytes(offset_ov7);
+                    Array.Copy(temp, 0, buffer, sortedIDs[i] * 8 + 4, 4);
+
+                    if (offset_ov7 % 0x200 != 0)
+                        offset_ov7 += 0x200 - (offset_ov7 % 0x200);
+                }
+                else
+                {
+                    temp = BitConverter.GetBytes(offset);
+                    Array.Copy(temp, 0, buffer, sortedIDs[i] * 8, 4);
+                    offset += currFile.size;
+                    temp = BitConverter.GetBytes(offset);
+                    Array.Copy(temp, 0, buffer, sortedIDs[i] * 8 + 4, 4);
+
+                    if (offset % 0x200 != 0)
+                        offset += 0x200 - (offset % 0x200);
+                }
+            }
+
+            bw.Write(buffer);
+
+            temp = BitConverter.GetBytes((uint)0);
+            for (int i = 0; i < zero_files; i++)
+            {
+                Array.Copy(temp, 0, buffer, sortedIDs[i] * 8, 4);
+                Array.Copy(temp, 0, buffer, sortedIDs[i] * 8 + 4, 4);
+            }
+
+            int rem = (int)bw.BaseStream.Position % 0x200;
+            if (rem != 0)
+            {
+                while (rem < 0x200)
+                {
+                    bw.Write((byte)0xFF);
+                    rem++;
+                }
+            }
+
+            bw.Flush();
+            bw.Close();
+            Console.WriteLine(Tools.Helper.GetTranslation("Messages", "S09"), new FileInfo(fileOut).Length);
+        }
+
+
+        private static sFile Search_File(int id, sFolder currFolder)
         {
             if (currFolder.id == id) // Archivos descomprimidos
             {
@@ -101,28 +183,8 @@ namespace Tinke.Nitro
             {
                 foreach (sFolder subFolder in currFolder.folders)
                 {
-                    sFile currFile = BuscarArchivo(id, subFolder);
+                    sFile currFile = Search_File(id, subFolder);
                     if (currFile.name is string)
-                        return currFile;
-                }
-            }
-
-            return new sFile();
-        }
-        private static sFile BuscarArchivo(string name, sFolder currFolder)
-        {
-            if (currFolder.files is List<sFile>)
-                foreach (sFile archivo in currFolder.files)
-                    if (archivo.name == name)
-                        return archivo;
-
-
-            if (currFolder.folders is List<sFolder>)
-            {
-                foreach (sFolder subFolder in currFolder.folders)
-                {
-                    sFile currFile = BuscarArchivo(name, subFolder);
-                    if (currFile.name is String)
                         return currFile;
                 }
             }
@@ -154,5 +216,42 @@ namespace Tinke.Nitro
                     Asignar_Archivo(id, offset, size, romFile, subFolder);
         }
 
+        public static ushort[] SortByOffset(Estructuras.sFAT[] fat)
+        {
+            List<OffsetID> lfat = new List<OffsetID>();
+            lfat.Sort(Sort);
+
+            for (ushort i = 0; i < fat.Length; i++)
+                lfat.Add(new OffsetID { offset = fat[i].offset, id = i });
+
+            lfat.Sort(Sort);
+
+            ushort[] ids = new ushort[fat.Length];
+            for (int i = 0; i < fat.Length; i++)
+                ids[i] = lfat[i].id;
+
+            return ids;
+        }
+        private struct OffsetID
+        {
+            public uint offset;
+            public ushort id;
+        }
+        private static int Sort(OffsetID f1, OffsetID f2)
+        {
+            if (f1.offset > f2.offset)
+                return 1;
+            else if (f1.offset < f2.offset)
+                return -1;
+            else
+            {
+                if (f1.id > f2.id)
+                    return 1;
+                else if (f1.id < f2.id)
+                    return -1;
+                else  // Impossible
+                    return 0;
+            }
+        }
     }
 }

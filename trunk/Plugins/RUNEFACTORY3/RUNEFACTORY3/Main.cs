@@ -37,7 +37,7 @@ namespace RUNEFACTORY3
         }
         public bool IsCompatible()
         {
-            if (gameCode == "BRFE" || gameCode == "BRFJ")
+            if (gameCode == "BRFE" || gameCode == "BRFJ" || gameCode == "BRFP")
                 return true;
 
             return false;

@@ -46,40 +46,11 @@
     <Compile Include="BDZ.cs" />
     <Compile Include="CLZ.cs" />
     <Compile Include="CZ.cs" />
-    <Compile Include="ImageControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="ImageControl.designer.cs">
-      <DependentUpon>ImageControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="CellControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="iNCER.designer.cs">
-      <DependentUpon>CellControl.cs</DependentUpon>
-    </Compile>
     <Compile Include="Main.cs" />
     <Compile Include="OBJS.cs" />
-    <Compile Include="PaletteControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="PaletteControl.designer.cs">
-      <DependentUpon>PaletteControl.cs</DependentUpon>
-    </Compile>
     <Compile Include="PLZ.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SLZ.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="CellControl.resx">
-      <DependentUpon>CellControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="ImageControl.resx">
-      <DependentUpon>ImageControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="PaletteControl.resx">
-      <DependentUpon>PaletteControl.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Content Include="TETRISDSLang.xml">

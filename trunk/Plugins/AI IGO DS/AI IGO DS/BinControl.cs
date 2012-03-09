@@ -33,48 +33,30 @@ namespace AI_IGO_DS
     public partial class BinControl : UserControl
     {
         IPluginHost pluginHost;
-        NCLR paleta;
-        NCGR[] tiles;
+        BIN bin;
+        bool stop;
 
         public BinControl()
         {
             InitializeComponent();
         }
-        public BinControl(IPluginHost pluginHost, NCLR paleta, NCGR[] tiles)
+        public BinControl(IPluginHost pluginHost, BIN bin)
         {
             InitializeComponent();
+            this.bin = bin;
             this.pluginHost = pluginHost;
-            this.paleta = paleta;
-            this.tiles = tiles;
+
             ReadLanguage();
 
-            numericImage.Maximum = tiles.Length - 1;
-            numericWidth.Value = tiles[0].rahc.nTilesX * 8;
-            numericHeight.Value = tiles[0].rahc.nTilesY * 8;
-            picBox.Image = pluginHost.Bitmap_NCGR(tiles[0], paleta);
+            stop = true;
+            numericImage.Maximum = bin.NumImages - 1;
+            numericWidth.Value = bin.Get_Size(0).Width;
+            numericHeight.Value = bin.Get_Size(0).Height;
+            stop = false;
+
+            picBox.Image = bin.Get_Image(0);
         }
-        public BinControl(IPluginHost pluginHost, bool isMap)
-        {
-            InitializeComponent();
 
-            this.pluginHost = pluginHost;
-            ReadLanguage();
-            paleta = pluginHost.Get_NCLR();
-            tiles = new NCGR[] { pluginHost.Get_NCGR() };
-
-            if (isMap)
-            {
-                NSCR map = pluginHost.Get_NSCR();
-                tiles[0].rahc.tileData = pluginHost.Transform_NSCR(map, tiles[0].rahc.tileData);
-                tiles[0].rahc.nTilesX = (ushort)(map.section.width / 8);
-                tiles[0].rahc.nTilesY = (ushort)(map.section.height / 8);
-            }
-
-            picBox.Image = pluginHost.Bitmap_NCGR(tiles[0], paleta);
-            numericWidth.Value = tiles[0].rahc.nTilesX * 8;
-            numericHeight.Value = tiles[0].rahc.nTilesY * 8;
-            numericImage.Maximum = 0;
-        }
         private void ReadLanguage()
         {
             try
@@ -113,29 +95,33 @@ namespace AI_IGO_DS
 
         private void numericImage_ValueChanged(object sender, EventArgs e)
         {
-            numericWidth.Value = tiles[(int)numericImage.Value].rahc.nTilesX * 8;
-            numericHeight.Value = tiles[(int)numericImage.Value].rahc.nTilesY * 8;
-            Actualizar_Imagen();
+            stop = true;
+            numericWidth.Value = bin.Get_Size((int)numericImage.Value).Width;
+            numericHeight.Value = bin.Get_Size((int)numericImage.Value).Height;
+            stop = false;
+
+            Update_Image();
         }
         private void numericSize_ValueChanged(object sender, EventArgs e)
         {
+            if (stop)
+                return;
+
             if (numericWidth.Value != 0 && numericHeight.Value != 0)
-                Actualizar_Imagen();
+                bin.Set_Size(new Size((int)numericWidth.Value, (int)numericHeight.Value),
+                             (int)numericImage.Value);
+
+            Update_Image();
         }
-        private void Actualizar_Imagen()
+        private void Update_Image()
         {
-            picBox.Image = pluginHost.Bitmap_NCGR(
-                tiles[(int)numericImage.Value],
-                paleta,
-                0,
-                (int)numericWidth.Value / 8,
-                (int)numericHeight.Value / 8);
+            picBox.Image = bin.Get_Image((int)numericImage.Value);
 
             if (checkTransparency.Checked)
             {
-                Bitmap imagen = (Bitmap)picBox.Image;
-                imagen.MakeTransparent(paleta.pltt.palettes[0].colors[0]);
-                picBox.Image = imagen;
+                Bitmap imaget = (Bitmap)picBox.Image;
+                imaget.MakeTransparent(bin.Get_Palette[0]);
+                picBox.Image = imaget;
             }
         }
 
@@ -161,7 +147,7 @@ namespace AI_IGO_DS
 
         private void trackZoom_Scroll(object sender, EventArgs e)
         {
-            Actualizar_Imagen();
+            Update_Image();
             float scale = trackZoom.Value / 100f;
             Bitmap imagen = new Bitmap((int)(picBox.Image.Width * scale), (int)(picBox.Image.Height * scale));
             Graphics graficos = Graphics.FromImage(imagen);
@@ -172,7 +158,7 @@ namespace AI_IGO_DS
 
         private void checkTransparency_CheckedChanged(object sender, EventArgs e)
         {
-            Actualizar_Imagen();
+            Update_Image();
         }
 
         private void btnBgdRem_Click(object sender, EventArgs e)

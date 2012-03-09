@@ -40,7 +40,7 @@ namespace LAYTON
         public bool IsCompatible()
         {
             if (gameCode == "A5FP" || gameCode == "A5FE" || gameCode == "YLTS" || gameCode == "BLFE" ||
-                gameCode == "YLTE" || gameCode == "YLTP")
+                gameCode == "YLTE" || gameCode == "YLTP" || gameCode == "C2AJ")
                 return true;
             else
                 return false;
@@ -55,7 +55,7 @@ namespace LAYTON
                     if (id >= 0x0001 && id <= 0x02CA)
                         return new Ani(pluginHost, gameCode, "").Get_Formato(nombre);
                     else if (id >= 0x02CD && id <= 0x0765)
-                        return new Bg(pluginHost, gameCode, "").Get_Formato(nombre);
+                        return Format.FullImage;
                     else if (id == 0x0766)
                         return Format.System;   // The same as id 0xB73 in A5FP
                     break;
@@ -63,29 +63,29 @@ namespace LAYTON
                     if (id >= 0x0001 && id <= 0x04E7)
                         return new Ani(pluginHost, gameCode, "").Get_Formato(nombre);
                     else if (id >= 0x04E8 && id <= 0x0B72)
-                        return new Bg(pluginHost, gameCode, "").Get_Formato(nombre);
+                        return Format.FullImage;
                     else if (id == 0x0B73)
                         return Format.System;   // Dummy, it was text to test the puzzle system, nothing interesing and not used
                     break;
 
                 // Professor Layton and the Diabolical Box
-                case "YLTS":    
+                case "YLTS":
                     if (id >= 0x37 && id <= 0x408)
                         return new Ani(pluginHost, gameCode, "").Get_Formato(nombre);
                     else if (id >= 0x409 & id <= 0x808)
-                        return new Bg(pluginHost, gameCode, "").Get_Formato(nombre);
+                        return Format.FullImage;
                     break;
                 case "YLTE":
                     if (id >= 0x37 && id <= 0x412)
                         return new Ani(pluginHost, gameCode, "").Get_Formato(nombre);
                     else if (id >= 0x413 && id <= 0x818)
-                        return new Bg(pluginHost, gameCode, "").Get_Formato(nombre);
+                        return Format.FullImage;
                     break;
                 case "YLTP":
                     if (id >= 0x37 && id <= 0x408)
                         return new Ani(pluginHost, gameCode, "").Get_Formato(nombre);
                     else if (id >= 0x409 && id <= 0x808)
-                        return new Bg(pluginHost, gameCode, "").Get_Formato(nombre);
+                        return Format.FullImage;
                     break;
                 
                 case "BLFE":
@@ -96,9 +96,16 @@ namespace LAYTON
                     else if (nombre.EndsWith(".ARCHIVE"))
                         return Format.Pack;
                     break;
+
+                case "C2AJ":
+                    if (id >= 0x35 && id <= 0xEF)
+                        return new Ani(pluginHost, gameCode, "").Get_Formato(nombre);
+                    else if (id >= 0xF0 && id <= 0x193)
+                        return Format.FullImage;
+                    break;
             }
 
-            if (nombre.ToUpper().EndsWith(".TXT"))
+            if (gameCode != "C2AJ" && nombre.ToUpper().EndsWith(".TXT"))
                 return Format.Text;
             if (nombre.ToUpper().EndsWith(".PLZ"))
                 return Format.Pack;
@@ -115,50 +122,75 @@ namespace LAYTON
         public void Read(string archivo, int id)
         {
         }
-        public Control Show_Info(string archivo, int id)
+        public Control Show_Info(string file, int id)
         {
             switch (gameCode)
             {
                 case "A5FE":
                     if (id >= 0x0001 && id <= 0x02CA)
-                        return new Ani(pluginHost, gameCode, archivo).Show_Info();
+                        return new Ani(pluginHost, gameCode, file).Show_Info();
                     else if (id >= 0x02CD && id <= 0x0765)
-                        return new Bg(pluginHost, gameCode, archivo).Show_Info();
+                    {
+                        Bg bg = new Bg(pluginHost, file, id);
+                        return bg.Get_Control();
+                    }
                     break;
                 case "A5FP":
                     if (id >= 0x0001 && id <= 0x04E7)
-                        return new Ani(pluginHost, gameCode, archivo).Show_Info();
+                        return new Ani(pluginHost, gameCode, file).Show_Info();
                     else if (id >= 0x04E8 && id <= 0x0B72)
-                        return new Bg(pluginHost, gameCode, archivo).Show_Info();
+                    {
+                        Bg bg = new Bg(pluginHost, file, id);
+                        return bg.Get_Control();
+                    }
                     break;
 
                 // Professor Layton and the Diabolical Box
                 case "YLTS":
                     if (id >= 0x37 && id <= 0x408)
-                        return new Ani(pluginHost, gameCode, archivo).Show_Info();
+                        return new Ani(pluginHost, gameCode, file).Show_Info();
                     else if (id >= 0x409 && id <= 0x808)
-                        return new Bg(pluginHost, gameCode, archivo).Show_Info();
+                    {
+                        Bg bg = new Bg(pluginHost, file, id);
+                        return bg.Get_Control();
+                    }
                     break;
                 case "YLTE":
                     if (id >= 0x37 && id <= 0x412)
-                        return new Ani(pluginHost, gameCode, archivo).Show_Info();
+                        return new Ani(pluginHost, gameCode, file).Show_Info();
                     else if (id >= 0x413 && id <= 0x818)
-                        return new Bg(pluginHost, gameCode, archivo).Show_Info();
+                    {
+                        Bg bg = new Bg(pluginHost, file, id);
+                        return bg.Get_Control();
+                    }
                     break;
                 case "YLTP":
                     if (id >= 0x37 && id <= 0x408)
-                        return new Ani(pluginHost, gameCode, archivo).Show_Info();
+                        return new Ani(pluginHost, gameCode, file).Show_Info();
                     else if (id >= 0x409 && id <= 0x808)
-                        return new Bg(pluginHost, gameCode, archivo).Show_Info();
+                    {
+                        Bg bg = new Bg(pluginHost, file, id);
+                        return bg.Get_Control();
+                    }
+                    break;
+
+                case "C2AJ":
+                    if (id >= 0x35 && id <= 0xEF)
+                        return new Ani(pluginHost, gameCode, file).Show_Info();
+                    else if (id >= 0xF0 && id <= 0x193)
+                    {
+                        Bg bg = new Bg(pluginHost, file, id);
+                        return bg.Get_Control();
+                    }
                     break;
             }
 
-            if (archivo.ToUpper().EndsWith(".TXT"))
-                return new Text(pluginHost, gameCode, archivo).Show_Info(id);
-            else if (archivo.ToUpper().EndsWith(".PLZ"))
+            if (file.ToUpper().EndsWith(".TXT"))
+                return new Text(pluginHost, gameCode, file).Show_Info(id);
+            else if (file.ToUpper().EndsWith(".PLZ"))
                 return new Control();
-            else if (archivo.ToUpper().EndsWith(".GDS"))
-                return new ScriptControl(GDS.Read(archivo));         
+            else if (file.ToUpper().EndsWith(".GDS"))
+                return new ScriptControl(GDS.Read(file));         
 
             return new Control();
         }
@@ -180,6 +212,24 @@ namespace LAYTON
         }
         public String Pack(ref sFolder unpacked, string file, int id)
         {
+            if (gameCode == "BLFE")
+            {
+                string fileOut = pluginHost.Get_TempFolder() + System.IO.Path.DirectorySeparatorChar +
+                    System.IO.Path.GetRandomFileName();
+
+                if (file.ToUpper().EndsWith(".DENC"))
+                {
+                    fileOut += ".denc";
+                    DENC.Pack(fileOut, unpacked);
+                    return fileOut;
+                }
+                else if (file.ToUpper().EndsWith(".DARC"))
+                {
+                    fileOut += ".darc";
+                    DARC.Pack(fileOut, ref unpacked);
+                    return fileOut;
+                }
+            }
             return null;
         }
     }

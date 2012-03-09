@@ -23,6 +23,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using PluginInterface;
+using PluginInterface.Images;
 
 namespace TOTTEMPEST
 {
@@ -60,29 +61,30 @@ namespace TOTTEMPEST
             return Format.Unknown;
         }
 
-        public void Read(string archivo, int id)
+        public void Read(string file, int id)
         {
-            if (archivo.ToUpper().EndsWith(".APA"))
-                APA.Read(archivo, id, pluginHost);
-            else if (archivo.ToUpper().EndsWith(".ANA"))
-                ANA.Read(archivo, id, pluginHost);
-            else if (archivo.ToUpper().EndsWith(".ASC"))
-                ASC.Read(archivo, id, pluginHost);
-            else if (archivo.ToUpper().EndsWith(".NBM"))
-                NBM.Read(archivo, id, pluginHost);
+            if (file.ToUpper().EndsWith(".APA"))
+                new APA(pluginHost, file, id);
+            else if (file.ToUpper().EndsWith(".ANA"))
+                new ANA(pluginHost, file, id);
+            else if (file.ToUpper().EndsWith(".ASC"))
+                new ASC(pluginHost, file, id);
         }
-        public Control Show_Info(string archivo, int id)
+        public Control Show_Info(string file, int id)
         {
-            Read(archivo, id);
+            Read(file, id);
 
-            if (archivo.ToUpper().EndsWith(".ANA"))
+            if (file.ToUpper().EndsWith(".ANA"))
                 return new ImageControl(pluginHost, false);
-            else if (archivo.ToUpper().EndsWith(".ASC"))
+
+            if (file.ToUpper().EndsWith(".ASC"))
                 return new ImageControl(pluginHost, true);
-            else if (archivo.ToUpper().EndsWith(".APA"))
+
+            if (file.ToUpper().EndsWith(".APA"))
                 return new PaletteControl(pluginHost);
-            else if (archivo.ToUpper().EndsWith(".NBM"))
-                return new ImageControl(pluginHost, false);
+
+            if (file.ToUpper().EndsWith(".NBM"))
+                return new NBM(pluginHost, file, id).Get_Control();
 
             return new System.Windows.Forms.Control();
         }

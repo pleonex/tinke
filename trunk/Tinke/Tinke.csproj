@@ -193,37 +193,12 @@
     <Compile Include="Espera.Designer.cs">
       <DependentUpon>Espera.cs</DependentUpon>
     </Compile>
-    <Compile Include="Imagen\iNANR.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Imagen\iNANR.Designer.cs">
-      <DependentUpon>iNANR.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Imagen\iNCER.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Imagen\iNCER.Designer.cs">
-      <DependentUpon>iNCER.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Imagen\iNCGR.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Imagen\iNCGR.Designer.cs">
-      <DependentUpon>iNCGR.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Imagen\iNCLR.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Imagen\iNCLR.Designer.cs">
-      <DependentUpon>iNCLR.cs</DependentUpon>
-    </Compile>
     <Compile Include="Dialog\MapOptions.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Dialog\MapOptions.Designer.cs">
       <DependentUpon>MapOptions.cs</DependentUpon>
     </Compile>
-    <Compile Include="Imagen\NANR.cs" />
     <Compile Include="RomInfo.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -290,18 +265,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Espera.resx">
       <DependentUpon>Espera.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Imagen\iNANR.resx">
-      <DependentUpon>iNANR.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Imagen\iNCER.resx">
-      <DependentUpon>iNCER.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Imagen\iNCGR.resx">
-      <DependentUpon>iNCGR.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Imagen\iNCLR.resx">
-      <DependentUpon>iNCLR.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Dialog\MapOptions.resx">
       <DependentUpon>MapOptions.cs</DependentUpon>

@@ -60,7 +60,14 @@
     <Compile Include="Images\ImageControl.designer.cs">
       <DependentUpon>ImageControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="Images\SpriteControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Images\SpriteControl.designer.cs">
+      <DependentUpon>SpriteControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="Images\MapBase.cs" />
+    <Compile Include="Images\SpriteBase.cs" />
     <Compile Include="Images\PaletteBase.cs" />
     <Compile Include="Images\PaletteControl.cs">
       <SubType>UserControl</SubType>
@@ -69,19 +76,30 @@
       <DependentUpon>PaletteControl.cs</DependentUpon>
     </Compile>
     <Compile Include="Images\RawData.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Structures.cs" />
     <Compile Include="IGamePlugin.cs" />
     <Compile Include="IPluginHost.cs" />
     <Compile Include="IPlugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <EmbeddedResource Include="Images\ImageControl.resx">
       <DependentUpon>ImageControl.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Images\SpriteControl.resx">
+      <DependentUpon>SpriteControl.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Images\PaletteControl.resx">
       <DependentUpon>PaletteControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -32,6 +32,7 @@ namespace Images
 	public class Main : IPlugin
 	{
 		IPluginHost pluginHost;
+        NANR nanr;  // TEMP
 
 		public void Initialize(IPluginHost pluginHost)
 		{
@@ -49,6 +50,8 @@ namespace Images
             // Palettes
             if (name.EndsWith(".NTFP") || name.EndsWith(".PLT"))
                 return Format.Palette;
+            if (ext == "NCLR" || ext == "RLCN")
+                return Format.Palette;
             if (ext == "NCCL")
                 return Format.Palette;
             if (name.EndsWith(".NBFP"))
@@ -58,6 +61,8 @@ namespace Images
 
             // Tiles
             if (ext == "NCCG")
+                return Format.Tile;
+            if (ext == "RGCN" || ext == "RBCN")
                 return Format.Tile;
             if (name.EndsWith(".NTFT") || name.EndsWith(".CHAR"))
                 return Format.Tile;
@@ -69,14 +74,24 @@ namespace Images
             // Map
             if (ext == "NCSC")
                 return Format.Map;
+            if (ext == "RCSN")
+                return Format.Map;
             if (name.EndsWith(".NBFS"))
                 return Format.Map;
             if (name.EndsWith(".NSC.L") && magic[0] != 0x10)
                 return Format.Map;
 
-            // Cells
+            // Sprites
             if (name.EndsWith(".NCE.L") && magic[0] != 0x10)
                 return Format.Cell;
+            if (ext == "RECN")
+                return Format.Cell;
+            if (ext == "NCOB")
+                return Format.Cell;
+
+            // Animations
+            if (ext == "RNAN")
+                return Format.Animation;
 
 			return Format.Unknown;
 		}
@@ -93,6 +108,12 @@ namespace Images
 
             if (format == Format.Map && pluginHost.Get_Palette().Loaded && pluginHost.Get_Image().Loaded)
                 return new ImageControl(pluginHost, pluginHost.Get_Image(), pluginHost.Get_Palette(), pluginHost.Get_Map());
+
+            if (format == Format.Cell && pluginHost.Get_Palette().Loaded && pluginHost.Get_Image().Loaded)
+                return new SpriteControl(pluginHost, pluginHost.Get_Sprite());
+
+            if (format == Format.Animation && pluginHost.Get_Palette().Loaded && pluginHost.Get_Image().Loaded && pluginHost.Get_Sprite().Loaded)
+                return new AnimationControl(pluginHost, nanr);
 			
 			return new Control();
 		}		
@@ -119,6 +140,12 @@ namespace Images
                 pluginHost.Set_Palette(palette);
                 return Format.Palette;
             }
+            else if (ext == "RLCN")
+            {
+                PaletteBase palette = new NCLR(pluginHost, file, id);
+                pluginHost.Set_Palette(palette);
+                return Format.Palette;
+            }
             else if (ext == "NCCL")
             {
                 NCCL palette = new NCCL(pluginHost, file, id);
@@ -138,6 +165,7 @@ namespace Images
                 return Format.Palette;
             }
 
+
             // Tile
             if (file.ToUpper().EndsWith(".NTFT"))
             {
@@ -150,6 +178,12 @@ namespace Images
                         image.Height *= 2;
                 }
                 pluginHost.Set_Image(image);
+                return Format.Tile;
+            }
+            else if (ext == "RGCN" || ext == "RBCN")
+            {
+                NCGR ncgr = new NCGR(pluginHost, file, id);
+                pluginHost.Set_Image(ncgr);
                 return Format.Tile;
             }
             else if (ext == "NCCG")
@@ -197,6 +231,12 @@ namespace Images
                 pluginHost.Set_Image(image);
                 return Format.Map;
             }
+            else if (ext == "RCSN")
+            {
+                NSCR nscr = new NSCR(pluginHost, file, id);
+                pluginHost.Set_Map(nscr);
+                return Format.Map;
+            }
             else if (ext == "NCSC")
             {
                 NCSC map = new NCSC(pluginHost, file, id);
@@ -224,6 +264,27 @@ namespace Images
                 pluginHost.Set_Map(map);
                 pluginHost.Set_Image(image);
                 return Format.Map;
+            }
+
+            // Sprite
+            if (ext == "NCOB")
+            {
+                NCOB sprite = new NCOB(pluginHost, file, id);
+                pluginHost.Set_Sprite(sprite);
+                return Format.Cell;
+            }
+            else if (ext == "RECN")
+            {
+                NCER ncer = new NCER(pluginHost, file, id);
+                pluginHost.Set_Sprite(ncer);
+                return Format.Cell;
+            }
+
+            // Animation
+            if (ext == "RNAN")
+            {
+                nanr = new NANR(pluginHost, file, id);
+                return Format.Animation;
             }
 
             return Format.Unknown;

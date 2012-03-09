@@ -48,29 +48,9 @@
     <Compile Include="ANA.cs" />
     <Compile Include="APA.cs" />
     <Compile Include="ASC.cs" />
-    <Compile Include="ImageControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="ImageControl.designer.cs">
-      <DependentUpon>ImageControl.cs</DependentUpon>
-    </Compile>
     <Compile Include="Main.cs" />
     <Compile Include="NBM.cs" />
-    <Compile Include="PaletteControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="PaletteControl.designer.cs">
-      <DependentUpon>PaletteControl.cs</DependentUpon>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="ImageControl.resx">
-      <DependentUpon>ImageControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="PaletteControl.resx">
-      <DependentUpon>PaletteControl.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Content Include="TottempestLang.xml">

@@ -52,6 +52,12 @@
     </Compile>
     <Compile Include="KPCN.cs" />
     <Compile Include="Main.cs" />
+    <Compile Include="MQuestText.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="MQuestText.Designer.cs">
+      <DependentUpon>MQuestText.cs</DependentUpon>
+    </Compile>
     <Compile Include="NPCK.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -59,23 +65,44 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="ScenarioText.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ScenarioText.Designer.cs">
+      <DependentUpon>ScenarioText.cs</DependentUpon>
+    </Compile>
     <Compile Include="SQcontrol.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="SQcontrol.Designer.cs">
       <DependentUpon>SQcontrol.cs</DependentUpon>
     </Compile>
+    <Compile Include="SystemText.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SystemText.Designer.cs">
+      <DependentUpon>SystemText.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="BMPControl.resx">
       <DependentUpon>BMPControl.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="MQuestText.resx">
+      <DependentUpon>MQuestText.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="ScenarioText.resx">
+      <DependentUpon>ScenarioText.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="SQcontrol.resx">
       <DependentUpon>SQcontrol.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SystemText.resx">
+      <DependentUpon>SystemText.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
@@ -88,7 +115,9 @@
     <None Include="Resources\picture_edit.png" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="NINOKUNILang.xml" />
+    <Content Include="NINOKUNILang.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

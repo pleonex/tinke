@@ -174,7 +174,13 @@ namespace Fonts
         {
             // Calculate de size of each block
             font.plgc.block_size = (uint)(0x10 + font.plgc.tiles.Length * font.plgc.tile_length);
-            font.hdwc.block_size = (uint)(0x10 + font.hdwc.info.Count * 3) + 0x02;
+            if (font.plgc.block_size % 4 != 0)  // Padding
+                font.plgc.block_size += (4 - (font.plgc.block_size % 4));
+
+            font.hdwc.block_size = (uint)(0x10 + font.hdwc.info.Count * 3);
+            if (font.hdwc.block_size % 4 != 0)  // Padding
+                font.hdwc.block_size += (4 - (font.hdwc.block_size % 4));
+               
             uint pacm_totalSize = 0x00;
             for (int i = 0; i < font.pamc.Count; i++)
                 pacm_totalSize += font.pamc[i].block_size;
@@ -218,6 +224,12 @@ namespace Fonts
                 bw.Write(font.fnif.unknown5);
             }
 
+            // Padding
+            int rem = (int)bw.BaseStream.Position % 4;
+            if (rem != 0)
+                for (; rem < 4; rem++)
+                    bw.Write((byte)0x00);
+
             // Write the PLGC section
             bw.Write(font.plgc.type);
             bw.Write(font.plgc.block_size);
@@ -229,6 +241,12 @@ namespace Fonts
             bw.Write(font.plgc.rotateMode);
             for (int i = 0; i < font.plgc.tiles.Length; i++)
                 bw.Write(BitsToBytes(font.plgc.tiles[i]));
+
+            // Padding
+            rem = (int)bw.BaseStream.Position % 4;
+            if (rem != 0)
+                for (; rem < 4; rem++)
+                    bw.Write((byte)0x00);
 
             // Write HDWC section
             bw.Write(font.hdwc.type);
@@ -242,7 +260,12 @@ namespace Fonts
                 bw.Write(font.hdwc.info[i].pixel_width);
                 bw.Write(font.hdwc.info[i].pixel_length);
             }
-            bw.Write((ushort)0x00);
+
+            // Padding
+            rem = (int)bw.BaseStream.Position % 4;
+            if (rem != 0)
+                for (; rem < 4; rem++)
+                    bw.Write((byte)0x00);
 
             // Write the PAMC section
             for (int i = 0; i < font.pamc.Count; i++)

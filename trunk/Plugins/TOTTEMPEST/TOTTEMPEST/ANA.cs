@@ -14,7 +14,7 @@
  *   You should have received a copy of the GNU General Public License
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  *
- * Programador: pleoNeX
+ *   By: pleoNeX
  * 
  */
 using System;
@@ -23,79 +23,60 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using PluginInterface;
+using PluginInterface.Images;
 
 namespace TOTTEMPEST
 {
-    public static class ANA
+    public class ANA : ImageBase
     {
-        public static void Read(string file, int id, IPluginHost pluginHost)
+        public ANA(IPluginHost pluginHost, string file, int id) : base(pluginHost, file, id) { }
+
+        public override void Read(string file)
         {
-            uint file_size = (uint)new FileInfo(file).Length;
             BinaryReader br = new BinaryReader(File.OpenRead(file));
-            NCGR ncgr = new NCGR();
 
-            // Common header
-            ncgr.id = (uint)id;
-            ncgr.header.id = "ANA ".ToCharArray();
-            ncgr.header.nSection = 1;
-            ncgr.header.constant = 0x0100;
-            ncgr.header.file_size = file_size;
-            
-            // RAHC section
-            ncgr.order = TileOrder.Horizontal;
-            ncgr.rahc.nTiles = br.ReadUInt16();
-            ncgr.rahc.depth = (br.ReadUInt16() == 0x01 ? System.Windows.Forms.ColorDepth.Depth8Bit : System.Windows.Forms.ColorDepth.Depth4Bit);
-            if (file_size - 4 == ncgr.rahc.nTiles * 0x40)
-                ncgr.rahc.depth = System.Windows.Forms.ColorDepth.Depth8Bit;
+            ushort num_tiles = br.ReadUInt16();
+            ushort depth = br.ReadUInt16();
+            ColorFormat format = (depth == 0x01 ? ColorFormat.colors256 : ColorFormat.colors16);
+            if (br.BaseStream.Length - 4 == num_tiles * 0x40)
+                format = ColorFormat.colors256;
 
-            ncgr.rahc.nTilesX = 0x08;
-            if (ncgr.rahc.nTiles == 0x10)   // All the images with 0x10 tiles are 32x32
-                ncgr.rahc.nTilesX = 0x04;
-            ncgr.rahc.nTilesY = (ushort)(ncgr.rahc.nTiles / ncgr.rahc.nTilesX);
-            if (ncgr.rahc.nTilesY == 0x00)
-                ncgr.rahc.nTilesY = 0x01;
+            Byte[] tiles = br.ReadBytes(num_tiles * (0x20 + 0x20 * depth));
 
-            ncgr.rahc.tiledFlag = 0x00000000;
-            ncgr.rahc.size_section = file_size;
-
-            // Tile data
-            ncgr.rahc.tileData = new NTFT();
-            ncgr.rahc.tileData.nPalette = new byte[ncgr.rahc.nTiles];
-            ncgr.rahc.tileData.tiles = new byte[ncgr.rahc.nTiles][];
-
-            for (int i = 0; i < ncgr.rahc.nTiles; i++)
-            {
-                if (ncgr.rahc.depth == System.Windows.Forms.ColorDepth.Depth4Bit)
-                    ncgr.rahc.tileData.tiles[i] = pluginHost.Bit8ToBit4(br.ReadBytes(32));
-                else
-                    ncgr.rahc.tileData.tiles[i] = br.ReadBytes(64);
-                ncgr.rahc.tileData.nPalette[i] = 0;
-            }
+            int width = 64;
+            if (num_tiles == 0x10)
+                width = 32;
+            int height = tiles.Length / width;
+            if (depth == 0)
+                height *= 2;
 
             br.Close();
-            pluginHost.Set_NCGR(ncgr);
+            Set_Tiles(tiles, width, height, format, TileForm.Horizontal, true);
+            pluginHost.Set_Image(this);
 
             // If the image is 8bpp, convert to 8bpp the palette (4bpp per default)
-            if (ncgr.rahc.depth == System.Windows.Forms.ColorDepth.Depth8Bit &&
-                pluginHost.Get_NCLR().header.file_size != 0x00)
+            PaletteBase palette = pluginHost.Get_Palette();
+            if (palette.Loaded && format == ColorFormat.colors256)
             {
-                NCLR paleta = pluginHost.Get_NCLR();
-                paleta.pltt = pluginHost.Palette_4bppTo8bpp(paleta.pltt);
-                pluginHost.Set_NCLR(paleta);
+                palette.Depth = ColorFormat.colors256;
+                pluginHost.Set_Palette(palette);
             }
         }
-        public static void Write(NCGR tile, string fileout, IPluginHost pluginHost)
+        public override void Write(string fileout, PaletteBase palette)
         {
             BinaryWriter bw = new BinaryWriter(File.OpenWrite(fileout));
-        
-            bw.Write((ushort)tile.rahc.nTiles);
-            bw.Write((ushort)(tile.rahc.depth == System.Windows.Forms.ColorDepth.Depth4Bit ? 0x00 : 0x01));
+
+            ushort num_tiles = (ushort)(Tiles.Length / 0x20);
+            if (ColorFormat == ColorFormat.colors256)
+                num_tiles /= 2;
+
+            bw.Write(num_tiles);
+            bw.Write((ushort)(ColorFormat == PluginInterface.Images.ColorFormat.colors16 ? 0x00 : 0x01));
             // Write the tile data
-            for (int i = 0; i < tile.rahc.tileData.tiles.Length; i++)
-                if (tile.rahc.depth == System.Windows.Forms.ColorDepth.Depth4Bit)
-                    bw.Write(pluginHost.Bit4ToBit8(tile.rahc.tileData.tiles[i]));
-                else
-                    bw.Write(tile.rahc.tileData.tiles[i]);
+            if (ColorFormat == PluginInterface.Images.ColorFormat.colors16)
+                bw.Write(pluginHost.Bit8ToBit4(Tiles));
+            else
+                bw.Write(Tiles);
 
             bw.Flush();
             bw.Close();

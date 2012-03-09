@@ -148,6 +148,22 @@ namespace Tinke.Tools
 
             return message;
         }
+        public static String Get_LangXML()
+        {
+            XElement xml = XElement.Load(System.Windows.Forms.Application.StartupPath + Path.DirectorySeparatorChar + "Tinke.xml");
+            string lang = xml.Element("Options").Element("Language").Value;
+
+            foreach (string langFile in Directory.GetFiles(System.Windows.Forms.Application.StartupPath + Path.DirectorySeparatorChar + "langs"))
+            {
+                if (!langFile.EndsWith(".xml"))
+                    continue;
+
+                xml = XElement.Load(langFile);
+                if (xml.Attribute("name").Value == lang)
+                    return langFile;
+            }
+            return "";
+        }
 
         public static byte[] StringToBytes(string text, int num_bytes)
         {

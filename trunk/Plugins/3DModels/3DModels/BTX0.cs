@@ -463,7 +463,7 @@ namespace _3DModels
 
             return GetTexture(pluginHost, btx0, num, num_pal);
         }
-        public static System.Drawing.Bitmap GetTexture(IPluginHost pluginHost, sBTX0 btx0, int num_tex, int num_pal)
+        public static Bitmap GetTexture(IPluginHost pluginHost, sBTX0 btx0, int num_tex, int num_pal)
         {
             sBTX0.Texture.TextInfo texInfo = (sBTX0.Texture.TextInfo)btx0.texture.texInfo.infoBlock.infoData[num_tex];
             sBTX0.Texture.PalInfo palInfo = (sBTX0.Texture.PalInfo)btx0.texture.palInfo.infoBlock.infoData[num_pal];

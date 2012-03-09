@@ -14,7 +14,7 @@
  *   You should have received a copy of the GNU General Public License
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  *
- * Programador: pleoNeX
+ * By: pleoNeX
  * 
  */
 using System;
@@ -22,36 +22,34 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using System.Drawing;
 using PluginInterface;
+using PluginInterface.Images;
 
 namespace AI_IGO_DS
 {
-    public static class ANCL
+    public class ANCL : PaletteBase
     {
-        public static void Leer(string archivo, IPluginHost pluginHost)
-        {
-            NCLR paleta = new NCLR();
-            BinaryReader br = new BinaryReader(new FileStream(archivo, FileMode.Open));
+        public ANCL(IPluginHost pluginHost, string file, int id) : base(pluginHost, file, id) { }
 
-            // Cabecera típica
-            paleta.header.id = br.ReadChars(4);
-            paleta.header.endianess = 0xFFFE;
-            paleta.header.constant = 0x0100;
-            paleta.header.file_size = (uint)br.BaseStream.Length;
-            paleta.header.header_size = 0x8;
-            paleta.header.nSection = 1;
-            // Paleta
-            paleta.pltt.ID = paleta.header.id;
-            paleta.pltt.length = paleta.header.file_size - 0x08;
-            paleta.pltt.paletteLength = paleta.header.file_size - 0x08;
-            paleta.pltt.nColors = br.ReadUInt16();
-            paleta.pltt.depth = (br.ReadUInt16() == 0x04) ? System.Windows.Forms.ColorDepth.Depth4Bit : System.Windows.Forms.ColorDepth.Depth8Bit;
-                        
-            paleta.pltt.palettes = new NTFP[1];
-            paleta.pltt.palettes[0].colors = pluginHost.BGR555ToColor(br.ReadBytes((int)(paleta.pltt.paletteLength)));
-            pluginHost.Set_NCLR(paleta);
+        public override void Read(string file)
+        {
+            BinaryReader br = new BinaryReader(File.OpenRead(file));
+
+            char[] header = br.ReadChars(4);
+            ushort num_colors = br.ReadUInt16();
+            ColorFormat depth = (ColorFormat)br.ReadUInt16();
+                   
+            Color[][] colors = new Color[1][];
+            colors[0] = pluginHost.BGR555ToColor(br.ReadBytes((int)(br.BaseStream.Length - 0x08)));
 
             br.Close();
+            Set_Palette(colors, false);
+            pluginHost.Set_Palette(this);
+        }
+        public override void Write(string fileOut)
+        {
+            throw new NotImplementedException();
         }
     }
 }

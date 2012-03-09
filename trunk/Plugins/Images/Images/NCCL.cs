@@ -58,7 +58,7 @@ namespace Images
             this.fileName = Path.GetFileName(file);
         }
 
-        public override void Write_Palette(string fileOut)
+        public override void Write(string fileOut)
         {
             System.Windows.Forms.MessageBox.Show("Not supported");
         }

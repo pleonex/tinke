@@ -59,6 +59,51 @@ namespace LAYTON
             br.Close();
             return unpacked;
         }
+
+        public static void Pack(string fileOut, ref sFolder unpacked)
+        {
+            BinaryWriter bw = new BinaryWriter(File.OpenWrite(fileOut));
+
+            bw.Write(new char[] { 'D', 'A', 'R', 'C' });
+            bw.Write((uint)unpacked.files.Count);
+
+            uint offset = (uint)unpacked.files.Count * 4 + 8;
+            uint[] offset_files = new uint[unpacked.files.Count];
+            for (int i = 0; i < unpacked.files.Count; i++)
+            {
+                offset_files[i] = (uint)(offset - bw.BaseStream.Position);
+                if (offset_files[i] % 4 != 0)
+                    offset_files[i] += (4 - (offset_files[i] % 4));
+                bw.Write(offset_files[i]);
+                offset_files[i] += (uint)bw.BaseStream.Position;
+
+                offset += unpacked.files[i].size + 4;
+            }
+
+            for (int i = 0; i < unpacked.files.Count; i++)
+            {
+                bw.Write(unpacked.files[i].size);
+
+                BinaryReader br = new BinaryReader(File.OpenRead(unpacked.files[i].path));
+                br.BaseStream.Position = unpacked.files[i].offset;
+                bw.Write(br.ReadBytes((int)unpacked.files[i].size));
+                br.Close();
+
+                int rem = (int)bw.BaseStream.Position % 4;
+                if (rem != 0)
+                    for (; rem < 4; rem++)
+                        bw.Write((byte)0x00);
+                bw.Flush();
+
+                sFile newFile = unpacked.files[i];
+                newFile.offset = offset_files[i];
+                newFile.path = fileOut;
+                unpacked.files[i] = newFile;
+            }
+
+            bw.Flush();
+            bw.Close();
+        }
     }
 
     /// <summary>
@@ -111,6 +156,24 @@ namespace LAYTON
 
             br.Close();
             return decode;
+        }
+
+        public static void Pack(string fileOut, sFolder unpacked)
+        {
+            BinaryWriter bw = new BinaryWriter(File.OpenWrite(fileOut));
+
+            bw.Write(new char[] { 'D', 'E', 'N', 'C' });
+            bw.Write(unpacked.files[0].size);
+            bw.Write(new char[] { 'N', 'U', 'L', 'L' });
+            bw.Write(unpacked.files[0].size);
+
+            BinaryReader br = new BinaryReader(File.OpenRead(unpacked.files[0].path));
+            br.BaseStream.Position = unpacked.files[0].offset;
+            bw.Write(br.ReadBytes((int)unpacked.files[0].size));
+            br.Close();
+
+            bw.Flush();
+            bw.Close();
         }
 
         public static void Decode_LZSS(byte[] encoded, string fileOut, int decode_length)

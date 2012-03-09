@@ -52,6 +52,10 @@ namespace PluginInterface.Images
             this.label2 = new System.Windows.Forms.Label();
             this.numericHeight = new System.Windows.Forms.NumericUpDown();
             this.groupProp = new System.Windows.Forms.GroupBox();
+            this.btnFotochoh = new System.Windows.Forms.Button();
+            this.label9 = new System.Windows.Forms.Label();
+            this.numPal = new System.Windows.Forms.NumericUpDown();
+            this.checkHex = new System.Windows.Forms.CheckBox();
             this.btnImport = new System.Windows.Forms.Button();
             this.btnBgdTrans = new System.Windows.Forms.Button();
             this.pictureBgd = new System.Windows.Forms.PictureBox();
@@ -74,6 +78,7 @@ namespace PluginInterface.Images
             ((System.ComponentModel.ISupportInitialize)(this.numericWidth)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericHeight)).BeginInit();
             this.groupProp.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numPal)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBgd)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackZoom)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericStart)).BeginInit();
@@ -88,7 +93,7 @@ namespace PluginInterface.Images
             0,
             0,
             0});
-            this.numericWidth.Location = new System.Drawing.Point(48, 84);
+            this.numericWidth.Location = new System.Drawing.Point(48, 101);
             this.numericWidth.Maximum = new decimal(new int[] {
             65536,
             0,
@@ -112,7 +117,7 @@ namespace PluginInterface.Images
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(6, 86);
+            this.label1.Location = new System.Drawing.Point(6, 103);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(26, 13);
             this.label1.TabIndex = 2;
@@ -121,7 +126,7 @@ namespace PluginInterface.Images
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(128, 86);
+            this.label2.Location = new System.Drawing.Point(128, 103);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(26, 13);
             this.label2.TabIndex = 3;
@@ -134,7 +139,7 @@ namespace PluginInterface.Images
             0,
             0,
             0});
-            this.numericHeight.Location = new System.Drawing.Point(165, 84);
+            this.numericHeight.Location = new System.Drawing.Point(165, 101);
             this.numericHeight.Maximum = new decimal(new int[] {
             65536,
             0,
@@ -157,6 +162,10 @@ namespace PluginInterface.Images
             // 
             // groupProp
             // 
+            this.groupProp.Controls.Add(this.btnFotochoh);
+            this.groupProp.Controls.Add(this.label9);
+            this.groupProp.Controls.Add(this.numPal);
+            this.groupProp.Controls.Add(this.checkHex);
             this.groupProp.Controls.Add(this.btnImport);
             this.groupProp.Controls.Add(this.btnBgdTrans);
             this.groupProp.Controls.Add(this.pictureBgd);
@@ -185,12 +194,51 @@ namespace PluginInterface.Images
             this.groupProp.TabStop = false;
             this.groupProp.Text = "S02";
             // 
+            // btnFotochoh
+            // 
+            this.btnFotochoh.Location = new System.Drawing.Point(254, 160);
+            this.btnFotochoh.Name = "btnFotochoh";
+            this.btnFotochoh.Size = new System.Drawing.Size(80, 40);
+            this.btnFotochoh.TabIndex = 27;
+            this.btnFotochoh.Text = "Fotochoh";
+            this.btnFotochoh.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnFotochoh.UseVisualStyleBackColor = true;
+            this.btnFotochoh.Visible = false;
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(128, 177);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(57, 13);
+            this.label9.TabIndex = 26;
+            this.label9.Text = "Nº palette:";
+            // 
+            // numPal
+            // 
+            this.numPal.Location = new System.Drawing.Point(199, 175);
+            this.numPal.Name = "numPal";
+            this.numPal.Size = new System.Drawing.Size(37, 20);
+            this.numPal.TabIndex = 25;
+            this.numPal.ValueChanged += new System.EventHandler(this.numPal_ValueChanged);
+            // 
+            // checkHex
+            // 
+            this.checkHex.AutoSize = true;
+            this.checkHex.Location = new System.Drawing.Point(32, 71);
+            this.checkHex.Name = "checkHex";
+            this.checkHex.Size = new System.Drawing.Size(87, 17);
+            this.checkHex.TabIndex = 24;
+            this.checkHex.Text = "Hexadecimal";
+            this.checkHex.UseVisualStyleBackColor = true;
+            this.checkHex.CheckedChanged += new System.EventHandler(this.checkHex_CheckedChanged);
+            // 
             // btnImport
             // 
             this.btnImport.Enabled = false;
-            this.btnImport.Location = new System.Drawing.Point(388, 171);
+            this.btnImport.Location = new System.Drawing.Point(426, 160);
             this.btnImport.Name = "btnImport";
-            this.btnImport.Size = new System.Drawing.Size(100, 32);
+            this.btnImport.Size = new System.Drawing.Size(80, 40);
             this.btnImport.TabIndex = 23;
             this.btnImport.Text = "S21";
             this.btnImport.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
@@ -231,7 +279,7 @@ namespace PluginInterface.Images
             // checkTransparency
             // 
             this.checkTransparency.AutoSize = true;
-            this.checkTransparency.Location = new System.Drawing.Point(9, 161);
+            this.checkTransparency.Location = new System.Drawing.Point(9, 178);
             this.checkTransparency.Name = "checkTransparency";
             this.checkTransparency.Size = new System.Drawing.Size(46, 17);
             this.checkTransparency.TabIndex = 19;
@@ -284,7 +332,7 @@ namespace PluginInterface.Images
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(6, 125);
+            this.label6.Location = new System.Drawing.Point(6, 142);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(26, 13);
             this.label6.TabIndex = 11;
@@ -297,7 +345,7 @@ namespace PluginInterface.Images
             this.comboBox1.Items.AddRange(new object[] {
             "S16",
             "S17"});
-            this.comboBox1.Location = new System.Drawing.Point(116, 122);
+            this.comboBox1.Location = new System.Drawing.Point(116, 139);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(119, 21);
             this.comboBox1.TabIndex = 10;
@@ -314,9 +362,9 @@ namespace PluginInterface.Images
             // 
             // btnSave
             // 
-            this.btnSave.Location = new System.Drawing.Point(261, 171);
+            this.btnSave.Location = new System.Drawing.Point(340, 160);
             this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(100, 32);
+            this.btnSave.Size = new System.Drawing.Size(80, 40);
             this.btnSave.TabIndex = 6;
             this.btnSave.Text = "S15";
             this.btnSave.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
@@ -408,6 +456,7 @@ namespace PluginInterface.Images
             ((System.ComponentModel.ISupportInitialize)(this.numericHeight)).EndInit();
             this.groupProp.ResumeLayout(false);
             this.groupProp.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numPal)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBgd)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackZoom)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericStart)).EndInit();
@@ -445,5 +494,9 @@ namespace PluginInterface.Images
         private System.Windows.Forms.Button btnBgdTrans;
         internal System.Windows.Forms.Button btnImport;
         private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.CheckBox checkHex;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.NumericUpDown numPal;
+        private System.Windows.Forms.Button btnFotochoh;
     }
 }

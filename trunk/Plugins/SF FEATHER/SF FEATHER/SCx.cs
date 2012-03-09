@@ -22,14 +22,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
-using System.Drawing;
 using PluginInterface;
+using PluginInterface.Images;
 
 namespace SF_FEATHER
 {
-    public static class SCx
+    public class SCx : MapBase
     {
-        public static void SC4_Read(string file, IPluginHost pluginHost)
+        public SCx(IPluginHost pluginHost, string file, int id) : base(pluginHost, file, id) { }
+
+        public override void Read(string file)
         {
             BinaryReader br = new BinaryReader(File.OpenRead(file));
 
@@ -44,64 +46,17 @@ namespace SF_FEATHER
             uint size_mapData2 = br.ReadUInt32();   // Is alway the same?
             uint size_mapData = br.ReadUInt32();
 
-            // Create a nitro map file
-            NSCR map = new NSCR();
-            map.header.file_size = size_mapData;
-            map.section.data_size = size_mapData;
-            map.section.height = height;
-            map.section.width = width;
+            NTFS[] map = new NTFS[size_mapData / 2];
+            for (int i = 0; i < map.Length; i++)
+                map[i] = pluginHost.MapInfo(br.ReadUInt16());
 
-            map.section.mapData = new NTFS[size_mapData / 2];
-            for (int i = 0; i < map.section.mapData.Length; i++)
-            {
-                ushort parameters = br.ReadUInt16();
-
-                map.section.mapData[i] = new NTFS();
-                map.section.mapData[i].nTile = (ushort)(parameters & 0x3FF);
-                map.section.mapData[i].xFlip = (byte)((parameters >> 10) & 1);
-                map.section.mapData[i].yFlip = (byte)((parameters >> 11) & 1);
-                map.section.mapData[i].nPalette = (byte)((parameters >> 12) & 0xF);
-            }
-
-            pluginHost.Set_NSCR(map);
             br.Close();
+            Set_Map(map, false, width, height);
+            pluginHost.Set_Map(this);
         }
-        public static void SC8_Read(string file, IPluginHost pluginHost)
+        public override void Write(string fileOut, ImageBase image, PaletteBase palette)
         {
-            BinaryReader br = new BinaryReader(File.OpenRead(file));
-
-            char[] type = br.ReadChars(4);
-            uint unknown1 = br.ReadUInt32();
-            uint unknown2 = br.ReadUInt32();
-            uint unknown3 = br.ReadUInt32();    // Usually 0x00
-            uint unknown4 = br.ReadUInt32();
-
-            ushort width = br.ReadUInt16();
-            ushort height = br.ReadUInt16();
-            uint size_mapData2 = br.ReadUInt32();   // Is alway the same?
-            uint size_mapData = br.ReadUInt32();
-
-            // Create a nitro map file
-            NSCR map = new NSCR();
-            map.header.file_size = size_mapData;
-            map.section.data_size = size_mapData;
-            map.section.height = height;
-            map.section.width = width;
-
-            map.section.mapData = new NTFS[size_mapData / 2];
-            for (int i = 0; i < map.section.mapData.Length; i++)
-            {
-                ushort parameters = br.ReadUInt16();
-
-                map.section.mapData[i] = new NTFS();
-                map.section.mapData[i].nTile = (ushort)(parameters & 0x3FF);
-                map.section.mapData[i].yFlip = (byte)((parameters >> 10) & 1);
-                map.section.mapData[i].xFlip = (byte)((parameters >> 11) & 1);
-                map.section.mapData[i].nPalette = (byte)((parameters >> 12) & 0xF);
-            }
-
-            pluginHost.Set_NSCR(map);
-            br.Close();
+            throw new NotImplementedException();
         }
     }
 }

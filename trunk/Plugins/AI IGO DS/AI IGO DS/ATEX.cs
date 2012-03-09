@@ -14,7 +14,7 @@
  *   You should have received a copy of the GNU General Public License
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  *
- * Programador: pleoNeX
+ * By: pleoNeX
  * 
  */
 using System;
@@ -23,46 +23,33 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using PluginInterface;
+using PluginInterface.Images;
 
 namespace AI_IGO_DS
 {
-    public static class ATEX
+    public class ATEX : ImageBase
     {
-        public static void Leer(string archivo, IPluginHost pluginHost)
+
+        public ATEX(IPluginHost pluginHost, string file, int id) : base(pluginHost, file, id) { }
+
+        public override void Read(string fileIn)
         {
-            NCGR imagen = new NCGR();
-            BinaryReader br = new BinaryReader(new FileStream(archivo, FileMode.Open));
+            BinaryReader br = new BinaryReader(File.OpenRead(fileIn));
 
-            imagen.order = TileOrder.NoTiled;
-            // Cabecera genérica
-            imagen.header.id = br.ReadChars(4);
-            imagen.header.endianess = 0xFFFE;
-            imagen.header.constant = 0x0100;
-            imagen.header.file_size = (uint)br.BaseStream.Length;
-            imagen.header.header_size = 0x08;
-            imagen.header.nSection = 1;
-            // Tile data
-            imagen.rahc.id = imagen.header.id;
-            imagen.rahc.size_tiledata = br.ReadUInt32();
-            imagen.rahc.size_section = imagen.rahc.size_tiledata;
-            imagen.rahc.nTiles = (ushort)(imagen.rahc.size_tiledata / 32);
-            imagen.rahc.nTilesX = br.ReadUInt16();
-            imagen.rahc.nTilesY = br.ReadUInt16();
-            imagen.rahc.tiledFlag = 0x00;
-            imagen.rahc.depth = (br.ReadUInt16() == 0x04) ? System.Windows.Forms.ColorDepth.Depth4Bit : System.Windows.Forms.ColorDepth.Depth8Bit;
+            char[] header = br.ReadChars(4);
+            uint tiles_size = br.ReadUInt32();
+            ushort width = br.ReadUInt16();
+            ushort height = br.ReadUInt16();
+            ColorFormat depth = (ColorFormat)br.ReadUInt16();
+            Byte[] tiles = br.ReadBytes((int)tiles_size);
 
-            imagen.rahc.tileData.tiles = new byte[1][];
-            imagen.rahc.tileData.nPalette = new byte[imagen.rahc.nTiles];
-            for (int i = 0; i < imagen.rahc.nTiles; i++)
-            {
-                imagen.rahc.tileData.nPalette[i] = 0;
-            }
-            imagen.rahc.tileData.tiles[0] = pluginHost.Bit8ToBit4(br.ReadBytes((int)imagen.rahc.size_tiledata));
-
-
-            pluginHost.Set_NCGR(imagen);
             br.Close();
-
+            Set_Tiles(tiles, width, height, depth, PluginInterface.Images.TileForm.Lineal, false);
+            pluginHost.Set_Image(this);
+        }
+        public override void Write(string fileOut, PaletteBase palette)
+        {
+            throw new NotImplementedException();
         }
     }
 }

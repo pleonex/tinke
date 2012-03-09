@@ -49,9 +49,6 @@ namespace PluginInterface.Images
         int tile_width;
         bool canEdit;
 
-        bool custom_palette;
-        PaletteBase palette;
-
         Object obj;
         #endregion
 
@@ -74,18 +71,9 @@ namespace PluginInterface.Images
             Read(file);
         }
 
-        public Image Get_Image()
+        public Image Get_Image(PaletteBase palette)
         {
-            Color[][] pal_colors;
-            if (custom_palette)
-                pal_colors = palette.Palette;
-            else if (pluginHost.Get_Palette().Loaded)
-                pal_colors = pluginHost.Get_Palette().Palette;
-            else
-            {
-                MessageBox.Show("There isn't palette loaded");
-                return new Bitmap(1, 1);
-            }
+            Color[][] pal_colors = palette.Palette;
 
             Byte[] img_tiles;
             if (tileForm == Images.TileForm.Horizontal)
@@ -101,7 +89,7 @@ namespace PluginInterface.Images
         }
 
         public abstract void Read(string fileIn);
-        public abstract void Write(string fileOut);
+        public abstract void Write(string fileOut, PaletteBase palette);
 
         public void Change_TileForm(TileForm newForm)
         {
@@ -150,11 +138,6 @@ namespace PluginInterface.Images
             // Get the original data for changes in startByte
             original = (byte[])tiles.Clone();
         }
-        public void Set_Palette(PaletteBase palette)
-        {
-            this.palette = palette;
-            custom_palette = true;
-        }
 
         #region Properties
         public int ID
@@ -172,6 +155,10 @@ namespace PluginInterface.Images
         public bool CanEdit
         {
             get { return canEdit; }
+        }
+        public IPluginHost PluginHost
+        {
+            get { return pluginHost; }
         }
 
         public int Zoom
@@ -227,7 +214,10 @@ namespace PluginInterface.Images
         }
         public Byte[] Tiles
         {
-            get { return tiles; }
+            get
+            {
+                return tiles;
+            }
         }
         public Byte[] TilesPalette
         {
@@ -237,14 +227,6 @@ namespace PluginInterface.Images
         public int TileWidth
         {
             get { return tile_width; }
-        }
-        public bool CustomPalette
-        {
-            get { return custom_palette; }
-        }
-        public PaletteBase Palette
-        {
-            get { return palette; }
         }
         #endregion
     }
@@ -260,7 +242,7 @@ namespace PluginInterface.Images
         {
             throw new NotImplementedException();
         }
-        public override void Write(string fileOut)
+        public override void Write(string fileOut, PaletteBase palette)
         {
             throw new NotImplementedException();
         }

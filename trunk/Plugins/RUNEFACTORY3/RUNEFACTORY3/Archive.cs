@@ -67,20 +67,19 @@ namespace RUNEFACTORY3
 
             // File entries
             uint offset = 0x00;
+            uint[] offset_files = new uint[unpacked.files.Count];
             for (int i = 0; i < unpacked.files.Count; i++)
             {
-                sFile newFile = unpacked.files[i];
-                newFile.offset = offset;
-                newFile.path = fileOut;
-                unpacked.files[i] = newFile;
-
+                offset_files[i] = offset;
                 bw.Write(offset);
                 bw.Write(unpacked.files[i].size);
+
                 offset += unpacked.files[i].size;
             }
             bw.Flush();
 
             // File data
+            uint first_file_offset = (uint)unpacked.files.Count *0x8 + 0xC;
             for (int i = 0; i < unpacked.files.Count; i++)
             {
                 BinaryReader br = new BinaryReader(File.OpenRead(unpacked.files[i].path));
@@ -88,6 +87,11 @@ namespace RUNEFACTORY3
                 bw.Write(br.ReadBytes((int)unpacked.files[i].size));
                 br.Close();
                 bw.Flush();
+
+                sFile newFile = unpacked.files[i];
+                newFile.offset = offset_files[i] + first_file_offset;
+                newFile.path = fileOut;
+                unpacked.files[i] = newFile;
             }
 
             bw.Close();

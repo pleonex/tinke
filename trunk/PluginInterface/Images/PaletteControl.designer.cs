@@ -51,7 +51,7 @@ namespace PluginInterface.Images
             this.numericPalette = new System.Windows.Forms.NumericUpDown();
             this.label1 = new System.Windows.Forms.Label();
             this.btnShow = new System.Windows.Forms.Button();
-            this.btnSave = new System.Windows.Forms.Button();
+            this.btnExport = new System.Windows.Forms.Button();
             this.lblRGB = new System.Windows.Forms.Label();
             this.btnImport = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
@@ -101,16 +101,16 @@ namespace PluginInterface.Images
             this.btnShow.UseVisualStyleBackColor = true;
             this.btnShow.Click += new System.EventHandler(this.btnShow_Click);
             // 
-            // btnSave
+            // btnExport
             // 
-            this.btnSave.Location = new System.Drawing.Point(299, 3);
-            this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(95, 30);
-            this.btnSave.TabIndex = 6;
-            this.btnSave.Text = "S03";
-            this.btnSave.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.btnSave.UseVisualStyleBackColor = true;
-            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
+            this.btnExport.Location = new System.Drawing.Point(299, 3);
+            this.btnExport.Name = "btnExport";
+            this.btnExport.Size = new System.Drawing.Size(95, 30);
+            this.btnExport.TabIndex = 6;
+            this.btnExport.Text = "S03";
+            this.btnExport.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnExport.UseVisualStyleBackColor = true;
+            this.btnExport.Click += new System.EventHandler(this.btnExport_Click);
             // 
             // lblRGB
             // 
@@ -162,7 +162,7 @@ namespace PluginInterface.Images
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(26, 13);
             this.label3.TabIndex = 9;
-            this.label3.Text = "S02";
+            this.label3.Text = "S07";
             // 
             // comboDepth
             // 
@@ -199,7 +199,7 @@ namespace PluginInterface.Images
             this.Controls.Add(this.label2);
             this.Controls.Add(this.numericStartByte);
             this.Controls.Add(this.lblRGB);
-            this.Controls.Add(this.btnSave);
+            this.Controls.Add(this.btnExport);
             this.Controls.Add(this.btnShow);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.numericPalette);
@@ -220,7 +220,7 @@ namespace PluginInterface.Images
         private System.Windows.Forms.NumericUpDown numericPalette;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button btnShow;
-        private System.Windows.Forms.Button btnSave;
+        private System.Windows.Forms.Button btnExport;
         private System.Windows.Forms.Label lblRGB;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.NumericUpDown numericStartByte;

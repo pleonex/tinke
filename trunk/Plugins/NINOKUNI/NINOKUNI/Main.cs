@@ -27,6 +27,7 @@ namespace NINOKUNI
         public Format Get_Format(string fileName, byte[] magic, int id)
         {
             String ext = new String(Encoding.ASCII.GetChars(magic));
+            uint exti = BitConverter.ToUInt32(magic, 0);
 
             if (ext == "NPCK" || ext == "KPCN")
                 return Format.Pack;
@@ -34,6 +35,14 @@ namespace NINOKUNI
                 return Format.Text;
             else if (magic[0] == 0x42 && magic[1] == 0x4D && fileName.ToUpper().StartsWith("EDDN")) // BMP image
                 return Format.FullImage;
+            else if (exti == 0x001F080A || exti == 0x0019090A)
+                return Format.Script;
+            else if (id == 0xFF2)
+                return Format.Text;
+            else if (id == 0xFF4)
+                return Format.Text;
+            else if (id == 0xF76)
+                return Format.Text;
 
             return Format.Unknown;
         }
@@ -47,7 +56,12 @@ namespace NINOKUNI
                 return new SQcontrol(pluginHost, file, id);
             else if (Path.GetFileName(file).Contains("eddn"))
                 return new BMPControl(file, id, pluginHost);
-
+            else if (id == 0xFF2)
+                return new ScenarioText(file);
+            else if (id == 0xFF4)
+                return new SystemText(file, id, pluginHost);
+            else if (id == 0xF76)
+                return new MQuestText(pluginHost, file, id);
 
             return new System.Windows.Forms.Control();
         }

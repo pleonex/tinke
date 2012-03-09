@@ -75,25 +75,36 @@ namespace Tinke.Nitro
         }
 
 
-        public static void EscribirOverlays(string salida, sFolder overlays, string romFile)
+        public static void EscribirOverlays(string salida, List<sFile> overlays, string romFile)
         {
-            BinaryWriter bw = new BinaryWriter(new FileStream(salida, FileMode.Open));
-            BinaryReader br = new BinaryReader(new FileStream(romFile, FileMode.Open));
+            BinaryWriter bw = new BinaryWriter(File.OpenWrite(salida));
+            BinaryReader br = new BinaryReader(File.OpenRead(romFile));
 
-            for (int i = 0; i < overlays.files.Count; i++)
+            for (int i = 0; i < overlays.Count; i++)
             {
-                if (overlays.files[i].path == romFile)
+                if (overlays[i].path == romFile)
                 {
-                    br.BaseStream.Position = overlays.files[i].offset;
-                    bw.Write(br.ReadBytes((int)overlays.files[i].size));
+                    br.BaseStream.Position = overlays[i].offset;
+                    bw.Write(br.ReadBytes((int)overlays[i].size));
                 }
                 else
                 {
-                    BinaryReader br2 = new BinaryReader(new FileStream(overlays.files[i].path, FileMode.Open));
-                    br2.BaseStream.Position = overlays.files[i].offset;
-                    bw.Write(br2.ReadBytes((int)overlays.files[i].size));
+                    BinaryReader br2 = new BinaryReader(new FileStream(overlays[i].path, FileMode.Open));
+                    br2.BaseStream.Position = overlays[i].offset;
+                    bw.Write(br2.ReadBytes((int)overlays[i].size));
                     br2.Close();
                 }
+
+                uint rem = (uint)bw.BaseStream.Position % 0x200;
+                if (rem != 0)
+                {
+                    while (rem < 0x200)
+                    {
+                        bw.Write((byte)0xFF);
+                        rem++;
+                    }
+                }
+
             }
 
             br.Close();

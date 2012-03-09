@@ -1,42 +1,36 @@
-﻿/*
- * Copyright (C) 2011  pleoNeX
- *
- *   This program is free software: you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation, either version 3 of the License, or
- *   (at your option) any later version.
- *
- *   This program is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU General Public License for more details.
- *
- *   You should have received a copy of the GNU General Public License
- *   along with this program.  If not, see <http://www.gnu.org/licenses/>. 
- *
- * Programador: pleoNeX
- * Programa utilizado: Microsoft Visual C# 2010 Express
- * Fecha: 18/02/2011
- * 
- */
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
 using PluginInterface;
+using PluginInterface.Images;
 
-namespace Tinke
+namespace Images
 {
-    public static class Imagen_NANR
+    public class NANR
     {
-        public static NANR Leer(string archivo, int id)
-        {
-            BinaryReader br = new BinaryReader(File.OpenRead(archivo));
-            NANR nanr = new NANR();
-            nanr.id = (uint)id;
+        IPluginHost pluginHost;
+        string fileName;
+        int id;
 
-            // Cabecera genérica
+        sNANR nanr;
+
+        public NANR(IPluginHost pluginHost, string file, int id)
+        {
+            this.pluginHost = pluginHost;
+            fileName = Path.GetFileName(file);
+            this.id = id;
+
+            Read(file);
+        }
+
+        public void Read(string file)
+        {
+            BinaryReader br = new BinaryReader(File.OpenRead(file));
+            nanr = new sNANR();
+
+            // Generic header
             nanr.header.id = br.ReadChars(4);
             nanr.header.endianess = br.ReadUInt16();
             if (nanr.header.endianess == 0xFFFE)
@@ -46,8 +40,8 @@ namespace Tinke
             nanr.header.header_size = br.ReadUInt16();
             nanr.header.nSection = br.ReadUInt16();
 
-            #region Sección ABNK
-            // Primera sección ABNK (Animation BaNK)
+            #region ABNK
+            // ABNK (Animation BaNK)
             nanr.abnk.id = br.ReadChars(4);
             nanr.abnk.length = br.ReadUInt32();
             nanr.abnk.nBanks = br.ReadUInt16();
@@ -56,33 +50,33 @@ namespace Tinke
             nanr.abnk.offset1 = br.ReadUInt32();
             nanr.abnk.offset2 = br.ReadUInt32();
             nanr.abnk.padding = br.ReadUInt64();
-            nanr.abnk.anis = new Animation[nanr.abnk.nBanks];
+            nanr.abnk.anis = new sNANR.Animation[nanr.abnk.nBanks];
 
-            // Cabecera de cada Bank
+            // Bank header
             for (int i = 0; i < nanr.abnk.nBanks; i++)
             {
                 br.BaseStream.Position = 0x30 + i * 0x10;
 
-                Animation ani = new Animation();
+                sNANR.Animation ani = new sNANR.Animation();
                 ani.nFrames = br.ReadUInt32();
                 ani.dataType = br.ReadUInt16();
                 ani.unknown1 = br.ReadUInt16();
                 ani.unknown2 = br.ReadUInt16();
                 ani.unknown3 = br.ReadUInt16();
                 ani.offset_frame = br.ReadUInt32();
-                ani.frames = new Frame[ani.nFrames];
+                ani.frames = new sNANR.Frame[ani.nFrames];
 
-                // Cabecera de cada frame
+                // Frame header
                 for (int j = 0; j < ani.nFrames; j++)
                 {
                     br.BaseStream.Position = 0x18 + nanr.abnk.offset1 + j * 0x08 + ani.offset_frame;
 
-                    Frame frame = new Frame();
+                    sNANR.Frame frame = new sNANR.Frame();
                     frame.offset_data = br.ReadUInt32();
                     frame.unknown1 = br.ReadUInt16();
                     frame.constant = br.ReadUInt16();
 
-                    // Datos de cada frame
+                    // Frame data
                     br.BaseStream.Position = 0x18 + nanr.abnk.offset2 + frame.offset_data;
                     frame.data.nCell = br.ReadUInt16();
 
@@ -92,8 +86,8 @@ namespace Tinke
                 nanr.abnk.anis[i] = ani;
             }
             #endregion
-            #region Sección LABL
-            // Lee la segunda LABL
+
+            #region LABL
             br.BaseStream.Position = nanr.header.header_size + nanr.abnk.length;
             List<uint> offsets = new List<uint>();
             List<String> names = new List<string>();
@@ -104,7 +98,7 @@ namespace Tinke
                 goto Tercera;
             nanr.labl.section_size = br.ReadUInt32();
 
-            // Primero se encuentran los offset a los nombres.
+            // Offset
             for (int i = 0; i < nanr.abnk.nBanks; i++)
             {
                 uint offset = br.ReadUInt32();
@@ -117,7 +111,8 @@ namespace Tinke
                 offsets.Add(offset);
             }
             nanr.labl.offset = offsets.ToArray();
-            // Ahora leemos los nombres
+
+            // Names
             for (int i = 0; i < nanr.labl.offset.Length; i++)
             {
                 names.Add("");
@@ -135,8 +130,8 @@ namespace Tinke
                 else
                     nanr.labl.names[i] = i.ToString();
             #endregion
-            #region Sección UEXT
-        // Lee la tercera sección UEXT
+
+            #region UEXT
             nanr.uext.id = br.ReadChars(4);
             if (new String(nanr.uext.id) != "TXEU")
                 goto Fin;
@@ -147,7 +142,78 @@ namespace Tinke
 
         Fin:
             br.Close();
-            return nanr;
         }
+
+        public String[] Names
+        {
+            get { return nanr.labl.names; }
+        }
+        public sNANR Struct
+        {
+            get { return nanr; }
+        }
+
+        public struct sNANR
+        {
+            public Header header;
+            public ABNK abnk;
+            public LABL labl;
+            public UEXT uext;
+
+            public struct ABNK
+            {
+                public char[] id;
+                public uint length;
+                public ushort nBanks;
+                public ushort tFrames;
+                public uint constant;
+                public uint offset1;
+                public uint offset2;
+                public ulong padding;
+                public Animation[] anis;
+            }
+            public struct Animation
+            {
+                public uint nFrames;
+                public ushort dataType;
+                public ushort unknown1;
+                public ushort unknown2;
+                public ushort unknown3;
+                public uint offset_frame;
+                public Frame[] frames;
+            }
+            public struct Frame
+            {
+                public uint offset_data;
+                public ushort unknown1;
+                public ushort constant;
+                public Frame_Data data;
+            }
+            public struct Frame_Data
+            {
+                public ushort nCell;
+                // DataType 1
+                public ushort[] transform; // See http://nocash.emubase.de/gbatek.htm#lcdiobgrotationscaling
+                public short xDisplacement;
+                public short yDisplacement;
+                //DataType 2 (the Displacement above)
+                public ushort constant; // 0xBEEF
+            }
+
+            public struct LABL
+            {
+                public char[] id;
+                public UInt32 section_size;
+                public UInt32[] offset;
+                public string[] names;
+            }
+            public struct UEXT
+            {
+                public char[] id;
+                public UInt32 section_size;
+                public UInt32 unknown;
+            }
+        }
+
     }
 }

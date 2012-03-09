@@ -929,9 +929,12 @@ namespace _3DModels
 
                     case GeometryCmd.COLOR:
                         // Convert the param to RGB555 color
-                        int r = ((int)geoCmd[i].param[0] & 0x001F) * 0x08;
-                        int g = (((int)geoCmd[i].param[0] & 0x03E0) >> 5) * 0x08;
-                        int b = (((int)geoCmd[i].param[0] & 0x7C00) >> 10) * 0x08;
+                        int r = ((int)geoCmd[i].param[0] & 0x001F);
+                        int g = (((int)geoCmd[i].param[0] & 0x03E0) >> 5);
+                        int b = (((int)geoCmd[i].param[0] & 0x7C00) >> 10);
+                        r = r * 2 + (r + 31) / 32;
+                        g = g * 2 + (g + 31) / 32;
+                        b = b * 2 + (b + 31) / 32;
 
                         GL.Color3(Color.FromArgb(r, g, b));
                         break;

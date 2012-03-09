@@ -14,13 +14,14 @@
  *   You should have received a copy of the GNU General Public License
  *   along with this program.  If not, see <http://www.gnu.org/licenses/>. 
  *
- * Programador: pleoNeX
+ * By: pleoNeX
  * 
  */
 using System;
 using System.Collections.Generic;
 using System.Text;
 using PluginInterface;
+using PluginInterface.Images;
 
 namespace TETRIS_DS
 {
@@ -28,7 +29,6 @@ namespace TETRIS_DS
     {
         IPluginHost pluginHost;
         String gameCode;
-
 
         public void Initialize(IPluginHost pluginHost, string gameCode)
         {
@@ -42,56 +42,60 @@ namespace TETRIS_DS
             return false;
         }
 
-        public Format Get_Format(string nombre, byte[] magic, int id)
+        public Format Get_Format(string name, byte[] magic, int id)
         {
-            if (nombre.ToUpper().EndsWith(".CZ"))
+            if (name.ToUpper().EndsWith(".CZ"))
                 return Format.Tile;
-            else if (nombre.ToUpper().EndsWith(".BDZ") || nombre.ToUpper().EndsWith(".BLZ"))
+            else if (name.ToUpper().EndsWith(".BDZ") || name.ToUpper().EndsWith(".BLZ"))
                 return Format.Tile;
-            else if (nombre.ToUpper().EndsWith(".SLZ"))
+            else if (name.ToUpper().EndsWith(".SLZ"))
                 return Format.Map;
-            else if (nombre.ToUpper().EndsWith(".PLZ"))
+            else if (name.ToUpper().EndsWith(".PLZ"))
                 return Format.Palette;
-            else if (nombre.ToUpper().EndsWith(".CLZ") || nombre.ToUpper().EndsWith(".CHR"))
+            else if (name.ToUpper().EndsWith(".CLZ") || name.ToUpper().EndsWith(".CHR"))
                 return Format.Tile;
-            else if (nombre.ToUpper().EndsWith(".OBJS"))
+            else if (name.ToUpper().EndsWith(".OBJS"))
                 return Format.Cell;
 
             return Format.Unknown;
         }
 
-        public void Read(string archivo, int id)
+        public void Read(string file, int id)
         {
-            if (archivo.ToUpper().EndsWith(".CZ"))
-                CZ.Read(archivo, id, pluginHost);
-            else if (archivo.ToUpper().EndsWith(".BDZ") || archivo.ToUpper().EndsWith(".BLZ"))
-                BDZ.Read(archivo, id, pluginHost);
-            else if (archivo.ToUpper().EndsWith(".SLZ"))
-                SLZ.Read(archivo, id, pluginHost);
-            else if (archivo.ToUpper().EndsWith(".PLZ"))
-                PLZ.Read(archivo, id, pluginHost);
-            else if (archivo.ToUpper().EndsWith(".CLZ") || archivo.ToUpper().EndsWith(".CHR"))
-                CLZ.Read(archivo, id, pluginHost);
-            else if (archivo.ToUpper().EndsWith(".OBJS"))
-                OBJS.Read(archivo, pluginHost);
+            if (file.ToUpper().EndsWith(".CZ"))
+                new CZ(pluginHost, file, id);
+            else if (file.ToUpper().EndsWith(".BDZ") || file.ToUpper().EndsWith(".BLZ"))
+                new BDZ(pluginHost, file, id);
+            else if (file.ToUpper().EndsWith(".SLZ"))
+                new SLZ(pluginHost, file, id);
+            else if (file.ToUpper().EndsWith(".PLZ"))
+                new PLZ(pluginHost, file, id);
+            else if (file.ToUpper().EndsWith(".CLZ") || file.ToUpper().EndsWith(".CHR"))
+                new CLZ(pluginHost ,file, id);
+            else if (file.ToUpper().EndsWith(".OBJS"))
+                new OBJS(pluginHost, file, id);
         }
-        public System.Windows.Forms.Control Show_Info(string archivo, int id)
+        public System.Windows.Forms.Control Show_Info(string file, int id)
         {
-            Read(archivo, id);
+            Read(file, id);
 
-            if (archivo.ToUpper().EndsWith(".CZ") && pluginHost.Get_NCLR().header.file_size != 0x00)
-                return new ImageControl(pluginHost, false);
-            else if (archivo.ToUpper().EndsWith(".SLZ") &&
-                pluginHost.Get_NCGR().header.file_size != 0x00 && pluginHost.Get_NCLR().header.file_size != 0x00)
-                return new ImageControl(pluginHost, true);
-            else if ((archivo.ToUpper().EndsWith(".CLZ") || archivo.ToUpper().EndsWith(".CHR")) && pluginHost.Get_NCLR().header.file_size != 0x00)
-                return new ImageControl(pluginHost, false);
-            else if (archivo.ToUpper().EndsWith(".PLZ"))
-                return new PaletteControl(pluginHost);
-            else if (archivo.ToUpper().EndsWith(".BDZ") || archivo.ToUpper().EndsWith(".BLZ"))
-                return new ImageControl(pluginHost, false);
-            else if (archivo.ToUpper().EndsWith(".OBJS"))
-                return new CellControl(pluginHost);
+            if (file.ToUpper().EndsWith(".CZ") && pluginHost.Get_Palette().Loaded)
+                return new ImageControl(pluginHost, pluginHost.Get_Image(), pluginHost.Get_Palette());
+
+            if (file.ToUpper().EndsWith(".SLZ") && pluginHost.Get_Image().Loaded && pluginHost.Get_Palette().Loaded)
+                return new ImageControl(pluginHost, pluginHost.Get_Image(), pluginHost.Get_Palette(), pluginHost.Get_Map());
+
+            if ((file.ToUpper().EndsWith(".CLZ") || file.ToUpper().EndsWith(".CHR")) && pluginHost.Get_Palette().Loaded)
+                return new ImageControl(pluginHost, pluginHost.Get_Image(), pluginHost.Get_Palette());
+
+            if (file.ToUpper().EndsWith(".PLZ"))
+                return new PaletteControl(pluginHost, pluginHost.Get_Palette());
+
+            if ((file.ToUpper().EndsWith(".BDZ") || file.ToUpper().EndsWith(".BLZ")) && pluginHost.Get_Palette().Loaded)
+                return new ImageControl(pluginHost, pluginHost.Get_Image(), pluginHost.Get_Palette());
+
+            if (file.ToUpper().EndsWith(".OBJS"))
+                return new SpriteControl(pluginHost);
 
             return new System.Windows.Forms.Control();
         }
