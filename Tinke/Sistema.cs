@@ -136,8 +136,8 @@ namespace Tinke
             }
             else if (Environment.GetCommandLineArgs().Length >= 3)
             {
-                filesToRead = new String[Environment.GetCommandLineArgs().Length - 2];
-                Array.Copy(Environment.GetCommandLineArgs(), 2, filesToRead, 0, filesToRead.Length);
+                filesToRead = new String[Environment.GetCommandLineArgs().Length - 1];
+                Array.Copy(Environment.GetCommandLineArgs(), 1, filesToRead, 0, filesToRead.Length);
             }
 
             Thread espera = new System.Threading.Thread(ThreadEspera);
@@ -960,6 +960,17 @@ namespace Tinke
                 e.SuppressKeyPress = true;
                 btnHex.PerformClick();
             }
+            else if (e.KeyCode == Keys.R && treeSystem.Focused)
+            {
+                this.Cursor = Cursors.WaitCursor;
+                e.SuppressKeyPress = true;
+                sFolder currFolder = accion.Selected_Folder();
+                if (!(currFolder.name is string))
+                    return;
+
+                Recursive_ReadFile(accion.Selected_Folder());
+                this.Cursor = Cursors.Default;
+            }
 
         }
         private void Sistema_KeyUp(object sender, KeyEventArgs e)
@@ -970,6 +981,17 @@ namespace Tinke
         void treeSystem_LostFocus(object sender, EventArgs e)
         {
             keyDown = Keys.Escape;
+        }
+
+        private void Recursive_ReadFile(sFolder currFolder)
+        {
+            if (currFolder.files is List<sFile>)
+                for (int f = 0; f < currFolder.files.Count; f++)
+                    accion.Read_File(currFolder.files[f]);
+
+            if (currFolder.folders is List<sFolder>)
+                for (int f = 0; f < currFolder.folders.Count; f++)
+                    Recursive_ReadFile(currFolder.folders[f]);
         }
         #endregion
 

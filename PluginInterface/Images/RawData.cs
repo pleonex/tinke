@@ -70,8 +70,8 @@ namespace PluginInterface.Images
             BinaryReader br = new BinaryReader(File.OpenRead(fileIn));
             prev_data = br.ReadBytes(offset);
 
-            if (fileSize <= 0)
-                fileSize = (int)br.BaseStream.Length;
+            if (fileSize <= 0)    fileSize = (int)br.BaseStream.Length;
+            if (fileSize > 0x200) fileSize = 0x200;
 
             // Color data
             Color[][] palette = new Color[0][];
@@ -100,6 +100,8 @@ namespace PluginInterface.Images
 
             if (fileSize <= 0)
                 fileSize = (int)br.BaseStream.Length;
+            int fileSize_ = fileSize;
+            if (fileSize > 0x200) fileSize = 0x200;
 
             // Color data
             Color[][] palette = new Color[1][];
@@ -110,9 +112,11 @@ namespace PluginInterface.Images
 
             next_data = br.ReadBytes((int)(br.BaseStream.Length - fileSize));
 
-            br.Close();
-
             Set_Palette(palette, editable);
+
+            br.BaseStream.Position = offset;
+            this.Original = br.ReadBytes(fileSize_);
+            br.Close();
         }
 
         public override void Write(string fileOut)

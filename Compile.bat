@@ -40,6 +40,7 @@ REM Compiling game plugins
 %windir%\microsoft.net\framework\v4.0.30319\msbuild "Plugins\SF FEATHER\SF FEATHER.sln" /v:minimal /p:Configuration=%conf%;TarjetFrameworkVersion=v3.5 "/p:Platform=Any CPU" "/p:OutputPath=%CD%\build\Plugins\"
 %windir%\microsoft.net\framework\v4.0.30319\msbuild "Plugins\DEATHNOTEDS\DEATHNOTEDS.sln" /v:minimal /p:Configuration=%conf%;TarjetFrameworkVersion=v3.5 "/p:Platform=Any CPU" "/p:OutputPath=%CD%\build\Plugins\"
 %windir%\microsoft.net\framework\v4.0.30319\msbuild "Plugins\INAZUMA11\INAZUMA11.sln" /v:minimal /p:Configuration=%conf%;TarjetFrameworkVersion=v3.5 "/p:Platform=Any CPU" "/p:OutputPath=%CD%\build\Plugins\"
+%windir%\microsoft.net\framework\v4.0.30319\msbuild "Plugins\PSL\PSL.sln" /v:minimal /p:Configuration=%conf%;TarjetFrameworkVersion=v3.5 "/p:Platform=Any CPU" "/p:OutputPath=%CD%\build\Plugins\"
 
 
 REM Compiling format plugins

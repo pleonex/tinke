@@ -68,14 +68,14 @@ namespace Images
 
             nclr.pmcp = pmcp;
 
-            End:
+        End:
             br.Close();
             Set_Palette(pltt.palettes, true);
         }
 
         public override void Write(string fileOut)
         {
-            // Set new data into NCLR
+            Update_Struct();
             BinaryWriter bw = new BinaryWriter(File.OpenWrite(fileOut));
 
             bw.Write(nclr.header.id);
@@ -92,11 +92,24 @@ namespace Images
             bw.Write(nclr.pltt.unknown2);
             bw.Write(nclr.pltt.pal_length);
             bw.Write(0x10);                     // Colors start offset from 0x14
+
             for (int i = 0; i < nclr.pltt.palettes.Length; i++)
                 bw.Write(pluginHost.ColorToBGR555(nclr.pltt.palettes[i]));
 
             bw.Flush();
             bw.Close();
+        }
+
+        private void Update_Struct()
+        {
+            nclr.pltt.palettes = Palette;
+            nclr.pltt.depth = Depth;
+
+            nclr.pltt.pal_length = 0;
+            for (int i = 0; i < nclr.pltt.palettes.Length; i++)
+                nclr.pltt.pal_length += (uint)(nclr.pltt.palettes[i].Length * 2);
+            nclr.pltt.length = nclr.pltt.pal_length + 0x18;
+            nclr.header.file_size = nclr.pltt.length + 0x10;
         }
 
         public struct sNCLR      // Nintendo CoLor Resource

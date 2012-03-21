@@ -33,8 +33,10 @@
             this.label2 = new System.Windows.Forms.Label();
             this.txtTranslated = new System.Windows.Forms.TextBox();
             this.btnSave = new System.Windows.Forms.Button();
-            this.listBlock = new System.Windows.Forms.ListBox();
+            this.listsBlock = new System.Windows.Forms.ListBox();
             this.label3 = new System.Windows.Forms.Label();
+            this.listfBlock = new System.Windows.Forms.ListBox();
+            this.label4 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // txtOriginal
@@ -83,14 +85,14 @@
             this.btnSave.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnSave.UseVisualStyleBackColor = true;
             // 
-            // listBlock
+            // listsBlock
             // 
-            this.listBlock.FormattingEnabled = true;
-            this.listBlock.Location = new System.Drawing.Point(10, 322);
-            this.listBlock.Name = "listBlock";
-            this.listBlock.Size = new System.Drawing.Size(198, 186);
-            this.listBlock.TabIndex = 5;
-            this.listBlock.SelectedIndexChanged += new System.EventHandler(this.listBlock_SelectedIndexChanged);
+            this.listsBlock.FormattingEnabled = true;
+            this.listsBlock.Location = new System.Drawing.Point(10, 322);
+            this.listsBlock.Name = "listsBlock";
+            this.listsBlock.Size = new System.Drawing.Size(130, 69);
+            this.listsBlock.TabIndex = 5;
+            this.listsBlock.SelectedIndexChanged += new System.EventHandler(this.listBlock_SelectedIndexChanged);
             // 
             // label3
             // 
@@ -101,12 +103,32 @@
             this.label3.TabIndex = 6;
             this.label3.Text = "S02";
             // 
+            // listfBlock
+            // 
+            this.listfBlock.FormattingEnabled = true;
+            this.listfBlock.Location = new System.Drawing.Point(10, 427);
+            this.listfBlock.Name = "listfBlock";
+            this.listfBlock.Size = new System.Drawing.Size(130, 82);
+            this.listfBlock.TabIndex = 7;
+            this.listfBlock.SelectedIndexChanged += new System.EventHandler(this.listfBlocks_SelectedIndexChanged);
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(10, 411);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(66, 13);
+            this.label4.TabIndex = 8;
+            this.label4.Text = "Final blocks:";
+            // 
             // SQcontrol
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
             this.BackColor = System.Drawing.Color.Transparent;
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this.listfBlock);
             this.Controls.Add(this.label3);
-            this.Controls.Add(this.listBlock);
+            this.Controls.Add(this.listsBlock);
             this.Controls.Add(this.btnSave);
             this.Controls.Add(this.txtTranslated);
             this.Controls.Add(this.label2);
@@ -126,7 +148,9 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox txtTranslated;
         private System.Windows.Forms.Button btnSave;
-        private System.Windows.Forms.ListBox listBlock;
+        private System.Windows.Forms.ListBox listsBlock;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.ListBox listfBlock;
+        private System.Windows.Forms.Label label4;
     }
 }

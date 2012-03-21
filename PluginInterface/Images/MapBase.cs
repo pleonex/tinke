@@ -103,6 +103,22 @@ namespace PluginInterface.Images
                 data.AddRange(BitConverter.GetBytes(pluginHost.MapInfo(map[i])));
             original = data.ToArray();
         }
+        public void Set_Map(MapBase new_map)
+        {
+            this.map = new_map.Map;
+            this.width = new_map.Width;
+            this.height = new_map.Height;
+
+            startByte = 0;
+            loaded = true;
+
+            // Get the original byte data
+            List<Byte> data = new List<byte>();
+            for (int i = 0; i < map.Length; i++)
+                data.AddRange(BitConverter.GetBytes(pluginHost.MapInfo(map[i])));
+            original = data.ToArray();
+        }
+
 
         private void Change_StartByte(int newStart)
         {

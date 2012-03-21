@@ -30,7 +30,7 @@ namespace NINOKUNI
             this.id = id;
             Read(file);
             translated = original;
-            listBlock.SelectedIndex = 0;
+            listsBlock.SelectedIndex = 0;
 
             ReadLanguage();
         }
@@ -55,47 +55,40 @@ namespace NINOKUNI
         {
             BinaryReader br = new BinaryReader(File.OpenRead(file));
             original = new SQ();
-            original.blocks = new List<SQ.Block>();
+            original.sblocks = new SQ.Block[4];
 
             original.id = br.ReadUInt32();    // File ID
 
-            // Read the first 3 blocks
-            for (int i = 0; i < 3; i++)
+            // Read the first 4 blocks
+            for (int i = 0; i < 4; i++)
             {
-                SQ.Block block = new SQ.Block();
-                block.size = br.ReadUInt16();
-                block.text = new String(Encoding.GetEncoding(932).GetChars(br.ReadBytes((int)block.size)));
+                original.sblocks[i].size = br.ReadUInt16();
+                original.sblocks[i].text = new String(Encoding.GetEncoding(932).GetChars(
+                                           br.ReadBytes((int)original.sblocks[i].size)));
 
-                listBlock.Items.Add("Block " + i.ToString());
-                original.blocks.Add(block);
+                listsBlock.Items.Add("Block " + i.ToString());
             }
 
-            original.unknown = br.ReadBytes(0xF);   // Unknown data
-            original.final_blocks = br.ReadByte();
+            original.unknown = br.ReadBytes(0xD);   // Unknown data
+            original.num_fblocks = br.ReadByte();
 
-            if (original.final_blocks != 2 && original.final_blocks != 3)
-                MessageBox.Show("FB");
-
-            for (int i = 0; i < original.final_blocks; i++)
+            original.fblocks = new SQ.Block[original.num_fblocks];
+            for (int i = 0; i < original.num_fblocks; i++)
             {
-                SQ.Block block = new SQ.Block();
-                block.size = br.ReadUInt16();
-                block.text = new String(Encoding.GetEncoding(932).GetChars(br.ReadBytes((int)block.size)));
+                original.fblocks[i].size = br.ReadUInt16();
+                original.fblocks[i].text = new String(Encoding.GetEncoding(932).GetChars(
+                                           br.ReadBytes((int)original.fblocks[i].size)));
 
-                listBlock.Items.Add("Block " + (i + 4).ToString());
-                original.blocks.Add(block);
+                listfBlock.Items.Add("Block " + i.ToString());
             }
 
-            original.final = br.ReadByte();
-            if (original.final == 0)
-                original.final_data = new byte[0];
-            else if (original.final == 1)
+            original.num_final = br.ReadByte();
+            original.final = new byte[original.num_final][];
+            for (int i = 0; i < original.num_final; i++)
             {
                 byte size = br.ReadByte();
-                original.final_data = br.ReadBytes(size + 4);
+                original.final[i] = br.ReadBytes(size + 4);
             }
-            else
-                MessageBox.Show("FD");
 
             br.Close();
         }
@@ -105,25 +98,20 @@ namespace NINOKUNI
 
             BinaryWriter bw = new BinaryWriter(File.OpenWrite(fileOut));
 
-            //bw.Write((uint)0x001C080A);
-            //for (int i = 0; i < translated.blocks.Count; i++)
-            //{
-            //    if (i + 1 != translated.blocks.Count && translated.blocks[i].type != SQ.Type.Unknown)
-            //        bw.Write((ushort)translated.blocks[i].data.Length);
-
-            //    bw.Write(translated.blocks[i].data);
-            //}
-            //bw.Write((byte)0x00);
-
-            //bw.Flush();
+            bw.Flush();
             bw.Close();
             pluginHost.ChangeFile(id, fileOut);
         }
 
         private void listBlock_SelectedIndexChanged(object sender, EventArgs e)
         {
-            txtOriginal.Text = original.blocks[listBlock.SelectedIndex].text.Replace("\n", "\r\n");
-            txtTranslated.Text = translated.blocks[listBlock.SelectedIndex].text;
+            txtOriginal.Text = original.sblocks[listsBlock.SelectedIndex].text.Replace("\n", "\r\n");
+            txtTranslated.Text = translated.sblocks[listsBlock.SelectedIndex].text.Replace("\n", "\r\n");
+        }
+        private void listfBlocks_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            txtOriginal.Text = original.fblocks[listfBlock.SelectedIndex].text.Replace("\n", "\r\n");
+            txtTranslated.Text = translated.fblocks[listfBlock.SelectedIndex].text.Replace("\n", "\r\n");
         }
 
     }
@@ -131,18 +119,21 @@ namespace NINOKUNI
     public struct SQ
     {
         public uint id;
-        public List<Block> blocks;
 
-        public byte[] unknown;  // 0x0F
-        public byte final_blocks;
+        public Block[] sblocks; // First 4 blocks
+
+        public byte[] unknown;  // 0x0D
+        public byte num_fblocks;
+
+        public Block[] fblocks; // Last block, variable length
+
+        public byte num_final;
+        public byte[][] final;
 
         public struct Block
         {
             public ushort size;
             public string text;
         }
-
-        public byte final;
-        public byte[] final_data;
-    }
+   }
 }

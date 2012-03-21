@@ -28,7 +28,6 @@ namespace _3DModels
     public class Main : IPlugin
     {
         IPluginHost pluginHost;
-        sBMD0 bmd;
         sBTX0 btx;
 
         public void Initialize(IPluginHost pluginHost)
@@ -48,8 +47,28 @@ namespace _3DModels
             return Format.Unknown;
         }
 
-        public void Read(string archivo, int id)
+        public void Read(string file, int id)
         {
+            BinaryReader br = new BinaryReader(File.OpenRead(file));
+            string ext = new String(br.ReadChars(4));
+            br.Close();
+
+            if (ext == "BTX0")
+            {
+                sBTX0 btx = BTX0.Read(file, id, pluginHost);
+
+                // Extract texture to temp folder
+                for (int i = 0; i < btx.texture.texInfo.num_objs; i++)
+                {
+                    string fileOut = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar +
+                        Path.GetFileName(file).Substring(12) + '_' + btx.texture.texInfo.names[i] + ".png";
+                    if (File.Exists(fileOut))
+                        fileOut = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + Path.GetRandomFileName() +
+                            '_' + btx.texture.texInfo.names[i] + ".png";
+
+                    BTX0.GetTexture(pluginHost, btx, i).Save(fileOut);
+                }
+            }
         }
         public System.Windows.Forms.Control Show_Info(string file, int id)
         {

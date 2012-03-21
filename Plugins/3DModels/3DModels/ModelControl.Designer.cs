@@ -50,13 +50,11 @@ namespace _3DModels
             this.glControl1 = new OpenTK.GLControl();
             this.label1 = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
-            this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDown2 = new System.Windows.Forms.NumericUpDown();
+            this.numericPoly = new System.Windows.Forms.NumericUpDown();
             this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).BeginInit();
+            this.checkManual = new System.Windows.Forms.CheckBox();
+            this.button2 = new System.Windows.Forms.Button();
+            ((System.ComponentModel.ISupportInitialize)(this.numericPoly)).BeginInit();
             this.SuspendLayout();
             // 
             // glControl1
@@ -78,8 +76,8 @@ namespace _3DModels
             // 
             this.label1.AutoSize = true;
             this.label1.BackColor = System.Drawing.Color.Transparent;
-            this.label1.ForeColor = System.Drawing.Color.White;
-            this.label1.Location = new System.Drawing.Point(14, 13);
+            this.label1.ForeColor = System.Drawing.Color.Black;
+            this.label1.Location = new System.Drawing.Point(3, 388);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(35, 13);
             this.label1.TabIndex = 1;
@@ -95,69 +93,60 @@ namespace _3DModels
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
-            // checkBox1
+            // numericPoly
             // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(4, 438);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(68, 17);
-            this.checkBox1.TabIndex = 3;
-            this.checkBox1.Text = "Manually";
-            this.checkBox1.UseVisualStyleBackColor = true;
-            this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
-            // 
-            // numericUpDown1
-            // 
-            this.numericUpDown1.Enabled = false;
-            this.numericUpDown1.Location = new System.Drawing.Point(63, 462);
-            this.numericUpDown1.Name = "numericUpDown1";
-            this.numericUpDown1.Size = new System.Drawing.Size(61, 20);
-            this.numericUpDown1.TabIndex = 4;
-            // 
-            // numericUpDown2
-            // 
-            this.numericUpDown2.Enabled = false;
-            this.numericUpDown2.Location = new System.Drawing.Point(63, 489);
-            this.numericUpDown2.Name = "numericUpDown2";
-            this.numericUpDown2.Size = new System.Drawing.Size(61, 20);
-            this.numericUpDown2.TabIndex = 5;
+            this.numericPoly.Enabled = false;
+            this.numericPoly.Location = new System.Drawing.Point(90, 483);
+            this.numericPoly.Name = "numericPoly";
+            this.numericPoly.Size = new System.Drawing.Size(63, 20);
+            this.numericPoly.TabIndex = 3;
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(3, 464);
+            this.label2.Location = new System.Drawing.Point(3, 485);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(46, 13);
-            this.label2.TabIndex = 6;
-            this.label2.Text = "Texture:";
+            this.label2.Size = new System.Drawing.Size(81, 13);
+            this.label2.TabIndex = 4;
+            this.label2.Text = "Number of poly:";
             // 
-            // label3
+            // checkManual
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(3, 491);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(48, 13);
-            this.label3.TabIndex = 7;
-            this.label3.Text = "Polygon:";
+            this.checkManual.AutoSize = true;
+            this.checkManual.Location = new System.Drawing.Point(4, 457);
+            this.checkManual.Name = "checkManual";
+            this.checkManual.Size = new System.Drawing.Size(68, 17);
+            this.checkManual.TabIndex = 5;
+            this.checkManual.Text = "Manually";
+            this.checkManual.UseVisualStyleBackColor = true;
+            this.checkManual.CheckedChanged += new System.EventHandler(this.checkManual_CheckedChanged);
+            // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(333, 473);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(75, 23);
+            this.button2.TabIndex = 6;
+            this.button2.Text = "button2";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // ModelControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
-            this.Controls.Add(this.label3);
+            this.Controls.Add(this.button2);
+            this.Controls.Add(this.checkManual);
             this.Controls.Add(this.label2);
-            this.Controls.Add(this.numericUpDown2);
-            this.Controls.Add(this.numericUpDown1);
-            this.Controls.Add(this.checkBox1);
+            this.Controls.Add(this.numericPoly);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.glControl1);
             this.Name = "ModelControl";
             this.Size = new System.Drawing.Size(512, 512);
             this.Load += new System.EventHandler(this.ModelControl_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericPoly)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -168,10 +157,9 @@ namespace _3DModels
         private OpenTK.GLControl glControl1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.CheckBox checkBox1;
-        private System.Windows.Forms.NumericUpDown numericUpDown1;
-        private System.Windows.Forms.NumericUpDown numericUpDown2;
+        private System.Windows.Forms.NumericUpDown numericPoly;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.CheckBox checkManual;
+        private System.Windows.Forms.Button button2;
     }
 }

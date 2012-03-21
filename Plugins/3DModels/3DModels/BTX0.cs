@@ -43,7 +43,7 @@ namespace _3DModels
             btx.id = id;
             btx.file = Path.GetTempFileName();
             File.Copy(file, btx.file, true);
-            
+
             // Read header
             btx.header.type = br.ReadChars(4);
             btx.header.constant = br.ReadUInt32();
@@ -195,7 +195,7 @@ namespace _3DModels
             tex.palInfo.names = new string[tex.palInfo.num_objs];
             for (int i = 0; i < tex.palInfo.num_objs; i++)
                 tex.palInfo.names[i] = new String(br.ReadChars(0x10)).Replace("\0", "");
-            #endregion            
+            #endregion
 
             btx.texture = tex;
             #endregion
@@ -305,7 +305,9 @@ namespace _3DModels
             }
             tex.texInfo.names = new string[tex.texInfo.num_objs];
             for (int i = 0; i < tex.texInfo.num_objs; i++)
+            {
                 tex.texInfo.names[i] = new String(br.ReadChars(0x10)).Replace("\0", "");
+            }
             #endregion
 
             #region Palette Info
@@ -485,14 +487,15 @@ namespace _3DModels
 
             Bitmap tex;
             if (texInfo.format != 5)
-               tex = Draw_Texture(pluginHost, btx0, tile_data, texInfo, palette);
+                tex = Draw_Texture(pluginHost, btx0, tile_data, texInfo, palette);
             else
                 tex = Draw_CompressedTexture(pluginHost, btx0, tile_data, texInfo, num_pal);
 
             return tex;
         }
 
-        private static Bitmap Draw_Texture(IPluginHost pluginHost, sBTX0 btx0, 
+
+        private static Bitmap Draw_Texture(IPluginHost pluginHost, sBTX0 btx0,
             byte[] data, sBTX0.Texture.TextInfo info, Color[] palette)
         {
             Bitmap imagen = new Bitmap(info.width, info.height);
@@ -660,6 +663,68 @@ namespace _3DModels
             return bit2.ToArray();
         }
 
+        public static void Find_IDs(out int num_tex, out int num_pal, string tex_name, string pal_name, sBTX0.Texture texture)
+        {
+            num_tex = num_pal = 0;
+            for (int i = 0; i < texture.texInfo.num_objs; i++)
+                if (texture.texInfo.names[i] == tex_name)
+                    num_tex = i;
+            for (int i = 0; i < texture.palInfo.num_objs; i++)
+                if (texture.palInfo.names[i] == pal_name)
+                    num_pal = i;
+        }
+        public static void Match_Textures(ref sBMD0.Model.ModelData.Material.MatDef[] mats, string[] palNames, string[] texNames)
+        {
+
+            for (int i = 0; i < mats.Length; i++)
+            {
+
+                if (mats[i].palName == null && mats[i].texName != "")     // Search palette
+                {
+                    for (int p = 0; p < palNames.Length; p++)
+                    {
+                        if (palNames[p] == mats[i].texName || palNames[p].Replace("_pl", "") == mats[i].texName)
+                        {
+                            mats[i].palName = palNames[p];
+                            mats[i].palID = (byte)p;
+                            break;
+                        }
+                    }
+                }
+                else if (mats[i].texName == null && mats[i].palName != "")        // Search texture
+                {
+                    for (int t = 0; t < texNames.Length; t++)
+                    {
+                        if (texNames[t] == mats[i].palName || texNames[t] == mats[i].palName.Replace("_pl", ""))
+                        {
+                            mats[i].texName = texNames[t];
+                            mats[i].texID = (byte)t;
+                            break;
+                        }
+                    }
+                }
+                //else if (mats[i].texName != mats[i].palName && mats[i].texName != mats[i].palName.Replace("_pl", ""))
+                //{
+                //    for (int p = 0; p < palNames.Length; p++)
+                //    {
+                //        if (palNames[p] == mats[i].texName || palNames[p].Replace("_pl", "") == mats[i].texName)
+                //        {
+                //            mats[i].palName = palNames[p];
+                //            mats[i].palID = (byte)p;
+                //        }
+                //    }
+
+                //    //for (int t = 0; t < texNames.Length; t++)
+                //    //{
+                //    //    if (texNames[t] == mats[i].palName || texNames[t] == mats[i].palName.Replace("_pl", ""))
+                //    //    {
+                //    //        mats[i].texName = texNames[t];
+                //    //        mats[i].texID = (byte)t;
+                //    //    }
+                //    //}
+                //}
+            }
+        }
 
         //                                              0  1  2  3  4  5  6  7
         public static byte[] FormatDepth = new byte[] { 0, 8, 2, 4, 8, 2, 8, 16 };

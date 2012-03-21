@@ -94,7 +94,10 @@ namespace PluginInterface.Images
             startByte = start;
 
             // Get the new palette data
-            Byte[] data = new byte[original.Length - start];
+            int size = original.Length - start;
+            if (size > 0x200) size = 0x200;
+
+            Byte[] data = new byte[size];
             Array.Copy(original, start, data, 0, data.Length);
             // Convert it to colors
             List<Color> colors = new List<Color>();
@@ -151,6 +154,38 @@ namespace PluginInterface.Images
             original = pluginHost.ColorToBGR555(colors.ToArray());
             startByte = 0;
         }
+        public void Set_Palette(PaletteBase new_pal)
+        {
+            this.palette = new_pal.Palette;
+            this.depth = new_pal.Depth;
+
+            loaded = true;
+
+            // Convert the palette to bytes, to store the original palette
+            List<Color> colors = new List<Color>();
+            for (int i = 0; i < palette.Length; i++)
+                colors.AddRange(palette[i]);
+            original = pluginHost.ColorToBGR555(colors.ToArray());
+            startByte = 0;
+        }
+        public void Set_Palette(Color[][] palette)
+        {
+            this.palette = palette;
+            if (palette.Length == 1 && palette[0].Length > 16)
+                depth = ColorFormat.colors256;
+            else
+                depth = ColorFormat.colors16;
+
+            loaded = true;
+
+            // Convert the palette to bytes, to store the original palette
+            List<Color> colors = new List<Color>();
+            for (int i = 0; i < palette.Length; i++)
+                colors.AddRange(palette[i]);
+            original = pluginHost.ColorToBGR555(colors.ToArray());
+            startByte = 0;
+        }
+
 
         #region Properties
         public int StartByte
@@ -190,6 +225,10 @@ namespace PluginInterface.Images
         public int ID
         {
             get { return id; }
+        }
+        public Byte[] Original
+        {
+            set { original = value; }
         }
         #endregion
     }

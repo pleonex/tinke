@@ -53,6 +53,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Images\Actions.cs" />
+    <Compile Include="Images\Bitmap.cs" />
     <Compile Include="Images\ImageBase.cs" />
     <Compile Include="Images\ImageControl.cs">
       <SubType>UserControl</SubType>

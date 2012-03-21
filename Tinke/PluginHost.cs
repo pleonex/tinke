@@ -77,12 +77,9 @@ namespace Tinke
         public Byte[] ColorToBGR555(Color[] color) { return Convertir.ColorToBGR555(color); }
         public NTFS MapInfo(ushort value) { return Convertir.MapInfo(value); }
         public ushort MapInfo(NTFS map) { return Convertir.MapInfo(map); }
-        public Byte[] TilesToBytes(byte[][] tiles, int startByte = 0) { return Convertir.TilesToBytes(tiles, startByte); }
-        public Byte[][] BytesToTiles(byte[] bytes) { return Convertir.BytesToTiles(bytes); }
-        public Byte[][] BytesToTiles_NoChanged(byte[] bytes, int tilesX, int tilesY) { return Convertir.BytesToTiles_NoChanged(bytes, tilesX, tilesY); }
+
         public Color[][] Palette_4bppTo8bpp(Color[][] palette) { return Convertir.Palette_4bppTo8bpp(palette); }
         public Color[][] Palette_8bppTo4bpp(Color[][] palette) { return Convertir.Palette_8bppTo4bpp(palette); }
-        public void Change_Color(ref byte[][] tiles, int oldIndex, int newIndex) { Convertir.Change_Color(ref tiles, oldIndex, newIndex); }
 
         public Byte[] Bit4ToBit8(byte[] bits4) { return Convertir.Bit4ToBit8(bits4); }
         public Byte[] Bit8ToBit4(byte[] bits8) { return Convertir.Bit8ToBit4(bits8); }
@@ -90,18 +87,6 @@ namespace Tinke
         public byte[] BitsToBytes(byte[] bits) { return Tools.Helper.BitsToBytes(bits); }
 
         public Bitmap Bitmaps_NCLR(Color[] colors) { return Actions.Get_Image(colors); }
-        public int Remove_DuplicatedColors(ref Color[] palette, ref byte[][] tiles)
-        {
-            return Convertir.Remove_DuplicatedColors(ref palette, ref tiles);
-        }
-        public int Remove_NotUsedColors(ref Color[] palette, ref byte[][] tiles)
-        {
-            return Convertir.Remove_NotUsedColors(ref palette, ref tiles);
-        }
-        public void Replace_Color(ref byte[][] tiles, int oldIndex, int newIndex)
-        {
-            Convertir.Replace_Color(ref tiles, oldIndex, newIndex);
-        }
 
         public NTFT Transform_NSCR(NTFS[] map, ref NTFT ntft, int startInfo = 0)
         {

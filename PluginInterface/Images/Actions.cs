@@ -77,6 +77,27 @@ namespace PluginInterface.Images
 
             return Color.FromArgb(r, g, b);
         }
+        /// <summary>
+        /// Convert colors to byte with BGR555 encoding
+        /// </summary>
+        /// <param name="colores">Colors to convert</param>
+        /// <returns>Bytes converted</returns>
+        public static Byte[] ColorToBGR555(Color[] colores)
+        {
+            List<Byte> datos = new List<Byte>(colores.Length * 2);
+
+            for (int i = 0; i < colores.Length; i++)
+            {
+                int r = colores[i].R / 8;
+                int g = (colores[i].G / 8) << 5;
+                int b = (colores[i].B / 8) << 10;
+
+                ushort bgr = (ushort)(r + g + b);
+                datos.AddRange(BitConverter.GetBytes(bgr));
+            }
+
+            return datos.ToArray();
+        }
 
         public static Bitmap Get_Image(Color[] colors)
         {
@@ -503,6 +524,79 @@ namespace PluginInterface.Images
 
             return bit4;
         }
+
+        public static int Remove_DuplicatedColors(ref Color[] palette, ref byte[] tiles)
+        {
+            List<Color> colors = new List<Color>();
+            int first_duplicated_color = -1;
+
+            for (int i = 0; i < palette.Length; i++)
+            {
+                if (!colors.Contains(palette[i]))
+                    colors.Add(palette[i]);
+                else        // The color is duplicated
+                {
+                    int newIndex = colors.IndexOf(palette[i]);
+                    Replace_Color(ref tiles, i, newIndex);
+                    colors.Add(Color.FromArgb(248, 0, 248));
+
+                    if (first_duplicated_color == -1)
+                        first_duplicated_color = i;
+                }
+            }
+
+            palette = colors.ToArray();
+            return first_duplicated_color;
+        }
+        public static int Remove_NotUsedColors(ref Color[] palette, ref byte[] tiles)
+        {
+            int first_notUsed_color = -1;
+
+            bool[] colors = new bool[palette.Length];
+            for (int i = 0; i < palette.Length; i++)
+                colors[i] = false;
+
+            for (int i = 0; i < tiles.Length; i++)
+                colors[tiles[i]] = true;
+
+            for (int i = 0; i < colors.Length; i++)
+                if (!colors[i])
+                    first_notUsed_color = i;
+
+            return first_notUsed_color;
+        }
+        public static void Change_Color(ref byte[] tiles, int oldIndex, int newIndex)
+        {
+            for (int i = 0; i < tiles.Length; i++)
+            {
+                if (tiles[i] == oldIndex)
+                    tiles[i] = (byte)newIndex;
+                else if (tiles[i] == newIndex)
+                    tiles[i] = (byte)oldIndex;
+            }
+        }
+        public static void Change_Color(ref byte[] tiles, ref Color[] palette, int oldIndex, int newIndex)
+        {
+            Color old_color = palette[oldIndex];
+            palette[oldIndex] = palette[newIndex];
+            palette[newIndex] = old_color;
+
+            for (int i = 0; i < tiles.Length; i++)
+            {
+                if (tiles[i] == oldIndex)
+                    tiles[i] = (byte)newIndex;
+                else if (tiles[i] == newIndex)
+                    tiles[i] = (byte)oldIndex;
+            }
+        }
+        public static void Replace_Color(ref byte[] tiles, int oldIndex, int newIndex)
+        {
+            for (int i = 0; i < tiles.Length; i++)
+            {
+                if (tiles[i] == oldIndex)
+                    tiles[i] = (byte)newIndex;
+            }
+        }
         #endregion
 
         #region Map
@@ -547,11 +641,25 @@ namespace PluginInterface.Images
             {
                 for (int w = 0; w < tile_width / 2; w++)
                 {
-                    newTile[w + h * tile_width] = tile[((tile_width - 1) - w) + h * tile_width];
-                    newTile[((tile_width - 1) - w) + h * tile_width] = tile[w + h * tile_width];
+                    byte b = tile[((tile_width - 1) - w) + h * tile_width];
+                    newTile[w + h * tile_width] = Reverse_Bits(b, tile_width);
+
+                    b = tile[w + h * tile_width];
+                    newTile[((tile_width - 1) - w) + h * tile_width] = Reverse_Bits(b, tile_width);
                 }
             }
             return newTile;
+        }
+        public static Byte Reverse_Bits(byte b, int length)
+        {
+            byte rb = 0;
+
+            if (length == 4)
+            {
+                rb = (byte)((b << 4) + (b >> 4));
+            }
+
+            return rb;
         }
         public static Byte[] YFlip(Byte[] tile, int tile_width)
         {
@@ -567,6 +675,26 @@ namespace PluginInterface.Images
             }
             return newTile;
         }
+
+        public static NTFS[] Create_BasicMap(int num_tiles, int startTile = 0, byte palette = 0)
+        {
+            NTFS[] map = new NTFS[num_tiles];
+
+            for (int i = 0; i < num_tiles; i++)
+            {
+                map[i] = new NTFS();
+                map[i].nPalette = palette;
+                map[i].yFlip = 0;
+                map[i].xFlip = 0;
+                //if (i >= startFillTile)
+                //    map[i].nTile = (ushort)fillTile;
+                //else
+                map[i].nTile = (ushort)(i + startTile);
+            }
+
+            return map;
+        }
+
         #endregion
 
         #region OAM
@@ -677,10 +805,12 @@ namespace PluginInterface.Images
                     else
                         cell_img.StartByte = (int)tileOffset * 0x20;
 
-
+                    byte num_pal = bank.oams[i].obj2.index_palette;
+                    if (num_pal >= pal.NumberOfPalettes)
+                        num_pal = 0;
                     if (cell_img.ColorFormat == ColorFormat.colors16)
                         for (int j = 0; j < cell_img.TilesPalette.Length; j++)
-                            cell_img.TilesPalette[j] = bank.oams[i].obj2.index_palette;
+                            cell_img.TilesPalette[j] = num_pal;
 
                     cell = cell_img.Get_Image(pal);
                     //else
@@ -713,7 +843,7 @@ namespace PluginInterface.Images
                     #endregion
 
                     if (trans)
-                        ((Bitmap)cell).MakeTransparent(pal.Palette[bank.oams[i].obj2.index_palette][0]);
+                        ((Bitmap)cell).MakeTransparent(pal.Palette[num_pal][0]);
 
                     graphic.DrawImageUnscaled(cell, size.Width / 2 + bank.oams[i].obj1.xOffset * zoom, size.Height / 2 + bank.oams[i].obj0.yOffset * zoom);
                 }
