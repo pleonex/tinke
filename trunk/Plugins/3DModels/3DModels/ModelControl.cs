@@ -39,7 +39,6 @@ namespace _3DModels
         sBTX0 tex;
 
         Dictionary<int, int> texturesGL;
-        Dictionary<int, int> textureID;
 
         PolygonMode pm = PolygonMode.Fill;
 
@@ -50,48 +49,55 @@ namespace _3DModels
         public ModelControl(IPluginHost pluginHost, sBMD0 model)
         {
             InitializeComponent();
-            this.label1.Parent = glControl1;
             this.pluginHost = pluginHost;
             this.model = model;
             this.tex = Get_BTX0();
 
-            numericUpDown1.Maximum = model.texture.texInfo.num_objs;
-            numericUpDown2.Maximum = model.model.mdlData[0].polygon.header.num_objs;
+            Get_TexIDS();
+            numericPoly.Maximum = model.model.mdlData[0].polygon.header.num_objs - 1;
         }
         public ModelControl(IPluginHost pluginHost, sBMD0 model, sBTX0 tex)
         {
             InitializeComponent();
-            this.label1.Parent = glControl1;
             this.pluginHost = pluginHost;
             this.model = model;
             this.tex = tex;
 
-            numericUpDown1.Maximum = model.texture.texInfo.num_objs;
-            numericUpDown2.Maximum = model.model.mdlData[0].polygon.header.num_objs;
-
+            Get_TexIDS();
+            numericPoly.Maximum = model.model.mdlData[0].polygon.header.num_objs - 1;
         }
         private void ModelControl_Load(object sender, EventArgs e)
         {
             glControl1.Context.MakeCurrent(glControl1.WindowInfo);
-
             GL.ClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-            GL.Viewport(this.ClientRectangle);
-
+            GL.Viewport(new Size(512, 512));
             glControl1.SwapBuffers();
+
             LoadAllTex();
             ProcessBones();
         }
 
+        private void Get_TexIDS()
+        {
+            for (int i = 0; i < model.model.mdlData[0].material.material.Length; i++)
+            {
+                sBMD0.Model.ModelData.Material.MatDef mat = model.model.mdlData[0].material.material[i];
+                int num_tex, num_pal;
+                BTX0.Find_IDs(out num_tex, out num_pal, mat.texName, mat.palName, tex.texture);
+                mat.palID = (byte)num_pal;
+                mat.texID = (byte)num_tex;
+                model.model.mdlData[0].material.material[i] = mat;
+            }
+        }
+
         private void LoadAllTex()
         {
-            texturesGL = new Dictionary<int,int>();
-            textureID = new Dictionary<int, int>();
+            texturesGL = new Dictionary<int, int>();
 
-            for (int i = 0; i < model.model.mdlData[0].material.texture.num_objs; i++)
+            for (int i = 0; i < model.model.mdlData[0].material.material.Length; i++)
             {
-                sBMD0.Model.ModelData.Material.TexPalData texInfo = (sBMD0.Model.ModelData.Material.TexPalData)model.model.mdlData[0].material.texture.infoBlock.infoData[i];
-                texturesGL.Add(texInfo.ID, LoadTextures(texInfo.ID));
-                textureID.Add(texInfo.ID, i);
+                sBMD0.Model.ModelData.Material.MatDef mat = (sBMD0.Model.ModelData.Material.MatDef)model.model.mdlData[0].material.material[i];
+                texturesGL.Add(i, LoadTextures(mat.texID, mat.palID));
             }
         }
         private void ProcessBones()
@@ -109,9 +115,9 @@ namespace _3DModels
                             currTex = cmd.parameters[0];
                         else
                             texturesGL.TryGetValue(1, out currTex);
-                        
+
                         model.model.mdlData[0].polygon.display[cmd.parameters[2]].materialAssoc = texturesGL[currTex];
-                        model.model.mdlData[0].polygon.display[cmd.parameters[2]].materialID = textureID[currTex];
+                        model.model.mdlData[0].polygon.display[cmd.parameters[2]].materialID = cmd.parameters[0];
                         break;
                     default:
                         break;
@@ -121,9 +127,9 @@ namespace _3DModels
 
         private void Render()
         {
+            GL.ClearColor(0.0f, 0.0f, 1.0f, 0.0f);
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-            GL.ClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-            
+
             GL.PushMatrix();    // For translation and scale
 
             GL.MatrixMode(MatrixMode.Modelview);
@@ -142,48 +148,38 @@ namespace _3DModels
             // Edges
             DrawEdges();
 
-            //GL.DepthFunc(DepthFunction.Less);
-
-            GL.Enable(EnableCap.Blend);
-            GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
-
-            GL.Enable(EnableCap.AlphaTest);
-            GL.AlphaFunc(AlphaFunction.Greater, 0.5f);
+            GL.Enable(EnableCap.PolygonSmooth);
+            GL.Enable(EnableCap.DepthTest);
             GL.Enable(EnableCap.Texture2D);
+            GL.Enable(EnableCap.AlphaTest);
+            GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
+            GL.Enable(EnableCap.Blend);
+            GL.AlphaFunc(AlphaFunction.Greater, 0f);
             GL.Disable(EnableCap.CullFace);
-            GL.Enable(EnableCap.Dither);
-
-            // Fix transparency problems
-            //GL.Hint(HintTarget.PerspectiveCorrectionHint, HintMode.Nicest);
-            //GL.AlphaFunc(AlphaFunction.Greater, 0.5f);
-            //GL.Enable(EnableCap.AlphaTest);
-            //GL.Disable(EnableCap.Blend);
-            //GL.Enable(EnableCap.LineSmooth);
-            //GL.Enable(EnableCap.PolygonSmooth);
-            //GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.One);
-            //GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusDstAlpha);
-            //GL.Color4(1.0f, 1.0f, 1.0f, 0.5f);
-            //GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
-
+            //pm = PolygonMode.Line;
             GL.PolygonMode(MaterialFace.FrontAndBack, pm);
 
-            GL.MatrixMode(MatrixMode.Texture);
-            GL.LoadIdentity();
-
-            GL.Color3(1.0f, 1.0f, 1.0f);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Nearest);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Nearest);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (float)TextureWrapMode.Repeat);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (float)TextureWrapMode.Repeat);
             GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.TextureEnvMode, (int)TextureEnvMode.Replace);
 
-            if (!checkBox1.Checked)
+            if (!checkManual.Checked)
             {
                 for (int i = 0; i < model.model.mdlData[0].polygon.header.num_objs; i++)
                 {
                     sBMD0.Model.ModelData.Polygon.Display poly = model.model.mdlData[0].polygon.display[i];
-                    sBTX0.Texture.TextInfo texInfo = (sBTX0.Texture.TextInfo)tex.texture.texInfo.infoBlock.infoData[poly.materialID];
+                    if (poly.materialID >= model.model.mdlData[0].material.material.Length)
+                        poly.materialID = 0;
+                    sBMD0.Model.ModelData.Material.MatDef mat = (sBMD0.Model.ModelData.Material.MatDef)model.model.mdlData[0].material.material[poly.materialID];
+
+                    sBTX0.Texture.TextInfo texInfo = (sBTX0.Texture.TextInfo)tex.texture.texInfo.infoBlock.infoData[mat.texID];
 
                     GL.BindTexture(TextureTarget.Texture2D, poly.materialAssoc);
-                    
+                    GL.MatrixMode(MatrixMode.Texture);
+                    GL.LoadIdentity();
+
 
                     GL.Scale(1.0f / (float)texInfo.width, 1.0f / (float)texInfo.height, 1.0f); // Scale the texture to fill the polygon
                     BMD0.GeometryCommands(poly.commands);
@@ -191,31 +187,22 @@ namespace _3DModels
             }
             else
             {
-                int texInd = LoadTextures((int)numericUpDown1.Value);
-                sBTX0.Texture.TextInfo texInfo = (sBTX0.Texture.TextInfo)tex.texture.texInfo.infoBlock.infoData[(int)numericUpDown1.Value];
+                int i = (int)numericPoly.Value;
 
-                GL.TexEnv(TextureEnvTarget.TextureEnv, TextureEnvParameter.TextureEnvMode, (int)TextureEnvMode.Replace);
-                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Nearest);
-                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Nearest);
-                GL.BindTexture(TextureTarget.Texture2D, texInd);
+                sBMD0.Model.ModelData.Polygon.Display poly = model.model.mdlData[0].polygon.display[i];
+                if (poly.materialID >= model.model.mdlData[0].material.material.Length)
+                    poly.materialID = 0;
+                sBMD0.Model.ModelData.Material.MatDef mat = (sBMD0.Model.ModelData.Material.MatDef)model.model.mdlData[0].material.material[poly.materialID];
+                sBTX0.Texture.TextInfo texInfo = (sBTX0.Texture.TextInfo)tex.texture.texInfo.infoBlock.infoData[mat.texID];
 
-                GL.PolygonMode(MaterialFace.FrontAndBack, pm);
-
+                GL.BindTexture(TextureTarget.Texture2D, poly.materialAssoc);
                 GL.MatrixMode(MatrixMode.Texture);
                 GL.LoadIdentity();
 
-                GL.Scale(1.0f / (float)texInfo.width, 1.0f / (float)texInfo.height, 1.0f); // Scale the texture to fill the polygon
-                BMD0.GeometryCommands(model.model.mdlData[0].polygon.display[(int)numericUpDown2.Value].commands);
-            }
-            GL.MatrixMode(MatrixMode.Modelview);
 
-            //GL.Disable(EnableCap.Texture2D);
-            //GL.Disable(EnableCap.AlphaTest);
-            //GL.Disable(EnableCap.Blend);
-            //GL.Disable(EnableCap.CullFace);
-            //GL.Disable(EnableCap.DepthTest);
-            //  Reset the color back to white
-            GL.Disable(EnableCap.Blend);
+                GL.Scale(1.0f / (float)texInfo.width, 1.0f / (float)texInfo.height, 1.0f); // Scale the texture to fill the polygon
+                BMD0.GeometryCommands(poly.commands);
+            }
 
             GL.PopMatrix();
 
@@ -245,12 +232,12 @@ namespace _3DModels
             GL.Flush();
         }
 
-        private int LoadTextures(int num_tex)
+        private int LoadTextures(int num_tex, int num_pal)
         {
             int id = GL.GenTexture();
             GL.BindTexture(TextureTarget.Texture2D, id);
 
-            Bitmap bmp = BTX0.GetTexture(pluginHost, tex, num_tex);
+            Bitmap bmp = BTX0.GetTexture(pluginHost, tex, num_tex, num_pal);
             System.Drawing.Imaging.BitmapData bmp_data = bmp.LockBits(new Rectangle(0, 0, bmp.Width, bmp.Height), ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppRgb);
 
             GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, bmp_data.Width, bmp_data.Height, 0,
@@ -258,9 +245,10 @@ namespace _3DModels
 
             bmp.UnlockBits(bmp_data);
 
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Nearest);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Nearest);
-
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (float)TextureMagFilter.Nearest);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (float)TextureMinFilter.Nearest);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (float)TextureWrapMode.Repeat);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (float)TextureWrapMode.Repeat);
             return id;
         }
 
@@ -278,13 +266,13 @@ namespace _3DModels
         private float angleY = 0;
         private float angleXS = 0;
         private float angleYS = 0;
-        private float distance = 1;
-        private float distanceS = 1;
+        private float distance = 0.08f;
+        private float distanceS = 0.08f;
         private const float ROT_SPEED = 1f;
-        private const float ZOOM_FACTOR = 500f;
+        private const float ZOOM_FACTOR = 100f;
 
-        float x = 0;
-        float y = 0;
+        float x = -1.5f;
+        float y = -7.5f;
         float z = 0;
         const float STEP = 0.5f;
 
@@ -376,9 +364,21 @@ namespace _3DModels
             ven.Show();
         }
 
-        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        private void checkManual_CheckedChanged(object sender, EventArgs e)
         {
-            numericUpDown1.Enabled = numericUpDown2.Enabled = checkBox1.Checked;
+            numericPoly.Enabled = checkManual.Checked;
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            Form big = new Form();
+            big.Controls.Add(glControl1);
+            big.Controls[0].Dock = DockStyle.Fill;
+            big.WindowState = FormWindowState.Maximized;
+            big.Text = "Tinke - pleoNeX";
+            big.Icon = Properties.Resources.nintendo_ds;
+            big.Show();
+            GL.Viewport(new Size(big.Width, big.Height));
         }
     }
 }

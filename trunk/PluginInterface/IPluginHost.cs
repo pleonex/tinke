@@ -46,23 +46,13 @@ namespace PluginInterface
         Byte[] ColorToBGR555(Color[] color);
         NTFS MapInfo(ushort value);
         ushort MapInfo(NTFS map);
-        Byte[] TilesToBytes(byte[][] tiles, int startByte = 0);
-        Byte[][] BytesToTiles(byte[] bytes);
-        Byte[][] BytesToTiles_NoChanged(byte[] bytes, int tilesX, int tilesY);
+
         Byte[][] MergeImage(Byte[][] originalTile, Byte[][] newTiles, int startTile);
         Color[][] Palette_4bppTo8bpp(Color[][] palette);
         Color[][] Palette_8bppTo4bpp(Color[][] palette);
-        int Remove_DuplicatedColors(ref Color[] palette, ref byte[][] tiles);
-        int Remove_NotUsedColors(ref Color[] palette, ref byte[][] tiles);
-        void Change_Color(ref byte[][] tiles, int oldIndex, int newIndex);
-        void Replace_Color(ref byte[][] tiles, int oldIndex, int newIndex);
 
         Bitmap Bitmaps_NCLR(Color[] colors);
         Bitmap Bitmap_NTFT(NTFT tiles, Color[][] palette, TileForm tileOrder, int startTile, int tilesX, int tilesY, int zoom = 1);
-
-        //NTFT Transform_NSCR(NSCR nscr, NTFT ntft, int startInfo = 0);
-        Byte[] XFlip(Byte[] tile);
-        Byte[] YFlip(Byte[] tile);
 
         Size Get_OAMSize(byte byte1, byte byte2);
 

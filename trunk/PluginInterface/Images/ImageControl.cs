@@ -97,7 +97,7 @@ namespace PluginInterface.Images
             }
 
             this.comboBox1.SelectedIndex = 1;
-            this.numPal.Maximum = palette.NumberOfPalettes;
+            this.numPal.Maximum = palette.NumberOfPalettes - 1;
 
             this.comboDepth.SelectedIndexChanged += new EventHandler(comboDepth_SelectedIndexChanged);
             this.numericWidth.ValueChanged += new EventHandler(numericSize_ValueChanged);
@@ -165,7 +165,7 @@ namespace PluginInterface.Images
             }
             this.numericWidth.Value = pic.Image.Width;
             this.numericHeight.Value = pic.Image.Height;
-            this.numPal.Maximum = palette.NumberOfPalettes;
+            this.numPal.Maximum = palette.NumberOfPalettes - 1;
 
             this.comboDepth.SelectedIndexChanged += new EventHandler(comboDepth_SelectedIndexChanged);
             this.numericWidth.ValueChanged += new EventHandler(numericSize_ValueChanged);
@@ -218,7 +218,7 @@ namespace PluginInterface.Images
 
             this.comboBox1.SelectedIndex = 1;
             this.comboBox1.Enabled = false;
-            this.numPal.Maximum = palette.NumberOfPalettes;
+            this.numPal.Maximum = palette.NumberOfPalettes - 1;
 
             this.comboDepth.SelectedIndexChanged += new EventHandler(comboDepth_SelectedIndexChanged);
             this.numericWidth.ValueChanged += new EventHandler(numericSize_ValueChanged);
@@ -354,93 +354,46 @@ namespace PluginInterface.Images
 
         private void btnImport_Click(object sender, EventArgs e)
         {
-            //// TODO
-            //OpenFileDialog o = new OpenFileDialog();
-            //o.CheckFileExists = true;
-            //o.DefaultExt = "bmp";
-            //o.Filter = "BitMaP (*.bmp)|*.bmp";
-            //o.Multiselect = false;
-            //if (o.ShowDialog() == DialogResult.OK)
-            //{
-            //    // TODO: write new palette file
+            OpenFileDialog o = new OpenFileDialog();
+            o.CheckFileExists = true;
+            o.DefaultExt = "bmp";
+            o.Filter = "BitMaP (*.bmp)|*.bmp";
+            o.Multiselect = false;
+            if (o.ShowDialog() != DialogResult.OK)
+                return;
 
-            //    NCGR newTile = pluginHost.BitmapToTile(o.FileName, (comboBox1.SelectedIndex == 0 ? TileOrder.NoTiled : TileOrder.Horizontal));
-            //    String tileFile = System.IO.Path.GetTempFileName() + '.' + image.FileName;
-            //    // TODO: set new tile data
+            BMP bitmap = new BMP(pluginHost, o.FileName);
 
-            //    image.Write(tileFile, palette);
-            //    pluginHost.ChangeFile(image.ID, tileFile);
+            image.Set_Tiles(bitmap);
+            palette.Set_Palette(bitmap.Palette);
+            if (isMap)
+                map.Set_Map(Actions.Create_BasicMap(bitmap.Tiles.Length / (bitmap.TileWidth * 8)), map.CanEdit, bitmap.Width, bitmap.Height);
 
-            //    if (isMap)
-            //    {
-            //        //NSCR newMap;
-            //        //if (image.TileForm == TileOrder.Horizontal)
-            //        //    newMap = pluginHost.Create_BasicMap((int)tile.rahc.nTiles, tile.rahc.nTilesX * 8, tile.rahc.nTilesY * 8);
-            //        //else
-            //        //    newMap = pluginHost.Create_BasicMap((int)tile.rahc.nTiles, tile.rahc.nTilesX, tile.rahc.nTilesY);
-            //        //newMap.id = map.id;
-            //        //newMap.header.id = map.header.id;
-            //        //String mapFile = System.IO.Path.GetTempFileName() + new String(map.header.id);
-            //        //map = newMap;
+            Save_Files();
 
-            //        //pluginHost.Set_NSCR(map);
-            //        //Write(mapFile, map, pluginHost);
-            //        //pluginHost.ChangeFile((int)map.id, mapFile);
-            //    }
-
-            //    if (image.TileForm == TileForm.Lineal)
-            //    {
-            //        numericWidth.Value = image.Width;
-            //        numericHeight.Value = image.Height;
-            //        numericHeight.Minimum = 1;
-            //        numericWidth.Minimum = 1;
-            //        numericWidth.Increment = 1;
-            //        numericHeight.Increment = 1;
-            //        comboBox1.SelectedIndex = 0;
-            //    }
-            //    else
-            //    {
-            //        numericWidth.Value = image.Width * 8;
-            //        numericHeight.Value = image.Height * 8;
-            //        numericHeight.Minimum = 8;
-            //        numericWidth.Minimum = 8;
-            //        numericWidth.Increment = 8;
-            //        numericHeight.Increment = 8;
-            //        comboBox1.SelectedIndex = 1;
-            //    }
-            //}
+            Update_Image();
         }
-        //public static void Write_Tiles(string fileout, NCGR tiles, IPluginHost pluginHost)
-        //{
-        //    // Obsolet
-        //    BinaryWriter bw = new BinaryWriter(File.OpenWrite(fileout));
-
-        //    for (int i = 0; i < tiles.rahc.tileData.tiles.Length; i++)
-        //        if (tiles.rahc.depth == ColorDepth.Depth4Bit)
-        //            bw.Write(pluginHost.Bit4ToBit8(tiles.rahc.tileData.tiles[i]));
-        //        else
-        //            bw.Write(tiles.rahc.tileData.tiles[i]);
-
-        //    bw.Flush();
-        //    bw.Close();
-        //}
-        //public static void Write_Map(string fileout, NSCR map, IPluginHost pluginHost)
-        //{
-        //    // Obsolet
-        //    BinaryWriter bw = new BinaryWriter(File.OpenWrite(fileout));
-
-        //    for (int i = 0; i < map.section.mapData.Length; i++)
-        //    {
-        //        int npalette = map.section.mapData[i].nPalette << 12;
-        //        int yFlip = map.section.mapData[i].yFlip << 11;
-        //        int xFlip = map.section.mapData[i].xFlip << 10;
-        //        int data = npalette + yFlip + xFlip + map.section.mapData[i].nTile;
-        //        bw.Write((ushort)data);
-        //    }
-
-        //    bw.Flush();
-        //    bw.Close();
-        //}
+        private void Save_Files()
+        {
+            if (image.ID > 0)
+            {
+                string imageFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + Path.GetRandomFileName() + image.FileName;
+                image.Write(imageFile, palette);
+                pluginHost.ChangeFile(image.ID, imageFile);
+            }
+            if (palette.ID > 0)
+            {
+                string paletteFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + Path.GetRandomFileName() + palette.FileName;
+                palette.Write(paletteFile);
+                pluginHost.ChangeFile(palette.ID, paletteFile);
+            }
+            if (isMap && map.ID > 0)
+            {
+                string mapFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + Path.GetRandomFileName() + map.FileName;
+                map.Write(mapFile, image, palette);
+                pluginHost.ChangeFile(map.ID, mapFile);
+            }
+        }
 
         private void btnSave_Click(object sender, EventArgs e)
         {
@@ -482,7 +435,6 @@ namespace PluginInterface.Images
             PictureBox pcBox = new PictureBox();
             pcBox.Image = pic.Image;
             pcBox.SizeMode = PictureBoxSizeMode.AutoSize;
-            pcBox.BackColor = pictureBgd.BackColor;
 
             ven.Controls.Add(pcBox);
             ven.BackColor = SystemColors.GradientInactiveCaption;
@@ -520,7 +472,6 @@ namespace PluginInterface.Images
 
             if (o.ShowDialog() == DialogResult.OK)
             {
-                pictureBgd.BackColor = o.Color;
                 pic.BackColor = o.Color;
                 btnBgdTrans.Enabled = true;
             }
@@ -528,14 +479,42 @@ namespace PluginInterface.Images
         private void btnBgdTrans_Click(object sender, EventArgs e)
         {
             btnBgdTrans.Enabled = false;
-
-            pictureBgd.BackColor = Color.Transparent;
             pic.BackColor = Color.Transparent;
         }
 
         private void checkHex_CheckedChanged(object sender, EventArgs e)
         {
             numericStart.Hexadecimal = checkHex.Checked;
+        }
+
+        private void btnSetTrans_Click(object sender, EventArgs e)
+        {
+            int pal_index = image.TilesPalette[0];  // How can I know that? yeah, I'm too lazy to do a new windows ;)
+
+            Color[] pal = palette.Palette[pal_index];  
+            byte[] tiles = image.Tiles;
+            int index = Actions.Remove_DuplicatedColors(ref pal, ref tiles);
+            if (index == -1)
+            {
+                index = Actions.Remove_NotUsedColors(ref pal, ref tiles);
+                if (index == -1)
+                {
+                    MessageBox.Show("No space in the palette found");
+                    return;
+                }
+            }
+
+            Actions.Change_Color(ref tiles, ref pal, index, 0);
+
+            Color[][] new_pal = palette.Palette;
+            new_pal[pal_index] = pal;
+
+            if (image.ID > 0)
+                image.Set_Tiles(tiles);
+            if (palette.ID > 0)
+                palette.Set_Palette(new_pal);
+
+            Save_Files();
         }
 
         //private void btnFotochoh_Click(object sender, EventArgs e)

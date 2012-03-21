@@ -138,6 +138,48 @@ namespace PluginInterface.Images
             // Get the original data for changes in startByte
             original = (byte[])tiles.Clone();
         }
+        public void Set_Tiles(ImageBase new_img)
+        {
+            this.tiles = new_img.Tiles;
+            this.format = new_img.ColorFormat;
+            this.tileForm = new_img.TileForm;         
+            Width = new_img.Width;
+            Height = new_img.Height;
+
+            zoom = 1;
+            startByte = 0;
+            loaded = true;
+
+            tile_width = 8;
+            if (format == Images.ColorFormat.colors16)
+                tile_width = 4;
+            else if (format == Images.ColorFormat.colors2)
+                tile_width = 1;
+            else if (format == Images.ColorFormat.colors4)
+                tile_width = 2;
+            else if (format == Images.ColorFormat.direct)
+                tile_width = 16;
+
+            tilePal = new byte[tiles.Length * (8 / tile_width)];
+
+            // Get the original data for changes in startByte
+            original = (byte[])tiles.Clone();
+        }
+        public void Set_Tiles(Byte[] tiles)
+        {
+            this.tiles = tiles;
+
+            zoom = 1;
+            startByte = 0;
+            loaded = true;
+
+            tilePal = new byte[tiles.Length * (8 / tile_width)];
+
+            // Get the original data for changes in startByte
+            original = (byte[])tiles.Clone();
+        }
+
+
 
         #region Properties
         public int ID

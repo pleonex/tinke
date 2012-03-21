@@ -58,7 +58,6 @@ namespace PluginInterface.Images
             this.checkHex = new System.Windows.Forms.CheckBox();
             this.btnImport = new System.Windows.Forms.Button();
             this.btnBgdTrans = new System.Windows.Forms.Button();
-            this.pictureBgd = new System.Windows.Forms.PictureBox();
             this.btnBgd = new System.Windows.Forms.Button();
             this.checkTransparency = new System.Windows.Forms.CheckBox();
             this.label8 = new System.Windows.Forms.Label();
@@ -75,11 +74,11 @@ namespace PluginInterface.Images
             this.label5 = new System.Windows.Forms.Label();
             this.pic = new System.Windows.Forms.PictureBox();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.btnSetTrans = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.numericWidth)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericHeight)).BeginInit();
             this.groupProp.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numPal)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBgd)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackZoom)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericStart)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pic)).BeginInit();
@@ -162,13 +161,13 @@ namespace PluginInterface.Images
             // 
             // groupProp
             // 
+            this.groupProp.Controls.Add(this.btnSetTrans);
             this.groupProp.Controls.Add(this.btnFotochoh);
             this.groupProp.Controls.Add(this.label9);
             this.groupProp.Controls.Add(this.numPal);
             this.groupProp.Controls.Add(this.checkHex);
             this.groupProp.Controls.Add(this.btnImport);
             this.groupProp.Controls.Add(this.btnBgdTrans);
-            this.groupProp.Controls.Add(this.pictureBgd);
             this.groupProp.Controls.Add(this.btnBgd);
             this.groupProp.Controls.Add(this.checkTransparency);
             this.groupProp.Controls.Add(this.label8);
@@ -248,29 +247,19 @@ namespace PluginInterface.Images
             // btnBgdTrans
             // 
             this.btnBgdTrans.Enabled = false;
-            this.btnBgdTrans.Location = new System.Drawing.Point(410, 35);
+            this.btnBgdTrans.Location = new System.Drawing.Point(426, 35);
             this.btnBgdTrans.Name = "btnBgdTrans";
-            this.btnBgdTrans.Size = new System.Drawing.Size(78, 35);
+            this.btnBgdTrans.Size = new System.Drawing.Size(80, 40);
             this.btnBgdTrans.TabIndex = 22;
             this.btnBgdTrans.Text = "S20";
             this.btnBgdTrans.UseVisualStyleBackColor = true;
             this.btnBgdTrans.Click += new System.EventHandler(this.btnBgdTrans_Click);
             // 
-            // pictureBgd
-            // 
-            this.pictureBgd.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pictureBgd.Location = new System.Drawing.Point(369, 35);
-            this.pictureBgd.Name = "pictureBgd";
-            this.pictureBgd.Size = new System.Drawing.Size(35, 35);
-            this.pictureBgd.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pictureBgd.TabIndex = 21;
-            this.pictureBgd.TabStop = false;
-            // 
             // btnBgd
             // 
-            this.btnBgd.Location = new System.Drawing.Point(261, 35);
+            this.btnBgd.Location = new System.Drawing.Point(340, 35);
             this.btnBgd.Name = "btnBgd";
-            this.btnBgd.Size = new System.Drawing.Size(102, 35);
+            this.btnBgd.Size = new System.Drawing.Size(80, 40);
             this.btnBgd.TabIndex = 20;
             this.btnBgd.Text = "S1F";
             this.btnBgd.UseVisualStyleBackColor = true;
@@ -323,7 +312,7 @@ namespace PluginInterface.Images
             this.trackZoom.Maximum = 20;
             this.trackZoom.Minimum = 1;
             this.trackZoom.Name = "trackZoom";
-            this.trackZoom.Size = new System.Drawing.Size(226, 45);
+            this.trackZoom.Size = new System.Drawing.Size(226, 42);
             this.trackZoom.SmallChange = 50;
             this.trackZoom.TabIndex = 15;
             this.trackZoom.Value = 1;
@@ -442,6 +431,16 @@ namespace PluginInterface.Images
             this.panel1.Size = new System.Drawing.Size(512, 287);
             this.panel1.TabIndex = 7;
             // 
+            // btnSetTrans
+            // 
+            this.btnSetTrans.Location = new System.Drawing.Point(254, 35);
+            this.btnSetTrans.Name = "btnSetTrans";
+            this.btnSetTrans.Size = new System.Drawing.Size(80, 40);
+            this.btnSetTrans.TabIndex = 28;
+            this.btnSetTrans.Text = "Set transparency";
+            this.btnSetTrans.UseVisualStyleBackColor = true;
+            this.btnSetTrans.Click += new System.EventHandler(this.btnSetTrans_Click);
+            // 
             // ImageControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -457,7 +456,6 @@ namespace PluginInterface.Images
             this.groupProp.ResumeLayout(false);
             this.groupProp.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numPal)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBgd)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackZoom)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericStart)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pic)).EndInit();
@@ -489,7 +487,6 @@ namespace PluginInterface.Images
         private System.Windows.Forms.Label lblZoom;
         private System.Windows.Forms.TrackBar trackZoom;
         private System.Windows.Forms.CheckBox checkTransparency;
-        private System.Windows.Forms.PictureBox pictureBgd;
         private System.Windows.Forms.Button btnBgd;
         private System.Windows.Forms.Button btnBgdTrans;
         internal System.Windows.Forms.Button btnImport;
@@ -498,5 +495,6 @@ namespace PluginInterface.Images
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.NumericUpDown numPal;
         private System.Windows.Forms.Button btnFotochoh;
+        private System.Windows.Forms.Button btnSetTrans;
     }
 }

@@ -43,39 +43,51 @@ namespace Images
 
             br.Close();
 
-            Set_Map(nscr.nrcs.mapData, false, nscr.nrcs.width, nscr.nrcs.height);
+            Set_Map(nscr.nrcs.mapData, true, nscr.nrcs.width, nscr.nrcs.height);
         }
         public override void Write(string fileOut, ImageBase image, PaletteBase palette)
         {
-            /*
-             *             BinaryWriter bw = new BinaryWriter(File.OpenWrite(fileout));
+            Update_Struct();
+            BinaryWriter bw = new BinaryWriter(File.OpenWrite(fileOut));
 
-                        // Common header
-                        bw.Write(map.header.id);
-                        bw.Write(map.header.endianess);
-                        bw.Write(map.header.constant);
-                        bw.Write(map.header.file_size);
-                        bw.Write(map.header.header_size);
-                        bw.Write(map.header.nSection);
-                        // SCRN section
-                        bw.Write(map.section.id);
-                        bw.Write(map.section.section_size);
-                        bw.Write(map.section.width);
-                        bw.Write(map.section.height);
-                        bw.Write(map.section.padding);
-                        bw.Write(map.section.data_size);
-                        for (int i = 0; i < map.section.mapData.Length; i++)
-                        {
-                            int npalette = map.section.mapData[i].nPalette << 12;
-                            int yFlip = map.section.mapData[i].yFlip << 11;
-                            int xFlip = map.section.mapData[i].xFlip << 10;
-                            int data = npalette + yFlip + xFlip + map.section.mapData[i].nTile;
-                            bw.Write((ushort)data);
-                        }
+            // Common header
+            bw.Write(nscr.header.id);
+            bw.Write(nscr.header.endianess);
+            bw.Write(nscr.header.constant);
+            bw.Write(nscr.header.file_size);
+            bw.Write(nscr.header.header_size);
+            bw.Write(nscr.header.nSection);
 
-                        bw.Flush();
-                        bw.Close();
-            */
+            // SCRN section
+            bw.Write(nscr.nrcs.id);
+            bw.Write(nscr.nrcs.section_size);
+            bw.Write(nscr.nrcs.width);
+            bw.Write(nscr.nrcs.height);
+            bw.Write(nscr.nrcs.padding);
+            bw.Write(nscr.nrcs.data_size);
+
+            for (int i = 0; i < nscr.nrcs.mapData.Length; i++)
+            {
+                int npalette = nscr.nrcs.mapData[i].nPalette << 12;
+                int yFlip = nscr.nrcs.mapData[i].yFlip << 11;
+                int xFlip = nscr.nrcs.mapData[i].xFlip << 10;
+                int data = npalette + yFlip + xFlip + nscr.nrcs.mapData[i].nTile;
+                bw.Write((ushort)data);
+            }
+
+            bw.Flush();
+            bw.Close();
+
+        }
+
+        private void Update_Struct()
+        {
+            nscr.nrcs.width = (ushort)Width;
+            nscr.nrcs.height = (ushort)Height;
+            nscr.nrcs.mapData = Map;
+            nscr.nrcs.data_size = (uint)(Map.Length * 2);
+            nscr.nrcs.section_size = nscr.nrcs.data_size + 0x14;
+            nscr.header.file_size = nscr.nrcs.section_size + 0x10;
         }
 
         public struct sNSCR      // Nintendo SCreen Resource

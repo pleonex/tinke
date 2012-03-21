@@ -109,30 +109,50 @@ namespace INAZUMA11
 
         public static sFolder Unpack_PKH1(string pkb, string pkh)
         {
+            // Fixed problem with some files thanks to ouioui2003
             BinaryReader br = new BinaryReader(File.OpenRead(pkh));
             sFolder unpacked = new sFolder();
             unpacked.files = new List<sFile>();
 
             br.BaseStream.Position = 0x10;  // Skip the header name
-            uint file_size = br.ReadUInt32();
+            ushort file_size = br.ReadUInt16();
+            ushort type = br.ReadUInt16();
             ushort unknown = br.ReadUInt16();
             uint num_files = br.ReadUInt16();
             uint unknown2 = br.ReadUInt32();
-            uint unknown3 = br.ReadUInt32();
+            uint block_length = br.ReadUInt32();
 
             br.BaseStream.Position += 0x10; // 0x00
 
-            for (int i = 0; i < num_files; i++)
+            if (type == 0)
             {
-                br.ReadUInt32();    // Unknown, ID¿?
+                for (int i = 0; i < num_files; i++)
+                {
+                    br.ReadUInt32();    // Unknown, ID¿?
 
-                sFile newFile = new sFile();
-                newFile.name = "File" + i.ToString() + ".pac_";
-                newFile.offset = br.ReadUInt32();
-                newFile.size = br.ReadUInt32();
-                newFile.path = pkb;
+                    sFile newFile = new sFile();
+                    newFile.name = "File" + i.ToString() + ".pac_";
+                    newFile.offset = br.ReadUInt32();
+                    newFile.size = br.ReadUInt32();
+                    newFile.path = pkb;
 
-                unpacked.files.Add(newFile);
+                    unpacked.files.Add(newFile);
+                }
+            }
+            else if (type == 3 || type == 2)
+            {
+                for (int i = 0; i < num_files; i++)
+                {
+                    br.ReadUInt32();    // Unknown, ID¿?
+
+                    sFile newFile = new sFile();
+                    newFile.name = "File" + i.ToString() + ".pac_";
+                    newFile.offset = (uint)i * block_length;
+                    newFile.size = block_length;
+                    newFile.path = pkb;
+
+                    unpacked.files.Add(newFile);
+                }
             }
 
             br.Close();

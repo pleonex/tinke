@@ -74,6 +74,7 @@ namespace Images
         }
         public override void Write(string fileOut, PaletteBase palette)
         {
+            Update_Struct();
             BinaryWriter bw = new BinaryWriter(File.OpenWrite(fileOut));
 
             // Common header
@@ -87,18 +88,15 @@ namespace Images
             // RAHC section
             bw.Write(ncgr.rahc.id);
             bw.Write(ncgr.rahc.size_section);
-            bw.Write((ushort)(ncgr.rahc.nTilesY / 8));
-            bw.Write((ushort)(ncgr.rahc.nTilesX / 8));
+            bw.Write(ncgr.rahc.nTilesY);
+            bw.Write(ncgr.rahc.nTilesX);
             bw.Write((uint)(ncgr.rahc.depth));
             bw.Write(ncgr.rahc.unknown1);
             bw.Write(ncgr.rahc.unknown2);
             bw.Write(ncgr.rahc.tiledFlag);
-            bw.Write((uint)Tiles.Length);
+            bw.Write(ncgr.rahc.size_tiledata);
             bw.Write(ncgr.rahc.unknown3);
-            if (ncgr.rahc.depth == ColorFormat.colors16)
-                bw.Write(pluginHost.Bit4ToBit8(Tiles));
-            else
-                bw.Write(Tiles);
+            bw.Write(ncgr.rahc.data);
 
             // SOPC section
             if (ncgr.header.nSection == 2)
@@ -112,6 +110,28 @@ namespace Images
 
             bw.Flush();
             bw.Close();
+        }
+
+        private void Update_Struct()
+        {
+            ncgr.rahc.nTilesX = (ushort)(Width / 8);
+            ncgr.rahc.nTilesY = (ushort)(Height / 8);
+
+            ncgr.rahc.data = Tiles;
+            if (this.TileForm == PluginInterface.Images.TileForm.Lineal && ncgr.order == PluginInterface.Images.TileForm.Horizontal)
+            {
+                ncgr.rahc.data = Actions.HorizontalToLineal(Tiles, ncgr.rahc.nTilesX, ncgr.rahc.nTilesY, TileWidth);
+                Set_Tiles(ncgr.rahc.data, this.Width, this.Height, this.ColorFormat, ncgr.order, true);
+            }
+
+            ncgr.rahc.depth = ColorFormat;
+
+            //if (ncgr.rahc.depth == ColorFormat.colors16)
+            //    ncgr.rahc.data = pluginHost.Bit4ToBit8(ncgr.rahc.data);
+
+            ncgr.rahc.size_tiledata = (uint)ncgr.rahc.data.Length;
+            ncgr.rahc.size_section = ncgr.rahc.size_tiledata + 0x24;
+            ncgr.header.file_size = ncgr.rahc.size_section + 0x10;
         }
 
         public struct sNCGR  // Nintendo Character Graphic Resource

@@ -491,7 +491,60 @@ namespace _3DModels
                     br.BaseStream.Position = modelOffset + data.header.materialOffset + (uint)data.material.definition.infoBlock.infoData[i];
                     br.BaseStream.Position += 4 + 18;       // 0x04 for Texture and Palette offset, 18 unknown but it works :)
                     data.material.material[i].definition = br.ReadBytes(0x2E);
+
+                    if (i < data.material.texture.names.Length)
+                    {
+                        int texID = ((sBMD0.Model.ModelData.Material.TexPalData)data.material.texture.infoBlock.infoData[i]).ID;
+                        data.material.material[texID].texName = data.material.texture.names[i];
+                        data.material.material[texID].texID = (byte)i;
+                    }
+                    if (i < data.material.palette.names.Length)
+                    {
+                        int palID = ((sBMD0.Model.ModelData.Material.TexPalData)data.material.palette.infoBlock.infoData[i]).ID;
+                        data.material.material[palID].palName = data.material.palette.names[i];
+                        data.material.material[palID].palID = (byte)i;
+                    }
                 }
+                for (int i = 0; i < data.material.definition.num_objs; i++)
+                {
+                    sBMD0.Model.ModelData.Material.MatDef mat = data.material.material[i];
+                    if (mat.palName != null && mat.texName != null)
+                        continue;
+
+                    Console.WriteLine("Trying to fix...");
+                    if (mat.texName == null)
+                    {
+                        for (int t = 0; t < data.material.texture.infoBlock.infoData.Length; t++)
+                        {
+                            sBMD0.Model.ModelData.Material.TexPalData tex = (sBMD0.Model.ModelData.Material.TexPalData)data.material.texture.infoBlock.infoData[t];
+                            if (tex.num_associated_mat <= 1)
+                                continue;
+
+                            mat.texName = data.material.texture.names[t];
+                            mat.texID = (byte)t;
+                            tex.num_associated_mat--;
+                            data.material.texture.infoBlock.infoData[t] = tex;
+                            break;
+                        }
+                    }
+                    if (mat.palName == null)
+                    {
+                        for (int p = 0; p < data.material.palette.infoBlock.infoData.Length; p++)
+                        {
+                            sBMD0.Model.ModelData.Material.TexPalData pal = (sBMD0.Model.ModelData.Material.TexPalData)data.material.palette.infoBlock.infoData[p];
+                            if (pal.num_associated_mat <= 1)
+                                continue;
+
+                            mat.palName = data.material.palette.names[p];
+                            mat.palID = (byte)p;
+                            pal.num_associated_mat--;
+                            data.material.palette.infoBlock.infoData[p] = pal;
+                            break;
+                        }
+                    }
+                    data.material.material[i] = mat;
+                }
+                BTX0.Match_Textures(ref data.material.material, data.material.palette.names, data.material.texture.names);
                 #endregion
 
                 // Polygon section
@@ -545,7 +598,7 @@ namespace _3DModels
                     def.unknown2 = br.ReadUInt32();
                     def.display_offset = br.ReadUInt32() + (uint)currPos;
                     def.display_size = br.ReadUInt32();
-                    data.polygon.definition[i]= def;
+                    data.polygon.definition[i] = def;
                 }
                 #endregion
                 #region Display list
@@ -560,7 +613,7 @@ namespace _3DModels
                     {
                         byte[] cmdID = new byte[] { display_list[l], display_list[l + 1], display_list[l + 2], display_list[l + 3] };
                         l += 4;
-                        
+
                         Command[] commands = new Command[4];
                         for (int c = 0; c < 4; c++)
                         {
@@ -658,7 +711,7 @@ namespace _3DModels
                     Console.WriteLine("<u>" + xml.Element("S25").Value + "</u><ol>");
                     for (int i = 0; i < bmd.model.mdlData[m].bones.commands.Count; i++)
                     {
-                        Console.WriteLine("<li>" + xml.Element("S26").Value + "</li>", i, bmd.model.mdlData[m].bones.commands[i].command, 
+                        Console.WriteLine("<li>" + xml.Element("S26").Value + "</li>", i, bmd.model.mdlData[m].bones.commands[i].command,
                             bmd.model.mdlData[m].bones.commands[i].size, BitConverter.ToString(bmd.model.mdlData[m].bones.commands[i].parameters, 0));
                     }
                     Console.WriteLine("</ol>");
@@ -871,12 +924,12 @@ namespace _3DModels
                         break;
 
                     #region Vertex commands
-                        // Multiply by the clipmatrix
+                    // Multiply by the clipmatrix
                     case GeometryCmd.VTX_16:
                         vector.X = Get_Double((int)(geoCmd[i].param[0] & 0xFFFF), true, 3, 12);
                         vector.Y = Get_Double((int)(geoCmd[i].param[0] >> 16), true, 3, 12);
                         vector.Z = Get_Double((int)(geoCmd[i].param[1] & 0xFFFF), true, 3, 12);
-                        
+
                         GL.Vertex3(vector);
                         break;
 
@@ -884,14 +937,14 @@ namespace _3DModels
                         vector.X = Get_Double((int)(geoCmd[i].param[0] & 0x3FF), true, 3, 6);
                         vector.Y = Get_Double((int)((geoCmd[i].param[0] >> 10) & 0x3FF), true, 3, 6);
                         vector.Z = Get_Double((int)(geoCmd[i].param[0] >> 20), true, 3, 6);
-                        
+
                         GL.Vertex3(vector);
                         break;
 
                     case GeometryCmd.VTX_XY:
                         vector.X = Get_Double((int)(geoCmd[i].param[0] & 0xFFFF), true, 3, 12);
                         vector.Y = Get_Double((int)(geoCmd[i].param[0] >> 16), true, 3, 12);
-                        
+
                         GL.Vertex3(vector);
 
                         break;
@@ -899,7 +952,7 @@ namespace _3DModels
                     case GeometryCmd.VTX_XZ:
                         vector.X = Get_Double((int)(geoCmd[i].param[0] & 0xFFFF), true, 3, 12);
                         vector.Z = Get_Double((int)(geoCmd[i].param[0] >> 16), true, 3, 12);
-                        
+
                         GL.Vertex3(vector);
 
                         break;
@@ -907,7 +960,7 @@ namespace _3DModels
                     case GeometryCmd.VTX_YZ:
                         vector.Y = Get_Double((int)(geoCmd[i].param[0] & 0xFFFF), true, 3, 12);
                         vector.Z = Get_Double((int)(geoCmd[i].param[0] >> 16), true, 3, 12);
-                        
+
                         GL.Vertex3(vector);
 
                         break;
@@ -922,21 +975,18 @@ namespace _3DModels
                         vector.X += (diffX / 8);
                         vector.Y += (diffY / 8);
                         vector.Z += (diffZ / 8);
-                        
+
                         GL.Vertex3(vector);
                         break;
                     #endregion
 
                     case GeometryCmd.COLOR:
                         // Convert the param to RGB555 color
-                        int r = ((int)geoCmd[i].param[0] & 0x001F);
-                        int g = (((int)geoCmd[i].param[0] & 0x03E0) >> 5);
-                        int b = (((int)geoCmd[i].param[0] & 0x7C00) >> 10);
-                        r = r * 2 + (r + 31) / 32;
-                        g = g * 2 + (g + 31) / 32;
-                        b = b * 2 + (b + 31) / 32;
+                        int r = (int)(geoCmd[i].param[0] & 0x1F);
+                        int g = (int)((geoCmd[i].param[0] >> 5) & 0x1F);
+                        int b = (int)((geoCmd[i].param[0] >> 10) & 0x1F);
 
-                        GL.Color3(Color.FromArgb(r, g, b));
+                        GL.Color3((float)r / 31.0f, (float)g / 31.0f, (float)b / 31.0f);
                         break;
                     case GeometryCmd.POLYGON_ATTR:
                         break;
@@ -1145,6 +1195,11 @@ namespace _3DModels
                     public struct MatDef
                     {
                         public byte[] definition;   // Usually 48 bytes
+
+                        public string texName;
+                        public byte texID;
+                        public string palName;
+                        public byte palID;
                     }
 
                 }

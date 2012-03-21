@@ -211,8 +211,8 @@ namespace Fonts
 
         private void btnPalette_Click(object sender, EventArgs e)
         {
-            if (pluginHost.Get_NCLR().header.file_size != 0x00)
-                palette = pluginHost.Get_NCLR().pltt.palettes[0].colors;
+            if (pluginHost.Get_Palette().Loaded)
+                palette = pluginHost.Get_Palette().Palette[0];
 
             int depth = Convert.ToByte(new String('1', font.plgc.depth), 2);
             Color[] palette2 = new System.Drawing.Color[depth + 1];

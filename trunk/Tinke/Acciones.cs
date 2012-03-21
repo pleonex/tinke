@@ -1535,8 +1535,8 @@ namespace Tinke
                     f = plugin.Get_Format(new FileInfo(arg).Name, ext, -1);
                     if (f == Format.Compressed || f == Format.Pack)
                     {
-                        plugin.Read(arg, -1);
-                        goto Continuar;
+                        pluginHost.Set_Files(plugin.Unpack(arg));
+                        return;
                     }
                 }
 
@@ -1568,7 +1568,6 @@ namespace Tinke
                 MessageBox.Show(e.Message);
                 Console.WriteLine(e.Message);
             }
-        Continuar:
             return;
         }
 
@@ -1829,15 +1828,17 @@ namespace Tinke
 
         public void Read_File()
         {
-            sFile selectFile = Selected_File();
-
+            Read_File(Selected_File());
+        }
+        public void Read_File(sFile currfile)
+        {
             // Save the file
-            string tempFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + selectFile.id + selectFile.name;
-            BinaryReader br = new BinaryReader(File.OpenRead(selectFile.path));
-            br.BaseStream.Position = selectFile.offset;
-            File.WriteAllBytes(tempFile, br.ReadBytes((int)selectFile.size));
+            string tempFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + Path.GetRandomFileName() + currfile.name;
+            BinaryReader br = new BinaryReader(File.OpenRead(currfile.path));
+            br.BaseStream.Position = currfile.offset;
+            File.WriteAllBytes(tempFile, br.ReadBytes((int)currfile.size));
 
-            br.BaseStream.Position = selectFile.offset;
+            br.BaseStream.Position = currfile.offset;
             byte[] ext = br.ReadBytes(4);
             br.Close();
 
@@ -1846,7 +1847,7 @@ namespace Tinke
             {
                 foreach (IGamePlugin plugin in gamePlugin)
                 {
-                    if (plugin.Get_Format(selectFile.name, ext, idSelect) != Format.Unknown)
+                    if (plugin.Get_Format(currfile.name, ext, idSelect) != Format.Unknown)
                     {
                         plugin.Read(tempFile, idSelect);
                         File.Delete(tempFile);
@@ -1856,26 +1857,13 @@ namespace Tinke
 
                 foreach (IPlugin plugin in formatList)
                 {
-                    if (plugin.Get_Format(selectFile.name, ext, idSelect) != Format.Unknown)
+                    if (plugin.Get_Format(currfile.name, ext, idSelect) != Format.Unknown)
                     {
                         plugin.Read(tempFile, idSelect);
                         File.Delete(tempFile);
                         return;
                     }
                 }
-            }
-            catch (Exception e)
-            {
-                MessageBox.Show(e.Message);
-                Console.WriteLine(e.Message);
-            }
-            #endregion
-
-            #region Common image format
-            try
-            {
-                if (DSDecmp.Main.Get_Format(tempFile) != FormatCompress.Invalid)
-                    MessageBox.Show(Tools.Helper.GetTranslation("Messages", "S1A"), "", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception e)
             {

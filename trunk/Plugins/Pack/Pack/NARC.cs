@@ -95,8 +95,8 @@ namespace Pack
                     for (int i = 0; i < arc.btaf.nFiles; i++)
                     {
                         sFile currFile = new sFile();
-                        currFile.id = (ushort)idFile++;
                         currFile.name = "File" + idFile.ToString();
+                        currFile.id = (ushort)idFile++;
 
                         // FAT data
                         currFile.path = narcFile;

@@ -76,7 +76,7 @@ namespace TETRIS_DS
                     uint size_b = br.ReadUInt32();
                     byte b1 = (byte)(size_b & 0x03);
                     byte b2 = (byte)((size_b & 0x0C) >> 2);
-                    System.Drawing.Size size = pluginHost.Size_NCER(b1, b2);
+                    System.Drawing.Size size = Actions.Get_OAMSize(b1, b2);
                     banks[i].oams[j].width = (ushort)size.Width;
                     banks[i].oams[j].height = (ushort)size.Height;
 
