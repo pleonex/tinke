@@ -31,59 +31,6 @@ namespace Tinke
     public static class Convertir
     {
         #region Palette
-        /// <summary>
-        /// A partir de un array de bytes devuelve un array de colores.
-        /// </summary>
-        /// <param name="bytes">Bytes para convertir</param>
-        /// <returns>Colores de la paleta.</returns>
-        public static Color[] BGR555(byte[] bytes)
-        {
-            Color[] paleta = new Color[bytes.Length / 2];
-
-            for (int i = 0; i < bytes.Length / 2; i++)
-            {
-                paleta[i] = BGR555(bytes[i * 2], bytes[i * 2 + 1]);
-            }
-            return paleta;
-        }
-        /// <summary>
-        /// Convierte dos bytes en un color.
-        /// </summary>
-        /// <param name="byte1">Primer byte</param>
-        /// <param name="byte2">Segundo byte</param>
-        /// <returns>Color convertido</returns>
-        public static Color BGR555(byte byte1, byte byte2)
-        {
-            int r, b, g;
-            short bgr = BitConverter.ToInt16(new Byte[] { byte1, byte2 }, 0);
-
-            r = (bgr & 0x001F) * 0x08;
-            g = ((bgr & 0x03E0) >> 5) * 0x08;
-            b = ((bgr & 0x7C00) >> 10) * 0x08;
-
-            return System.Drawing.Color.FromArgb(r, g, b);
-        }
-        /// <summary>
-        /// Convert colors to byte with BGR555 encoding
-        /// </summary>
-        /// <param name="colores">Colors to convert</param>
-        /// <returns>Bytes converted</returns>
-        public static Byte[] ColorToBGR555(Color[] colores)
-        {
-            List<Byte> datos = new List<Byte>(colores.Length * 2);
-
-            for (int i = 0; i < colores.Length; i++)
-            {
-                int r = colores[i].R / 8;
-                int g = (colores[i].G / 8) << 5;
-                int b = (colores[i].B / 8) << 10;
-
-                ushort bgr = (ushort)(r + g + b);
-                datos.AddRange(BitConverter.GetBytes(bgr));
-            }
-
-            return datos.ToArray();
-        }
 
         public static Color[][] Palette_4bppTo8bpp(Color[][] palette)
         {
@@ -132,26 +79,6 @@ namespace Tinke
         #endregion
 
         #region Map
-        public static NTFS MapInfo(ushort value)
-        {
-            NTFS mapInfo = new NTFS();
-            
-            mapInfo.nTile = (ushort)(value & 0x3FF);
-            mapInfo.xFlip = (byte)((value >> 10) & 1);
-            mapInfo.yFlip = (byte)((value >> 11) & 1);
-            mapInfo.nPalette = (byte)((value >> 12) & 0xF);
-
-            return mapInfo;
-        }
-        public static ushort MapInfo(NTFS map)
-        {
-            int npalette = map.nPalette << 12;
-            int yFlip = map.yFlip << 11;
-            int xFlip = map.xFlip << 10;
-            int data = npalette + yFlip + xFlip + map.nTile;
-
-            return (ushort)data;
-        }
         #endregion
 
         /// <summary>

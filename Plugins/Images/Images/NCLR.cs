@@ -50,7 +50,7 @@ namespace Images
 
             br.BaseStream.Position = 0x18 + colors_startOffset;
             for (int i = 0; i < pltt.palettes.Length; i++)
-                pltt.palettes[i] = pluginHost.BGR555ToColor(br.ReadBytes((int)pltt.num_colors * 2));
+                pltt.palettes[i] = Actions.BGR555ToColor(br.ReadBytes((int)pltt.num_colors * 2));
 
             nclr.pltt = pltt;
 
@@ -94,7 +94,7 @@ namespace Images
             bw.Write(0x10);                     // Colors start offset from 0x14
 
             for (int i = 0; i < nclr.pltt.palettes.Length; i++)
-                bw.Write(pluginHost.ColorToBGR555(nclr.pltt.palettes[i]));
+                bw.Write(Actions.ColorToBGR555(nclr.pltt.palettes[i]));
 
             bw.Flush();
             bw.Close();

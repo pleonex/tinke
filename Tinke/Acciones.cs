@@ -1175,7 +1175,7 @@ namespace Tinke
 
             currFile.name = currFile.name.ToUpper();
             if (currFile.name == "FNT.BIN" || currFile.name == "FAT.BIN" || currFile.name.StartsWith("OVERLAY9_") || currFile.name.StartsWith("OVERLAY7_") ||
-                currFile.name == "ARM9.BIN" || currFile.name == "ARM7.BIN" || currFile.name == "Y9.BIN" || currFile.name == "Y7.BIN" ||
+                currFile.name == "ARM9.BIN" || currFile.name == "ARM7.BIN" || currFile.name == "Y9.BIN" || currFile.name == "Y7.BIN" || currFile.name == "BANNER.BIN" ||
                 currFile.name.EndsWith(".SRL") || currFile.name.EndsWith(".NDS"))
                 return Format.System;
 
@@ -1245,7 +1245,7 @@ namespace Tinke
             fs.Dispose();
 
             if (currFile.name == "FNT.BIN" || currFile.name == "FAT.BIN" || currFile.name.StartsWith("OVERLAY9_") || currFile.name.StartsWith("OVERLAY7_") ||
-                currFile.name == "ARM9.BIN" || currFile.name == "ARM7.BIN" || currFile.name == "Y9.BIN" || currFile.name == "Y7.BIN")
+                currFile.name == "ARM9.BIN" || currFile.name == "ARM7.BIN" || currFile.name == "Y9.BIN" || currFile.name == "Y7.BIN" || currFile.name == "BANNER.BIN")
                 return Format.System;
 
 
@@ -1287,7 +1287,7 @@ namespace Tinke
             name = name.ToUpper();
             if (name == "FNT.BIN" || name == "FAT.BIN" || name.StartsWith("OVERLAY9_") || name.StartsWith("OVERLAY7_") ||
                 name == "ARM9.BIN" || name == "ARM7.BIN" || name == "Y9.BIN" || name == "Y7.BIN" || name.EndsWith(".SRL") ||
-                name.EndsWith(".NDS"))
+                name.EndsWith(".NDS") || name == "BANNER.BIN")
                 return Format.System;
 
             if (new String(Encoding.ASCII.GetChars(ext)) == "LZ77") // LZ77
@@ -1358,7 +1358,7 @@ namespace Tinke
                 return Format.Compressed;
 
             if (name == "FNT.BIN" || name == "FAT.BIN" || name.StartsWith("OVERLAY9_") || name.StartsWith("OVERLAY7_") ||
-                name == "ARM9.BIN" || name == "ARM7.BIN" || name == "Y9.BIN" || name == "Y7.BIN")
+                name == "ARM9.BIN" || name == "ARM7.BIN" || name == "Y9.BIN" || name == "Y7.BIN" || name == "BANNER.BIN")
                 return Format.System;
 
             return Format.Unknown;

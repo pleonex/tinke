@@ -75,7 +75,7 @@ namespace KIRBY_DRO
             {
                 NTFS[] maps = new NTFS[map_length / 2];
                 for (int i = 0; i < maps.Length; i++)
-                    maps[i] = pluginHost.MapInfo(br.ReadUInt16());
+                    maps[i] = Actions.MapInfo(br.ReadUInt16());
                 Set_Map(maps, false);
             }
 

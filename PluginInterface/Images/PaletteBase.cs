@@ -101,7 +101,7 @@ namespace PluginInterface.Images
             Array.Copy(original, start, data, 0, data.Length);
             // Convert it to colors
             List<Color> colors = new List<Color>();
-            colors.AddRange(pluginHost.BGR555ToColor(data));
+            colors.AddRange(Actions.BGR555ToColor(data));
 
             if (depth == ColorFormat.colors16)
             {
@@ -136,7 +136,7 @@ namespace PluginInterface.Images
             List<Color> colors = new List<Color>();
             for (int i = 0; i < palette.Length; i++)
                 colors.AddRange(palette[i]);
-            original = pluginHost.ColorToBGR555(colors.ToArray());
+            original = Actions.ColorToBGR555(colors.ToArray());
             startByte = 0;
         }
         public void Set_Palette(Color[][] palette, ColorFormat depth, bool editable)
@@ -151,7 +151,7 @@ namespace PluginInterface.Images
             List<Color> colors = new List<Color>();
             for (int i = 0; i < palette.Length; i++)
                 colors.AddRange(palette[i]);
-            original = pluginHost.ColorToBGR555(colors.ToArray());
+            original = Actions.ColorToBGR555(colors.ToArray());
             startByte = 0;
         }
         public void Set_Palette(PaletteBase new_pal)
@@ -165,7 +165,7 @@ namespace PluginInterface.Images
             List<Color> colors = new List<Color>();
             for (int i = 0; i < palette.Length; i++)
                 colors.AddRange(palette[i]);
-            original = pluginHost.ColorToBGR555(colors.ToArray());
+            original = Actions.ColorToBGR555(colors.ToArray());
             startByte = 0;
         }
         public void Set_Palette(Color[][] palette)
@@ -182,7 +182,7 @@ namespace PluginInterface.Images
             List<Color> colors = new List<Color>();
             for (int i = 0; i < palette.Length; i++)
                 colors.AddRange(palette[i]);
-            original = pluginHost.ColorToBGR555(colors.ToArray());
+            original = Actions.ColorToBGR555(colors.ToArray());
             startByte = 0;
         }
 
@@ -204,7 +204,18 @@ namespace PluginInterface.Images
         }
         public int NumberOfColors
         {
-            get { return palette[0].Length; }
+            get
+            {
+                if (depth == ColorFormat.colors256)
+                    return palette[0].Length;
+                else
+                {
+                    int colors = 0;
+                    for (int i = 0; i < palette.Length; i++)
+                        colors += palette[i].Length;
+                    return colors;
+                }
+            }
         }
         public Color[][] Palette
         {
@@ -229,6 +240,7 @@ namespace PluginInterface.Images
         public Byte[] Original
         {
             set { original = value; }
+            get { return original; }
         }
         #endregion
     }

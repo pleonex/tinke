@@ -303,6 +303,15 @@ namespace Tinke
             accion.LastFileID++;
             ftc.files.Add(fat);
 
+            sFile banner = new sFile();
+            banner.name = "banner.bin";
+            banner.offset = romInfo.Cabecera.bannerOffset;
+            banner.size = 0x840;
+            banner.path = accion.ROMFile;
+            banner.id = (ushort)accion.LastFileID;
+            accion.LastFileID++;
+            ftc.files.Add(banner);
+
             sFile arm9 = new sFile();
             arm9.name = "arm9.bin";
             arm9.offset = romInfo.Cabecera.ARM9romOffset;
@@ -1287,6 +1296,7 @@ namespace Tinke
              *     |_Start offset
              *     |_End offset
              * Banner
+             *   |_Header 0x20
              *   |_Icon (Bitmap + palette) 0x200 + 0x20
              *   |_Game titles (Japanese, English, French, German, Italian, Spanish) 6 * 0x100
              * Files...

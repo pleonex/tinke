@@ -73,11 +73,6 @@ namespace Tinke
 
         public void Set_Object(Object objects) { this.objects = objects; }
 
-        public Color[] BGR555ToColor(byte[] datos) { return Convertir.BGR555(datos); }
-        public Byte[] ColorToBGR555(Color[] color) { return Convertir.ColorToBGR555(color); }
-        public NTFS MapInfo(ushort value) { return Convertir.MapInfo(value); }
-        public ushort MapInfo(NTFS map) { return Convertir.MapInfo(map); }
-
         public Color[][] Palette_4bppTo8bpp(Color[][] palette) { return Convertir.Palette_4bppTo8bpp(palette); }
         public Color[][] Palette_8bppTo4bpp(Color[][] palette) { return Convertir.Palette_8bppTo4bpp(palette); }
 

@@ -72,11 +72,7 @@ namespace TOTTEMPEST
 
             bw.Write(num_tiles);
             bw.Write((ushort)(ColorFormat == PluginInterface.Images.ColorFormat.colors16 ? 0x00 : 0x01));
-            // Write the tile data
-            if (ColorFormat == PluginInterface.Images.ColorFormat.colors16)
-                bw.Write(pluginHost.Bit8ToBit4(Tiles));
-            else
-                bw.Write(Tiles);
+            bw.Write(Tiles);
 
             bw.Flush();
             bw.Close();

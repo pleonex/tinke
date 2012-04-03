@@ -42,11 +42,6 @@ namespace PluginInterface
         void Set_Map(MapBase map);
         void Set_Sprite(SpriteBase sprite);
         
-        Color[] BGR555ToColor(byte[] data);
-        Byte[] ColorToBGR555(Color[] color);
-        NTFS MapInfo(ushort value);
-        ushort MapInfo(NTFS map);
-
         Byte[][] MergeImage(Byte[][] originalTile, Byte[][] newTiles, int startTile);
         Color[][] Palette_4bppTo8bpp(Color[][] palette);
         Color[][] Palette_8bppTo4bpp(Color[][] palette);

@@ -40,7 +40,6 @@
             this.checkImagen = new System.Windows.Forms.CheckBox();
             this.label2 = new System.Windows.Forms.Label();
             this.btnBgdTrans = new System.Windows.Forms.Button();
-            this.pictureBgd = new System.Windows.Forms.PictureBox();
             this.btnBgd = new System.Windows.Forms.Button();
             this.label8 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
@@ -49,8 +48,9 @@
             this.btnImport = new System.Windows.Forms.Button();
             this.btnSetTrans = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.checkPalette = new System.Windows.Forms.CheckBox();
+            this.btnOAMeditor = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.imgBox)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBgd)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackZoom)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -63,6 +63,7 @@
             this.imgBox.TabIndex = 0;
             this.imgBox.TabStop = false;
             this.imgBox.DoubleClick += new System.EventHandler(this.imgBox_DoubleClick);
+            this.imgBox.MouseClick += new System.Windows.Forms.MouseEventHandler(this.imgBox_MouseClick);
             // 
             // label1
             // 
@@ -174,29 +175,19 @@
             // btnBgdTrans
             // 
             this.btnBgdTrans.Enabled = false;
-            this.btnBgdTrans.Location = new System.Drawing.Point(176, 321);
+            this.btnBgdTrans.Location = new System.Drawing.Point(92, 322);
             this.btnBgdTrans.Name = "btnBgdTrans";
-            this.btnBgdTrans.Size = new System.Drawing.Size(80, 35);
+            this.btnBgdTrans.Size = new System.Drawing.Size(80, 40);
             this.btnBgdTrans.TabIndex = 29;
             this.btnBgdTrans.Text = "S18";
             this.btnBgdTrans.UseVisualStyleBackColor = true;
             this.btnBgdTrans.Click += new System.EventHandler(this.btnBgdTrans_Click);
             // 
-            // pictureBgd
-            // 
-            this.pictureBgd.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pictureBgd.Location = new System.Drawing.Point(135, 322);
-            this.pictureBgd.Name = "pictureBgd";
-            this.pictureBgd.Size = new System.Drawing.Size(35, 35);
-            this.pictureBgd.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pictureBgd.TabIndex = 28;
-            this.pictureBgd.TabStop = false;
-            // 
             // btnBgd
             // 
             this.btnBgd.Location = new System.Drawing.Point(6, 322);
             this.btnBgd.Name = "btnBgd";
-            this.btnBgd.Size = new System.Drawing.Size(118, 35);
+            this.btnBgd.Size = new System.Drawing.Size(80, 40);
             this.btnBgd.TabIndex = 27;
             this.btnBgd.Text = "S17";
             this.btnBgd.UseVisualStyleBackColor = true;
@@ -233,6 +224,7 @@
             // trackZoom
             // 
             this.trackZoom.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
+            this.trackZoom.Enabled = false;
             this.trackZoom.LargeChange = 2;
             this.trackZoom.Location = new System.Drawing.Point(262, 322);
             this.trackZoom.Maximum = 20;
@@ -251,15 +243,17 @@
             this.btnImport.TabIndex = 30;
             this.btnImport.Text = "S24";
             this.btnImport.UseVisualStyleBackColor = true;
+            this.btnImport.Click += new System.EventHandler(this.btnImport_Click);
             // 
             // btnSetTrans
             // 
-            this.btnSetTrans.Location = new System.Drawing.Point(6, 363);
+            this.btnSetTrans.Location = new System.Drawing.Point(178, 322);
             this.btnSetTrans.Name = "btnSetTrans";
-            this.btnSetTrans.Size = new System.Drawing.Size(118, 32);
+            this.btnSetTrans.Size = new System.Drawing.Size(80, 40);
             this.btnSetTrans.TabIndex = 31;
             this.btnSetTrans.Text = "S25";
             this.btnSetTrans.UseVisualStyleBackColor = true;
+            this.btnSetTrans.Click += new System.EventHandler(this.btnSetTrans_Click);
             // 
             // groupBox1
             // 
@@ -275,18 +269,42 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Options";
             // 
+            // checkPalette
+            // 
+            this.checkPalette.AutoSize = true;
+            this.checkPalette.Checked = true;
+            this.checkPalette.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkPalette.Location = new System.Drawing.Point(416, 440);
+            this.checkPalette.Name = "checkPalette";
+            this.checkPalette.Size = new System.Drawing.Size(86, 17);
+            this.checkPalette.TabIndex = 34;
+            this.checkPalette.Text = "Save palette";
+            this.checkPalette.UseVisualStyleBackColor = true;
+            this.checkPalette.CheckedChanged += new System.EventHandler(this.checkPalette_CheckedChanged);
+            // 
+            // btnOAMeditor
+            // 
+            this.btnOAMeditor.Location = new System.Drawing.Point(320, 417);
+            this.btnOAMeditor.Name = "btnOAMeditor";
+            this.btnOAMeditor.Size = new System.Drawing.Size(90, 40);
+            this.btnOAMeditor.TabIndex = 35;
+            this.btnOAMeditor.Text = "OAM Editor";
+            this.btnOAMeditor.UseVisualStyleBackColor = true;
+            this.btnOAMeditor.Click += new System.EventHandler(this.btnOAMeditor_Click);
+            // 
             // SpriteControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Transparent;
             this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.Controls.Add(this.btnOAMeditor);
+            this.Controls.Add(this.checkPalette);
             this.Controls.Add(this.imgBox);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.btnSetTrans);
             this.Controls.Add(this.btnImport);
             this.Controls.Add(this.btnBgdTrans);
-            this.Controls.Add(this.pictureBgd);
             this.Controls.Add(this.btnBgd);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.label7);
@@ -300,7 +318,6 @@
             this.Name = "SpriteControl";
             this.Size = new System.Drawing.Size(512, 512);
             ((System.ComponentModel.ISupportInitialize)(this.imgBox)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBgd)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackZoom)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
@@ -323,7 +340,6 @@
         private System.Windows.Forms.CheckBox checkImagen;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button btnBgdTrans;
-        private System.Windows.Forms.PictureBox pictureBgd;
         private System.Windows.Forms.Button btnBgd;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label7;
@@ -332,5 +348,7 @@
         private System.Windows.Forms.Button btnImport;
         private System.Windows.Forms.Button btnSetTrans;
         private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.CheckBox checkPalette;
+        private System.Windows.Forms.Button btnOAMeditor;
     }
 }

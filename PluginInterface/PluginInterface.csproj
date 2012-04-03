@@ -54,6 +54,12 @@
   <ItemGroup>
     <Compile Include="Images\Actions.cs" />
     <Compile Include="Images\Bitmap.cs" />
+    <Compile Include="Images\Dialogs\OAMEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Images\Dialogs\OAMEditor.Designer.cs">
+      <DependentUpon>OAMEditor.cs</DependentUpon>
+    </Compile>
     <Compile Include="Images\ImageBase.cs" />
     <Compile Include="Images\ImageControl.cs">
       <SubType>UserControl</SubType>
@@ -89,6 +95,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Images\Dialogs\OAMEditor.resx">
+      <DependentUpon>OAMEditor.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Images\ImageControl.resx">
       <DependentUpon>ImageControl.cs</DependentUpon>
     </EmbeddedResource>

@@ -81,7 +81,7 @@ namespace AI_IGO_DS
                 {
                     Byte[] data = new Byte[0x20];
                     Array.Copy(defaultPaletteData, i * 0x20, data, 0, 0x20);
-                    colors[i] = pluginHost.BGR555ToColor(data);
+                    colors[i] = Actions.BGR555ToColor(data);
                 }
                 goto Tile;
             }
@@ -97,7 +97,7 @@ namespace AI_IGO_DS
             colors = new Color[depth == ColorFormat.colors16 ? (pSize - 0x08) / 0x20 : 1][];
             uint pal_length = (depth == ColorFormat.colors16) ? 0x20 : pSize - 0x08;
             for (int i = 0; i < colors.Length; i++)
-                colors[i] = pluginHost.BGR555ToColor(br.ReadBytes((int)pal_length));
+                colors[i] = Actions.BGR555ToColor(br.ReadBytes((int)pal_length));
             
             // Tile data
             Tile:
@@ -134,7 +134,7 @@ namespace AI_IGO_DS
                     map = new NTFS[(mSize[i] - 4) / 2];
 
                 for (int j = 0; j < map.Length; j++)
-                    map[j] = pluginHost.MapInfo(br.ReadUInt16());
+                    map[j] = Actions.MapInfo(br.ReadUInt16());
 
                 maps[i] = new RawMap(pluginHost, map, width, height, false);
             }

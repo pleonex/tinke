@@ -524,6 +524,35 @@ namespace PluginInterface.Images
 
             return bit4;
         }
+        public static Byte[] ByteToBit4(Byte[] data)
+        {
+            byte[] bit4 = new byte[data.Length * 2];
+            for (int i = 0; i < data.Length; i++)
+            {
+                byte[] b4 = ByteToBit4(data[i]);
+                bit4[i * 2] = b4[0];
+                bit4[i * 2 + 1] = b4[1];
+            }
+            return bit4;
+        }
+
+        public static Byte Bit4ToByte(Byte[] data)
+        {
+            return (byte)(data[0] + (data[1] << 4));
+        }
+        public static Byte Bit4ToByte(Byte b1, Byte b2)
+        {
+            return (byte)(b1 + (b2 << 4));
+        }
+        public static Byte[] Bits4ToByte(Byte[] data)
+        {
+            byte[] b = new byte[data.Length / 2];
+
+            for (int i = 0; i < data.Length; i += 2)
+                b[i / 2] = Bit4ToByte(data[i], data[i + 1]);
+
+            return b;
+        }
 
         public static int Remove_DuplicatedColors(ref Color[] palette, ref byte[] tiles)
         {
@@ -565,8 +594,11 @@ namespace PluginInterface.Images
 
             return first_notUsed_color;
         }
-        public static void Change_Color(ref byte[] tiles, int oldIndex, int newIndex)
+        public static void Change_Color(ref byte[] tiles, int oldIndex, int newIndex, ColorFormat format)
         {
+            if (format == ColorFormat.colors16) // Yeah, I should improve it
+                tiles = ByteToBit4(tiles);
+
             for (int i = 0; i < tiles.Length; i++)
             {
                 if (tiles[i] == oldIndex)
@@ -574,9 +606,14 @@ namespace PluginInterface.Images
                 else if (tiles[i] == newIndex)
                     tiles[i] = (byte)oldIndex;
             }
+
+            tiles = Bits4ToByte(tiles);
         }
-        public static void Change_Color(ref byte[] tiles, ref Color[] palette, int oldIndex, int newIndex)
+        public static void Change_Color(ref byte[] tiles, ref Color[] palette, int oldIndex, int newIndex, ColorFormat format)
         {
+            if (format == ColorFormat.colors16) // Yeah, I should improve it
+                tiles = ByteToBit4(tiles);
+
             Color old_color = palette[oldIndex];
             palette[oldIndex] = palette[newIndex];
             palette[newIndex] = old_color;
@@ -588,6 +625,8 @@ namespace PluginInterface.Images
                 else if (tiles[i] == newIndex)
                     tiles[i] = (byte)oldIndex;
             }
+
+            tiles = Bits4ToByte(tiles);
         }
         public static void Replace_Color(ref byte[] tiles, int oldIndex, int newIndex)
         {
@@ -596,6 +635,26 @@ namespace PluginInterface.Images
                 if (tiles[i] == oldIndex)
                     tiles[i] = (byte)newIndex;
             }
+        }
+
+        public static uint Add_Image(ref byte[] data, byte[] newData, uint blockSize)
+        {
+            // Add the image to the end of the data
+            // Return the offset where the data is added
+            List<byte> result = new List<byte>();
+            result.AddRange(data);
+
+            while (result.Count % blockSize != 0)
+                result.Add(0x00);
+
+            uint offset = (uint)result.Count;
+
+            result.AddRange(newData);
+            while (result.Count % blockSize != 0)
+                result.Add(0x00);
+
+            data = result.ToArray();
+            return offset;
         }
         #endregion
 
@@ -694,7 +753,82 @@ namespace PluginInterface.Images
 
             return map;
         }
+        public static NTFS[] Create_Map(ref byte[] data, int tile_width, byte palette = 0)
+        {
+            // Divide the data in tiles
+            byte[][] tiles = new byte[data.Length / (tile_width * 8)][];
+            for (int i = 0; i < tiles.Length; i++)
+            {
+                tiles[i] = new byte[tile_width * 8];
+                Array.Copy(data, i * (tile_width * 8), tiles[i], 0, tile_width * 8);
+            }
 
+            NTFS[] map = new NTFS[tiles.Length];
+            List<byte[]> newtiles = new List<byte[]>();
+            for (int i = 0; i < map.Length; i++)
+            {
+                map[i].nPalette = palette;
+                map[i].xFlip = 0;
+                map[i].yFlip = 0;
+
+                int index = -1;
+                for (ushort t = 0; t < newtiles.Count; t++)
+                {
+                    if (Compare_Array(newtiles[t], tiles[i]))
+                    {
+                        index = t;
+                        break;
+                    }
+                }
+
+                if (index > -1)
+                    map[i].nTile = (ushort)index;
+                else
+                {
+                    map[i].nTile = (ushort)newtiles.Count;
+                    newtiles.Add(tiles[i]);
+                }
+            }
+
+            // Save the new tiles
+            data = new byte[newtiles.Count * tile_width * 8];
+            for (int i = 0; i < newtiles.Count; i++)
+                for (int j = 0; j < newtiles[i].Length; j++)
+                    data[j + i * (tile_width * 8)] = newtiles[i][j];
+            return map;
+        }
+        public static bool Compare_Array(byte[] d1, byte[] d2)
+        {
+            if (d1.Length != d2.Length)
+                return false;
+
+            for (int i = 0; i < d1.Length; i++)
+                if (d1[i] != d2[i])
+                    return false;
+
+            return true;
+        }
+
+        public static NTFS MapInfo(ushort value)
+        {
+            NTFS mapInfo = new NTFS();
+
+            mapInfo.nTile = (ushort)(value & 0x3FF);
+            mapInfo.xFlip = (byte)((value >> 10) & 1);
+            mapInfo.yFlip = (byte)((value >> 11) & 1);
+            mapInfo.nPalette = (byte)((value >> 12) & 0xF);
+
+            return mapInfo;
+        }
+        public static ushort MapInfo(NTFS map)
+        {
+            int npalette = map.nPalette << 12;
+            int yFlip = map.yFlip << 11;
+            int xFlip = map.xFlip << 10;
+            int data = npalette + yFlip + xFlip + map.nTile;
+
+            return (ushort)data;
+        }
         #endregion
 
         #region OAM
@@ -761,7 +895,8 @@ namespace PluginInterface.Images
         }
 
         public static Bitmap Get_Image(Bank bank, uint blockSize, ImageBase img, PaletteBase pal, int max_width, int max_height,
-                                       bool draw_grid, bool draw_cells, bool draw_numbers, bool trans, bool image, int zoom = 1)
+                                       bool draw_grid, bool draw_cells, bool draw_numbers, bool trans, bool image, int currOAM = -1,
+                                       int zoom = 1)
         {
             Size size = new Size(max_width * zoom, max_height * zoom);
             Bitmap bank_img = new Bitmap(size.Width, size.Height);
@@ -799,11 +934,7 @@ namespace PluginInterface.Images
                     ImageBase cell_img = new TestImage(img.PluginHost);
                     cell_img.Set_Tiles((byte[])img.Tiles.Clone(), bank.oams[i].width, bank.oams[i].height, img.ColorFormat,
                                        img.TileForm, false);
-
-                    if (cell_img.ColorFormat != ColorFormat.colors16)
-                        cell_img.StartByte = (int)tileOffset * 0x20;
-                    else
-                        cell_img.StartByte = (int)tileOffset * 0x20;
+                    cell_img.StartByte = (int)tileOffset * 0x20;
 
                     byte num_pal = bank.oams[i].obj2.index_palette;
                     if (num_pal >= pal.NumberOfPalettes)
@@ -851,6 +982,9 @@ namespace PluginInterface.Images
                 if (draw_cells)
                     graphic.DrawRectangle(Pens.Black, size.Width / 2 + bank.oams[i].obj1.xOffset * zoom, size.Height / 2 + bank.oams[i].obj0.yOffset * zoom,
                         bank.oams[i].width * zoom, bank.oams[i].height * zoom);
+                if (i == currOAM)
+                    graphic.DrawRectangle(new Pen(Color.Red, 3), size.Width / 2 + bank.oams[i].obj1.xOffset * zoom, size.Height / 2 + bank.oams[i].obj0.yOffset * zoom,
+                        bank.oams[i].width * zoom, bank.oams[i].height * zoom);
                 if (draw_numbers)
                     graphic.DrawString(bank.oams[i].num_cell.ToString(), SystemFonts.CaptionFont, Brushes.Black, size.Width / 2 + bank.oams[i].obj1.xOffset * zoom,
                         size.Height / 2 + bank.oams[i].obj0.yOffset * zoom);
@@ -858,7 +992,26 @@ namespace PluginInterface.Images
 
             return bank_img;
         }
+        
+        public static Byte[] Get_OAMdata(OAM oam, byte[] image, ColorFormat format)
+        {
+            if (format == ColorFormat.colors16)
+                image = ByteToBit4(image);
 
+            List<byte> data = new List<byte>();
+            int y1 = 128 + oam.obj0.yOffset;
+            int y2 = y1 + oam.height;
+            int x1 = 256 + oam.obj1.xOffset;
+            int x2 = x1 + oam.width;
+
+            for (int ht = 0; ht < 256; ht++)
+                for (int wt = 0; wt < 512; wt++)
+                    if (ht >= y1 && ht < y2)
+                        if (wt >= x1 && wt < x2)
+                            data.Add(image[wt + ht * 512]);
+
+            return Bits4ToByte(data.ToArray());
+        }
         #endregion
     }
 }

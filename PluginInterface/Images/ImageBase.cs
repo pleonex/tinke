@@ -270,6 +270,10 @@ namespace PluginInterface.Images
         {
             get { return tile_width; }
         }
+        public Byte[] Original
+        {
+            get { return original; }
+        }
         #endregion
     }
 

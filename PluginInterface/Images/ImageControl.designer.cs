@@ -52,6 +52,7 @@ namespace PluginInterface.Images
             this.label2 = new System.Windows.Forms.Label();
             this.numericHeight = new System.Windows.Forms.NumericUpDown();
             this.groupProp = new System.Windows.Forms.GroupBox();
+            this.btnSetTrans = new System.Windows.Forms.Button();
             this.btnFotochoh = new System.Windows.Forms.Button();
             this.label9 = new System.Windows.Forms.Label();
             this.numPal = new System.Windows.Forms.NumericUpDown();
@@ -74,7 +75,6 @@ namespace PluginInterface.Images
             this.label5 = new System.Windows.Forms.Label();
             this.pic = new System.Windows.Forms.PictureBox();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.btnSetTrans = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.numericWidth)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericHeight)).BeginInit();
             this.groupProp.SuspendLayout();
@@ -193,6 +193,16 @@ namespace PluginInterface.Images
             this.groupProp.TabStop = false;
             this.groupProp.Text = "S02";
             // 
+            // btnSetTrans
+            // 
+            this.btnSetTrans.Location = new System.Drawing.Point(254, 35);
+            this.btnSetTrans.Name = "btnSetTrans";
+            this.btnSetTrans.Size = new System.Drawing.Size(80, 40);
+            this.btnSetTrans.TabIndex = 28;
+            this.btnSetTrans.Text = "Set transparency";
+            this.btnSetTrans.UseVisualStyleBackColor = true;
+            this.btnSetTrans.Click += new System.EventHandler(this.btnSetTrans_Click);
+            // 
             // btnFotochoh
             // 
             this.btnFotochoh.Location = new System.Drawing.Point(254, 160);
@@ -307,12 +317,13 @@ namespace PluginInterface.Images
             // trackZoom
             // 
             this.trackZoom.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
+            this.trackZoom.Enabled = false;
             this.trackZoom.LargeChange = 2;
             this.trackZoom.Location = new System.Drawing.Point(261, 101);
             this.trackZoom.Maximum = 20;
             this.trackZoom.Minimum = 1;
             this.trackZoom.Name = "trackZoom";
-            this.trackZoom.Size = new System.Drawing.Size(226, 42);
+            this.trackZoom.Size = new System.Drawing.Size(226, 45);
             this.trackZoom.SmallChange = 50;
             this.trackZoom.TabIndex = 15;
             this.trackZoom.Value = 1;
@@ -430,16 +441,6 @@ namespace PluginInterface.Images
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(512, 287);
             this.panel1.TabIndex = 7;
-            // 
-            // btnSetTrans
-            // 
-            this.btnSetTrans.Location = new System.Drawing.Point(254, 35);
-            this.btnSetTrans.Name = "btnSetTrans";
-            this.btnSetTrans.Size = new System.Drawing.Size(80, 40);
-            this.btnSetTrans.TabIndex = 28;
-            this.btnSetTrans.Text = "Set transparency";
-            this.btnSetTrans.UseVisualStyleBackColor = true;
-            this.btnSetTrans.Click += new System.EventHandler(this.btnSetTrans_Click);
             // 
             // ImageControl
             // 

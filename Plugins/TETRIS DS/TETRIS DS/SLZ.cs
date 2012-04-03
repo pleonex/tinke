@@ -54,7 +54,7 @@ namespace TETRIS_DS
             BinaryReader br = new BinaryReader(File.OpenRead(dec_file));			
             NTFS[] map = new NTFS[br.BaseStream.Length / 2];
             for (int i = 0; i < map.Length; i++)
-                map[i] = pluginHost.MapInfo(br.ReadUInt16());
+                map[i] = Actions.MapInfo(br.ReadUInt16());
             br.Close();
 
             Set_Map(map, false, 0x100, 0x100);

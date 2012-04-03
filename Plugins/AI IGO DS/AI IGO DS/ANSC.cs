@@ -39,7 +39,7 @@ namespace AI_IGO_DS
             uint size = br.ReadUInt16();
             NTFS[] map = new NTFS[(size + 2) / 2];
             for (int i = 0; i < map.Length; i++)
-                map[i] = pluginHost.MapInfo(br.ReadUInt16());
+                map[i] = Actions.MapInfo(br.ReadUInt16());
 
             br.Close();
             Set_Map(map, false, 0x100, 0xB0);

@@ -92,7 +92,7 @@ namespace TETRIS_DS
             PaletteBase palette;
             int palette_length = (int)(br.BaseStream.Length - br.BaseStream.Position);
             Color[][] colors = new Color[1][];
-            colors[0] = pluginHost.BGR555ToColor(br.ReadBytes(palette_length));
+            colors[0] = Actions.BGR555ToColor(br.ReadBytes(palette_length));
 
             br.Close();
 

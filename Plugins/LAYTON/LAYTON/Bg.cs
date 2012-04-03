@@ -71,7 +71,7 @@ namespace LAYTON
             // Palette
             uint num_colors = br.ReadUInt32();
             Color[][] colors = new Color[1][];
-            colors[0] = pluginHost.BGR555ToColor(br.ReadBytes((int)num_colors * 2));
+            colors[0] = Actions.BGR555ToColor(br.ReadBytes((int)num_colors * 2));
 
             // Image data
             uint num_tiles = (ushort)br.ReadUInt32();
@@ -83,7 +83,7 @@ namespace LAYTON
             NTFS[] map = new NTFS[width * height / 0x40];
 
             for (int i = 0; i < map.Length; i++)
-                map[i] = pluginHost.MapInfo(br.ReadUInt16());
+                map[i] = Actions.MapInfo(br.ReadUInt16());
 
             br.Close();
 

@@ -29,26 +29,29 @@ namespace SF_FEATHER
 {
     public class SCx : MapBase
     {
+        sSCx scx;
+
         public SCx(IPluginHost pluginHost, string file, int id) : base(pluginHost, file, id) { }
 
         public override void Read(string file)
         {
             BinaryReader br = new BinaryReader(File.OpenRead(file));
+            scx = new sSCx();
 
-            char[] type = br.ReadChars(4);
-            uint unknown1 = br.ReadUInt32();
-            uint unknown2 = br.ReadUInt32();
-            uint unknown3 = br.ReadUInt32();    // Usually 0x00
-            uint unknown4 = br.ReadUInt32();
+            scx.type = br.ReadChars(4);
+            scx.unknown1 = br.ReadUInt32();
+            scx.unknown2 = br.ReadUInt32();
+            scx.unknown3 = br.ReadUInt32();    // Usually 0x00
+            scx.unknown4 = br.ReadUInt32();
 
             ushort width = br.ReadUInt16();
             ushort height = br.ReadUInt16();
-            uint size_mapData2 = br.ReadUInt32();   // Is alway the same?
-            uint size_mapData = br.ReadUInt32();
+            scx.size_mapData2 = br.ReadUInt32();   // Is alway the same?
+            scx.size_mapData = br.ReadUInt32();
 
-            NTFS[] map = new NTFS[size_mapData / 2];
+            NTFS[] map = new NTFS[scx.size_mapData / 2];
             for (int i = 0; i < map.Length; i++)
-                map[i] = pluginHost.MapInfo(br.ReadUInt16());
+                map[i] = Actions.MapInfo(br.ReadUInt16());
 
             br.Close();
             Set_Map(map, false, width, height);
@@ -56,7 +59,36 @@ namespace SF_FEATHER
         }
         public override void Write(string fileOut, ImageBase image, PaletteBase palette)
         {
-            throw new NotImplementedException();
+            BinaryWriter bw = new BinaryWriter(File.OpenWrite(fileOut));
+
+            bw.Write(scx.type);
+            bw.Write(scx.unknown1);
+            bw.Write(scx.unknown2);
+            bw.Write(scx.unknown3);
+            bw.Write(scx.unknown4);
+
+            bw.Write((ushort)Width);
+            bw.Write((ushort)Height);
+            bw.Write(Map.Length * 2);
+            bw.Write(Map.Length * 2);
+
+            for (int i = 0; i < Map.Length; i++)
+                bw.Write(Actions.MapInfo(Map[i]));
+
+            bw.Flush();
+            bw.Close();
+        }
+
+        public struct sSCx
+        {
+            public char[] type;
+            public uint unknown1;
+            public uint unknown2;
+            public uint unknown3;
+            public uint unknown4;
+
+            public uint size_mapData2;
+            public uint size_mapData;
         }
     }
 }

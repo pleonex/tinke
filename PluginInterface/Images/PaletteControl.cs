@@ -54,7 +54,7 @@ namespace PluginInterface.Images
 
             numericPalette.Maximum = palette.NumberOfPalettes - 1;
             label3.Text = translation[0] + (palette.NumberOfPalettes - 1).ToString();
-            numericStartByte.Maximum = palette.NumberOfColors * palette.NumberOfPalettes * 2;
+            numericStartByte.Maximum = palette.Original.Length - 1;
             comboDepth.SelectedIndex = (palette.Depth == ColorFormat.colors16 ? 0 : 1);
         }
         public PaletteControl(IPluginHost pluginHost, PaletteBase palette)
@@ -71,7 +71,7 @@ namespace PluginInterface.Images
 
             numericPalette.Maximum = palette.NumberOfPalettes - 1;
             label3.Text = translation[0] + (palette.NumberOfPalettes - 1).ToString();
-            numericStartByte.Maximum = palette.NumberOfColors * palette.NumberOfPalettes * 2;
+            numericStartByte.Maximum = palette.Original.Length - 1;
             comboDepth.SelectedIndex = (palette.Depth == ColorFormat.colors16 ? 0 : 1);
         }
 
@@ -189,6 +189,11 @@ namespace PluginInterface.Images
             String fileOut = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + Path.GetRandomFileName() + palette.FileName;
             palette.Write(fileOut);
             pluginHost.ChangeFile(palette.ID, fileOut);
+        }
+
+        private void checkHex_CheckedChanged(object sender, EventArgs e)
+        {
+            numericStartByte.Hexadecimal = checkHex.Checked;
         }
     }
 }

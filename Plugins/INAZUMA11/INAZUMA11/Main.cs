@@ -38,9 +38,10 @@ namespace INAZUMA11
         }
         public bool IsCompatible()
         {
-			if (gameCode == "BEBJ" || gameCode == "BOEJ" || gameCode == "BEEJ" || 
-				gameCode == "YEEP" || gameCode == "YEEJ" || gameCode == "BE8J" || gameCode == "BEZJ")
-                return true;
+            if (gameCode == "BEBJ" || gameCode == "BOEJ" || gameCode == "BEEJ" ||
+                gameCode == "YEEP" || gameCode == "YEEJ" || gameCode == "BE8J" ||
+                gameCode == "BEZJ" || gameCode == "BEBP" || gameCode == "BEEP")
+                    return true;
 
             return false;
         }
