@@ -54,7 +54,7 @@ namespace Images
 
             NTFS[] map = new NTFS[(ncsc.scrn.size - 0x18) / 2];
             for (int i = 0; i < map.Length; i++)
-                map[i] = pluginHost.MapInfo(br.ReadUInt16());
+                map[i] = Actions.MapInfo(br.ReadUInt16());
 
             // Read other sections
             for (int n = 1; n < ncsc.generic.nSection; n++)

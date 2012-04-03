@@ -100,7 +100,7 @@ namespace PluginInterface.Images
             // Get the original byte data
             List<Byte> data = new List<byte>();
             for (int i = 0; i < map.Length; i++)
-                data.AddRange(BitConverter.GetBytes(pluginHost.MapInfo(map[i])));
+                data.AddRange(BitConverter.GetBytes(Actions.MapInfo(map[i])));
             original = data.ToArray();
         }
         public void Set_Map(MapBase new_map)
@@ -115,7 +115,7 @@ namespace PluginInterface.Images
             // Get the original byte data
             List<Byte> data = new List<byte>();
             for (int i = 0; i < map.Length; i++)
-                data.AddRange(BitConverter.GetBytes(pluginHost.MapInfo(map[i])));
+                data.AddRange(BitConverter.GetBytes(Actions.MapInfo(map[i])));
             original = data.ToArray();
         }
 
@@ -132,7 +132,7 @@ namespace PluginInterface.Images
 
             for (int i = 0; i < map.Length; i ++)
             {
-                map[i] = pluginHost.MapInfo(BitConverter.ToUInt16(newData, i * 2));
+                map[i] = Actions.MapInfo(BitConverter.ToUInt16(newData, i * 2));
             }
         }
 

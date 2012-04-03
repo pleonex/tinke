@@ -5,6 +5,7 @@ using System.Text;
 using System.IO;
 using System.Drawing;
 using PluginInterface;
+using PluginInterface.Images;
 
 namespace Tinke.Nitro
 {
@@ -289,7 +290,7 @@ namespace Tinke.Nitro
         public static Bitmap IconoToBitmap(byte[] tileData, byte[] paletteData)
         {
             Bitmap imagen = new Bitmap(32, 32);
-            Color[] paleta = Convertir.BGR555(paletteData);
+            Color[] paleta = Actions.BGR555ToColor(paletteData);
 
             tileData = Tools.Helper.Bits8To4Bits(tileData);
             int i = 0;

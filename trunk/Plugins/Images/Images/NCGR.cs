@@ -126,9 +126,6 @@ namespace Images
 
             ncgr.rahc.depth = ColorFormat;
 
-            //if (ncgr.rahc.depth == ColorFormat.colors16)
-            //    ncgr.rahc.data = pluginHost.Bit4ToBit8(ncgr.rahc.data);
-
             ncgr.rahc.size_tiledata = (uint)ncgr.rahc.data.Length;
             ncgr.rahc.size_section = ncgr.rahc.size_tiledata + 0x24;
             ncgr.header.file_size = ncgr.rahc.size_section + 0x10;

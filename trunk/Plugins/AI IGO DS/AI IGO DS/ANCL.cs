@@ -41,7 +41,7 @@ namespace AI_IGO_DS
             ColorFormat depth = (ColorFormat)br.ReadUInt16();
                    
             Color[][] colors = new Color[1][];
-            colors[0] = pluginHost.BGR555ToColor(br.ReadBytes((int)(br.BaseStream.Length - 0x08)));
+            colors[0] = Actions.BGR555ToColor(br.ReadBytes((int)(br.BaseStream.Length - 0x08)));
 
             br.Close();
             Set_Palette(colors, false);

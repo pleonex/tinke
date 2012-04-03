@@ -25,6 +25,7 @@ using System.Windows.Forms;
 using System.IO;
 using System.Drawing;
 using PluginInterface;
+using PluginInterface.Images;
 
 namespace LAYTON
 {
@@ -99,7 +100,7 @@ namespace LAYTON
             paleta.offset = (ulong)rdr.BaseStream.Position;
             paleta.datos = rdr.ReadBytes((int)paleta.length);                    // Paleta en binario
             paleta.colores = new Color[paleta.length];                           // Declaramos el tamaño
-            paleta.colores = pluginHost.BGR555ToColor(paleta.datos);     // Paleta en colores
+            paleta.colores = Actions.BGR555ToColor(paleta.datos);               // Paleta en colores
 
             rdr.Close();
 
@@ -481,11 +482,11 @@ namespace LAYTON
             */
 
             rdr.BaseStream.Position = posicion;                                  // Posición inicial de paleta
-            paleta.length = size * 2;                              // Longitud de paleta
+            paleta.length = size * 2;                                            // Longitud de paleta
             paleta.offset = (ulong)rdr.BaseStream.Position;
             paleta.datos = rdr.ReadBytes((int)paleta.length);                    // Paleta en binario
             paleta.colores = new Color[paleta.length];                           // Declaramos el tamaño
-            paleta.colores = pluginHost.BGR555ToColor(paleta.datos);     // Paleta en colores
+            paleta.colores = Actions.BGR555ToColor(paleta.datos);                // Paleta en colores
 
             rdr.Close();
 

@@ -228,7 +228,7 @@ namespace PluginInterface.Images
 
             NTFS[] map = new NTFS[file_size / 2];
             for (int i = 0; i < map.Length; i++)
-                map[i] = pluginHost.MapInfo(br.ReadUInt16());
+                map[i] = Actions.MapInfo(br.ReadUInt16());
 
             next_data = br.ReadBytes((int)(br.BaseStream.Length - file_size));
 

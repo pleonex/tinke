@@ -39,7 +39,7 @@ namespace Images
             nscr.nrcs.mapData = new NTFS[nscr.nrcs.data_size / 2];
 
             for (int i = 0; i < nscr.nrcs.mapData.Length; i++)
-                nscr.nrcs.mapData[i] = pluginHost.MapInfo(br.ReadUInt16());
+                nscr.nrcs.mapData[i] = Actions.MapInfo(br.ReadUInt16());
 
             br.Close();
 

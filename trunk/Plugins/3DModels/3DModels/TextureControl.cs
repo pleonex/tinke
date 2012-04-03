@@ -168,7 +168,7 @@ namespace _3DModels
             br.BaseStream.Position = btx0.header.offset[0] + btx0.texture.header.paletteData_offset;
             br.BaseStream.Position += palInfo.palette_offset * 8;
             Byte[] palette_data = br.ReadBytes((int)PaletteSize[texInfo.format]);
-            Color[] palette = pluginHost.BGR555ToColor(palette_data);
+            Color[] palette = Actions.BGR555ToColor(palette_data);
             br.Close();
 
             picTex.Image = Draw_Texture(tile_data, texInfo, palette);
@@ -267,7 +267,7 @@ namespace _3DModels
                     if (br.BaseStream.Position >= br.BaseStream.Length)
                         br.BaseStream.Position -= pal_offset * 4;
 
-                    Color[] palette = pluginHost.BGR555ToColor(br.ReadBytes(0x08));
+                    Color[] palette = Actions.BGR555ToColor(br.ReadBytes(0x08));
                     br.BaseStream.Position = currPos;
 
                     for (int hTex = 0; hTex < 4; hTex++)

@@ -23,8 +23,9 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Drawing;
-using PluginInterface;
 using System.IO;
+using PluginInterface;
+using PluginInterface.Images;
 
 namespace Common
 {
@@ -146,7 +147,7 @@ namespace Common
                     break;
 
                 case TGA.ImageType.Uncompressed_TrueColor:
-                    colores = pluginHost.BGR555ToColor(br.ReadBytes(tga.header.image_spec.height * tga.header.image_spec.width * 2));
+                    colores = Actions.BGR555ToColor(br.ReadBytes(tga.header.image_spec.height * tga.header.image_spec.width * 2));
                     for (int y = tga.header.image_spec.height - 1; y > 0; y--)
                     {
                         for (int x = 0; x < tga.header.image_spec.width; x++)

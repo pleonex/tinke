@@ -98,6 +98,7 @@ namespace PluginInterface.Images
 
             this.comboBox1.SelectedIndex = 1;
             this.numPal.Maximum = palette.NumberOfPalettes - 1;
+            this.numericStart.Maximum = image.Original.Length - 1;
 
             this.comboDepth.SelectedIndexChanged += new EventHandler(comboDepth_SelectedIndexChanged);
             this.numericWidth.ValueChanged += new EventHandler(numericSize_ValueChanged);
@@ -166,6 +167,7 @@ namespace PluginInterface.Images
             this.numericWidth.Value = pic.Image.Width;
             this.numericHeight.Value = pic.Image.Height;
             this.numPal.Maximum = palette.NumberOfPalettes - 1;
+            this.numericStart.Maximum = image.Original.Length - 1;
 
             this.comboDepth.SelectedIndexChanged += new EventHandler(comboDepth_SelectedIndexChanged);
             this.numericWidth.ValueChanged += new EventHandler(numericSize_ValueChanged);
@@ -219,6 +221,7 @@ namespace PluginInterface.Images
             this.comboBox1.SelectedIndex = 1;
             this.comboBox1.Enabled = false;
             this.numPal.Maximum = palette.NumberOfPalettes - 1;
+            this.numericStart.Maximum = image.Original.Length - 1;
 
             this.comboDepth.SelectedIndexChanged += new EventHandler(comboDepth_SelectedIndexChanged);
             this.numericWidth.ValueChanged += new EventHandler(numericSize_ValueChanged);
@@ -364,10 +367,16 @@ namespace PluginInterface.Images
 
             BMP bitmap = new BMP(pluginHost, o.FileName);
 
+            byte[] tiles = bitmap.Tiles;
+            if (isMap)
+            {
+                tiles = Actions.HorizontalToLineal(tiles, bitmap.Width / 8, bitmap.Height / 8, bitmap.TileWidth);
+                map.Set_Map(Actions.Create_Map(ref tiles, bitmap.TileWidth), map.CanEdit, bitmap.Width, bitmap.Height);
+            }
+            bitmap.Set_Tiles(tiles, 0x100, tiles.Length / 0x100, bitmap.ColorFormat, TileForm.Horizontal, false);
+
             image.Set_Tiles(bitmap);
             palette.Set_Palette(bitmap.Palette);
-            if (isMap)
-                map.Set_Map(Actions.Create_BasicMap(bitmap.Tiles.Length / (bitmap.TileWidth * 8)), map.CanEdit, bitmap.Width, bitmap.Height);
 
             Save_Files();
 
@@ -377,21 +386,33 @@ namespace PluginInterface.Images
         {
             if (image.ID > 0)
             {
-                string imageFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + Path.GetRandomFileName() + image.FileName;
-                image.Write(imageFile, palette);
-                pluginHost.ChangeFile(image.ID, imageFile);
+                try
+                {
+                    string imageFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + Path.GetRandomFileName() + image.FileName;
+                    image.Write(imageFile, palette);
+                    pluginHost.ChangeFile(image.ID, imageFile);
+                }
+                catch (Exception e) { MessageBox.Show("Error writing new image:\n" + e.Message); };
             }
             if (palette.ID > 0)
             {
-                string paletteFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + Path.GetRandomFileName() + palette.FileName;
-                palette.Write(paletteFile);
-                pluginHost.ChangeFile(palette.ID, paletteFile);
+                try
+                {
+                    string paletteFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + Path.GetRandomFileName() + palette.FileName;
+                    palette.Write(paletteFile);
+                    pluginHost.ChangeFile(palette.ID, paletteFile);
+                }
+                catch (Exception e) { MessageBox.Show("Error writing new palette:\n" + e.Message); };
             }
             if (isMap && map.ID > 0)
             {
-                string mapFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + Path.GetRandomFileName() + map.FileName;
-                map.Write(mapFile, image, palette);
-                pluginHost.ChangeFile(map.ID, mapFile);
+                try
+                {
+                    string mapFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + Path.GetRandomFileName() + map.FileName;
+                    map.Write(mapFile, image, palette);
+                    pluginHost.ChangeFile(map.ID, mapFile);
+                }
+                catch (Exception e) { MessageBox.Show("Error writing new map:\n" + e.Message); };
             }
         }
 
@@ -504,7 +525,7 @@ namespace PluginInterface.Images
                 }
             }
 
-            Actions.Change_Color(ref tiles, ref pal, index, 0);
+            Actions.Change_Color(ref tiles, ref pal, index, 0, image.ColorFormat);
 
             Color[][] new_pal = palette.Palette;
             new_pal[pal_index] = pal;

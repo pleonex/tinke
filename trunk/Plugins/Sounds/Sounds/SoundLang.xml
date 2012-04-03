@@ -61,21 +61,21 @@
       <S04>Activer la boucle</S04>
       <S05>Voulez-vous également sauvegarder l'archive en boucle ?</S05>
       <S06>Format</S06>
-      <S07>Channels</S07>
-      <S08>Loop</S08>
-      <S09>Begin of loop</S09>
-      <S0A>End of loop</S0A>
-      <S0B>Sample rate</S0B>
-      <S0C>Number of samples</S0C>
-      <S0D>Block size</S0D>
-      <S0E>Sample bit depth</S0E>
-      <S0F>Credits</S0F>
+      <S07>Canaux</S07>
+      <S08>Boucle</S08>
+      <S09>Début de la boucle</S09>
+      <S0A>Fin de la boucle</S0A>
+      <S0B>Taux d'échantillonage</S0B>
+      <S0C>Nombre d'échantillons</S0C>
+      <S0D>Taille du bloc</S0D>
+      <S0E>Profondeur d'analyse de l'échantillon</S0E>
+      <S0F>Crédits</S0F>
     </SoundControl>
     <Messages>
       <S00>Conversion de l'archive en boucle</S00>
       <S01>Patientez</S01>
       <S02>Sauvegarde de la nouvelle archive WAV</S02>
-      <S03>Encoding: </S03>
+      <S03>Codage : </S03>
     </Messages>
   </Français>
 </Language>

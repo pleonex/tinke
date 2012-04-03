@@ -86,7 +86,7 @@ namespace _999HRPERDOOR
             // Read palette
             br.BaseStream.Position = info.info3.palette_offset;
             Color[][] colors = new Color[1][];
-            colors[0] = pluginHost.BGR555ToColor(br.ReadBytes(0x200));
+            colors[0] = Actions.BGR555ToColor(br.ReadBytes(0x200));
             palette = new RawPalette(pluginHost, colors, false, ColorFormat.colors256);
 
             // Read tiles

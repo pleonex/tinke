@@ -56,7 +56,7 @@ namespace AI_IGO_DS
             uint pSize = br.ReadUInt32() * 4;
 
             Color[][] colors = new Color[1][];
-            colors[0] = pluginHost.BGR555ToColor(br.ReadBytes((int)(pSize - 0x08)));
+            colors[0] = Actions.BGR555ToColor(br.ReadBytes((int)(pSize - 0x08)));
             palette = new RawPalette(pluginHost, colors, false, ColorFormat.colors256);
 
             // Image data
@@ -77,7 +77,7 @@ namespace AI_IGO_DS
 
             NTFS[] map = new NTFS[(mSize - 0x08) / 2];
             for (int i = 0; i < map.Length; i++)
-                map[i] = pluginHost.MapInfo(br.ReadUInt16());
+                map[i] = Actions.MapInfo(br.ReadUInt16());
 
             br.Close();
             Set_Map(map, false, width * 8, height * 8);

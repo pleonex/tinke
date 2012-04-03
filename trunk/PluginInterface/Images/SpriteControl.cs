@@ -43,7 +43,6 @@ namespace PluginInterface.Images
         public SpriteControl()
         {
             InitializeComponent();
-            Read_Language();
         }
         public SpriteControl(IPluginHost pluginHost)
         {
@@ -209,7 +208,6 @@ namespace PluginInterface.Images
 
             pic.Location = new Point(0, 0);
             pic.SizeMode = PictureBoxSizeMode.AutoSize;
-            pic.BackColor = pictureBgd.BackColor;
             ventana.AutoSize = true;
             ventana.BackColor = SystemColors.GradientInactiveCaption;
             ventana.AutoScroll = true;
@@ -229,7 +227,6 @@ namespace PluginInterface.Images
         {
             btnBgdTrans.Enabled = false;
 
-            pictureBgd.BackColor = Color.Transparent;
             imgBox.BackColor = Color.Transparent;
         }
         private void btnBgd_Click(object sender, EventArgs e)
@@ -240,31 +237,152 @@ namespace PluginInterface.Images
 
             if (o.ShowDialog() == DialogResult.OK)
             {
-                pictureBgd.BackColor = o.Color;
                 imgBox.BackColor = o.Color;
                 btnBgdTrans.Enabled = true;
             }
         }
 
+        private void btnImport_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog o = new OpenFileDialog();
+            o.CheckFileExists = true;
+            o.DefaultExt = "bmp";
+            o.Filter = "Supported images |*.png;*.bmp;*.jpg;*.jpeg;*.tif;*.tiff;*.gif;*.ico;*.icon|" +
+                       "BitMaP (*.bmp)|*.bmp|" +
+                       "Portable Network Graphic (*.png)|*.png|" +
+                       "JPEG (*.jpg)|*.jpg;*.jpeg|" +
+                       "Tagged Image File Format (*.tiff)|*.tiff;*.tif|" +
+                       "Graphic Interchange Format (*.gif)|*.gif|" +
+                       "Icon (*.ico)|*.ico;*.icon";
+            o.Multiselect = false;
+            if (o.ShowDialog() != DialogResult.OK)
+                return;
 
-        //private void btnImport_Click(object sender, EventArgs e)
-        //{
-        //    OpenFileDialog o = new OpenFileDialog();
-        //    o.CheckFileExists = true;
-        //    o.DefaultExt = "bmp";
-        //    o.Filter = "Supported images |*.png;*.bmp;*.jpg;*.jpeg;*.tif;*.tiff;*.gif;*.ico;*.icon|" +
-        //               "BitMaP (*.bmp)|*.bmp|" +
-        //               "Portable Network Graphic (*.png)|*.png|" +
-        //               "JPEG (*.jpg)|*.jpg;*.jpeg|" +
-        //               "Tagged Image File Format (*.tiff)|*.tiff;*.tif|" +
-        //               "Graphic Interchange Format (*.gif)|*.gif|" +
-        //               "Icon (*.ico)|*.ico;*.icon";
-        //    o.Multiselect = false;
-        //    if (o.ShowDialog() == DialogResult.OK)
-        //    {
-        //        string filePath = o.FileName;
-        //    }
-        //}
+            BMP bitmap = new BMP(pluginHost, o.FileName);
+
+            // Adapt the new image to the current
+            bitmap.ColorFormat = image.ColorFormat;
+            byte[] newImg = bitmap.Tiles;
+
+            // Get the data of a oam and add to the end of the image
+            byte[] imgData = image.Tiles;
+            for (int i = 0; i < sprite.Banks[comboBank.SelectedIndex].oams.Length; i++)
+            {
+                OAM oam = sprite.Banks[comboBank.SelectedIndex].oams[i];
+                byte[] cellImg = Actions.Get_OAMdata(oam, newImg, bitmap.ColorFormat);
+
+                if (image.TileForm == TileForm.Horizontal)
+                    cellImg = Actions.HorizontalToLineal(cellImg, oam.width / 8, oam.height / 8, bitmap.TileWidth);
+
+                uint offset = Actions.Add_Image(ref imgData, cellImg, (uint)(1 << (int)sprite.BlockSize) * 0x20);
+                offset /= 0x20;
+                offset >>= (int)sprite.BlockSize;
+                sprite.Banks[comboBank.SelectedIndex].oams[i].obj2.tileOffset = offset;
+            }
+            image.Set_Tiles(imgData, 0x100, imgData.Length / 0x100, image.ColorFormat, image.TileForm, image.CanEdit);
+            
+            // Set the palette
+            if (checkPalette.Checked)
+                palette.Set_Palette(bitmap.Palette);
+
+            Save_Files();
+            Update_Image();
+        }
+        void Save_Files()
+        {
+            if (sprite.ID > 0)
+            {
+                try
+                {
+                    string spriteFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + Path.GetRandomFileName() + sprite.FileName;
+                    sprite.Write(spriteFile, image, palette);
+                    pluginHost.ChangeFile(sprite.ID, spriteFile);
+                }
+                catch (Exception e) { MessageBox.Show("Error writing new sprite:\n" + e.Message); };
+            }
+            if (image.ID > 0)
+            {
+                try
+                {
+                    string imageFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + Path.GetRandomFileName() + image.FileName;
+                    image.Write(imageFile, palette);
+                    pluginHost.ChangeFile(image.ID, imageFile);
+                }
+                catch (Exception e) { MessageBox.Show("Error writing new image:\n" + e.Message); };
+            }
+            if (checkPalette.Checked && palette.ID > 0)
+            {
+                try
+                {
+                    string paletteFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + Path.GetRandomFileName() + palette.FileName;
+                    palette.Write(paletteFile);
+                    pluginHost.ChangeFile(palette.ID, paletteFile);
+                }
+                catch (Exception e) { MessageBox.Show("Error writing new palette:\n" + e.Message); };
+            }
+        }
+
+        private void btnSetTrans_Click(object sender, EventArgs e)
+        {
+            selectColor = true;
+        }
+        private void SetTransFromImage(Color color)
+        {
+            int pal_index = sprite.Banks[comboBank.SelectedIndex].oams[0].obj2.index_palette;  // How can I know that? yeah, I'm too lazy to do a new windows ;)
+
+            Color[] pal = palette.Palette[pal_index];
+            byte[] tiles = image.Tiles;
+
+            int index = -1;
+            for (int i = 0; i < pal.Length; i++)
+            {
+                if (pal[i] == color)
+                {
+                    index = i;
+                    break;
+                }
+            }
+
+            Actions.Change_Color(ref tiles, ref pal, index, 0, image.ColorFormat);
+
+            Color[][] new_pal = palette.Palette;
+            new_pal[pal_index] = pal;
+
+            if (image.ID > 0)
+                image.Set_Tiles(tiles);
+            if (palette.ID > 0)
+                palette.Set_Palette(new_pal);
+
+            Save_Files();
+        }
+
+        private void btnOAMeditor_Click(object sender, EventArgs e)
+        {
+            Dialogs.OAMEditor editor = new Dialogs.OAMEditor(sprite.Banks[comboBank.SelectedIndex], sprite, image, palette);
+            if (editor.ShowDialog() != DialogResult.OK)
+                return;
+
+            sprite.Banks[comboBank.SelectedIndex] = editor.Bank;
+            Update_Image();
+            Save_Files();
+        }
+
+        private void checkPalette_CheckedChanged(object sender, EventArgs e)
+        {
+            btnSetTrans.Enabled = checkPalette.Checked;
+        }
+
+        private void imgBox_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (selectColor && imgBox.Image is Image)
+            {
+                Color color = ((Bitmap)imgBox.Image).GetPixel(e.X, e.Y);
+                SetTransFromImage(color);
+            }
+        }
+
+
+
         //private void btnSetTrans_Click(object sender, EventArgs e)
         //{
         //    Dialog.SelectModeColor dialog = new Dialog.SelectModeColor();
@@ -295,40 +413,6 @@ namespace PluginInterface.Images
         //        Color color = ((Bitmap)imgBox.Image).GetPixel(e.X, e.Y);
         //        Change_TransparencyColor(color);
         //    }
-        //}
-        //private void Change_TransparencyColor(Color color)
-        //{
-        //    int colorIndex = 0;
-        //    int paletteIndex = ncer.cebk.banks[comboCelda.SelectedIndex].cells[0].obj2.index_palette;
-
-        //    for (int i = 0; i < paleta.pltt.palettes[paletteIndex].colors.Length; i++)
-        //    {
-        //        if (paleta.pltt.palettes[paletteIndex].colors[i] == color)
-        //        {
-        //            paleta.pltt.palettes[paletteIndex].colors[i] = paleta.pltt.palettes[paletteIndex].colors[0];
-        //            paleta.pltt.palettes[paletteIndex].colors[0] = color;
-        //            colorIndex = i;
-        //            break;
-        //        }
-        //    }
-
-        //    pluginHost.Set_NCLR(paleta);
-        //    String paletteFile = System.IO.Path.GetTempFileName();
-        //    Imagen_NCLR.Escribir(paleta, paletteFile);
-        //    pluginHost.ChangeFile((int)paleta.id, paletteFile);
-
-        //    for (int i = 0; i < ncer.cebk.banks[comboCelda.SelectedIndex].cells.Length; i++)
-        //    {
-        //        tile.rahc.tileData.tiles = Imagen_NCER.Change_ColorCell(ncer.cebk.banks[comboCelda.SelectedIndex].cells[i],
-        //            ncer.cebk.block_size, tile, colorIndex, 0);
-        //    }
-        //    pluginHost.Set_NCGR(tile);
-        //    String tileFile = System.IO.Path.GetTempFileName();
-        //    Imagen_NCGR.Write(tile, tileFile);
-        //    pluginHost.ChangeFile((int)tile.id, tileFile);
-
-        //    ActualizarImagen();
-        //    checkTransparencia.Checked = true;
         //}
         //private void Add_TransparencyColor()
         //{

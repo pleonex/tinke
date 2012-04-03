@@ -68,6 +68,10 @@ namespace PluginInterface.Images
         {
             get { return banks.Length; }
         }
+        public uint BlockSize
+        {
+            get { return block_size; }
+        }
         #endregion
 
         public SpriteBase(IPluginHost pluginHost)
@@ -125,6 +129,18 @@ namespace PluginInterface.Images
             return Actions.Get_Image(banks[index], block_size, image, pal, width, height,
                                      grid, cell, number, trans, img);
         }
+        public Image Get_Image(ImageBase image, PaletteBase pal, Bank bank, int width, int height,
+                       bool grid, bool cell, bool number, bool trans, bool img)
+        {
+            return Actions.Get_Image(bank, block_size, image, pal, width, height,
+                                     grid, cell, number, trans, img);
+        }
+        public Image Get_Image(ImageBase image, PaletteBase pal, Bank bank, int width, int height,
+               bool grid, bool cell, bool number, bool trans, bool img, int currOAM)
+        {
+            return Actions.Get_Image(bank, block_size, image, pal, width, height,
+                                     grid, cell, number, trans, img, currOAM);
+        }
 
     }
 
@@ -156,7 +172,7 @@ namespace PluginInterface.Images
         public byte objMode;        // Bit10-11 -> 0 = normal; 1 = semi-trans; 2 = window; 3 = invalid
         public byte mosaic_flag;    // Bit12 
         public byte depth;          // Bit13 -> 0 = 4bit; 1 = 8bit
-        public byte shape;          // Bit14-15 -> 0 = shape; 1 = horizontal; 2 = vertial; 3 = invalid
+        public byte shape;          // Bit14-15 -> 0 = square; 1 = horizontal; 2 = vertial; 3 = invalid
     }
     public struct Obj1  // 16 bits
     {

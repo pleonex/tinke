@@ -56,7 +56,7 @@ namespace TETRIS_DS
 
             ColorFormat depth = (br.BaseStream.Length > 0x20) ? ColorFormat.colors256 : ColorFormat.colors16;
             Color[][] colors = new Color[1][];
-            colors[0] = pluginHost.BGR555ToColor(br.ReadBytes((int)br.BaseStream.Length));
+            colors[0] = Actions.BGR555ToColor(br.ReadBytes((int)br.BaseStream.Length));
 
             br.Close();
             Set_Palette(colors, depth, false);

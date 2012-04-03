@@ -41,7 +41,7 @@ namespace Images
             for (int i = 0; i < nccl.palt.num_palette; i++)
             {
                 // Each color is 2bytes (BGR555 encoding)
-                palette[i] = pluginHost.BGR555ToColor(br.ReadBytes((int)nccl.palt.num_colors * 2));
+                palette[i] = Actions.BGR555ToColor(br.ReadBytes((int)nccl.palt.num_colors * 2));
             }
 
             // CMNT section

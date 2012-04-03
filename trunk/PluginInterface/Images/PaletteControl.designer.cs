@@ -59,6 +59,7 @@ namespace PluginInterface.Images
             this.label3 = new System.Windows.Forms.Label();
             this.comboDepth = new System.Windows.Forms.ComboBox();
             this.label4 = new System.Windows.Forms.Label();
+            this.checkHex = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.picPalette)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericPalette)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericStartByte)).BeginInit();
@@ -186,12 +187,24 @@ namespace PluginInterface.Images
             this.label4.TabIndex = 11;
             this.label4.Text = "S06";
             // 
+            // checkHex
+            // 
+            this.checkHex.AutoSize = true;
+            this.checkHex.Location = new System.Drawing.Point(400, 72);
+            this.checkHex.Name = "checkHex";
+            this.checkHex.Size = new System.Drawing.Size(87, 17);
+            this.checkHex.TabIndex = 12;
+            this.checkHex.Text = "Hexadecimal";
+            this.checkHex.UseVisualStyleBackColor = true;
+            this.checkHex.CheckedChanged += new System.EventHandler(this.checkHex_CheckedChanged);
+            // 
             // PaletteControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Transparent;
             this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.Controls.Add(this.checkHex);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.comboDepth);
             this.Controls.Add(this.btnImport);
@@ -228,5 +241,6 @@ namespace PluginInterface.Images
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.ComboBox comboDepth;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.CheckBox checkHex;
     }
 }
