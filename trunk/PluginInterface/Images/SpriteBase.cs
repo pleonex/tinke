@@ -102,24 +102,8 @@ namespace PluginInterface.Images
             {
                 List<OAM> cells = new List<OAM>();
                 cells.AddRange(banks[b].oams);
-                cells.Sort(Comparision_Cell);
+                cells.Sort(Actions.Comparision_OAM);
                 banks[b].oams = cells.ToArray();
-            }
-        }
-        private int Comparision_Cell(OAM c1, OAM c2)
-        {
-            if (c1.obj2.priority < c2.obj2.priority)
-                return 1;
-            else if (c1.obj2.priority > c2.obj2.priority)
-                return -1;
-            else   // Same priority
-            {
-                if (c1.num_cell < c2.num_cell)
-                    return 1;
-                else if (c1.num_cell > c2.num_cell)
-                    return -1;
-                else // Same cell
-                    return 0;
             }
         }
 

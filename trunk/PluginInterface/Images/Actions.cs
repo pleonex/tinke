@@ -1010,8 +1010,28 @@ namespace PluginInterface.Images
                         if (wt >= x1 && wt < x2)
                             data.Add(image[wt + ht * 512]);
 
-            return Bits4ToByte(data.ToArray());
+            if (format == ColorFormat.colors16)
+                return Bits4ToByte(data.ToArray());
+            else
+                return data.ToArray();
         }
+        public static int Comparision_OAM(OAM c1, OAM c2)
+        {
+            if (c1.obj2.priority < c2.obj2.priority)
+                return 1;
+            else if (c1.obj2.priority > c2.obj2.priority)
+                return -1;
+            else   // Same priority
+            {
+                if (c1.num_cell < c2.num_cell)
+                    return 1;
+                else if (c1.num_cell > c2.num_cell)
+                    return -1;
+                else // Same cell
+                    return 0;
+            }
+        }
+
         #endregion
     }
 }

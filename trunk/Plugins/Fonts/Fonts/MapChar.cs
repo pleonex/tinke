@@ -93,7 +93,7 @@ namespace Fonts
                 case 2:
                     sNFTR.PAMC.Type2 type2 = (sNFTR.PAMC.Type2)map.info;
                     for (int i = 0; i < type2.num_chars; i++)
-                        dataGridMapInfo.Rows.Add(type2.chars[i].ToString(), type2.chars_code[i].ToString());
+                        dataGridMapInfo.Rows.Add(type2.charInfo[i].chars.ToString(), type2.charInfo[i].chars_code.ToString());
                     break;
             }
         }
@@ -127,8 +127,7 @@ namespace Fonts
                     case 2:
                         sNFTR.PAMC.Type2 type2 = (sNFTR.PAMC.Type2)map.info;
                         size += 2;
-                        size += (uint)type2.chars_code.Length * 2;
-                        size += (uint)type2.chars.Length * 2;
+                        size += (uint)type2.charInfo.Length * 4;
                         break;
                 }
                 size += 2;  // 0x00 terminator
@@ -178,8 +177,7 @@ namespace Fonts
             numericType.ReadOnly = false;
             sNFTR.PAMC.Type2 type2 = new sNFTR.PAMC.Type2();
             type2.num_chars = 0;
-            type2.chars = new ushort[0];
-            type2.chars_code = new ushort[0];
+            type2.charInfo = new sNFTR.PAMC.Type2.CharInfo[0];
             map.info = type2;
             maps.Add(map);
 
@@ -206,74 +204,61 @@ namespace Fonts
                 sNFTR.PAMC.Type2 type2 = (sNFTR.PAMC.Type2)map.info;
                 if (e.ColumnIndex == 0) 
                 {
-                    if ((e.RowIndex + 1) > type2.chars.Length)  
+                    if ((e.RowIndex + 1) > type2.charInfo.Length)  
                     {
-                        List<ushort> values = new List<ushort>();
+                        List<sNFTR.PAMC.Type2.CharInfo> values = new List<sNFTR.PAMC.Type2.CharInfo>();
+                        sNFTR.PAMC.Type2.CharInfo info = new sNFTR.PAMC.Type2.CharInfo();
+                        info.chars = Convert.ToUInt16(dataGridMapInfo.Rows[e.RowIndex].Cells[0].Value);
+                        info.chars_code = 0;
 
-                        values.AddRange(type2.chars);
-                        values.Add(Convert.ToUInt16(dataGridMapInfo.Rows[e.RowIndex].Cells[0].Value));
-                        type2.chars = values.ToArray();
-
-                        values.Clear();
-                        values.AddRange(type2.chars_code);
-                        values.Add(0);
-                        type2.chars_code = values.ToArray();
+                        values.AddRange(type2.charInfo);
+                        values.Add(info);
+                        type2.charInfo = values.ToArray();
 
                         type2.num_chars++;
                     }
-                    else if (dataGridMapInfo.RowCount < type2.chars.Length)
+                    else if (dataGridMapInfo.RowCount < type2.charInfo.Length)
                     {
-                        List<ushort> values = new List<ushort>();
+                        List<sNFTR.PAMC.Type2.CharInfo> values = new List<sNFTR.PAMC.Type2.CharInfo>();
 
-                        values.AddRange(type2.chars);
+                        values.AddRange(type2.charInfo);
                         values.RemoveAt(e.RowIndex);
-                        type2.chars = values.ToArray();
-
-                        values.Clear();
-                        values.AddRange(type2.chars_code);
-                        values.RemoveAt(e.RowIndex);
-                        type2.chars_code = values.ToArray();
+                        type2.charInfo = values.ToArray();
 
                         type2.num_chars--;
                     }
                     else
-                        type2.chars[e.RowIndex] = Convert.ToUInt16(dataGridMapInfo.Rows[e.RowIndex].Cells[0].Value);
+                        type2.charInfo[e.RowIndex].chars = Convert.ToUInt16(dataGridMapInfo.Rows[e.RowIndex].Cells[0].Value);
 
                 }
                 else if (e.ColumnIndex == 1)  
                 {
-                    if ((e.RowIndex + 1) > type2.chars_code.Length)
+                    if ((e.RowIndex + 1) > type2.charInfo.Length)
                     {
-                        List<ushort> values = new List<ushort>();
+                        List<sNFTR.PAMC.Type2.CharInfo> values = new List<sNFTR.PAMC.Type2.CharInfo>();
 
-                        values.AddRange(type2.chars_code);
-                        values.Add(Convert.ToUInt16(dataGridMapInfo.Rows[e.RowIndex].Cells[1].Value));
-                        type2.chars_code = values.ToArray();
+                        sNFTR.PAMC.Type2.CharInfo info = new sNFTR.PAMC.Type2.CharInfo();
+                        info.chars_code = Convert.ToUInt16(dataGridMapInfo.Rows[e.RowIndex].Cells[1].Value);
+                        info.chars = 0;
 
-                        values.Clear();
-                        values.AddRange(type2.chars);
-                        values.Add(0);
-                        type2.chars = values.ToArray();
+                        values.AddRange(type2.charInfo);
+                        values.Add(info);
+                        type2.charInfo = values.ToArray();
 
                         type2.num_chars++;
                     }
-                    else if (dataGridMapInfo.RowCount < type2.chars.Length)
+                    else if (dataGridMapInfo.RowCount < type2.charInfo.Length)
                     {
-                        List<ushort> values = new List<ushort>();
+                        List<sNFTR.PAMC.Type2.CharInfo> values = new List<sNFTR.PAMC.Type2.CharInfo>();
 
-                        values.AddRange(type2.chars_code);
+                        values.AddRange(type2.charInfo);
                         values.RemoveAt(e.RowIndex);
-                        type2.chars_code = values.ToArray();
-
-                        values.Clear();
-                        values.AddRange(type2.chars);
-                        values.RemoveAt(e.RowIndex);
-                        type2.chars = values.ToArray();
+                        type2.charInfo = values.ToArray();
 
                         type2.num_chars--;
                     }
                     else
-                        type2.chars_code[e.RowIndex] = Convert.ToUInt16(dataGridMapInfo.Rows[e.RowIndex].Cells[1].Value);
+                        type2.charInfo[e.RowIndex].chars_code = Convert.ToUInt16(dataGridMapInfo.Rows[e.RowIndex].Cells[1].Value);
                 }
                 map.info = type2;
             }

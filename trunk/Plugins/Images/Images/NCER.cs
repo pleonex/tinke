@@ -400,7 +400,6 @@ namespace Images
             {
                 ncer.cebk.banks[i].nCells = (ushort)Banks[i].oams.Length;
                 ncer.cebk.banks[i].cell_offset = offset_cells;
-                ncer.cebk.banks[i].oams = new OAM[Banks[i].oams.Length];
                 offset_cells += (uint)(Banks[i].oams.Length * 6);
 
                 size += (uint)(ncer.cebk.tBank == 0 ? 0x08 : 0x10);

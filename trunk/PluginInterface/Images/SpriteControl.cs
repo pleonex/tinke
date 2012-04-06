@@ -134,20 +134,21 @@ namespace PluginInterface.Images
             SaveFileDialog o = new SaveFileDialog();
             o.AddExtension = true;
             o.CheckPathExists = true;
-            o.DefaultExt = ".bmp";
-            o.Filter = "BitMaP (*.bmp)|*.bmp|" +
-                       "Portable Network Graphic (*.png)|*.png|" +
+            o.DefaultExt = ".png";
+            o.Filter = "Portable Network Graphic (*.png)|*.png|" +
+                       "BitMaP (*.bmp)|*.bmp|" +
                        "JPEG (*.jpg)|*.jpg;*.jpeg|" +
                        "Tagged Image File Format (*.tiff)|*.tiff;*.tif|" +
                        "Graphic Interchange Format (*.gif)|*.gif|" +
                        "Icon (*.ico)|*.ico;*.icon";
-            o.OverwritePrompt = true;
+            o.OverwritePrompt = true;   // FIX: Random name
+            o.FileName = sprite.FileName.Substring(12, sprite.FileName.IndexOf('.', 12) - 12) + '_' + comboBank.SelectedIndex;
 
             if (o.ShowDialog() == DialogResult.OK)
             {
-                if (o.FilterIndex == 1)
+                if (o.FilterIndex == 2)
                     imgBox.Image.Save(o.FileName, System.Drawing.Imaging.ImageFormat.Bmp);
-                else if (o.FilterIndex == 2)
+                else if (o.FilterIndex == 1)
                     imgBox.Image.Save(o.FileName, System.Drawing.Imaging.ImageFormat.Png);
                 else if (o.FilterIndex == 3)
                     imgBox.Image.Save(o.FileName, System.Drawing.Imaging.ImageFormat.Jpeg);
@@ -290,7 +291,7 @@ namespace PluginInterface.Images
         }
         void Save_Files()
         {
-            if (sprite.ID > 0)
+            if (sprite.ID >= 0)
             {
                 try
                 {
@@ -300,7 +301,7 @@ namespace PluginInterface.Images
                 }
                 catch (Exception e) { MessageBox.Show("Error writing new sprite:\n" + e.Message); };
             }
-            if (image.ID > 0)
+            if (image.ID >= 0)
             {
                 try
                 {
@@ -310,7 +311,7 @@ namespace PluginInterface.Images
                 }
                 catch (Exception e) { MessageBox.Show("Error writing new image:\n" + e.Message); };
             }
-            if (checkPalette.Checked && palette.ID > 0)
+            if (checkPalette.Checked && palette.ID >= 0)
             {
                 try
                 {

@@ -86,12 +86,14 @@
             // 
             // btnShowAll
             // 
+            this.btnShowAll.Enabled = false;
             this.btnShowAll.Location = new System.Drawing.Point(73, 290);
             this.btnShowAll.Name = "btnShowAll";
             this.btnShowAll.Size = new System.Drawing.Size(183, 23);
             this.btnShowAll.TabIndex = 4;
             this.btnShowAll.Text = "S02";
             this.btnShowAll.UseVisualStyleBackColor = true;
+            this.btnShowAll.Visible = false;
             this.btnShowAll.Click += new System.EventHandler(this.btnShowAll_Click);
             // 
             // btnSave

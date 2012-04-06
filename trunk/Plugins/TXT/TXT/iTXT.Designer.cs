@@ -99,7 +99,8 @@ namespace TXT
             "unicode",
             "utf-32",
             "utf-8",
-            "ascii"});
+            "ascii",
+            "utf-16"});
             this.comboEncod.Location = new System.Drawing.Point(82, 480);
             this.comboEncod.Name = "comboEncod";
             this.comboEncod.Size = new System.Drawing.Size(121, 21);
