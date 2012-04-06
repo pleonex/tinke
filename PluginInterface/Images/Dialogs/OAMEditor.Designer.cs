@@ -1,4 +1,23 @@
-﻿namespace PluginInterface.Images.Dialogs
+﻿/*
+ * Copyright (C) 2011  pleoNeX
+ *
+ *   This program is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+ *
+ * By: pleoNeX
+ * 
+ */
+namespace PluginInterface.Images.Dialogs
 {
     partial class OAMEditor
     {
@@ -73,6 +92,10 @@
             this.checkTrans = new System.Windows.Forms.CheckBox();
             this.groupPreview = new System.Windows.Forms.GroupBox();
             this.checkCurrOAM = new System.Windows.Forms.CheckBox();
+            this.btnAddOAM = new System.Windows.Forms.Button();
+            this.btnRemOAM = new System.Windows.Forms.Button();
+            this.numNumOAM = new System.Windows.Forms.NumericUpDown();
+            this.label15 = new System.Windows.Forms.Label();
             this.groupObj0.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numYoffset)).BeginInit();
             this.groupObj1.SuspendLayout();
@@ -86,6 +109,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numOAM)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picBox)).BeginInit();
             this.groupPreview.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numNumOAM)).BeginInit();
             this.SuspendLayout();
             // 
             // groupObj0
@@ -102,9 +126,9 @@
             this.groupObj0.Controls.Add(this.label3);
             this.groupObj0.Controls.Add(this.numYoffset);
             this.groupObj0.Controls.Add(this.label1);
-            this.groupObj0.Location = new System.Drawing.Point(15, 42);
+            this.groupObj0.Location = new System.Drawing.Point(14, 33);
             this.groupObj0.Name = "groupObj0";
-            this.groupObj0.Size = new System.Drawing.Size(222, 224);
+            this.groupObj0.Size = new System.Drawing.Size(222, 197);
             this.groupObj0.TabIndex = 0;
             this.groupObj0.TabStop = false;
             this.groupObj0.Text = "Object 0";
@@ -118,7 +142,7 @@
             "Horizontal",
             "Vertical",
             "Invalid"});
-            this.comboShape.Location = new System.Drawing.Point(98, 191);
+            this.comboShape.Location = new System.Drawing.Point(98, 169);
             this.comboShape.Name = "comboShape";
             this.comboShape.Size = new System.Drawing.Size(110, 21);
             this.comboShape.TabIndex = 22;
@@ -127,7 +151,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(7, 165);
+            this.label5.Location = new System.Drawing.Point(7, 143);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(39, 13);
             this.label5.TabIndex = 21;
@@ -140,7 +164,7 @@
             this.comboDepth.Items.AddRange(new object[] {
             "4 bpp (16 colors)",
             "8 bpp (256 colors)"});
-            this.comboDepth.Location = new System.Drawing.Point(98, 162);
+            this.comboDepth.Location = new System.Drawing.Point(98, 140);
             this.comboDepth.Name = "comboDepth";
             this.comboDepth.Size = new System.Drawing.Size(110, 21);
             this.comboDepth.TabIndex = 20;
@@ -155,7 +179,7 @@
             "Semi-transparent",
             "Window",
             "Invalid"});
-            this.comboObjMode.Location = new System.Drawing.Point(98, 113);
+            this.comboObjMode.Location = new System.Drawing.Point(98, 91);
             this.comboObjMode.Name = "comboObjMode";
             this.comboObjMode.Size = new System.Drawing.Size(110, 21);
             this.comboObjMode.TabIndex = 19;
@@ -164,7 +188,7 @@
             // checkMosaic
             // 
             this.checkMosaic.AutoSize = true;
-            this.checkMosaic.Location = new System.Drawing.Point(9, 139);
+            this.checkMosaic.Location = new System.Drawing.Point(9, 117);
             this.checkMosaic.Name = "checkMosaic";
             this.checkMosaic.Size = new System.Drawing.Size(60, 17);
             this.checkMosaic.TabIndex = 17;
@@ -175,7 +199,7 @@
             // checkDoubleSize
             // 
             this.checkDoubleSize.AutoSize = true;
-            this.checkDoubleSize.Location = new System.Drawing.Point(98, 91);
+            this.checkDoubleSize.Location = new System.Drawing.Point(135, 68);
             this.checkDoubleSize.Name = "checkDoubleSize";
             this.checkDoubleSize.Size = new System.Drawing.Size(81, 17);
             this.checkDoubleSize.TabIndex = 16;
@@ -186,7 +210,7 @@
             // checkObjdisable
             // 
             this.checkObjdisable.AutoSize = true;
-            this.checkObjdisable.Location = new System.Drawing.Point(98, 68);
+            this.checkObjdisable.Location = new System.Drawing.Point(36, 68);
             this.checkObjdisable.Name = "checkObjdisable";
             this.checkObjdisable.Size = new System.Drawing.Size(93, 17);
             this.checkObjdisable.TabIndex = 15;
@@ -208,7 +232,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(6, 191);
+            this.label4.Location = new System.Drawing.Point(6, 169);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(41, 13);
             this.label4.TabIndex = 4;
@@ -217,7 +241,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(6, 116);
+            this.label3.Location = new System.Drawing.Point(6, 94);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(70, 13);
             this.label3.TabIndex = 2;
@@ -260,7 +284,7 @@
             this.groupObj1.Controls.Add(this.numSelectPar);
             this.groupObj1.Controls.Add(this.label2);
             this.groupObj1.Controls.Add(this.numXpos);
-            this.groupObj1.Location = new System.Drawing.Point(243, 42);
+            this.groupObj1.Location = new System.Drawing.Point(242, 33);
             this.groupObj1.Name = "groupObj1";
             this.groupObj1.Size = new System.Drawing.Size(169, 118);
             this.groupObj1.TabIndex = 1;
@@ -368,7 +392,7 @@
             this.groupObj2.Controls.Add(this.label9);
             this.groupObj2.Controls.Add(this.numOffset);
             this.groupObj2.Controls.Add(this.label8);
-            this.groupObj2.Location = new System.Drawing.Point(243, 166);
+            this.groupObj2.Location = new System.Drawing.Point(242, 157);
             this.groupObj2.Name = "groupObj2";
             this.groupObj2.Size = new System.Drawing.Size(169, 100);
             this.groupObj2.TabIndex = 1;
@@ -471,7 +495,7 @@
             // picBox
             // 
             this.picBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.picBox.Location = new System.Drawing.Point(15, 289);
+            this.picBox.Location = new System.Drawing.Point(14, 280);
             this.picBox.Name = "picBox";
             this.picBox.Size = new System.Drawing.Size(512, 256);
             this.picBox.TabIndex = 5;
@@ -480,7 +504,7 @@
             // label13
             // 
             this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(15, 273);
+            this.label13.Location = new System.Drawing.Point(15, 256);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(48, 13);
             this.label13.TabIndex = 6;
@@ -489,7 +513,7 @@
             // btnSave
             // 
             this.btnSave.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.btnSave.Location = new System.Drawing.Point(446, 7);
+            this.btnSave.Location = new System.Drawing.Point(449, 4);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(80, 40);
             this.btnSave.TabIndex = 7;
@@ -500,7 +524,7 @@
             // label14
             // 
             this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(416, 66);
+            this.label14.Location = new System.Drawing.Point(415, 57);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(70, 13);
             this.label14.TabIndex = 8;
@@ -523,7 +547,7 @@
             "08x32",
             "16x32",
             "32x64"});
-            this.comboSize.Location = new System.Drawing.Point(416, 82);
+            this.comboSize.Location = new System.Drawing.Point(415, 73);
             this.comboSize.Name = "comboSize";
             this.comboSize.Size = new System.Drawing.Size(110, 21);
             this.comboSize.TabIndex = 9;
@@ -598,7 +622,7 @@
             this.groupPreview.Controls.Add(this.checkOAM);
             this.groupPreview.Controls.Add(this.checkNumbers);
             this.groupPreview.Controls.Add(this.checkImage);
-            this.groupPreview.Location = new System.Drawing.Point(419, 114);
+            this.groupPreview.Location = new System.Drawing.Point(418, 105);
             this.groupPreview.Name = "groupPreview";
             this.groupPreview.Size = new System.Drawing.Size(111, 152);
             this.groupPreview.TabIndex = 15;
@@ -618,12 +642,58 @@
             this.checkCurrOAM.UseVisualStyleBackColor = true;
             this.checkCurrOAM.CheckedChanged += new System.EventHandler(this.Change_Preview);
             // 
+            // btnAddOAM
+            // 
+            this.btnAddOAM.Location = new System.Drawing.Point(225, 4);
+            this.btnAddOAM.Name = "btnAddOAM";
+            this.btnAddOAM.Size = new System.Drawing.Size(90, 23);
+            this.btnAddOAM.TabIndex = 16;
+            this.btnAddOAM.Text = "Add OAM";
+            this.btnAddOAM.UseVisualStyleBackColor = true;
+            this.btnAddOAM.Click += new System.EventHandler(this.btnAddOAM_Click);
+            // 
+            // btnRemOAM
+            // 
+            this.btnRemOAM.Location = new System.Drawing.Point(321, 4);
+            this.btnRemOAM.Name = "btnRemOAM";
+            this.btnRemOAM.Size = new System.Drawing.Size(90, 23);
+            this.btnRemOAM.TabIndex = 17;
+            this.btnRemOAM.Text = "Remove OAM";
+            this.btnRemOAM.UseVisualStyleBackColor = true;
+            this.btnRemOAM.Click += new System.EventHandler(this.btnRemOAM_Click);
+            // 
+            // numNumOAM
+            // 
+            this.numNumOAM.Location = new System.Drawing.Point(176, 236);
+            this.numNumOAM.Maximum = new decimal(new int[] {
+            65535,
+            0,
+            0,
+            0});
+            this.numNumOAM.Name = "numNumOAM";
+            this.numNumOAM.Size = new System.Drawing.Size(60, 20);
+            this.numNumOAM.TabIndex = 18;
+            this.numNumOAM.ValueChanged += new System.EventHandler(this.numNumOAM_ValueChanged);
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(125, 238);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(45, 13);
+            this.label15.TabIndex = 19;
+            this.label15.Text = "OAM id:";
+            // 
             // OAMEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
-            this.ClientSize = new System.Drawing.Size(533, 548);
+            this.ClientSize = new System.Drawing.Size(533, 538);
+            this.Controls.Add(this.label15);
+            this.Controls.Add(this.numNumOAM);
+            this.Controls.Add(this.btnRemOAM);
+            this.Controls.Add(this.btnAddOAM);
             this.Controls.Add(this.groupPreview);
             this.Controls.Add(this.comboSize);
             this.Controls.Add(this.label14);
@@ -659,6 +729,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.picBox)).EndInit();
             this.groupPreview.ResumeLayout(false);
             this.groupPreview.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numNumOAM)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -710,5 +781,9 @@
         private System.Windows.Forms.CheckBox checkTrans;
         private System.Windows.Forms.GroupBox groupPreview;
         private System.Windows.Forms.CheckBox checkCurrOAM;
+        private System.Windows.Forms.Button btnAddOAM;
+        private System.Windows.Forms.Button btnRemOAM;
+        private System.Windows.Forms.NumericUpDown numNumOAM;
+        private System.Windows.Forms.Label label15;
     }
 }

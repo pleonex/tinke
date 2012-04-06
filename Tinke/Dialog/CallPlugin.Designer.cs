@@ -183,7 +183,7 @@ namespace Tinke.Dialog
             this.numericID.Hexadecimal = true;
             this.numericID.Location = new System.Drawing.Point(272, 58);
             this.numericID.Maximum = new decimal(new int[] {
-            4095,
+            61439,
             0,
             0,
             0});

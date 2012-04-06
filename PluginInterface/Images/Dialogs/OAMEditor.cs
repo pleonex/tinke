@@ -1,4 +1,23 @@
-﻿using System;
+﻿/*
+ * Copyright (C) 2011  pleoNeX
+ *
+ *   This program is free software: you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation, either version 3 of the License, or
+ *   (at your option) any later version.
+ *
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+ *
+ * By: pleoNeX
+ * 
+ */
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -118,8 +137,9 @@ namespace PluginInterface.Images.Dialogs
                     else if (oam.obj1.size == 3) comboSize.SelectedIndex = 11;
                     break;
             }
-        }
 
+            numNumOAM.Value = oam.num_cell;
+        }
         private void Update_Image()
         {
             OAM oam = bank.oams[(int)numOAM.Value];
@@ -183,7 +203,6 @@ namespace PluginInterface.Images.Dialogs
 
             Update_Image();
         }
-
         private void Change_OBJ1(object sender, EventArgs e)
         {
             bank.oams[(int)numOAM.Value].obj1.xOffset = (int)numXpos.Value;
@@ -203,6 +222,22 @@ namespace PluginInterface.Images.Dialogs
         }
         private void Change_Preview(object sender, EventArgs e)
         {
+            Update_Image();
+        }
+        private void numNumOAM_ValueChanged(object sender, EventArgs e)
+        {
+            bank.oams[(int)numOAM.Value].num_cell = (ushort)numNumOAM.Value;
+
+            OAM currOAM = bank.oams[(int)numOAM.Value];
+
+            // Reorder the cells due to the new priority
+            List<OAM> cells = new List<OAM>();
+            cells.AddRange(bank.oams);
+            cells.Sort(Actions.Comparision_OAM);
+            bank.oams = cells.ToArray();
+
+            numOAM.Value = Array.IndexOf(bank.oams, currOAM);
+            Read_Info((int)numOAM.Value);
             Update_Image();
         }
 
@@ -262,5 +297,49 @@ namespace PluginInterface.Images.Dialogs
             Read_Info((int)numOAM.Value);
             Update_Image();
         }
+
+        private void btnAddOAM_Click(object sender, EventArgs e)
+        {
+            int length = bank.oams.Length;
+
+            OAM[] newOAM = new OAM[length + 1];
+            Array.Copy(bank.oams, newOAM, length);
+            // New oam
+            newOAM[length] = new OAM();
+            newOAM[length].num_cell = (ushort)length;
+            newOAM[length].obj0.yOffset = -128;
+            newOAM[length].obj1.xOffset = -256;
+            bank.oams = newOAM;
+            OAM oam = newOAM[length];
+
+            // Reorder the cells due to the new num_cell and priority
+            List<OAM> cells = new List<OAM>();
+            cells.AddRange(bank.oams);
+            cells.Sort(Actions.Comparision_OAM);
+            bank.oams = cells.ToArray();
+
+            // Update
+            numOAM.Maximum = bank.oams.Length - 1;
+            label12.Text = "of " + numOAM.Maximum.ToString();
+
+            numOAM.Value = Array.IndexOf(bank.oams, oam);
+            Read_Info((int)numOAM.Value);
+            Update_Image();
+        }
+        private void btnRemOAM_Click(object sender, EventArgs e)
+        {
+            OAM[] newOAM = new OAM[bank.oams.Length - 1];
+            int j = 0;
+            for (int i = 0; i < bank.oams.Length; i++)
+                if (i != numOAM.Value)
+                    newOAM[j++] = bank.oams[i];
+            bank.oams = newOAM;
+
+            numOAM.Maximum = bank.oams.Length - 1;
+            label12.Text = "of " + numOAM.Maximum.ToString();
+            Read_Info((int)numOAM.Value);
+            Update_Image();
+        }
+
     }
 }

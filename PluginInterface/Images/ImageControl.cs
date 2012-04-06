@@ -384,7 +384,7 @@ namespace PluginInterface.Images
         }
         private void Save_Files()
         {
-            if (image.ID > 0)
+            if (image.ID >= 0)
             {
                 try
                 {
@@ -394,7 +394,7 @@ namespace PluginInterface.Images
                 }
                 catch (Exception e) { MessageBox.Show("Error writing new image:\n" + e.Message); };
             }
-            if (palette.ID > 0)
+            if (palette.ID >= 0)
             {
                 try
                 {
@@ -404,7 +404,7 @@ namespace PluginInterface.Images
                 }
                 catch (Exception e) { MessageBox.Show("Error writing new palette:\n" + e.Message); };
             }
-            if (isMap && map.ID > 0)
+            if (isMap && map.ID >= 0)
             {
                 try
                 {
@@ -428,6 +428,11 @@ namespace PluginInterface.Images
                        "Graphic Interchange Format (*.gif)|*.gif|" +
                        "Icon (*.ico)|*.ico;*.icon";
             o.OverwritePrompt = true;
+            if (isMap)  // FIX: RANDOM NAME
+                o.FileName = map.FileName.Substring(12);
+            else
+                o.FileName = image.FileName.Substring(12);
+
             if (o.ShowDialog() == DialogResult.OK)
             {
                 if (o.FilterIndex == 1)

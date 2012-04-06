@@ -148,13 +148,12 @@ namespace Fonts
                     case 2:
                         sNFTR.PAMC.Type2 type2 = new sNFTR.PAMC.Type2();
                         type2.num_chars = br.ReadUInt16();
-                        type2.chars_code = new ushort[type2.num_chars];
-                        type2.chars = new ushort[type2.num_chars];
+                        type2.charInfo = new sNFTR.PAMC.Type2.CharInfo[type2.num_chars];
 
                         for (int i = 0; i < type2.num_chars; i++)
                         {
-                            type2.chars_code[i] = br.ReadUInt16();
-                            type2.chars[i] = br.ReadUInt16();
+                            type2.charInfo[i].chars_code = br.ReadUInt16();
+                            type2.charInfo[i].chars = br.ReadUInt16();
                         }
                         pamc.info = type2;
                         break;
@@ -297,8 +296,8 @@ namespace Fonts
                         bw.Write(type2.num_chars);
                         for (int j = 0; j < type2.num_chars; j++)
                         {
-                            bw.Write(type2.chars_code[j]);
-                            bw.Write(type2.chars[j]);
+                            bw.Write(type2.charInfo[j].chars_code);
+                            bw.Write(type2.charInfo[j].chars);
                         }
                         break;
                 }
@@ -394,8 +393,8 @@ namespace Fonts
                             Console.WriteLine("    \\_" + xml.Element("S1B").Value, type2.num_chars.ToString());
                             for (int j = 0; j < type2.num_chars; j++)
                             {
-                                Console.WriteLine("    |_" + xml.Element("S1C").Value, j.ToString(), type2.chars_code[j].ToString("x"));
-                                Console.WriteLine("    |_" + xml.Element("S1D").Value, j.ToString(), type2.chars[j].ToString());
+                                Console.WriteLine("    |_" + xml.Element("S1C").Value, j.ToString(), type2.charInfo[j].chars_code.ToString("x"));
+                                Console.WriteLine("    |_" + xml.Element("S1D").Value, j.ToString(), type2.charInfo[j].chars.ToString());
                             }
                             break;
                     }
@@ -674,9 +673,13 @@ namespace Fonts
             public struct Type2
             {
                 public ushort num_chars;
+                public CharInfo[] charInfo;
 
-                public ushort[] chars_code;
-                public ushort[] chars;
+                public struct CharInfo
+                {
+                    public ushort chars_code;
+                    public ushort chars;
+                }
             }
         }
     }

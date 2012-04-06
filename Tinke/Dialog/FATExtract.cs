@@ -308,6 +308,43 @@ namespace Tinke.Dialog
             return 0;
         }
 
+        private void btnAddOffset_Click(object sender, EventArgs e)
+        {
+            if (fat.files == null)
+                fat.files = new List<sFile>();
+
+            sFile newFile = new sFile();
+            newFile.path = file;
+            newFile.name = "File " + (fat.files.Count - 1).ToString();
+            newFile.offset = (uint)numOffset.Value;
+            if (numSize.Value == 0)
+                newFile.size = (uint)(new FileInfo(file).Length - newFile.offset);
+            else
+                newFile.size = (uint)numSize.Value;
+
+
+            // Get the extension
+            BinaryReader br = new BinaryReader(File.OpenRead(file));
+            br.BaseStream.Position = newFile.offset;
+            char[] ext;
+            if (newFile.size < 4)
+                ext = Encoding.ASCII.GetChars(br.ReadBytes((int)newFile.size));
+            else
+                ext = Encoding.ASCII.GetChars(br.ReadBytes(4));
+
+            String extS = ".";
+            for (int s = 0; s < ext.Length; s++)
+                if (Char.IsLetterOrDigit(ext[s]) || ext[s] == 0x20)
+                    extS += ext[s];
+
+            if (extS != "." && extS.Length == 5 && newFile.size >= 4)
+                newFile.name += extS;
+            else
+                newFile.name += ".bin";
+
+            fat.files.Add(newFile);
+            listBoxFiles.Items.Add(newFile.name);
+        }
         private void btnAccept_Click(object sender, EventArgs e)
         {
             this.Close();
@@ -349,6 +386,7 @@ namespace Tinke.Dialog
             public uint num_files;
             public List<sFile> files;
         }
+
 
     }
 }

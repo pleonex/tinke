@@ -107,7 +107,7 @@ namespace Fonts
                     sNFTR.PAMC.Type2 type2 = (sNFTR.PAMC.Type2)font.pamc[p].info;
 
                     for (int j = 0; j < type2.num_chars; j++)
-                        try { charTile.Add(type2.chars_code[j], type2.chars[j]); }
+                        try { charTile.Add(type2.charInfo[j].chars_code, type2.charInfo[j].chars); }
                         catch { }
                 }
             }
@@ -240,13 +240,30 @@ namespace Fonts
         {
             MapChar map = new MapChar(font.pamc, pluginHost.Get_Language());
             map.ShowDialog();
-            if (map.DialogResult == DialogResult.OK)
+            if (map.DialogResult != DialogResult.OK)
+                return;
+
+            font.pamc = map.Maps;
+            for (int i = 0; i < font.pamc.Count; i++)
             {
-                font.pamc = map.Maps;
-                charTile.Clear();
-                Fill_CharTile();
-                txtBox_TextChanged(txtBox, null);
+                if (font.pamc[i].info is sNFTR.PAMC.Type2)
+                {
+                    sNFTR.PAMC sec = font.pamc[i];
+
+                    List<sNFTR.PAMC.Type2.CharInfo> infos = new List<sNFTR.PAMC.Type2.CharInfo>();
+                    sNFTR.PAMC.Type2 type2 = (sNFTR.PAMC.Type2)sec.info;
+                    infos.AddRange(type2.charInfo);
+                    infos.Sort(Sort_Font);
+
+                    type2.charInfo = infos.ToArray();
+                    sec.info = type2;
+                    font.pamc[i] = sec;
+                }
             }
+
+            charTile.Clear();
+            Fill_CharTile();
+            txtBox_TextChanged(txtBox, null);
         }
         private void btnAddChar_Click(object sender, EventArgs e)
         {
@@ -285,5 +302,14 @@ namespace Fonts
             comboChar.SelectedIndex = index - 1;
         }
 
+        private int Sort_Font(sNFTR.PAMC.Type2.CharInfo c1, sNFTR.PAMC.Type2.CharInfo c2)
+        {
+            if (c1.chars_code < c2.chars_code)
+                return -1;
+            else if (c1.chars_code > c2.chars_code)
+                return 1;
+            else
+                return 0;
+        }
     }
 }
