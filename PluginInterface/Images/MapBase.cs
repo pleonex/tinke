@@ -68,14 +68,15 @@ namespace PluginInterface.Images
 
         public Image Get_Image(ImageBase image, PaletteBase palette)
         {
-            if (image.TileForm == TileForm.Lineal)
-                image.TileForm = TileForm.Horizontal;
+            if (image.FormTile == TileForm.Lineal)
+                image.FormTile = TileForm.Horizontal;
 
             Byte[] tiles, tile_pal;
-            tiles = Actions.Apply_Map(map, image.Tiles, out tile_pal, image.TileWidth);
+            NTFS[] currMap = (NTFS[])map.Clone();
+            tiles = Actions.Apply_Map(currMap, image.Tiles, out tile_pal, image.BPP, image.TileSize);
 
             ImageBase newImage = new TestImage(pluginHost);
-            newImage.Set_Tiles(tiles, image.Width, image.Height, image.ColorFormat, image.TileForm, image.CanEdit);
+            newImage.Set_Tiles(tiles, image.Width, image.Height, image.FormatColor, image.FormTile, image.CanEdit, image.TileSize);
             newImage.TilesPalette = tile_pal;
             newImage.Zoom = image.Zoom;
 

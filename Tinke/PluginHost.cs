@@ -91,14 +91,6 @@ namespace Tinke
 
             return ntft;
         }
-        public byte[] XFlip(byte[] tile)
-        {
-            return Actions.XFlip(tile, 8);
-        }
-        public byte[] YFlip(byte[] tile)
-        {
-            return Actions.YFlip(tile, 8);
-        }
 
         public Bitmap Bitmap_NTFT(NTFT tiles, Color[][] palette, TileForm tileOrder, int startTile, int tilesX, int tilesY, int zoom = 1)
         {
@@ -110,6 +102,17 @@ namespace Tinke
         }
 
         public Size Get_OAMSize(byte byte1, byte byte2) { return Actions.Get_OAMSize(byte1, byte2); }
+
+        public string[] PluginList()
+        {
+            return event_PluginList();
+        }
+        public event Func<string[]> event_PluginList;
+        public Object Call_Plugin(string[] param, int id, int action)
+        {
+            return event_CallPlugin(param, id, action);
+        }
+        public event Func<string[], int, int, object> event_CallPlugin;
 
         public void Set_Files(sFolder archivos)
         {

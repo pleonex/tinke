@@ -99,7 +99,7 @@ namespace SF_FEATHER
         }
         public override void Write(string fileOut, PaletteBase palette)
         {
-            if (depth != ColorFormat)
+            if (depth != FormatColor)
                 throw new NotImplementedException("The current file doesn't support this depth");
 
             // Update the struct

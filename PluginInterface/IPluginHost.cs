@@ -56,6 +56,9 @@ namespace PluginInterface
         Byte[] Bit4ToBit8(byte[] bits4);
         Byte[] Bit8ToBit4(byte[] bits8);
 
+        string[] PluginList();
+        Object Call_Plugin(string[] param, int id, int action);
+
         void Set_Files(sFolder folder);
         sFolder Get_Files();
         sFolder Get_DecompressedFiles(int id);
@@ -78,10 +81,6 @@ namespace PluginInterface
         /// <param name="id">The id of the file to change</param>
         /// <param name="newFile">The path where the new file is</param>
         void ChangeFile(int id, string newFile);
-
-        //NCLR BitmapToPalette(string bitmap, int paletteIndex = 0);
-        //NCGR BitmapToTile(string bitmap, TileOrder tileOrder);
-        //NSCR Create_BasicMap(int nTiles, int width, int height);
 
         /// <summary>
         /// Save an animation in a APNG file (Firefox supported)

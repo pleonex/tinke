@@ -262,7 +262,7 @@ namespace PluginInterface.Images
             BMP bitmap = new BMP(pluginHost, o.FileName);
 
             // Adapt the new image to the current
-            bitmap.ColorFormat = image.ColorFormat;
+            bitmap.FormatColor = image.FormatColor;
             byte[] newImg = bitmap.Tiles;
 
             // Get the data of a oam and add to the end of the image
@@ -270,17 +270,17 @@ namespace PluginInterface.Images
             for (int i = 0; i < sprite.Banks[comboBank.SelectedIndex].oams.Length; i++)
             {
                 OAM oam = sprite.Banks[comboBank.SelectedIndex].oams[i];
-                byte[] cellImg = Actions.Get_OAMdata(oam, newImg, bitmap.ColorFormat);
+                byte[] cellImg = Actions.Get_OAMdata(oam, newImg, bitmap.FormatColor);
 
-                if (image.TileForm == TileForm.Horizontal)
-                    cellImg = Actions.HorizontalToLineal(cellImg, oam.width / 8, oam.height / 8, bitmap.TileWidth);
+                if (image.FormTile == TileForm.Horizontal)
+                    cellImg = Actions.HorizontalToLineal(cellImg, oam.width, oam.height, bitmap.BPP, bitmap.TileSize);
 
                 uint offset = Actions.Add_Image(ref imgData, cellImg, (uint)(1 << (int)sprite.BlockSize) * 0x20);
                 offset /= 0x20;
                 offset >>= (int)sprite.BlockSize;
                 sprite.Banks[comboBank.SelectedIndex].oams[i].obj2.tileOffset = offset;
             }
-            image.Set_Tiles(imgData, 0x100, imgData.Length / 0x100, image.ColorFormat, image.TileForm, image.CanEdit);
+            image.Set_Tiles(imgData, 0x100, imgData.Length / 0x100, image.FormatColor, image.FormTile, image.CanEdit);
             
             // Set the palette
             if (checkPalette.Checked)
@@ -344,7 +344,7 @@ namespace PluginInterface.Images
                 }
             }
 
-            Actions.Change_Color(ref tiles, ref pal, index, 0, image.ColorFormat);
+            Actions.Change_Color(ref tiles, ref pal, index, 0, image.FormatColor);
 
             Color[][] new_pal = palette.Palette;
             new_pal[pal_index] = pal;

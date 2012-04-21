@@ -60,6 +60,7 @@ namespace PluginInterface.Images
             this.comboDepth = new System.Windows.Forms.ComboBox();
             this.label4 = new System.Windows.Forms.Label();
             this.checkHex = new System.Windows.Forms.CheckBox();
+            this.btnUseThis = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.picPalette)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericPalette)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericStartByte)).BeginInit();
@@ -104,9 +105,9 @@ namespace PluginInterface.Images
             // 
             // btnExport
             // 
-            this.btnExport.Location = new System.Drawing.Point(299, 3);
+            this.btnExport.Location = new System.Drawing.Point(343, 3);
             this.btnExport.Name = "btnExport";
-            this.btnExport.Size = new System.Drawing.Size(95, 30);
+            this.btnExport.Size = new System.Drawing.Size(80, 40);
             this.btnExport.TabIndex = 6;
             this.btnExport.Text = "S03";
             this.btnExport.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
@@ -125,9 +126,9 @@ namespace PluginInterface.Images
             // btnImport
             // 
             this.btnImport.Enabled = false;
-            this.btnImport.Location = new System.Drawing.Point(400, 3);
+            this.btnImport.Location = new System.Drawing.Point(429, 3);
             this.btnImport.Name = "btnImport";
-            this.btnImport.Size = new System.Drawing.Size(106, 30);
+            this.btnImport.Size = new System.Drawing.Size(80, 40);
             this.btnImport.TabIndex = 3;
             this.btnImport.Text = "S04";
             this.btnImport.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
@@ -198,12 +199,23 @@ namespace PluginInterface.Images
             this.checkHex.UseVisualStyleBackColor = true;
             this.checkHex.CheckedChanged += new System.EventHandler(this.checkHex_CheckedChanged);
             // 
+            // btnUseThis
+            // 
+            this.btnUseThis.Location = new System.Drawing.Point(262, 3);
+            this.btnUseThis.Name = "btnUseThis";
+            this.btnUseThis.Size = new System.Drawing.Size(80, 40);
+            this.btnUseThis.TabIndex = 13;
+            this.btnUseThis.Text = "Use this palette";
+            this.btnUseThis.UseVisualStyleBackColor = true;
+            this.btnUseThis.Click += new System.EventHandler(this.btnUseThis_Click);
+            // 
             // PaletteControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Transparent;
             this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.Controls.Add(this.btnUseThis);
             this.Controls.Add(this.checkHex);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.comboDepth);
@@ -242,5 +254,6 @@ namespace PluginInterface.Images
         private System.Windows.Forms.ComboBox comboDepth;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.CheckBox checkHex;
+        private System.Windows.Forms.Button btnUseThis;
     }
 }

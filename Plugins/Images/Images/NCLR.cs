@@ -45,7 +45,9 @@ namespace Images
                 pltt.pal_length = pltt.length - 0x18;
 
             uint colors_startOffset = br.ReadUInt32();
-            pltt.num_colors = (pltt.depth == ColorFormat.colors16) ? 0x10 : pltt.pal_length / 2;
+            pltt.num_colors = (uint)((pltt.depth == ColorFormat.colors16) ? 0x10 : 0x100);
+            if (pltt.pal_length / 2 < pltt.num_colors)
+                pltt.num_colors = pltt.pal_length / 2;
             pltt.palettes = new Color[pltt.pal_length / (pltt.num_colors * 2)][];
 
             br.BaseStream.Position = 0x18 + colors_startOffset;
@@ -70,7 +72,7 @@ namespace Images
 
         End:
             br.Close();
-            Set_Palette(pltt.palettes, true);
+            Set_Palette(pltt.palettes, pltt.depth, true);
         }
 
         public override void Write(string fileOut)

@@ -1630,24 +1630,7 @@ namespace Tinke
             // The current selected file will be changed if they only select one file
             if (o.FileNames.Length == 1 && accion.IDSelect < 0xF000)
             {
-                sFile newFile = new sFile();
-                sFile fileToBeChanged = accion.Selected_File();
-                newFile.name = fileToBeChanged.name;
-                newFile.id = fileToBeChanged.id;
-                newFile.offset = 0x00;
-                if (accion.ROMFile == "") // If the user haven't opened a rom, the file is overwritten
-                {
-                    File.Copy(o.FileNames[0], fileToBeChanged.path, true);
-                    newFile.path = fileToBeChanged.path;
-                }
-                else
-                    newFile.path = o.FileNames[0];
-                newFile.format = fileToBeChanged.format;
-                newFile.size = (uint)new FileInfo(o.FileNames[0]).Length;
-                if ((String)newFile.tag == "Descomprimido")
-                    newFile.tag = String.Format("{0:X}", newFile.size).PadLeft(8, '0') + newFile.path;
-
-                accion.Change_File(fileToBeChanged.id, newFile, accion.Root);
+                accion.Change_File(accion.IDSelect, o.FileNames[0]);
                 return;
             }
 
@@ -1682,23 +1665,7 @@ namespace Tinke
                     fileToBeChanged = dialog.SelectedFile;
                 }
 
-                sFile newFile = new sFile();
-                newFile.name = fileToBeChanged.name;
-                newFile.id = fileToBeChanged.id;
-                newFile.offset = 0x00;
-                if (accion.ROMFile == "") // If the user haven't opened a rom, the file is overwritten
-                {
-                    File.Copy(currFile, fileToBeChanged.path, true);
-                    newFile.path = fileToBeChanged.path;
-                }
-                else
-                    newFile.path = currFile;
-                newFile.format = fileToBeChanged.format;
-                newFile.size = (uint)new FileInfo(currFile).Length;
-                if ((String)newFile.tag == "Descomprimido")
-                    newFile.tag = String.Format("{0:X}", newFile.size).PadLeft(8, '0') + newFile.path;
-
-                accion.Change_File(fileToBeChanged.id, newFile, accion.Root);
+                accion.Change_File(fileToBeChanged.id, currFile);
             }
         }
         #endregion

@@ -46,7 +46,8 @@ namespace PluginInterface.Images
         int width, height;
         ColorFormat format;
         TileForm tileForm;
-        int tile_width;
+        int tile_size;      // Pixels heigth
+        int bpp;
         bool canEdit;
 
         Object obj;
@@ -73,14 +74,15 @@ namespace PluginInterface.Images
 
         public Image Get_Image(PaletteBase palette)
         {
+            palette.Depth = format;
             Color[][] pal_colors = palette.Palette;
 
             Byte[] img_tiles;
             if (tileForm == Images.TileForm.Horizontal)
             {
-                if (height < 8) height = 8;
-                img_tiles = Actions.LinealToHorizontal(tiles, width / 8, height / 8, tile_width);
-                tilePal = Actions.LinealToHorizontal(tilePal, width / 8, height / 8, 8);
+                if (height < tile_size) height = tile_size;
+                img_tiles = Actions.LinealToHorizontal(tiles, width, height, bpp, tile_size);
+                tilePal = Actions.LinealToHorizontal(tilePal, width, height, 8, tile_size);
             }
             else
                 img_tiles = tiles;
@@ -91,13 +93,6 @@ namespace PluginInterface.Images
         public abstract void Read(string fileIn);
         public abstract void Write(string fileOut, PaletteBase palette);
 
-        public void Change_TileForm(TileForm newForm)
-        {
-            if (newForm == tileForm)
-                return;
-
-            tileForm = newForm;
-        }
         public void Change_StartByte(int start)
         {
             if (start < 0 || start >= original.Length)
@@ -105,12 +100,13 @@ namespace PluginInterface.Images
 
             startByte = start;
 
-            Array.Copy(original, start, tiles, 0, original.Length - start);
-            tilePal = new byte[tiles.Length];
+            tiles = new byte[original.Length - start];
+            Array.Copy(original, start, tiles, 0, tiles.Length);
+            tilePal = new byte[tiles.Length * (tile_size / bpp)];
         }
 
         public void Set_Tiles(Byte[] tiles, int width, int height, ColorFormat format,
-            TileForm form, bool editable)
+            TileForm form, bool editable, int tile_size = 8)
         {
             this.tiles = tiles;
             this.format = format;
@@ -118,22 +114,23 @@ namespace PluginInterface.Images
             Width = width;
             Height = height;
             this.canEdit = editable;
+            this.tile_size = tile_size;
 
             zoom = 1;
             startByte = 0;
             loaded = true;
 
-            tile_width = 8;
+            bpp = 8;
             if (format == Images.ColorFormat.colors16)
-                tile_width = 4;
+                bpp = 4;
             else if (format == Images.ColorFormat.colors2)
-                tile_width = 1;
+                bpp = 1;
             else if (format == Images.ColorFormat.colors4)
-                tile_width = 2;
+                bpp = 2;
             else if (format == Images.ColorFormat.direct)
-                tile_width = 16;
+                bpp = 16;
 
-            tilePal = new byte[tiles.Length * (8 / tile_width)];
+            tilePal = new byte[tiles.Length * (tile_size / bpp)];
 
             // Get the original data for changes in startByte
             original = (byte[])tiles.Clone();
@@ -141,26 +138,27 @@ namespace PluginInterface.Images
         public void Set_Tiles(ImageBase new_img)
         {
             this.tiles = new_img.Tiles;
-            this.format = new_img.ColorFormat;
-            this.tileForm = new_img.TileForm;         
+            this.format = new_img.FormatColor;
+            this.tileForm = new_img.FormTile;         
             Width = new_img.Width;
             Height = new_img.Height;
+            this.tile_size = new_img.tile_size;
 
             zoom = 1;
             startByte = 0;
             loaded = true;
 
-            tile_width = 8;
+            bpp = 8;
             if (format == Images.ColorFormat.colors16)
-                tile_width = 4;
+                bpp = 4;
             else if (format == Images.ColorFormat.colors2)
-                tile_width = 1;
+                bpp = 1;
             else if (format == Images.ColorFormat.colors4)
-                tile_width = 2;
+                bpp = 2;
             else if (format == Images.ColorFormat.direct)
-                tile_width = 16;
+                bpp = 16;
 
-            tilePal = new byte[tiles.Length * (8 / tile_width)];
+            tilePal = new byte[tiles.Length * (tile_size / bpp)];
 
             // Get the original data for changes in startByte
             original = (byte[])tiles.Clone();
@@ -173,12 +171,11 @@ namespace PluginInterface.Images
             startByte = 0;
             loaded = true;
 
-            tilePal = new byte[tiles.Length * (8 / tile_width)];
+            tilePal = new byte[tiles.Length * (tile_size / bpp)];
 
             // Get the original data for changes in startByte
             original = (byte[])tiles.Clone();
         }
-
 
 
         #region Properties
@@ -229,30 +226,30 @@ namespace PluginInterface.Images
                 width = value;
             }
         }
-        public ColorFormat ColorFormat
+        public ColorFormat FormatColor
         {
             get { return format; }
             set
             {
                 format = value;
                 if (format == Images.ColorFormat.colors16)
-                    tile_width = 4;
+                    bpp = 4;
                 else if (format == Images.ColorFormat.colors2)
-                    tile_width = 1;
+                    bpp = 1;
                 else if (format == Images.ColorFormat.colors4)
-                    tile_width = 2;
+                    bpp = 2;
                 else if (format == Images.ColorFormat.direct)
-                    tile_width = 16;
+                    bpp = 16;
                 else
-                    tile_width = 8;
+                    bpp = 8;
 
-                tilePal = new byte[tiles.Length * (8 / tile_width)];
+                Array.Resize(ref tilePal, tiles.Length * (tile_size / bpp));
             }
         }
-        public TileForm TileForm
+        public TileForm FormTile
         {
             get { return tileForm; }
-            set { Change_TileForm(value); }
+            set { tileForm = value; }
         }
         public Byte[] Tiles
         {
@@ -266,9 +263,18 @@ namespace PluginInterface.Images
             get { return tilePal; }
             set { tilePal = value; }
         }
-        public int TileWidth
+        public int BPP
         {
-            get { return tile_width; }
+            get { return bpp; }
+        }
+        public int TileSize
+        {
+            get { return tile_size; }
+            set
+            {
+                tile_size = value;
+                Array.Resize(ref tilePal, tiles.Length * (tile_size / bpp));
+            }
         }
         public Byte[] Original
         {

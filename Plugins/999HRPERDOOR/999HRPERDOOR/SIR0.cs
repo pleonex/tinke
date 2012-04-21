@@ -128,6 +128,42 @@ namespace _999HRPERDOOR
         }
     }
 
+    public class SIR0_Image : ImageBase
+    {
+        public SIR0_Image(IPluginHost pluginHost, string file, int id) : base(pluginHost, file, id) { }
+
+        public override void Read(string fileIn)
+        {
+            BinaryReader br = new BinaryReader(File.OpenRead(fileIn));
+
+            char[] type = br.ReadChars(4);
+            uint offset1 = br.ReadUInt32();
+            uint offset2 = br.ReadUInt32();
+            uint offset3 = br.ReadUInt32();     // Always 0x00 ?
+
+            br.BaseStream.Position = offset1 + 0x1C;
+            uint paletteOffset = br.ReadUInt32();
+
+            br.BaseStream.Position = 0x10;
+            byte[] tiles = br.ReadBytes((int)(paletteOffset - 0x10));
+
+            br.BaseStream.Position = paletteOffset;
+            Color[] colors = Actions.BGR555ToColor(br.ReadBytes(0x200));
+            RawPalette palette = new RawPalette(pluginHost, new Color[][] { colors }, false, ColorFormat.colors256);
+            pluginHost.Set_Palette(palette);
+
+            br.Close();
+
+            Set_Tiles(tiles, 0x100, tiles.Length / 0x100, ColorFormat.colors256, TileForm.Lineal, false);
+            pluginHost.Set_Image(this);
+        }
+
+        public override void Write(string fileOut, PaletteBase palette)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
     public struct SIR0_Info
     {
         public Info1 info1;

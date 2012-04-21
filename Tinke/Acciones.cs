@@ -60,6 +60,8 @@ namespace Tinke
             pluginHost.event_GetDecompressedFiles += new Func<int, sFolder>(pluginHost_event_GetDecompressedFiles);
             pluginHost.event_SearchFile += new Func<int, String>(Save_File);
             pluginHost.event_SearchFile2 += new Func<int, sFile>(Search_File);
+            pluginHost.event_PluginList += new Func<string[]>(Get_PluginsList);
+            pluginHost.event_CallPlugin += new Func<string[],int,int,object>(Call_Plugin);
             Load_Plugins();
         }
         public void Dispose()
@@ -134,7 +136,7 @@ namespace Tinke
         }
         public Object Call_Plugin(sFile file, string name, string ext, int id, string header, int action)
         {
-            string tempFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + file.id;
+            string tempFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + Path.GetRandomFileName();
             if (file.name.Contains('.'))
                 tempFile += file.name.Substring(0, file.name.IndexOf('.') + 1) + ext;
             else
@@ -234,6 +236,109 @@ namespace Tinke
             Console.WriteLine("Plugin not found");
             return null;
         }
+        public Object Call_Plugin(string file, string pname, string fname, int id, string header, int action)
+        {
+            string tempFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + Path.GetRandomFileName() + fname;
+            File.Copy(file, tempFile, true);
+
+            foreach (IGamePlugin plugin in gamePlugin)
+            {
+                if (plugin.ToString() != pname)
+                    continue;
+
+                try
+                {
+                    switch (action)
+                    {
+                        case 0:
+                            plugin.Read(tempFile, id);
+                            return null;
+
+                        case 1:
+                            return plugin.Show_Info(tempFile, id);
+
+                        case 2:
+                            sFolder unpacked = plugin.Unpack(tempFile, id);
+                            Add_Files(ref unpacked, id);
+                            return unpacked;
+
+                        case 3:
+                            sFolder unpack = pluginHost_event_GetDecompressedFiles(id);
+                            String packFile = plugin.Pack(ref unpack, tempFile, id);
+
+                            if (!(packFile is String) || packFile == "")
+                            {
+                                MessageBox.Show(Tools.Helper.GetTranslation("Messages", "S23"));
+                                Console.WriteLine(Tools.Helper.GetTranslation("Messages", "S25"));
+                                throw new NotSupportedException();
+                            }
+
+                            pluginHost_ChangeFile_Event(id, packFile);
+                            Change_Files(unpack);
+                            return null;
+                    }
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show(Tools.Helper.GetTranslation("Messages", "S25"));
+                    Console.WriteLine(e.Message);
+                    return null;
+                }
+            }
+
+            foreach (IPlugin plugin in formatList)
+            {
+                if (plugin.ToString() != pname)
+                    continue;
+
+                try
+                {
+                    switch (action)
+                    {
+                        case 0:
+                            plugin.Read(tempFile, id);
+                            return null;
+
+                        case 1:
+                            return plugin.Show_Info(tempFile, id);
+
+                        case 2: // Unpack
+                            sFolder unpacked = plugin.Unpack(tempFile);
+                            Add_Files(ref unpacked, id);
+                            return unpacked;
+
+                        case 3: // Pack
+                            sFolder unpack = pluginHost_event_GetDecompressedFiles(id);
+                            String packFile = plugin.Pack(ref unpack, tempFile);
+
+                            if (!(packFile is String) || packFile == "")
+                            {
+                                MessageBox.Show(Tools.Helper.GetTranslation("Messages", "S23"));
+                                Console.WriteLine(Tools.Helper.GetTranslation("Messages", "S25"));
+                                throw new NotSupportedException();
+                            }
+
+                            pluginHost_ChangeFile_Event(id, packFile);
+                            Change_Files(unpack);
+                            return null;
+                    }
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show(Tools.Helper.GetTranslation("Messages", "S25"));
+                    Console.WriteLine(e.Message);
+                    return null;
+                }
+            }
+
+            Console.WriteLine("Plugin not found");
+            return null;
+        }
+        public Object Call_Plugin(string[] param, int id, int action)
+        {
+            return Call_Plugin(param[0], param[1], param[2], id, param[3], action);
+        }
+
         #endregion
 
         #region Properties
@@ -657,6 +762,10 @@ namespace Tinke
                         Change_File(id, fileChanged, currFolder.folders[i]);
                 }
             }
+        }
+        public void Change_File(int id, string newFilePath)
+        {
+            pluginHost_ChangeFile_Event(id, newFilePath);
         }
         void pluginHost_ChangeFile_Event(int id, string newFilePath)
         {
@@ -1786,6 +1895,7 @@ namespace Tinke
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
+                Console.WriteLine(e.StackTrace);
                 try { File.Delete(tempFile); }
                 catch { }
                 return new Control();

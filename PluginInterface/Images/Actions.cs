@@ -340,7 +340,9 @@ namespace PluginInterface.Images
                 for (int w = 0; w < width; w++)
                 {
                     int num_pal = 0;
-                    if (tile_pal.Length > w + h * width)
+                    if (tile_pal.Length <= w + h * width)
+                        num_pal = 0;
+                    else
                         num_pal = tile_pal[w + h * width];
 
                     if (num_pal >= palette.Length)
@@ -440,9 +442,13 @@ namespace PluginInterface.Images
             return color;
         }
 
-        public static byte[] HorizontalToLineal(byte[] horizontal, int tilesX, int tilesY, int tile_width)
+        public static byte[] HorizontalToLineal(byte[] horizontal, int width, int height, int bpp, int tile_size)
         {
             Byte[] lineal = new byte[horizontal.Length];
+            int tile_width = tile_size * bpp / 8;   // Calculate the number of byte per line in the tile
+            // pixels per line * bits per pixel / 8 bits per byte
+            int tilesX = width / tile_size;
+            int tilesY = height / tile_size;
 
             int pos = 0;
             for (int ht = 0; ht < tilesY; ht++)
@@ -450,16 +456,16 @@ namespace PluginInterface.Images
                 for (int wt = 0; wt < tilesX; wt++)
                 {
                     // Get the tile data
-                    for (int h = 0; h < 8; h++)
+                    for (int h = 0; h < tile_size; h++)
                     {
                         for (int w = 0; w < tile_width; w++)
                         {
-                            if ((w + h * tile_width * tilesX) + wt * tile_width + ht * tilesX * 8 * tile_width >= lineal.Length)
+                            if ((w + h * tile_width * tilesX) + wt * tile_width + ht * tilesX * tile_size * tile_width >= lineal.Length)
                                 continue;
                             if (pos >= lineal.Length)
                                 continue;
 
-                            lineal[pos++] = horizontal[(w + h * tile_width * tilesX) + wt * tile_width + ht * tilesX * 8 * tile_width];
+                            lineal[pos++] = horizontal[(w + h * tile_width * tilesX) + wt * tile_width + ht * tilesX * tile_size * tile_width];
                         }
                     }
                 }
@@ -467,9 +473,13 @@ namespace PluginInterface.Images
 
             return lineal;
         }
-        public static byte[] LinealToHorizontal(byte[] lineal, int tilesX, int tilesY, int tile_width)
+        public static byte[] LinealToHorizontal(byte[] lineal, int width, int height, int bpp, int tile_size)
         {
             byte[] horizontal = new byte[lineal.Length];
+            int tile_width = tile_size * bpp / 8;   // Calculate the number of byte per line in the tile
+            // pixels per line * bits per pixel / 8 bits per byte
+            int tilesX = width / tile_size;
+            int tilesY = height / tile_size;
 
             int pos = 0;
             for (int ht = 0; ht < tilesY; ht++)
@@ -477,16 +487,16 @@ namespace PluginInterface.Images
                 for (int wt = 0; wt < tilesX; wt++)
                 {
                     // Get the tile data
-                    for (int h = 0; h < 8; h++)
+                    for (int h = 0; h < tile_size; h++)
                     {
                         for (int w = 0; w < tile_width; w++)
                         {
-                            if ((w + h * tile_width * tilesX) + wt * tile_width + ht * tilesX * 8 * tile_width >= lineal.Length)
+                            if ((w + h * tile_width * tilesX) + wt * tile_width + ht * tilesX * tile_size * tile_width >= lineal.Length)
                                 continue;
                             if (pos >= lineal.Length)
                                 continue;
 
-                            horizontal[(w + h * tile_width * tilesX) + wt * tile_width + ht * tilesX * 8 * tile_width] = lineal[pos++];
+                            horizontal[(w + h * tile_width * tilesX) + wt * tile_width + ht * tilesX * tile_size * tile_width] = lineal[pos++];
                         }
                     }
                 }
@@ -659,52 +669,53 @@ namespace PluginInterface.Images
         #endregion
 
         #region Map
-        public static Byte[] Apply_Map(NTFS[] map, Byte[] tiles, out Byte[] tile_pal, int tile_width, int startInfo = 0)
+        public static Byte[] Apply_Map(NTFS[] map, Byte[] tiles, out Byte[] tile_pal, int bpp, int tile_size, int startInfo = 0)
         {
-            int tilesize = tile_width * 8;
-            int num_tiles = tiles.Length / tilesize;
+            int tile_length = tile_size * tile_size * bpp / 8;
+            int num_tiles = tiles.Length / tile_length;
 
             List<Byte> bytes = new List<byte>();
-            tile_pal = new byte[(map.Length - startInfo) * 64];
+            tile_pal = new byte[(map.Length - startInfo) * tile_size * tile_size];
 
             for (int i = startInfo; i < map.Length; i++)
             {
-
                 if (map[i].nTile >= num_tiles)
                     map[i].nTile = 0;
 
-                Byte[] currTile = new byte[tilesize];
-                if (map[i].nTile * tilesize + tilesize > tiles.Length)
+                Byte[] currTile = new byte[tile_length];
+                if (map[i].nTile * tile_length + tile_length > tiles.Length)
                     map[i].nTile = 0;
 
-                Array.Copy(tiles, map[i].nTile * tilesize, currTile, 0, tilesize);
+                if (tile_length < tiles.Length)
+                    Array.Copy(tiles, map[i].nTile * tile_length, currTile, 0, tile_length);
 
                 if (map[i].xFlip == 1)
-                    currTile = XFlip(currTile, tile_width);
+                    currTile = XFlip(currTile, tile_size, bpp);
                 if (map[i].yFlip == 1)
-                    currTile = YFlip(currTile, tile_width);
+                    currTile = YFlip(currTile, tile_size, bpp);
 
                 bytes.AddRange(currTile);
 
-                for (int t = 0; t < 64; t++)
-                    tile_pal[i * 64 + t] = map[i].nPalette;
+                for (int t = 0; t < tile_size * tile_size; t++)
+                    tile_pal[i * tile_size * tile_size + t] = map[i].nPalette;
             }
 
             return bytes.ToArray();
         }
-        public static Byte[] XFlip(Byte[] tile, int tile_width)
+        public static Byte[] XFlip(Byte[] tile, int tile_size, int bpp)
         {
             byte[] newTile = new byte[tile.Length];
+            int tile_width = tile_size * bpp / 8;
 
-            for (int h = 0; h < 8; h++)
+            for (int h = 0; h < tile_size; h++)
             {
                 for (int w = 0; w < tile_width / 2; w++)
                 {
                     byte b = tile[((tile_width - 1) - w) + h * tile_width];
-                    newTile[w + h * tile_width] = Reverse_Bits(b, tile_width);
+                    newTile[w + h * tile_width] = Reverse_Bits(b, bpp);
 
                     b = tile[w + h * tile_width];
-                    newTile[((tile_width - 1) - w) + h * tile_width] = Reverse_Bits(b, tile_width);
+                    newTile[((tile_width - 1) - w) + h * tile_width] = Reverse_Bits(b, bpp);
                 }
             }
             return newTile;
@@ -720,16 +731,17 @@ namespace PluginInterface.Images
 
             return rb;
         }
-        public static Byte[] YFlip(Byte[] tile, int tile_width)
+        public static Byte[] YFlip(Byte[] tile, int tile_size, int bpp)
         {
             byte[] newTile = new byte[tile.Length];
+            int tile_width = tile_size * bpp / 8;
 
-            for (int h = 0; h < 4; h++)
+            for (int h = 0; h < tile_size / 2; h++)
             {
                 for (int w = 0; w < tile_width; w++)
                 {
-                    newTile[w + h * tile_width] = tile[w + (7 - h) * tile_width];
-                    newTile[w + (7 - h) * tile_width] = tile[w + h * tile_width];
+                    newTile[w + h * tile_width] = tile[w + (tile_size - 1 - h) * tile_width];
+                    newTile[w + (tile_size - 1 - h) * tile_width] = tile[w + h * tile_width];
                 }
             }
             return newTile;
@@ -932,16 +944,15 @@ namespace PluginInterface.Images
                 if (image)
                 {
                     ImageBase cell_img = new TestImage(img.PluginHost);
-                    cell_img.Set_Tiles((byte[])img.Tiles.Clone(), bank.oams[i].width, bank.oams[i].height, img.ColorFormat,
-                                       img.TileForm, false);
+                    cell_img.Set_Tiles((byte[])img.Tiles.Clone(), bank.oams[i].width, bank.oams[i].height, img.FormatColor,
+                                       img.FormTile, false);
                     cell_img.StartByte = (int)tileOffset * 0x20;
 
                     byte num_pal = bank.oams[i].obj2.index_palette;
                     if (num_pal >= pal.NumberOfPalettes)
                         num_pal = 0;
-                    if (cell_img.ColorFormat == ColorFormat.colors16)
-                        for (int j = 0; j < cell_img.TilesPalette.Length; j++)
-                            cell_img.TilesPalette[j] = num_pal;
+                    for (int j = 0; j < cell_img.TilesPalette.Length; j++)
+                        cell_img.TilesPalette[j] = num_pal;
 
                     cell = cell_img.Get_Image(pal);
                     //else
@@ -992,7 +1003,7 @@ namespace PluginInterface.Images
 
             return bank_img;
         }
-        
+
         public static Byte[] Get_OAMdata(OAM oam, byte[] image, ColorFormat format)
         {
             if (format == ColorFormat.colors16)
