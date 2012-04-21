@@ -118,13 +118,13 @@ namespace Images
             ncgr.rahc.nTilesY = (ushort)(Height / 8);
 
             ncgr.rahc.data = Tiles;
-            if (this.TileForm == PluginInterface.Images.TileForm.Lineal && ncgr.order == PluginInterface.Images.TileForm.Horizontal)
+            if (this.FormTile == TileForm.Lineal && ncgr.order == TileForm.Horizontal)
             {
-                ncgr.rahc.data = Actions.HorizontalToLineal(Tiles, ncgr.rahc.nTilesX, ncgr.rahc.nTilesY, TileWidth);
-                Set_Tiles(ncgr.rahc.data, this.Width, this.Height, this.ColorFormat, ncgr.order, true);
+                ncgr.rahc.data = Actions.HorizontalToLineal(Tiles, ncgr.rahc.nTilesX, ncgr.rahc.nTilesY, BPP, TileSize);
+                Set_Tiles(ncgr.rahc.data, this.Width, this.Height, this.FormatColor, ncgr.order, true);
             }
 
-            ncgr.rahc.depth = ColorFormat;
+            ncgr.rahc.depth = FormatColor;
 
             ncgr.rahc.size_tiledata = (uint)ncgr.rahc.data.Length;
             ncgr.rahc.size_section = ncgr.rahc.size_tiledata + 0x24;

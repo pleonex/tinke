@@ -36,7 +36,7 @@ namespace MAPLESTORYDS
         }
         public bool IsCompatible()
         {
-            if (gameCode == "YMPK")
+            if (gameCode == "YMPK" || gameCode == "YMPJ")
                 return true;
 
             return false;
@@ -60,7 +60,7 @@ namespace MAPLESTORYDS
 
         public sFolder Unpack(string file, int id)
         {
-            if (System.IO.Path.GetFileName(file).ToUpper() == "108RESOURCE.NXARC")
+            if (file.ToUpper().EndsWith("RESOURCE.NXARC"))
                 return PACK.Unpack(file, pluginHost);
 
             return new sFolder();

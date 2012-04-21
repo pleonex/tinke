@@ -52,6 +52,8 @@ namespace PluginInterface.Images
             this.label2 = new System.Windows.Forms.Label();
             this.numericHeight = new System.Windows.Forms.NumericUpDown();
             this.groupProp = new System.Windows.Forms.GroupBox();
+            this.label10 = new System.Windows.Forms.Label();
+            this.numTileSize = new System.Windows.Forms.NumericUpDown();
             this.btnSetTrans = new System.Windows.Forms.Button();
             this.btnFotochoh = new System.Windows.Forms.Button();
             this.label9 = new System.Windows.Forms.Label();
@@ -78,6 +80,7 @@ namespace PluginInterface.Images
             ((System.ComponentModel.ISupportInitialize)(this.numericWidth)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericHeight)).BeginInit();
             this.groupProp.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numTileSize)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numPal)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackZoom)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericStart)).BeginInit();
@@ -92,7 +95,7 @@ namespace PluginInterface.Images
             0,
             0,
             0});
-            this.numericWidth.Location = new System.Drawing.Point(48, 101);
+            this.numericWidth.Location = new System.Drawing.Point(48, 76);
             this.numericWidth.Maximum = new decimal(new int[] {
             65536,
             0,
@@ -116,7 +119,7 @@ namespace PluginInterface.Images
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(6, 103);
+            this.label1.Location = new System.Drawing.Point(6, 78);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(26, 13);
             this.label1.TabIndex = 2;
@@ -125,7 +128,7 @@ namespace PluginInterface.Images
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(128, 103);
+            this.label2.Location = new System.Drawing.Point(128, 78);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(26, 13);
             this.label2.TabIndex = 3;
@@ -138,7 +141,7 @@ namespace PluginInterface.Images
             0,
             0,
             0});
-            this.numericHeight.Location = new System.Drawing.Point(165, 101);
+            this.numericHeight.Location = new System.Drawing.Point(165, 76);
             this.numericHeight.Maximum = new decimal(new int[] {
             65536,
             0,
@@ -161,6 +164,8 @@ namespace PluginInterface.Images
             // 
             // groupProp
             // 
+            this.groupProp.Controls.Add(this.label10);
+            this.groupProp.Controls.Add(this.numTileSize);
             this.groupProp.Controls.Add(this.btnSetTrans);
             this.groupProp.Controls.Add(this.btnFotochoh);
             this.groupProp.Controls.Add(this.label9);
@@ -193,9 +198,41 @@ namespace PluginInterface.Images
             this.groupProp.TabStop = false;
             this.groupProp.Text = "S02";
             // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(128, 143);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(48, 13);
+            this.label10.TabIndex = 30;
+            this.label10.Text = "Tile size:";
+            // 
+            // numTileSize
+            // 
+            this.numTileSize.Increment = new decimal(new int[] {
+            8,
+            0,
+            0,
+            0});
+            this.numTileSize.Location = new System.Drawing.Point(199, 141);
+            this.numTileSize.Maximum = new decimal(new int[] {
+            1024,
+            0,
+            0,
+            0});
+            this.numTileSize.Name = "numTileSize";
+            this.numTileSize.Size = new System.Drawing.Size(37, 20);
+            this.numTileSize.TabIndex = 29;
+            this.numTileSize.Value = new decimal(new int[] {
+            8,
+            0,
+            0,
+            0});
+            this.numTileSize.ValueChanged += new System.EventHandler(this.numTileSize_ValueChanged);
+            // 
             // btnSetTrans
             // 
-            this.btnSetTrans.Location = new System.Drawing.Point(254, 35);
+            this.btnSetTrans.Location = new System.Drawing.Point(254, 19);
             this.btnSetTrans.Name = "btnSetTrans";
             this.btnSetTrans.Size = new System.Drawing.Size(80, 40);
             this.btnSetTrans.TabIndex = 28;
@@ -217,7 +254,7 @@ namespace PluginInterface.Images
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(128, 177);
+            this.label9.Location = new System.Drawing.Point(128, 174);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(57, 13);
             this.label9.TabIndex = 26;
@@ -225,7 +262,7 @@ namespace PluginInterface.Images
             // 
             // numPal
             // 
-            this.numPal.Location = new System.Drawing.Point(199, 175);
+            this.numPal.Location = new System.Drawing.Point(199, 172);
             this.numPal.Name = "numPal";
             this.numPal.Size = new System.Drawing.Size(37, 20);
             this.numPal.TabIndex = 25;
@@ -234,7 +271,7 @@ namespace PluginInterface.Images
             // checkHex
             // 
             this.checkHex.AutoSize = true;
-            this.checkHex.Location = new System.Drawing.Point(32, 71);
+            this.checkHex.Location = new System.Drawing.Point(32, 46);
             this.checkHex.Name = "checkHex";
             this.checkHex.Size = new System.Drawing.Size(87, 17);
             this.checkHex.TabIndex = 24;
@@ -257,7 +294,7 @@ namespace PluginInterface.Images
             // btnBgdTrans
             // 
             this.btnBgdTrans.Enabled = false;
-            this.btnBgdTrans.Location = new System.Drawing.Point(426, 35);
+            this.btnBgdTrans.Location = new System.Drawing.Point(426, 19);
             this.btnBgdTrans.Name = "btnBgdTrans";
             this.btnBgdTrans.Size = new System.Drawing.Size(80, 40);
             this.btnBgdTrans.TabIndex = 22;
@@ -267,7 +304,7 @@ namespace PluginInterface.Images
             // 
             // btnBgd
             // 
-            this.btnBgd.Location = new System.Drawing.Point(340, 35);
+            this.btnBgd.Location = new System.Drawing.Point(340, 19);
             this.btnBgd.Name = "btnBgd";
             this.btnBgd.Size = new System.Drawing.Size(80, 40);
             this.btnBgd.TabIndex = 20;
@@ -278,7 +315,7 @@ namespace PluginInterface.Images
             // checkTransparency
             // 
             this.checkTransparency.AutoSize = true;
-            this.checkTransparency.Location = new System.Drawing.Point(9, 178);
+            this.checkTransparency.Location = new System.Drawing.Point(9, 175);
             this.checkTransparency.Name = "checkTransparency";
             this.checkTransparency.Size = new System.Drawing.Size(46, 17);
             this.checkTransparency.TabIndex = 19;
@@ -332,7 +369,7 @@ namespace PluginInterface.Images
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(6, 142);
+            this.label6.Location = new System.Drawing.Point(6, 117);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(26, 13);
             this.label6.TabIndex = 11;
@@ -345,7 +382,7 @@ namespace PluginInterface.Images
             this.comboBox1.Items.AddRange(new object[] {
             "S16",
             "S17"});
-            this.comboBox1.Location = new System.Drawing.Point(116, 139);
+            this.comboBox1.Location = new System.Drawing.Point(116, 114);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(119, 21);
             this.comboBox1.TabIndex = 10;
@@ -354,7 +391,7 @@ namespace PluginInterface.Images
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(128, 47);
+            this.label4.Location = new System.Drawing.Point(128, 22);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(31, 13);
             this.label4.TabIndex = 9;
@@ -383,16 +420,16 @@ namespace PluginInterface.Images
             "A3I5",
             "A5I3",
             "2bpp (4 colors)"});
-            this.comboDepth.Location = new System.Drawing.Point(165, 44);
+            this.comboDepth.Location = new System.Drawing.Point(165, 19);
             this.comboDepth.Name = "comboDepth";
-            this.comboDepth.Size = new System.Drawing.Size(71, 21);
+            this.comboDepth.Size = new System.Drawing.Size(83, 21);
             this.comboDepth.TabIndex = 8;
             this.comboDepth.SelectedIndexChanged += new System.EventHandler(this.comboDepth_SelectedIndexChanged);
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(6, 47);
+            this.label3.Location = new System.Drawing.Point(6, 22);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(26, 13);
             this.label3.TabIndex = 7;
@@ -400,7 +437,7 @@ namespace PluginInterface.Images
             // 
             // numericStart
             // 
-            this.numericStart.Location = new System.Drawing.Point(48, 45);
+            this.numericStart.Location = new System.Drawing.Point(48, 20);
             this.numericStart.Maximum = new decimal(new int[] {
             65535,
             0,
@@ -423,7 +460,6 @@ namespace PluginInterface.Images
             // pic
             // 
             this.pic.BackColor = System.Drawing.Color.Transparent;
-            this.pic.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pic.Location = new System.Drawing.Point(0, 0);
             this.pic.Name = "pic";
             this.pic.Size = new System.Drawing.Size(100, 100);
@@ -456,6 +492,7 @@ namespace PluginInterface.Images
             ((System.ComponentModel.ISupportInitialize)(this.numericHeight)).EndInit();
             this.groupProp.ResumeLayout(false);
             this.groupProp.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numTileSize)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numPal)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackZoom)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericStart)).EndInit();
@@ -497,5 +534,7 @@ namespace PluginInterface.Images
         private System.Windows.Forms.NumericUpDown numPal;
         private System.Windows.Forms.Button btnFotochoh;
         private System.Windows.Forms.Button btnSetTrans;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.NumericUpDown numTileSize;
     }
 }

@@ -65,13 +65,31 @@ namespace PluginInterface.Images
             {
                 btnImport.Enabled = image.CanEdit;
                 pic.Image = image.Get_Image(palette);
+
+                switch (image.FormTile)
+                {
+                    case TileForm.Lineal:
+                        comboBox1.SelectedIndex = 0;
+                        numericHeight.Minimum = 1;
+                        numericWidth.Minimum = 1;
+                        numericWidth.Increment = 1;
+                        numericHeight.Increment = 1;
+                        break;
+                    case TileForm.Horizontal:
+                        comboBox1.SelectedIndex = 1;
+                        numericHeight.Minimum = 8;
+                        numericWidth.Minimum = 8;
+                        numericWidth.Increment = 8;
+                        numericHeight.Increment = 8;
+                        break;
+                }
             }
 
 
             this.numericWidth.Value = pic.Image.Width;
             this.numericHeight.Value = pic.Image.Height;
 
-            switch (image.ColorFormat)
+            switch (image.FormatColor)
             {
                 case ColorFormat.A3I5:
                     comboDepth.SelectedIndex = 4;
@@ -96,6 +114,7 @@ namespace PluginInterface.Images
                     break;
             }
 
+            this.numTileSize.Value = image.TileSize;
             this.comboBox1.SelectedIndex = 1;
             this.numPal.Maximum = palette.NumberOfPalettes - 1;
             this.numericStart.Maximum = image.Original.Length - 1;
@@ -122,7 +141,7 @@ namespace PluginInterface.Images
             pic.Image = image.Get_Image(palette);
 
 
-            switch (image.ColorFormat)
+            switch (image.FormatColor)
             {
                 case ColorFormat.A3I5:
                     comboDepth.SelectedIndex = 4;
@@ -147,7 +166,7 @@ namespace PluginInterface.Images
                     break;
             }
 
-            switch (image.TileForm)
+            switch (image.FormTile)
             {
                 case TileForm.Lineal:
                     comboBox1.SelectedIndex = 0;
@@ -164,6 +183,8 @@ namespace PluginInterface.Images
                     numericHeight.Increment = 8;
                     break;
             }
+
+            this.numTileSize.Value = image.TileSize;
             this.numericWidth.Value = pic.Image.Width;
             this.numericHeight.Value = pic.Image.Height;
             this.numPal.Maximum = palette.NumberOfPalettes - 1;
@@ -193,7 +214,7 @@ namespace PluginInterface.Images
             this.numericWidth.Value = pic.Image.Width;
             this.numericHeight.Value = pic.Image.Height;
 
-            switch (image.ColorFormat)
+            switch (image.FormatColor)
             {
                 case ColorFormat.A3I5:
                     comboDepth.SelectedIndex = 4;
@@ -218,6 +239,7 @@ namespace PluginInterface.Images
                     break;
             }
 
+            this.numTileSize.Value = image.TileSize;
             this.comboBox1.SelectedIndex = 1;
             this.comboBox1.Enabled = false;
             this.numPal.Maximum = palette.NumberOfPalettes - 1;
@@ -244,6 +266,15 @@ namespace PluginInterface.Images
 
             Update_Image();
         }
+        private void numTileSize_ValueChanged(object sender, EventArgs e)
+        {
+            if (stop)
+                return;
+
+            image.TileSize = (int)numTileSize.Value;
+            Update_Image();
+        }
+
         private void numericSize_ValueChanged(object sender, EventArgs e)
         {
             if (stop)
@@ -269,13 +300,13 @@ namespace PluginInterface.Images
 
             switch (comboDepth.SelectedIndex)
             {
-                case 0: image.ColorFormat = ColorFormat.colors16; break;
-                case 1: image.ColorFormat = ColorFormat.colors256; break;
-                case 2: image.ColorFormat = ColorFormat.colors2; break;
-                case 3: image.ColorFormat = ColorFormat.direct; break;
-                case 4: image.ColorFormat = ColorFormat.A3I5; break;
-                case 5: image.ColorFormat = ColorFormat.A5I3; break;
-                case 6: image.ColorFormat = ColorFormat.colors4; break;
+                case 0: image.FormatColor = ColorFormat.colors16; break;
+                case 1: image.FormatColor = ColorFormat.colors256; break;
+                case 2: image.FormatColor = ColorFormat.colors2; break;
+                case 3: image.FormatColor = ColorFormat.direct; break;
+                case 4: image.FormatColor = ColorFormat.A3I5; break;
+                case 5: image.FormatColor = ColorFormat.A5I3; break;
+                case 6: image.FormatColor = ColorFormat.colors4; break;
             }
 
             Update_Image();
@@ -288,14 +319,14 @@ namespace PluginInterface.Images
             switch (comboBox1.SelectedIndex)
             {
                 case 0:
-                    image.TileForm = TileForm.Lineal;
+                    image.FormTile = TileForm.Lineal;
                     numericHeight.Minimum = 1;
                     numericWidth.Minimum = 1;
                     numericWidth.Increment = 1;
                     numericHeight.Increment = 1;
                     break;
                 case 1:
-                    image.TileForm = TileForm.Horizontal;
+                    image.FormTile = TileForm.Horizontal;
                     numericHeight.Minimum = 8;
                     numericWidth.Minimum = 8;
                     numericWidth.Increment = 8;
@@ -326,6 +357,10 @@ namespace PluginInterface.Images
                 bitmap.MakeTransparent(palette.Palette[(int)numPal.Value][0]);
 
             pic.Image = bitmap;
+            if (bitmap.Width == 512)
+                pic.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            else
+                pic.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
         }
 
         private void ReadLanguage()
@@ -370,10 +405,10 @@ namespace PluginInterface.Images
             byte[] tiles = bitmap.Tiles;
             if (isMap)
             {
-                tiles = Actions.HorizontalToLineal(tiles, bitmap.Width / 8, bitmap.Height / 8, bitmap.TileWidth);
-                map.Set_Map(Actions.Create_Map(ref tiles, bitmap.TileWidth), map.CanEdit, bitmap.Width, bitmap.Height);
+                tiles = Actions.HorizontalToLineal(tiles, bitmap.Width, bitmap.Height, bitmap.BPP, bitmap.TileSize);
+                map.Set_Map(Actions.Create_Map(ref tiles, bitmap.BPP), map.CanEdit, bitmap.Width, bitmap.Height);
             }
-            bitmap.Set_Tiles(tiles, 0x100, tiles.Length / 0x100, bitmap.ColorFormat, TileForm.Horizontal, false);
+            bitmap.Set_Tiles(tiles, 0x100, tiles.Length / 0x100, bitmap.FormatColor, TileForm.Horizontal, false);
 
             image.Set_Tiles(bitmap);
             palette.Set_Palette(bitmap.Palette);
@@ -420,24 +455,24 @@ namespace PluginInterface.Images
         {
             SaveFileDialog o = new SaveFileDialog();
             o.AddExtension = true;
-            o.DefaultExt = "bmp";
-            o.Filter = "BitMaP (*.bmp)|*.bmp|" +
-                       "Portable Network Graphic (*.png)|*.png|" +
+            o.DefaultExt = ".png";
+            o.Filter = "Portable Network Graphic (*.png)|*.png|" +
+                        "BitMaP (*.bmp)|*.bmp|" +
                        "JPEG (*.jpg)|*.jpg;*.jpeg|" +
                        "Tagged Image File Format (*.tiff)|*.tiff;*.tif|" +
                        "Graphic Interchange Format (*.gif)|*.gif|" +
                        "Icon (*.ico)|*.ico;*.icon";
             o.OverwritePrompt = true;
             if (isMap)  // FIX: RANDOM NAME
-                o.FileName = map.FileName.Substring(12);
+                o.FileName = map.FileName.Substring(12) + ".png";
             else
-                o.FileName = image.FileName.Substring(12);
+                o.FileName = image.FileName.Substring(12) + ".png";
 
             if (o.ShowDialog() == DialogResult.OK)
             {
-                if (o.FilterIndex == 1)
+                if (o.FilterIndex == 2)
                     pic.Image.Save(o.FileName, System.Drawing.Imaging.ImageFormat.Bmp);
-                else if (o.FilterIndex == 2)
+                else if (o.FilterIndex == 1)
                     pic.Image.Save(o.FileName, System.Drawing.Imaging.ImageFormat.Png);
                 else if (o.FilterIndex == 3)
                     pic.Image.Save(o.FileName, System.Drawing.Imaging.ImageFormat.Jpeg);
@@ -530,7 +565,7 @@ namespace PluginInterface.Images
                 }
             }
 
-            Actions.Change_Color(ref tiles, ref pal, index, 0, image.ColorFormat);
+            Actions.Change_Color(ref tiles, ref pal, index, 0, image.FormatColor);
 
             Color[][] new_pal = palette.Palette;
             new_pal[pal_index] = pal;
@@ -542,6 +577,8 @@ namespace PluginInterface.Images
 
             Save_Files();
         }
+
+
 
         //private void btnFotochoh_Click(object sender, EventArgs e)
         //{
@@ -561,7 +598,8 @@ namespace PluginInterface.Images
 
         //    if (image.TileForm == TileForm.Horizontal)
         //        tiles = Actions.LinealToHorizontal(tiles, image.Width / 8, image.Height / 8, image.TileWidth);
-
+        //    if (image.ColorFormat == ColorFormat.Color16)
+        //        Actions.Bit8ToBit4(tiles);
         //    FotochohForTinke.FotochohForm fotochoh = new FotochohForm();
         //    fotochoh.SetBitmap(tiles, image.Width, palette.Palette[0], (PaletteType)image.ColorFormat);
         //    fotochoh.ShowDialog();

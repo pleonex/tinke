@@ -175,6 +175,7 @@ namespace PluginInterface.Images
             o.Filter = "Windows Palette (*.pal)|*.pal|" +
                        "Portable Network Graphics (*.png)|*.png";
             o.OverwritePrompt = true;
+            o.FileName = palette.FileName.Substring(12);
 
             if (o.ShowDialog() != DialogResult.OK)
                 return;
@@ -194,6 +195,11 @@ namespace PluginInterface.Images
         private void checkHex_CheckedChanged(object sender, EventArgs e)
         {
             numericStartByte.Hexadecimal = checkHex.Checked;
+        }
+
+        private void btnUseThis_Click(object sender, EventArgs e)
+        {
+            pluginHost.Set_Palette(palette);
         }
     }
 }

@@ -173,7 +173,7 @@ namespace Images
                     0, -1);
                 if (pluginHost.Get_Palette().Depth == ColorFormat.colors16)
                 {
-                    image.ColorFormat = ColorFormat.colors16;
+                    image.FormatColor = ColorFormat.colors16;
                     if (image.Height != 32 && image.Width != 32)
                         image.Height *= 2;
                 }
@@ -198,7 +198,7 @@ namespace Images
                     0, -1);
                 if (pluginHost.Get_Palette().Depth == ColorFormat.colors16)
                 {
-                    image.ColorFormat = ColorFormat.colors16;
+                    image.FormatColor = ColorFormat.colors16;
                     if (image.Height != 32 && image.Width != 32)
                         image.Height *= 2;
                 }
@@ -210,7 +210,7 @@ namespace Images
                 RawImage image = new RawImage(pluginHost, file, id, TileForm.Horizontal, ColorFormat.colors256, false,
                     0, -1);
                 if (pluginHost.Get_Palette().Depth == ColorFormat.colors16)
-                    image.ColorFormat = ColorFormat.colors16;
+                    image.FormatColor = ColorFormat.colors16;
                 pluginHost.Set_Image(image);
                 return Format.Tile;
             }
