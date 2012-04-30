@@ -281,13 +281,13 @@ namespace Tinke.Dialog
                 switch ((int)numericOffsetLen.Value)
                 {
                     case 1:
-                        return br.ReadByte();
+                        return (uint)(br.ReadByte() * numericOffsetMult.Value);
                     case 2:
-                        return BitConverter.ToUInt16(br.ReadBytes(2).Reverse().ToArray(), 0);
+                        return BitConverter.ToUInt16(br.ReadBytes(2).Reverse().ToArray(), 0) * (uint)numericOffsetMult.Value;
                     case 4:
-                        return BitConverter.ToUInt32(br.ReadBytes(4).Reverse().ToArray(), 0);
+                        return BitConverter.ToUInt32(br.ReadBytes(4).Reverse().ToArray(), 0) * (uint)numericOffsetMult.Value;
                     case 8:
-                        return (uint)BitConverter.ToUInt64(br.ReadBytes(8).Reverse().ToArray(), 0);
+                        return (uint)(BitConverter.ToUInt64(br.ReadBytes(8).Reverse().ToArray(), 0) * numericOffsetMult.Value);
                 }
             }
             else
@@ -295,13 +295,13 @@ namespace Tinke.Dialog
                 switch ((int)numericOffsetLen.Value)
                 {
                     case 1:
-                        return br.ReadByte();
+                        return br.ReadByte() * (uint)numericOffsetMult.Value;
                     case 2:
-                        return br.ReadUInt16();
+                        return br.ReadUInt16() * (uint)numericOffsetMult.Value;
                     case 4:
-                        return br.ReadUInt32();
+                        return br.ReadUInt32() * (uint)numericOffsetMult.Value;
                     case 8:
-                        return (uint)br.ReadUInt64();
+                        return (uint)(br.ReadUInt64() * numericOffsetMult.Value);
                 }
             }
 
@@ -316,7 +316,7 @@ namespace Tinke.Dialog
             sFile newFile = new sFile();
             newFile.path = file;
             newFile.name = "File " + (fat.files.Count - 1).ToString();
-            newFile.offset = (uint)numOffset.Value;
+            newFile.offset = (uint)(numOffset.Value * numericOffsetMult.Value);
             if (numSize.Value == 0)
                 newFile.size = (uint)(new FileInfo(file).Length - newFile.offset);
             else

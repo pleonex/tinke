@@ -1017,7 +1017,7 @@ namespace Tinke
         {
             VisorHex hex = (VisorHex)sender;
             if (hex.Edited)
-                accion.Change_File(hex.NewFile.id, hex.NewFile, accion.Root);
+                accion.Change_File(hex.FileID, hex.NewFile);
         }
 
         private void BtnSee(object sender, EventArgs e)

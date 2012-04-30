@@ -1,4 +1,28 @@
-﻿namespace NINOKUNI
+﻿// ----------------------------------------------------------------------
+// <copyright file="SystemText.Designer.cs" company="none">
+
+// Copyright (C) 2012
+//
+//   This program is free software: you can redistribute it and/or modify
+//   it under the terms of the GNU General Public License as published by 
+//   the Free Software Foundation, either version 3 of the License, or
+//   (at your option) any later version.
+//
+//   This program is distributed in the hope that it will be useful, 
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//   GNU General Public License for more details. 
+//
+//   You should have received a copy of the GNU General Public License
+//   along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+//
+// </copyright>
+
+// <author>pleoNeX</author>
+// <email>benito356@gmail.com</email>
+// <date>29/04/2012 13:40:55</date>
+// -----------------------------------------------------------------------
+namespace NINOKUNI
 {
     partial class SystemText
     {
@@ -30,7 +54,6 @@
         {
             this.txtOri = new System.Windows.Forms.TextBox();
             this.txtTrans = new System.Windows.Forms.TextBox();
-            this.txtID = new System.Windows.Forms.TextBox();
             this.btnSave = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -38,9 +61,11 @@
             this.label4 = new System.Windows.Forms.Label();
             this.numElement = new System.Windows.Forms.NumericUpDown();
             this.lblNum = new System.Windows.Forms.Label();
-            this.lblSizeOri = new System.Windows.Forms.Label();
-            this.lblSizeTrans = new System.Windows.Forms.Label();
+            this.btnImport = new System.Windows.Forms.Button();
+            this.btnExport = new System.Windows.Forms.Button();
+            this.numID = new System.Windows.Forms.NumericUpDown();
             ((System.ComponentModel.ISupportInitialize)(this.numElement)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numID)).BeginInit();
             this.SuspendLayout();
             // 
             // txtOri
@@ -55,7 +80,7 @@
             // 
             // txtTrans
             // 
-            this.txtTrans.Location = new System.Drawing.Point(9, 206);
+            this.txtTrans.Location = new System.Drawing.Point(9, 179);
             this.txtTrans.MaxLength = 65535;
             this.txtTrans.Multiline = true;
             this.txtTrans.Name = "txtTrans";
@@ -63,24 +88,16 @@
             this.txtTrans.TabIndex = 1;
             this.txtTrans.TextChanged += new System.EventHandler(this.txtTrans_TextChanged);
             // 
-            // txtID
-            // 
-            this.txtID.Location = new System.Drawing.Point(87, 463);
-            this.txtID.Name = "txtID";
-            this.txtID.ReadOnly = true;
-            this.txtID.Size = new System.Drawing.Size(100, 20);
-            this.txtID.TabIndex = 2;
-            // 
             // btnSave
             // 
-            this.btnSave.Enabled = false;
-            this.btnSave.Location = new System.Drawing.Point(429, 469);
+            this.btnSave.Location = new System.Drawing.Point(429, 420);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(80, 40);
             this.btnSave.TabIndex = 4;
-            this.btnSave.Text = "Save changes";
+            this.btnSave.Text = "Save";
             this.btnSave.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnSave.UseVisualStyleBackColor = true;
+            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
             // 
             // label1
             // 
@@ -103,7 +120,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(6, 190);
+            this.label3.Location = new System.Drawing.Point(6, 163);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(60, 13);
             this.label3.TabIndex = 7;
@@ -135,31 +152,48 @@
             this.lblNum.TabIndex = 10;
             this.lblNum.Text = "of ";
             // 
-            // lblSizeOri
+            // btnImport
             // 
-            this.lblSizeOri.AutoSize = true;
-            this.lblSizeOri.Location = new System.Drawing.Point(40, 157);
-            this.lblSizeOri.Name = "lblSizeOri";
-            this.lblSizeOri.Size = new System.Drawing.Size(33, 13);
-            this.lblSizeOri.TabIndex = 11;
-            this.lblSizeOri.Text = "Size: ";
+            this.btnImport.Location = new System.Drawing.Point(429, 466);
+            this.btnImport.Name = "btnImport";
+            this.btnImport.Size = new System.Drawing.Size(80, 40);
+            this.btnImport.TabIndex = 13;
+            this.btnImport.Text = "Import";
+            this.btnImport.UseVisualStyleBackColor = true;
+            this.btnImport.Click += new System.EventHandler(this.btnImport_Click);
             // 
-            // lblSizeTrans
+            // btnExport
             // 
-            this.lblSizeTrans.AutoSize = true;
-            this.lblSizeTrans.Location = new System.Drawing.Point(43, 338);
-            this.lblSizeTrans.Name = "lblSizeTrans";
-            this.lblSizeTrans.Size = new System.Drawing.Size(33, 13);
-            this.lblSizeTrans.TabIndex = 12;
-            this.lblSizeTrans.Text = "Size: ";
+            this.btnExport.Location = new System.Drawing.Point(343, 466);
+            this.btnExport.Name = "btnExport";
+            this.btnExport.Size = new System.Drawing.Size(80, 40);
+            this.btnExport.TabIndex = 14;
+            this.btnExport.Text = "Export";
+            this.btnExport.UseVisualStyleBackColor = true;
+            this.btnExport.Click += new System.EventHandler(this.btnExport_Click);
+            // 
+            // numID
+            // 
+            this.numID.Hexadecimal = true;
+            this.numID.Location = new System.Drawing.Point(87, 463);
+            this.numID.Maximum = new decimal(new int[] {
+            -1,
+            0,
+            0,
+            0});
+            this.numID.Name = "numID";
+            this.numID.Size = new System.Drawing.Size(100, 20);
+            this.numID.TabIndex = 15;
+            this.numID.ValueChanged += new System.EventHandler(this.numID_ValueChanged);
             // 
             // SystemText
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Transparent;
-            this.Controls.Add(this.lblSizeTrans);
-            this.Controls.Add(this.lblSizeOri);
+            this.Controls.Add(this.numID);
+            this.Controls.Add(this.btnExport);
+            this.Controls.Add(this.btnImport);
             this.Controls.Add(this.lblNum);
             this.Controls.Add(this.numElement);
             this.Controls.Add(this.label4);
@@ -167,12 +201,12 @@
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.btnSave);
-            this.Controls.Add(this.txtID);
             this.Controls.Add(this.txtTrans);
             this.Controls.Add(this.txtOri);
             this.Name = "SystemText";
             this.Size = new System.Drawing.Size(512, 512);
             ((System.ComponentModel.ISupportInitialize)(this.numElement)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numID)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -182,7 +216,6 @@
 
         private System.Windows.Forms.TextBox txtOri;
         private System.Windows.Forms.TextBox txtTrans;
-        private System.Windows.Forms.TextBox txtID;
         private System.Windows.Forms.Button btnSave;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
@@ -190,7 +223,8 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.NumericUpDown numElement;
         private System.Windows.Forms.Label lblNum;
-        private System.Windows.Forms.Label lblSizeOri;
-        private System.Windows.Forms.Label lblSizeTrans;
+        private System.Windows.Forms.Button btnImport;
+        private System.Windows.Forms.Button btnExport;
+        private System.Windows.Forms.NumericUpDown numID;
     }
 }

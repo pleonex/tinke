@@ -70,22 +70,16 @@ namespace PluginInterface.Images
             BinaryReader br = new BinaryReader(File.OpenRead(fileIn));
             prev_data = br.ReadBytes(offset);
 
-            if (fileSize <= 0)    fileSize = (int)br.BaseStream.Length;
-            if (fileSize > 0x200) fileSize = 0x200;
+            if (fileSize <= 0) fileSize = (int)br.BaseStream.Length;
+            if (fileSize > 0x2000) fileSize = 0x2000;
+
+            int palette_length = 0x200;
+            if (depth == ColorFormat.colors16 || fileSize < 0x200) palette_length = 0x20;
 
             // Color data
-            Color[][] palette = new Color[0][];
-            if (depth == ColorFormat.colors256)
-            {
-                palette = new Color[1][];
-                palette[0] = Actions.BGR555ToColor(br.ReadBytes(fileSize));
-            }
-            else if (depth == ColorFormat.colors16)
-            {
-                palette = new Color[fileSize / 0x20][];
-                for (int i = 0; i < palette.Length; i++)
-                    palette[i] = Actions.BGR555ToColor(br.ReadBytes(0x20));
-            }
+            Color[][] palette = new Color[fileSize / palette_length][];
+            for (int i = 0; i < palette.Length; i++)
+                palette[i] = Actions.BGR555ToColor(br.ReadBytes(palette_length));
 
             next_data = br.ReadBytes((int)(br.BaseStream.Length - fileSize));
 
@@ -101,14 +95,15 @@ namespace PluginInterface.Images
             if (fileSize <= 0)
                 fileSize = (int)br.BaseStream.Length;
             int fileSize_ = fileSize;
-            if (fileSize > 0x200) fileSize = 0x200;
+            if (fileSize > 0x2000) fileSize = 0x2000;
+
+            int palette_length = 0x200;
+            if (fileSize < 0x200) palette_length = fileSize;
 
             // Color data
-            Color[][] palette = new Color[1][];
-            palette[0] = Actions.BGR555ToColor(br.ReadBytes(fileSize));
-
-            if (palette[0].Length < 0x100)
-                palette = pluginHost.Palette_8bppTo4bpp(palette);
+            Color[][] palette = new Color[fileSize / palette_length][];
+            for (int i = 0; i < palette.Length; i++)
+                palette[i] = Actions.BGR555ToColor(br.ReadBytes(palette_length));
 
             next_data = br.ReadBytes((int)(br.BaseStream.Length - fileSize));
 
@@ -133,7 +128,8 @@ namespace PluginInterface.Images
         byte[] next_data;
 
         public RawImage(IPluginHost pluginHost, String file, int id, TileForm form, ColorFormat format,
-            bool editable, int offset, int size) : base(pluginHost)
+            bool editable, int offset, int size)
+            : base(pluginHost)
         {
             this.pluginHost = pluginHost;
             this.id = id;
@@ -207,7 +203,8 @@ namespace PluginInterface.Images
 
             Read(file, offset, size, editable);
         }
-        public RawMap(IPluginHost pluginHost, NTFS[] map, int width, int height, bool editable) : base(pluginHost, map, editable, width, height)
+        public RawMap(IPluginHost pluginHost, NTFS[] map, int width, int height, bool editable)
+            : base(pluginHost, map, editable, width, height)
         {
         }
 

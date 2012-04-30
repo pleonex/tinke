@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("pleoNeX")]
 [assembly: AssemblyProduct("Tinke")]
-[assembly: AssemblyCopyright("Copyright ©  2011 pleoNeX")]
+[assembly: AssemblyCopyright("Copyright ©  2012 pleoNeX")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

@@ -56,7 +56,10 @@ namespace SDAT
             this.pluginHost = pluginHost;
             ReadLanguage();
 
-            Add_Group();
+            if (sdat.files.root.name == "SWAV" || sdat.files.root.name == "STRM")
+                btnCreate.Enabled = false;
+            else
+                Add_Group();
 
             treeFiles.Nodes.Add(CarpetaToNodo(sdat.files.root));
             treeFiles.Nodes[0].Expand();
@@ -65,9 +68,6 @@ namespace SDAT
             Set_LastFolderID(sdat.files.root);
             lastFileID++;
             lastFolderID++;
-
-            if (sdat.files.root.name == "SWAV")
-                btnCreate.Enabled = false;
         }
         private void ReadLanguage()
         {

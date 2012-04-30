@@ -67,13 +67,8 @@ namespace Common
                 return new PNG(pluginHost, archivo).Show_Info();
             else if (archivo.ToUpper().EndsWith(".WAV") || ext == "RIFF")
                 return new WAV(pluginHost, archivo).Show_Info();
-            //else if (archivo.ToUpper().EndsWith(".BMP"))
-           //     return new BMP(pluginHost, archivo).Show_Info();
             else if (archivo.ToUpper().EndsWith(".BMP"))
-            {
-                PluginInterface.Images.BMP bmp = new PluginInterface.Images.BMP(pluginHost, archivo);
-                return new PluginInterface.Images.ImageControl(pluginHost, bmp, bmp.Palette);
-            }
+                return new BMP(pluginHost, archivo).Show_Info();
 
             return new Control();
         }

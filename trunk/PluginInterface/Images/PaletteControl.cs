@@ -173,7 +173,8 @@ namespace PluginInterface.Images
             o.CheckPathExists = true;
             o.DefaultExt = ".pal";
             o.Filter = "Windows Palette (*.pal)|*.pal|" +
-                       "Portable Network Graphics (*.png)|*.png";
+                       "Portable Network Graphics (*.png)|*.png|" +
+                       "Adobe COlor (*.aco)|*.aco";
             o.OverwritePrompt = true;
             o.FileName = palette.FileName.Substring(12);
 
@@ -183,13 +184,22 @@ namespace PluginInterface.Images
             if (o.FilterIndex == 2)
                 picPalette.Image.Save(o.FileName, System.Drawing.Imaging.ImageFormat.Png);
             else if (o.FilterIndex == 1)
-                pluginHost.Write_WinPal(o.FileName, palette.Palette[(int)numericPalette.Value]);
+            {
+                Formats.PaletteWin palwin = new Formats.PaletteWin(pluginHost, palette.Palette[(int)numericPalette.Value]);
+                palwin.Write(o.FileName);
+            }
+            else if (o.FilterIndex == 3)
+            {
+                Formats.ACO palaco = new Formats.ACO(pluginHost, palette.Palette[(int)numericPalette.Value]);
+                palaco.Write(o.FileName);
+            }
         }
         private void btnImport_Click(object sender, EventArgs e)
         {
-            String fileOut = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + Path.GetRandomFileName() + palette.FileName;
-            palette.Write(fileOut);
-            pluginHost.ChangeFile(palette.ID, fileOut);
+            // TODO
+            //String fileOut = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + Path.GetRandomFileName() + palette.FileName;
+            //palette.Write(fileOut);
+            //pluginHost.ChangeFile(palette.ID, fileOut);
         }
 
         private void checkHex_CheckedChanged(object sender, EventArgs e)

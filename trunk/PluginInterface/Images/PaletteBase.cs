@@ -95,7 +95,7 @@ namespace PluginInterface.Images
 
             // Get the new palette data
             int size = original.Length - start;
-            if (size > 0x200) size = 0x200;
+            if (size > 0x2000) size = 0x2000;
 
             Byte[] data = new byte[size];
             Array.Copy(original, start, data, 0, data.Length);
@@ -103,21 +103,14 @@ namespace PluginInterface.Images
             List<Color> colors = new List<Color>();
             colors.AddRange(Actions.BGR555ToColor(data));
 
-            if (depth == ColorFormat.colors16)
+            int num_colors = (depth == ColorFormat.colors16 ? 0x10 : 0x100);
+            bool isExact = (colors.Count % num_colors == 0 ? true : false);
+            palette = new Color[(colors.Count / num_colors) + (isExact ? 0 : 1)][];
+            for (int i = 0; i < palette.Length; i++)
             {
-                bool isExact = (colors.Count % 16 == 0 ? true : false);
-                palette = new Color[(colors.Count / 16) + (isExact ? 0 : 1)][];
-                for (int i = 0; i < palette.Length; i++)
-                {
-                    int palette_length = i * 16 + 16 <= colors.Count ? 16 : colors.Count - i * 16;
-                    palette[i] = new Color[palette_length];
-                    Array.Copy(colors.ToArray(), i * 16, palette[i], 0, palette_length);
-                }
-            }
-            else
-            {
-                palette = new Color[1][];
-                palette[0] = colors.ToArray();
+                int palette_length = i * num_colors + num_colors <= colors.Count ? num_colors : colors.Count - i * num_colors;
+                palette[i] = new Color[palette_length];
+                Array.Copy(colors.ToArray(), i * num_colors, palette[i], 0, palette_length);
             }
         }
 
@@ -125,12 +118,26 @@ namespace PluginInterface.Images
         {
             this.palette = palette;
             canEdit = editable;
-            if (palette.Length == 1 && palette[0].Length > 16)
+            if (palette[0].Length > 16)
                 depth = ColorFormat.colors256;
             else
                 depth = ColorFormat.colors16;
 
             loaded = true;
+
+            if (depth == ColorFormat.colors16 && (palette.Length == 1 && palette[0].Length > 0x10))
+            {
+                Color[][] newColors = new Color[palette[0].Length / 0x10][];
+                for (int i = 0; i < newColors.Length; i++)
+                {
+                    int pal_colors = 0x10;
+                    if (i * 0x10 >= palette[0].Length)
+                        pal_colors = palette[0].Length - (i - 1) * 0x10;
+                    newColors[i] = new Color[pal_colors];
+                    Array.Copy(palette[0], i * 0x10, newColors[i], 0, pal_colors);
+                }
+                this.palette = newColors;
+            }
 
             // Convert the palette to bytes, to store the original palette
             List<Color> colors = new List<Color>();
@@ -146,6 +153,20 @@ namespace PluginInterface.Images
             this.depth = depth;
 
             loaded = true;
+
+            if (depth == ColorFormat.colors16 && (palette.Length == 1 && palette[0].Length > 0x10))
+            {
+                Color[][] newColors = new Color[palette[0].Length / 0x10][];
+                for (int i = 0; i < newColors.Length; i++)
+                {
+                    int pal_colors = 0x10;
+                    if (i * 0x10 >= palette[0].Length)
+                        pal_colors = palette[0].Length - (i - 1) * 0x10;
+                    newColors[i] = new Color[pal_colors];
+                    Array.Copy(palette[0], i * 0x10, newColors[i], 0, pal_colors);
+                }
+                this.palette = newColors;
+            }
 
             // Convert the palette to bytes, to store the original palette
             List<Color> colors = new List<Color>();
@@ -171,12 +192,27 @@ namespace PluginInterface.Images
         public void Set_Palette(Color[][] palette)
         {
             this.palette = palette;
-            if (palette.Length == 1 && palette[0].Length > 16)
+            if (palette[0].Length > 16)
                 depth = ColorFormat.colors256;
             else
                 depth = ColorFormat.colors16;
 
             loaded = true;
+
+
+            if (depth == ColorFormat.colors16 && (palette.Length == 1 && palette[0].Length > 0x10))
+            {
+                Color[][] newColors = new Color[palette[0].Length / 0x10][];
+                for (int i = 0; i < newColors.Length; i++)
+                {
+                    int pal_colors = 0x10;
+                    if (i * 0x10 >= palette[0].Length)
+                        pal_colors = palette[0].Length - (i - 1) * 0x10;
+                    newColors[i] = new Color[pal_colors];
+                    Array.Copy(palette[0], i * 0x10, newColors[i], 0, pal_colors);
+                }
+                this.palette = newColors;
+            }
 
             // Convert the palette to bytes, to store the original palette
             List<Color> colors = new List<Color>();

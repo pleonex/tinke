@@ -214,7 +214,6 @@
     <Compile Include="PluginHost.cs" />
     <Compile Include="Imagen\NCER.cs" />
     <Compile Include="Imagen\Convertir.cs" />
-    <Compile Include="Imagen\NCLR.cs" />
     <Compile Include="Imagen\NCGR.cs" />
     <Compile Include="Nitro\Estructuras.cs" />
     <Compile Include="Nitro\FAT.cs" />

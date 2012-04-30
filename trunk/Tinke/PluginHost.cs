@@ -170,8 +170,5 @@ namespace Tinke
 
         public void Create_APNG(string fileout, Bitmap[] frames, int delay, int loops) { Tools.APNG.Crear_APNG(frames, fileout, delay, loops); }
         public void Create_APNG(string fileout, String[] frames, int delay, int loops) { Tools.APNG.Crear_APNG(frames, fileout, delay, loops); }
-
-        public Color[][] Read_WinPal2(string fileIn, ColorDepth depth) { return Imagen_NCLR.Read_WinPal2(fileIn, depth); }
-        public void Write_WinPal(string fileOut, Color[] palette) { Imagen_NCLR.Write_WinPal(fileOut, palette); }
     }
 }

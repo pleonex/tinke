@@ -124,11 +124,11 @@ namespace Images
                     Size cellSize = pluginHost.Get_OAMSize(ncer.cebk.banks[i].oams[j].obj0.shape, ncer.cebk.banks[i].oams[j].obj1.size);
                     ncer.cebk.banks[i].oams[j].height = (ushort)cellSize.Height;
                     ncer.cebk.banks[i].oams[j].width = (ushort)cellSize.Width;
-                    if (ncer.cebk.banks[i].oams[j].obj0.doubleSize == 1)
-                    {
-                        ncer.cebk.banks[i].oams[j].width *= 2;
-                        ncer.cebk.banks[i].oams[j].height *= 2;
-                    }
+                    //if (ncer.cebk.banks[i].oams[j].obj0.doubleSize == 1)
+                    //{
+                    //    ncer.cebk.banks[i].oams[j].width *= 2;
+                    //    ncer.cebk.banks[i].oams[j].height *= 2;
+                    //}
 
                     //Console.WriteLine("|_" + xml.Element("S1C").Value + " {0}:", j.ToString());
                     //Console.WriteLine("    " + xml.Element("S1D").Value + ": {0}", ncer.cebk.banks[i].cells[j].obj0.yOffset.ToString());
