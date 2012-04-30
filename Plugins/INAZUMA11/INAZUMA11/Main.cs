@@ -1,22 +1,27 @@
-﻿/*
- * Copyright (C) 2011  pleoNeX
- *
- *   This program is free software: you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation, either version 3 of the License, or
- *   (at your option) any later version.
- *
- *   This program is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU General Public License for more details.
- *
- *   You should have received a copy of the GNU General Public License
- *   along with this program.  If not, see <http://www.gnu.org/licenses/>. 
- *
- * By: pleoNeX
- * 
- */
+﻿// ----------------------------------------------------------------------
+// <copyright file="Main.cs" company="none">
+
+// Copyright (C) 2012
+//
+//   This program is free software: you can redistribute it and/or modify
+//   it under the terms of the GNU General Public License as published by 
+//   the Free Software Foundation, either version 3 of the License, or
+//   (at your option) any later version.
+//
+//   This program is distributed in the hope that it will be useful, 
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//   GNU General Public License for more details. 
+//
+//   You should have received a copy of the GNU General Public License
+//   along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+//
+// </copyright>
+
+// <author>pleoNeX</author>
+// <email>benito356@gmail.com</email>
+// <date>27/04/2012 23:53:48</date>
+// -----------------------------------------------------------------------
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -50,6 +55,7 @@ namespace INAZUMA11
         {
             string ext = new string(Encoding.ASCII.GetChars(magic));
 
+            // Pack files
             if ((fileName.ToUpper().EndsWith(".PAC_") || fileName.ToUpper().EndsWith(".PAC")) && BitConverter.ToUInt32(magic, 0) < 0x100)
                 return Format.Pack;
             else if (fileName.ToUpper().EndsWith(".PKB"))
@@ -62,6 +68,18 @@ namespace INAZUMA11
                 return Format.Pack;
             else if (fileName.ToUpper().EndsWith(".SPL"))
                 return Format.System;
+
+            // Text files
+            // TODO: Include more gameCodes here and in Show_Info
+            switch (gameCode)
+            {
+                case "BEBP":
+                    if (id >= 0x13F && id <= 0x161) return Format.Text;
+                    if (id == 0xD8) return Format.Text;
+                    if (id == 0x387) return Format.Text;
+                    if (id == 0x388) return Format.Text;
+                    break;
+            }
 
             return Format.Unknown;
         }
@@ -112,6 +130,15 @@ namespace INAZUMA11
         }
         public Control Show_Info(string file, int id)
         {
+            switch (gameCode)
+            {
+                case "BEBP":
+                    if (id >= 0x13F && id <= 0x161) return new SubtitlesControl(file, pluginHost, id);
+                    if (id == 0xD8) return new USearchControl(file, id, pluginHost);
+                    if (id == 0x387) return new BlogpostControl(file, id, pluginHost);
+                    if (id == 0x388) return new BlogresControl(file, id, pluginHost);
+                    break;
+            }
             return new Control();
         }
 

@@ -33,10 +33,10 @@ namespace Tinke
 {
     public partial class VisorHex : Form
     {
-        sFile file;
+        int id;
+        string hexFile;
         bool fileEdited;
         IByteCharConverter bcc;
-        string hexFile;
         bool allowEdit;
 
         int last_search;
@@ -45,10 +45,10 @@ namespace Tinke
         {
             InitializeComponent();
             ReadLanguage();
+            this.id = file.id;
 
             saveToolStripMenuItem.Enabled = edit;
 
-            this.file = file;
             allowEdit = edit;
 
             hexFile = Path.GetDirectoryName(file.path) + Path.DirectorySeparatorChar + "hex_" + Path.GetRandomFileName();
@@ -107,20 +107,19 @@ namespace Tinke
 
             fileEdited = true;
             ((DynamicFileByteProvider)hexBox1.ByteProvider).ApplyChanges();
-            String newFilePath = Path.GetDirectoryName(hexFile) + Path.DirectorySeparatorChar + "new_" + Path.GetRandomFileName();
-            File.Copy(hexFile, newFilePath, true);
-            file.offset = 0x00;
-            file.path = newFilePath;
-            file.size = (uint)new FileInfo(newFilePath).Length;
         }
 
         public Boolean Edited
         {
             get { return fileEdited; }
         }
-        public sFile NewFile
+        public string NewFile
         {
-            get { return file; }
+            get { return hexFile; }
+        }
+        public int FileID
+        {
+            get { return id; }
         }
 
         private void VisorHex_Resize(object sender, EventArgs e)

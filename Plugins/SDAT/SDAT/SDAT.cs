@@ -42,7 +42,7 @@ namespace SDAT
             nombre = nombre.ToUpper();
             string ext = new String(System.Text.Encoding.ASCII.GetChars(magic));
 
-            if (ext == "SDAT" || ext == "SWAV")
+            if (ext == "SDAT" || ext == "SWAV" || ext == "STRM")
                 return Format.Sound;
 
             return Format.Unknown;
@@ -69,8 +69,9 @@ namespace SDAT
             sdat.archivo = Path.GetTempFileName();
             File.Copy(archivo, sdat.archivo, true);
             BinaryReader br = new BinaryReader(new FileStream(archivo, FileMode.Open));
+            string h = new String(br.ReadChars(4));
 
-            if (new String(br.ReadChars(4)) == "SWAV")
+            if (h == "SWAV")
             {
                 sdat.files.root.id = 0x0F000;
                 sdat.files.root.name = "SWAV";
@@ -87,6 +88,24 @@ namespace SDAT
                 br.Close();
                 return sdat;
             }
+            if (h == "STRM")  // Quick fix
+            {
+                sdat.files.root.id = 0x0F000;
+                sdat.files.root.name = "STRM";
+                sdat.files.root.files = new List<Sound>();
+                Sound swavFile = new Sound();
+                swavFile.id = 0x00;
+                swavFile.name = new FileInfo(archivo).Name;
+                swavFile.offset = 0x00;
+                swavFile.size = (uint)new FileInfo(archivo).Length;
+                swavFile.type = FormatSound.STRM;
+                swavFile.path = sdat.archivo;
+                sdat.files.root.files.Add(swavFile);
+
+                br.Close();
+                return sdat;
+            }
+
 
             br.BaseStream.Position = 0x00;
 

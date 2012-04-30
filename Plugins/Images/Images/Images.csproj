@@ -112,6 +112,7 @@
     <Compile Include="AnimationControl.designer.cs">
       <DependentUpon>AnimationControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="Games\PCT.cs" />
     <Compile Include="NANR.cs" />
     <Compile Include="NCCG.cs" />
     <Compile Include="NCCL.cs" />

@@ -52,14 +52,18 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helper\BinaryReaderBE.cs" />
+    <Compile Include="Helper\BinaryWriterBE.cs" />
     <Compile Include="Images\Actions.cs" />
-    <Compile Include="Images\Bitmap.cs" />
+    <Compile Include="Images\Formats\ACO.cs" />
+    <Compile Include="Images\Formats\Bitmap.cs" />
     <Compile Include="Images\Dialogs\OAMEditor.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Images\Dialogs\OAMEditor.Designer.cs">
       <DependentUpon>OAMEditor.cs</DependentUpon>
     </Compile>
+    <Compile Include="Images\Formats\PaletteWin.cs" />
     <Compile Include="Images\ImageBase.cs" />
     <Compile Include="Images\ImageControl.cs">
       <SubType>UserControl</SubType>

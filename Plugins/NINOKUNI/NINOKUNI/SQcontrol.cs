@@ -1,12 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Linq;
+﻿// ----------------------------------------------------------------------
+// <copyright file="SQcontrol.cs" company="none">
+
+// Copyright (C) 2012
+//
+//   This program is free software: you can redistribute it and/or modify
+//   it under the terms of the GNU General Public License as published by 
+//   the Free Software Foundation, either version 3 of the License, or
+//   (at your option) any later version.
+//
+//   This program is distributed in the hope that it will be useful, 
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//   GNU General Public License for more details. 
+//
+//   You should have received a copy of the GNU General Public License
+//   along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+//
+// </copyright>
+
+// <author>pleoNeX</author>
+// <email>benito356@gmail.com</email>
+// <date>29/04/2012 13:40:16</date>
+// -----------------------------------------------------------------------
+using System;
 using System.Text;
-using System.Windows.Forms;
 using System.IO;
+using System.Xml;
+using System.Windows.Forms;
 using PluginInterface;
 
 namespace NINOKUNI
@@ -14,9 +34,11 @@ namespace NINOKUNI
     public partial class SQcontrol : UserControl
     {
         IPluginHost pluginHost;
+        string fileName;
         int id;
         SQ original;
         SQ translated;
+        Encoding enc;
 
         public SQcontrol()
         {
@@ -25,14 +47,54 @@ namespace NINOKUNI
         public SQcontrol(IPluginHost pluginHost, string file, int id)
         {
             InitializeComponent();
-
+            this.fileName = Path.GetFileName(file).Substring(12);
             this.pluginHost = pluginHost;
             this.id = id;
-            Read(file);
-            translated = original;
-            listsBlock.SelectedIndex = 0;
+            enc = Encoding.GetEncoding(932);
+
+            original = Read(file);
+            translated = Read(file);
 
             ReadLanguage();
+            radio_CheckedChanged(null, null);
+            TEST();
+        }
+
+        private void TEST()
+        {
+            // Test method to know if it's working with all the files
+            // it could be useful later to import all of them in one time (batch mode)
+            string folder = @"G:\projects\ninokuni\Quest\";
+            string[] files = Directory.GetFiles(folder);
+
+            for (int i = 0; i < files.Length; i++)
+            {
+                SQ temp = Read(files[i]);
+                string temp_xml = files[i] + ".xml";
+                Export_XML(temp_xml, temp);
+                Import_XML(temp_xml, ref temp);
+                string temp_sq = files[i] + ".nSQ";
+                Write(temp_sq, temp);
+
+                if (!Compare(files[i], temp_sq))
+                    MessageBox.Show("Test");
+                File.Delete(temp_sq);
+            }
+            MessageBox.Show("Final");
+        }
+        private bool Compare(string f1, string f2)
+        {
+            byte[] b1 = File.ReadAllBytes(f1);
+            byte[] b2 = File.ReadAllBytes(f2);
+
+            if (b1.Length != b2.Length)
+                return false;
+
+            for (int i = 0; i < b1.Length; i++)
+                if (b1[i] != b2[i])
+                    return false;
+
+            return true;
         }
 
         private void ReadLanguage()
@@ -45,16 +107,16 @@ namespace NINOKUNI
 
                 label1.Text = xml.Element("S00").Value;
                 label2.Text = xml.Element("S01").Value;
-                label3.Text = xml.Element("S02").Value;
+                //label3.Text = xml.Element("S02").Value;
                 btnSave.Text = xml.Element("S03").Value;
             }
             catch { throw new NotSupportedException("There was an error reading the language file"); }
         }
 
-        private void Read(string file)
+        private SQ Read(string file)
         {
             BinaryReader br = new BinaryReader(File.OpenRead(file));
-            original = new SQ();
+            SQ original = new SQ();
             original.sblocks = new SQ.Block[4];
 
             original.id = br.ReadUInt32();    // File ID
@@ -63,10 +125,7 @@ namespace NINOKUNI
             for (int i = 0; i < 4; i++)
             {
                 original.sblocks[i].size = br.ReadUInt16();
-                original.sblocks[i].text = new String(Encoding.GetEncoding(932).GetChars(
-                                           br.ReadBytes((int)original.sblocks[i].size)));
-
-                listsBlock.Items.Add("Block " + i.ToString());
+                original.sblocks[i].text = new String(enc.GetChars(br.ReadBytes((int)original.sblocks[i].size)));
             }
 
             original.unknown = br.ReadBytes(0xD);   // Unknown data
@@ -76,10 +135,7 @@ namespace NINOKUNI
             for (int i = 0; i < original.num_fblocks; i++)
             {
                 original.fblocks[i].size = br.ReadUInt16();
-                original.fblocks[i].text = new String(Encoding.GetEncoding(932).GetChars(
-                                           br.ReadBytes((int)original.fblocks[i].size)));
-
-                listfBlock.Items.Add("Block " + i.ToString());
+                original.fblocks[i].text = new String(enc.GetChars(br.ReadBytes((int)original.fblocks[i].size)));
             }
 
             original.num_final = br.ReadByte();
@@ -91,27 +147,200 @@ namespace NINOKUNI
             }
 
             br.Close();
+            return original;
         }
-        private void Write()
+        private void Write(string fileOut, SQ translated)
         {
-            String fileOut = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + "newSQ_" + Path.GetRandomFileName();
-
+            Update_Blocks();
             BinaryWriter bw = new BinaryWriter(File.OpenWrite(fileOut));
+
+            bw.Write(translated.id);
+
+            // First 4 blocks
+            for (int i = 0; i < translated.sblocks.Length; i++)
+            {
+                bw.Write(translated.sblocks[i].size);
+                bw.Write(enc.GetBytes(translated.sblocks[i].text));
+            }
+
+            bw.Write(translated.unknown);
+            bw.Write(translated.num_fblocks);
+
+            // Write final blocks
+            for (int i = 0; i < translated.fblocks.Length; i++)
+            {
+                bw.Write(translated.fblocks[i].size);
+                bw.Write(enc.GetBytes(translated.fblocks[i].text));
+            }
+
+            bw.Write(translated.num_final);
+            for (int i = 0; i < translated.final.Length; i++)
+            {
+                bw.Write((byte)(translated.final[i].Length - 4));
+                bw.Write(translated.final[i]);
+            }
 
             bw.Flush();
             bw.Close();
+        }
+        private void Update_Blocks()
+        {
+            for (int i = 0; i < translated.sblocks.Length; i++)
+                translated.sblocks[i].size = (ushort)enc.GetByteCount(translated.sblocks[i].text);
+            for (int i = 0; i < translated.fblocks.Length; i++)
+                translated.fblocks[i].size = (ushort)enc.GetByteCount(translated.fblocks[i].text);
+        }
+
+
+        private void btnExport_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog o = new SaveFileDialog();
+            o.AddExtension = true;
+            o.CheckPathExists = true;
+            o.DefaultExt = ".xml";
+            o.FileName = fileName + ".xml";
+            if (o.ShowDialog() != DialogResult.OK)
+                return;
+
+            Export_XML(o.FileName, translated);
+        }
+        private void btnImport_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog o = new OpenFileDialog();
+            o.AddExtension = true;
+            o.CheckFileExists = true;
+            o.DefaultExt = ".xml";
+            o.FileName = fileName + ".xml";
+            if (o.ShowDialog() != DialogResult.OK)
+                return;
+
+            Import_XML(o.FileName, ref translated);
+
+            numString_ValueChanged(null, null);
+        }
+        private void Export_XML(string fileOut, SQ translated)
+        {
+            if (File.Exists(fileOut))
+                File.Delete(fileOut);
+
+            XmlDocument doc = new XmlDocument();
+            doc.AppendChild(doc.CreateXmlDeclaration("1.0", "utf-8", null));
+            XmlElement root = doc.CreateElement("SubQuest");
+
+            XmlElement sBlocks = doc.CreateElement("StartBlocks");
+            for (int i = 0; i < translated.sblocks.Length; i++)
+            {
+                XmlElement s = doc.CreateElement("String");
+
+                string text = translated.sblocks[i].text;
+                text = text.Replace('<', '【');
+                text = text.Replace('>', '】');
+                text = text.Replace("\n", "\n      ");
+                if (text.Contains("\n"))
+                    text = "\n      " + text + "\n    ";
+
+                s.InnerText = text;
+                sBlocks.AppendChild(s);
+            }
+            root.AppendChild(sBlocks);
+
+            XmlElement fBlocks = doc.CreateElement("FinalBlocks");
+            for (int i = 0; i < translated.fblocks.Length; i++)
+            {
+                XmlElement s = doc.CreateElement("String");
+
+                string text = translated.fblocks[i].text;
+                text = text.Replace('<', '【');
+                text = text.Replace('>', '】');
+                text = text.Replace("\n", "\n      ");
+                if (text.Contains("\n"))
+                    text = "\n      " + text + "\n    ";
+
+                s.InnerText = text;
+                fBlocks.AppendChild(s);
+            }
+            root.AppendChild(fBlocks);
+
+            doc.AppendChild(root);
+            doc.Save(fileOut);
+        }
+        private void Import_XML(string fileIn, ref SQ translated)
+        {
+            XmlDocument doc = new XmlDocument();
+            doc.Load(fileIn);
+
+            XmlNode root = doc.ChildNodes[1];
+
+            XmlNode sBlocks = root.ChildNodes[0];
+            for (int i = 0; i < sBlocks.ChildNodes.Count; i++)
+            {
+                string text = sBlocks.ChildNodes[i].InnerText;
+                if (text.Contains("\n"))
+                {
+                    text = text.Remove(0, 7);
+                    text = text.Remove(text.Length - 5);
+                    text = text.Replace("\n      ", "\n");
+                }
+                text = text.Replace('【', '<');
+                text = text.Replace('】', '>');
+
+                translated.sblocks[i].text = text;
+            }
+
+            XmlNode fBlocks = root.ChildNodes[1];
+            for (int i = 0; i < fBlocks.ChildNodes.Count; i++)
+            {
+                string text = fBlocks.ChildNodes[i].InnerText;
+                if (text.Contains("\n"))
+                {
+                    text = text.Remove(0, 7);
+                    text = text.Remove(text.Length - 5);
+                    text = text.Replace("\n      ", "\n");
+                }
+                text = text.Replace('【', '<');
+                text = text.Replace('】', '>');
+
+                translated.fblocks[i].text = text;
+            }
+        }
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            String fileOut = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + Path.GetRandomFileName() + ".SQ";
+            Write(fileOut, translated);
             pluginHost.ChangeFile(id, fileOut);
         }
 
-        private void listBlock_SelectedIndexChanged(object sender, EventArgs e)
+        private void numString_ValueChanged(object sender, EventArgs e)
         {
-            txtOriginal.Text = original.sblocks[listsBlock.SelectedIndex].text.Replace("\n", "\r\n");
-            txtTranslated.Text = translated.sblocks[listsBlock.SelectedIndex].text.Replace("\n", "\r\n");
+            int i = (int)numString.Value;
+            if (radioStart.Checked)
+            {
+                txtOriginal.Text = original.sblocks[i].text.Replace("\n", "\r\n");
+                txtTranslated.Text = translated.sblocks[i].text.Replace("\n", "\r\n");
+            }
+            else
+            {
+                txtOriginal.Text = original.fblocks[i].text.Replace("\n", "\r\n");
+                txtTranslated.Text = translated.fblocks[i].text.Replace("\n", "\r\n");
+            }
         }
-        private void listfBlocks_SelectedIndexChanged(object sender, EventArgs e)
+        private void radio_CheckedChanged(object sender, EventArgs e)
         {
-            txtOriginal.Text = original.fblocks[listfBlock.SelectedIndex].text.Replace("\n", "\r\n");
-            txtTranslated.Text = translated.fblocks[listfBlock.SelectedIndex].text.Replace("\n", "\r\n");
+            if (radioStart.Checked)
+                numString.Maximum = translated.sblocks.Length - 1;
+            else
+                numString.Maximum = translated.fblocks.Length - 1;
+
+            label5.Text = "of " + numString.Maximum;
+            numString_ValueChanged(null, null);
+        }
+        private void txtTranslated_TextChanged(object sender, EventArgs e)
+        {
+            int i = (int)numString.Value;
+            if (radioStart.Checked)
+                translated.sblocks[i].text = txtTranslated.Text.Replace("\r\n", "\n");
+            else
+                translated.fblocks[i].text = txtTranslated.Text.Replace("\r\n", "\n");
         }
 
     }
@@ -135,5 +364,5 @@ namespace NINOKUNI
             public ushort size;
             public string text;
         }
-   }
+    }
 }

@@ -12,7 +12,7 @@ IF /I "%conf%"=="D" ( SET conf=Debug
 SET /P plat=Choose the platform. Press 1 for x86 or 2 for x64: 
 IF "%plat%"=="1" SET plat=x86
 IF "%plat%"=="2" ( SET plat=x64
-) ELSE (IF NOT "%plat%"=="x64" GOTO secif)
+) ELSE (IF NOT "%plat%"=="x86" GOTO secif)
 
 :check
 

@@ -460,6 +460,7 @@ namespace PluginInterface.Images
             // pic
             // 
             this.pic.BackColor = System.Drawing.Color.Transparent;
+            this.pic.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pic.Location = new System.Drawing.Point(0, 0);
             this.pic.Name = "pic";
             this.pic.Size = new System.Drawing.Size(100, 100);

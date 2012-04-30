@@ -91,8 +91,5 @@ namespace PluginInterface
         /// <param name="loops">The number of  loops (if 0 = infinite)</param>
         void Create_APNG(string outFile, Bitmap[] frames, int delay, int loops);
         void Create_APNG(string outFile, String[] frames, int delay, int loops);
-
-        Color[][] Read_WinPal2(string file, System.Windows.Forms.ColorDepth depth);
-        void Write_WinPal(string fileOut, Color[] palette);
     }
 }
