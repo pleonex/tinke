@@ -38,6 +38,7 @@ namespace Tinke
 
         sFolder extraidos;
         string tempFolder;
+        string _tempFolder; // Original
 
         public PluginHost()
         {
@@ -49,6 +50,7 @@ namespace Tinke
                 {
                     tempFolder = Application.StartupPath + System.IO.Path.DirectorySeparatorChar + "Temp" + n;
                     System.IO.Directory.CreateDirectory(tempFolder);
+                    _tempFolder = (string)tempFolder.Clone();
                     break;
                 }
             }
@@ -140,6 +142,15 @@ namespace Tinke
         {
             return tempFolder;
         }
+        public void Set_TempFolder(string newPath)
+        {
+            tempFolder = newPath;
+        }
+        public void Restore_TempFolder()
+        {
+            tempFolder = (string)_tempFolder.Clone();
+        }
+
         public string Get_LangXML() { return Tools.Helper.Get_LangXML(); }
         public string Get_Language()
         {

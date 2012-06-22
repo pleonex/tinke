@@ -49,6 +49,8 @@ namespace Tinke.Dialog
         {
             this.groupOptions = new System.Windows.Forms.GroupBox();
             this.groupOffset = new System.Windows.Forms.GroupBox();
+            this.numericOffsetMult = new System.Windows.Forms.NumericUpDown();
+            this.label8 = new System.Windows.Forms.Label();
             this.numSize = new System.Windows.Forms.NumericUpDown();
             this.numOffset = new System.Windows.Forms.NumericUpDown();
             this.label5 = new System.Windows.Forms.Label();
@@ -82,10 +84,9 @@ namespace Tinke.Dialog
             this.listBoxFiles = new System.Windows.Forms.ListBox();
             this.btnHex = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
-            this.label8 = new System.Windows.Forms.Label();
-            this.numericOffsetMult = new System.Windows.Forms.NumericUpDown();
             this.groupOptions.SuspendLayout();
             this.groupOffset.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericOffsetMult)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numSize)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numOffset)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericOffsetLen)).BeginInit();
@@ -97,7 +98,6 @@ namespace Tinke.Dialog
             ((System.ComponentModel.ISupportInitialize)(this.numericNumFiles)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericNumOffset)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericNumLen)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericOffsetMult)).BeginInit();
             this.SuspendLayout();
             // 
             // groupOptions
@@ -134,6 +134,38 @@ namespace Tinke.Dialog
             this.groupOffset.TabIndex = 1;
             this.groupOffset.TabStop = false;
             this.groupOffset.Text = "S0E";
+            // 
+            // numericOffsetMult
+            // 
+            this.numericOffsetMult.Hexadecimal = true;
+            this.numericOffsetMult.Location = new System.Drawing.Point(205, 46);
+            this.numericOffsetMult.Maximum = new decimal(new int[] {
+            65535,
+            0,
+            0,
+            0});
+            this.numericOffsetMult.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericOffsetMult.Name = "numericOffsetMult";
+            this.numericOffsetMult.Size = new System.Drawing.Size(76, 20);
+            this.numericOffsetMult.TabIndex = 14;
+            this.numericOffsetMult.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(193, 49);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(12, 13);
+            this.label8.TabIndex = 13;
+            this.label8.Text = "x";
             // 
             // numSize
             // 
@@ -529,23 +561,6 @@ namespace Tinke.Dialog
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(193, 49);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(12, 13);
-            this.label8.TabIndex = 13;
-            this.label8.Text = "x";
-            // 
-            // numericOffsetMult
-            // 
-            this.numericOffsetMult.Hexadecimal = true;
-            this.numericOffsetMult.Location = new System.Drawing.Point(205, 46);
-            this.numericOffsetMult.Name = "numericOffsetMult";
-            this.numericOffsetMult.Size = new System.Drawing.Size(76, 20);
-            this.numericOffsetMult.TabIndex = 14;
-            // 
             // FATExtract
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -567,6 +582,7 @@ namespace Tinke.Dialog
             this.groupOptions.ResumeLayout(false);
             this.groupOffset.ResumeLayout(false);
             this.groupOffset.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericOffsetMult)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numSize)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numOffset)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericOffsetLen)).EndInit();
@@ -581,7 +597,6 @@ namespace Tinke.Dialog
             ((System.ComponentModel.ISupportInitialize)(this.numericNumFiles)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericNumOffset)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericNumLen)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericOffsetMult)).EndInit();
             this.ResumeLayout(false);
 
         }

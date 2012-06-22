@@ -70,6 +70,9 @@ namespace PluginInterface
         string Get_Language();
         string Get_LangXML();
         string Get_TempFolder();
+        void Set_TempFolder(string newPath);
+        void Restore_TempFolder();
+
 
         void Decompress(string file);
         void Decompress(byte[] data);

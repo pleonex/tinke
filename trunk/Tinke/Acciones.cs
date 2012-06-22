@@ -339,6 +339,18 @@ namespace Tinke
             return Call_Plugin(param[0], param[1], param[2], id, param[3], action);
         }
 
+        public string Get_TempFolder()
+        {
+            return pluginHost.Get_TempFolder();
+        }
+        public void Set_TempFolder(string newPath)
+        {
+            pluginHost.Set_TempFolder(newPath);
+        }
+        public void Restore_TempFolder()
+        {
+            pluginHost.Restore_TempFolder();
+        }
         #endregion
 
         #region Properties
@@ -1218,7 +1230,7 @@ namespace Tinke
             string fin = new String(Encoding.ASCII.GetChars(ext));
 
             for (int i = 0; i < fin.Length; i++)
-                if (!Char.IsLetterOrDigit(fin[i]) && fin[i] != ' ')
+                if ((byte)fin[i] < 0x20 || (byte)fin[i] > 0x7D || fin[i] == '?')   // ASCII chars
                     return "";
 
             return fin;
@@ -1237,7 +1249,7 @@ namespace Tinke
             string ext = new String(Encoding.ASCII.GetChars(buffer));
 
             for (int i = 0; i < ext.Length; i++)
-                if (!Char.IsLetterOrDigit(ext[i]) && ext[i] != ' ')
+                if ((byte)ext[i] < 0x20 || (byte)ext[i] > 0x7D || ext[i] == '?')   // ASCII chars
                     return "";
 
             return ext;
@@ -1871,6 +1883,8 @@ namespace Tinke
             byte[] ext = br.ReadBytes(4);
             br.Close();
 
+            GC.Collect();
+
             #region Calling to plugins
             try
             {
@@ -1957,20 +1971,22 @@ namespace Tinke
             {
                 foreach (IGamePlugin plugin in gamePlugin)
                 {
-                    if (plugin.Get_Format(currfile.name, ext, idSelect) != Format.Unknown)
+                    if (plugin.Get_Format(currfile.name, ext, currfile.id) != Format.Unknown)
                     {
-                        plugin.Read(tempFile, idSelect);
+                        plugin.Read(tempFile, currfile.id);
                         File.Delete(tempFile);
+                        GC.Collect();
                         return;
                     }
                 }
 
                 foreach (IPlugin plugin in formatList)
                 {
-                    if (plugin.Get_Format(currfile.name, ext, idSelect) != Format.Unknown)
+                    if (plugin.Get_Format(currfile.name, ext, currfile.id) != Format.Unknown)
                     {
-                        plugin.Read(tempFile, idSelect);
+                        plugin.Read(tempFile, currfile.id);
                         File.Delete(tempFile);
+                        GC.Collect();
                         return;
                     }
                 }
@@ -2007,6 +2023,19 @@ namespace Tinke
             BinaryReader br = new BinaryReader(File.OpenRead(selectFile.path));
             br.BaseStream.Position = selectFile.offset;
             File.WriteAllBytes(outFile, br.ReadBytes((int)selectFile.size));
+            br.Close();
+
+            return outFile;
+        }
+        public String Save_File(sFile file)
+        {
+            String outFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + Path.GetRandomFileName() + file.name;
+            if (File.Exists(outFile))
+                File.Delete(outFile);
+
+            BinaryReader br = new BinaryReader(File.OpenRead(file.path));
+            br.BaseStream.Position = file.offset;
+            File.WriteAllBytes(outFile, br.ReadBytes((int)file.size));
             br.Close();
 
             return outFile;

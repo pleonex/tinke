@@ -49,6 +49,12 @@ namespace PluginInterface.Images
             this.pluginHost = pluginHost;
             Set_Palette(colors, depth, editable);
         }
+        public RawPalette(IPluginHost pluginHost, Color[] colors, bool editable, ColorFormat depth)
+            : base(pluginHost)
+        {
+            this.pluginHost = pluginHost;
+            Set_Palette(new Color[][] {colors}, depth, editable);
+        }
         public RawPalette(IPluginHost pluginHost, string file, int id,
             bool editable, int offset, int size)
             : base(pluginHost)
@@ -128,14 +134,24 @@ namespace PluginInterface.Images
         byte[] next_data;
 
         public RawImage(IPluginHost pluginHost, String file, int id, TileForm form, ColorFormat format,
-            bool editable, int offset, int size)
-            : base(pluginHost)
+            bool editable, int offset, int size) : base(pluginHost)
         {
             this.pluginHost = pluginHost;
             this.id = id;
             this.fileName = Path.GetFileName(file);
 
             Read(file, form, format, editable, offset, size);
+        }
+        public RawImage(IPluginHost pluginHost, String file, int id, TileForm form, ColorFormat format,
+            int width, int height, bool editable, int offset, int size) : base(pluginHost)
+        {
+            this.pluginHost = pluginHost;
+            this.id = id;
+            this.fileName = Path.GetFileName(file);
+
+            Read(file, form, format, editable, offset, size);
+            this.Width = width;
+            this.Height = height;
         }
         public RawImage(IPluginHost pluginHost, byte[] tiles, TileForm form, ColorFormat format, int width, int height,
             bool editable)

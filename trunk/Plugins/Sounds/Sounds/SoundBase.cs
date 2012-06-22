@@ -89,6 +89,11 @@ namespace Sounds
             this.copyright = copyright;
             this.editable = editable;
         }
+        ~ SoundBase()
+        {
+            pcm16 = null;
+            pcm16 = null;
+        }
 
         /// <summary>
         /// Read the file and decode the audio
@@ -102,6 +107,8 @@ namespace Sounds
             pcm16 = Decode(encoded, false);
             if (loop_enabled)
                 pcm16_loop = Decode(encoded, true);
+
+            encoded = null;
         }
         public abstract byte[] Read_File();
         public abstract byte[] Decode(byte[] encoded, bool loop_enabled);
@@ -222,7 +229,14 @@ namespace Sounds
             finally
             {
                 if (bw != null) bw.Close();
-                if (fs != null) fs.Close();
+                if (fs != null)
+                {
+                    fs.Close();
+                    fs.Dispose();
+                }
+
+                bw = null;
+                fs = null;
             }
         }
 

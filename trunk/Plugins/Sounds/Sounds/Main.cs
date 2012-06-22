@@ -1,16 +1,43 @@
-﻿using System;
-using System.Collections.Generic;
+﻿// ----------------------------------------------------------------------
+// <copyright file="Main.cs" company="none">
+
+// Copyright (C) 2012
+//
+//   This program is free software: you can redistribute it and/or modify
+//   it under the terms of the GNU General Public License as published by 
+//   the Free Software Foundation, either version 3 of the License, or
+//   (at your option) any later version.
+//
+//   This program is distributed in the hope that it will be useful, 
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//   GNU General Public License for more details. 
+//
+//   You should have received a copy of the GNU General Public License
+//   along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+//
+// </copyright>
+
+// <author>pleoNeX</author>
+// <email>benito356@gmail.com</email>
+// <date>14/05/2012 3:20:19</date>
+// -----------------------------------------------------------------------
+using System;
 using System.Linq;
 using System.Text;
+using System.IO;
 using System.Windows.Forms;
 using System.Threading;
 using PluginInterface;
+using System.ComponentModel;
 
 namespace Sounds
 {
     public class Main : IPlugin
     {
         IPluginHost pluginHost;
+        Waiting wait;
+        SoundBase sb;
 
         public void Initialize(IPluginHost pluginHost)
         {
@@ -38,7 +65,7 @@ namespace Sounds
                 {
                     byte[] offset = { magic[3], magic[2] };
                     byte[] copyright = pluginHost.Get_Bytes(id, BitConverter.ToUInt16(offset, 0) - 2, 6);
-                    
+
                     if (new String(Encoding.ASCII.GetChars(copyright)) == "(c)CRI")
                         return Format.Sound;
                 }
@@ -49,71 +76,82 @@ namespace Sounds
 
         public void Read(string file, int id)
         {
-            Thread waiting = new Thread(Thread_Waiting);
-            waiting.Start((new String[] { "S00", pluginHost.Get_Language() }));
+            BackgroundWorker bw = new BackgroundWorker();
+            bw.DoWork += new DoWorkEventHandler(bw_DoWork);
+            bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bw_RunWorkerCompleted);
+            bw.RunWorkerAsync(new string[] { file, id.ToString() });
 
-            System.Media.SoundPlayer sp;
-            string wav_file = pluginHost.Get_TempFolder() + System.IO.Path.DirectorySeparatorChar
-                + System.IO.Path.GetRandomFileName();
+            wait = new Waiting("S00", pluginHost.Get_Language());
+            wait.ShowDialog();
+        }
+        void bw_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            wait.Close();
+            wait.Dispose();
+        }
+        void bw_DoWork(object sender, DoWorkEventArgs e)
+        {
+            // Get params
+            string file = ((string[])e.Argument)[0];
+            int id = Convert.ToInt32(((string[])e.Argument)[1]);
 
+            // Get out file
+            string wav_file = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar
+                + Path.GetFileNameWithoutExtension(file).Substring(12) + ".wav";
+            if (System.IO.File.Exists(wav_file))
+            {
+                try { File.Delete(wav_file); }
+                catch { wav_file += '_' + Path.GetRandomFileName(); }
+            }
+
+            // Process
             if (file.ToUpper().EndsWith(".SAD"))
             {
                 SADL sadl = new SADL(pluginHost.Get_Language(), file, id);
                 sadl.Initialize();
-
-                waiting.Abort();
-
                 sadl.Save_WAV(wav_file, false);
-                sp = new System.Media.SoundPlayer(wav_file);
-                sp.Play();
-                return;
             }
             else if (file.ToUpper().EndsWith(".ADX"))
             {
                 ADX adx = new ADX(file, id);
                 adx.Initialize();
-
-                waiting.Abort();
-
                 adx.Save_WAV(wav_file, false);
-                sp = new System.Media.SoundPlayer(wav_file);
-                sp.Play();
-                return;
             }
-
-            waiting.Abort();
         }
 
         public Control Show_Info(string file, int id)
         {
-            Thread waiting = new Thread(Thread_Waiting);
-            waiting.Start((new String[] { "S00", pluginHost.Get_Language() }));
+            BackgroundWorker bw = new BackgroundWorker();
+            bw.DoWork += new DoWorkEventHandler(bw_DoWorkRead);
+            bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bw_RunWorkerCompletedRead);
+            bw.RunWorkerAsync(new string[] { file, id.ToString() });
 
-            if (file.ToUpper().EndsWith(".SAD"))
-            {
-                SADL sadl = new SADL(pluginHost.Get_Language(), file, id);
-                sadl.Initialize();
+            wait = new Waiting("S00", pluginHost.Get_Language());
+            wait.ShowDialog();
 
-                waiting.Abort();
-                return new SoundControl(sadl, pluginHost);
-            }
-            else if (file.ToUpper().EndsWith(".ADX"))
-            {
-                ADX adx = new ADX(file, id);
-                adx.Initialize();
-
-                waiting.Abort();
-                return new SoundControl(adx, pluginHost);
-            }
-
-            waiting.Abort();
-            return new Control();
+            return new SoundControl(sb, pluginHost);
         }
-        void Thread_Waiting(Object e)
+        void bw_RunWorkerCompletedRead(object sender, RunWorkerCompletedEventArgs e)
         {
-            String[] args = (String[])e;
-            Waiting waitWind = new Waiting(args[0], args[1]);
-            waitWind.ShowDialog();
+            sb = (SoundBase)e.Result;
+            wait.Close();
+            wait.Dispose();
+        }
+        void bw_DoWorkRead(object sender, DoWorkEventArgs e)
+        {
+            // Get params
+            string file = ((string[])e.Argument)[0];
+            int id = Convert.ToInt32(((string[])e.Argument)[1]);
+
+            // Process
+            SoundBase sb = null;
+            if (file.ToUpper().EndsWith(".SAD"))
+                sb = new SADL(pluginHost.Get_Language(), file, id);
+            else if (file.ToUpper().EndsWith(".ADX"))
+                sb = new ADX(file, id);
+
+            sb.Initialize();
+            e.Result = sb;
         }
 
         public String Pack(ref sFolder unpacked, string file) { return null; }
