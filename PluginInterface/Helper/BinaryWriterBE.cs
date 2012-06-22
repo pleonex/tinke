@@ -35,7 +35,7 @@ namespace PluginInterface.Helper
         public BinaryWriterBE(string file) : base(File.OpenWrite(file))
         { }
 
-        public void Write(ushort value)
+        public override void Write(ushort value)
         {
             byte[] v = BitConverter.GetBytes(value);
             v = v.Reverse().ToArray();

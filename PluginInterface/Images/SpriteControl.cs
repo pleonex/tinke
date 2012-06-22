@@ -93,7 +93,6 @@ namespace PluginInterface.Images
                 checkTransparencia.Text = xml.Element("S12").Value;
                 checkNumber.Text = xml.Element("S13").Value;
                 label2.Text = xml.Element("S15").Value;
-                lblZoom.Text = xml.Element("S16").Value;
                 btnBgd.Text = xml.Element("S17").Value;
                 btnBgdTrans.Text = xml.Element("S18").Value;
                 btnImport.Text = xml.Element("S24").Value;
@@ -108,6 +107,8 @@ namespace PluginInterface.Images
                 checkEntorno.Checked, checkCelda.Checked, checkNumber.Checked, checkTransparencia.Checked,
                 checkImagen.Checked);
 
+            Clipboard.SetImage(imgBox.Image);
+
             return imgBox.Image;
         }
 
@@ -116,10 +117,6 @@ namespace PluginInterface.Images
             Update_Image();
         }
         private void check_CheckedChanged(object sender, EventArgs e)
-        {
-            Update_Image();
-        }
-        private void trackZoom_Scroll(object sender, EventArgs e)
         {
             Update_Image();
         }
@@ -242,7 +239,6 @@ namespace PluginInterface.Images
         {
             OpenFileDialog o = new OpenFileDialog();
             o.CheckFileExists = true;
-            o.DefaultExt = "bmp";
             o.Filter = "Supported images |*.png;*.bmp;*.jpg;*.jpeg;*.tif;*.tiff;*.gif;*.ico;*.icon|" +
                        "BitMaP (*.bmp)|*.bmp|" +
                        "Portable Network Graphic (*.png)|*.png|" +
@@ -254,21 +250,30 @@ namespace PluginInterface.Images
             if (o.ShowDialog() != DialogResult.OK)
                 return;
 
-            BMP bitmap = new BMP(pluginHost, o.FileName);
+            Bitmap bitmap = (Bitmap)Image.FromFile(o.FileName);
 
-            // Adapt the new image to the current
-            bitmap.FormatColor = image.FormatColor;
-            byte[] newImg = bitmap.Tiles;
+            // Get data from image
+            byte[] tiles = new byte[0];
+            Color[] pal = new Color[0];
+            try { Actions.Indexed_Image(bitmap, image.FormatColor, out tiles, out pal); }
+            catch (Exception ex) { MessageBox.Show(ex.Message); Console.WriteLine(ex.Message); return; }
+
+            // Swap palettes if "Save palette" is not checked. Try to change the colors to the old palette
+            if (!checkPalette.Checked)
+            {
+                try { Actions.Swap_Palette(ref tiles, palette.Palette[0], pal, image.FormatColor); }
+                catch (Exception ex) { MessageBox.Show(ex.Message); Console.WriteLine(ex.Message); return; }
+            }
 
             // Get the data of a oam and add to the end of the image
             byte[] imgData = image.Tiles;
             for (int i = 0; i < sprite.Banks[comboBank.SelectedIndex].oams.Length; i++)
             {
                 OAM oam = sprite.Banks[comboBank.SelectedIndex].oams[i];
-                byte[] cellImg = Actions.Get_OAMdata(oam, newImg, bitmap.FormatColor);
+                byte[] cellImg = Actions.Get_OAMdata(oam, tiles, image.FormatColor);
 
                 if (image.FormTile == TileForm.Horizontal)
-                    cellImg = Actions.HorizontalToLineal(cellImg, oam.width, oam.height, bitmap.BPP, bitmap.TileSize);
+                    cellImg = Actions.HorizontalToLineal(cellImg, oam.width, oam.height, image.BPP, 8);
 
                 uint offset = Actions.Add_Image(ref imgData, cellImg, (uint)(1 << (int)sprite.BlockSize) * 0x20);
                 offset /= 0x20;
@@ -279,7 +284,10 @@ namespace PluginInterface.Images
             
             // Set the palette
             if (checkPalette.Checked)
-                palette.Set_Palette(bitmap.Palette);
+            {
+                // TODO: Ask in a windows to select the index
+                palette.Set_Palette(pal, 0);
+            }
 
             Save_Files();
             Update_Image();
@@ -339,7 +347,7 @@ namespace PluginInterface.Images
                 }
             }
 
-            Actions.Change_Color(ref tiles, ref pal, index, 0, image.FormatColor);
+            Actions.Swap_Color(ref tiles, ref pal, index, 0, image.FormatColor);
 
             Color[][] new_pal = palette.Palette;
             new_pal[pal_index] = pal;

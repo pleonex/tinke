@@ -46,7 +46,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Games\4HEROSLIGHT.cs" />
+    <Compile Include="Games\BSIGILBE.cs" />
     <Compile Include="Games\GENSUIKODS.cs" />
+    <Compile Include="Games\GTACTW.cs" />
+    <Compile Include="Games\ROCKMAN_EXE.cs" />
     <Compile Include="Games\RR3BACE.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="NARC.cs" />

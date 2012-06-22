@@ -77,7 +77,9 @@ namespace Sounds
 
             br.BaseStream.Position = 0;
             byte[] buffer = br.ReadBytes((int)br.BaseStream.Length);
+
             br.Close();
+            br = null;
 
             return buffer;
         }
@@ -113,6 +115,8 @@ namespace Sounds
                     Array.Copy(encoded, pos, buffer, 0, buffer.Length);
                     pos += buffer.Length;
                     right_channel.AddRange(buffer);
+
+                    buffer = null;
                 }
                 else   // Mono
                 {
@@ -120,6 +124,8 @@ namespace Sounds
                     Array.Copy(encoded, pos, buffer, 0, buffer.Length);
                     pos += buffer.Length;
                     data.AddRange(buffer);
+
+                    buffer = null;
                 }
             }
 
@@ -136,14 +142,24 @@ namespace Sounds
                     dRight_channel = Compression.IMA_ADPCM.Decompress(right_channel.ToArray());
 
                     data.AddRange(Helper.MergeChannels(dLeft_channel, dRight_channel));
+
+                    dLeft_channel = null;
+                    dRight_channel = null;
                 }
                 else
                 {
                     Byte[] buffer = Compression.IMA_ADPCM.Decompress(data.ToArray());
                     data.Clear();
                     data.AddRange(buffer);
+
+                    buffer = null;
                 }
             }
+
+            right_channel.Clear();
+            right_channel = null;
+            left_channel.Clear();
+            left_channel = null;
 
             return data.ToArray();
         }
@@ -196,6 +212,7 @@ namespace Sounds
             else
                 mus = Helper.MergeChannels(buffer[0], buffer[1]);
 
+            buffer = null;
             return mus;
         }
 

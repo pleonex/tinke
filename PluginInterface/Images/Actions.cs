@@ -82,21 +82,32 @@ namespace PluginInterface.Images
         /// </summary>
         /// <param name="colores">Colors to convert</param>
         /// <returns>Bytes converted</returns>
-        public static Byte[] ColorToBGR555(Color[] colores)
+        public static Byte[] ColorToBGR555(Color[] colors)
         {
-            List<Byte> datos = new List<Byte>(colores.Length * 2);
+            byte[] data = new byte[colors.Length * 2];
 
-            for (int i = 0; i < colores.Length; i++)
+            for (int i = 0; i < colors.Length; i += 2)
             {
-                int r = colores[i].R / 8;
-                int g = (colores[i].G / 8) << 5;
-                int b = (colores[i].B / 8) << 10;
-
-                ushort bgr = (ushort)(r + g + b);
-                datos.AddRange(BitConverter.GetBytes(bgr));
+                byte[] bgr = ColorToBGR555(colors[i]);
+                data[i * 2] = bgr[0];
+                data[i * 2 + 1] = bgr[1];
             }
 
-            return datos.ToArray();
+            return data;
+        }
+        public static Byte[] ColorToBGR555(Color color)
+        {
+            byte[] d = new byte[2];
+
+            int r = color.R / 8;
+            int g = (color.G / 8) << 5;
+            int b = (color.B / 8) << 10;
+            int a = (color.A / 255) << 15;            // Alpha value set to 1
+            
+            ushort bgra = (ushort)(r + g + b + a);
+            Array.Copy(BitConverter.GetBytes(bgra), d, 2);
+
+            return d;
         }
 
         public static Bitmap Get_Image(Color[] colors)
@@ -130,7 +141,7 @@ namespace PluginInterface.Images
             {
                 for (int j = 0; j < 16; j++)
                 {
-                    if (colors.Length == j + 16 * i)
+                    if (colors.Length <= j + 16 * i)
                     {
                         end = true;
                         break;
@@ -426,7 +437,7 @@ namespace PluginInterface.Images
 
                     ushort byteColor = BitConverter.ToUInt16(data, pos);
                     color = Color.FromArgb(
-                        ((byteColor >> 15) == 0 ? 255 : 0),
+                        ((byteColor >> 15) == 0 ? 0 : 255),
                         (byteColor & 0x1F) * 8,
                         ((byteColor >> 5) & 0x1F) * 8,
                         ((byteColor >> 10) & 0x1F) * 8);
@@ -617,9 +628,10 @@ namespace PluginInterface.Images
                     tiles[i] = (byte)oldIndex;
             }
 
-            tiles = Bits4ToByte(tiles);
+            if (format == ColorFormat.colors16)
+                tiles = Bits4ToByte(tiles);
         }
-        public static void Change_Color(ref byte[] tiles, ref Color[] palette, int oldIndex, int newIndex, ColorFormat format)
+        public static void Swap_Color(ref byte[] tiles, ref Color[] palette, int oldIndex, int newIndex, ColorFormat format)
         {
             if (format == ColorFormat.colors16) // Yeah, I should improve it
                 tiles = ByteToBit4(tiles);
@@ -636,7 +648,8 @@ namespace PluginInterface.Images
                     tiles[i] = (byte)oldIndex;
             }
 
-            tiles = Bits4ToByte(tiles);
+            if (format == ColorFormat.colors16)
+                tiles = Bits4ToByte(tiles);
         }
         public static void Replace_Color(ref byte[] tiles, int oldIndex, int newIndex)
         {
@@ -645,6 +658,28 @@ namespace PluginInterface.Images
                 if (tiles[i] == oldIndex)
                     tiles[i] = (byte)newIndex;
             }
+        }
+        public static void Swap_Palette(ref byte[] tiles, Color[] newp, Color[] oldp, ColorFormat format)
+        {
+            if (format == ColorFormat.colors16) // Yeah, I should improve it
+                tiles = ByteToBit4(tiles);
+            else if (format != ColorFormat.colors256)
+                return;
+
+            List<Color> listnew = new List<Color>();
+            listnew.AddRange(newp);
+
+            for (int i = 0; i < tiles.Length; i++)
+            {
+                Color px = oldp[tiles[i]];
+                int id = listnew.IndexOf(px);
+                if (id == -1)
+                    throw new NotSupportedException("Color not found in the original palette!");
+                tiles[i] = (byte)id;
+            }
+
+            if (format == ColorFormat.colors16)
+                tiles = Bits4ToByte(tiles);
         }
 
         public static uint Add_Image(ref byte[] data, byte[] newData, uint blockSize)
@@ -665,6 +700,97 @@ namespace PluginInterface.Images
 
             data = result.ToArray();
             return offset;
+        }
+
+        public static void Indexed_Image(Bitmap img, ColorFormat cf, out byte[] tiles, out Color[] palette)
+        {
+            // It's a slow method but it should work always
+            int width = img.Width;
+            int height = img.Height;
+
+            List<Color> coldif = new List<Color>();
+            int[,] data = new int[width * height, 2];
+
+            // Get the indexed data
+            for (int h = 0; h < height; h++)
+            {
+                for (int w = 0; w < width; w++)
+                {
+                    Color pix = img.GetPixel(w, h);
+                    Color apix = Color.FromArgb(pix.R, pix.G, pix.B);   // Without alpha value
+
+                    // Add the color to the provisional palette
+                    if (!coldif.Contains(apix))
+                        coldif.Add(apix);
+
+                    // Get the index and save the alpha value
+                    data[w + h * width, 0] = coldif.IndexOf(apix);  // Index
+                    data[w + h * width, 1] = pix.A;                 // Alpha value
+                }
+            }
+
+            int max_colors = 0;     // Maximum colors per palette
+            int bpc = 0;            // Bits per color
+            switch (cf)
+            {
+                case ColorFormat.A3I5: max_colors = 32; bpc = 8; break;
+                case ColorFormat.colors4: max_colors = 4; bpc = 2; break;
+                case ColorFormat.colors16: max_colors = 16; bpc = 4; break;
+                case ColorFormat.colors256: max_colors = 256; bpc = 8; break;
+                case ColorFormat.texel4x4: throw new NotSupportedException("Texel 4x4 not supported yet.");
+                case ColorFormat.A5I3: max_colors = 8; bpc = 8; break;
+                case ColorFormat.direct: max_colors = 0; bpc = 16; break;
+                case ColorFormat.colors2: max_colors = 2; bpc = 1; break;
+            }
+
+            // Not dithering method for now, I hope you input a image with less than the maximum colors
+            if (coldif.Count > max_colors && cf != ColorFormat.direct)
+                throw new NotSupportedException("The image has more colors than permitted.\n" +
+                    (coldif.Count + 1).ToString() + " unique colors!");
+
+            // Finally get the set the tile array with the correct format
+            tiles = new byte[width * height * bpc / 8];
+            for (int i = 0, j = 0; i < tiles.Length;)
+            {
+                switch (cf)
+                {
+                    case ColorFormat.colors2:
+                    case ColorFormat.colors4:
+                    case ColorFormat.colors16:
+                    case ColorFormat.colors256:
+                        for (int b = 0; b < 8; b += bpc)
+                            if (j < data.Length)
+                                tiles[i] |= (byte)(data[j++, 0] << b);
+
+                        i++;
+                        break;
+
+                    case ColorFormat.A3I5:
+                        byte alpha1 = (byte)(data[j, 1] * 8 / 256);
+                        byte va1 = (byte)data[j++, 0];
+                        va1 |= (byte)(alpha1 << 5);
+                        tiles[i++] = va1;
+                        break;
+                    case ColorFormat.A5I3:
+                        byte alpha2 = (byte)(data[j, 1] * 32 / 256);
+                        byte va2 = (byte)data[j++, 0];
+                        va2 |= (byte)(alpha2 << 3);
+                        tiles[i++] = va2;
+                        break;
+
+                    case ColorFormat.direct:
+                        byte[] v = ColorToBGR555(Color.FromArgb(data[j, 1], coldif[data[j++, 0]]));
+                        tiles[i++] = v[0];
+                        tiles[i++] = v[1];
+                        break;
+
+                    case ColorFormat.texel4x4:
+                        // Not supported
+                        break;
+                }
+            }
+
+            palette = coldif.ToArray();
         }
         #endregion
 
@@ -725,9 +851,9 @@ namespace PluginInterface.Images
             byte rb = 0;
 
             if (length == 4)
-            {
                 rb = (byte)((b << 4) + (b >> 4));
-            }
+            else if (length == 8)
+                return b;
 
             return rb;
         }

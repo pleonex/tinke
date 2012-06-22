@@ -34,7 +34,7 @@ namespace PluginInterface.Helper
         public BinaryReaderBE(string file) : base(File.OpenRead(file))
         { }
 
-        public ushort ReadUInt16()
+        public override ushort ReadUInt16()
         {
             return BitConverter.ToUInt16(ReadBytes(2).Reverse().ToArray(), 0);
         }

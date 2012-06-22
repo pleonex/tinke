@@ -35,7 +35,9 @@ namespace Common
             nombre = nombre.ToUpper();
             string ext = new String(Encoding.ASCII.GetChars(magic));
 
-            if (nombre.EndsWith(".TGA") || nombre.EndsWith(".JPG") || nombre.EndsWith(".PNG") || nombre.EndsWith(".BMP"))
+            if (nombre.EndsWith(".TGA") || nombre.EndsWith(".JPG") || nombre.EndsWith(".PNG"))
+                return Format.FullImage;
+            else if (nombre.EndsWith(".BMP") && magic[0] == 'B' && magic[1] == 'M')
                 return Format.FullImage;
             else if (nombre.EndsWith(".WAV") || ext == "RIFF")
                 return Format.Sound;

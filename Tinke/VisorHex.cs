@@ -41,37 +41,41 @@ namespace Tinke
 
         int last_search;
 
-        public VisorHex(sFile file, bool edit)
+        public VisorHex(string hexFile, int id, bool edit)
         {
             InitializeComponent();
             ReadLanguage();
-            this.id = file.id;
+            this.id = id;
+            this.hexFile = hexFile;
 
             saveToolStripMenuItem.Enabled = edit;
-
             allowEdit = edit;
-
-            hexFile = Path.GetDirectoryName(file.path) + Path.DirectorySeparatorChar + "hex_" + Path.GetRandomFileName();
-            if (new FileInfo(file.path).Length != file.size)
-            {
-                BinaryReader br = new BinaryReader(File.OpenRead(file.path));
-                br.BaseStream.Position = file.offset;
-                File.WriteAllBytes(hexFile, br.ReadBytes((int)file.size));
-                br.Close();
-            }
-            else if (!edit)
-                hexFile = file.path;
-            else
-                File.Copy(file.path, hexFile, true);
 
             hexBox1.ByteProvider = new DynamicFileByteProvider(hexFile, !edit); 
             encodingCombo.SelectedIndex = 0;
          }
+        public VisorHex(sFile file)
+        {
+            InitializeComponent();
+            ReadLanguage();
+
+            hexFile = Path.GetTempFileName();
+            BinaryReader br = new BinaryReader(File.OpenRead(file.path));
+            br.BaseStream.Position = file.offset;
+            File.WriteAllBytes(hexFile, br.ReadBytes((int)file.size));
+            br.Close();
+
+            saveToolStripMenuItem.Enabled = false;
+            allowEdit = false;
+
+            hexBox1.ByteProvider = new DynamicFileByteProvider(hexFile, true);
+            encodingCombo.SelectedIndex = 0;
+        }
         private void VisorHex_FormClosed(object sender, FormClosedEventArgs e)
         {
             hexBox1.Dispose();
             ((DynamicFileByteProvider)hexBox1.ByteProvider).Dispose();
-            if (File.Exists(hexFile) && allowEdit)
+            if (!allowEdit)
                 File.Delete(hexFile);
         }
 

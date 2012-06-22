@@ -54,13 +54,11 @@ namespace PluginInterface.Images
             {
                 this.map = pluginHost.Get_Map();
                 btnImport.Enabled = map.CanEdit;
-                pic.Image = map.Get_Image(image, palette);
                 this.comboBox1.Enabled = false;
             }
             else
             {
                 btnImport.Enabled = image.CanEdit;
-                pic.Image = image.Get_Image(palette);
 
                 switch (image.FormTile)
                 {
@@ -82,8 +80,8 @@ namespace PluginInterface.Images
             }
 
 
-            this.numericWidth.Value = pic.Image.Width;
-            this.numericHeight.Value = pic.Image.Height;
+            this.numericWidth.Value = image.Width;
+            this.numericHeight.Value = image.Height;
 
             switch (image.FormatColor)
             {
@@ -111,7 +109,6 @@ namespace PluginInterface.Images
             }
 
             this.numTileSize.Value = image.TileSize;
-            this.comboBox1.SelectedIndex = 1;
             this.numPal.Maximum = palette.NumberOfPalettes - 1;
             this.numericStart.Maximum = image.Original.Length - 1;
 
@@ -122,6 +119,7 @@ namespace PluginInterface.Images
 
             ReadLanguage();
             stop = false;
+            Update_Image();
         }
         public ImageControl(IPluginHost pluginHost, ImageBase image, PaletteBase palette)
         {
@@ -133,9 +131,6 @@ namespace PluginInterface.Images
             this.palette = palette;
             this.pluginHost = pluginHost;
             btnImport.Enabled = image.CanEdit;
-
-            pic.Image = image.Get_Image(palette);
-
 
             switch (image.FormatColor)
             {
@@ -181,8 +176,8 @@ namespace PluginInterface.Images
             }
 
             this.numTileSize.Value = image.TileSize;
-            this.numericWidth.Value = pic.Image.Width;
-            this.numericHeight.Value = pic.Image.Height;
+            this.numericWidth.Value = image.Width;
+            this.numericHeight.Value = image.Height;
             this.numPal.Maximum = palette.NumberOfPalettes - 1;
             this.numericStart.Maximum = image.Original.Length - 1;
 
@@ -193,6 +188,7 @@ namespace PluginInterface.Images
 
             ReadLanguage();
             stop = false;
+            Update_Image();
         }
         public ImageControl(IPluginHost pluginHost, ImageBase image, PaletteBase palette, MapBase map)
         {
@@ -206,9 +202,8 @@ namespace PluginInterface.Images
             this.map = map;
             btnImport.Enabled = map.CanEdit;
 
-            pic.Image = map.Get_Image(image, palette);
-            this.numericWidth.Value = pic.Image.Width;
-            this.numericHeight.Value = pic.Image.Height;
+            this.numericWidth.Value = image.Width;
+            this.numericHeight.Value = image.Height;
 
             switch (image.FormatColor)
             {
@@ -248,6 +243,7 @@ namespace PluginInterface.Images
 
             ReadLanguage();
             stop = false;
+            Update_Image();
         }
 
         private void numericStart_ValueChanged(object sender, EventArgs e)
@@ -352,7 +348,9 @@ namespace PluginInterface.Images
             if (checkTransparency.Checked)
                 bitmap.MakeTransparent(palette.Palette[(int)numPal.Value][0]);
 
+            Clipboard.SetImage(bitmap);
             pic.Image = bitmap;
+
             if (bitmap.Width == 512)
                 pic.BorderStyle = System.Windows.Forms.BorderStyle.None;
             else
@@ -378,7 +376,6 @@ namespace PluginInterface.Images
                 comboBox1.Items[0] = xml.Element("S16").Value;
                 comboBox1.Items[1] = xml.Element("S17").Value;
                 checkTransparency.Text = xml.Element("S1D").Value;
-                lblZoom.Text = xml.Element("S1E").Value;
                 btnBgd.Text = xml.Element("S1F").Value;
                 btnBgdTrans.Text = xml.Element("S20").Value;
                 btnImport.Text = xml.Element("S21").Value;
@@ -390,24 +387,43 @@ namespace PluginInterface.Images
         {
             OpenFileDialog o = new OpenFileDialog();
             o.CheckFileExists = true;
-            o.DefaultExt = "bmp";
-            o.Filter = "BitMaP (*.bmp)|*.bmp";
+            o.Filter = "Supported images |*.png;*.bmp;*.jpg;*.jpeg;*.tif;*.tiff;*.gif;*.ico;*.icon|" +
+                       "BitMaP (*.bmp)|*.bmp|" +
+                       "Portable Network Graphic (*.png)|*.png|" +
+                       "JPEG (*.jpg)|*.jpg;*.jpeg|" +
+                       "Tagged Image File Format (*.tiff)|*.tiff;*.tif|" +
+                       "Graphic Interchange Format (*.gif)|*.gif|" +
+                       "Icon (*.ico)|*.ico;*.icon";
             o.Multiselect = false;
             if (o.ShowDialog() != DialogResult.OK)
                 return;
 
-            BMP bitmap = new BMP(pluginHost, o.FileName);
+            Bitmap bitmap = (Bitmap)Image.FromFile(o.FileName);
 
-            byte[] tiles = bitmap.Tiles;
+            // Get tiles + palette from the current image
+            byte[] tiles = new byte[0];
+            Color[] pal = new Color[0];
+            try { Actions.Indexed_Image(bitmap, image.FormatColor, out tiles, out pal); }
+            catch (Exception ex) { MessageBox.Show(ex.Message); Console.WriteLine(ex.Message); return; }
+
+            // Swap palettes if "Use original palette" is checked. Try to change the colors to the old palette
+            if (checkOriginalPal.Checked)
+            {
+                try { Actions.Swap_Palette(ref tiles, palette.Palette[(int)numPal.Value], pal, image.FormatColor); }
+                catch (Exception ex) { MessageBox.Show(ex.Message); Console.WriteLine(ex.Message); return; }
+                pal = palette.Palette[(int)numPal.Value];
+            }
+
+            // Create a map file and convert the tiles to Horizontal form
             if (isMap)
             {
-                tiles = Actions.HorizontalToLineal(tiles, bitmap.Width, bitmap.Height, bitmap.BPP, bitmap.TileSize);
-                map.Set_Map(Actions.Create_Map(ref tiles, bitmap.BPP), map.CanEdit, bitmap.Width, bitmap.Height);
+                tiles = Actions.HorizontalToLineal(tiles, bitmap.Width, bitmap.Height, image.BPP, 8);
+                map.Set_Map(Actions.Create_Map(ref tiles, image.BPP), map.CanEdit, bitmap.Width, bitmap.Height);
             }
-            bitmap.Set_Tiles(tiles, 0x100, tiles.Length / 0x100, bitmap.FormatColor, TileForm.Horizontal, false);
 
-            image.Set_Tiles(bitmap);
-            palette.Set_Palette(bitmap.Palette);
+            // Set the data
+            image.Set_Tiles(tiles, bitmap.Width, bitmap.Height, image.FormatColor, TileForm.Lineal, image.CanEdit, 8);
+            palette.Set_Palette(pal, (int)numPal.Value);
 
             Save_Files();
 
@@ -425,7 +441,7 @@ namespace PluginInterface.Images
                 }
                 catch (Exception e) { MessageBox.Show("Error writing new image:\n" + e.Message); };
             }
-            if (palette.ID >= 0)
+            if (palette.ID >= 0 && !checkOriginalPal.Checked)
             {
                 try
                 {
@@ -505,11 +521,7 @@ namespace PluginInterface.Images
             ven.Show();
         }
 
-        private void trackZoom_Scroll(object sender, EventArgs e)
-        {
-            image.Zoom = trackZoom.Value;
-            Update_Image();
-        }
+
         private void checkTransparency_CheckedChanged(object sender, EventArgs e)
         {
             if (checkTransparency.Checked)
@@ -561,7 +573,7 @@ namespace PluginInterface.Images
                 }
             }
 
-            Actions.Change_Color(ref tiles, ref pal, index, 0, image.FormatColor);
+            Actions.Swap_Color(ref tiles, ref pal, index, 0, image.FormatColor);
 
             Color[][] new_pal = palette.Palette;
             new_pal[pal_index] = pal;

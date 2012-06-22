@@ -43,7 +43,7 @@ namespace Tinke
         int nFiles;
         bool isMono;
         Keys keyDown;
-
+        bool stop;
 
         public Sistema()
         {
@@ -780,6 +780,9 @@ namespace Tinke
 
         private void treeSystem_AfterSelect(object sender, TreeViewEventArgs e)
         {
+            if (stop)
+                return;
+
             btnPack.Enabled = false;
             accion.IDSelect = Convert.ToInt32(e.Node.Tag);
             // Clean old information
@@ -923,6 +926,8 @@ namespace Tinke
             if (e.KeyCode == keyDown)
                 return;
 
+            stop = true;
+
             if (e.KeyCode == Keys.Space && treeSystem.Focused)
             {
                 e.SuppressKeyPress = true;
@@ -973,14 +978,33 @@ namespace Tinke
             {
                 this.Cursor = Cursors.WaitCursor;
                 e.SuppressKeyPress = true;
+
                 sFolder currFolder = accion.Selected_Folder();
                 if (!(currFolder.name is string))
+                {
+                    this.Cursor = Cursors.Default;
+                    stop = false;
                     return;
+                }
+                
+                // Change the temp folder, used to export (if so) the files.
+                FolderBrowserDialog o = new FolderBrowserDialog();
+                o.Description = "Select new \"temp folder\".";
+                if (o.ShowDialog() != System.Windows.Forms.DialogResult.OK)
+                {
+                    this.Cursor = Cursors.Default;
+                    stop = false;
+                    return;
+                }
+                accion.Set_TempFolder(o.SelectedPath);
+                int a = accion.IDSelect;
+                Recursive_ReadFile(currFolder);
 
-                Recursive_ReadFile(accion.Selected_Folder());
+                accion.Restore_TempFolder();
                 this.Cursor = Cursors.Default;
             }
 
+            stop = false;
         }
         private void Sistema_KeyUp(object sender, KeyEventArgs e)
         {
@@ -999,8 +1023,19 @@ namespace Tinke
                     accion.Read_File(currFolder.files[f]);
 
             if (currFolder.folders is List<sFolder>)
+            {
                 for (int f = 0; f < currFolder.folders.Count; f++)
+                {
+                    string tempFolder = accion.Get_TempFolder() + Path.DirectorySeparatorChar + currFolder.folders[f].name;
+                    if (!Directory.Exists(tempFolder))
+                        Directory.CreateDirectory(tempFolder);
+                    accion.Set_TempFolder(tempFolder);
+
                     Recursive_ReadFile(currFolder.folders[f]);
+
+                    accion.Set_TempFolder(Directory.GetParent(tempFolder).FullName);
+                }
+            }
         }
         #endregion
 
@@ -1008,7 +1043,9 @@ namespace Tinke
         private void btnHex_Click(object sender, EventArgs e)
         {
             sFile file = accion.Selected_File();
-            VisorHex hex = new VisorHex(file, (file.name == "rom.nds" ? false : true));
+            VisorHex hex = new VisorHex(accion.Save_File(file), file.id,
+                                        file.name == "rom.nds" ? false : true);
+
             hex.Text += " - " + file.name;
             hex.Show();
             hex.FormClosed += new FormClosedEventHandler(hex_FormClosed);

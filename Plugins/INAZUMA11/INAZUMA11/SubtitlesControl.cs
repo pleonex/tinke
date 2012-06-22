@@ -48,15 +48,17 @@ namespace INAZUMA11
             this.pluginHost = pluginHost;
             this.id = id;
 
-            Read(fileIn);
+            subs = Read(fileIn);
+            subsNew = Read(fileIn);
+
             numSub.Maximum = subsNew.Count - 1;
             label8.Text = "of " + numSub.Maximum.ToString();
             numSub_ValueChanged(null, null);
         }
 
-        public void Read(string fileIn)
+        public List<Subtitle> Read(string fileIn)
         {
-            subs = new List<Subtitle>();
+            List<Subtitle> subs = new List<Subtitle>();
             BinaryReader br = new BinaryReader(File.OpenRead(fileIn));
 
             while (br.BaseStream.Length > br.BaseStream.Position)
@@ -79,13 +81,13 @@ namespace INAZUMA11
                 if ((br.BaseStream.Position % 4) != 0)
                     while ((br.BaseStream.Position % 4) != 0)
                         br.ReadByte();
-                sub.text = new String(Encoding.GetEncoding("shift_jis").GetChars(b));
+                sub.text = new String(Encoding.GetEncoding("shift_jis").GetChars(b)).Replace("\0", "");
 
                 subs.Add(sub);
             }
 
             br.Close();
-            subsNew = subs;
+            return subs;
         }
         public void Write()
         {
@@ -101,8 +103,7 @@ namespace INAZUMA11
                 length += 4 - (length % 4);
                 bw.Write(length);
                 bw.Write(Encoding.GetEncoding("shift_jis").GetBytes(subsNew[i].text));
-                while (bw.BaseStream.Position % 4 != 0)
-                    bw.Write((byte)0x00);
+                bw.Write(new byte[4 - (bw.BaseStream.Position % 4)]);
             }
             bw.Write(0xFFFFFFFF);
 

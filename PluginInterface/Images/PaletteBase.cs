@@ -175,6 +175,14 @@ namespace PluginInterface.Images
             original = Actions.ColorToBGR555(colors.ToArray());
             startByte = 0;
         }
+        public void Set_Palette(Color[] palette, ColorFormat depth, bool editable)
+        {
+            Set_Palette(new Color[][] { palette }, depth, editable);
+        }
+        public void Set_Palette(Color[] palette, int index)
+        {
+            this.palette[index] = palette;
+        }
         public void Set_Palette(PaletteBase new_pal)
         {
             this.palette = new_pal.Palette;
