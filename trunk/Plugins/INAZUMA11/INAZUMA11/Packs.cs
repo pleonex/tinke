@@ -96,6 +96,45 @@ namespace INAZUMA11
 
             return unpacked;
         }
+        public static void Pack(ref sFolder unpacked, string fileout)
+        {
+            BinaryWriter bw = new BinaryWriter(File.OpenWrite(fileout));
+
+            bw.Write((uint)unpacked.files.Count);
+
+            uint header_length = 8 + 8 * (uint)unpacked.files.Count;
+            uint offset = header_length;
+            List<byte> buffer = new List<byte>();
+            BinaryReader br;
+
+            for (int i = 0; i < unpacked.files.Count; i++)
+            {
+                sFile currfile = unpacked.files[i];
+
+                // Get the file data
+                br = new BinaryReader(File.OpenRead(currfile.path));
+                br.BaseStream.Position = currfile.offset;
+                buffer.AddRange(br.ReadBytes((int)currfile.size));
+                br.Close();
+
+                // Write the fat data
+                bw.Write(offset);
+                bw.Write(currfile.size);
+
+                // Update file structure
+                currfile.offset = offset;
+                currfile.path = fileout;
+                unpacked.files[i] = currfile;
+
+                offset += currfile.size;
+            }
+
+            bw.Write(offset - header_length);
+            bw.Write(buffer.ToArray());
+
+            bw.Flush();
+            bw.Close();
+        }
     }
 
     public static class PKB

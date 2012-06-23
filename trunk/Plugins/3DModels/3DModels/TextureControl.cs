@@ -172,6 +172,7 @@ namespace _3DModels
             br.Close();
 
             picTex.Image = Draw_Texture(tile_data, texInfo, palette);
+            Clipboard.SetImage(picTex.Image);
 
             PaletteBase p = new RawPalette(pluginHost, new Color[][] { palette }, false, ColorFormat.colors256);
             picPalette.Image = p.Get_Image(0);

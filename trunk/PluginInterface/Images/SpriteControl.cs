@@ -121,38 +121,6 @@ namespace PluginInterface.Images
             Update_Image();
         }
 
-        private void btnSave_Click(object sender, EventArgs e)
-        {
-            SaveFileDialog o = new SaveFileDialog();
-            o.AddExtension = true;
-            o.CheckPathExists = true;
-            o.DefaultExt = ".png";
-            o.Filter = "Portable Network Graphic (*.png)|*.png|" +
-                       "BitMaP (*.bmp)|*.bmp|" +
-                       "JPEG (*.jpg)|*.jpg;*.jpeg|" +
-                       "Tagged Image File Format (*.tiff)|*.tiff;*.tif|" +
-                       "Graphic Interchange Format (*.gif)|*.gif|" +
-                       "Icon (*.ico)|*.ico;*.icon";
-            o.OverwritePrompt = true;   // FIX: Random name
-            o.FileName = sprite.FileName.Substring(12, sprite.FileName.IndexOf('.', 12) - 12) + '_' + comboBank.SelectedIndex;
-
-            if (o.ShowDialog() == DialogResult.OK)
-            {
-                if (o.FilterIndex == 2)
-                    imgBox.Image.Save(o.FileName, System.Drawing.Imaging.ImageFormat.Bmp);
-                else if (o.FilterIndex == 1)
-                    imgBox.Image.Save(o.FileName, System.Drawing.Imaging.ImageFormat.Png);
-                else if (o.FilterIndex == 3)
-                    imgBox.Image.Save(o.FileName, System.Drawing.Imaging.ImageFormat.Jpeg);
-                else if (o.FilterIndex == 4)
-                    imgBox.Image.Save(o.FileName, System.Drawing.Imaging.ImageFormat.Tiff);
-                else if (o.FilterIndex == 5)
-                    imgBox.Image.Save(o.FileName, System.Drawing.Imaging.ImageFormat.Gif);
-                else if (o.FilterIndex == 6)
-                    imgBox.Image.Save(o.FileName, System.Drawing.Imaging.ImageFormat.Icon);
-            }
-        }
-
         private void btnShowAll_Click(object sender, EventArgs e)
         {
             Form ven = new Form();
@@ -235,7 +203,86 @@ namespace PluginInterface.Images
             }
         }
 
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            if (!checkBatch.Checked)
+                Export_Single();
+            else
+                Export_All();
+        }
+        private void Export_Single()
+        {
+            SaveFileDialog o = new SaveFileDialog();
+            o.AddExtension = true;
+            o.CheckPathExists = true;
+            o.DefaultExt = ".png";
+            o.Filter = "Portable Network Graphic (*.png)|*.png|" +
+                       "BitMaP (*.bmp)|*.bmp|" +
+                       "JPEG (*.jpg)|*.jpg;*.jpeg|" +
+                       "Tagged Image File Format (*.tiff)|*.tiff;*.tif|" +
+                       "Graphic Interchange Format (*.gif)|*.gif|" +
+                       "Icon (*.ico)|*.ico;*.icon";
+            o.OverwritePrompt = true;
+            o.FileName = sprite.FileName + '_' + comboBank.SelectedIndex;
+
+            if (o.ShowDialog() == DialogResult.OK)
+            {
+                if (o.FilterIndex == 1)
+                    imgBox.Image.Save(o.FileName, System.Drawing.Imaging.ImageFormat.Png);
+                else if (o.FilterIndex == 2)
+                    imgBox.Image.Save(o.FileName, System.Drawing.Imaging.ImageFormat.Bmp);
+                else if (o.FilterIndex == 3)
+                    imgBox.Image.Save(o.FileName, System.Drawing.Imaging.ImageFormat.Jpeg);
+                else if (o.FilterIndex == 4)
+                    imgBox.Image.Save(o.FileName, System.Drawing.Imaging.ImageFormat.Tiff);
+                else if (o.FilterIndex == 5)
+                    imgBox.Image.Save(o.FileName, System.Drawing.Imaging.ImageFormat.Gif);
+                else if (o.FilterIndex == 6)
+                    imgBox.Image.Save(o.FileName, System.Drawing.Imaging.ImageFormat.Icon);
+            }
+        }
+        private void Export_All()
+        {
+            if (txtBatch.Text == "" || txtBatch.Text == null || !txtBatch.Text.Contains("%s"))
+            {
+                MessageBox.Show("Invalid file name.");
+                return;
+            }
+            for (int i = 0; i < Path.GetInvalidFileNameChars().Length; i++)
+            {
+                if (txtBatch.Text.Contains(Path.GetInvalidFileNameChars()[i].ToString()))
+                {
+                    MessageBox.Show("Invalid file name.");
+                    return;
+                }
+            }
+
+            FolderBrowserDialog o = new FolderBrowserDialog();
+            o.Description = "Select the folder to extract the sprites.";
+            o.ShowNewFolderButton = true;
+            if (o.ShowDialog() != DialogResult.OK)
+                return;
+
+            // TODO: Only export to PNG
+            for (int i = 0; i < sprite.NumBanks; i++)
+            {
+                Image img = sprite.Get_Image(image, palette, i, 512, 256, checkEntorno.Checked, checkCelda.Checked,
+                    checkNumber.Checked, checkTransparencia.Checked, checkImagen.Checked);
+
+                string path = o.SelectedPath + Path.DirectorySeparatorChar;
+                path += txtBatch.Text.Replace("%s", i.ToString()) + ".png";
+                img.Save(path, System.Drawing.Imaging.ImageFormat.Png);
+            }
+        }
+
         private void btnImport_Click(object sender, EventArgs e)
+        {
+            if (checkBatch.Checked)
+                Import_All();
+            else
+                Import_Single();
+        }
+        private void Import_Single()
         {
             OpenFileDialog o = new OpenFileDialog();
             o.CheckFileExists = true;
@@ -250,7 +297,45 @@ namespace PluginInterface.Images
             if (o.ShowDialog() != DialogResult.OK)
                 return;
 
-            Bitmap bitmap = (Bitmap)Image.FromFile(o.FileName);
+            // TODO: Ask in a windows to select the index
+            Import_File(o.FileName, comboBank.SelectedIndex, 0);
+
+            Save_Files();
+            Update_Image();
+        }
+        private void Import_All()
+        {
+            FolderBrowserDialog o = new FolderBrowserDialog();
+            o.Description = "Select the folder where the images are.";
+            if (o.ShowDialog() != DialogResult.OK)
+                return;
+
+            string[] imgs = Directory.GetFiles(o.SelectedPath);
+            for (int i = 0; i < sprite.NumBanks; i++)
+            {
+                string img = "";
+                for (int j = 0; j < imgs.Length; j++)
+                {
+                    if (Path.GetFileNameWithoutExtension(imgs[j]) == txtBatch.Text.Replace("%s", i.ToString()))
+                    {
+                        img = imgs[j];
+                        break;
+                    }
+                }
+
+                if (img == "")
+                    continue;
+
+                // TODO: I need to think how to know the palette index
+                Import_File(img, i, 0);
+            }
+
+            Save_Files();
+            Update_Image();
+        }
+        private void Import_File(string path, int banki, int pali)
+        {
+            Bitmap bitmap = (Bitmap)Image.FromFile(path);
 
             // Get data from image
             byte[] tiles = new byte[0];
@@ -261,15 +346,15 @@ namespace PluginInterface.Images
             // Swap palettes if "Save palette" is not checked. Try to change the colors to the old palette
             if (!checkPalette.Checked)
             {
-                try { Actions.Swap_Palette(ref tiles, palette.Palette[0], pal, image.FormatColor); }
+                try { Actions.Swap_Palette(ref tiles, palette.Palette[pali], pal, image.FormatColor); }
                 catch (Exception ex) { MessageBox.Show(ex.Message); Console.WriteLine(ex.Message); return; }
             }
 
             // Get the data of a oam and add to the end of the image
             byte[] imgData = image.Tiles;
-            for (int i = 0; i < sprite.Banks[comboBank.SelectedIndex].oams.Length; i++)
+            for (int i = 0; i < sprite.Banks[banki].oams.Length; i++)
             {
-                OAM oam = sprite.Banks[comboBank.SelectedIndex].oams[i];
+                OAM oam = sprite.Banks[banki].oams[i];
                 byte[] cellImg = Actions.Get_OAMdata(oam, tiles, image.FormatColor);
 
                 if (image.FormTile == TileForm.Horizontal)
@@ -278,20 +363,15 @@ namespace PluginInterface.Images
                 uint offset = Actions.Add_Image(ref imgData, cellImg, (uint)(1 << (int)sprite.BlockSize) * 0x20);
                 offset /= 0x20;
                 offset >>= (int)sprite.BlockSize;
-                sprite.Banks[comboBank.SelectedIndex].oams[i].obj2.tileOffset = offset;
+                sprite.Banks[banki].oams[i].obj2.tileOffset = offset;
             }
             image.Set_Tiles(imgData, 0x100, imgData.Length / 0x100, image.FormatColor, image.FormTile, image.CanEdit);
-            
+
             // Set the palette
             if (checkPalette.Checked)
-            {
-                // TODO: Ask in a windows to select the index
-                palette.Set_Palette(pal, 0);
-            }
-
-            Save_Files();
-            Update_Image();
+                palette.Set_Palette(pal, pali);
         }
+
         void Save_Files()
         {
             if (sprite.ID >= 0)
@@ -383,6 +463,11 @@ namespace PluginInterface.Images
                 Color color = ((Bitmap)imgBox.Image).GetPixel(e.X, e.Y);
                 SetTransFromImage(color);
             }
+        }
+
+        private void checkBatch_CheckedChanged(object sender, EventArgs e)
+        {
+            txtBatch.Enabled = checkBatch.Checked;
         }
 
 
