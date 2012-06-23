@@ -52,6 +52,7 @@ namespace PluginInterface.Images
             this.label2 = new System.Windows.Forms.Label();
             this.numericHeight = new System.Windows.Forms.NumericUpDown();
             this.groupProp = new System.Windows.Forms.GroupBox();
+            this.checkOriginalPal = new System.Windows.Forms.CheckBox();
             this.label10 = new System.Windows.Forms.Label();
             this.numTileSize = new System.Windows.Forms.NumericUpDown();
             this.btnSetTrans = new System.Windows.Forms.Button();
@@ -73,7 +74,6 @@ namespace PluginInterface.Images
             this.label5 = new System.Windows.Forms.Label();
             this.pic = new System.Windows.Forms.PictureBox();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.checkOriginalPal = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.numericWidth)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericHeight)).BeginInit();
             this.groupProp.SuspendLayout();
@@ -191,6 +191,16 @@ namespace PluginInterface.Images
             this.groupProp.TabStop = false;
             this.groupProp.Text = "S02";
             // 
+            // checkOriginalPal
+            // 
+            this.checkOriginalPal.AutoSize = true;
+            this.checkOriginalPal.Location = new System.Drawing.Point(390, 118);
+            this.checkOriginalPal.Name = "checkOriginalPal";
+            this.checkOriginalPal.Size = new System.Drawing.Size(116, 17);
+            this.checkOriginalPal.TabIndex = 31;
+            this.checkOriginalPal.Text = "Use original palette";
+            this.checkOriginalPal.UseVisualStyleBackColor = true;
+            // 
             // label10
             // 
             this.label10.AutoSize = true;
@@ -274,7 +284,6 @@ namespace PluginInterface.Images
             // 
             // btnImport
             // 
-            this.btnImport.Enabled = false;
             this.btnImport.Location = new System.Drawing.Point(426, 160);
             this.btnImport.Name = "btnImport";
             this.btnImport.Size = new System.Drawing.Size(80, 40);
@@ -428,16 +437,6 @@ namespace PluginInterface.Images
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(512, 287);
             this.panel1.TabIndex = 7;
-            // 
-            // checkOriginalPal
-            // 
-            this.checkOriginalPal.AutoSize = true;
-            this.checkOriginalPal.Location = new System.Drawing.Point(390, 118);
-            this.checkOriginalPal.Name = "checkOriginalPal";
-            this.checkOriginalPal.Size = new System.Drawing.Size(116, 17);
-            this.checkOriginalPal.TabIndex = 31;
-            this.checkOriginalPal.Text = "Use original palette";
-            this.checkOriginalPal.UseVisualStyleBackColor = true;
             // 
             // ImageControl
             // 

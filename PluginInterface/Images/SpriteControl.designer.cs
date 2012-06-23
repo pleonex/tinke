@@ -70,6 +70,9 @@ namespace PluginInterface.Images
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.checkPalette = new System.Windows.Forms.CheckBox();
             this.btnOAMeditor = new System.Windows.Forms.Button();
+            this.checkBatch = new System.Windows.Forms.CheckBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.txtBatch = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.imgBox)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -87,7 +90,7 @@ namespace PluginInterface.Images
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(3, 266);
+            this.label1.Location = new System.Drawing.Point(0, 307);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(26, 13);
             this.label1.TabIndex = 2;
@@ -97,7 +100,7 @@ namespace PluginInterface.Images
             // 
             this.comboBank.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBank.FormattingEnabled = true;
-            this.comboBank.Location = new System.Drawing.Point(73, 263);
+            this.comboBank.Location = new System.Drawing.Point(70, 304);
             this.comboBank.Name = "comboBank";
             this.comboBank.Size = new System.Drawing.Size(183, 21);
             this.comboBank.TabIndex = 3;
@@ -106,7 +109,7 @@ namespace PluginInterface.Images
             // btnShowAll
             // 
             this.btnShowAll.Enabled = false;
-            this.btnShowAll.Location = new System.Drawing.Point(73, 290);
+            this.btnShowAll.Location = new System.Drawing.Point(70, 331);
             this.btnShowAll.Name = "btnShowAll";
             this.btnShowAll.Size = new System.Drawing.Size(183, 23);
             this.btnShowAll.TabIndex = 4;
@@ -189,7 +192,7 @@ namespace PluginInterface.Images
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(262, 266);
+            this.label2.Location = new System.Drawing.Point(-3, 259);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(26, 13);
             this.label2.TabIndex = 11;
@@ -197,8 +200,7 @@ namespace PluginInterface.Images
             // 
             // btnBgdTrans
             // 
-            this.btnBgdTrans.Enabled = false;
-            this.btnBgdTrans.Location = new System.Drawing.Point(92, 322);
+            this.btnBgdTrans.Location = new System.Drawing.Point(89, 363);
             this.btnBgdTrans.Name = "btnBgdTrans";
             this.btnBgdTrans.Size = new System.Drawing.Size(80, 40);
             this.btnBgdTrans.TabIndex = 29;
@@ -208,7 +210,7 @@ namespace PluginInterface.Images
             // 
             // btnBgd
             // 
-            this.btnBgd.Location = new System.Drawing.Point(6, 322);
+            this.btnBgd.Location = new System.Drawing.Point(3, 363);
             this.btnBgd.Name = "btnBgd";
             this.btnBgd.Size = new System.Drawing.Size(80, 40);
             this.btnBgd.TabIndex = 27;
@@ -228,7 +230,7 @@ namespace PluginInterface.Images
             // 
             // btnSetTrans
             // 
-            this.btnSetTrans.Location = new System.Drawing.Point(178, 322);
+            this.btnSetTrans.Location = new System.Drawing.Point(175, 363);
             this.btnSetTrans.Name = "btnSetTrans";
             this.btnSetTrans.Size = new System.Drawing.Size(80, 40);
             this.btnSetTrans.TabIndex = 31;
@@ -273,12 +275,42 @@ namespace PluginInterface.Images
             this.btnOAMeditor.UseVisualStyleBackColor = true;
             this.btnOAMeditor.Click += new System.EventHandler(this.btnOAMeditor_Click);
             // 
+            // checkBatch
+            // 
+            this.checkBatch.AutoSize = true;
+            this.checkBatch.Location = new System.Drawing.Point(329, 319);
+            this.checkBatch.Name = "checkBatch";
+            this.checkBatch.Size = new System.Drawing.Size(155, 17);
+            this.checkBatch.TabIndex = 36;
+            this.checkBatch.Text = "Export / Import batch mode";
+            this.checkBatch.UseVisualStyleBackColor = true;
+            this.checkBatch.CheckedChanged += new System.EventHandler(this.checkBatch_CheckedChanged);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(326, 258);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(163, 26);
+            this.label3.TabIndex = 37;
+            this.label3.Text = "Batch name (without extension)\r\n%s will be replace by the bank ID";
+            // 
+            // txtBatch
+            // 
+            this.txtBatch.Enabled = false;
+            this.txtBatch.Location = new System.Drawing.Point(329, 293);
+            this.txtBatch.Name = "txtBatch";
+            this.txtBatch.Size = new System.Drawing.Size(177, 20);
+            this.txtBatch.TabIndex = 38;
+            // 
             // SpriteControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Transparent;
-            this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.Controls.Add(this.txtBatch);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.checkBatch);
             this.Controls.Add(this.btnOAMeditor);
             this.Controls.Add(this.checkPalette);
             this.Controls.Add(this.imgBox);
@@ -293,7 +325,7 @@ namespace PluginInterface.Images
             this.Controls.Add(this.comboBank);
             this.Controls.Add(this.label1);
             this.Name = "SpriteControl";
-            this.Size = new System.Drawing.Size(512, 512);
+            this.Size = new System.Drawing.Size(514, 514);
             ((System.ComponentModel.ISupportInitialize)(this.imgBox)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
@@ -322,5 +354,8 @@ namespace PluginInterface.Images
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.CheckBox checkPalette;
         private System.Windows.Forms.Button btnOAMeditor;
+        private System.Windows.Forms.CheckBox checkBatch;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.TextBox txtBatch;
     }
 }

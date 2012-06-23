@@ -136,7 +136,7 @@ namespace Images
             // Palette
             if (file.ToUpper().EndsWith(".NTFP") || file.ToUpper().EndsWith(".PLT"))
             {
-                RawPalette palette = new RawPalette(pluginHost, file, id, false, 0, -1);
+                RawPalette palette = new RawPalette(pluginHost, file, id, true, 0, -1);
                 pluginHost.Set_Palette(palette);
                 return Format.Palette;
             }
@@ -154,13 +154,13 @@ namespace Images
             }
             else if (file.ToUpper().EndsWith(".NBFP"))
             {
-                RawPalette palette = new RawPalette(pluginHost, file, id, false, 0, -1);
+                RawPalette palette = new RawPalette(pluginHost, file, id, true, 0, -1);
                 pluginHost.Set_Palette(palette);
                 return Format.Palette;
             }
             else if (file.ToUpper().EndsWith(".NCL.L") && ext[0] != '\x10')
             {
-                RawPalette palette = new RawPalette(pluginHost, file, id, false, 0, -1);
+                RawPalette palette = new RawPalette(pluginHost, file, id, true, 0, -1);
                 pluginHost.Set_Palette(palette);
                 return Format.Palette;
             }
@@ -169,7 +169,7 @@ namespace Images
             // Tile
             if (file.ToUpper().EndsWith(".NTFT"))
             {
-                RawImage image = new RawImage(pluginHost, file, id, TileForm.Lineal, ColorFormat.colors256, false,
+                RawImage image = new RawImage(pluginHost, file, id, TileForm.Lineal, ColorFormat.colors256, true,
                     0, -1);
                 if (pluginHost.Get_Palette().Depth == ColorFormat.colors16)
                 {
@@ -194,7 +194,7 @@ namespace Images
             }
             else if (file.ToUpper().EndsWith(".NBFC") || file.ToUpper().EndsWith(".CHAR"))
             {
-                RawImage image = new RawImage(pluginHost, file, id, TileForm.Horizontal, ColorFormat.colors256, false,
+                RawImage image = new RawImage(pluginHost, file, id, TileForm.Horizontal, ColorFormat.colors256, true,
                     0, -1);
                 if (pluginHost.Get_Palette().Depth == ColorFormat.colors16)
                 {
@@ -207,7 +207,7 @@ namespace Images
             }
             else if (file.ToUpper().EndsWith(".NCG.L") && ext[0] != '\x10')
             {
-                RawImage image = new RawImage(pluginHost, file, id, TileForm.Horizontal, ColorFormat.colors256, false,
+                RawImage image = new RawImage(pluginHost, file, id, TileForm.Horizontal, ColorFormat.colors256, true,
                     0, -1);
                 if (pluginHost.Get_Palette().Depth == ColorFormat.colors16)
                     image.FormatColor = ColorFormat.colors16;
@@ -219,7 +219,7 @@ namespace Images
             if (file.ToUpper().EndsWith(".NBFS"))
             {
                 RawMap map = new RawMap(pluginHost, file, id,
-                    0, -1, false);
+                    0, -1, true);
                 ImageBase image = pluginHost.Get_Image();
 
                 if (map.Width != 0)
@@ -253,7 +253,7 @@ namespace Images
             }
             else if (file.ToUpper().EndsWith(".NSC.L") && ext[0] != '\x10')
             {
-                RawMap map = new RawMap(pluginHost, file, id, 0, -1, false);
+                RawMap map = new RawMap(pluginHost, file, id, 0, -1, true);
                 ImageBase image = pluginHost.Get_Image();
 
                 if (map.Width != 0)

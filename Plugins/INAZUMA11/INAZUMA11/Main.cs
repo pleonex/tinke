@@ -122,6 +122,16 @@ namespace INAZUMA11
         }
         public string Pack(ref sFolder unpacked, string file, int id)
         {
+            string fileout = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar +
+                Path.GetRandomFileName() + Path.GetFileName(file);
+
+            if (file.ToUpper().EndsWith(".PAC_") || file.ToUpper().EndsWith(".PAC"))
+            {
+                Console.WriteLine("Packing to " + fileout);
+                PAC.Pack(ref unpacked, fileout);
+                return fileout;
+            }
+
             return null;
         }
 

@@ -1,22 +1,27 @@
-﻿/*
- * Copyright (C) 2011  pleoNeX
- *
- *   This program is free software: you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation, either version 3 of the License, or
- *   (at your option) any later version.
- *
- *   This program is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU General Public License for more details.
- *
- *   You should have received a copy of the GNU General Public License
- *   along with this program.  If not, see <http://www.gnu.org/licenses/>. 
- *
- * By: pleoNeX
- * 
- */
+﻿// ----------------------------------------------------------------------
+// <copyright file="RawData.cs" company="none">
+
+// Copyright (C) 2012
+//
+//   This program is free software: you can redistribute it and/or modify
+//   it under the terms of the GNU General Public License as published by 
+//   the Free Software Foundation, either version 3 of the License, or
+//   (at your option) any later version.
+//
+//   This program is distributed in the hope that it will be useful, 
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//   GNU General Public License for more details. 
+//
+//   You should have received a copy of the GNU General Public License
+//   along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+//
+// </copyright>
+
+// <author>pleoNeX</author>
+// <email>benito356@gmail.com</email>
+// <date>23/06/2012 19:04:27</date>
+// -----------------------------------------------------------------------
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -69,7 +74,7 @@ namespace PluginInterface.Images
 
         public override void Read(string fileIn)
         {
-            Read(fileIn, false, 0, -1);
+            Read(fileIn, true, 0, -1);
         }
         public void Read(string fileIn, bool editable, ColorFormat depth, int offset, int fileSize)
         {
@@ -122,8 +127,15 @@ namespace PluginInterface.Images
 
         public override void Write(string fileOut)
         {
-            // TODO: write raw palette.
-            throw new NotImplementedException();
+            BinaryWriter bw = new BinaryWriter(File.OpenWrite(fileOut));
+
+            bw.Write(prev_data);
+            for (int i = 0; i < palette.Length; i++)
+                bw.Write(Actions.ColorToBGR555(palette[i]));
+            bw.Write(next_data);
+
+            bw.Flush();
+            bw.Close();
         }
     }
 
@@ -164,7 +176,7 @@ namespace PluginInterface.Images
 
         public override void Read(string fileIn)
         {
-            Read(fileIn, TileForm.Horizontal, Images.ColorFormat.colors16, false, 0, -1);
+            Read(fileIn, TileForm.Horizontal, Images.ColorFormat.colors16, true, 0, -1);
         }
         public void Read(string fileIn, TileForm form, ColorFormat format, bool editable,
             int offset, int fileSize)
@@ -198,8 +210,14 @@ namespace PluginInterface.Images
 
         public override void Write(string fileOut, PaletteBase palette)
         {
-            // TODO: Write raw images
-            throw new NotImplementedException();
+            BinaryWriter bw = new BinaryWriter(File.OpenWrite(fileOut));
+
+            bw.Write(prev_data);
+            bw.Write(Tiles);
+            bw.Write(next_data);
+
+            bw.Flush();
+            bw.Close();
         }
     }
 
@@ -226,7 +244,7 @@ namespace PluginInterface.Images
 
         public override void Read(string fileIn)
         {
-            Read(fileIn, 0, -1, false);
+            Read(fileIn, 0, -1, true);
         }
         public void Read(string fileIn, int offset, int size, bool editable)
         {
@@ -254,8 +272,15 @@ namespace PluginInterface.Images
 
         public override void Write(string fileOut, ImageBase image, PaletteBase palette)
         {
-            // TODO: write raw map
-            throw new NotImplementedException();
+            BinaryWriter bw = new BinaryWriter(File.OpenWrite(fileOut));
+
+            bw.Write(prev_data);
+            for (int i = 0; i < Map.Length; i++)
+                bw.Write(Actions.MapInfo(Map[i]));
+            bw.Write(next_data);
+
+            bw.Flush();
+            bw.Close();
         }
     }
 
