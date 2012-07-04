@@ -24,8 +24,8 @@ using System.Text;
 using System.Windows.Forms;
 using System.IO;
 using System.Drawing;
-using PluginInterface;
-using PluginInterface.Images;
+using Ekona;
+using Ekona.Images;
 
 namespace LAYTON
 {
@@ -165,7 +165,7 @@ namespace LAYTON
             else
             {
                 parte.length = (uint)(parte.width * parte.height) / 2;
-                parte.datos = pluginHost.Bit8ToBit4(rdr.ReadBytes((int)parte.length));
+                parte.datos = Ekona.Helper.BitsConverter.BytesToBit4(rdr.ReadBytes((int)parte.length));
             }
 
             rdr.Close();
@@ -462,7 +462,7 @@ namespace LAYTON
             else
             {
                 parte.length = (uint)(parte.width * parte.height) / 2;
-                parte.datos = pluginHost.Bit8ToBit4(rdr.ReadBytes((int)parte.length));
+                parte.datos = Ekona.Helper.BitsConverter.BytesToBit4(rdr.ReadBytes((int)parte.length));
             }
 
             rdr.Close();

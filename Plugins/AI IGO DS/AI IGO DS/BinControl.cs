@@ -26,7 +26,7 @@ using System.Linq;
 using System.Text;
 using System.Xml.Linq;
 using System.Windows.Forms;
-using PluginInterface;
+using Ekona;
 
 namespace AI_IGO_DS
 {

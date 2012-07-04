@@ -20,8 +20,8 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using PluginInterface;
-using PluginInterface.Images;
+using Ekona;
+using Ekona.Images;
 
 namespace SF_FEATHER
 {
@@ -43,11 +43,11 @@ namespace SF_FEATHER
             return false;
         }
 
-        public Format Get_Format(string fileName, byte[] magic, int id)
+        public Format Get_Format(sFile file, byte[] magic)
         {
             string ext = new String(Encoding.ASCII.GetChars(magic));
 
-            if (fileName.EndsWith(".pac") && (magic[2] == 0x01 && magic[3] == 0x00))
+            if (file.name.EndsWith(".pac") && (magic[2] == 0x01 && magic[3] == 0x00))
                 return Format.Pack;
             if (ext == "CG4 " || ext == "CG8 ")
                 return Format.FullImage;
@@ -62,41 +62,53 @@ namespace SF_FEATHER
         }
 
 
-        public string Pack(ref sFolder unpacked, string file, int id)
+        public string Pack(ref sFolder unpacked, sFile file)
         {
-            string fileOut = pluginHost.Get_TempFolder() + System.IO.Path.DirectorySeparatorChar +
-                System.IO.Path.GetRandomFileName();
-            PAC.Pack(file, fileOut, ref unpacked);
+            string fileOut = pluginHost.Get_TempFile();
+            PAC.Pack(file.path, fileOut, ref unpacked);
 
             return fileOut;
         }
-        public sFolder Unpack(string file, int id)
+        public sFolder Unpack(sFile file)
         {
-            return PAC.Unpack(file);
+            return PAC.Unpack(file.path, file.name);
         }
 
-        public void Read(string file, int id)
+        public void Read(sFile file)
         {
-            System.IO.BinaryReader br = new System.IO.BinaryReader(System.IO.File.OpenRead(file));
+            System.IO.BinaryReader br = new System.IO.BinaryReader(System.IO.File.OpenRead(file.path));
             string ext = new String(Encoding.ASCII.GetChars(br.ReadBytes(4)));
             br.Close();
 
             if (ext == "CG4 ")
-                new CGx(pluginHost, file, id, false);
+            {
+                CGx cgx = new CGx(file.path, file.id, false, file.name);
+                pluginHost.Set_Palette(cgx.Palette);
+                pluginHost.Set_Image(cgx);
+            }
             else if (ext == "CG8 ")
-                new CGx(pluginHost, file, id, true);
-            else if (ext == "SC4 ")
-                new SCx(pluginHost, file, id);
-            else if (ext == "SC8 ")
-                new SCx(pluginHost, file, id);
+            {
+                CGx cgx = new CGx(file.path, file.id, true, file.name);
+                pluginHost.Set_Palette(cgx.Palette);
+                pluginHost.Set_Image(cgx);
+            }
+            else if (ext == "SC4 " || ext == "SC8 ")
+            {
+                SCx scx = new SCx(file.path, file.id, file.name);
+                pluginHost.Set_Map(scx);
+            }
             else if (ext == "CGT ")
-                new CGT(pluginHost, file, id);
+            {
+                CGT cgt = new CGT(file.path, file.id, file.name);
+                pluginHost.Set_Palette(cgt.Palette);
+                pluginHost.Set_Image(cgt);
+            }
         }
-        public System.Windows.Forms.Control Show_Info(string file, int id)
+        public System.Windows.Forms.Control Show_Info(sFile file)
         {
-            Read(file, id);
+            Read(file);
 
-            System.IO.BinaryReader br = new System.IO.BinaryReader(System.IO.File.OpenRead(file));
+            System.IO.BinaryReader br = new System.IO.BinaryReader(System.IO.File.OpenRead(file.path));
             string ext = new String(Encoding.ASCII.GetChars(br.ReadBytes(4)));
             br.Close();
 

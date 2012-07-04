@@ -23,16 +23,17 @@ using System.Linq;
 using System.Text;
 using System.Drawing;
 using System.IO;
-using PluginInterface;
-using PluginInterface.Images;
+using Ekona;
+using Ekona.Images;
 
 namespace TOTTEMPEST
 {
     public class NBM : ImageBase
     {
         PaletteBase palette;
+        IPluginHost pluginHost;
 
-        public NBM(IPluginHost pluginHost, string file, int id) : base(pluginHost, file, id) { }
+        public NBM(IPluginHost pluginHost, string file, int id) : base(file, id) { this.pluginHost = pluginHost; }
 
         public override void Read(string file)
         {
@@ -49,8 +50,8 @@ namespace TOTTEMPEST
             // Palette
             int palette_length = (depth == 0x01) ? 0x200 : 0x20;
             Color[][] colors = new Color[1][];
-            colors[0] = pluginHost.BGR555ToColor(br.ReadBytes(palette_length));
-            palette = new RawPalette(pluginHost, colors, false, format);
+            colors[0] = Actions.BGR555ToColor(br.ReadBytes(palette_length));
+            palette = new RawPalette(colors, false, format);
 
             // Tiles
             int tiles_length = width * height;
@@ -67,17 +68,17 @@ namespace TOTTEMPEST
             BinaryWriter bw = new BinaryWriter(File.OpenWrite(fileout));
 
             // Header
-            bw.Write((ushort)(ColorFormat == ColorFormat.colors256 ? 0x01 : 0x00));
+            bw.Write((ushort)(FormatColor == ColorFormat.colors256 ? 0x01 : 0x00));
             bw.Write((ushort)Width);
             bw.Write((ushort)Height);
             bw.Write((ushort)0x00);
 
             // Palette section
-            bw.Write(pluginHost.ColorToBGR555(palette.Palette[0]));
+            bw.Write(Actions.ColorToBGR555(palette.Palette[0]));
 
             // Tile section
-            if (ColorFormat == ColorFormat.colors16)
-                bw.Write(pluginHost.Bit8ToBit4(Tiles));
+            if (FormatColor == ColorFormat.colors16)
+                bw.Write(Ekona.Helper.BitsConverter.BytesToBit4(Tiles));
             else
                 bw.Write(Tiles);
 

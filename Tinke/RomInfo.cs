@@ -25,6 +25,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using Ekona.Helper;
 
 namespace Tinke
 {
@@ -162,7 +163,7 @@ namespace Tinke
             }
             listInfo.Items[4].SubItems.Add(Convert.ToString(cabecera.encryptionSeed));
             listInfo.Items[5].SubItems.Add((cabecera.tamaño / Math.Pow(2, 20)).ToString() + " MB");
-            listInfo.Items[6].SubItems.Add(Tools.Helper.BytesToHexString(cabecera.reserved));
+            listInfo.Items[6].SubItems.Add(BitsConverter.BytesToHexString(cabecera.reserved));
             listInfo.Items[7].SubItems.Add(Convert.ToString(cabecera.ROMversion));
             listInfo.Items[8].SubItems.Add(Convert.ToString(cabecera.internalFlags));
             listInfo.Items[9].SubItems.Add("0x" + String.Format("{0:X}", cabecera.ARM9romOffset));
@@ -191,7 +192,7 @@ namespace Tinke
             listInfo.Items[32].SubItems.Add(cabecera.secureDisable.ToString());
             listInfo.Items[33].SubItems.Add("0x" + String.Format("{0:X}", cabecera.ROMsize) + " bytes");
             listInfo.Items[34].SubItems.Add("0x" + String.Format("{0:X}", cabecera.headerSize) + " bytes");
-            listInfo.Items[35].SubItems.Add(Tools.Helper.BytesToHexString(cabecera.reserved2));
+            listInfo.Items[35].SubItems.Add(BitsConverter.BytesToHexString(cabecera.reserved2));
             listInfo.Items[36].SubItems.Add(cabecera.logoCRC16.ToString() + " (" + Convert.ToString(cabecera.logoCRC) + ")");
             listInfo.Items[37].SubItems.Add(cabecera.headerCRC16.ToString() + " (" + Convert.ToString(cabecera.headerCRC) + ")");
             listInfo.Items[38].SubItems.Add("0x" + String.Format("{0:X}", cabecera.debug_romOffset));
@@ -207,7 +208,7 @@ namespace Tinke
             txtBannerVer.Text = banner.version.ToString();
             txtBannerCRC.Text = String.Format("{0:X}", banner.CRC16) + " (" +
                 (banner.checkCRC ? "OK)" : Tools.Helper.GetTranslation("RomInfo", "S39") + ')');
-            txtBannerReserved.Text = Tools.Helper.BytesToHexString(banner.reserved);
+            txtBannerReserved.Text = BitsConverter.BytesToHexString(banner.reserved);
 
             titulos = new string[] { banner.japaneseTitle, banner.englishTitle, banner.frenchTitle, banner.germanTitle, banner.italianTitle, banner.spanishTitle };
             txtBannerTitle.Text = titulos[0];

@@ -24,8 +24,8 @@ using System.Text;
 using System.Windows.Forms;
 using System.Drawing;
 using System.IO;
-using PluginInterface;
-using PluginInterface.Images;
+using Ekona;
+using Ekona.Images;
 
 namespace Common
 {

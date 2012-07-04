@@ -27,7 +27,7 @@ using System.Text;
 using System.IO;
 using System.Windows.Forms;
 using System.Xml.Linq;
-using PluginInterface;
+using Ekona;
 
 namespace Tinke.Dialog
 {

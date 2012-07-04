@@ -577,7 +577,7 @@
     <S0C>Seleccionado desde 0x{0} con longitud 0x{1}</S0C>
   </VisorHex>
 
-  <!-- PluginInterface controls -->
+  <!-- Ekona controls -->
   <PaletteControl>
     <S01>Number of palette:</S01>
     <S02>Display all palettes</S02>

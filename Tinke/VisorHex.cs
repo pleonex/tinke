@@ -27,7 +27,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.IO;
 using Be.Windows.Forms;
-using PluginInterface;
+using Ekona;
 
 namespace Tinke
 {

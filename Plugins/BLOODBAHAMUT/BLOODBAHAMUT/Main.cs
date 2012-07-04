@@ -20,7 +20,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using PluginInterface;
+using Ekona;
 
 namespace BLOODBAHAMUT
 {
@@ -42,34 +42,34 @@ namespace BLOODBAHAMUT
             return false;
         }
 
-        public Format Get_Format(string fileName, byte[] magic, int id)
+        public Format Get_Format(sFile file, byte[] magic)
         {
-            if (fileName.ToUpper().EndsWith(".DPK"))
+            if (file.name.ToUpper().EndsWith(".DPK"))
                 return Format.Pack;
 
             return Format.Unknown;
         }
 
-        public string Pack(ref sFolder unpacked, string file, int id)
+        public string Pack(ref sFolder unpacked, sFile file)
         {
-            if (file.ToUpper().EndsWith(".DPK"))
-                return DPK.Pack(ref unpacked, file, id);
+            if (file.name.ToUpper().EndsWith(".DPK"))
+                return DPK.Pack(ref unpacked, file.path, file.id);
 
             return null;
         }
-        public sFolder Unpack(string file, int id)
+        public sFolder Unpack(sFile file)
         {
-            if (file.ToUpper().EndsWith(".DPK"))
-                return DPK.Unpack(file, pluginHost);
+            if (file.name.ToUpper().EndsWith(".DPK"))
+                return DPK.Unpack(file.path, pluginHost);
 
             return new sFolder();
         }
 
-        public void Read(string file, int id)
+        public void Read(sFile file)
         {
         }
 
-        public System.Windows.Forms.Control Show_Info(string file, int id)
+        public System.Windows.Forms.Control Show_Info(sFile file)
         {
             return new System.Windows.Forms.Control();
         }

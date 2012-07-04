@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.IO;
 using System.Text;
-using PluginInterface;
-using PluginInterface.Images;
+using Ekona;
+using Ekona.Images;
 
 namespace Images
 {
@@ -12,7 +12,7 @@ namespace Images
     {
         sNCGR ncgr;
 
-        public NCGR(IPluginHost pluginHost, string file, int id) : base(pluginHost, file, id) { }
+        public NCGR(string file, int id, string fileName = "") : base(file, id, fileName) { }
 
         public override void Read(string fileIn)
         {
@@ -133,7 +133,7 @@ namespace Images
 
         public struct sNCGR  // Nintendo Character Graphic Resource
         {
-            public Header header;
+            public NitroHeader header;
             public RAHC rahc;
             public SOPC sopc;
             public TileForm order;

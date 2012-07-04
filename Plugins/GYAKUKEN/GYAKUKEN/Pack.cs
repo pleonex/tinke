@@ -22,7 +22,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
-using PluginInterface;
+using Ekona;
 
 namespace GYAKUKEN
 {
@@ -31,12 +31,9 @@ namespace GYAKUKEN
     /// </summary>
     public static class PACK
     {
-        public static sFolder Unpack(IPluginHost pluginHost, string file)
+        public static sFolder Unpack(IPluginHost pluginHost, sFile file)
         {
-            string packFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + "pack_" + Path.GetFileName(file);
-            File.Copy(file, packFile, true);
-
-            BinaryReader br = new BinaryReader(File.OpenRead(file));
+            BinaryReader br = new BinaryReader(File.OpenRead(file.path));
             sFolder unpack = new sFolder();
             unpack.files = new List<sFile>();
 
@@ -52,9 +49,9 @@ namespace GYAKUKEN
                     break;
 
                 sFile currFile = new sFile();
-                currFile.name = Path.GetFileName(file) + '_' + i.ToString() + ".dbin";
+                currFile.name = file.name + '_' + i.ToString() + ".dbin";
                 currFile.offset = currOffset;
-                currFile.path = packFile;
+                currFile.path = file.path;
 
                 currOffset = br.ReadUInt32();
                 currFile.size = currOffset - currFile.offset;
@@ -66,12 +63,9 @@ namespace GYAKUKEN
             br.Close();
             return unpack;
         }
-        public static sFolder Unpack2(IPluginHost pluginHost, string file)
+        public static sFolder Unpack2(IPluginHost pluginHost, sFile file)
         {
-            string packFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + "pack_" + Path.GetFileName(file);
-            File.Copy(file, packFile, true);
-
-            BinaryReader br = new BinaryReader(File.OpenRead(file));
+            BinaryReader br = new BinaryReader(File.OpenRead(file.path));
             sFolder unpack = new sFolder();
             unpack.files = new List<sFile>();
 
@@ -81,7 +75,7 @@ namespace GYAKUKEN
             for (int i = 0; i < num_files; i++)
             {
                 sFile currFile = new sFile();
-                currFile.name = "File" + i.ToString();
+                currFile.name = file.name + i.ToString();
                 if (i == 0)
                     currFile.name += ".ncer";
                 else if (i == 1)
@@ -89,7 +83,7 @@ namespace GYAKUKEN
                 else if (i == 2)
                     currFile.name += ".ncgr";
                 currFile.offset = br.ReadUInt32();
-                currFile.path = packFile;
+                currFile.path = file.path;
 
                 if (i + 1 == num_files) // Last file
                     currFile.size = (uint)br.BaseStream.Length - currFile.offset;

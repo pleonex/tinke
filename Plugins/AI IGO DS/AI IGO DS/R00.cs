@@ -24,8 +24,8 @@ using System.Text;
 using System.IO;
 using System.Drawing;
 using System.Windows.Forms;
-using PluginInterface;
-using PluginInterface.Images;
+using Ekona;
+using Ekona.Images;
 
 namespace AI_IGO_DS
 {
@@ -33,8 +33,9 @@ namespace AI_IGO_DS
     {
         PaletteBase palette;
         ImageBase image;
+        IPluginHost pluginHost;
 
-        public R00(IPluginHost pluginHost, string file, int id) : base(pluginHost, file, id) { }
+        public R00(IPluginHost pluginHost, string file, int id, string fileName = "") : base(file, id, fileName) { this.pluginHost = pluginHost; }
 
         public Control Get_Control()
         {
@@ -57,7 +58,7 @@ namespace AI_IGO_DS
 
             Color[][] colors = new Color[1][];
             colors[0] = Actions.BGR555ToColor(br.ReadBytes((int)(pSize - 0x08)));
-            palette = new RawPalette(pluginHost, colors, false, ColorFormat.colors256);
+            palette = new RawPalette(colors, false, ColorFormat.colors256);
 
             // Image data
             br.BaseStream.Position = tileOffset;
@@ -65,7 +66,7 @@ namespace AI_IGO_DS
             uint tSize = br.ReadUInt32() * 4;
 
             byte[] tiles = br.ReadBytes((int)(tSize - 0x08));
-            image = new RawImage(pluginHost, tiles, TileForm.Horizontal, ColorFormat.colors256, 256, 192, false);
+            image = new RawImage(tiles, TileForm.Horizontal, ColorFormat.colors256, 256, 192, false);
 
             // Map
             br.BaseStream.Position = mapOffset;

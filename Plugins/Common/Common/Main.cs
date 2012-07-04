@@ -21,7 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using PluginInterface;
+using Ekona;
 using System.Windows.Forms;
 
 namespace Common
@@ -30,16 +30,15 @@ namespace Common
     {
         IPluginHost pluginHost;
 
-        public Format Get_Format(string nombre, byte[] magic, int id)
+        public Format Get_Format(sFile file, byte[] magic)
         {
-            nombre = nombre.ToUpper();
             string ext = new String(Encoding.ASCII.GetChars(magic));
 
-            if (nombre.EndsWith(".TGA") || nombre.EndsWith(".JPG") || nombre.EndsWith(".PNG"))
+            if (file.name.ToUpper().EndsWith(".TGA") || file.name.ToUpper().EndsWith(".JPG") || file.name.ToUpper().EndsWith(".PNG"))
                 return Format.FullImage;
-            else if (nombre.EndsWith(".BMP") && magic[0] == 'B' && magic[1] == 'M')
+            else if (file.name.ToUpper().EndsWith(".BMP") && magic[0] == 'B' && magic[1] == 'M')
                 return Format.FullImage;
-            else if (nombre.EndsWith(".WAV") || ext == "RIFF")
+            else if (file.name.ToUpper().EndsWith(".WAV") || ext == "RIFF")
                 return Format.Sound;
             
             return Format.Unknown;
@@ -50,32 +49,30 @@ namespace Common
             this.pluginHost = pluginHost;
         }
 
-        public void Read(string archivo, int id)
+        public void Read(sFile file) { }
+        public Control Show_Info(sFile file)
         {
-        }
-        public Control Show_Info(string archivo, int id)
-        {
-            System.IO.BinaryReader br = new System.IO.BinaryReader(System.IO.File.OpenRead(archivo));
+            System.IO.BinaryReader br = new System.IO.BinaryReader(System.IO.File.OpenRead(file.path));
             string ext = "";
             try { ext = new String(br.ReadChars(4)); }
             catch { }
             br.Close();
 
-            if (archivo.ToUpper().EndsWith(".TGA"))
-                return new TGA(pluginHost, archivo).Show_Info();
-            else if (archivo.ToUpper().EndsWith(".JPG"))
-                return new JPG(pluginHost, archivo).Show_Info();
-            else if (archivo.ToUpper().EndsWith(".PNG"))
-                return new PNG(pluginHost, archivo).Show_Info();
-            else if (archivo.ToUpper().EndsWith(".WAV") || ext == "RIFF")
-                return new WAV(pluginHost, archivo).Show_Info();
-            else if (archivo.ToUpper().EndsWith(".BMP"))
-                return new BMP(pluginHost, archivo).Show_Info();
+            if (file.name.ToUpper().EndsWith(".TGA"))
+                return new TGA(pluginHost, file.path).Show_Info();
+            else if (file.name.ToUpper().EndsWith(".JPG"))
+                return new JPG(pluginHost, file.path).Show_Info();
+            else if (file.name.ToUpper().EndsWith(".PNG"))
+                return new PNG(pluginHost, file.path).Show_Info();
+            else if (file.name.ToUpper().EndsWith(".WAV") || ext == "RIFF")
+                return new WAV(pluginHost, file.path).Show_Info();
+            else if (file.name.ToUpper().EndsWith(".BMP"))
+                return new BMP(pluginHost, file.path).Show_Info();
 
             return new Control();
         }
 
-        public string Pack(ref sFolder unpacked, string file) { return null; }
-        public sFolder Unpack(string file) { return new sFolder(); }
+        public string Pack(ref sFolder unpacked, sFile file) { return null; }
+        public sFolder Unpack(sFile file) { return new sFolder(); }
     }
 }

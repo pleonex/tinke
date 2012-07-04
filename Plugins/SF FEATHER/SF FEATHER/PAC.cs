@@ -22,14 +22,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
-using PluginInterface;
+using Ekona;
 
 namespace SF_FEATHER
 {
     public static class PAC
     {
 
-        public static sFolder Unpack(string file)
+        public static sFolder Unpack(string file, string name)
         {
             BinaryReader br = new BinaryReader(File.OpenRead(file));
             sFolder unpacked = new sFolder();
@@ -42,7 +42,7 @@ namespace SF_FEATHER
             for (int i = 0; i < num_element; i++)
             {
                 sFile newFile = new sFile();
-                newFile.name = "File" + i.ToString();
+                newFile.name = name + '_' + i.ToString();
                 newFile.offset = br.ReadUInt32() * 0x10;
                 newFile.size = br.ReadUInt32() * 0x10;
                 newFile.path = file;

@@ -27,26 +27,26 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
-using PluginInterface;
+using Ekona;
 
 namespace DEATHNOTEDS
 {
     public static class Packs
     {
-        public static sFolder Unpack_data(string file)
+        public static sFolder Unpack_data(sFile file)
         {
             sFolder unpacked = new sFolder();
             unpacked.files = new List<sFile>();
-            BinaryReader br = new BinaryReader(File.OpenRead(file));
+            BinaryReader br = new BinaryReader(File.OpenRead(file.path));
 
             uint num_files = br.ReadUInt32();
             for (int i = 0; i < num_files; i++)
             {
                 sFile newFile = new sFile();
-                newFile.name = "File " + i.ToString();
+                newFile.name = Path.GetFileNameWithoutExtension(file.name) + '_' + i.ToString() + ".bin";
                 newFile.offset = br.ReadUInt32() * 4;
                 newFile.size = br.ReadUInt32();
-                newFile.path = file;
+                newFile.path = file.path;
                 
                 unpacked.files.Add(newFile);
             }

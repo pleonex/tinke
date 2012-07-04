@@ -52,7 +52,7 @@ namespace PSL
         /// </summary>
         private void InitializeComponent()
         {
-            this.spriteControl1 = new PluginInterface.Images.SpriteControl();
+            this.spriteControl1 = new Ekona.Images.SpriteControl();
             this.btnExtract = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
@@ -125,7 +125,7 @@ namespace PSL
 
         #endregion
 
-        private PluginInterface.Images.SpriteControl spriteControl1;
+        private Ekona.Images.SpriteControl spriteControl1;
         private System.Windows.Forms.Button btnExtract;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;

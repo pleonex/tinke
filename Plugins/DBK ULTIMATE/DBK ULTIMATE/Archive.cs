@@ -22,7 +22,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
-using PluginInterface;
+using Ekona;
 
 namespace DBK_ULTIMATE
 {
@@ -30,9 +30,6 @@ namespace DBK_ULTIMATE
     {
         public static sFolder Unpack_archiveDBK(IPluginHost pluginHost, string file)
         {
-            string packFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + "pack_" + Path.GetFileName(file);
-            File.Copy(file, packFile, true);
-
             BinaryReader br = new BinaryReader(File.OpenRead(file));
             sFolder unpacked = new sFolder();
             unpacked.files = new List<sFile>();
@@ -74,7 +71,7 @@ namespace DBK_ULTIMATE
                     for (int i = 0; i < unpacked.folders[f].files.Capacity; i++)    // Read all files, the id start at 0
                     {
                         sFile newFile = new sFile();
-                        newFile.path = packFile;
+                        newFile.path = file;
 
                         uint name_length = br.ReadUInt32();
                         uint name_offset = 0x00;
@@ -120,7 +117,7 @@ namespace DBK_ULTIMATE
                             for (int i = 0; i < unpacked.folders[f].folders[f2].files.Capacity; i++)    // Read all files, the id start at 0
                             {
                                 sFile newFile = new sFile();
-                                newFile.path = packFile;
+                                newFile.path = file;
 
                                 uint name_length = br.ReadUInt32();
                                 uint name_offset = 0x00;

@@ -26,7 +26,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using PluginInterface;
+using Ekona;
 
 namespace Pack.Games
 {
@@ -48,22 +48,22 @@ namespace Pack.Games
             return false;
         }
 
-        public Format Get_Format(string fileName, byte[] magic, int id)
+        public Format Get_Format(sFile file, byte[] magic)
         {
-            if (id == 0x461 || id == 0x462 || id == 0x45D || id == 0x45F)
+            if (file.id == 0x461 || file.id == 0x462 || file.id == 0x45D || file.id == 0x45F)
                 return Format.Pack;
 
             return Format.Unknown;
         }
 
-        public string Pack(ref sFolder unpacked, string file, int id)
+        public string Pack(ref sFolder unpacked, sFile file)
         {
             return null;
         }
-        public sFolder Unpack(string file, int id)
+        public sFolder Unpack(sFile file)
         {
             // There are only one type of pack file
-            BinaryReader br = new BinaryReader(File.OpenRead(file));
+            BinaryReader br = new BinaryReader(File.OpenRead(file.path));
             sFolder unpack = new sFolder();
             unpack.files = new List<sFile>();
 
@@ -73,9 +73,9 @@ namespace Pack.Games
             for (int i = 0; i < num_files; i++)
             {
                 sFile newFile = new sFile();
-                newFile.name = Path.GetFileNameWithoutExtension(file).Substring(12) + '_' + i.ToString() + ".bin";
+                newFile.name = file.name + '_' + i.ToString() + ".bin";
                 newFile.offset = br.ReadUInt32();
-                newFile.path = file;
+                newFile.path = file.path;
 
                 uint size = br.ReadUInt32();
                 if ((size >> 31) == 1)  // The file it's compressed with LZ11
@@ -94,10 +94,10 @@ namespace Pack.Games
             return unpack;
         }
 
-        public void Read(string file, int id)
+        public void Read(sFile file)
         {
         }
-        public System.Windows.Forms.Control Show_Info(string file, int id)
+        public System.Windows.Forms.Control Show_Info(sFile file)
         {
             return new System.Windows.Forms.Control();
         }

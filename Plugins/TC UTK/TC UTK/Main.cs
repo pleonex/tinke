@@ -27,8 +27,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
-using PluginInterface;
-using PluginInterface.Images;
+using Ekona;
+using Ekona.Images;
 
 namespace TC_UTK
 {
@@ -75,28 +75,28 @@ namespace TC_UTK
             return false;
         }
 
-        public Format Get_Format(string fileName, byte[] magic, int id)
+        public Format Get_Format(sFile file, byte[] magic)
         {
             string ext = new String(Encoding.ASCII.GetChars(magic));
 
             if (ext == "VXDS")          // It's a video, but we can't open it yet
                 return Format.Unknown;
 
-            if ((id >= 0x12C & id <= 0x165) || (id >= 0x65D && id <= 0x68A) ||
-                id == 0x16B || id == 0x16C)
+            if ((file.id >= 0x12C & file.id <= 0x165) || (file.id >= 0x65D && file.id <= 0x68A) ||
+                file.id == 0x16B || file.id == 0x16C)
                 return Format.Text;
-            if (((id >= 0x1E4 && id <= 0x1F4) || (id >= 0x1F7 && id <= 0x2FC))
-                && !fileName.EndsWith(".adx"))
+            if (((file.id >= 0x1E4 && file.id <= 0x1F4) || (file.id >= 0x1F7 && file.id <= 0x2FC))
+                && !file.name.EndsWith(".adx"))
                 return Format.Sound;
 
-            if (id >= 0x01 && id <= 0x1E3 && ext != "TDT ")
+            if (file.id >= 0x01 && file.id <= 0x1E3 && ext != "TDT ")
             {
                 if (magic[0] == 0x10 || magic[0] == 0x12)
                     return Format.FullImage;
                 else if (magic[0] == 0x18 || magic[0] == 0x1A)
                     return Format.Tile;
 
-                sFile currFile = pluginHost.Search_File((short)id);
+                sFile currFile = pluginHost.Search_File((short)file.id);
                 if (currFile.size == 512 || currFile.size == 128 || currFile.size == 32)
                     return Format.Palette;
                 else if (magic[0] != 0)
@@ -107,43 +107,43 @@ namespace TC_UTK
         }
 
 
-        public string Pack(ref sFolder unpacked, string file, int id)
+        public string Pack(ref sFolder unpacked, sFile file)
         {
             return null;
         }
-        public sFolder Unpack(string file, int id)
+        public sFolder Unpack(sFile file)
         {
             return new sFolder();
         }
 
-        public void Read(string file, int id)
+        public void Read(sFile file)
         {
         }
-        public System.Windows.Forms.Control Show_Info(string file, int id)
+        public System.Windows.Forms.Control Show_Info(sFile file)
         {
-            if ((id >= 0x12C && id <= 0x165) || (id >= 0x65D && id <= 0x68A) ||
-                id == 0x16B || id == 0x16C)
-                return new TextControl(pluginHost, file);
+            if ((file.id >= 0x12C && file.id <= 0x165) || (file.id >= 0x65D && file.id <= 0x68A) ||
+                file.id == 0x16B || file.id == 0x16C)
+                return new TextControl(pluginHost, file.path);
 
-            if ((id >= 0x1E4 && id <= 0x1F4) || (id >= 0x1F7 && id <= 0x2FC))
+            if ((file.id >= 0x1E4 && file.id <= 0x1F4) || (file.id >= 0x1F7 && file.id <= 0x2FC))
             {
                 string[] p = new String[] {
-                    file, "Sounds.Main",
-                    Path.GetFileNameWithoutExtension(file) + ".adx",
+                    file.path, "Sounds.Main",
+                    file.name + ".adx",
                     "" };
-                return (System.Windows.Forms.Control)pluginHost.Call_Plugin(p, id, 1);
+                return (System.Windows.Forms.Control)pluginHost.Call_Plugin(p, file.id, 1);
             }
 
-            long length = new FileInfo(file).Length;
-            if (id >= 0x01 && id <= 0x1E3)
-                if (length == 512 || length == 128 || length == 32)
+
+            if (file.id >= 0x01 && file.id <= 0x1E3)
+                if (file.size == 512 || file.size == 128 || file.size == 32)
                 {
-                    RawPalette palette = new RawPalette(pluginHost, file, id, false, 0, -1);
+                    RawPalette palette = new RawPalette(file.path, file.id, false, 0, -1, file.name);
                     pluginHost.Set_Palette(palette);
                     return new PaletteControl(pluginHost);
                 }
                 else
-                    return new Images(pluginHost, file, id).Get_Control();
+                    return new Images(pluginHost, file.path, file.id).Get_Control();
 
             return new System.Windows.Forms.Control();
         }

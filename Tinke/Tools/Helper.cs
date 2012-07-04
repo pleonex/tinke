@@ -28,73 +28,15 @@ namespace Tinke.Tools
 {
     public static class Helper
     {
-        public static string BytesToHexString(byte[] bytes)
+        public static byte[] Get_Bytes(int offset, int length, Ekona.sFile file)
         {
-            string result = "0x";
+            BinaryReader br = new BinaryReader(File.OpenRead(file.path));
+            br.BaseStream.Position = file.offset + offset;
 
-            for (int i = 0; i < bytes.Length; i++)
-                result += String.Format("{0:X}", bytes[i]);
+            byte[] bytes = br.ReadBytes(length);
+            br.Close();
 
-            return result;
-        }
-
-        /// <summary>
-        /// Convierte una array de bytes en bits y les cambia el orden.
-        /// </summary>
-        /// <param name="bytes">Array de bytes.</param>
-        /// <returns>Array de bits.</returns>
-        public static byte[] Bits8To4Bits(byte[] bytes)
-        {
-            byte[] bits = new Byte[bytes.Length * 2];
-
-            for (int i = 0; i < bytes.Length; i++)
-            {
-                bits[i * 2] = (byte)(bytes[i] & 0x0F);
-                bits[i * 2 + 1] = (byte)((bytes[i] & 0xF0) >> 4);
-            }
-
-            return bits;
-        }
-        public static byte[] Bits4ToBits8(byte[] bytes)
-        {
-            List<Byte> bit8 = new List<byte>();
-
-            for (int i = 0; i < bytes.Length; i += 2)
-            {
-                byte byte1 = bytes[i];
-                byte byte2 = (byte)(bytes[i + 1] << 4);
-                bit8.Add((byte)(byte1 + byte2));
-            }
-
-            return bit8.ToArray();
-        }
-
-        public static Byte[] BytesToBits(Byte[] bytes)
-        {
-            List<Byte> bits = new List<byte>();
-
-            for (int i = 0; i < bytes.Length; i++)
-                for (int j = 7; j >= 0; j--)
-                    bits.Add((byte)((bytes[i] >> j) & 1));
-
-            return bits.ToArray();
-        }
-        public static Byte[] BitsToBytes(Byte[] bits)
-        {
-            List<Byte> bytes = new List<byte>();
-
-            for (int i = 0; i < bits.Length; i += 8)
-            {
-                Byte newByte = 0;
-                int b = 0;
-                for (int j = 7; j >= 0; j--, b++)
-                {
-                    newByte += (byte)(bits[i + b] << j);
-                }
-                bytes.Add(newByte);
-            }
-
-            return bytes.ToArray();
+            return bytes;
         }
 
         public static XElement GetTranslation(string treeS)
@@ -165,27 +107,5 @@ namespace Tinke.Tools
             return "";
         }
 
-        public static byte[] StringToBytes(string text, int num_bytes)
-        {
-            string hexText = text.Replace("-", "");
-            hexText = hexText.PadRight(num_bytes * 2, '0');
-
-            List<Byte> hex = new List<byte>();
-            for (int i = 0; i < hexText.Length; i += 2)
-                hex.Add(Convert.ToByte(hexText.Substring(i, 2), 16));
-
-            return hex.ToArray();
-        }
-
-        public static byte[] Get_Bytes(int offset, int length, PluginInterface.sFile file)
-        {
-            BinaryReader br = new BinaryReader(File.OpenRead(file.path));
-            br.BaseStream.Position = file.offset + offset;
-
-            byte[] bytes = br.ReadBytes(length);
-            br.Close();
-
-            return bytes;
-        }
     }
 }

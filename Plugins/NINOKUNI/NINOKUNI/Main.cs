@@ -26,7 +26,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
-using PluginInterface;
+using Ekona;
 
 namespace NINOKUNI
 {
@@ -43,12 +43,16 @@ namespace NINOKUNI
         public bool IsCompatible()
         {
             if (gameCode == "B2KJ")
+            {
+                Helper.pluginHost = pluginHost;
+                Helper.Read_Replace();
                 return true;
+            }
 
             return false;
         }
 
-        public Format Get_Format(string fileName, byte[] magic, int id)
+        public Format Get_Format(sFile file, byte[] magic)
         {
             String ext = new String(Encoding.ASCII.GetChars(magic));
             uint exti = BitConverter.ToUInt32(magic, 0);
@@ -57,74 +61,80 @@ namespace NINOKUNI
                 return Format.Pack;
             else if (BitConverter.ToUInt32(magic, 0) == 0x001C080A)
                 return Format.Text;
-            else if (magic[0] == 0x42 && magic[1] == 0x4D && fileName.ToUpper().StartsWith("EDDN")) // BMP image
+            else if (magic[0] == 0x42 && magic[1] == 0x4D && file.name.ToUpper().StartsWith("EDDN")) // BMP image
                 return Format.FullImage;
             else if (exti == 0x001F080A || exti == 0x0019090A)
                 return Format.Script;
-            else if (id == 0xFF2)
+            else if (file.id == 0xFF2)
                 return Format.Text;
-            else if (id == 0xFF4)
+            else if (file.id == 0xFF4)
                 return Format.Text;
-            else if (id == 0xF76)
+            else if (file.id == 0xF76)
                 return Format.Text;
+            else if (file.name.EndsWith(".txt"))
+                return Format.Text;     // Subtitles
+            else if (ext == "TMAP")
+                return Format.Pack;
 
             return Format.Unknown;
         }
 
-        public void Read(string file, int id)
+        public void Read(sFile file)
         {
         }
-        public System.Windows.Forms.Control Show_Info(string file, int id)
+        public System.Windows.Forms.Control Show_Info(sFile file)
         {
-            if (file.ToUpper().EndsWith(".SQ"))
-                return new SQcontrol(pluginHost, file, id);
-            else if (Path.GetFileName(file).Contains("eddn"))
-                return new BMPControl(file, id, pluginHost);
-            else if (id == 0xFF2)
-                return new ScenarioText(pluginHost, file, id);
-            else if (id == 0xFF4)
-                return new SystemText(file, id, pluginHost);
-            else if (id == 0xF76)
-                return new MQuestText(pluginHost, file, id);
+            if (file.name.ToUpper().EndsWith(".SQ"))
+                return new SQcontrol(pluginHost, file.path, file.id);
+            else if (Path.GetFileName(file.path).Contains("eddn"))
+                return new BMPControl(file.path, file.id, pluginHost);
+            else if (file.id == 0xFF2)
+                return new ScenarioText(pluginHost, file.path, file.id);
+            else if (file.id == 0xFF4)
+                return new SystemText(file.path, file.id, pluginHost);
+            else if (file.id == 0xF76)
+                return new MQuestText(pluginHost, file.path, file.id);
+            else if (file.name.EndsWith(".txt"))
+                return new SubtitleControl(pluginHost, file.path, file.id);
 
             return new System.Windows.Forms.Control();
         }
 
-        public String Pack(ref sFolder unpacked, string file, int id)
+        public String Pack(ref sFolder unpacked, sFile file)
         {
-            BinaryReader br = new BinaryReader(File.OpenRead(file));
+            BinaryReader br = new BinaryReader(File.OpenRead(file.path));
             string ext = new String(br.ReadChars(4));
             br.Close();
 
             if (ext == "NPCK")
             {
-                string fileOut = pluginHost.Get_TempFolder() + System.IO.Path.DirectorySeparatorChar +
-                    "pack_" + System.IO.Path.GetFileName(file);
+                string fileOut = pluginHost.Get_TempFile();
                 
                 NPCK.Pack(fileOut, ref unpacked, pluginHost);
                 return fileOut;
             }
             else if (ext == "KPCN")
             {
-                string fileOut = pluginHost.Get_TempFolder() + System.IO.Path.DirectorySeparatorChar +
-                    "pack_" + System.IO.Path.GetFileName(file);
+                string fileOut = pluginHost.Get_TempFile();
 
-                KPCN.Pack(fileOut, file, ref unpacked, pluginHost);
+                KPCN.Pack(fileOut, file.path, ref unpacked, pluginHost);
                 return fileOut;
             }
 
             return null;
         }
-        public sFolder Unpack(string file, int id)
+        public sFolder Unpack(sFile file)
         {
-            BinaryReader br = new BinaryReader(File.OpenRead(file));
+            BinaryReader br = new BinaryReader(File.OpenRead(file.path));
             string ext = new String(br.ReadChars(4));
             br.Close();
 
             if (ext == "NPCK")
-                return NPCK.Unpack(file, pluginHost);
+                return NPCK.Unpack(file.path, file.name);
             else if (ext == "KPCN")
-                return KPCN.Unpack(file, pluginHost); 
+                return KPCN.Unpack(file.path, file.name);
+            else if (ext == "TMAP")
+                return TMAP.Unpack(file.path, file.name);
 
             return new sFolder();
         }

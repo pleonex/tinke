@@ -25,19 +25,20 @@
 using System;
 using System.IO;
 using System.Drawing;
-using PluginInterface;
-using PluginInterface.Images;
+using Ekona;
+using Ekona.Images;
 
 namespace TC_UTK
 {
     class Images : MapBase
     {
+        IPluginHost pluginHost;
         ImageBase img;
         PaletteBase pal;
         bool ismap;
 
         public Images(IPluginHost pluginHost, string file, int id)
-            : base(pluginHost, file, id) { }
+            : base(file, id) { this.pluginHost = pluginHost; }
 
         public override void Read(string fileIn)
         {
@@ -74,14 +75,14 @@ namespace TC_UTK
             // Get palette
             br.BaseStream.Position = pal_offset + 4;
             Color[] colors = Actions.BGR555ToColor(br.ReadBytes(0x200));
-            pal = new RawPalette(pluginHost, new Color[][] { colors }, false, ColorFormat.colors256);
+            pal = new RawPalette(new Color[][] { colors }, false, ColorFormat.colors256);
 
             // Unknown (probably like a map)
             br.BaseStream.Position = unk_offset;
             int width = br.ReadByte() * 8;
             int height = br.ReadByte() * 8;
 
-            img = new RawImage(pluginHost, data, TileForm.Horizontal, ColorFormat.colors256, width, height, false);
+            img = new RawImage(data, TileForm.Horizontal, ColorFormat.colors256, width, height, false);
             ismap = false;
 
             br.Close();
@@ -120,7 +121,7 @@ namespace TC_UTK
             Encryption enc = new Encryption(data);
             data = enc.Decrypt();
 
-            img = new RawImage(pluginHost, data, TileForm.Horizontal, format, width, height, false);
+            img = new RawImage(data, TileForm.Horizontal, format, width, height, false);
 
             // Read palette
             if ((bpp == 0x18 || bpp == 0x1A) && pluginHost.Get_Palette().Loaded)
@@ -129,7 +130,7 @@ namespace TC_UTK
             {
                 br.BaseStream.Position = pal_offset;
                 Color[] colors = Actions.BGR555ToColor(br.ReadBytes(pal_size));
-                pal = new RawPalette(pluginHost, new Color[][] { colors }, false, ColorFormat.colors16);
+                pal = new RawPalette(new Color[][] { colors }, false, ColorFormat.colors16);
             }
 
             br.Close();

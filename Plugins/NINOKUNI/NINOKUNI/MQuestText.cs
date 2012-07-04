@@ -27,8 +27,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.IO;
 using System.Xml;
+using System.Xml.Linq;
 using System.Windows.Forms;
-using PluginInterface;
+using Ekona;
 
 namespace NINOKUNI
 {
@@ -60,6 +61,7 @@ namespace NINOKUNI
             numBlock_ValueChanged(null, null);
         }
 
+
         private MainQuest ReadFile(string file)
         {
             BinaryReader br = new BinaryReader(File.OpenRead(file));
@@ -82,6 +84,7 @@ namespace NINOKUNI
                     MainQuest.Block.Element e = new MainQuest.Block.Element();
                     e.size = br.ReadUInt16();
                     e.text = new String(Encoding.GetEncoding(932).GetChars(br.ReadBytes((int)e.size)));
+                    e.text = Helper.SJISToLatin(e.text);
 
                     elements.Add(e);
                     pos += 2 + e.size;
@@ -109,7 +112,7 @@ namespace NINOKUNI
                 for (int e = 0; e < mq.blocks[i].elements.Length; e++)
                 {
                     bw.Write(mq.blocks[i].elements[e].size);
-                    bw.Write(enc.GetBytes(mq.blocks[i].elements[e].text));
+                    bw.Write(enc.GetBytes(Helper.LatinToSJIS(mq.blocks[i].elements[e].text)));
                 }
                 bw.Write((byte)0x00);
             }
@@ -123,7 +126,7 @@ namespace NINOKUNI
             for (int i = 0; i < block.elements.Length; i++)
             {
                 MainQuest.Block.Element e = block.elements[i];
-                e.size = (ushort)enc.GetByteCount(e.text);
+                e.size = (ushort)enc.GetByteCount(Helper.LatinToSJIS(e.text));
                 block.elements[i] = e;
 
                 size += (ushort)(e.size + 2);

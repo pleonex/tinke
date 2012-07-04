@@ -122,7 +122,7 @@ namespace Tinke
                 try
                 {
 
-                    if (fileName.EndsWith("PluginInterface.dll"))
+                    if (fileName.EndsWith("Ekona.dll"))
                         continue;
 
                     

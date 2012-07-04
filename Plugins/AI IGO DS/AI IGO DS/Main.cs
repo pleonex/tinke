@@ -22,8 +22,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using PluginInterface;
-using PluginInterface.Images;
+using Ekona;
+using Ekona.Images;
 
 namespace AI_IGO_DS
 {
@@ -44,65 +44,75 @@ namespace AI_IGO_DS
 
             return false;
         }
-        public Format Get_Format(string nombre, byte[] magic, int id)
+        public Format Get_Format(sFile file, byte[] magic)
         {
-            nombre = nombre.ToUpper();
-
-            if (nombre.EndsWith(".ANCL"))
+            if (file.name.ToUpper().EndsWith(".ANCL"))
                 return Format.Palette;
-            else if (nombre.EndsWith(".ANCG"))
+            else if (file.name.ToUpper().EndsWith(".ANCG"))
                 return Format.Tile;
-            else if (nombre.EndsWith(".ATEX"))
+            else if (file.name.ToUpper().EndsWith(".ATEX"))
                 return Format.Tile;
-            else if (nombre.EndsWith(".ANSC"))
+            else if (file.name.ToUpper().EndsWith(".ANSC"))
                 return Format.Map;
-            else if (nombre.EndsWith("FAT.BIN") || nombre.EndsWith("FNT.BIN") || nombre.EndsWith("ARM9.BIN") ||
-                    nombre.EndsWith("ARM7.BIN"))
+            else if (file.name.ToUpper().EndsWith("FAT.BIN") || file.name.ToUpper().EndsWith("FNT.BIN") ||
+                    file.name.ToUpper().EndsWith("ARM9.BIN") || file.name.ToUpper().EndsWith("ARM7.BIN"))
                 return Format.System;
-            else if (nombre.EndsWith(".BIN") || nombre.EndsWith(".R00"))
+            else if (file.name.ToUpper().EndsWith(".BIN") || file.name.ToUpper().EndsWith(".R00"))
                 return Format.FullImage;
 
             return Format.Unknown;
         }
 
-        public void Read(string archivo, int id)
+        public void Read(sFile file)
         {
-            if (archivo.ToUpper().EndsWith(".ANCL"))
-                new ANCL(pluginHost, archivo, id);
-            else if (archivo.ToUpper().EndsWith(".ANCG"))
-                new ANCG(pluginHost, archivo, id);
-            else if (archivo.ToUpper().EndsWith(".ANSC"))
-                new ANSC(pluginHost, archivo, id);
-            else if (archivo.ToUpper().EndsWith(".ATEX"))
-                new ATEX(pluginHost, archivo, id);
+            if (file.name.ToUpper().EndsWith(".ANCL"))
+            {
+                ANCL ancl = new ANCL(file.path, file.id, file.name);
+                pluginHost.Set_Palette(ancl);
+            }
+            else if (file.name.ToUpper().EndsWith(".ANCG"))
+            {
+                ANCG ancg = new ANCG(file.path, file.id, file.name);
+                pluginHost.Set_Image(ancg);
+            }
+            else if (file.name.ToUpper().EndsWith(".ANSC"))
+            {
+                ANSC ansc = new ANSC(file.path, file.id, file.name);
+                pluginHost.Set_Map(ansc);
+            }
+            else if (file.name.ToUpper().EndsWith(".ATEX"))
+            {
+                ATEX atex = new ATEX(file.path, file.id, file.name);
+                pluginHost.Set_Image(atex);
+            }
         }
-        public Control Show_Info(string archivo, int id)
+        public Control Show_Info(sFile file)
         {
-            Read(archivo, id);
+            Read(file);
 
-            if (archivo.ToUpper().EndsWith(".ANCL"))
+            if (file.name.ToUpper().EndsWith(".ANCL"))
                 return new PaletteControl(pluginHost, pluginHost.Get_Palette());
 
-            if (archivo.ToUpper().EndsWith(".ANCG") && pluginHost.Get_Palette().Loaded)
+            if (file.name.ToUpper().EndsWith(".ANCG") && pluginHost.Get_Palette().Loaded)
                 return new ImageControl(pluginHost, pluginHost.Get_Image(), pluginHost.Get_Palette());
 
-            if (archivo.ToUpper().EndsWith(".ANSC") && pluginHost.Get_Palette().Loaded && pluginHost.Get_Image().Loaded)
+            if (file.name.ToUpper().EndsWith(".ANSC") && pluginHost.Get_Palette().Loaded && pluginHost.Get_Image().Loaded)
                 return new ImageControl(pluginHost, pluginHost.Get_Image(), pluginHost.Get_Palette(), pluginHost.Get_Map());
 
-            if (archivo.ToUpper().EndsWith(".ATEX") && pluginHost.Get_Palette().Loaded)
+            if (file.name.ToUpper().EndsWith(".ATEX") && pluginHost.Get_Palette().Loaded)
                 return new ImageControl(pluginHost, pluginHost.Get_Image(), pluginHost.Get_Palette());
 
-            if (archivo.ToUpper().EndsWith(".BIN") && !archivo.EndsWith("fat.bin") && !archivo.EndsWith("fnt.bin") &&
-                !archivo.EndsWith("arm9.bin") && !archivo.EndsWith("arm7.bin"))
-                return new BinControl(pluginHost, new BIN(pluginHost, archivo, id));
+            if (file.name.ToUpper().EndsWith(".BIN") && !file.name.ToUpper().EndsWith("fat.bin") && !file.name.ToUpper().EndsWith("fnt.bin") &&
+                !file.name.ToUpper().EndsWith("arm9.bin") && !file.name.ToUpper().EndsWith("arm7.bin"))
+                return new BinControl(pluginHost, new BIN(file.path, file.id, file.name));
 
-            if (archivo.ToUpper().EndsWith(".R00"))
-                return new R00(pluginHost, archivo, id).Get_Control();
+            if (file.name.ToUpper().EndsWith(".R00"))
+                return new R00(pluginHost, file.path, file.id).Get_Control();
 
             return new Control();
         }
 
-        public String Pack(ref sFolder unpacked, string file, int id) { return null; }
-        public sFolder Unpack(string file, int id) { return new sFolder(); }
+        public String Pack(ref sFolder unpacked, sFile file) { return null; }
+        public sFolder Unpack(sFile file) { return new sFolder(); }
     }
 }

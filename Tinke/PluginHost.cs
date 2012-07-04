@@ -1,30 +1,35 @@
-﻿/*
- * Copyright (C) 2011  pleoNeX
- *
- *   This program is free software: you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation, either version 3 of the License, or
- *   (at your option) any later version.
- *
- *   This program is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU General Public License for more details.
- *
- *   You should have received a copy of the GNU General Public License
- *   along with this program.  If not, see <http://www.gnu.org/licenses/>. 
- *
- * Programador: pleoNeX
- * 
- */
+﻿// ----------------------------------------------------------------------
+// <copyright file="PluginHost.cs" company="none">
+
+// Copyright (C) 2012
+//
+//   This program is free software: you can redistribute it and/or modify
+//   it under the terms of the GNU General Public License as published by 
+//   the Free Software Foundation, either version 3 of the License, or
+//   (at your option) any later version.
+//
+//   This program is distributed in the hope that it will be useful, 
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//   GNU General Public License for more details. 
+//
+//   You should have received a copy of the GNU General Public License
+//   along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+//
+// </copyright>
+
+// <author>pleoNeX</author>
+// <email>benito356@gmail.com</email>
+// <date>24/06/2012 14:36:06</date>
+// -----------------------------------------------------------------------
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Drawing;
-using PluginInterface;
-using PluginInterface.Images;
+using Ekona;
+using Ekona.Images;
 
 namespace Tinke
 {
@@ -75,51 +80,12 @@ namespace Tinke
 
         public void Set_Object(Object objects) { this.objects = objects; }
 
-        public Color[][] Palette_4bppTo8bpp(Color[][] palette) { return Convertir.Palette_4bppTo8bpp(palette); }
-        public Color[][] Palette_8bppTo4bpp(Color[][] palette) { return Convertir.Palette_8bppTo4bpp(palette); }
-
-        public Byte[] Bit4ToBit8(byte[] bits4) { return Convertir.Bit4ToBit8(bits4); }
-        public Byte[] Bit8ToBit4(byte[] bits8) { return Convertir.Bit8ToBit4(bits8); }
-        public byte[] BytesToBits(byte[] bytes) { return Tools.Helper.BytesToBits(bytes); }
-        public byte[] BitsToBytes(byte[] bits) { return Tools.Helper.BitsToBytes(bits); }
-
-        public Bitmap Bitmaps_NCLR(Color[] colors) { return Actions.Get_Image(colors); }
-
-        public NTFT Transform_NSCR(NTFS[] map, ref NTFT ntft, int startInfo = 0)
-        {
-            byte[] num_palette;
-            ntft.tiles = Actions.Apply_Map(map, ntft.tiles, out num_palette, 8, startInfo);
-            ntft.nPalette = num_palette;
-
-            return ntft;
-        }
-
-        public Bitmap Bitmap_NTFT(NTFT tiles, Color[][] palette, TileForm tileOrder, int startTile, int tilesX, int tilesY, int zoom = 1)
-        {
-            return null; // return Imagen_NCGR.Get_Image(tiles, palette, tileOrder, startTile, tilesX, tilesY, zoom);
-        }
-        public byte[][] MergeImage(byte[][] originalTile, byte[][] newTiles, int startTile)
-        {
-            return Imagen_NCGR.MergeImage(originalTile, newTiles, startTile);
-        }
-
-        public Size Get_OAMSize(byte byte1, byte byte2) { return Actions.Get_OAMSize(byte1, byte2); }
-
-        public string[] PluginList()
-        {
-            return event_PluginList();
-        }
+        public string[] PluginList() { return event_PluginList(); }
         public event Func<string[]> event_PluginList;
-        public Object Call_Plugin(string[] param, int id, int action)
-        {
-            return event_CallPlugin(param, id, action);
-        }
+        public Object Call_Plugin(string[] param, int id, int action) { return event_CallPlugin(param, id, action); }
         public event Func<string[], int, int, object> event_CallPlugin;
 
-        public void Set_Files(sFolder archivos)
-        {
-            extraidos = archivos;
-        }
+        public void Set_Files(sFolder archivos) { extraidos = archivos; }
         public sFolder Get_Files()
         {
             sFolder devuelta = extraidos;
@@ -138,10 +104,16 @@ namespace Tinke
             return Tools.Helper.Get_Bytes(offset, length, Search_File((short)id));
         }
 
-        public string Get_TempFolder()
+        public string Get_LanguageFolder()
         {
-            return tempFolder;
+            return Application.StartupPath + System.IO.Path.DirectorySeparatorChar + "langs" + System.IO.Path.DirectorySeparatorChar;
         }
+
+        public string Get_TempFile()
+        {
+            return tempFolder + System.IO.Path.DirectorySeparatorChar + System.IO.Path.GetRandomFileName();
+        }
+        public string Get_TempFolder() { return tempFolder; }
         public void Set_TempFolder(string newPath)
         {
             tempFolder = newPath;
@@ -174,12 +146,5 @@ namespace Tinke
 
         public event Action<int, string> ChangeFile_Event;
         public void ChangeFile(int id, string newFile) { ChangeFile_Event(id, newFile); }
-
-        //public NCLR BitmapToPalette(string bitmap, int paletteIndex = 0) { return Imagen_NCLR.BitmapToPalette(bitmap, paletteIndex); }
-        //public NCGR BitmapToTile(string bitmap, TileForm tileOrder) { return Imagen_NCGR.BitmapToTile(bitmap, tileOrder); }
-        //public NSCR Create_BasicMap(int nTiles, int width, int height) { return Imagen_NSCR.Create_BasicMap(nTiles, width, height); }
-
-        public void Create_APNG(string fileout, Bitmap[] frames, int delay, int loops) { Tools.APNG.Crear_APNG(frames, fileout, delay, loops); }
-        public void Create_APNG(string fileout, String[] frames, int delay, int loops) { Tools.APNG.Crear_APNG(frames, fileout, delay, loops); }
     }
 }

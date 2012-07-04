@@ -23,7 +23,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.IO;
-using PluginInterface;
+using Ekona;
 
 namespace KIRBY_DRO
 {
@@ -45,29 +45,27 @@ namespace KIRBY_DRO
             else
                 return false;
         }
-        public Format Get_Format(string nombre, byte[] magic, int id)
+        public Format Get_Format(sFile file, byte[] magic)
         {
-            nombre = nombre.ToUpper();
-
-            if (nombre.EndsWith(".BIN"))
+            if (file.name.ToUpper().EndsWith(".BIN"))
                 return Format.FullImage;
 
             return Format.Unknown;
         }
 
 
-        public void Read(string archivo, int id)
+        public void Read(sFile file)
         {
         }
-        public Control Show_Info(string archivo, int id)
+        public Control Show_Info(sFile file)
         {
-            if (archivo.ToUpper().EndsWith(".BIN"))
-                return new Bin(archivo, id, pluginHost).Get_Control();
+            if (file.name.ToUpper().EndsWith(".BIN"))
+                return new Bin(file.path, file.id, pluginHost, file.name).Get_Control();
 
             return new Control();
         }
 
-        public String Pack(ref sFolder unpacked, string file, int id) { return null; }
-        public sFolder Unpack(string file, int id) { return new sFolder(); }
+        public String Pack(ref sFolder unpacked, sFile file) { return null; }
+        public sFolder Unpack(sFile file) { return new sFolder(); }
     }
 }

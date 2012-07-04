@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
-using PluginInterface;
-using PluginInterface.Images;
+using Ekona;
+using Ekona.Images;
 
 namespace Images
 {
@@ -12,7 +12,7 @@ namespace Images
     {
         sNSCR nscr;
 
-        public NSCR(IPluginHost pluginHost, string file, int id) : base(pluginHost, file, id) { }
+        public NSCR(string file, int id, string fileName = "") : base(file, id, fileName) { }
 
         public override void Read(string fileIn)
         {
@@ -92,7 +92,7 @@ namespace Images
 
         public struct sNSCR      // Nintendo SCreen Resource
         {
-            public Header header;
+            public NitroHeader header;
             public NRCS nrcs;
 
             public struct NRCS

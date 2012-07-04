@@ -21,7 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
-using PluginInterface;
+using Ekona;
 
 namespace _3DModels
 {
@@ -35,7 +35,7 @@ namespace _3DModels
             this.pluginHost = pluginHost;
         }
 
-        public Format Get_Format(string nombre, byte[] magic, int id)
+        public Format Get_Format(sFile file, byte[] magic)
         {
             string ext = new String(Encoding.ASCII.GetChars(magic));
 
@@ -47,21 +47,21 @@ namespace _3DModels
             return Format.Unknown;
         }
 
-        public void Read(string file, int id)
+        public void Read(sFile file)
         {
-            BinaryReader br = new BinaryReader(File.OpenRead(file));
+            BinaryReader br = new BinaryReader(File.OpenRead(file.path));
             string ext = new String(br.ReadChars(4));
             br.Close();
 
             if (ext == "BTX0")
             {
-                sBTX0 btx = BTX0.Read(file, id, pluginHost);
+                sBTX0 btx = BTX0.Read(file.path, file.id, pluginHost);
 
                 // Extract texture to temp folder
                 for (int i = 0; i < btx.texture.texInfo.num_objs; i++)
                 {
                     string fileOut = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar +
-                        Path.GetFileName(file).Substring(12) + '_' + btx.texture.texInfo.names[i] + ".png";
+                        file.name + '_' + btx.texture.texInfo.names[i] + ".png";
                     if (File.Exists(fileOut))
                         fileOut = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + Path.GetRandomFileName() +
                             '_' + btx.texture.texInfo.names[i] + ".png";
@@ -70,20 +70,20 @@ namespace _3DModels
                 }
             }
         }
-        public System.Windows.Forms.Control Show_Info(string file, int id)
+        public System.Windows.Forms.Control Show_Info(sFile file)
         {
-            BinaryReader br = new BinaryReader(File.OpenRead(file));
+            BinaryReader br = new BinaryReader(File.OpenRead(file.path));
             string ext = new String(br.ReadChars(4));
             br.Close();
 
             if (ext == "BTX0")
             {
-                btx = BTX0.Read(file, id, pluginHost);
+                btx = BTX0.Read(file.path, file.id, pluginHost);
                 return new TextureControl(pluginHost, btx);
             }
             else if (ext == "BMD0")
             {
-                sBMD0 bmd = BMD0.Read(file, id, pluginHost);
+                sBMD0 bmd = BMD0.Read(file.path, file.id, pluginHost);
 
                 if (bmd.header.numSect == 2)
                     return new ModelControl(pluginHost, bmd);
@@ -96,7 +96,7 @@ namespace _3DModels
             return new System.Windows.Forms.Control();
         }
 
-        public String Pack(ref sFolder unpacked, string file) { return null; }
-        public sFolder Unpack(string file) { return new sFolder(); }
+        public String Pack(ref sFolder unpacked, sFile file) { return null; }
+        public sFolder Unpack(sFile file) { return new sFolder(); }
     }
 }

@@ -26,7 +26,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
-using PluginInterface;
+using Ekona;
 
 namespace Pack.Games
 {
@@ -48,34 +48,33 @@ namespace Pack.Games
             return false;
         }
 
-        public Format Get_Format(string fileName, byte[] magic, int id)
+        public Format Get_Format(sFile file, byte[] magic)
         {
             if (BitConverter.ToUInt32(magic, 0) == 0x00015618)
                 return Format.Pack;
-            if (id == 0x16)
+            if (file.id == 0x16)
                 return Format.Pack;
 
             return Format.Unknown;
         }
 
-
-        public string Pack(ref sFolder unpacked, string file, int id)
+        public string Pack(ref sFolder unpacked, sFile file)
         {
             return null;
         }
-        public sFolder Unpack(string file, int id)
+        public sFolder Unpack(sFile file)
         {
-            if (id == 0x16)
-                return Unpack_Sound(file);
+            if (file.id == 0x16)
+                return Unpack_Sound(file.path, file.name);
 
-            return Unpack_Images(file);
+            return Unpack_Images(file.path);
             return new sFolder();
         }
 
-        public void Read(string file, int id)
+        public void Read(sFile file)
         {
         }
-        public System.Windows.Forms.Control Show_Info(string file, int id)
+        public System.Windows.Forms.Control Show_Info(sFile file)
         {
             return new System.Windows.Forms.Control();
         }
@@ -111,7 +110,7 @@ namespace Pack.Games
             br.Close();
             return unpacked;
         }
-        private sFolder Unpack_Sound(string file)
+        private sFolder Unpack_Sound(string file, string name)
         {
             BinaryReader br = new BinaryReader(File.OpenRead(file));
             sFolder unpacked = new sFolder();
@@ -123,7 +122,7 @@ namespace Pack.Games
             for (int i = 0; i < num_files; i++)
             {
                 sFile newFile = new sFile();
-                newFile.name = "Sound" + i.ToString() + ".bin";
+                newFile.name = name + '_' + i.ToString() + ".bin";
                 newFile.offset = br.ReadUInt32();
 
                 if (i + 1 != num_files)

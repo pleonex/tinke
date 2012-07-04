@@ -1,8 +1,32 @@
-﻿using System;
+﻿// ----------------------------------------------------------------------
+// <copyright file="Main.cs" company="none">
+
+// Copyright (C) 2012
+//
+//   This program is free software: you can redistribute it and/or modify
+//   it under the terms of the GNU General Public License as published by 
+//   the Free Software Foundation, either version 3 of the License, or
+//   (at your option) any later version.
+//
+//   This program is distributed in the hope that it will be useful, 
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//   GNU General Public License for more details. 
+//
+//   You should have received a copy of the GNU General Public License
+//   along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+//
+// </copyright>
+
+// <author>pleoNeX</author>
+// <email>benito356@gmail.com</email>
+// <date>29/06/2012 2:10:31</date>
+// -----------------------------------------------------------------------
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
-using PluginInterface;
+using Ekona;
 
 namespace TOKIMEKIGS3S
 {
@@ -24,11 +48,11 @@ namespace TOKIMEKIGS3S
             return false;
         }
 
-        public Format Get_Format(string fileName, byte[] magic, int id)
+        public Format Get_Format(sFile file, byte[] magic)
         {
             String ext = new string(Encoding.ASCII.GetChars(magic));
 
-            if (fileName.ToUpper().EndsWith(".LZS"))
+            if (file.name.ToUpper().EndsWith(".LZS"))
                 return Format.Compressed;
             else if (ext == "RESC")
                 return Format.Pack;
@@ -36,37 +60,37 @@ namespace TOKIMEKIGS3S
             return Format.Unknown;
         }
 
-        public string Pack(ref sFolder unpacked, string file, int id)
+        public string Pack(ref sFolder unpacked, sFile file)
         {
-            if (file.ToUpper().EndsWith(".LZS"))
-                return LZS.Compress(unpacked.files[0].path, file, pluginHost);
-            else if (file.ToUpper().EndsWith(".RESC"))
-                return RESC.Pack(file, ref unpacked, pluginHost);
+            if (file.name.ToUpper().EndsWith(".LZS"))
+                return LZS.Compress(unpacked.files[0].path, file.path, pluginHost);
+            else if (file.name.ToUpper().EndsWith(".RESC"))
+                return RESC.Pack(file.path, ref unpacked, pluginHost);
 
             return null;
         }
-        public sFolder Unpack(string file, int id)
+        public sFolder Unpack(sFile file)
         {
-            if (file.ToUpper().EndsWith(".LZS"))
+            if (file.name.ToUpper().EndsWith(".LZS"))
             {
                 sFolder decompressed = new sFolder();
                 decompressed.files = new List<sFile>();
-                decompressed.files.Add(LZS.Decompress(file, pluginHost));
+                decompressed.files.Add(LZS.Decompress(file.path, pluginHost));
 
                 return decompressed;
             }
-            else if (file.ToUpper().EndsWith(".RESC"))
+            else if (file.name.ToUpper().EndsWith(".RESC"))
             {
-                return RESC.Unpack(file, pluginHost);
+                return RESC.Unpack(file.path, pluginHost);
             }
 
             return new sFolder();
         }
 
-        public void Read(string file, int id)
+        public void Read(sFile file)
         {
         }
-        public System.Windows.Forms.Control Show_Info(string file, int id)
+        public System.Windows.Forms.Control Show_Info(sFile file)
         {
             return new System.Windows.Forms.Control();
         }

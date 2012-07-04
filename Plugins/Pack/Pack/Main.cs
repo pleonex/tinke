@@ -22,7 +22,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using PluginInterface;
+using Ekona;
 
 namespace Pack
 {
@@ -34,50 +34,45 @@ namespace Pack
         {
             this.pluginHost = pluginHost;
         }
-        public Format Get_Format(string nombre, byte[] magic, int id)
+        public Format Get_Format(sFile file, byte[] magic)
         {
-            nombre = nombre.ToUpper();
             string type = new String(Encoding.ASCII.GetChars(magic));
 
-            if (type == "NARC" || type == "CRAN" || (nombre.EndsWith("UTILITY.BIN") && magic[0] == 0x10))
+            if (type == "NARC" || type == "CRAN" || (file.name.ToUpper().EndsWith("UTILITY.BIN") && magic[0] == 0x10))
                 return Format.Pack;
 
             return Format.Unknown;
         }
 
-        public void Read(string archivo, int idArchivo)
+        public void Read(sFile file)
         {
-            System.IO.BinaryReader br = new System.IO.BinaryReader(System.IO.File.OpenRead(archivo));
-            string type = new String(Encoding.ASCII.GetChars(br.ReadBytes(4)));
-            br.Close();
-
         }
-        public Control Show_Info(string file, int id)
+        public Control Show_Info(sFile file)
         {
             return new Control();
         }
 
-        public String Pack(ref sFolder unpacked, string file) 
+        public String Pack(ref sFolder unpacked, sFile file) 
         {
-            System.IO.BinaryReader br = new System.IO.BinaryReader(System.IO.File.OpenRead(file));
+            System.IO.BinaryReader br = new System.IO.BinaryReader(System.IO.File.OpenRead(file.path));
             string type = new String(Encoding.ASCII.GetChars(br.ReadBytes(4)));
             br.Close();
 
             if (type == "NARC" || type == "CRAN")
                 return new NARC(pluginHost).Pack(file, ref unpacked);
-            else if (file.ToUpper().EndsWith("UTILITY.BIN"))
-                return new Utility(pluginHost).Pack(file, ref unpacked);
+            else if (file.name.ToUpper().EndsWith("UTILITY.BIN"))
+                return new Utility(pluginHost).Pack(file.path, ref unpacked);
 
             return null;
         }
-        public sFolder Unpack(string file)
+        public sFolder Unpack(sFile file)
         {
-            System.IO.BinaryReader br = new System.IO.BinaryReader(System.IO.File.OpenRead(file));
+            System.IO.BinaryReader br = new System.IO.BinaryReader(System.IO.File.OpenRead(file.path));
             string type = new String(Encoding.ASCII.GetChars(br.ReadBytes(4)));
             br.Close();
 
-            if (file.ToUpper().EndsWith("UTILITY.BIN"))
-                return new Utility(pluginHost).Unpack(file);
+            if (file.name.ToUpper().EndsWith("UTILITY.BIN"))
+                return new Utility(pluginHost).Unpack(file.path);
             else if (type == "NARC" || type == "CRAN")
                 return new NARC(pluginHost).Unpack(file);
 

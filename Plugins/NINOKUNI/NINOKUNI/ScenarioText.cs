@@ -27,8 +27,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.IO;
 using System.Xml;
+using System.Xml.Linq;
 using System.Windows.Forms;
-using PluginInterface;
+using Ekona;
 
 namespace NINOKUNI
 {
@@ -83,16 +84,21 @@ namespace NINOKUNI
                     e.size = br.ReadByte();
 
                     if (i == 0)
+                    {
                         e.text = Get_Furigana(Encoding.GetEncoding(932).GetChars(br.ReadBytes(e.size)));
+                        e.text = Helper.SJISToLatin(e.text);
+                    }
                     else if (i == 1)
                     {
                         e.text = Get_Furigana(Encoding.GetEncoding(932).GetChars(br.ReadBytes(e.size)));
+                        e.text = Helper.SJISToLatin(e.text);
                         e.unk = br.ReadUInt16();
                     }
                     else if (i == 2)
                     {
                         e.unk = br.ReadUInt16();
                         e.text = Get_Furigana(Encoding.GetEncoding(932).GetChars(br.ReadBytes(e.size - 4)));
+                        e.text = Helper.SJISToLatin(e.text);
                         e.unk2 = br.ReadUInt16();
                     }
 
@@ -126,7 +132,7 @@ namespace NINOKUNI
                     if (i == 2)
                         bw.Write(sce.blocks[i].elements[j].unk);
 
-                    bw.Write(enc.GetBytes(Set_Furigana(sce.blocks[i].elements[j].text)));
+                    bw.Write(enc.GetBytes(Helper.LatinToSJIS(Set_Furigana(sce.blocks[i].elements[j].text))));
 
                     if (i == 1)
                         bw.Write(sce.blocks[i].elements[j].unk);
@@ -148,7 +154,7 @@ namespace NINOKUNI
             block = sce.blocks[0];
             for (int i = 0; i < block.elements.Length; i++)
             {
-                block.elements[i].size = (byte)enc.GetByteCount(Set_Furigana(block.elements[i].text));
+                block.elements[i].size = (byte)enc.GetByteCount(Helper.LatinToSJIS(Set_Furigana(block.elements[i].text)));
                 size += block.elements[i].size + 5; // Text + ID + Size
             }
             size += 4;  // 0xFFFFFFFF
@@ -160,7 +166,7 @@ namespace NINOKUNI
             size = 0;
             for (int i = 0; i < block.elements.Length; i++)
             {
-                block.elements[i].size = (byte)enc.GetByteCount(Set_Furigana(block.elements[i].text));
+                block.elements[i].size = (byte)enc.GetByteCount(Helper.LatinToSJIS(Set_Furigana(block.elements[i].text)));
                 size += block.elements[i].size + 7; // Text + ID + Size + Unknown
             }
             size += 4;  // 0xFFFFFFFF
@@ -172,7 +178,7 @@ namespace NINOKUNI
             size = 0;
             for (int i = 0; i < block.elements.Length; i++)
             {
-                block.elements[i].size = (byte)(enc.GetByteCount(Set_Furigana(block.elements[i].text)) + 4);
+                block.elements[i].size = (byte)(enc.GetByteCount(Helper.LatinToSJIS(Set_Furigana(block.elements[i].text))) + 4);
                 size += block.elements[i].size + 5; // Text + ID + Size
             }
             size += 4;  // 0xFFFFFFFF

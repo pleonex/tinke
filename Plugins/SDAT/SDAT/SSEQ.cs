@@ -22,7 +22,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
-using PluginInterface;
+using Ekona;
 
 namespace SDAT
 {
@@ -66,7 +66,7 @@ namespace SDAT
 
     public struct sSSEQ
     {
-        public Header generic;
+        public NitroHeader generic;
         public Data data;
 
         public struct Data

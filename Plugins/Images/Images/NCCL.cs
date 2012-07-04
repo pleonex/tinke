@@ -4,8 +4,8 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Drawing;
-using PluginInterface;
-using PluginInterface.Images;
+using Ekona;
+using Ekona.Images;
 
 namespace Images
 {
@@ -13,7 +13,7 @@ namespace Images
     {
         sNCCL nccl;
 
-        public NCCL(IPluginHost pluginHost, string file, int id) : base(pluginHost, file, id)
+        public NCCL(string file, int id, string fileName = "") : base(file, id, fileName)
         {
         }
 
@@ -65,7 +65,7 @@ namespace Images
 
         public struct sNCCL
         {
-            public Header generic;     // Generic header
+            public NitroHeader generic;     // Generic header
             public PALT palt;
             public CMNT cmnt;
 

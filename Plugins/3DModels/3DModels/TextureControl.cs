@@ -26,8 +26,8 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Windows.Forms;
-using PluginInterface;
-using PluginInterface.Images;
+using Ekona;
+using Ekona.Images;
 
 namespace _3DModels
 {
@@ -174,7 +174,7 @@ namespace _3DModels
             picTex.Image = Draw_Texture(tile_data, texInfo, palette);
             Clipboard.SetImage(picTex.Image);
 
-            PaletteBase p = new RawPalette(pluginHost, new Color[][] { palette }, false, ColorFormat.colors256);
+            PaletteBase p = new RawPalette(new Color[][] { palette }, false, ColorFormat.colors256);
             picPalette.Image = p.Get_Image(0);
 
             Info(num_tex, num_pal);
@@ -187,7 +187,7 @@ namespace _3DModels
 
             Bitmap imagen = new Bitmap(info.width, info.height);
             if (info.format == 3) // 16-color 4 bits
-                data = pluginHost.Bit8ToBit4(data);
+                data = Ekona.Helper.BitsConverter.BytesToBit4(data);
             else if (info.format == 2) // 4-color 2 bits
                 data = Bit8ToBit2(data);
 

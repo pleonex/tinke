@@ -20,7 +20,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using PluginInterface;
+using Ekona;
 
 namespace Fonts
 {
@@ -32,7 +32,7 @@ namespace Fonts
         {
             this.pluginHost = pluginHost;
         }
-        public Format Get_Format(string nombre, byte[] magic, int id)
+        public Format Get_Format(sFile file, byte[] magic)
         {
             string ext = new String(Encoding.ASCII.GetChars(magic));
 
@@ -42,24 +42,24 @@ namespace Fonts
             return Format.Unknown;
         }
 
-        public void Read(string archivo, int id)
+        public void Read(sFile file)
         {
         }
-        public System.Windows.Forms.Control Show_Info(string archivo, int id)
+        public System.Windows.Forms.Control Show_Info(sFile file)
         {
-            System.IO.BinaryReader br = new System.IO.BinaryReader(System.IO.File.OpenRead(archivo));
+            System.IO.BinaryReader br = new System.IO.BinaryReader(System.IO.File.OpenRead(file.path));
             string ext = new String(br.ReadChars(4));
             br.Close();
 
             if (ext == "NFTR" || ext == "RTFN")
             {
-                return new FontControl(pluginHost, NFTR.Read(archivo, id, pluginHost.Get_Language()));
+                return new FontControl(pluginHost, NFTR.Read(file.path, file.id, pluginHost.Get_Language()));
             }
 
             return new System.Windows.Forms.Control();
         }
 
-        public String Pack(ref sFolder unpacked, string file) { return null; }
-        public sFolder Unpack(string file) { return new sFolder(); }
+        public String Pack(ref sFolder unpacked, sFile file) { return null; }
+        public sFolder Unpack(sFile file) { return new sFolder(); }
     }
 }

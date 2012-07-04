@@ -28,8 +28,9 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Drawing;
-using PluginInterface;
-using PluginInterface.Images;
+using Ekona;
+using Ekona.Images;
+using Ekona.Helper;
 
 namespace Tinke.Nitro
 {
@@ -92,11 +93,11 @@ namespace Tinke.Nitro
             nds.reserved3 = br.ReadUInt32();
 
             br.BaseStream.Position = 0x4000;
-            nds.secureCRC = (Tools.CRC16.Calcular(br.ReadBytes(0x4000)) == nds.secureCRC16) ? true : false;
+            nds.secureCRC = (CRC16.Calculate(br.ReadBytes(0x4000)) == nds.secureCRC16) ? true : false;
             br.BaseStream.Position = 0xC0;
-            nds.logoCRC = (Tools.CRC16.Calcular(br.ReadBytes(156)) == nds.logoCRC16) ? true : false;
+            nds.logoCRC = (CRC16.Calculate(br.ReadBytes(156)) == nds.logoCRC16) ? true : false;
             br.BaseStream.Position = 0x0;
-            nds.headerCRC = (Tools.CRC16.Calcular(br.ReadBytes(0x15E)) == nds.headerCRC16) ? true : false;
+            nds.headerCRC = (CRC16.Calculate(br.ReadBytes(0x15E)) == nds.headerCRC16) ? true : false;
 
             br.Close();
 
@@ -250,7 +251,7 @@ namespace Tinke.Nitro
             bn.spanishTitle = TitleToString(br.ReadBytes(0x100));
 
             br.BaseStream.Position = offset + 0x20;
-            bn.checkCRC = (Tools.CRC16.Calcular(br.ReadBytes(0x820)) == bn.CRC16) ? true : false;
+            bn.checkCRC = (CRC16.Calculate(br.ReadBytes(0x820)) == bn.CRC16) ? true : false;
 
             br.Close();
 
@@ -316,7 +317,7 @@ namespace Tinke.Nitro
             Bitmap imagen = new Bitmap(32, 32);
             Color[] paleta = Actions.BGR555ToColor(paletteData);
 
-            tileData = Tools.Helper.Bits8To4Bits(tileData);
+            tileData = BitsConverter.BytesToBit4(tileData);
             int i = 0;
             for (int hi = 0; hi < 4; hi++)
             {

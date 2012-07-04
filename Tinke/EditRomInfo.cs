@@ -31,6 +31,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.IO;
+using Ekona.Helper;
 
 namespace Tinke
 {
@@ -148,7 +149,7 @@ namespace Tinke
             Nitro.NDS.EscribirBanner(tempBanner, banner);
             BinaryReader br = new BinaryReader(File.OpenRead(tempBanner));
             br.BaseStream.Position = 0x20;
-            banner.CRC16 = (ushort)Tools.CRC16.Calcular(br.ReadBytes(0x820));
+            banner.CRC16 = (ushort)CRC16.Calculate(br.ReadBytes(0x820));
             banner.checkCRC = true;
             br.Close();
             File.Delete(tempBanner);
@@ -157,7 +158,7 @@ namespace Tinke
             string tempHeader = Path.GetTempFileName();
             Nitro.NDS.EscribirCabecera(tempHeader, header, nintendoLogo);
             br = new BinaryReader(File.OpenRead(tempHeader));
-            header.headerCRC16 = (ushort)Tools.CRC16.Calcular(br.ReadBytes(0x15E));
+            header.headerCRC16 = (ushort)CRC16.Calculate(br.ReadBytes(0x15E));
             header.headerCRC = true;
             br.Close();
             File.Delete(tempHeader);
@@ -174,17 +175,17 @@ namespace Tinke
         // Control events
         private void txtBanReserved_Leave(object sender, EventArgs e)
         {
-            banner.reserved = Tools.Helper.StringToBytes(txtBanReserved.Text, 28);
+            banner.reserved = BitsConverter.StringToBytes(txtBanReserved.Text, 28);
             txtBanReserved.Text = BitConverter.ToString(banner.reserved);
         }
         private void txtReserved_Leave(object sender, EventArgs e)
         {
-            header.reserved = Tools.Helper.StringToBytes(txtReserved.Text, 9);
+            header.reserved = BitsConverter.StringToBytes(txtReserved.Text, 9);
             txtReserved.Text = BitConverter.ToString(header.reserved);
         }
         private void txtReserved2_Leave(object sender, EventArgs e)
         {
-            header.reserved2 = Tools.Helper.StringToBytes(txtReserved2.Text, 56);
+            header.reserved2 = BitsConverter.StringToBytes(txtReserved2.Text, 56);
             txtReserved2.Text = BitConverter.ToString(header.reserved2);
         }
 

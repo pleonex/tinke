@@ -23,14 +23,16 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Drawing;
-using PluginInterface;
-using PluginInterface.Images;
+using Ekona;
+using Ekona.Images;
 
 namespace TOTTEMPEST
 {
     public class APA : PaletteBase
     {
-        public APA(IPluginHost pluginHost, string file, int id) : base(pluginHost, file, id) { }
+        IPluginHost pluginHost;
+
+        public APA(IPluginHost pluginHost, string file, int id) : base(file, id) { this.pluginHost = pluginHost; }
 
         public override void Read(string file)
         {
@@ -39,7 +41,7 @@ namespace TOTTEMPEST
             Color[][] colors = new Color[(int)(br.BaseStream.Length / 0x20)][];
             // Get colors
             for (int i = 0; i < colors.Length; i++)
-                colors[i] = pluginHost.BGR555ToColor(br.ReadBytes((int)0x20));
+                colors[i] = Actions.BGR555ToColor(br.ReadBytes((int)0x20));
 
             br.Close();
 
@@ -52,7 +54,7 @@ namespace TOTTEMPEST
 
             // Write all the colors
             for (int i = 0; i < palette.Length; i++)
-                bw.Write(pluginHost.ColorToBGR555(palette[i]));
+                bw.Write(Actions.ColorToBGR555(palette[i]));
 
             for (; bw.BaseStream.Length != 0x200; )
                 bw.Write((byte)0x00);

@@ -23,7 +23,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.IO;
-using PluginInterface;
+using Ekona;
 
 namespace TXT
 {
@@ -35,21 +35,21 @@ namespace TXT
         {
             this.pluginHost = pluginHost;
         }
-        public Format Get_Format(string name, byte[] magic, int id)
+        public Format Get_Format(sFile file, byte[] magic)
         {
-            name = name.ToUpper();
+            file.name = file.name.ToUpper();
             string ext = new String(Encoding.ASCII.GetChars(magic));
 
-            if ((name.EndsWith("LZ.TXT") || name.EndsWith("LZ.XML")) && magic[0] == 0x10)
+            if ((file.name.EndsWith("LZ.TXT") || file.name.EndsWith("LZ.XML")) && magic[0] == 0x10)
                 return Format.Unknown;
 
-            if (name.EndsWith(".TXT") || name.EndsWith(".SADL") || name.EndsWith(".XML")
-                || name.EndsWith(".INI") || name.EndsWith(".H") || name.EndsWith(".XSADL")
-                || name.EndsWith(".BAT") || name.EndsWith(".SARC") || name.EndsWith(".SBDL")
-                || name.EndsWith(".C") || name.EndsWith("MAKEFILE") || name.EndsWith(".BSF")
-                || name.EndsWith(".LUA") || name.EndsWith(".CSV") || name.EndsWith(".SMAP")
-                || name.EndsWith("BUILDTIME") || name.EndsWith(".LUA~") || name.EndsWith(".INI.TEMPLATE")
-                || name.EndsWith("LUA.BAK") || name.EndsWith(".NAIX") || name.EndsWith(".NBSD"))
+            if (file.name.EndsWith(".TXT") || file.name.EndsWith(".SADL") || file.name.EndsWith(".XML")
+                || file.name.EndsWith(".INI") || file.name.EndsWith(".H") || file.name.EndsWith(".XSADL")
+                || file.name.EndsWith(".BAT") || file.name.EndsWith(".SARC") || file.name.EndsWith(".SBDL")
+                || file.name.EndsWith(".C") || file.name.EndsWith("MAKEFILE") || file.name.EndsWith(".BSF")
+                || file.name.EndsWith(".LUA") || file.name.EndsWith(".CSV") || file.name.EndsWith(".SMAP")
+                || file.name.EndsWith("BUILDTIME") || file.name.EndsWith(".LUA~") || file.name.EndsWith(".INI.TEMPLATE")
+                || file.name.EndsWith("LUA.BAK") || file.name.EndsWith(".NAIX") || file.name.EndsWith(".NBSD"))
                 return Format.Text;
             else if (ext == "MESG")
                 return Format.Text;
@@ -57,17 +57,17 @@ namespace TXT
             return Format.Unknown;
         }
 
-        public void Read(string archivo, int id)
+        public void Read(sFile file)
         {
         }
-        public Control Show_Info(string archivo, int id)
+        public Control Show_Info(sFile file)
         {
-            BinaryReader br = new BinaryReader(File.OpenRead(archivo));
+            BinaryReader br = new BinaryReader(File.OpenRead(file.path));
 
             if (new String(Encoding.ASCII.GetChars(br.ReadBytes(4))) == "MESG")
             {
                 br.Close();
-                return new bmg(pluginHost, archivo).ShowInfo();
+                return new bmg(pluginHost, file.path).ShowInfo();
             }
             else
                 br.BaseStream.Position = 0x00;
@@ -75,10 +75,10 @@ namespace TXT
             byte[] txt = br.ReadBytes((int)br.BaseStream.Length);
             br.Close();
 
-            return new iTXT(txt, pluginHost, id);
+            return new iTXT(txt, pluginHost, file.id);
         }
 
-        public String Pack(ref sFolder unpacked, string file) { return null; }
-        public sFolder Unpack(string file) { return new sFolder(); }
+        public String Pack(ref sFolder unpacked, sFile file) { return null; }
+        public sFolder Unpack(sFile file) { return new sFolder(); }
     }
 }

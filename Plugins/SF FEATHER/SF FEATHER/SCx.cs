@@ -22,8 +22,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
-using PluginInterface;
-using PluginInterface.Images;
+using Ekona;
+using Ekona.Images;
 
 namespace SF_FEATHER
 {
@@ -31,7 +31,7 @@ namespace SF_FEATHER
     {
         sSCx scx;
 
-        public SCx(IPluginHost pluginHost, string file, int id) : base(pluginHost, file, id) { }
+        public SCx(string file, int id, string fileName = "") : base(file, id, fileName) { }
 
         public override void Read(string file)
         {
@@ -55,7 +55,6 @@ namespace SF_FEATHER
 
             br.Close();
             Set_Map(map, false, width, height);
-            pluginHost.Set_Map(this);
         }
         public override void Write(string fileOut, ImageBase image, PaletteBase palette)
         {

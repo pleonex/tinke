@@ -22,7 +22,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using PluginInterface;
+using Ekona;
 using System.IO;
 
 namespace SDAT
@@ -30,16 +30,14 @@ namespace SDAT
     public class SDAT : IPlugin
     {
         IPluginHost pluginHost;
-        string archivo;
 
         #region Plugin
         public void Initialize(IPluginHost pluginHost)
         {
             this.pluginHost = pluginHost;
         }
-        public Format Get_Format(string nombre, byte[] magic, int id)
+        public Format Get_Format(sFile file, byte[] magic)
         {
-            nombre = nombre.ToUpper();
             string ext = new String(System.Text.Encoding.ASCII.GetChars(magic));
 
             if (ext == "SDAT" || ext == "SWAV" || ext == "STRM")
@@ -48,27 +46,24 @@ namespace SDAT
             return Format.Unknown;
         }
  
-        public void Read(string archivo, int id)
+        public void Read(sFile file)
         {
         }
-        public Control Show_Info(string archivo, int id)
+        public Control Show_Info(sFile file)
         {
-            this.archivo = archivo;
-
-            return new iSDAT(Read(id), pluginHost);
+            return new iSDAT(Read_SDAT(file), pluginHost);
         }
   
-        public String Pack(ref sFolder unpacked, string file) { return null; }
-        public sFolder Unpack(string file) { return new sFolder(); }
+        public String Pack(ref sFolder unpacked, sFile file) { return null; }
+        public sFolder Unpack(sFile file) { return new sFolder(); }
         #endregion
 
-        private sSDAT Read(int id)
+        private sSDAT Read_SDAT(sFile file)
         {
             sSDAT sdat = new sSDAT();
-            sdat.id = id;
-            sdat.archivo = Path.GetTempFileName();
-            File.Copy(archivo, sdat.archivo, true);
-            BinaryReader br = new BinaryReader(new FileStream(archivo, FileMode.Open));
+            sdat.id = file.id;
+            sdat.archivo = file.path;
+            BinaryReader br = new BinaryReader(new FileStream(file.path, FileMode.Open));
             string h = new String(br.ReadChars(4));
 
             if (h == "SWAV")
@@ -76,11 +71,12 @@ namespace SDAT
                 sdat.files.root.id = 0x0F000;
                 sdat.files.root.name = "SWAV";
                 sdat.files.root.files = new List<Sound>();
+
                 Sound swavFile = new Sound();
                 swavFile.id = 0x00;
-                swavFile.name = new FileInfo(archivo).Name;
+                swavFile.name = file.name;
                 swavFile.offset = 0x00;
-                swavFile.size = (uint)new FileInfo(archivo).Length;
+                swavFile.size = file.size;
                 swavFile.type = FormatSound.SWAV;
                 swavFile.path = sdat.archivo;
                 sdat.files.root.files.Add(swavFile);
@@ -93,11 +89,12 @@ namespace SDAT
                 sdat.files.root.id = 0x0F000;
                 sdat.files.root.name = "STRM";
                 sdat.files.root.files = new List<Sound>();
+
                 Sound swavFile = new Sound();
                 swavFile.id = 0x00;
-                swavFile.name = new FileInfo(archivo).Name;
+                swavFile.name = file.name;
                 swavFile.offset = 0x00;
-                swavFile.size = (uint)new FileInfo(archivo).Length;
+                swavFile.size = file.size;
                 swavFile.type = FormatSound.STRM;
                 swavFile.path = sdat.archivo;
                 sdat.files.root.files.Add(swavFile);
@@ -412,7 +409,7 @@ namespace SDAT
             }
             catch { throw new Exception("There was an error reading the XML file of language."); }
 
-            FileSystem(ref sdat);
+            FileSystem(ref sdat, file.path);
 
             Set_Data(ref sdat);
 
@@ -442,7 +439,7 @@ namespace SDAT
         }
 
 
-        private void FileSystem(ref sSDAT sdat)
+        private void FileSystem(ref sSDAT sdat, string file)
         {
             #region Folder declaration
             Folder root = new Folder();
@@ -477,7 +474,7 @@ namespace SDAT
             strm.id = 0x0F006;
             #endregion
 
-            BinaryReader br = new BinaryReader(new FileStream (archivo, FileMode.Open));
+            BinaryReader br = new BinaryReader(new FileStream (file, FileMode.Open));
             for (int i = 0; i < sdat.fat.header.nRecords; i++)
             {
                 br.BaseStream.Position = sdat.fat.records[i].offset;
@@ -690,7 +687,7 @@ namespace SDAT
     {
         public String archivo;
         public int id;
-        public Header generico;
+        public NitroHeader generico;
         public Cabecera cabecera;
         public Symbol symbol;
         public Info info;

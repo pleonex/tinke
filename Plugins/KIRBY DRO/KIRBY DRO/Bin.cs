@@ -21,18 +21,19 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Drawing;
-using PluginInterface;
-using PluginInterface.Images;
+using Ekona;
+using Ekona.Images;
 
 namespace KIRBY_DRO
 {
     class Bin : MapBase
     {
+        IPluginHost pluginHost;
         PaletteBase palette;
         ImageBase image;
         bool isMap;
 
-        public Bin(string file, int id, IPluginHost pluginHost) : base(pluginHost, file, id) { }
+        public Bin(string file, int id, IPluginHost pluginHost, string fileName = "") : base(file, id, fileName) { this.pluginHost = pluginHost; }
 
         public override void Read(string fileIn)
         {
@@ -64,11 +65,11 @@ namespace KIRBY_DRO
             Color[][] colors = new Color[pal_length / (num_colors * 2)][];
             for (int i = 0; i < colors.Length; i++)
                 colors[i] = Actions.BGR555ToColor(br.ReadBytes((int)(num_colors * 2)));
-            palette = new RawPalette(pluginHost, colors, false, depth);
+            palette = new RawPalette(colors, false, depth, fileName);
 
             // Tile data
             Byte[] tiles = br.ReadBytes((int)tile_length);
-            image.Set_Tiles(tiles, width, height, depth, TileForm.Horizontal, false);
+            image = new RawImage(tiles, TileForm.Horizontal, depth, width, height, false, fileName);
 
             // Map
             if (isMap)

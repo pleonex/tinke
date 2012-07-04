@@ -27,7 +27,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.IO;
 using System.Windows.Forms;
-using PluginInterface;
+using Ekona;
 
 namespace INAZUMA11
 {

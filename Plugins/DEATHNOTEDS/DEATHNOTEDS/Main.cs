@@ -25,7 +25,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using PluginInterface;
+using Ekona;
 
 namespace DEATHNOTEDS
 {
@@ -47,32 +47,32 @@ namespace DEATHNOTEDS
             return false;
         }
 
-        public Format Get_Format(string fileName, byte[] magic, int id)
+        public Format Get_Format(sFile file, byte[] magic)
         {
-            if (gameCode == "YDNJ" && id == 0x1)
+            if (gameCode == "YDNJ" && file.id == 0x1)
                 return Format.Pack;
 
             return Format.Unknown;
         }
 
 
-        public string Pack(ref sFolder unpacked, string file, int id)
+        public string Pack(ref sFolder unpacked, sFile file)
         {
             System.Windows.Forms.MessageBox.Show("TODO ;)\nIf you need it please contact with me");
             return "";
         }
-        public sFolder Unpack(string file, int id)
+        public sFolder Unpack(sFile file)
         {
-            if (gameCode == "YDNJ" && id == 0x01)
+            if (gameCode == "YDNJ" && file.id == 0x01)
                 return Packs.Unpack_data(file);
 
             return new sFolder();
         }
 
-        public void Read(string file, int id)
+        public void Read(sFile file)
         {
         }
-        public System.Windows.Forms.Control Show_Info(string file, int id)
+        public System.Windows.Forms.Control Show_Info(sFile file)
         {
             return new System.Windows.Forms.Control();
         }

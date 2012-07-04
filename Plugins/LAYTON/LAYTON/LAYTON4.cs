@@ -22,14 +22,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
-using PluginInterface;
+using Ekona;
 
 namespace LAYTON
 {
     public static class LAYTON4
     {
 
-        public static sFolder Unpack_ARCHIVE(string file)
+        public static sFolder Unpack_ARCHIVE(string file, string name)
         {
             BinaryReader br = new BinaryReader(File.OpenRead(file));
             sFolder unpacked = new sFolder();
@@ -41,7 +41,7 @@ namespace LAYTON
             for (int i = 0; i < number_files; i++)
             {
                 sFile newFile = new sFile();
-                newFile.name = "File" + i.ToString();
+                newFile.name = name + '_' + i.ToString();
                 newFile.offset = br.ReadUInt32();
                 newFile.size = br.ReadUInt32();
                 newFile.path = file;

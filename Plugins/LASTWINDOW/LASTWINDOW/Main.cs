@@ -23,7 +23,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Windows.Forms;
-using PluginInterface;
+using Ekona;
 
 namespace LASTWINDOW
 {
@@ -40,11 +40,9 @@ namespace LASTWINDOW
             return false;
         }
 
-        public Format Get_Format(string nombre, byte[] magic, int id)
+        public Format Get_Format(sFile file, byte[] magic)
         {
-            nombre = nombre.ToUpper();
-
-            if (nombre.EndsWith(".PACK"))
+            if (file.name.EndsWith(".PACK"))
                 return Format.Compressed;
 
             return Format.Unknown;
@@ -56,21 +54,21 @@ namespace LASTWINDOW
             this.gameCode = gameCode;
         }
 
-        public void Read(string archivo, int id)
+        public void Read(sFile file)
         {
         }
-        public Control Show_Info(string archivo, int id)
+        public Control Show_Info(sFile file)
         {
             return new Control();
         }
 
-        public sFolder Unpack(string file, int id)
+        public sFolder Unpack(sFile file)
         {
-            if (file.ToUpper().EndsWith(".PACK"))
-                return PACK.Leer(pluginHost, file);
+            if (file.name.ToUpper().EndsWith(".PACK"))
+                return PACK.Unpack(pluginHost, file.path);
 
             return new sFolder();
         }
-        public String Pack(ref sFolder unpacked, string file, int id) { return null; }
+        public String Pack(ref sFolder unpacked, sFile file) { return null; }
     }
 }

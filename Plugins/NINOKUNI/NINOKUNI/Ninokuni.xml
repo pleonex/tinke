@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<GameConfig>
+  <Español>
+    <ReplaceChars>
+      <Char Original="Á" New="Ａ" />
+      <Char Original="É" New="Ｅ" />
+      <Char Original="Í" New="Ｉ" />
+      <Char Original="Ó" New="Ｏ" />
+      <Char Original="Ú" New="Ｕ" />
+      <Char Original="á" New="ａ" />
+      <Char Original="é" New="ｅ" />
+      <Char Original="í" New="ｉ" />
+      <Char Original="ó" New="ｏ" />
+      <Char Original="ú" New="ｕ" />
+      <Char Original="¿" New="？" />
+      <Char Original="¡" New="！" />
+      <Char Original="ñ" New="ｎ" />
+      <Char Original="Ñ" New="Ｎ" />
+      <Char Original="ü" New="∂ " />
+      <Char Original="Ü" New="∇" />
+    </ReplaceChars>
+    <BMPControl>
+      <S00>Exportar</S00>
+      <S01>Importar</S01>
+    </BMPControl>
+    <SQcontrol>
+      <S00>Texto traducido:</S00>
+      <S01>Texto original:</S01>
+      <S02>Bloques</S02>
+      <S03>Escribir archivo</S03>
+    </SQcontrol>
+  </Español>
+  <English>
+    <BMPControl>
+      <S00>Export</S00>
+      <S01>Import</S01>
+    </BMPControl>
+    <SQcontrol>
+      <S00>Translated text:</S00>
+      <S01>Original text:</S01>
+      <S02>Blocks</S02>
+      <S03>Write file</S03>
+    </SQcontrol>
+  </English>
+  <Français>
+    <BMPControl>
+      <S00>Exporter</S00>
+      <S01>Importer</S01>
+    </BMPControl>
+    <SQcontrol>
+      <S00>Texte traduit :</S00>
+      <S01>Texte original :</S01>
+      <S02>Blocs</S02>
+      <S03>Écrire l'archive</S03>
+    </SQcontrol>
+  </Français>
+</GameConfig>

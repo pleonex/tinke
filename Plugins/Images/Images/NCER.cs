@@ -4,8 +4,8 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Drawing;
-using PluginInterface;
-using PluginInterface.Images;
+using Ekona;
+using Ekona.Images;
 
 namespace Images
 {
@@ -13,7 +13,7 @@ namespace Images
     {
         sNCER ncer;
 
-        public NCER(IPluginHost pluginHost, string file, int id) : base(pluginHost, file, id) { }
+        public NCER(string file, int id, string fileName = "") : base(file, id, fileName) { }
 
         public override void Read(string fileIn)
         {
@@ -121,7 +121,7 @@ namespace Images
                     ncer.cebk.banks[i].oams[j].obj2.index_palette = (byte)((obj2 >> 12) & 0xF);
 
                     // Calculate the size
-                    Size cellSize = pluginHost.Get_OAMSize(ncer.cebk.banks[i].oams[j].obj0.shape, ncer.cebk.banks[i].oams[j].obj1.size);
+                    Size cellSize = Actions.Get_OAMSize(ncer.cebk.banks[i].oams[j].obj0.shape, ncer.cebk.banks[i].oams[j].obj1.size);
                     ncer.cebk.banks[i].oams[j].height = (ushort)cellSize.Height;
                     ncer.cebk.banks[i].oams[j].width = (ushort)cellSize.Width;
                     //if (ncer.cebk.banks[i].oams[j].obj0.doubleSize == 1)
@@ -429,7 +429,7 @@ namespace Images
 
         public struct sNCER       // Nintendo CEll Resource
         {
-            public Header header;
+            public NitroHeader header;
             public CEBK cebk;
             public LABL labl;
             public UEXT uext;

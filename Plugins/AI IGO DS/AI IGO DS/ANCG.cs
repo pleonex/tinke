@@ -22,14 +22,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
-using PluginInterface;
-using PluginInterface.Images;
+using Ekona;
+using Ekona.Images;
 
 namespace AI_IGO_DS
 {
     public class ANCG : ImageBase
     {
-        public ANCG(IPluginHost pluginHost, string file, int id) : base(pluginHost, file, id) { }
+        public ANCG(string file, int id, string fileName = "") : base(file, id, fileName) { }
 
         public override void Read(string fileIn)
         {
@@ -41,7 +41,6 @@ namespace AI_IGO_DS
 
             br.Close();
             Set_Tiles(tiles, 0x40, tiles.Length / 0x20, ColorFormat.colors16, TileForm.Horizontal, false);
-            pluginHost.Set_Image(this);
         }
         public override void Write(string fileOut, PaletteBase palette)
         {

@@ -22,20 +22,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
-using PluginInterface;
+using Ekona;
 
 namespace LASTWINDOW
 {
     public static class PACK
     {
-        public static sFolder Leer(IPluginHost pluginHost, string archivo)
+        public static sFolder Unpack(IPluginHost pluginHost, string file)
         {
-            String packFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + Path.GetRandomFileName();
-            File.Copy(archivo, packFile, true);
-
-            BinaryReader br = new BinaryReader(File.OpenRead(archivo));
-            string tempFolder = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + Path.GetFileNameWithoutExtension(archivo);
-            Directory.CreateDirectory(tempFolder);
+            BinaryReader br = new BinaryReader(File.OpenRead(file));
 
             sFolder descomprimidos = new sFolder(); // Donde guardaremos los archivos descomprimidos
             sPACK pack = new sPACK();
@@ -60,7 +55,7 @@ namespace LASTWINDOW
                 sFile newFile = new sFile();
                 newFile.name = pack.files[i].name;
                 newFile.offset = (uint)br.BaseStream.Position;
-                newFile.path = packFile;
+                newFile.path = file;
                 newFile.size = pack.files[i].size;
                 newFile.id = (ushort)i;
 

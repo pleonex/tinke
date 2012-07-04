@@ -25,7 +25,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using PluginInterface;
+using Ekona;
 
 namespace LAYTON
 {
@@ -104,7 +104,7 @@ namespace LAYTON
             o.OverwritePrompt = true;
 
             if (o.ShowDialog() == DialogResult.OK)
-                pluginHost.Create_APNG(o.FileName, imagenes, Convert.ToInt32(maskedTextBox1.Text), 0);
+                Ekona.Images.Formats.APNG.Create(imagenes, o.FileName, Convert.ToInt32(maskedTextBox1.Text), 0);
                 
         }
 

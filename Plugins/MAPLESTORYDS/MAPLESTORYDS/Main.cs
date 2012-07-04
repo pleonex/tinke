@@ -20,7 +20,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using PluginInterface;
+using Ekona;
 
 namespace MAPLESTORYDS
 {
@@ -42,30 +42,30 @@ namespace MAPLESTORYDS
             return false;
         }
 
-        public Format Get_Format(string fileName, byte[] magic, int id)
+        public Format Get_Format(sFile file, byte[] magic)
         {
-            if (fileName == "RESOURCE.NXARC")
+            if (file.name == "RESOURCE.NXARC")
                 return Format.Pack;
 
             return Format.Unknown;
         }
 
-        public void Read(string file, int id)
+        public void Read(sFile file)
         {
         }
-        public System.Windows.Forms.Control Show_Info(string file, int id)
+        public System.Windows.Forms.Control Show_Info(sFile file)
         {
             return new System.Windows.Forms.Control();
         }
 
-        public sFolder Unpack(string file, int id)
+        public sFolder Unpack(sFile file)
         {
-            if (file.ToUpper().EndsWith("RESOURCE.NXARC"))
-                return PACK.Unpack(file, pluginHost);
+            if (file.name.ToUpper().EndsWith("RESOURCE.NXARC"))
+                return PACK.Unpack(file.path, file.name);
 
             return new sFolder();
         }
-        public String Pack(ref sFolder unpacked, string file, int id)
+        public String Pack(ref sFolder unpacked, sFile file)
         {
             return null;
         }
