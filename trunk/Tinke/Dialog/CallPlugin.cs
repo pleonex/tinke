@@ -25,6 +25,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using Ekona.Helper;
 
 namespace Tinke.Dialog
 {
@@ -76,9 +77,9 @@ namespace Tinke.Dialog
         {
             get { return comboAction.SelectedIndex; }
         }
-        public int ID
+        public ushort ID
         {
-            get { return (int)numericID.Value; }
+            get { return (ushort)numericID.Value; }
             set { numericID.Value = value; }
         }
 
@@ -90,7 +91,7 @@ namespace Tinke.Dialog
         private void txtHeaderHex_TextChanged(object sender, EventArgs e)
         {
             if (txtHeaderHex.Focused)
-                txtHeader.Text = new String(Encoding.ASCII.GetChars(Tools.Helper.StringToBytes(txtHeaderHex.Text, 4)));
+                txtHeader.Text = new String(Encoding.ASCII.GetChars(BitsConverter.StringToBytes(txtHeaderHex.Text, 4)));
         }
     }
 }

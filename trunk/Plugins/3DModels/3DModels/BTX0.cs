@@ -24,8 +24,8 @@ using System.Text;
 using System.IO;
 using System.Windows.Forms;
 using System.Drawing;
-using PluginInterface;
-using PluginInterface.Images;
+using Ekona;
+using Ekona.Images;
 
 // Copied from:
 // http://llref.emutalk.net/docs/?file=xml/btx0.xml#xml-doc
@@ -501,7 +501,7 @@ namespace _3DModels
         {
             Bitmap imagen = new Bitmap(info.width, info.height);
             if (info.format == 3) // 16-color 4 bits
-                data = pluginHost.Bit8ToBit4(data);
+                data = Ekona.Helper.BitsConverter.BytesToBit4(data);
             else if (info.format == 2) // 4-color 2 bits
                 data = Bit8ToBit2(data);
 

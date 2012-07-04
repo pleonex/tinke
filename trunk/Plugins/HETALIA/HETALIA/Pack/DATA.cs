@@ -25,15 +25,15 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using PluginInterface;
+using Ekona;
 
 namespace HETALIA.Pack
 {
     public static class DATA
     {
-        public static sFolder Unpack(string fileIn)
+        public static sFolder Unpack(sFile file)
         {
-            BinaryReader br = new BinaryReader(File.OpenRead(fileIn));
+            BinaryReader br = new BinaryReader(File.OpenRead(file.path));
             sFolder unpack = new sFolder();
             unpack.files = new List<sFile>();
 
@@ -43,10 +43,10 @@ namespace HETALIA.Pack
             for (int i = 0; i < num_files; i++)
             {
                 sFile newFile = new sFile();
-                newFile.name = "File" + i.ToString() + '.';
+                newFile.name = "File_" + i.ToString() + '.';
                 newFile.size = br.ReadUInt32();
                 newFile.offset = br.ReadUInt32();
-                newFile.path = fileIn;
+                newFile.path = file.path;
 
                 long currPos = br.BaseStream.Position;
                 br.BaseStream.Position = newFile.offset;

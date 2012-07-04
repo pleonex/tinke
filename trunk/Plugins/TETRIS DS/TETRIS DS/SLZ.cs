@@ -22,14 +22,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
-using PluginInterface;
-using PluginInterface.Images;
+using Ekona;
+using Ekona.Images;
 
 namespace TETRIS_DS
 {
     public class SLZ : MapBase
     {
-        public SLZ(IPluginHost pluginHost, string file, int id) : base(pluginHost, file, id) { }
+        IPluginHost pluginHost;
+
+        public SLZ(IPluginHost pluginHost, string file, int id) : base(file, id) { this.pluginHost = pluginHost; }
 
         public override void Read(string file)
         {

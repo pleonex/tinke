@@ -22,7 +22,7 @@
 
 using System;
 using System.Collections.Generic;
-using PluginInterface;
+using Ekona;
 
 namespace Tinke.Nitro
 {

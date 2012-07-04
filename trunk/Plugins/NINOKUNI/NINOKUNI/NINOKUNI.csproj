@@ -32,9 +32,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="PluginInterface, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Ekona, Version=7.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\PluginInterface\bin\Debug\PluginInterface.dll</HintPath>
+      <HintPath>..\..\..\Ekona\bin\Debug\Ekona.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -50,6 +50,7 @@
     <Compile Include="BMPControl.Designer.cs">
       <DependentUpon>BMPControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="Helper.cs" />
     <Compile Include="KPCN.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="MQuestText.cs">
@@ -77,12 +78,19 @@
     <Compile Include="SQcontrol.Designer.cs">
       <DependentUpon>SQcontrol.cs</DependentUpon>
     </Compile>
+    <Compile Include="SubtitleControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="SubtitleControl.Designer.cs">
+      <DependentUpon>SubtitleControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="SystemText.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="SystemText.Designer.cs">
       <DependentUpon>SystemText.cs</DependentUpon>
     </Compile>
+    <Compile Include="TMAP.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="BMPControl.resx">
@@ -101,6 +109,9 @@
     <EmbeddedResource Include="SQcontrol.resx">
       <DependentUpon>SQcontrol.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="SubtitleControl.resx">
+      <DependentUpon>SubtitleControl.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="SystemText.resx">
       <DependentUpon>SystemText.cs</DependentUpon>
     </EmbeddedResource>
@@ -115,7 +126,7 @@
     <None Include="Resources\picture_edit.png" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="NINOKUNILang.xml">
+    <Content Include="Ninokuni.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

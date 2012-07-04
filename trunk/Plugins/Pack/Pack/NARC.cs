@@ -23,14 +23,13 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Windows.Forms;
-using PluginInterface;
+using Ekona;
 
 namespace Pack
 {
     public class NARC 
     {
         IPluginHost pluginHost;
-        string narcFile;
         ARC narc;
 
         public NARC(IPluginHost pluginHost)
@@ -39,13 +38,10 @@ namespace Pack
         }
 
         #region Unpack methods
-        public sFolder Unpack(string file)
+        public sFolder Unpack(sFile file)
         {
             ARC arc = new ARC();
-            narcFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + "narc_" + Path.GetRandomFileName();
-            arc.file = narcFile;
-            File.Copy(file, narcFile, true);
-            BinaryReader br = new BinaryReader(System.IO.File.OpenRead(file));
+            BinaryReader br = new BinaryReader(System.IO.File.OpenRead(file.path));
 
             // Nitro generic header
             arc.id = br.ReadChars(4);
@@ -95,11 +91,11 @@ namespace Pack
                     for (int i = 0; i < arc.btaf.nFiles; i++)
                     {
                         sFile currFile = new sFile();
-                        currFile.name = "File" + idFile.ToString();
+                        currFile.name = Path.GetFileNameWithoutExtension(file.name) + '_' + idFile.ToString();
                         currFile.id = (ushort)idFile++;
 
                         // FAT data
-                        currFile.path = narcFile;
+                        currFile.path = file.path;
                         currFile.offset = arc.btaf.entries[currFile.id].start_offset + gmif_offset;
                         currFile.size = (arc.btaf.entries[currFile.id].end_offset - arc.btaf.entries[currFile.id].start_offset);
 
@@ -146,7 +142,7 @@ namespace Pack
                         currFile.name = new String(br.ReadChars(id));
 
                         // FAT data
-                        currFile.path = narcFile;
+                        currFile.path = file.path;
                         currFile.offset = arc.btaf.entries[currFile.id].start_offset + gmif_offset;
                         currFile.size = (arc.btaf.entries[currFile.id].end_offset - arc.btaf.entries[currFile.id].start_offset);
 
@@ -204,17 +200,15 @@ namespace Pack
         #endregion
 
         #region Pack methods
-        public String Pack(string file, ref sFolder unpacked)
+        public String Pack(sFile file, ref sFolder unpacked)
         {
             Unpack(file);
-            String fileout = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + "Newpack_" + Path.GetFileName(file);
-            if (File.Exists(fileout))
-                File.Delete(fileout);
+            String fileout = pluginHost.Get_TempFile();
 
-            Save_NARC(fileout, ref unpacked);
+            Save_NARC(fileout, ref unpacked, file.path);
             return fileout;
         }
-        private void Save_NARC(string fileout, ref sFolder decompressed)
+        private void Save_NARC(string fileout, ref sFolder decompressed, string orifile)
         {
             /* Structure of the file
              * 
@@ -232,7 +226,7 @@ namespace Pack
              */
 
             BinaryWriter bw = new BinaryWriter(File.OpenWrite(fileout));
-            BinaryReader br = new BinaryReader(File.OpenRead(narc.file));
+            BinaryReader br = new BinaryReader(File.OpenRead(orifile));
 
             // Write the BTAF section
             String btafTmp = Path.GetTempFileName();
@@ -344,9 +338,6 @@ namespace Pack
     #region Estructuras
     public struct ARC
     {
-        public int file_id;
-        public string file;
-
         public char[] id;           // Always NARC = 0x4E415243
         public UInt16 id_endian;    // Si 0xFFFE hay que darle la vuelta al id
         public UInt16 constant;     // Always 0x0100

@@ -24,8 +24,8 @@ using System.Text;
 using System.IO;
 using System.Drawing;
 using System.Windows.Forms;
-using PluginInterface;
-using PluginInterface.Images;
+using Ekona;
+using Ekona.Images;
 
 namespace LAYTON
 {
@@ -33,8 +33,9 @@ namespace LAYTON
     {
         ImageBase image;
         PaletteBase palette;
+        IPluginHost pluginHost;
 
-        public Bg(IPluginHost pluginHost, string file, int id) : base(pluginHost, file, id) { }
+        public Bg(IPluginHost pluginHost, string file, int id, string fileName = "") : base(file, id, fileName) { this.pluginHost = pluginHost;  }
 
         public Format Get_Formato(string nombre)
         {
@@ -87,8 +88,8 @@ namespace LAYTON
 
             br.Close();
 
-            palette = new RawPalette(pluginHost, colors, false, ColorFormat.colors256);
-            image = new RawImage(pluginHost, tiles, TileForm.Horizontal, ColorFormat.colors256, width, height, false);
+            palette = new RawPalette(colors, false, ColorFormat.colors256);
+            image = new RawImage(tiles, TileForm.Horizontal, ColorFormat.colors256, width, height, false);
             Set_Map(map, false, width, height);
         }
         public Control Get_Control()

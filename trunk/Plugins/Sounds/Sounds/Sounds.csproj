@@ -32,9 +32,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="PluginInterface, Version=2.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Ekona, Version=7.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\PluginInterface\bin\Debug\PluginInterface.dll</HintPath>
+      <HintPath>..\..\..\Ekona\bin\Debug\Ekona.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

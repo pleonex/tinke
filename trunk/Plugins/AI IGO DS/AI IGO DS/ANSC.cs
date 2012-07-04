@@ -22,14 +22,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
-using PluginInterface;
-using PluginInterface.Images;
+using Ekona;
+using Ekona.Images;
 
 namespace AI_IGO_DS
 {
     public class ANSC : MapBase
     {
-        public ANSC(IPluginHost pluginHost, string file, int id) : base(pluginHost, file, id) { }
+        public ANSC(string file, int id, string fileName = "") : base(file, id, fileName) { }
 
         public override void Read(string fileIn)
         {
@@ -43,7 +43,6 @@ namespace AI_IGO_DS
 
             br.Close();
             Set_Map(map, false, 0x100, 0xB0);
-            pluginHost.Set_Map(this);
         }
         public override void Write(string fileOut, ImageBase image, PaletteBase palette)
         {

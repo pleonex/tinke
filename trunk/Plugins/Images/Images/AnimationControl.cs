@@ -25,8 +25,8 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using PluginInterface;
-using PluginInterface.Images;
+using Ekona;
+using Ekona.Images;
 
 namespace Images
 {
@@ -39,6 +39,7 @@ namespace Images
         NANR ani;
 
         Bitmap[] bitAni;
+        bool isAni;         // If there are animations
         int imgShow;
 
         public AnimationControl()
@@ -82,17 +83,41 @@ namespace Images
             this.image = pluginHost.Get_Image();
             this.sprite = pluginHost.Get_Sprite();
             this.ani = ani;
+            isAni = true;
+
+            if (ani.Struct.abnk.nBanks == 0)
+            {
+                MessageBox.Show("No animations.");
+                isAni = false;
+                tempo.Enabled = false;
+                comboAni.Enabled = false;
+                btnNext.Enabled = false;
+                btnPlay.Enabled = false;
+                btnPrevious.Enabled = false;
+                btnSave.Enabled = false;
+                btnStop.Enabled = false;
+                txtTime.Enabled = false;
+                checkCeldas.Enabled = false;
+                checkEntorno.Enabled = false;
+                checkImage.Enabled = false;
+                checkNumeros.Enabled = false;
+                checkTransparencia.Enabled = false;
+            }
+
 
             for (int i = 0; i < ani.Names.Length; i++)
                 comboAni.Items.Add(ani.Names[i]);
-            comboAni.SelectedIndex = 0;
+            if (isAni)
+                comboAni.SelectedIndex = 0;
 
             ShowInfo();
             Get_Ani();
 
             tempo.Stop();
             tempo.Interval = Convert.ToInt32(txtTime.Text);
-            aniBox.Image = bitAni[0];
+
+            if (isAni)
+                aniBox.Image = bitAni[0];
         }
 
         private void Read_Language()
@@ -168,6 +193,9 @@ namespace Images
 
         private void Get_Ani()
         {
+            if (!isAni)
+                return;
+
             int id = comboAni.SelectedIndex;
             imgShow = 0;
             bitAni = new Bitmap[ani.Struct.abnk.anis[id].nFrames];
@@ -242,7 +270,7 @@ namespace Images
             o.OverwritePrompt = true;
 
             if (o.ShowDialog() == DialogResult.OK)
-                pluginHost.Create_APNG(o.FileName, bitAni, Convert.ToInt32(txtTime.Text) / 10, 0x00);
+                Ekona.Images.Formats.APNG.Create(bitAni, o.FileName, Convert.ToInt32(txtTime.Text) / 10, 0x00);
         }
 
         private void aniBox_DoubleClick(object sender, EventArgs e)

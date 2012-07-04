@@ -26,7 +26,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using PluginInterface;
+using Ekona;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 

@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
-using PluginInterface;
+using Ekona;
 
 namespace Pack.Games
 {
@@ -42,7 +42,7 @@ namespace Pack.Games
             return false;
         }
 
-        public Format Get_Format(string fileName, byte[] magic, int id)
+        public Format Get_Format(sFile file, byte[] magic)
         {
             string ext = new String(Encoding.ASCII.GetChars(magic));
 
@@ -50,48 +50,46 @@ namespace Pack.Games
                 return Format.Pack;
             else if (ext == "SSAM")
                 return Format.Pack;
-            else if (fileName.ToUpper().EndsWith(".FLSC.LZ") && BitConverter.ToUInt32(magic, 0) < 0x10)
+            else if (file.name.ToUpper().EndsWith(".FLSC.LZ") && BitConverter.ToUInt32(magic, 0) < 0x10)
                 return Format.Pack;
 
             return Format.Unknown;
         }
 
-        public sFolder Unpack(string file, int id)
+        public sFolder Unpack(sFile file)
         {
-            BinaryReader br = new BinaryReader(File.OpenRead(file));
+            BinaryReader br = new BinaryReader(File.OpenRead(file.path));
             string ext = new String(Encoding.ASCII.GetChars(br.ReadBytes(4)));
             br.Close();
 
             if (ext == "NMDP")
-                return Unpack_NMDP(file);
+                return Unpack_NMDP(file.path, file.name);
             else if (ext == "SSAM")
-                return Unpack_SSAM(file);
-            else if (file.ToUpper().EndsWith(".FLSC.LZ"))
-                return Unpack_FLSC(file);
+                return Unpack_SSAM(file.path);
+            else if (file.name.ToUpper().EndsWith(".FLSC.LZ"))
+                return Unpack_FLSC(file.path, file.name);
 
             return new sFolder();
         }
-        public string Pack(ref sFolder unpacked, string file, int id)
+        public string Pack(ref sFolder unpacked, sFile file)
         {
             System.Windows.Forms.MessageBox.Show("Not done");
             return null;
         }
 
-        public void Read(string file, int id)
+        public void Read(sFile file)
         {
         }
-        public System.Windows.Forms.Control Show_Info(string file, int id)
+        public System.Windows.Forms.Control Show_Info(sFile file)
         {
             return new System.Windows.Forms.Control();
         }
 
-        public sFolder Unpack_NMDP(string fileIn)
+        public sFolder Unpack_NMDP(string fileIn, string name)
         {
             BinaryReader br = new BinaryReader(File.OpenRead(fileIn));
             sFolder unpacked = new sFolder();
             unpacked.files = new List<sFile>();
-
-            string parent_name = Path.GetFileNameWithoutExtension(fileIn).Substring(12);
 
             char[] header = br.ReadChars(4);
             ushort header_size = br.ReadUInt16();
@@ -102,7 +100,7 @@ namespace Pack.Games
             uint unknown1 = br.ReadUInt32();
 
             sFile newFile = new sFile();
-            newFile.name = parent_name;
+            newFile.name = name;
             newFile.size = br.ReadUInt32();
             newFile.offset = br.ReadUInt32();
             newFile.path = fileIn;
@@ -136,20 +134,18 @@ namespace Pack.Games
             br.Close();
             return unpacked;
         }
-        public sFolder Unpack_FLSC(string fileIn)
+        public sFolder Unpack_FLSC(string fileIn, string name)
         {
             BinaryReader br = new BinaryReader(File.OpenRead(fileIn));
             sFolder unpacked = new sFolder();
             unpacked.files = new List<sFile>();
-
-            string parent_name = Path.GetFileNameWithoutExtension(fileIn).Substring(12);
 
             uint num_files = br.ReadUInt32();
             br.BaseStream.Position = 0x10;
             for (int i = 0; i < num_files; i++)
             {
                 sFile newFile = new sFile();
-                newFile.name = parent_name + i.ToString();
+                newFile.name = name + '_' + i.ToString();
                 newFile.offset = br.ReadUInt32();
                 newFile.size = br.ReadUInt32();
                 newFile.path = fileIn;

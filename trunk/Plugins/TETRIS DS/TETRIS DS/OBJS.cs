@@ -23,14 +23,16 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Drawing;
-using PluginInterface;
-using PluginInterface.Images;
+using Ekona;
+using Ekona.Images;
 
 namespace TETRIS_DS
 {
     public class OBJS : SpriteBase
     {
-        public OBJS(IPluginHost pluginHost, string file, int id) : base(pluginHost, file, id) { }
+        IPluginHost pluginHost;
+
+        public OBJS(IPluginHost pluginHost, string file, int id) : base(file, id) { this.pluginHost = pluginHost; }
 
         public override void Read(string file)
         {
@@ -55,7 +57,7 @@ namespace TETRIS_DS
             BinaryReader br = new BinaryReader(File.OpenRead(dec_file));
 
             // Bank info
-            PluginInterface.Images.Bank[] banks = new PluginInterface.Images.Bank[br.ReadUInt32()];
+            Ekona.Images.Bank[] banks = new Ekona.Images.Bank[br.ReadUInt32()];
             uint num_cells = br.ReadUInt32();
             uint unknown1 = br.ReadUInt32();
 
@@ -96,7 +98,7 @@ namespace TETRIS_DS
 
             br.Close();
 
-            palette = new RawPalette(pluginHost, colors, false, (palette_length > 0x20) ? ColorFormat.colors256 : ColorFormat.colors16);
+            palette = new RawPalette(colors, false, (palette_length > 0x20) ? ColorFormat.colors256 : ColorFormat.colors16);
             pluginHost.Set_Palette(palette);
         }
         public override void Write(string fileOut, ImageBase image, PaletteBase palette)

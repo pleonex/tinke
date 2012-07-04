@@ -32,8 +32,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="PluginInterface">
-      <HintPath>..\..\..\Tinke rev112\Tinke\PluginInterface.dll</HintPath>
+    <Reference Include="Ekona, Version=7.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Ekona\bin\Debug\Ekona.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />

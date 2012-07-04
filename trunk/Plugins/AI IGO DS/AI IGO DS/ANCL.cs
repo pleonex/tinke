@@ -23,14 +23,14 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Drawing;
-using PluginInterface;
-using PluginInterface.Images;
+using Ekona;
+using Ekona.Images;
 
 namespace AI_IGO_DS
 {
     public class ANCL : PaletteBase
     {
-        public ANCL(IPluginHost pluginHost, string file, int id) : base(pluginHost, file, id) { }
+        public ANCL(string file, int id, string fileName = "") : base(file, id, fileName) { }
 
         public override void Read(string file)
         {
@@ -45,7 +45,6 @@ namespace AI_IGO_DS
 
             br.Close();
             Set_Palette(colors, false);
-            pluginHost.Set_Palette(this);
         }
         public override void Write(string fileOut)
         {

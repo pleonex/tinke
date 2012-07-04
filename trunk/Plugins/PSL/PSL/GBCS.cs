@@ -26,8 +26,8 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.IO;
-using PluginInterface;
-using PluginInterface.Images;
+using Ekona;
+using Ekona.Images;
 
 namespace PSL
 {
@@ -90,8 +90,8 @@ namespace PSL
             byte[] tiles = br.ReadBytes((int)(infos[i].size - 0x208));
             br.Close();
 
-            RawPalette pal = new RawPalette(pluginHost, palette, false, ColorFormat.colors256);
-            RawImage img = new RawImage(pluginHost, tiles, TileForm.Horizontal, ColorFormat.colors256, (int)width, (int)height, false);
+            RawPalette pal = new RawPalette(palette, false, ColorFormat.colors256);
+            RawImage img = new RawImage(tiles, TileForm.Horizontal, ColorFormat.colors256, (int)width, (int)height, false);
             this.Controls.Remove(imgControl);
             this.imgControl = new ImageControl(pluginHost, img, pal);
             this.Controls.Add(imgControl);
@@ -118,8 +118,8 @@ namespace PSL
                 Color[][] palette = new Color[1][] { Actions.BGR555ToColor(br.ReadBytes(0x200)) };
                 byte[] tiles = br.ReadBytes((int)(infos[i].size - 0x208));
 
-                RawPalette pal = new RawPalette(pluginHost, palette, false, ColorFormat.colors256);
-                RawImage img = new RawImage(pluginHost, tiles, TileForm.Horizontal, ColorFormat.colors256, (int)width, (int)height, false);
+                RawPalette pal = new RawPalette(palette, false, ColorFormat.colors256);
+                RawImage img = new RawImage(tiles, TileForm.Horizontal, ColorFormat.colors256, (int)width, (int)height, false);
                 img.Get_Image(pal).Save(folderOut + "Image" + i.ToString() + ".png");
             }
             br.Close();

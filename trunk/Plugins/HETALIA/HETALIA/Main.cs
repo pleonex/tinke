@@ -24,7 +24,7 @@
 // -----------------------------------------------------------------------
 using System;
 using System.Text;
-using PluginInterface;
+using Ekona;
 
 namespace HETALIA
 {
@@ -46,11 +46,11 @@ namespace HETALIA
             return false;
         }
 
-        public Format Get_Format(string fileName, byte[] magic, int id)
+        public Format Get_Format(sFile file, byte[] magic)
         {
             string ext = new String(Encoding.ASCII.GetChars(magic));
 
-            if (id == 0x01)
+            if (file.id == 0x01)
                 return Format.Pack;
             if (ext == "MAP\0" || ext == "IMY\0")
                 return Format.FullImage;
@@ -58,32 +58,32 @@ namespace HETALIA
             return Format.Unknown;
         }
 
-        public string Pack(ref sFolder unpacked, string file, int id)
+        public string Pack(ref sFolder unpacked, sFile file)
         {
             return null;
         }
-        public sFolder Unpack(string file, int id)
+        public sFolder Unpack(sFile file)
         {
-            if (id == 0x01)
+            if (file.id == 0x01)
                 return HETALIA.Pack.DATA.Unpack(file);
 
             return new sFolder();
         }
 
-        public void Read(string file, int id)
+        public void Read(sFile file)
         {
         }
-        public System.Windows.Forms.Control Show_Info(string file, int id)
+        public System.Windows.Forms.Control Show_Info(sFile file)
         {
-            if (file.EndsWith(".IMY"))
+            if (file.name.EndsWith(".IMY"))
             {
-                new IMY(pluginHost, file, id);
-                return new PluginInterface.Images.ImageControl(pluginHost, false);
+                new IMY(pluginHost, file.path, file.id);
+                return new Ekona.Images.ImageControl(pluginHost, false);
             }
-            else if (file.EndsWith(".MAP"))
+            else if (file.name.EndsWith(".MAP"))
             {
-                new MAP(pluginHost, file, id);
-                return new PluginInterface.Images.ImageControl(pluginHost, true);
+                new MAP(pluginHost, file.path, file.id);
+                return new Ekona.Images.ImageControl(pluginHost, true);
             }
 
             return new System.Windows.Forms.Control();

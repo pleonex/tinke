@@ -78,9 +78,9 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\PluginInterface\PluginInterface.csproj">
+    <ProjectReference Include="..\..\..\Ekona\Ekona.csproj">
       <Project>{736010D3-F72F-4C56-B8D2-2EDD1B8F3A87}</Project>
-      <Name>PluginInterface</Name>
+      <Name>Ekona</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

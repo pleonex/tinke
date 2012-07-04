@@ -20,8 +20,8 @@
 using System;
 using System.Text;
 using System.Collections.Generic;
-using PluginInterface;
-using PluginInterface.Images;
+using Ekona;
+using Ekona.Images;
 
 namespace PSL
 {
@@ -77,74 +77,74 @@ namespace PSL
 			return false;
 		}
 		
-		public Format Get_Format(string fileName, byte[] magic, int id)
+		public Format Get_Format(sFile file, byte[] magic)
 		{
 			string ext = new string(Encoding.ASCII.GetChars(magic));
 			uint exti = BitConverter.ToUInt32(magic, 0);
 
-            if (id == 0x1D9 || id == 0x1DA)
+            if (file.id == 0x1D9 || file.id == 0x1DA)
                 return Format.FullImage;
             else if (ext == "LINK")
                 return Format.Pack;
             else if (exti == 0x0040E3C4 || exti == 0x0040E3BC)
                 return Format.Pack;
-            else if (bigImages.Contains(id))
+            else if (bigImages.Contains(file.id))
                 return Format.Tile;
-            else if (bigImages.Contains(id - 1))
+            else if (bigImages.Contains(file.id - 1))
                 return Format.System;
-            else if (id == 0x20F || id == 0x230 || id == 0x231)
+            else if (file.id == 0x20F || file.id == 0x230 || file.id == 0x231)
                 return Format.FullImage;
-            else if (id == 0x210 || id == 0x232 || id == 0x233)
+            else if (file.id == 0x210 || file.id == 0x232 || file.id == 0x233)
                 return Format.System;
 
-            if (id == 0xE6 || id == 0xE9)
+            if (file.id == 0xE6 || file.id == 0xE9)
                 return Format.Tile;
-            else if (id == 0xE7 || id == 0xEA)
+            else if (file.id == 0xE7 || file.id == 0xEA)
                 return Format.Palette;
 			
 			return Format.Unknown;
 		}
 		
-		public System.Windows.Forms.Control Show_Info(string file, int id)
+		public System.Windows.Forms.Control Show_Info(sFile file)
 		{
             // Images from still folder
-            if (bigImages.Contains(id))
-                return new TexSprites(pluginHost, file, pluginHost.Search_File(id + 1));
-            else if (id == 0x20F)
-                return new GBCS(pluginHost.Search_File(0x210), file, pluginHost);
-            else if (id == 0x230)
-                return new GBCS(pluginHost.Search_File(0x232), file, pluginHost);
-            else if (id == 0x231)
-                return new GBCS(pluginHost.Search_File(0x233), file, pluginHost);
+            if (bigImages.Contains(file.id))
+                return new TexSprites(pluginHost, file.path, pluginHost.Search_File(file.id + 1));
+            else if (file.id == 0x20F)
+                return new GBCS(pluginHost.Search_File(0x210), file.path, pluginHost);
+            else if (file.id == 0x230)
+                return new GBCS(pluginHost.Search_File(0x232), file.path, pluginHost);
+            else if (file.id == 0x231)
+                return new GBCS(pluginHost.Search_File(0x233), file.path, pluginHost);
 
             // Pokemon texture of attack and defense (POKEMON_ATX.ALL and POKEMON_DTX.ALL)
-            if (id == 0x1D9 || id == 0x1DA)
-                return new ATDTX(pluginHost, id);
+            if (file.id == 0x1D9 || file.id == 0x1DA)
+                return new ATDTX(pluginHost, file.id);
 
             // Effect images
-            if (id == 0xE7 || id == 0xEA)
+            if (file.id == 0xE7 || file.id == 0xEA)
             {
-                Read(file, id);
+                Read(file);
                 return new PaletteControl(pluginHost);
             }
-            else if (id == 0xE6 || id == 0xE9)
+            else if (file.id == 0xE6 || file.id == 0xE9)
             {
-                Read(file, id);
+                Read(file);
                 return new ImageControl(pluginHost, false);
             }
 
 			return new System.Windows.Forms.Control();
 		}		
-		public void Read(string file, int id)
+		public void Read(sFile file)
 		{
-            if (id == 0xE7 || id == 0xEA)
+            if (file.id == 0xE7 || file.id == 0xEA)
             {
-                RawPalette palette = new RawPalette(pluginHost, file, id, false, 0, -1);
+                RawPalette palette = new RawPalette(file.path, file.id, false, 0, -1);
                 pluginHost.Set_Palette(palette);
             }
-            else if (id == 0xE6 || id == 0xE9)
+            else if (file.id == 0xE6 || file.id == 0xE9)
             {
-                RawImage image = new RawImage(pluginHost, file, id, TileForm.Lineal, 
+                RawImage image = new RawImage(file.path, file.id, TileForm.Lineal, 
                     ColorFormat.colors16, false, 0, -1);
                 image.Width = 0x80;
                 image.Height = 0x200;
@@ -152,32 +152,31 @@ namespace PSL
             }
 		}
 		
-		public sFolder Unpack(string file, int id)
+		public sFolder Unpack(sFile file)
 		{
-			System.IO.BinaryReader br = new System.IO.BinaryReader(System.IO.File.OpenRead(file));
+			System.IO.BinaryReader br = new System.IO.BinaryReader(System.IO.File.OpenRead(file.path));
 			byte[] header = br.ReadBytes(4);
 			string ext = new String(Encoding.ASCII.GetChars(header));
 			uint exti = BitConverter.ToUInt32(header, 0);
 			
 			if (ext == "LINK")
-				return LINK.Unpack(file);
+				return LINK.Unpack(file.path);
 			else if (exti == 0x0040E3C4 || exti == 0x0040E3BC)
-				return PAC.Unpack(file);
+				return PAC.Unpack(file.path);
 			
 			return new sFolder();
 		}		
-		public string Pack(ref sFolder unpacked, string file, int id)
+		public string Pack(ref sFolder unpacked, sFile file)
 		{
-            System.IO.BinaryReader br = new System.IO.BinaryReader(System.IO.File.OpenRead(file));
+            System.IO.BinaryReader br = new System.IO.BinaryReader(System.IO.File.OpenRead(file.path));
             byte[] header = br.ReadBytes(4);
             string ext = new String(Encoding.ASCII.GetChars(header));
             uint exti = BitConverter.ToUInt32(header, 0);
 
             if (ext == "LINK")
             {
-                string fileOut = pluginHost.Get_TempFolder() + System.IO.Path.DirectorySeparatorChar + System.IO.Path.GetRandomFileName() +
-                    System.IO.Path.GetFileName(file);
-                LINK.Pack(file, fileOut, ref unpacked);
+                string fileOut = pluginHost.Get_TempFolder() + System.IO.Path.DirectorySeparatorChar + System.IO.Path.GetRandomFileName();
+                LINK.Pack(file.path, fileOut, ref unpacked);
                 return fileOut;
             }
 

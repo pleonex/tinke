@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
-using PluginInterface;
-using PluginInterface.Images;
+using Ekona;
+using Ekona.Images;
 
 namespace Images
 {
@@ -155,7 +155,7 @@ namespace Images
 
         public struct sNANR
         {
-            public Header header;
+            public NitroHeader header;
             public ABNK abnk;
             public LABL labl;
             public UEXT uext;

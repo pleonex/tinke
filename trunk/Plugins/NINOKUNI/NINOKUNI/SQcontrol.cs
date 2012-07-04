@@ -26,8 +26,10 @@ using System;
 using System.Text;
 using System.IO;
 using System.Xml;
+using System.Xml.Linq;
+using System.Collections.Generic;
 using System.Windows.Forms;
-using PluginInterface;
+using Ekona;
 
 namespace NINOKUNI
 {
@@ -57,7 +59,7 @@ namespace NINOKUNI
 
             ReadLanguage();
             radio_CheckedChanged(null, null);
-            TEST();
+            //TEST();
         }
 
         private void TEST()
@@ -102,7 +104,7 @@ namespace NINOKUNI
             try
             {
                 System.Xml.Linq.XElement xml = System.Xml.Linq.XElement.Load(Application.StartupPath + System.IO.Path.DirectorySeparatorChar +
-                    "Plugins" + System.IO.Path.DirectorySeparatorChar + "NINOKUNILang.xml");
+                    "Plugins" + System.IO.Path.DirectorySeparatorChar + "Ninokuni.xml");
                 xml = xml.Element(pluginHost.Get_Language()).Element("SQcontrol");
 
                 label1.Text = xml.Element("S00").Value;
@@ -126,6 +128,7 @@ namespace NINOKUNI
             {
                 original.sblocks[i].size = br.ReadUInt16();
                 original.sblocks[i].text = new String(enc.GetChars(br.ReadBytes((int)original.sblocks[i].size)));
+                original.sblocks[i].text = Helper.SJISToLatin(original.sblocks[i].text);
             }
 
             original.unknown = br.ReadBytes(0xD);   // Unknown data
@@ -136,6 +139,7 @@ namespace NINOKUNI
             {
                 original.fblocks[i].size = br.ReadUInt16();
                 original.fblocks[i].text = new String(enc.GetChars(br.ReadBytes((int)original.fblocks[i].size)));
+                original.fblocks[i].text = Helper.SJISToLatin(original.fblocks[i].text);
             }
 
             original.num_final = br.ReadByte();
@@ -160,7 +164,7 @@ namespace NINOKUNI
             for (int i = 0; i < translated.sblocks.Length; i++)
             {
                 bw.Write(translated.sblocks[i].size);
-                bw.Write(enc.GetBytes(translated.sblocks[i].text));
+                bw.Write(enc.GetBytes(Helper.LatinToSJIS(translated.sblocks[i].text)));
             }
 
             bw.Write(translated.unknown);
@@ -170,7 +174,7 @@ namespace NINOKUNI
             for (int i = 0; i < translated.fblocks.Length; i++)
             {
                 bw.Write(translated.fblocks[i].size);
-                bw.Write(enc.GetBytes(translated.fblocks[i].text));
+                bw.Write(enc.GetBytes(Helper.LatinToSJIS(translated.fblocks[i].text)));
             }
 
             bw.Write(translated.num_final);
@@ -186,9 +190,9 @@ namespace NINOKUNI
         private void Update_Blocks()
         {
             for (int i = 0; i < translated.sblocks.Length; i++)
-                translated.sblocks[i].size = (ushort)enc.GetByteCount(translated.sblocks[i].text);
+                translated.sblocks[i].size = (ushort)enc.GetByteCount(Helper.LatinToSJIS(translated.sblocks[i].text));
             for (int i = 0; i < translated.fblocks.Length; i++)
-                translated.fblocks[i].size = (ushort)enc.GetByteCount(translated.fblocks[i].text);
+                translated.fblocks[i].size = (ushort)enc.GetByteCount(Helper.LatinToSJIS(translated.fblocks[i].text));
         }
 
 

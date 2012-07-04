@@ -3,17 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
-using PluginInterface;
+using Ekona;
 
 namespace NINOKUNI
 {
     public static class KPCN
     {
-        public static sFolder Unpack(string file, IPluginHost pluginHost)
+        public static sFolder Unpack(string file, string name)
         {
-            String packFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + "pack_" + Path.GetFileName(file);
-            File.Copy(file, packFile, true);
-
             BinaryReader br = new BinaryReader(File.OpenRead(file));
             sFolder unpacked = new sFolder();
             unpacked.files = new List<sFile>();
@@ -28,10 +25,10 @@ namespace NINOKUNI
                 uint unknown = br.ReadUInt32();
 
                 sFile newFile = new sFile();
-                newFile.name = "File" + i.ToString() + ".bin";
+                newFile.name = name + '_' + i.ToString() + ".bin";
                 newFile.offset = br.ReadUInt32();
                 newFile.size = br.ReadUInt32();
-                newFile.path = packFile;
+                newFile.path = file;
 
                 unpacked.files.Add(newFile);
             }

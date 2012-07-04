@@ -23,16 +23,20 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Drawing;
-using PluginInterface;
-using PluginInterface.Images;
+using Ekona;
+using Ekona.Images;
 
 namespace _999HRPERDOOR
 {
     public class SIR0_Sprite : SpriteBase
     {
         SIR0_Info info;
+        IPluginHost pluginHost;
 
-        public SIR0_Sprite(IPluginHost pluginHost, string file, int id) : base(pluginHost, file, id) { }
+        public SIR0_Sprite(IPluginHost pluginHost, string file, int id, string fileName = "") : base(file, id, fileName) 
+        {
+            this.pluginHost = pluginHost;
+        }
 
         public override void Read(string file)
         {
@@ -41,7 +45,7 @@ namespace _999HRPERDOOR
 
             PaletteBase palette;
             ImageBase image;
-            PluginInterface.Images.Bank bank;
+            Ekona.Images.Bank bank;
 
             // Read header
             char[] file_id = br.ReadChars(4);
@@ -87,13 +91,13 @@ namespace _999HRPERDOOR
             br.BaseStream.Position = info.info3.palette_offset;
             Color[][] colors = new Color[1][];
             colors[0] = Actions.BGR555ToColor(br.ReadBytes(0x200));
-            palette = new RawPalette(pluginHost, colors, false, ColorFormat.colors256);
+            palette = new RawPalette(colors, false, ColorFormat.colors256);
 
             // Read tiles
             br.BaseStream.Position = info.info3.tile_offset;
             byte[] tiles = new byte[info.info3.tile_size];
             tiles = br.ReadBytes((int)info.info3.tile_size);
-            image = new RawImage(pluginHost, tiles, TileForm.Lineal, ColorFormat.colors256, 0x40,
+            image = new RawImage(tiles, TileForm.Lineal, ColorFormat.colors256, 0x40,
                 (int)(info.info3.tile_size / 0x40), false);
 
             // Read cell info
@@ -104,7 +108,7 @@ namespace _999HRPERDOOR
                 bank_size = info.info1.info3_offset - info.info3.cell_offset - 0x06;
 
             br.BaseStream.Position = info.info3.cell_offset;
-            bank = new PluginInterface.Images.Bank();
+            bank = new Ekona.Images.Bank();
             bank.oams = new OAM[bank_size / 0x0A];
             for (int i = 0; i < bank.oams.Length; i++)
             {
@@ -112,10 +116,10 @@ namespace _999HRPERDOOR
                 bank.oams[i].height = br.ReadUInt16();
                 bank.oams[i].obj1.xOffset = br.ReadUInt16() - 0x80;
                 bank.oams[i].obj0.yOffset = br.ReadUInt16() - 0x80;
-                bank.oams[i].obj2.tileOffset = (uint)(br.ReadUInt16() / 0x40);
+                bank.oams[i].obj2.tileOffset = (uint)(br.ReadUInt16() / 0x20);
                 bank.oams[i].num_cell = (ushort)i;
             }
-            Set_Banks(new PluginInterface.Images.Bank[] { bank }, 0, false);
+            Set_Banks(new Ekona.Images.Bank[] { bank }, 0, false);
             br.Close();
 
             pluginHost.Set_Palette(palette);
@@ -130,7 +134,12 @@ namespace _999HRPERDOOR
 
     public class SIR0_Image : ImageBase
     {
-        public SIR0_Image(IPluginHost pluginHost, string file, int id) : base(pluginHost, file, id) { }
+        IPluginHost pluginHost;
+
+        public SIR0_Image(IPluginHost pluginHost, string file, int id, string fileName = "") : base(file, id, fileName)
+        {
+            this.pluginHost = pluginHost;
+        }
 
         public override void Read(string fileIn)
         {
@@ -149,7 +158,7 @@ namespace _999HRPERDOOR
 
             br.BaseStream.Position = paletteOffset;
             Color[] colors = Actions.BGR555ToColor(br.ReadBytes(0x200));
-            RawPalette palette = new RawPalette(pluginHost, new Color[][] { colors }, false, ColorFormat.colors256);
+            RawPalette palette = new RawPalette(new Color[][] { colors }, false, ColorFormat.colors256);
             pluginHost.Set_Palette(palette);
 
             br.Close();

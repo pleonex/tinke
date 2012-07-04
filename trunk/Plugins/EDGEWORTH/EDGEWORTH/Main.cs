@@ -23,7 +23,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Windows.Forms;
-using PluginInterface;
+using Ekona;
 
 namespace EDGEWORTH
 {
@@ -34,17 +34,15 @@ namespace EDGEWORTH
 
         public bool IsCompatible()
         {
-            if (gameCode == "C32P" || gameCode == "C32J")
+            if (gameCode == "C32P" || gameCode == "C32J" || gameCode == "C32E")
                 return true;
 
             return false;
         }
 
-        public Format Get_Format(string nombre, byte[] magic, int id)
+        public Format Get_Format(sFile file, byte[] magic)
         {
-            nombre = nombre.ToUpper();
-
-            if (nombre == "ROMFILE.BIN")
+            if (file.name.ToUpper() == "ROMFILE.BIN")
                 return Format.Pack;
 
             return Format.Unknown;
@@ -56,19 +54,19 @@ namespace EDGEWORTH
             this.gameCode = gameCode;
         }
 
-        public void Read(string archivo, int id)
+        public void Read(sFile file)
         {
         }
-        public Control Show_Info(string archivo, int id)
+        public Control Show_Info(sFile file)
         {
             return new Control();
         }
 
-        public string Pack(ref sFolder unpacked, string file, int id)
+        public string Pack(ref sFolder unpacked, sFile file)
         {
-            if (file.ToUpper().EndsWith("ROMFILE.BIN"))
+            if (file.name.ToUpper().EndsWith("ROMFILE.BIN"))
             {
-                String packFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + "pack_romfile.bin";
+                String packFile = pluginHost.Get_TempFile();
                 if (File.Exists(packFile))
                     File.Delete(packFile);
 
@@ -78,9 +76,9 @@ namespace EDGEWORTH
 
             return null;
         }
-        public sFolder Unpack(string file, int id) 
+        public sFolder Unpack(sFile file) 
         {
-            if (file.ToUpper().EndsWith("ROMFILE.BIN"))
+            if (file.name.ToUpper().EndsWith("ROMFILE.BIN"))
             {
                 System.Threading.Thread waiting = new System.Threading.Thread(ThreadWait);
                 String lang = "";
@@ -93,7 +91,7 @@ namespace EDGEWORTH
                 catch { throw new NotSupportedException("There was an error reading the language file"); }
                 waiting.Start(lang);
 
-                sFolder desc = PACK.Unpack(file, pluginHost);
+                sFolder desc = PACK.Unpack(file.path, pluginHost);
 
                 waiting.Abort();
                 return desc;

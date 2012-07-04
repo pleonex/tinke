@@ -27,7 +27,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
-using PluginInterface;
+using Ekona;
 
 namespace Pack.Games
 {
@@ -49,34 +49,34 @@ namespace Pack.Games
             return false;
         }
 
-        public Format Get_Format(string fileName, byte[] magic, int id)
+        public Format Get_Format(sFile file, byte[] magic)
         {
-            if (id == 0xC1)
+            if (file.id == 0xC1)
                 return Format.System;
-            if (id == 0xC2)
+            if (file.id == 0xC2)
                 return Format.Pack;
 
             return Format.Unknown;
         }
 
-        public string Pack(ref sFolder unpacked, string file, int id)
+        public string Pack(ref sFolder unpacked, sFile file)
         {
             return null;
         }
-        public sFolder Unpack(string file, int id)
+        public sFolder Unpack(sFile file)
         {
-            if (id == 0xC1)
-                return Unpack_ROM(pluginHost.Search_File(0xC2), file);
-            if (id == 0xC2)
-                return Unpack_ROM(file, pluginHost.Search_File(0xC1));
+            if (file.id == 0xC1)
+                return Unpack_ROM(pluginHost.Search_File(0xC2), file.path);
+            if (file.id == 0xC2)
+                return Unpack_ROM(file.path, pluginHost.Search_File(0xC1));
 
             return new sFolder();
         }
 
-        public void Read(string file, int id)
+        public void Read(sFile file)
         {
         }
-        public System.Windows.Forms.Control Show_Info(string file, int id)
+        public System.Windows.Forms.Control Show_Info(sFile file)
         {
             return new System.Windows.Forms.Control();
         }

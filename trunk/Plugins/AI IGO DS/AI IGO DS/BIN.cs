@@ -24,25 +24,28 @@ using System.Text;
 using System.IO;
 using System.Drawing;
 using System.Windows.Forms;
-using PluginInterface;
-using PluginInterface.Images;
+using Ekona;
+using Ekona.Images;
 
 namespace AI_IGO_DS
 {
     public class BIN
     {
-        IPluginHost pluginHost;
         int id;
+        string fileName;
 
         bool hasMap;
         MapBase[] maps;
         ImageBase image;
         PaletteBase palette;
 
-        public BIN(IPluginHost pluginHost, string file, int id) 
+        public BIN(string file, int id, string fileName = "")
         {
-            this.pluginHost = pluginHost;
             this.id = id;
+            if (fileName == "")
+                this.fileName = Path.GetFileName(file);
+            else
+                this.fileName = fileName;
 
             Read(file);
         }
@@ -105,7 +108,7 @@ namespace AI_IGO_DS
             uint tCabeceraSize = br.ReadUInt32() * 4;
             uint tSize = br.ReadUInt32() * 4;
             byte[] tiles = br.ReadBytes((int)(tSize - 0x08));
-            image = new RawImage(pluginHost, tiles, TileForm.Horizontal, depth, 0x40, tiles.Length / 0x40, false);
+            image = new RawImage(tiles, TileForm.Horizontal, depth, 0x40, tiles.Length / 0x40, false, fileName);
 
             // Map
             if (mapOffset == 0x00)
@@ -136,13 +139,13 @@ namespace AI_IGO_DS
                 for (int j = 0; j < map.Length; j++)
                     map[j] = Actions.MapInfo(br.ReadUInt16());
 
-                maps[i] = new RawMap(pluginHost, map, width, height, false);
+                maps[i] = new RawMap(map, width, height, false, fileName);
             }
 
             End:
             br.Close();
 
-            palette = new RawPalette(pluginHost, colors, false, depth);
+            palette = new RawPalette(colors, false, depth, fileName);
         }
 
         public Size Get_Size(int index)

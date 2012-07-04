@@ -23,7 +23,7 @@ using System.Text;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using PluginInterface;
+using Ekona;
 
 namespace NotManagedNetPlugins
 {
@@ -63,12 +63,12 @@ namespace NotManagedNetPlugins
             return false;
         }
 
-        public Format Get_Format(string nombre, byte[] magic, int id)
+        public Format Get_Format(sFile file, byte[] magic)
         {
             switch (pluginLoaded)
             {
                 case 0:
-                    IntPtr p = XGetFormat(nombre, id);
+                    IntPtr p = XGetFormat(file.name, file.id);
                     string c = Marshal.PtrToStringAnsi(p);
                     return Helper.StringToFormat(c);
             }
@@ -76,23 +76,23 @@ namespace NotManagedNetPlugins
             return Format.Unknown;
         }
 
-        public void Read(string archivo, int id)
+        public void Read(sFile file)
         {
         }
-        public System.Windows.Forms.Control Show_Info(string archivo, int id)
+        public System.Windows.Forms.Control Show_Info(sFile file)
         {
             return new System.Windows.Forms.Control();
         }
 
-        public unsafe sFolder Unpack(string file, int id)
+        public unsafe sFolder Unpack(sFile file)
         {
             switch (pluginLoaded)
             {
                 case 0:
-                    if (id == 0x15)
+                    if (file.id == 0x15)
                     {
                         int num = 0;
-                        bool b = XDecompress(file, pluginHost.Search_File(0x16), pluginHost.Search_File(0x17), id.ToString(), &num);
+                        bool b = XDecompress(file.path, pluginHost.Search_File(0x16), pluginHost.Search_File(0x17), file.id.ToString(), &num);
 
                         String txtfile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + "tinke_file_list.txt";
                         sFolder decompressedFolder = Helper.Get_DecompressedFiles(txtfile, num, pluginHost);
@@ -104,7 +104,7 @@ namespace NotManagedNetPlugins
 
             return new sFolder();
         }
-        public String Pack(ref sFolder unpacked, string file, int id)
+        public String Pack(ref sFolder unpacked, sFile file)
         {
             return null;
         }

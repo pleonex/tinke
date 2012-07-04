@@ -28,7 +28,7 @@ using System.Windows.Forms;
 using System.IO;
 using System.Threading;
 using System.Xml.Linq;
-using PluginInterface;
+using Ekona;
 
 namespace Tinke
 {
@@ -1569,7 +1569,7 @@ namespace Tinke
             string tempHeader = Path.GetTempFileName();
             Nitro.NDS.EscribirCabecera(tempHeader, header, accion.ROMFile);
             BinaryReader brHeader = new BinaryReader(File.OpenRead(tempHeader));
-            header.headerCRC16 = (ushort)Tools.CRC16.Calcular(brHeader.ReadBytes(0x15E));
+            header.headerCRC16 = (ushort)Ekona.Helper.CRC16.Calculate(brHeader.ReadBytes(0x15E));
             brHeader.Close();
             File.Delete(tempHeader);
 
@@ -2035,6 +2035,10 @@ namespace Tinke
 
                     Get_SupportedFiles();
                     Add_TreeNodes(unpacked);
+                    break;
+
+                case 4: // Get format
+                    MessageBox.Show(((Format)action).ToString());
                     break;
             }
 

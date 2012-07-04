@@ -3,16 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
-using PluginInterface;
-using PluginInterface.Images;
+using Ekona;
+using Ekona.Images;
 
 namespace Images
 {
     public class NCOB : SpriteBase
     {
         sNCOB ncob;
+        ImageBase img;
 
-        public NCOB(IPluginHost pluginHost, string file, int id) : base(pluginHost, file, id) { }
+        public NCOB(string file, int id, string fileName = "") : base(file, id, fileName) { }
 
         public override void Read(string fileIn)
         {
@@ -37,11 +38,11 @@ namespace Images
                         ncob.cell.type = "CELL".ToCharArray();
                         ncob.cell.size = br.ReadUInt32();
                         ncob.cell.num_banks = br.ReadUInt32();
-                        ncob.cell.banks = new PluginInterface.Images.Bank[ncob.cell.num_banks];
+                        ncob.cell.banks = new Ekona.Images.Bank[ncob.cell.num_banks];
 
                         for (int b = 0; b < ncob.cell.num_banks; b++)
                         {
-                            ncob.cell.banks[b] = new PluginInterface.Images.Bank();
+                            ncob.cell.banks[b] = new Ekona.Images.Bank();
                             ncob.cell.banks[b].oams = new OAM[br.ReadUInt32()];
 
                             for (int o = 0; o < ncob.cell.banks[b].oams.Length; o++)
@@ -63,8 +64,8 @@ namespace Images
                                 oam.obj2.index_palette = br.ReadByte();
                                 oam.obj2.tileOffset = br.ReadUInt32();
 
-                                oam.width = (ushort)pluginHost.Get_OAMSize(oam.obj0.shape, oam.obj1.size).Width;
-                                oam.height = (ushort)pluginHost.Get_OAMSize(oam.obj0.shape, oam.obj1.size).Height;
+                                oam.width = (ushort)Actions.Get_OAMSize(oam.obj0.shape, oam.obj1.size).Width;
+                                oam.height = (ushort)Actions.Get_OAMSize(oam.obj0.shape, oam.obj1.size).Height;
                                 oam.num_cell = (ushort)o;
 
                                 ncob.cell.banks[b].oams[o] = oam;
@@ -90,9 +91,8 @@ namespace Images
 
             br.Close();
 
-            ImageBase image = new RawImage(pluginHost, ncob.chars.data, TileForm.Horizontal, ColorFormat.colors16,
+            img = new RawImage(ncob.chars.data, TileForm.Horizontal, ColorFormat.colors16,
                                             0x20, ncob.chars.data.Length / 0x20, false);
-            pluginHost.Set_Image(image);
             Set_Banks(ncob.cell.banks, 0, false);
         }
 
@@ -101,9 +101,14 @@ namespace Images
             throw new NotImplementedException();
         }
 
+        public ImageBase Image
+        {
+            get { return img; }
+        }
+
         public struct sNCOB
         {
-            public Header generic;
+            public NitroHeader generic;
             public CELL cell;
             public CHAR chars;
             public GRP grp;
@@ -124,7 +129,7 @@ namespace Images
                 public char[] type;
                 public uint size;
                 public uint num_banks;
-                public PluginInterface.Images.Bank[] banks;
+                public Ekona.Images.Bank[] banks;
             }
             public struct CHAR
             {

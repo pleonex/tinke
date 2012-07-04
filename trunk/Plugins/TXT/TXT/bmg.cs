@@ -22,7 +22,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
-using PluginInterface;
+using Ekona;
 
 namespace TXT
 {
@@ -204,7 +204,7 @@ namespace TXT
 
     public struct sBMG
     {
-        public Header cabecera;
+        public NitroHeader cabecera;
         public bool uft16;
         public sINF1 inf1;
         public sDAT1 dat1;

@@ -22,14 +22,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
-using PluginInterface;
-using PluginInterface.Images;
+using Ekona;
+using Ekona.Images;
 
 namespace TOTTEMPEST
 {
     public class ASC : MapBase
     {
-        public ASC(IPluginHost pluginHost, string file, int id) : base(pluginHost, file, id) { }
+        IPluginHost pluginHost;
+
+        public ASC(IPluginHost pluginHost, string file, int id) : base(file, id) { this.pluginHost = pluginHost; }
 
         public override void Read(string file)
         {
@@ -41,7 +43,7 @@ namespace TOTTEMPEST
             NTFS[] map = new NTFS[(file_size - 4) / 2];
 
             for (int i = 0; i < map.Length; i++)
-                map[i] = pluginHost.MapInfo(br.ReadUInt16());
+                map[i] = Actions.MapInfo(br.ReadUInt16());
 
             br.Close();
             Set_Map(map, true, width * 8, height * 8);
@@ -55,7 +57,7 @@ namespace TOTTEMPEST
             bw.Write((ushort)(Height / 0x08));
 
             for (int i = 0; i < Map.Length; i++)
-                bw.Write(pluginHost.MapInfo(Map[i]));
+                bw.Write(Actions.MapInfo(Map[i]));
 
             bw.Flush();
             bw.Close();

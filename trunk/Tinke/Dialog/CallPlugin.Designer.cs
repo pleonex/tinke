@@ -146,7 +146,8 @@ namespace Tinke.Dialog
             "Read (double click)",
             "View",
             "Unpack",
-            "Pack"});
+            "Pack",
+            "Get format"});
             this.comboAction.Location = new System.Drawing.Point(251, 15);
             this.comboAction.Name = "comboAction";
             this.comboAction.Size = new System.Drawing.Size(121, 21);

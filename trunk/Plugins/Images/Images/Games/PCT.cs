@@ -25,8 +25,8 @@
 using System;
 using System.IO;
 using System.Drawing;
-using PluginInterface;
-using PluginInterface.Images;
+using Ekona;
+using Ekona.Images;
 
 namespace Images.Games
 {
@@ -35,7 +35,7 @@ namespace Images.Games
         string gameCode;
         IPluginHost pluginHost;
 
-        public Format Get_Format(string fileName, byte[] magic, int id)
+        public Format Get_Format(sFile file, byte[] magic)
         {
             string ext = new string(System.Text.Encoding.ASCII.GetChars(magic));
             if (ext == "STD ")
@@ -57,21 +57,21 @@ namespace Images.Games
             return false;
         }
 
-        public void Read(string file, int id)
+        public void Read(sFile file)
         {
         }
-        public System.Windows.Forms.Control Show_Info(string file, int id)
+        public System.Windows.Forms.Control Show_Info(sFile file)
         {
             // BTM only support STD files
-            new STD(pluginHost, file, id);
+            new STD(pluginHost, file.path, file.id, file.name);
             return new ImageControl(pluginHost, true);
         }
 
-        public sFolder Unpack(string file, int id)
+        public sFolder Unpack(sFile file)
         {
             return new sFolder();
         }
-        public string Pack(ref sFolder unpacked, string file, int id)
+        public string Pack(ref sFolder unpacked, sFile file)
         {
             return null;
         }
@@ -80,7 +80,12 @@ namespace Images.Games
 
     class STD : MapBase
     {
-        public STD(IPluginHost pluginHost, string file, int id) : base(pluginHost, file, id) { }
+        IPluginHost pluginHost;
+
+        public STD(IPluginHost pluginHost, string file, int id, string fileName = "") : base(file, id, fileName)
+        {
+            this.pluginHost = pluginHost;
+        }
 
         public override void Read(string fileIn)
         {
@@ -99,7 +104,7 @@ namespace Images.Games
             ushort unknown_pal = br.ReadUInt16();
             ushort num_colors = br.ReadUInt16();
             Color[] colors = Actions.BGR555ToColor(br.ReadBytes(num_colors * 2));
-            PaletteBase palette = new RawPalette(pluginHost, new Color[][] { colors }, false, format);
+            PaletteBase palette = new RawPalette(new Color[][] { colors }, false, format);
 
             // Map
             int tile_width = br.ReadUInt16() * 8;
@@ -130,7 +135,7 @@ namespace Images.Games
             else if (clrformat != 0 && clrformat != 1)
                 System.Windows.Forms.MessageBox.Show("ClrFormat: " + clrformat.ToString());
             byte[] tiles = br.ReadBytes((int)(br.BaseStream.Length - br.BaseStream.Position));
-            ImageBase image = new RawImage(pluginHost, tiles, TileForm.Horizontal, format, width, height, false);
+            ImageBase image = new RawImage(tiles, TileForm.Horizontal, format, width, height, false);
             image.TileSize = tile_width;
 
             br.Close();

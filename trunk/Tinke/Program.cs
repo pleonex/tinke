@@ -35,7 +35,7 @@ namespace Tinke
         static void Main(string[] args)
         {
             #region Comprobación de archivos necesarios
-            string[] archivos = new string[] { "PluginInterface.dll", "DSDecmp.dll" };
+            string[] archivos = new string[] { "Ekona.dll", "DSDecmp.dll" };
             string faltan = "";
             for (int i = 0; i < archivos.Length; i++)
             {

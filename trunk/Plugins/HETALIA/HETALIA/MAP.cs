@@ -24,14 +24,16 @@
 // -----------------------------------------------------------------------
 using System;
 using System.IO;
-using PluginInterface;
-using PluginInterface.Images;
+using Ekona;
+using Ekona.Images;
 
 namespace HETALIA
 {
     class MAP : MapBase
     {
-        public MAP(IPluginHost pluginHost, string file, int id) : base(pluginHost, file, id) { }
+        IPluginHost pluginHost;
+
+        public MAP(IPluginHost pluginHost, string file, int id, string fileName = "") : base(file, id, fileName) { this.pluginHost = pluginHost; }
 
         public override void Read(string fileIn)
         {
@@ -59,7 +61,6 @@ namespace HETALIA
             for (int i = 0; i < map.Length; i++)
             {
                 map[i] = Actions.MapInfo(br.ReadUInt16());
-                //map[i].nTile--;
                 map[i].nPalette = 0;
             }
 
@@ -71,14 +72,16 @@ namespace HETALIA
             string imy_file = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + Path.GetRandomFileName();
             File.WriteAllBytes(imy_file, imy);
             // Read the file
-            new IMY(pluginHost, imy_file, id);
+            new IMY(pluginHost, imy_file, id, fileName);
 
             // Change some image parameters
             ImageBase img = pluginHost.Get_Image();
             int tile_size = tile_width * tile_height * img.BPP / 8;
+            // Set a zero tile in the beggining
             byte[] newTiles = new byte[img.Tiles.Length + tile_size];
             Array.Copy(img.Tiles, 0, newTiles, tile_size, img.Tiles.Length);
             img.Set_Tiles(newTiles);
+
             img.TileSize = tile_width;
             img.FormTile = TileForm.Horizontal;
             pluginHost.Set_Image(img);

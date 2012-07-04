@@ -22,14 +22,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
-using PluginInterface;
-using PluginInterface.Images;
+using Ekona;
+using Ekona.Images;
 
 namespace Images
 {
     public class NCSC : MapBase
     {
-        public NCSC(IPluginHost pluginHost, string file, int id) : base(pluginHost, file, id) { }
+        public NCSC(string file, int id, string fileName = "") : base(file, id, fileName) { }
 
         public override void Read(string file)
         {
@@ -125,7 +125,7 @@ namespace Images
 
         public struct sNCSC
         {
-            public Header generic;
+            public NitroHeader generic;
             public SCRN scrn;
             public ESCR escr;
             public CLRF clrf;

@@ -28,7 +28,7 @@ using System.Windows.Forms;
 using System.IO;
 using System.Media;
 using System.Threading;
-using PluginInterface;
+using Ekona;
 
 namespace SDAT
 {

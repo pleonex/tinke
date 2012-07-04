@@ -26,8 +26,8 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.IO;
-using PluginInterface;
-using PluginInterface.Images;
+using Ekona;
+using Ekona.Images;
 
 namespace PSL
 {
@@ -87,7 +87,7 @@ namespace PSL
             Color[][] pal = new Color[1][] { Actions.BGR555ToColor(br.ReadBytes(0x40)) };
             br.Close();
 
-            palette = new RawPalette(pluginHost, pal, false, ColorFormat.colors16);
+            palette = new RawPalette(pal, false, ColorFormat.colors16);
 
             if (imgs[i] == null)
                 imgs[i] = Save_File(imgs_[i]);
@@ -110,7 +110,7 @@ namespace PSL
             byte[] tiles = br.ReadBytes(0x200);
             br.Close();
 
-            ImageBase image = new RawImage(pluginHost, tiles, TileForm.Lineal, ColorFormat.colors16, 0x20, 0x20, false);
+            ImageBase image = new RawImage(tiles, TileForm.Lineal, ColorFormat.colors16, 0x20, 0x20, false);
             this.Controls.Remove(imageControl1);
             imageControl1 = new ImageControl(pluginHost, image, palette);
             this.Controls.Add(imageControl1);
@@ -137,7 +137,7 @@ namespace PSL
                 Color[][] pal = new Color[1][] { Actions.BGR555ToColor(br.ReadBytes(0x40)) };
                 br.Close();
 
-                palette = new RawPalette(pluginHost, pal, false, ColorFormat.colors16);
+                palette = new RawPalette(pal, false, ColorFormat.colors16);
 
                 if (imgs[i] == null)
                     imgs[i] = Save_File(imgs_[i]);
@@ -151,7 +151,7 @@ namespace PSL
                     br.BaseStream.Position = j * 0x200;
                     byte[] tiles = br.ReadBytes(0x200);
 
-                    ImageBase image = new RawImage(pluginHost, tiles, TileForm.Lineal, ColorFormat.colors16, 0x20, 0x20, false);
+                    ImageBase image = new RawImage(tiles, TileForm.Lineal, ColorFormat.colors16, 0x20, 0x20, false);
                     image.Get_Image(palette).Save(folderOut + "Sprite" + i.ToString() + '_' + j.ToString() + ".png");
                 }
                 br.Close();

@@ -22,16 +22,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
-using PluginInterface;
+using Ekona;
 
 namespace MAPLESTORYDS
 {
     public static class PACK
     {
-        public static sFolder Unpack(string file, IPluginHost pluginHost)
+        public static sFolder Unpack(string file, string name)
         {
-            string packFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + "pack_" + Path.GetFileName(file);
-            File.Copy(file, packFile, true);
             BinaryReader br = new BinaryReader(File.OpenRead(file));
             sFolder folder = new sFolder();
             folder.id = 0xFFFF;
@@ -75,8 +73,8 @@ namespace MAPLESTORYDS
             for (int i = 0; i < nxarc.header.num_files; i++)
             {
                 nxarc.files[i] = new sFile();
-                nxarc.files[i].name = "File" + i.ToString() + ".bin";
-                nxarc.files[i].path = packFile;
+                nxarc.files[i].name = name + '_' + i.ToString() + ".bin";
+                nxarc.files[i].path = file;
                 nxarc.files[i].offset = br.ReadUInt32();
                 nxarc.files[i].offset += nxarc.header.filesOffset;
                 nxarc.files[i].size = br.ReadUInt32();

@@ -21,7 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using PluginInterface;
+using Ekona;
 using System.IO;
 
 namespace Pack.Games
@@ -47,20 +47,19 @@ namespace Pack.Games
             return false;
         }
 
-        public Format Get_Format(string fileName, byte[] magic, int id)
+        public Format Get_Format(sFile file, byte[] magic)
         {
-            if (id >= 0x9E && id <= 0xD8 && id != 0xBA)
+            if (file.id >= 0x9E && file.id <= 0xD8 && file.id != 0xBA)
                 return Format.Pack;
 
             return Format.Unknown;
         }
 
-        public string Pack(ref sFolder unpacked, string file, int id)
+        public string Pack(ref sFolder unpacked, sFile file)
         {
-            if (id >= 0x9E && id <= 0xD8 && id != 0xBA)
+            if (file.id >= 0x9E && file.id <= 0xD8 && file.id != 0xBA)
             {
-                string fileOut = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + Path.GetRandomFileName() +
-                    Path.GetFileName(file);
+                string fileOut = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + Path.GetRandomFileName();
                 Pack(fileOut, ref unpacked);
 
                 return fileOut;
@@ -68,29 +67,28 @@ namespace Pack.Games
 
             return null;
         }
-        public sFolder Unpack(string file, int id)
+        public sFolder Unpack(sFile file)
         {
-            if (id >= 0x9E && id <= 0xD8 && id != 0xBA)
-                return Unpack(file);
+            if (file.id >= 0x9E && file.id <= 0xD8 && file.id != 0xBA)
+                return Unpack(file.path, file.name);
 
             return new sFolder();
         }
 
-        public void Read(string file, int id)
+        public void Read(sFile file)
         {
         }
-        public System.Windows.Forms.Control Show_Info(string file, int id)
+        public System.Windows.Forms.Control Show_Info(sFile file)
         {
             return new System.Windows.Forms.Control();
         }
 
-        public static sFolder Unpack(string file)
+        public static sFolder Unpack(string file, string name)
         {
             BinaryReader br = new BinaryReader(File.OpenRead(file));
             sFolder unpacked = new sFolder();
             unpacked.files = new List<sFile>();
 
-            string parent_name = Path.GetFileNameWithoutExtension(file).Substring(12);
             int num_files = (int)br.ReadUInt32() / 0x08;
             num_files--;    // The last offset indicates the end of the file
             br.BaseStream.Position = 0;
@@ -101,7 +99,7 @@ namespace Pack.Games
                 newFile.offset = br.ReadUInt32();
                 newFile.size = br.ReadUInt32() & 0x7FFFFFF;    // The last bit indicates if the file it's compressed
                 newFile.path = file;
-                newFile.name = parent_name + i.ToString();
+                newFile.name = name + '_' + i.ToString();
 
                 #region Get the extension
                 long currPos = br.BaseStream.Position;

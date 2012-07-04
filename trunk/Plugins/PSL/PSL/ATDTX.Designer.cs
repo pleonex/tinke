@@ -47,7 +47,7 @@ namespace PSL
         /// </summary>
         private void InitializeComponent()
         {
-            this.imageControl1 = new PluginInterface.Images.ImageControl();
+            this.imageControl1 = new Ekona.Images.ImageControl();
             this.numFile = new System.Windows.Forms.NumericUpDown();
             this.label1 = new System.Windows.Forms.Label();
             this.btnExtract = new System.Windows.Forms.Button();
@@ -153,7 +153,7 @@ namespace PSL
 
         #endregion
 
-        private PluginInterface.Images.ImageControl imageControl1;
+        private Ekona.Images.ImageControl imageControl1;
         private System.Windows.Forms.NumericUpDown numFile;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button btnExtract;

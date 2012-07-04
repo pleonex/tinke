@@ -26,8 +26,8 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.IO;
-using PluginInterface;
-using PluginInterface.Images;
+using Ekona;
+using Ekona.Images;
 
 namespace PSL
 {
@@ -85,11 +85,11 @@ namespace PSL
             int size = (int)infos[(int)numImg.Value].size;
             TileForm form = (images.EndsWith("Tex.dat") ? TileForm.Lineal : TileForm.Horizontal);
 
-            RawImage image = new RawImage(pluginHost, images, -1, form, ColorFormat.colors256, false,
+            RawImage image = new RawImage(images, -1, form, ColorFormat.colors256, false,
                 offset + 0x220, size - 0x220);
             pluginHost.Set_Image(image);
 
-            RawPalette palette = new RawPalette(pluginHost, images, -1, false,
+            RawPalette palette = new RawPalette(images, -1, false,
                 offset + 0x20, 0x200);
             pluginHost.Set_Palette(palette);
 
@@ -116,10 +116,10 @@ namespace PSL
                 int size = (int)infos[i].size;
                 TileForm form = (images.EndsWith("Tex.dat") ? TileForm.Lineal : TileForm.Horizontal);
 
-                RawImage image = new RawImage(pluginHost, images, -1, form, ColorFormat.colors256, false,
+                RawImage image = new RawImage(images, -1, form, ColorFormat.colors256, false,
                     offset + 0x220, size - 0x220);
 
-                RawPalette palette = new RawPalette(pluginHost, images, -1, false,
+                RawPalette palette = new RawPalette(images, -1, false,
                     offset + 0x20, 0x200);
 
                 sprite.Get_Image(image, palette, 0, 512, 256, false, false, false, true, true).Save(folder + "Image" + i.ToString() + ".png");

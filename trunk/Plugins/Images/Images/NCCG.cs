@@ -5,8 +5,8 @@ using System.Text;
 using System.IO;
 using System.Drawing;
 using System.Windows.Forms;
-using PluginInterface;
-using PluginInterface.Images;
+using Ekona;
+using Ekona.Images;
 
 namespace Images
 {
@@ -14,9 +14,7 @@ namespace Images
     {
         sNCCG nccg;
 
-        public NCCG(IPluginHost pluginHost, string file, int id) : base(pluginHost, file, id)
-        {
-        }
+        public NCCG(string file, int id, string fileName) : base(file, id, fileName) { }
 
         public override void Read(string file)
         {
@@ -76,7 +74,7 @@ namespace Images
 
         public struct sNCCG
         {
-            public Header generic;
+            public NitroHeader generic;
             public CHAR charS;
             public ATTR attr;
             public LINK link;

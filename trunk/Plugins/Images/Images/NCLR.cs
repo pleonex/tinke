@@ -4,8 +4,8 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Drawing;
-using PluginInterface;
-using PluginInterface.Images;
+using Ekona;
+using Ekona.Images;
 
 namespace Images
 {
@@ -13,7 +13,7 @@ namespace Images
     {
         sNCLR nclr;
 
-        public NCLR(IPluginHost pluginHost, string file, int id) : base(pluginHost, file, id) { }
+        public NCLR(string file, int id, string fileName = "") : base(file, id, fileName) { }
 
         public override void Read(string fileIn)
         {
@@ -116,7 +116,7 @@ namespace Images
 
         public struct sNCLR      // Nintendo CoLor Resource
         {
-            public Header header;
+            public NitroHeader header;
             public TTLP pltt;
             public PMCP pmcp;
         }

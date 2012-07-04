@@ -24,8 +24,8 @@ using System.Text;
 using System.IO;
 using System.Drawing;
 using System.Windows.Forms;
-using PluginInterface;
-using PluginInterface.Images;
+using Ekona;
+using Ekona.Images;
 
 namespace SF_FEATHER
 {
@@ -34,15 +34,24 @@ namespace SF_FEATHER
         const ushort WIDTH = 32;
         ColorFormat depth;
         sCGx cgx;
+        PaletteBase pb;
 
-        public CGx(IPluginHost pluginHost, string file, int id, bool cg8)
-            : base(pluginHost)
+        public CGx(string file, int id, bool cg8, string fileName = "")
+            : base()
         {
             this.id = id;
-            this.fileName = Path.GetFileName(file);
+            if (fileName != "")
+                this.fileName = fileName;
+            else
+                this.fileName = Path.GetFileName(file);
 
-            depth = cg8 ? ColorFormat.colors256 : PluginInterface.Images.ColorFormat.colors16;
+            depth = cg8 ? ColorFormat.colors256 : Ekona.Images.ColorFormat.colors16;
             Read(file);
+        }
+
+        public PaletteBase Palette
+        {
+            get { return pb; }
         }
 
         public override void Read(string file)
@@ -70,13 +79,13 @@ namespace SF_FEATHER
             int tile_size = (depth == ColorFormat.colors16 ? 0x20 : 0x40);
             Byte[] tiles = br.ReadBytes((int)cgx.num_tiles * tile_size);
             Set_Tiles(tiles, WIDTH, (int)(tiles.Length / WIDTH), depth, TileForm.Horizontal, false);
-            if (depth == PluginInterface.Images.ColorFormat.colors16)
+            if (depth == Ekona.Images.ColorFormat.colors16)
                 Height *= 2;
 
             // Read palette
             br.BaseStream.Position = cgx.palOffset;
             Color[][] colors;
-            if (depth == PluginInterface.Images.ColorFormat.colors16)
+            if (depth == Ekona.Images.ColorFormat.colors16)
             {
                 colors = new Color[cgx.palColors / 0x10][];
                 for (int i = 0; i < colors.Length; i++)
@@ -87,15 +96,12 @@ namespace SF_FEATHER
                 colors = new Color[1][];
                 colors[0] = Actions.BGR555ToColor(br.ReadBytes((int)cgx.palColors * 2));
             }
-            PaletteBase palette = new RawPalette(pluginHost, colors, false, depth);
+            PaletteBase palette = new RawPalette(colors, false, depth);
 
             br.BaseStream.Position = cgx.unknonwnOffset;
             cgx.unknown = br.ReadBytes((int)(br.BaseStream.Length - br.BaseStream.Position));
 
             br.Close();
-
-            pluginHost.Set_Palette(palette);
-            pluginHost.Set_Image(this);
         }
         public override void Write(string fileOut, PaletteBase palette)
         {
@@ -104,7 +110,7 @@ namespace SF_FEATHER
 
             // Update the struct
             cgx.size_tiles = (uint)Tiles.Length;
-            if (depth == PluginInterface.Images.ColorFormat.colors16)
+            if (depth == Ekona.Images.ColorFormat.colors16)
                 cgx.num_tiles = cgx.size_tiles / 0x20;
             else
                 cgx.num_tiles = cgx.size_tiles / 0x40;
@@ -161,8 +167,14 @@ namespace SF_FEATHER
     public class CGT : ImageBase
     {
         bool transparency;
+        PaletteBase pb;
 
-        public CGT(IPluginHost pluginHost, string file, int id) : base(pluginHost, file, id) { }
+        public CGT(string file, int id, string fileName = "") : base(file, id, fileName) { }
+
+        public PaletteBase Palette
+        {
+            get { return pb; }
+        }
 
         public override void Read(string file)
         {
@@ -200,9 +212,7 @@ namespace SF_FEATHER
             br.Close();
 
             Set_Tiles(data, width, height, (ColorFormat)format, TileForm.Lineal, false);
-            PaletteBase pb = new RawPalette(pluginHost, palette, false, ColorFormat.colors256);
-            pluginHost.Set_Palette(pb);
-            pluginHost.Set_Image(this);
+            pb = new RawPalette(palette, false, ColorFormat.colors256);
         }
 
         public override void Write(string fileOut, PaletteBase palette)

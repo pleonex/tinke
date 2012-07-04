@@ -22,8 +22,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using PluginInterface;
-using PluginInterface.Images;
+using Ekona;
+using Ekona.Images;
 
 namespace TOTTEMPEST
 {
@@ -45,51 +45,51 @@ namespace TOTTEMPEST
             return false;
         }
 
-        public Format Get_Format(string nombre, byte[] magic, int id)
+        public Format Get_Format(sFile file, byte[] magic)
         {
-            nombre = nombre.ToUpper();
+            file.name = file.name.ToUpper();
 
-            if (nombre.EndsWith(".ANA"))
+            if (file.name.EndsWith(".ANA"))
                 return Format.Tile;
-            else if (nombre.EndsWith(".APA"))
+            else if (file.name.EndsWith(".APA"))
                 return Format.Palette;
-            else if (nombre.EndsWith(".ASC"))
+            else if (file.name.EndsWith(".ASC"))
                 return Format.Map;
-            else if (nombre.EndsWith(".NBM"))
+            else if (file.name.EndsWith(".NBM"))
                 return Format.FullImage;
 
             return Format.Unknown;
         }
 
-        public void Read(string file, int id)
+        public void Read(sFile file)
         {
-            if (file.ToUpper().EndsWith(".APA"))
-                new APA(pluginHost, file, id);
-            else if (file.ToUpper().EndsWith(".ANA"))
-                new ANA(pluginHost, file, id);
-            else if (file.ToUpper().EndsWith(".ASC"))
-                new ASC(pluginHost, file, id);
+            if (file.name.ToUpper().EndsWith(".APA"))
+                new APA(pluginHost, file.path, file.id);
+            else if (file.name.ToUpper().EndsWith(".ANA"))
+                new ANA(pluginHost, file.path, file.id);
+            else if (file.name.ToUpper().EndsWith(".ASC"))
+                new ASC(pluginHost, file.path, file.id);
         }
-        public Control Show_Info(string file, int id)
+        public Control Show_Info(sFile file)
         {
-            Read(file, id);
+            Read(file);
 
-            if (file.ToUpper().EndsWith(".ANA"))
+            if (file.name.ToUpper().EndsWith(".ANA"))
                 return new ImageControl(pluginHost, false);
 
-            if (file.ToUpper().EndsWith(".ASC"))
+            if (file.name.ToUpper().EndsWith(".ASC"))
                 return new ImageControl(pluginHost, true);
 
-            if (file.ToUpper().EndsWith(".APA"))
+            if (file.name.ToUpper().EndsWith(".APA"))
                 return new PaletteControl(pluginHost);
 
-            if (file.ToUpper().EndsWith(".NBM"))
-                return new NBM(pluginHost, file, id).Get_Control();
+            if (file.name.ToUpper().EndsWith(".NBM"))
+                return new NBM(pluginHost, file.path, file.id).Get_Control();
 
             return new System.Windows.Forms.Control();
         }
 
-        public String Pack(ref sFolder unpacked, string file, int id) { return null; }
-        public sFolder Unpack(string file, int id) { return new sFolder(); }
+        public String Pack(ref sFolder unpacked, sFile file) { return null; }
+        public sFolder Unpack(sFile file) { return new sFolder(); }
     }
 }

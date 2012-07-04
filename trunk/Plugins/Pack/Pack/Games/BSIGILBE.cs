@@ -27,8 +27,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
-using PluginInterface;
-using PluginInterface.Images;
+using Ekona;
+using Ekona.Images;
 
 namespace Pack.Games
 {
@@ -50,7 +50,7 @@ namespace Pack.Games
             return false;
         }
 
-        public Format Get_Format(string fileName, byte[] magic, int id)
+        public Format Get_Format(sFile file, byte[] magic)
         {
             if (magic[0] == 0x08)
                 return Format.Compressed;
@@ -58,24 +58,24 @@ namespace Pack.Games
             return Format.Unknown;
         }
 
-        public string Pack(ref sFolder unpacked, string file, int id)
+        public string Pack(ref sFolder unpacked, sFile file)
         {
             return null;
         }
-        public sFolder Unpack(string file, int id)
+        public sFolder Unpack(sFile file)
         {
-            return Decrypt(file);
+            return Decrypt(file.path, file.name);
         }
 
-        public void Read(string file, int id)
+        public void Read(sFile file)
         {
         }
-        public System.Windows.Forms.Control Show_Info(string file, int id)
+        public System.Windows.Forms.Control Show_Info(sFile file)
         {
             return new System.Windows.Forms.Control();
         }
 
-        public sFolder Decrypt(string fileIn)
+        public sFolder Decrypt(string fileIn, string name)
         {
             byte[] dataIn = File.ReadAllBytes(fileIn);
             if (dataIn[0] != 0x08)
@@ -219,7 +219,7 @@ namespace Pack.Games
             File.WriteAllBytes(tempFile, buffer);
 
             sFile dec = new sFile();
-            dec.name = Path.GetFileNameWithoutExtension(fileIn).Substring(12) + ".dec";
+            dec.name = name + ".dec";
             dec.offset = 0;
             dec.size = (uint)buffer.Length;
             dec.path = tempFile;

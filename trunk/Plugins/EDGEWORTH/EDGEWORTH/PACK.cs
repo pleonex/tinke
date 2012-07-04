@@ -22,7 +22,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
-using PluginInterface;
+using Ekona;
 
 namespace EDGEWORTH
 {
@@ -30,8 +30,6 @@ namespace EDGEWORTH
     {
         public static sFolder Unpack(string file, IPluginHost pluginHost)
         {
-            String romFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + Path.GetRandomFileName();
-            File.Copy(file, romFile, true);
             BinaryReader br = new BinaryReader(File.OpenRead(file));
             sFolder unpacked = new sFolder();
             unpacked.files = new List<sFile>();
@@ -47,7 +45,7 @@ namespace EDGEWORTH
                 sFile newFile = new sFile();
                 newFile.name = "File " + i.ToString() + ".bin";
                 newFile.offset = startOffset + 4;
-                newFile.path = romFile;
+                newFile.path = file;
                 newFile.size = br.ReadUInt32();
 
                 br.BaseStream.Position = currPos;

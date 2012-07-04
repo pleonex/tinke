@@ -25,14 +25,16 @@
 using System;
 using System.IO;
 using System.Drawing;
-using PluginInterface;
-using PluginInterface.Images;
+using Ekona;
+using Ekona.Images;
 
 namespace HETALIA
 {
     class IMY : ImageBase
     {
-        public IMY(IPluginHost pluginHost, string file, int id) : base(pluginHost, file, id) { }
+        IPluginHost pluginHost;
+
+        public IMY(IPluginHost pluginHost, string file, int id, string fileName = "") : base(file, id, fileName) { this.pluginHost = pluginHost; }
 
         public override void Read(string fileIn)
         {
@@ -60,7 +62,7 @@ namespace HETALIA
             byte[] pal = new byte[num_colors * 2];
             Array.Copy(data, 0x20, pal, 0, pal.Length);
             Color[] colors = Actions.BGR555ToColor(pal);
-            RawPalette palette = new RawPalette(pluginHost, new Color[][] { colors }, false, format);
+            RawPalette palette = new RawPalette(new Color[][] { colors }, false, format);
 
             pluginHost.Set_Palette(palette);
             pluginHost.Set_Image(this);

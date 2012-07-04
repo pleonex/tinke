@@ -20,7 +20,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using PluginInterface;
+using Ekona;
 
 namespace DBK_ULTIMATE
 {
@@ -43,29 +43,27 @@ namespace DBK_ULTIMATE
         }
 
 
-        public Format Get_Format(string fileName, byte[] magic, int id)
+        public Format Get_Format(sFile file, byte[] magic)
         {
-            if (fileName == "archiveDBK.dsa")
+            if (file.name == "archiveDBK.dsa")
                 return Format.Pack;
 
             return Format.Unknown;
         }
 
-        public void Read(string file, int id)
-        {
-        }
-        public System.Windows.Forms.Control Show_Info(string file, int id)
+        public void Read(sFile file) { }
+        public System.Windows.Forms.Control Show_Info(sFile file)
         {
             return new System.Windows.Forms.Control();
         }
 
-        public sFolder Unpack(string file, int id)
+        public sFolder Unpack(sFile file)
         {
-            if (System.IO.Path.GetFileName(file) == "110archiveDBK.dsa")
-                return Archive.Unpack_archiveDBK(pluginHost, file);
+            if (file.name == "archiveDBK.dsa")
+                return Archive.Unpack_archiveDBK(pluginHost, file.path);
 
             return new sFolder();
         }
-        public string Pack(ref sFolder unpacked, string file, int id) { return null; }
+        public string Pack(ref sFolder unpacked, sFile file) { return null; }
     }
 }

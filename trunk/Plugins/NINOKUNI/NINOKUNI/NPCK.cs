@@ -27,17 +27,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
-using PluginInterface;
+using Ekona;
 
 namespace NINOKUNI
 {
     public static class NPCK
     {
-        public static sFolder Unpack(string file, IPluginHost pluginHost)
+        public static sFolder Unpack(string file, string name)
         {
-            String packFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + "unpack_" + Path.GetFileName(file);
-            File.Copy(file, packFile, true);
-
             BinaryReader br = new BinaryReader(File.OpenRead(file));
             sFolder unpack = new sFolder();
             unpack.files = new List<sFile>();
@@ -55,10 +52,10 @@ namespace NINOKUNI
                     continue;
 
                 sFile newFile = new sFile();
-                newFile.name = "File" + i.ToString() + Get_Extension(num_files, i);
+                newFile.name = name + '_' + i.ToString() + Get_Extension(num_files, i);
                 newFile.offset = offset;
                 newFile.size = size;
-                newFile.path = packFile;
+                newFile.path = file;
 
                 unpack.files.Add(newFile);
             }
@@ -77,7 +74,7 @@ namespace NINOKUNI
 
             for (int i = 0; i < 9; i++)
             {
-                sFile currFile = Search_File("File" + i.ToString() + ".bin", unpacked);
+                sFile currFile = Search_File("File" + i.ToString(), unpacked);
 
                 if (currFile.name is String)
                 {
@@ -95,7 +92,7 @@ namespace NINOKUNI
             }
             for (int i = 0; i < 9; i++)
             {
-                sFile currFile = Search_File("File" + i.ToString() + ".bin", unpacked);
+                sFile currFile = Search_File("File" + i.ToString(), unpacked);
 
                 if (currFile.name is String)
                 {
@@ -113,7 +110,7 @@ namespace NINOKUNI
         public static sFile Search_File(string name, sFolder folder)
         {
             for (int i = 0; i < folder.files.Count; i++)
-                if (folder.files[i].name == name)
+                if (folder.files[i].name.Substring(0, 5) == name)
                     return folder.files[i];
 
             return new sFile();

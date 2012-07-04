@@ -212,9 +212,6 @@
       <DependentUpon>Sistema.cs</DependentUpon>
     </Compile>
     <Compile Include="PluginHost.cs" />
-    <Compile Include="Imagen\NCER.cs" />
-    <Compile Include="Imagen\Convertir.cs" />
-    <Compile Include="Imagen\NCGR.cs" />
     <Compile Include="Nitro\Estructuras.cs" />
     <Compile Include="Nitro\FAT.cs" />
     <Compile Include="Nitro\FNT.cs" />
@@ -222,8 +219,6 @@
     <Compile Include="Nitro\Overlay.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Tools\APNG.cs" />
-    <Compile Include="Tools\CRC.cs" />
     <Compile Include="Tools\Helper.cs" />
     <Compile Include="Visor.cs">
       <SubType>Form</SubType>
@@ -304,9 +299,9 @@
       <Project>{26C5F25F-B450-4CAF-AD8B-B8D11AE73457}</Project>
       <Name>Be.Windows.Forms.HexBox</Name>
     </ProjectReference>
-    <ProjectReference Include="..\PluginInterface\PluginInterface.csproj">
+    <ProjectReference Include="..\Ekona\Ekona.csproj">
       <Project>{736010D3-F72F-4C56-B8D2-2EDD1B8F3A87}</Project>
-      <Name>PluginInterface</Name>
+      <Name>Ekona</Name>
     </ProjectReference>
     <ProjectReference Include="..\Plugins\DSDecmp\DSDecmp\DSDecmp.csproj">
       <Project>{E6F419F9-D6B5-4BE7-99BB-97C48C927FF3}</Project>

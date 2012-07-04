@@ -22,8 +22,8 @@ IF /I "%ans%"=="N" (GOTO start
 
 RMDIR /S /Q "%cd%\build"
 
-REM Create the plugin DLL needed for the plugins (pluginInterface)
-%windir%\microsoft.net\framework\v4.0.30319\msbuild Tinke.sln /v:minimal /p:Configuration=%conf%;TarjetFrameworkVersion=v3.5 "/p:Platform=%plat%"
+REM Create the plugin DLL needed for the plugins (Ekona)
+%windir%\microsoft.net\framework\v4.0.30319\msbuild Tinke.sln /v:minimal /p:Configuration=Debug;TarjetFrameworkVersion=v3.5 "/p:Platform=%plat%"
 REM Compiling program
 %windir%\microsoft.net\framework\v4.0.30319\msbuild Tinke.sln /v:minimal /p:Configuration=%conf%;TarjetFrameworkVersion=v3.5 "/p:Platform=%plat%" "/p:OutputPath=%CD%\build\"
 

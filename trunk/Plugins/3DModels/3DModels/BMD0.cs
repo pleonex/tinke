@@ -23,7 +23,7 @@ using System.Linq;
 using System.Text;
 using System.Drawing;
 using System.IO;
-using PluginInterface;
+using Ekona;
 using OpenTK;
 using OpenTK.Graphics.OpenGL;
 

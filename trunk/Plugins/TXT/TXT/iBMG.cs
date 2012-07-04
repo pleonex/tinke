@@ -25,7 +25,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using PluginInterface;
+using Ekona;
 
 namespace TXT
 {

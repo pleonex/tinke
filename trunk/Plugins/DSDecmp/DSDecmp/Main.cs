@@ -5,7 +5,7 @@ using DSDecmp.Formats.Nitro;
 using DSDecmp.Formats;
 using System.IO;
 using System.Xml.Linq;
-using PluginInterface;
+using Ekona;
 
 namespace DSDecmp
 {

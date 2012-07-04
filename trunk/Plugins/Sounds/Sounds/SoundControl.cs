@@ -10,7 +10,7 @@ using System.IO;
 using System.Windows.Forms;
 using System.Media;
 using System.Threading;
-using PluginInterface;
+using Ekona;
 
 namespace Sounds
 {

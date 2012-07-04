@@ -22,7 +22,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
-using PluginInterface;
+using Ekona;
 
 namespace LAYTON
 {
@@ -32,7 +32,7 @@ namespace LAYTON
     public static class DARC
     {
 
-        public static sFolder Unpack(string file)
+        public static sFolder Unpack(string file, string name)
         {
             BinaryReader br = new BinaryReader(File.OpenRead(file));
             sFolder unpacked = new sFolder();
@@ -44,7 +44,7 @@ namespace LAYTON
             for (int i = 0; i < number_files; i++)
             {
                 sFile newFile = new sFile();
-                newFile.name = "File" + i.ToString() + ".denc";
+                newFile.name = name + '_' + i.ToString() + ".denc";
                 newFile.offset = br.ReadUInt32() + (uint)br.BaseStream.Position;    // Relative offset
                 newFile.path = file;
 
@@ -112,13 +112,11 @@ namespace LAYTON
     public static class DENC
     {
 
-        public static sFolder Unpack(string file, IPluginHost pluginHost)
+        public static sFolder Unpack(string file, string name, IPluginHost pluginHost)
         {
             BinaryReader br = new BinaryReader(File.OpenRead(file));
             sFolder decode = new sFolder();
             decode.files = new List<sFile>();
-
-            string parent_name = Path.GetFileNameWithoutExtension(file).Substring(12);
 
             char[] type = br.ReadChars(4);
             uint decoded_length = br.ReadUInt32();
@@ -128,7 +126,7 @@ namespace LAYTON
             if (!coded)
             {
                 sFile newFile = new sFile();
-                newFile.name = parent_name;
+                newFile.name = name;
                 newFile.offset = (uint)br.BaseStream.Position;
                 newFile.size = decoded_length;
                 newFile.path = file;
@@ -140,10 +138,10 @@ namespace LAYTON
             else
             {
                 sFile newFile = new sFile();
-                newFile.name = parent_name;
+                newFile.name = name;
                 newFile.offset = 0;
                 newFile.size = decoded_length;
-                newFile.path = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + "dec_" + Path.GetRandomFileName() + newFile.name;
+                newFile.path = pluginHost.Get_TempFile();
 
                 Decode_LZSS(br.ReadBytes((int)coded_length), newFile.path, (int)decoded_length);
 

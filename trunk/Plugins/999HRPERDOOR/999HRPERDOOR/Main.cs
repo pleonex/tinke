@@ -21,7 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
-using PluginInterface;
+using Ekona;
 
 namespace _999HRPERDOOR
 {
@@ -43,46 +43,45 @@ namespace _999HRPERDOOR
             return false;
         }
 
-        public Format Get_Format(string nombre, byte[] magic, int id)
+        public Format Get_Format(sFile file, byte[] magic)
         {
             string ext = new String(Encoding.ASCII.GetChars(magic));
 
-            if (id >= 0x13EF && id <= 0x1500)
+            if (file.id >= 0x13EF && file.id <= 0x1500)
                 return Format.FullImage;
             if (ext == "AT6P")
                 return Format.Compressed;
-            if (nombre.EndsWith(".at6p"))
+            if (file.name.EndsWith(".at6p"))
                 return Format.FullImage;
 
             return Format.Unknown;
         }
 
-        public void Read(string archivo, int id)
+        public void Read(sFile file)
         {
-            if (id >= 0x13EF && id <= 0x1500)
-                new SIR0_Sprite(pluginHost, archivo, id);
-            if (archivo.EndsWith(".at6p"))
-                new SIR0_Image(pluginHost, archivo, id);
+            if (file.id >= 0x13EF && file.id <= 0x1500)
+                new SIR0_Sprite(pluginHost, file.path, file.id, file.name);
+            if (file.name.EndsWith(".at6p"))
+                new SIR0_Image(pluginHost, file.path, file.id, file.name);
         }
-        public System.Windows.Forms.Control Show_Info(string archivo, int id)
+        public System.Windows.Forms.Control Show_Info(sFile file)
         {
-            Read(archivo, id);
+            Read(file);
 
-            if (id >= 0x13EF && id <= 0x1500)
-                return new PluginInterface.Images.SpriteControl(pluginHost);
-            if (archivo.EndsWith(".at6p"))
-                return new PluginInterface.Images.ImageControl(pluginHost, false);
+            if (file.id >= 0x13EF && file.id <= 0x1500)
+                return new Ekona.Images.SpriteControl(pluginHost);
+            if (file.name.EndsWith(".at6p"))
+                return new Ekona.Images.ImageControl(pluginHost, false);
 
             return new System.Windows.Forms.Control();
         }
 
-        public String Pack(ref sFolder unpacked, string file, int id) { return null; }
-        public sFolder Unpack(string file, int id)
+        public String Pack(ref sFolder unpacked, sFile file) { return null; }
+        public sFolder Unpack(sFile file)
         {
-            string tempFile = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar +
-                Path.GetFileNameWithoutExtension(file).Substring(12) + ".at6p";
+            string tempFile = pluginHost.Get_TempFile();
 
-            byte[] data = File.ReadAllBytes(file);
+            byte[] data = File.ReadAllBytes(file.path);
             byte[] decrypted = AT6P.Decrypt(data);
             File.WriteAllBytes(tempFile, decrypted);
 
@@ -90,7 +89,7 @@ namespace _999HRPERDOOR
             unpack.files = new List<sFile>();
 
             sFile newFile = new sFile();
-            newFile.name = Path.GetFileName(tempFile);
+            newFile.name = file.name;
             newFile.offset = 0;
             newFile.path = tempFile;
             newFile.size = (uint)decrypted.Length;

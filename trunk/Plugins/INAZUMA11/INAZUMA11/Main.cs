@@ -27,7 +27,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
 using System.IO;
-using PluginInterface;
+using Ekona;
 
 namespace INAZUMA11
 {
@@ -43,6 +43,10 @@ namespace INAZUMA11
         }
         public bool IsCompatible()
         {
+            // Inazuma Eleven 1
+            if (gameCode == "YEES")
+                return true;
+
             if (gameCode == "BEBJ" || gameCode == "BOEJ" || gameCode == "BEEJ" ||
                 gameCode == "YEEP" || gameCode == "YEEJ" || gameCode == "BE8J" ||
                 gameCode == "BEZJ" || gameCode == "BEBP" || gameCode == "BEEP")
@@ -51,52 +55,57 @@ namespace INAZUMA11
             return false;
         }
 
-        public Format Get_Format(string fileName, byte[] magic, int id)
+        public Format Get_Format(sFile file, byte[] magic)
         {
             string ext = new string(Encoding.ASCII.GetChars(magic));
 
             // Pack files
-            if ((fileName.ToUpper().EndsWith(".PAC_") || fileName.ToUpper().EndsWith(".PAC")) && BitConverter.ToUInt32(magic, 0) < 0x100)
+            if ((file.name.ToUpper().EndsWith(".PAC_") || file.name.ToUpper().EndsWith(".PAC")) && BitConverter.ToUInt32(magic, 0) < 0x100)
                 return Format.Pack;
-            else if (fileName.ToUpper().EndsWith(".PKB"))
+            else if (file.name.ToUpper().EndsWith(".PKB"))
                 return Format.Pack;
-            else if (fileName.ToUpper().EndsWith(".PKH"))
+            else if (file.name.ToUpper().EndsWith(".PKH"))
                 return Format.System;
-            else if (fileName.ToUpper().EndsWith(".SPF_") && ext == "SFP\0")
+            else if (file.name.ToUpper().EndsWith(".SPF_") && ext == "SFP\0")
                 return Format.Pack;
-            else if (fileName.ToUpper().EndsWith(".SPD"))
+            else if (file.name.ToUpper().EndsWith(".SPD"))
                 return Format.Pack;
-            else if (fileName.ToUpper().EndsWith(".SPL"))
+            else if (file.name.ToUpper().EndsWith(".SPL"))
                 return Format.System;
 
             // Text files
-            // TODO: Include more gameCodes here and in Show_Info
             switch (gameCode)
             {
+                case "YEES":
+                    if (file.id >= 0x01B6 && file.id <= 0x01CA) return Format.Text;
+                    if (file.id == 0x619) return Format.Text;
+                    if (file.id == 0x61A) return Format.Text;
+                    if (file.id == 0xC0) return Format.Text;
+                    break;
+
                 case "BEBP":
-                    if (id >= 0x13F && id <= 0x161) return Format.Text;
-                    if (id == 0xD8) return Format.Text;
-                    if (id == 0x387) return Format.Text;
-                    if (id == 0x388) return Format.Text;
+                    if (file.id >= 0x13F && file.id <= 0x161) return Format.Text;
+                    if (file.id == 0xD8) return Format.Text;
+                    if (file.id == 0x387) return Format.Text;
+                    if (file.id == 0x388) return Format.Text;
                     break;
             }
 
             return Format.Unknown;
         }
 
-        public sFolder Unpack(string file, int id)
+        public sFolder Unpack(sFile file)
         {
-            if (file.ToUpper().EndsWith(".PAC_") || file.ToUpper().EndsWith(".PAC"))
+            if (file.name.ToUpper().EndsWith(".PAC_") || file.name.ToUpper().EndsWith(".PAC"))
                 return PAC.Unpack(file);
 
-            if (file.ToUpper().EndsWith(".SPF_"))
-                return SFP.Unpack(file);
+            if (file.name.ToUpper().EndsWith(".SPF_"))
+                return SFP.Unpack(file.path);
 
-            if (file.ToUpper().EndsWith(".PKB"))
+            if (file.name.ToUpper().EndsWith(".PKB"))
             {
-                string pkh = pluginHost.Search_File(id + 1);
-                if (Path.GetFileNameWithoutExtension(pkh).Substring(12) !=
-                    Path.GetFileNameWithoutExtension(file).Substring(12))
+                sFile pkh = pluginHost.Search_File((short)(file.id + 1));
+                if (pkh.name != file.name)
                 {
                     Console.WriteLine("Error searching header file");
                     return new sFolder();
@@ -105,27 +114,25 @@ namespace INAZUMA11
                 return PKB.Unpack(file, pkh);
             }
 
-            if (file.ToUpper().EndsWith(".SPD"))
+            if (file.name.ToUpper().EndsWith(".SPD"))
             {
-                string spl = pluginHost.Search_File(id + 1);
-                if (Path.GetFileNameWithoutExtension(spl).Substring(12) !=
-                    Path.GetFileNameWithoutExtension(file).Substring(12))
+                sFile spl = pluginHost.Search_File((short)(file.id + 1));
+                if (spl.name != file.name)
                 {
                     Console.WriteLine("Error searching header file");
                     return new sFolder();
                 }
 
-                return SFP.Unpack(file, spl);
+                return SFP.Unpack(file.path, spl.path);
             }
 
             return new sFolder();
         }
-        public string Pack(ref sFolder unpacked, string file, int id)
+        public string Pack(ref sFolder unpacked, sFile file)
         {
-            string fileout = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar +
-                Path.GetRandomFileName() + Path.GetFileName(file);
+            string fileout = pluginHost.Get_TempFile();
 
-            if (file.ToUpper().EndsWith(".PAC_") || file.ToUpper().EndsWith(".PAC"))
+            if (file.name.ToUpper().EndsWith(".PAC_") || file.name.ToUpper().EndsWith(".PAC"))
             {
                 Console.WriteLine("Packing to " + fileout);
                 PAC.Pack(ref unpacked, fileout);
@@ -135,18 +142,26 @@ namespace INAZUMA11
             return null;
         }
 
-        public void Read(string file, int id)
+        public void Read(sFile file)
         {
         }
-        public Control Show_Info(string file, int id)
+        public Control Show_Info(sFile file)
         {
             switch (gameCode)
             {
+                    // Inazuma11 - Spanish
+                case "YEES":
+                    if (file.id >= 0x01B6 && file.id <= 0x01CA) return new SubtitlesControl(file.path, pluginHost, file.id);
+                    if (file.id == 0x619) return new BlogpostControl(file.path, file.id, pluginHost);
+                    if (file.id == 0x61A) return new BlogresControl(file.path, file.id, pluginHost);
+                    if (file.id == 0xC0) return new USearchControl(file.path, file.id, pluginHost);
+                    break;
+
                 case "BEBP":
-                    if (id >= 0x13F && id <= 0x161) return new SubtitlesControl(file, pluginHost, id);
-                    if (id == 0xD8) return new USearchControl(file, id, pluginHost);
-                    if (id == 0x387) return new BlogpostControl(file, id, pluginHost);
-                    if (id == 0x388) return new BlogresControl(file, id, pluginHost);
+                    if (file.id >= 0x13F && file.id <= 0x161) return new SubtitlesControl(file.path, pluginHost, file.id);
+                    if (file.id == 0xD8) return new USearchControl(file.path, file.id, pluginHost);
+                    if (file.id == 0x387) return new BlogpostControl(file.path, file.id, pluginHost);
+                    if (file.id == 0x388) return new BlogresControl(file.path, file.id, pluginHost);
                     break;
             }
             return new Control();

@@ -26,8 +26,10 @@ using System;
 using System.Text;
 using System.IO;
 using System.Xml;
+using System.Xml.Linq;
+using System.Collections.Generic;
 using System.Windows.Forms;
-using PluginInterface;
+using Ekona;
 
 namespace NINOKUNI
 {
@@ -74,6 +76,7 @@ namespace NINOKUNI
                 s.elements[i].id = br.ReadUInt32();
                 s.elements[i].size = br.ReadUInt16();
                 s.elements[i].text = new String(Encoding.GetEncoding(932).GetChars(br.ReadBytes((int)s.elements[i].size)));
+                s.elements[i].text = Helper.SJISToLatin(s.elements[i].text);
             }
 
             br.Close();
@@ -87,9 +90,11 @@ namespace NINOKUNI
 
             for (int i = 0; i < systext.num_element; i++)
             {
+                systext.elements[i].size = (ushort)enc.GetByteCount(Helper.LatinToSJIS(systext.elements[i].text));
+
                 bw.Write(systext.elements[i].id);
                 bw.Write(systext.elements[i].size);
-                bw.Write(enc.GetBytes(systext.elements[i].text));
+                bw.Write(enc.GetBytes(Helper.LatinToSJIS(systext.elements[i].text)));
             }
 
             bw.Flush();
@@ -109,7 +114,6 @@ namespace NINOKUNI
         {
             int i = (int)numElement.Value;
             systext.elements[i].text = txtTrans.Text.Replace("\r\n", "\n");
-            systext.elements[i].size = (ushort)enc.GetByteCount(systext.elements[i].text);
         }
         private void numID_ValueChanged(object sender, EventArgs e)
         {
@@ -147,7 +151,6 @@ namespace NINOKUNI
                 text = text.Replace('】', '>');
 
                 systext.elements[i].text = text;
-                systext.elements[i].size = (ushort)enc.GetByteCount(text);
             }
             numElement_ValueChanged(null, null);
         }

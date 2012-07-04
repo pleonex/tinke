@@ -22,15 +22,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
-using PluginInterface;
-using PluginInterface.Images;
+using Ekona;
+using Ekona.Images;
 
 namespace AI_IGO_DS
 {
     public class ATEX : ImageBase
     {
 
-        public ATEX(IPluginHost pluginHost, string file, int id) : base(pluginHost, file, id) { }
+        public ATEX(string file, int id, string fileName = "") : base(file, id, fileName) { }
 
         public override void Read(string fileIn)
         {
@@ -44,8 +44,7 @@ namespace AI_IGO_DS
             Byte[] tiles = br.ReadBytes((int)tiles_size);
 
             br.Close();
-            Set_Tiles(tiles, width, height, depth, PluginInterface.Images.TileForm.Lineal, false);
-            pluginHost.Set_Image(this);
+            Set_Tiles(tiles, width, height, depth, Ekona.Images.TileForm.Lineal, false);
         }
         public override void Write(string fileOut, PaletteBase palette)
         {

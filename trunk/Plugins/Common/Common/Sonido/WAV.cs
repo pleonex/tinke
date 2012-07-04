@@ -21,7 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using PluginInterface;
+using Ekona;
 using System.Windows.Forms;
 
 namespace Common

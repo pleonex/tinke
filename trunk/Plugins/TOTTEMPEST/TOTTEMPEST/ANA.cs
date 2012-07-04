@@ -22,14 +22,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
-using PluginInterface;
-using PluginInterface.Images;
+using Ekona;
+using Ekona.Images;
 
 namespace TOTTEMPEST
 {
     public class ANA : ImageBase
     {
-        public ANA(IPluginHost pluginHost, string file, int id) : base(pluginHost, file, id) { }
+        IPluginHost pluginHost;
+
+        public ANA(IPluginHost pluginHost, string file, int id) : base(file, id) { this.pluginHost = pluginHost; }
 
         public override void Read(string file)
         {
@@ -67,11 +69,11 @@ namespace TOTTEMPEST
             BinaryWriter bw = new BinaryWriter(File.OpenWrite(fileout));
 
             ushort num_tiles = (ushort)(Tiles.Length / 0x20);
-            if (ColorFormat == ColorFormat.colors256)
+            if (FormatColor == ColorFormat.colors256)
                 num_tiles /= 2;
 
             bw.Write(num_tiles);
-            bw.Write((ushort)(ColorFormat == PluginInterface.Images.ColorFormat.colors16 ? 0x00 : 0x01));
+            bw.Write((ushort)(FormatColor == Ekona.Images.ColorFormat.colors16 ? 0x00 : 0x01));
             bw.Write(Tiles);
 
             bw.Flush();
