@@ -61,9 +61,13 @@ namespace Ekona.Images
             this.label4 = new System.Windows.Forms.Label();
             this.checkHex = new System.Windows.Forms.CheckBox();
             this.btnUseThis = new System.Windows.Forms.Button();
+            this.label5 = new System.Windows.Forms.Label();
+            this.numFillColors = new System.Windows.Forms.NumericUpDown();
+            this.btnFillColors = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.picPalette)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericPalette)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericStartByte)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numFillColors)).BeginInit();
             this.SuspendLayout();
             // 
             // picPalette
@@ -192,21 +196,52 @@ namespace Ekona.Images
             this.checkHex.AutoSize = true;
             this.checkHex.Location = new System.Drawing.Point(400, 72);
             this.checkHex.Name = "checkHex";
-            this.checkHex.Size = new System.Drawing.Size(87, 17);
+            this.checkHex.Size = new System.Drawing.Size(46, 17);
             this.checkHex.TabIndex = 12;
-            this.checkHex.Text = "Hexadecimal";
+            this.checkHex.Text = "S0B";
             this.checkHex.UseVisualStyleBackColor = true;
             this.checkHex.CheckedChanged += new System.EventHandler(this.checkHex_CheckedChanged);
             // 
             // btnUseThis
             // 
-            this.btnUseThis.Location = new System.Drawing.Point(262, 3);
+            this.btnUseThis.Location = new System.Drawing.Point(166, 3);
             this.btnUseThis.Name = "btnUseThis";
             this.btnUseThis.Size = new System.Drawing.Size(80, 40);
             this.btnUseThis.TabIndex = 13;
-            this.btnUseThis.Text = "Use this palette";
+            this.btnUseThis.Text = "S0A";
             this.btnUseThis.UseVisualStyleBackColor = true;
             this.btnUseThis.Click += new System.EventHandler(this.btnUseThis_Click);
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(259, 208);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(27, 13);
+            this.label5.TabIndex = 14;
+            this.label5.Text = "S0C";
+            // 
+            // numFillColors
+            // 
+            this.numFillColors.Location = new System.Drawing.Point(345, 206);
+            this.numFillColors.Maximum = new decimal(new int[] {
+            65535,
+            0,
+            0,
+            0});
+            this.numFillColors.Name = "numFillColors";
+            this.numFillColors.Size = new System.Drawing.Size(78, 20);
+            this.numFillColors.TabIndex = 15;
+            // 
+            // btnFillColors
+            // 
+            this.btnFillColors.Location = new System.Drawing.Point(429, 194);
+            this.btnFillColors.Name = "btnFillColors";
+            this.btnFillColors.Size = new System.Drawing.Size(80, 40);
+            this.btnFillColors.TabIndex = 16;
+            this.btnFillColors.Text = "S0D";
+            this.btnFillColors.UseVisualStyleBackColor = true;
+            this.btnFillColors.Click += new System.EventHandler(this.btnFillColors_Click);
             // 
             // PaletteControl
             // 
@@ -214,6 +249,9 @@ namespace Ekona.Images
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Transparent;
             this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.Controls.Add(this.btnFillColors);
+            this.Controls.Add(this.numFillColors);
+            this.Controls.Add(this.label5);
             this.Controls.Add(this.btnUseThis);
             this.Controls.Add(this.checkHex);
             this.Controls.Add(this.label4);
@@ -233,6 +271,7 @@ namespace Ekona.Images
             ((System.ComponentModel.ISupportInitialize)(this.picPalette)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericPalette)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericStartByte)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numFillColors)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -254,5 +293,8 @@ namespace Ekona.Images
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.CheckBox checkHex;
         private System.Windows.Forms.Button btnUseThis;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.NumericUpDown numFillColors;
+        private System.Windows.Forms.Button btnFillColors;
     }
 }

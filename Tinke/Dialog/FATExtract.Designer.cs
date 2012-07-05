@@ -84,6 +84,7 @@ namespace Tinke.Dialog
             this.listBoxFiles = new System.Windows.Forms.ListBox();
             this.btnHex = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
+            this.checkOmitZero = new System.Windows.Forms.CheckBox();
             this.groupOptions.SuspendLayout();
             this.groupOffset.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericOffsetMult)).BeginInit();
@@ -113,6 +114,7 @@ namespace Tinke.Dialog
             // 
             // groupOffset
             // 
+            this.groupOffset.Controls.Add(this.checkOmitZero);
             this.groupOffset.Controls.Add(this.numericOffsetMult);
             this.groupOffset.Controls.Add(this.label8);
             this.groupOffset.Controls.Add(this.numSize);
@@ -561,6 +563,16 @@ namespace Tinke.Dialog
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
+            // checkOmitZero
+            // 
+            this.checkOmitZero.AutoSize = true;
+            this.checkOmitZero.Location = new System.Drawing.Point(153, 145);
+            this.checkOmitZero.Name = "checkOmitZero";
+            this.checkOmitZero.Size = new System.Drawing.Size(112, 17);
+            this.checkOmitZero.TabIndex = 15;
+            this.checkOmitZero.Text = "Omit zero size files";
+            this.checkOmitZero.UseVisualStyleBackColor = true;
+            // 
             // FATExtract
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -640,5 +652,6 @@ namespace Tinke.Dialog
         private System.Windows.Forms.Button btnAddOffset;
         private System.Windows.Forms.NumericUpDown numericOffsetMult;
         private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.CheckBox checkOmitZero;
     }
 }

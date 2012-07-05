@@ -248,130 +248,6 @@
     <S25>No se encontraron operaciones para realizar.</S25>
     <S26>Limpiar log</S26>
   </Messages>
-  <NCLR>
-    <S01>Nº de paleta:</S01>
-    <S02>Propiedades</S02>
-    <S03>Campo</S03>
-    <S04>Valor</S04>
-    <S05>Número de paletas</S05>
-    <S06>Profundidad del color</S06>
-    <S07>Padding</S07>
-    <S08>Nº de colores por paleta</S08>
-    <S09>Tamaño de paleta</S09>
-    <S0A>Guardar</S0A>
-    <S0B>Mostrar todas las paletas</S0B>
-    <S0C>Paleta</S0C>
-    <S0D>Analizando paleta NCLR:</S0D>
-    <S0E>No hay secciones o hay de más ¿?: </S0E>
-    <S0F>paletas encontradas</S0F>
-    <S10>colores.</S10>
-    <S11>Modificar</S11>
-    <S12>Byte de inicio:</S12>
-    <S13>Importar</S13>
-    <S14>Cambiar de profundidad</S14>
-    <S15>Archivo no soportado</S15>
-    <S16>Archivo BMP no soportado, profundidad {0}</S16>
-  </NCLR>
-  <NCGR>
-    <S01>
-      Haga doble click en la imagen para verla a
-      tamaño real.
-    </S01>
-    <S02>Propiedades</S02>
-    <S03>Posición</S03>
-    <S04>Campo</S04>
-    <S05>Valor</S05>
-    <S06>Desconocido</S06>
-    <S07>Nº secciones</S07>
-    <S08>ID Sección 1</S08>
-    <S09>Tamaño</S09>
-    <S0A>Tiles Y</S0A>
-    <S0B>Tiles X</S0B>
-    <S0C>Formato</S0C>
-    <S0D>Desconocido</S0D>
-    <S0E>Desconocido</S0E>
-    <S0F>Tamaño píxels datos</S0F>
-    <S10>Desconocido</S10>
-    <S11>Inicio:</S11>
-    <S12>Ancho:</S12>
-    <S13>Alto:</S13>
-    <S14>Orden de tiles:</S14>
-    <S15>Guardar</S15>
-    <S16>Sin tiles</S16>
-    <S17>Horizontal</S17>
-    <S18>Vertical</S18>
-    <S19>Imagen a tamaño real</S19>
-    <S1A>Dividir imágenes</S1A>
-    <S1B>Imagen</S1B>
-    <S1C>Transparencia</S1C>
-    <S1D>Restaurar</S1D>
-    <S1E>Zoom</S1E>
-    <S1F>Color de fondo</S1F>
-    <S20>Quitar</S20>
-    <S21>Importar</S21>
-    <S22>Seleccionar color de transparencia</S22>
-    <S23>Archivo no soportado</S23>
-    <S24>Archivo BMP no soportado, profundidad {0}</S24>
-  </NCGR>
-  <NSCR>
-    <S00>Opciones del archivo Map</S00>
-    <S01>Ancho del map:</S01>
-    <S02>Alto del map:</S02>
-    <S03>Rellenar imagen</S03>
-    <S04>Tile de inicio:</S04>
-    <S05>Tile de relleno:</S05>
-    <S06>Aceptar</S06>
-    <S07>Ancho imagen:</S07>
-    <S08>Alto imagen:</S08>
-    <S09>Sub-imágenes</S09>
-    <S0A>Posición inicial:</S0A>
-    <S0B>Número de paleta:</S0B>
-    <S0C>Cancelar</S0C>
-  </NSCR>
-  <NCER>
-    <S01>Banco:</S01>
-    <S02>Mostrar todas los bancos</S02>
-    <S03>Guardar</S03>
-    <S04>Propiedades</S04>
-    <S05>Campo</S05>
-    <S06>Valor</S06>
-    <S07>Sección</S07>
-    <S08>Número de bancos</S08>
-    <S09>Tipo de bancos</S09>
-    <S0A>Constante</S0A>
-    <S0B>Tamaño bloque</S0B>
-    <S0C>Desconocido 1</S0C>
-    <S0D>Desconocido 2</S0D>
-    <S0E>Desconocido (Sección UEXT)</S0E>
-    <S0F>Mostrar entorno</S0F>
-    <S10>Mostrar celdas</S10>
-    <S11>Mostrar imagen</S11>
-    <S12>Transparencia</S12>
-    <S13>Mostrar números</S13>
-    <S14>Celdas</S14>
-    <S15>Haga doble click en la imagen para verla a tamaño real.</S15>
-    <S16>Zoom</S16>
-    <S17>Color de fondo</S17>
-    <S18>Quitar</S18>
-    <S19>Número de celdas</S19>
-    <S1A>Desconocido 1</S1A>
-    <S1B>Offset</S1B>
-    <S1C>Celda</S1C>
-    <S1D>Posición Y</S1D>
-    <S1E>Posición X</S1E>
-    <S1F>Ancho</S1F>
-    <S20>Alto</S20>
-    <S21>Número de paleta</S21>
-    <S22>Tile offset original</S22>
-    <S23>Tile offset modificado</S23>
-    <S24>Importar</S24>
-    <S25>Seleccionar color de transparencia</S25>
-    <S26>
-      Imagen incorrecta.
-      La imagen importada debe tener las dimensiones 512x512,
-      igual que cuando la exporta.
-    </S26>
-  </NCER>
   <NANR>
     <S01>Intervalo:</S01>
     <S02>milisegundos</S02>
@@ -578,16 +454,115 @@
   </VisorHex>
 
   <!-- Ekona controls -->
-  <PaletteControl>
-    <S01>Number of palette:</S01>
-    <S02>Display all palettes</S02>
-    <S03>Export</S03>
-    <S04>Import</S04>
-    <S05>Start byte:</S05>
-    <S06>Depth:</S06>
-    <S07>of </S07>
-    <S08>Palettes</S08>
-    <S09>Palette</S09>
-  </PaletteControl>
-
+  <Ekona>
+    <PaletteControl>
+      <S01>Number of palette:</S01>
+      <S02>Display all palettes</S02>
+      <S03>Export</S03>
+      <S04>Import</S04>
+      <S05>Start byte:</S05>
+      <S06>Depth:</S06>
+      <S07>of </S07>
+      <S08>Palettes</S08>
+      <S09>Palette</S09>
+      <S0A>Use this palette</S0A>
+      <S0B>Hexadecimal</S0B>
+      <S0C>Colors to fill:</S0C>
+      <S0D>Fill colors</S0D>
+    </PaletteControl>
+    <ImageControl>
+      <S01>Double-click to see the full image.</S01>
+      <S02>Image properties</S02>
+      <S03>Offset:</S03>
+      <S04>Hexadecimal</S04>
+      <S05>Width:</S05>
+      <S06>Height:</S06>
+      <S07>Image pattern:</S07>
+      <S08>Tile size:</S08>
+      <S09>Num palette</S09>
+      <S0A>Transparency</S0A>
+      <S0B>Set transparency</S0B>
+      <S0C>Set box background</S0C>
+      <S0D>Remove box background</S0D>
+      <S0E>Use original palette</S0E>
+      <S0F>Map compression</S0F>
+      <S10>Export</S10>
+      <S11>Import</S11>
+      <S12>Lineal</S12>
+      <S13>Horizontal</S13>
+      <S14>Vertical</S14>
+      <S15>Full size image</S15>
+    </ImageControl>
+    <SpriteControl>
+      <S01>Bank:</S01>
+      <S02>Show all banks</S02>
+      <S03>
+        Base name (without extension)
+        %s will be replace by the bank ID
+      </S03>
+      <S04>Export / Import multi-mode</S04>
+      <S05>OAM Editor</S05>
+      <S06>Export</S06>
+      <S07>Import</S07>
+      <S08>Set transparency color</S08>
+      <S09>Set box background</S09>
+      <S0A>Remove box background</S0A>
+      <S0B>Cell image options</S0B>
+      <S0C>Show grid</S0C>
+      <S0D>Show cell border</S0D>
+      <S0E>Show image</S0E>
+      <S0F>Transparency</S0F>
+      <S10>Show numbers</S10>
+      <S11>Use original palette</S11>
+      <S12>Banks</S12>
+      <S13>Imported tiles (bitmap only)</S13>
+      <S14>Replace palette</S14>
+    </SpriteControl>
+    <OAMEditor>
+      <S01>OAM Editor</S01>
+      <S02>OAM:</S02>
+      <S03>of</S03>
+      <S04>Object 0</S04>
+      <S05>Y position:</S05>
+      <S06>Rotation / Scale</S06>
+      <S07>Object disable</S07>
+      <S08>Double size</S08>
+      <S09>Object mode:</S09>
+      <S0A>Normal</S0A>
+      <S0B>Semi-transparent</S0B>
+      <S0C>Window</S0C>
+      <S0D>Invalid</S0D>
+      <S0E>Mosaic</S0E>
+      <S0F>Depth:</S0F>
+      <S10>4 bpp (16 colors)</S10>
+      <S11>8 bpp (256 colors)</S11>
+      <S12>Shape:</S12>
+      <S13>Square</S13>
+      <S14>Horizontal</S14>
+      <S15>Vertical</S15>
+      <S16>OAM id:</S16>
+      <S17>Preview:</S17>
+      <S18>Add OAM</S18>
+      <S19>Remove OAM</S19>
+      <S1A>Object 1</S1A>
+      <S1B>X position:</S1B>
+      <S1C>Select param:</S1C>
+      <S1D>Flip X</S1D>
+      <S1E>Flip Y</S1E>
+      <S1F>Size:</S1F>
+      <S20>Object 2</S20>
+      <S21>Tile offset:</S21>
+      <S22>Priority:</S22>
+      <S23>Palette index:</S23>
+      <S24>Save</S24>
+      <S25>Auto set size:</S25>
+      <S26>Preview options</S26>
+      <S27>Transparency</S27>
+      <S28>View oam border</S28>
+      <S29>View image</S29>
+      <S2A>View numbers</S2A>
+      <S2B>View grid</S2B>
+      <S2C>Select OAM</S2C>
+    </OAMEditor>
+  </Ekona>
 </Language>

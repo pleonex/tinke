@@ -56,6 +56,12 @@ namespace Ekona.Images
             label3.Text = translation[0] + (palette.NumberOfPalettes - 1).ToString();
             numericStartByte.Maximum = palette.Original.Length - 1;
             comboDepth.SelectedIndex = (palette.Depth == ColorFormat.colors16 ? 0 : 1);
+
+
+            if (palette.Depth == ColorFormat.colors16)
+                numFillColors.Value = 16;
+            else
+                numFillColors.Value = 256;
         }
         public PaletteControl(IPluginHost pluginHost, PaletteBase palette)
         {
@@ -73,6 +79,12 @@ namespace Ekona.Images
             label3.Text = translation[0] + (palette.NumberOfPalettes - 1).ToString();
             numericStartByte.Maximum = palette.Original.Length - 1;
             comboDepth.SelectedIndex = (palette.Depth == ColorFormat.colors16 ? 0 : 1);
+
+
+            if (palette.Depth == ColorFormat.colors16)
+                numFillColors.Value = 16;
+            else
+                numFillColors.Value = 256;
         }
 
         private void ReadLanguage()
@@ -89,6 +101,10 @@ namespace Ekona.Images
                 btnImport.Text = xml.Element("S04").Value;
                 label2.Text = xml.Element("S05").Value;
                 label4.Text = xml.Element("S06").Value;
+                btnUseThis.Text = xml.Element("S0A").Value;
+                checkHex.Text = xml.Element("S0B").Value;
+                label5.Text = xml.Element("S0C").Value;
+                btnFillColors.Text = xml.Element("S0D").Value;
 
                 translation = new string[3];
                 translation[0] = xml.Element("S07").Value;
@@ -118,6 +134,12 @@ namespace Ekona.Images
             numericPalette.Value = 0;
             numericPalette.Maximum = palette.NumberOfPalettes - 1;
             label3.Text = translation[0] + (palette.NumberOfPalettes - 1).ToString();
+
+            
+            if (palette.Depth == ColorFormat.colors16)
+                numFillColors.Value = 16;
+            else
+                numFillColors.Value = 256;
         }
 
         private void picPalette_MouseClick(object sender, MouseEventArgs e)
@@ -225,11 +247,15 @@ namespace Ekona.Images
                 palette.Set_Palette(newpal);
 
             // Write the file
+            Write_File();
+        }
+        private void Write_File()
+        {
             if (palette.ID > 0)
             {
                 try
                 {
-                    String fileOut = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + Path.GetRandomFileName() + palette.FileName;
+                    String fileOut = pluginHost.Get_TempFile();
                     palette.Write(fileOut);
                     pluginHost.ChangeFile(palette.ID, fileOut);
                 }
@@ -245,6 +271,13 @@ namespace Ekona.Images
         private void btnUseThis_Click(object sender, EventArgs e)
         {
             pluginHost.Set_Palette(palette);
+        }
+
+        private void btnFillColors_Click(object sender, EventArgs e)
+        {
+            palette.FillColors((int)numFillColors.Value, (int)numericPalette.Value);
+            Write_File();
+            picPalette.Image = palette.Get_Image((int)numericPalette.Value);
         }
     }
 }

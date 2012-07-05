@@ -75,6 +75,25 @@ namespace Ekona.Images
             return Actions.Get_Image(palette[index]);
         }
 
+        public void FillColors(int maxColors, int pal_index)
+        {
+            FillColors(maxColors, pal_index, Color.Black);
+        }
+        public void FillColors(int maxColors, int pal_index, Color color)
+        {
+            int old_length = palette[pal_index].Length;
+            if (old_length >= maxColors)
+                return;
+
+            Color[] newpal = new Color[maxColors];
+            Array.Copy(palette[pal_index], newpal, old_length);
+
+            for (int i = old_length; i < maxColors; i++)
+                newpal[i] = color;
+
+            palette[pal_index] = newpal;
+        }
+
         private void Change_PaletteDepth(ColorFormat newDepth)
         {
             if (newDepth == depth)

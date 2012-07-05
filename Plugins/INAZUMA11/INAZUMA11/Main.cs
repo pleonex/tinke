@@ -105,7 +105,7 @@ namespace INAZUMA11
             if (file.name.ToUpper().EndsWith(".PKB"))
             {
                 sFile pkh = pluginHost.Search_File((short)(file.id + 1));
-                if (pkh.name != file.name)
+                if (Path.GetFileNameWithoutExtension(pkh.name) != Path.GetFileNameWithoutExtension(file.name))
                 {
                     Console.WriteLine("Error searching header file");
                     return new sFolder();
@@ -117,7 +117,7 @@ namespace INAZUMA11
             if (file.name.ToUpper().EndsWith(".SPD"))
             {
                 sFile spl = pluginHost.Search_File((short)(file.id + 1));
-                if (spl.name != file.name)
+                if (Path.GetFileNameWithoutExtension(spl.name) != Path.GetFileNameWithoutExtension(file.name))
                 {
                     Console.WriteLine("Error searching header file");
                     return new sFolder();

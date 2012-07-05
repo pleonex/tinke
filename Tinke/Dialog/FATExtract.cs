@@ -176,6 +176,7 @@ namespace Tinke.Dialog
                 // Read all offset
                 br.BaseStream.Position = (long)numericOffsetStart.Value;
                 fat.files = new List<sFile>();
+                uint omit = 0;
 
                 for (int i = 0; i < fat.num_files; i++)
                 {
@@ -233,6 +234,12 @@ namespace Tinke.Dialog
                     if (currFile.size >= br.BaseStream.Length || currFile.size + currFile.offset > br.BaseStream.Length)
                         currFile.size = 0;
 
+                    if (checkOmitZero.Checked && currFile.size == 0)
+                    {
+                        omit++;
+                        continue;
+                    }
+
                     // Get the extension
                     long currPos = br.BaseStream.Position;
                     br.BaseStream.Position = currFile.offset;
@@ -255,6 +262,8 @@ namespace Tinke.Dialog
 
                     fat.files.Add(currFile);
                 }
+
+                fat.num_files -= omit;
 
                 for (int i = 0; i < fat.num_files; i++)
                     listBoxFiles.Items.Add(fat.files[i].name);

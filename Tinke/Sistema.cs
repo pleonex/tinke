@@ -64,7 +64,7 @@ namespace Tinke
             {
                 File.WriteAllText(Application.StartupPath + Path.DirectorySeparatorChar + "Tinke.xml", "<?xml version=\"1.0\" encoding=\"utf-8\"?>" +
                                  "\n<Tinke>\n  <Options>" +
-                                 "\n    <Language>Español</Language>" +
+                                 "\n    <Language>English</Language>" +
                                  "\n    <InstantSearch>True</InstantSearch>" +
                                  "\n    <WindowDebug>True</WindowDebug>" +
                                  "\n    <WindowInformation>True</WindowInformation>" +
@@ -1609,20 +1609,13 @@ namespace Tinke
                 Console.WriteLine(Tools.Helper.GetTranslation("Messages", "S0D"), o.FileName);
                 bw = new BinaryWriter(new FileStream(o.FileName, FileMode.Create));
 
-                bw.Write(File.ReadAllBytes(header_file));
-                bw.Flush();
-                bw.Write(File.ReadAllBytes(arm9Binary));
-                bw.Flush();
-                bw.Write(File.ReadAllBytes(arm7Binary));
-                bw.Flush();
-                bw.Write(File.ReadAllBytes(fileFNT));
-                bw.Flush();
-                bw.Write(File.ReadAllBytes(fileFAT));
-                bw.Flush();
-                bw.Write(File.ReadAllBytes(banner));
-                bw.Flush();
-                bw.Write(File.ReadAllBytes(files));
-                bw.Flush();
+                Ekona.Helper.IOutil.Append(ref bw, header_file);
+                Ekona.Helper.IOutil.Append(ref bw, arm9Binary);
+                Ekona.Helper.IOutil.Append(ref bw, arm7Binary);
+                Ekona.Helper.IOutil.Append(ref bw, fileFNT);
+                Ekona.Helper.IOutil.Append(ref bw, fileFAT);
+                Ekona.Helper.IOutil.Append(ref bw, banner);
+                Ekona.Helper.IOutil.Append(ref bw, files);
 
                 rem = header.tamaño - (uint)bw.BaseStream.Position;
                 while (rem > 0)

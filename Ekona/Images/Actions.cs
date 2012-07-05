@@ -86,7 +86,7 @@ namespace Ekona.Images
         {
             byte[] data = new byte[colors.Length * 2];
 
-            for (int i = 0; i < colors.Length; i += 2)
+            for (int i = 0; i < colors.Length; i++)
             {
                 byte[] bgr = ColorToBGR555(colors[i]);
                 data[i * 2] = bgr[0];
@@ -102,7 +102,7 @@ namespace Ekona.Images
             int r = color.R / 8;
             int g = (color.G / 8) << 5;
             int b = (color.B / 8) << 10;
-            int a = (color.A / 255) << 15;            // Alpha value set to 1
+            int a = (color.A / 255) << 15;            
             
             ushort bgra = (ushort)(r + g + b + a);
             Array.Copy(BitConverter.GetBytes(bgra), d, 2);
@@ -112,31 +112,13 @@ namespace Ekona.Images
 
         public static Bitmap Get_Image(Color[] colors)
         {
-            PixelFormat format = PixelFormat.Format8bppIndexed;
-
             int height = (colors.Length / 0x10);
             if (colors.Length % 0x10 != 0)
                 height++;
 
-
-            Bitmap palette = new Bitmap(160, height * 10, format);
-
-            ColorPalette pal = palette.Palette;
-            for (int i = 0; i < pal.Entries.Length; i++)
-            {
-                if (i >= colors.Length)
-                    pal.Entries[i] = Color.Black;
-                else
-                    pal.Entries[i] = colors[i];
-            }
-            palette.Palette = pal;
-
-            BitmapData data = palette.LockBits(new Rectangle(new Point(0, 0), palette.Size), ImageLockMode.WriteOnly, format);
-            Byte[] tiles = new Byte[data.Height * data.Stride];
-            Marshal.Copy(data.Scan0, tiles, 0, tiles.Length);
+            Bitmap palette = new Bitmap(160, height * 10);
 
             bool end = false;
-
             for (int i = 0; i < 16 & !end; i++)
             {
                 for (int j = 0; j < 16; j++)
@@ -149,12 +131,9 @@ namespace Ekona.Images
 
                     for (int k = 0; k < 10; k++)
                         for (int q = 0; q < 10; q++)
-                            tiles[(j * 10 + q) + (i * 10 + k) * data.Stride] = (byte)(j + 16 * i);
+                            palette.SetPixel((j * 10 + q), (i * 10 + k), colors[j + 16 * i]);
                 }
             }
-
-            Marshal.Copy(tiles, 0, data.Scan0, tiles.Length);
-            palette.UnlockBits(data);
 
             return palette;
         }
@@ -437,7 +416,7 @@ namespace Ekona.Images
 
                     ushort byteColor = BitConverter.ToUInt16(data, pos);
                     color = Color.FromArgb(
-                        ((byteColor >> 15) == 0 ? 0 : 255),
+                        ((byteColor >> 15) == 0 ? 255 : 0),
                         (byteColor & 0x1F) * 8,
                         ((byteColor >> 5) & 0x1F) * 8,
                         ((byteColor >> 10) & 0x1F) * 8);
@@ -560,6 +539,8 @@ namespace Ekona.Images
         {
             if (format == ColorFormat.colors16) // Yeah, I should improve it
                 tiles = Helper.BitsConverter.BytesToBit4(tiles);
+            else if (format != ColorFormat.colors256)
+                throw new NotSupportedException("Only supported 4bpp and 8bpp images.");
 
             for (int i = 0; i < tiles.Length; i++)
             {
@@ -576,6 +557,8 @@ namespace Ekona.Images
         {
             if (format == ColorFormat.colors16) // Yeah, I should improve it
                 tiles = Helper.BitsConverter.BytesToBit4(tiles);
+            else if (format != ColorFormat.colors256)
+                throw new NotSupportedException("Only supported 4bpp and 8bpp images.");
 
             Color old_color = palette[oldIndex];
             palette[oldIndex] = palette[newIndex];
@@ -600,12 +583,12 @@ namespace Ekona.Images
                     tiles[i] = (byte)newIndex;
             }
         }
-        public static void Swap_Palette(ref byte[] tiles, Color[] newp, Color[] oldp, ColorFormat format)
+        public static void Swap_Palette(ref byte[] tiles, Color[] newp, Color[] oldp, ColorFormat format, int threshold = 0)
         {
             if (format == ColorFormat.colors16) // Yeah, I should improve it
                 tiles = Helper.BitsConverter.BytesToBit4(tiles);
             else if (format != ColorFormat.colors256)
-                return;
+                throw new NotSupportedException("Only supported 4bpp and 8bpp images.");
 
             List<Color> listnew = new List<Color>();
             listnew.AddRange(newp);
@@ -613,7 +596,22 @@ namespace Ekona.Images
             for (int i = 0; i < tiles.Length; i++)
             {
                 Color px = oldp[tiles[i]];
-                int id = listnew.IndexOf(px);
+                int id = -1;
+
+                for (int c = 0; c < newp.Length; c++)
+                {
+                    if (px.R + threshold >= newp[c].R && px.R - threshold <= newp[c].R &&
+                        px.G + threshold >= newp[c].G && px.G - threshold <= newp[c].G &&
+                        px.B + threshold >= newp[c].B && px.B - threshold <= newp[c].B)
+                    {
+                        id = c;
+                        break;
+                    }
+                }
+
+                if (px == Color.Transparent && id == -1)
+                    id = 0;
+
                 if (id == -1)
                     throw new NotSupportedException("Color not found in the original palette!");
                 tiles[i] = (byte)id;
@@ -659,6 +657,9 @@ namespace Ekona.Images
                 {
                     Color pix = img.GetPixel(w, h);
                     Color apix = Color.FromArgb(pix.R, pix.G, pix.B);   // Without alpha value
+
+                    if (pix.A == 0)
+                        apix = Color.Transparent;
 
                     // Add the color to the provisional palette
                     if (!coldif.Contains(apix))
@@ -818,7 +819,7 @@ namespace Ekona.Images
         {
             NTFS[] map = new NTFS[num_tiles];
 
-            for (int i = 0; i < num_tiles; i++)
+            for (int i = startTile; i < num_tiles; i++)
             {
                 map[i] = new NTFS();
                 map[i].nPalette = palette;

@@ -23,7 +23,6 @@ using System.Windows.Forms;
 using System.IO;
 using System.Xml.Linq;
 using Ekona.Images.Formats;
-//using FotochohForTinke;
 
 namespace Ekona.Images
 {
@@ -55,10 +54,16 @@ namespace Ekona.Images
                 this.map = pluginHost.Get_Map();
                 btnImport.Enabled = map.CanEdit;
                 this.comboBox1.Enabled = false;
+
+                this.numericWidth.Value = (map.Width != 0 ? map.Width : image.Width);
+                this.numericHeight.Value = (map.Height != 0 ? map.Height : image.Height);
             }
             else
             {
                 btnImport.Enabled = image.CanEdit;
+
+                this.numericWidth.Value = image.Width;
+                this.numericHeight.Value = image.Height;
 
                 switch (image.FormTile)
                 {
@@ -78,10 +83,7 @@ namespace Ekona.Images
                         break;
                 }
             }
-
-
-            this.numericWidth.Value = image.Width;
-            this.numericHeight.Value = image.Height;
+            this.checkMapCmp.Enabled = isMap;
 
             switch (image.FormatColor)
             {
@@ -180,6 +182,7 @@ namespace Ekona.Images
             this.numericHeight.Value = image.Height;
             this.numPal.Maximum = palette.NumberOfPalettes - 1;
             this.numericStart.Maximum = image.Original.Length - 1;
+            this.checkMapCmp.Enabled = false;
 
             this.comboDepth.SelectedIndexChanged += new EventHandler(comboDepth_SelectedIndexChanged);
             this.numericWidth.ValueChanged += new EventHandler(numericSize_ValueChanged);
@@ -202,8 +205,8 @@ namespace Ekona.Images
             this.map = map;
             btnImport.Enabled = map.CanEdit;
 
-            this.numericWidth.Value = image.Width;
-            this.numericHeight.Value = image.Height;
+            this.numericWidth.Value = (map.Width != 0 ? map.Width : image.Width);
+            this.numericHeight.Value = (map.Height != 0 ? map.Height : image.Height);
 
             switch (image.FormatColor)
             {
@@ -235,6 +238,7 @@ namespace Ekona.Images
             this.comboBox1.Enabled = false;
             this.numPal.Maximum = palette.NumberOfPalettes - 1;
             this.numericStart.Maximum = image.Original.Length - 1;
+            this.checkMapCmp.Enabled = true;
 
             this.comboDepth.SelectedIndexChanged += new EventHandler(comboDepth_SelectedIndexChanged);
             this.numericWidth.ValueChanged += new EventHandler(numericSize_ValueChanged);
@@ -244,6 +248,57 @@ namespace Ekona.Images
             ReadLanguage();
             stop = false;
             Update_Image();
+        }
+        
+        private void ReadLanguage()
+        {
+            try
+            {
+                XElement xml = XElement.Load(pluginHost.Get_LangXML());
+                xml = xml.Element("Ekona").Element("ImageControl");
+
+                label5.Text = xml.Element("S01").Value;
+                groupProp.Text = xml.Element("S02").Value;
+                label3.Text = xml.Element("S03").Value;
+                checkHex.Text = xml.Element("S04").Value;
+                label1.Text = xml.Element("S05").Value;
+                label2.Text = xml.Element("S06").Value;
+                label6.Text = xml.Element("S07").Value;
+                label10.Text = xml.Element("S08").Value;
+                label9.Text = xml.Element("S09").Value;
+                checkTransparency.Text = xml.Element("S0A").Value;
+                btnSetTrans.Text = xml.Element("S0B").Value;
+                btnBgd.Text = xml.Element("S0C").Value;
+                btnBgdRem.Text = xml.Element("S0D").Value;
+                checkOriginalPal.Text = xml.Element("S0E").Value;
+                checkMapCmp.Text = xml.Element("S0F").Value;
+                btnExport.Text = xml.Element("S10").Value;
+                btnImport.Text = xml.Element("S11").Value;
+                comboBox1.Items[0] = xml.Element("S12").Value;
+                comboBox1.Items[1] = xml.Element("S13").Value;
+            }
+            catch { throw new Exception("There was an error reading the XML file of language."); }
+        }
+
+        private void Update_Image()
+        {
+            Bitmap bitmap;
+
+            if (!isMap)
+                bitmap = (Bitmap)image.Get_Image(palette);
+            else
+                bitmap = (Bitmap)map.Get_Image(image, palette);
+
+            if (checkTransparency.Checked)
+                bitmap.MakeTransparent(palette.Palette[(int)numPal.Value][0]);
+
+            Clipboard.SetImage(bitmap);
+            pic.Image = bitmap;
+
+            if (bitmap.Width == 512)
+                pic.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            else
+                pic.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
         }
 
         private void numericStart_ValueChanged(object sender, EventArgs e)
@@ -266,7 +321,6 @@ namespace Ekona.Images
             image.TileSize = (int)numTileSize.Value;
             Update_Image();
         }
-
         private void numericSize_ValueChanged(object sender, EventArgs e)
         {
             if (stop)
@@ -335,54 +389,85 @@ namespace Ekona.Images
 
             Update_Image();
         }
-
-        private void Update_Image()
+        private void checkTransparency_CheckedChanged(object sender, EventArgs e)
         {
-            Bitmap bitmap;
-
-            if (!isMap)
-                bitmap = (Bitmap)image.Get_Image(palette);
-            else
-                bitmap = (Bitmap)map.Get_Image(image, palette);
-
             if (checkTransparency.Checked)
-                bitmap.MakeTransparent(palette.Palette[(int)numPal.Value][0]);
-
-            Clipboard.SetImage(bitmap);
-            pic.Image = bitmap;
-
-            if (bitmap.Width == 512)
-                pic.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            else
-                pic.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-        }
-
-        private void ReadLanguage()
-        {
-            // TODO
-            try
             {
-                XElement xml = XElement.Load(Application.StartupPath + Path.DirectorySeparatorChar + "Plugins" +
-                    Path.DirectorySeparatorChar + "ImagesLang.xml");
-                xml = xml.Element(pluginHost.Get_Language()).Element("ImageControl");
-
-                label5.Text = xml.Element("S01").Value;
-                groupProp.Text = xml.Element("S02").Value;
-                label3.Text = xml.Element("S11").Value;
-                label1.Text = xml.Element("S12").Value;
-                label2.Text = xml.Element("S13").Value;
-                label6.Text = xml.Element("S14").Value;
-                btnSave.Text = xml.Element("S15").Value;
-                comboBox1.Items[0] = xml.Element("S16").Value;
-                comboBox1.Items[1] = xml.Element("S17").Value;
-                checkTransparency.Text = xml.Element("S1D").Value;
-                btnBgd.Text = xml.Element("S1F").Value;
-                btnBgdTrans.Text = xml.Element("S20").Value;
-                btnImport.Text = xml.Element("S21").Value;
+                Bitmap imageT = (Bitmap)pic.Image;
+                imageT.MakeTransparent(palette.Palette[(int)numPal.Value][0]);
+                pic.Image = imageT;
             }
-            catch { throw new Exception("There was an error reading the XML file of language."); }
+            else
+                Update_Image();
+        }
+        private void checkHex_CheckedChanged(object sender, EventArgs e)
+        {
+            numericStart.Hexadecimal = checkHex.Checked;
+        }
+        private void btnSetTrans_Click(object sender, EventArgs e)
+        {
+            int pal_index = (int)numPal.Value;
+
+            Color[] pal = palette.Palette[pal_index];
+            byte[] tiles = image.Tiles;
+            int index = Actions.Remove_DuplicatedColors(ref pal, ref tiles);
+            if (index == -1)
+            {
+                index = Actions.Remove_NotUsedColors(ref pal, ref tiles);
+                if (index == -1)
+                {
+                    MessageBox.Show("No space in the palette found");
+                    return;
+                }
+            }
+
+            Actions.Swap_Color(ref tiles, ref pal, index, 0, image.FormatColor);
+
+            Color[][] new_pal = palette.Palette;
+            new_pal[pal_index] = pal;
+
+            if (image.ID > 0)
+                image.Set_Tiles(tiles);
+            if (palette.ID > 0)
+                palette.Set_Palette(new_pal);
+
+            Save_Files();
         }
 
+        private void btnExport_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog o = new SaveFileDialog();
+            o.AddExtension = true;
+            o.DefaultExt = ".png";
+            o.Filter = "Portable Network Graphic (*.png)|*.png|" +
+                        "BitMaP (*.bmp)|*.bmp|" +
+                       "JPEG (*.jpg)|*.jpg;*.jpeg|" +
+                       "Tagged Image File Format (*.tiff)|*.tiff;*.tif|" +
+                       "Graphic Interchange Format (*.gif)|*.gif|" +
+                       "Icon (*.ico)|*.ico;*.icon";
+            o.OverwritePrompt = true;
+            if (isMap)
+                o.FileName = map.FileName + ".png";
+            else
+                o.FileName = image.FileName + ".png";
+
+            if (o.ShowDialog() == DialogResult.OK)
+            {
+                if (o.FilterIndex == 2)
+                    pic.Image.Save(o.FileName, System.Drawing.Imaging.ImageFormat.Bmp);
+                else if (o.FilterIndex == 1)
+                    pic.Image.Save(o.FileName, System.Drawing.Imaging.ImageFormat.Png);
+                else if (o.FilterIndex == 3)
+                    pic.Image.Save(o.FileName, System.Drawing.Imaging.ImageFormat.Jpeg);
+                else if (o.FilterIndex == 4)
+                    pic.Image.Save(o.FileName, System.Drawing.Imaging.ImageFormat.Tiff);
+                else if (o.FilterIndex == 5)
+                    pic.Image.Save(o.FileName, System.Drawing.Imaging.ImageFormat.Gif);
+                else if (o.FilterIndex == 6)
+                    pic.Image.Save(o.FileName, System.Drawing.Imaging.ImageFormat.Icon);
+            }
+            o.Dispose();
+        }
         private void btnImport_Click(object sender, EventArgs e)
         {
             OpenFileDialog o = new OpenFileDialog();
@@ -419,8 +504,13 @@ namespace Ekona.Images
                 tiles = Actions.HorizontalToLineal(tiles, bitmap.Width, bitmap.Height, image.BPP, 8);
 
             // Create a map file
-            if (isMap)
+            if (isMap && checkMapCmp.Checked)
                 map.Set_Map(Actions.Create_Map(ref tiles, image.BPP), map.CanEdit, bitmap.Width, bitmap.Height);
+            else if (isMap)
+            {
+                int num_tiles = (tiles.Length * 8 / image.BPP) / (image.TileSize * image.TileSize);
+                map.Set_Map(Actions.Create_BasicMap(num_tiles), map.CanEdit);
+            }
 
             // Set the data
             image.Set_Tiles(tiles, bitmap.Width, bitmap.Height, image.FormatColor, TileForm.Lineal, image.CanEdit, 8);
@@ -464,55 +554,20 @@ namespace Ekona.Images
             }
         }
 
-        private void btnSave_Click(object sender, EventArgs e)
-        {
-            SaveFileDialog o = new SaveFileDialog();
-            o.AddExtension = true;
-            o.DefaultExt = ".png";
-            o.Filter = "Portable Network Graphic (*.png)|*.png|" +
-                        "BitMaP (*.bmp)|*.bmp|" +
-                       "JPEG (*.jpg)|*.jpg;*.jpeg|" +
-                       "Tagged Image File Format (*.tiff)|*.tiff;*.tif|" +
-                       "Graphic Interchange Format (*.gif)|*.gif|" +
-                       "Icon (*.ico)|*.ico;*.icon";
-            o.OverwritePrompt = true;
-            if (isMap)  // FIX: RANDOM NAME
-                o.FileName = map.FileName.Substring(12) + ".png";
-            else
-                o.FileName = image.FileName.Substring(12) + ".png";
-
-            if (o.ShowDialog() == DialogResult.OK)
-            {
-                if (o.FilterIndex == 2)
-                    pic.Image.Save(o.FileName, System.Drawing.Imaging.ImageFormat.Bmp);
-                else if (o.FilterIndex == 1)
-                    pic.Image.Save(o.FileName, System.Drawing.Imaging.ImageFormat.Png);
-                else if (o.FilterIndex == 3)
-                    pic.Image.Save(o.FileName, System.Drawing.Imaging.ImageFormat.Jpeg);
-                else if (o.FilterIndex == 4)
-                    pic.Image.Save(o.FileName, System.Drawing.Imaging.ImageFormat.Tiff);
-                else if (o.FilterIndex == 5)
-                    pic.Image.Save(o.FileName, System.Drawing.Imaging.ImageFormat.Gif);
-                else if (o.FilterIndex == 6)
-                    pic.Image.Save(o.FileName, System.Drawing.Imaging.ImageFormat.Icon);
-            }
-            o.Dispose();
-        }
         private void pic_DoubleClick(object sender, EventArgs e)
         {
-            // TODO: language
-            XElement xml = XElement.Load(Application.StartupPath + Path.DirectorySeparatorChar + "Plugins" +
-                Path.DirectorySeparatorChar + "ImagesLang.xml");
-            xml = xml.Element(pluginHost.Get_Language()).Element("ImageControl");
+            XElement xml = XElement.Load(pluginHost.Get_LangXML());
+            xml = xml.Element("Ekona").Element("ImageControl");
 
             Form ven = new Form();
+
             PictureBox pcBox = new PictureBox();
             pcBox.Image = pic.Image;
             pcBox.SizeMode = PictureBoxSizeMode.AutoSize;
 
             ven.Controls.Add(pcBox);
             ven.BackColor = SystemColors.GradientInactiveCaption;
-            ven.Text = xml.Element("S19").Value;
+            ven.Text = xml.Element("S15").Value;
             ven.AutoScroll = true;
             ven.MaximumSize = new Size(1024, 700);
             ven.ShowIcon = false;
@@ -520,19 +575,6 @@ namespace Ekona.Images
             ven.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             ven.MaximizeBox = false;
             ven.Show();
-        }
-
-
-        private void checkTransparency_CheckedChanged(object sender, EventArgs e)
-        {
-            if (checkTransparency.Checked)
-            {
-                Bitmap imageT = (Bitmap)pic.Image;
-                imageT.MakeTransparent(palette.Palette[(int)numPal.Value][0]);
-                pic.Image = imageT;
-            }
-            else
-                Update_Image();
         }
         private void btnBgd_Click(object sender, EventArgs e)
         {
@@ -543,75 +585,13 @@ namespace Ekona.Images
             if (o.ShowDialog() == DialogResult.OK)
             {
                 pic.BackColor = o.Color;
-                btnBgdTrans.Enabled = true;
+                btnBgdRem.Enabled = true;
             }
         }
         private void btnBgdTrans_Click(object sender, EventArgs e)
         {
-            btnBgdTrans.Enabled = false;
+            btnBgdRem.Enabled = false;
             pic.BackColor = Color.Transparent;
         }
-
-        private void checkHex_CheckedChanged(object sender, EventArgs e)
-        {
-            numericStart.Hexadecimal = checkHex.Checked;
-        }
-
-        private void btnSetTrans_Click(object sender, EventArgs e)
-        {
-            int pal_index = image.TilesPalette[0];  // How can I know that? yeah, I'm too lazy to do a new windows ;)
-
-            Color[] pal = palette.Palette[pal_index];  
-            byte[] tiles = image.Tiles;
-            int index = Actions.Remove_DuplicatedColors(ref pal, ref tiles);
-            if (index == -1)
-            {
-                index = Actions.Remove_NotUsedColors(ref pal, ref tiles);
-                if (index == -1)
-                {
-                    MessageBox.Show("No space in the palette found");
-                    return;
-                }
-            }
-
-            Actions.Swap_Color(ref tiles, ref pal, index, 0, image.FormatColor);
-
-            Color[][] new_pal = palette.Palette;
-            new_pal[pal_index] = pal;
-
-            if (image.ID > 0)
-                image.Set_Tiles(tiles);
-            if (palette.ID > 0)
-                palette.Set_Palette(new_pal);
-
-            Save_Files();
-        }
-
-
-
-        //private void btnFotochoh_Click(object sender, EventArgs e)
-        //{
-        //    byte[] tiles = image.Tiles;
-        //    int width = image.Width;
-        //    int height = image.Height;
-        //    byte[] tile_pal;    // Not used
-
-        //    if (isMap)
-        //    {
-        //        tiles = Actions.Apply_Map(map.Map, tiles, out tile_pal, image.TileWidth);
-        //        if (map.Width != 0)
-        //            width = map.Width;
-        //        if (map.Height != 0)
-        //            height = map.Height;
-        //    }
-
-        //    if (image.TileForm == TileForm.Horizontal)
-        //        tiles = Actions.LinealToHorizontal(tiles, image.Width / 8, image.Height / 8, image.TileWidth);
-        //    if (image.ColorFormat == ColorFormat.Color16)
-        //        Actions.Bit8ToBit4(tiles);
-        //    FotochohForTinke.FotochohForm fotochoh = new FotochohForm();
-        //    fotochoh.SetBitmap(tiles, image.Width, palette.Palette[0], (PaletteType)image.ColorFormat);
-        //    fotochoh.ShowDialog();
-        //}
     }
 }
