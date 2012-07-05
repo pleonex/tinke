@@ -284,8 +284,11 @@ namespace Ekona.Images
 
             next_data = br.ReadBytes((int)(br.BaseStream.Length - file_size));
 
+            int width = (map.Length * 8 >= 0x100 ? 0x100 : map.Length * 8);
+            int height = (map.Length / (width / 8)) * 8;
+
             br.Close();
-            Set_Map(map, editable);
+            Set_Map(map, editable, width, height);
         }
 
         public override void Write(string fileOut, ImageBase image, PaletteBase palette)

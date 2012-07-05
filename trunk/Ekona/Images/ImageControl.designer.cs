@@ -52,22 +52,22 @@ namespace Ekona.Images
             this.label2 = new System.Windows.Forms.Label();
             this.numericHeight = new System.Windows.Forms.NumericUpDown();
             this.groupProp = new System.Windows.Forms.GroupBox();
+            this.checkMapCmp = new System.Windows.Forms.CheckBox();
             this.checkOriginalPal = new System.Windows.Forms.CheckBox();
             this.label10 = new System.Windows.Forms.Label();
             this.numTileSize = new System.Windows.Forms.NumericUpDown();
             this.btnSetTrans = new System.Windows.Forms.Button();
-            this.btnFotochoh = new System.Windows.Forms.Button();
             this.label9 = new System.Windows.Forms.Label();
             this.numPal = new System.Windows.Forms.NumericUpDown();
             this.checkHex = new System.Windows.Forms.CheckBox();
             this.btnImport = new System.Windows.Forms.Button();
-            this.btnBgdTrans = new System.Windows.Forms.Button();
+            this.btnBgdRem = new System.Windows.Forms.Button();
             this.btnBgd = new System.Windows.Forms.Button();
             this.checkTransparency = new System.Windows.Forms.CheckBox();
             this.label6 = new System.Windows.Forms.Label();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.label4 = new System.Windows.Forms.Label();
-            this.btnSave = new System.Windows.Forms.Button();
+            this.btnExport = new System.Windows.Forms.Button();
             this.comboDepth = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
             this.numericStart = new System.Windows.Forms.NumericUpDown();
@@ -119,7 +119,7 @@ namespace Ekona.Images
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(26, 13);
             this.label1.TabIndex = 2;
-            this.label1.Text = "S12";
+            this.label1.Text = "S05";
             // 
             // label2
             // 
@@ -128,7 +128,7 @@ namespace Ekona.Images
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(26, 13);
             this.label2.TabIndex = 3;
-            this.label2.Text = "S13";
+            this.label2.Text = "S06";
             // 
             // numericHeight
             // 
@@ -160,22 +160,22 @@ namespace Ekona.Images
             // 
             // groupProp
             // 
+            this.groupProp.Controls.Add(this.checkMapCmp);
             this.groupProp.Controls.Add(this.checkOriginalPal);
             this.groupProp.Controls.Add(this.label10);
             this.groupProp.Controls.Add(this.numTileSize);
             this.groupProp.Controls.Add(this.btnSetTrans);
-            this.groupProp.Controls.Add(this.btnFotochoh);
             this.groupProp.Controls.Add(this.label9);
             this.groupProp.Controls.Add(this.numPal);
             this.groupProp.Controls.Add(this.checkHex);
             this.groupProp.Controls.Add(this.btnImport);
-            this.groupProp.Controls.Add(this.btnBgdTrans);
+            this.groupProp.Controls.Add(this.btnBgdRem);
             this.groupProp.Controls.Add(this.btnBgd);
             this.groupProp.Controls.Add(this.checkTransparency);
             this.groupProp.Controls.Add(this.label6);
             this.groupProp.Controls.Add(this.comboBox1);
             this.groupProp.Controls.Add(this.label4);
-            this.groupProp.Controls.Add(this.btnSave);
+            this.groupProp.Controls.Add(this.btnExport);
             this.groupProp.Controls.Add(this.comboDepth);
             this.groupProp.Controls.Add(this.label3);
             this.groupProp.Controls.Add(this.numericStart);
@@ -191,14 +191,24 @@ namespace Ekona.Images
             this.groupProp.TabStop = false;
             this.groupProp.Text = "S02";
             // 
+            // checkMapCmp
+            // 
+            this.checkMapCmp.AutoSize = true;
+            this.checkMapCmp.Location = new System.Drawing.Point(393, 124);
+            this.checkMapCmp.Name = "checkMapCmp";
+            this.checkMapCmp.Size = new System.Drawing.Size(45, 17);
+            this.checkMapCmp.TabIndex = 32;
+            this.checkMapCmp.Text = "S0F";
+            this.checkMapCmp.UseVisualStyleBackColor = true;
+            // 
             // checkOriginalPal
             // 
             this.checkOriginalPal.AutoSize = true;
-            this.checkOriginalPal.Location = new System.Drawing.Point(390, 118);
+            this.checkOriginalPal.Location = new System.Drawing.Point(393, 101);
             this.checkOriginalPal.Name = "checkOriginalPal";
-            this.checkOriginalPal.Size = new System.Drawing.Size(116, 17);
+            this.checkOriginalPal.Size = new System.Drawing.Size(46, 17);
             this.checkOriginalPal.TabIndex = 31;
-            this.checkOriginalPal.Text = "Use original palette";
+            this.checkOriginalPal.Text = "S0E";
             this.checkOriginalPal.UseVisualStyleBackColor = true;
             // 
             // label10
@@ -206,9 +216,9 @@ namespace Ekona.Images
             this.label10.AutoSize = true;
             this.label10.Location = new System.Drawing.Point(128, 143);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(48, 13);
+            this.label10.Size = new System.Drawing.Size(26, 13);
             this.label10.TabIndex = 30;
-            this.label10.Text = "Tile size:";
+            this.label10.Text = "S08";
             // 
             // numTileSize
             // 
@@ -239,29 +249,18 @@ namespace Ekona.Images
             this.btnSetTrans.Name = "btnSetTrans";
             this.btnSetTrans.Size = new System.Drawing.Size(80, 40);
             this.btnSetTrans.TabIndex = 28;
-            this.btnSetTrans.Text = "Set transparency";
+            this.btnSetTrans.Text = "S0B";
             this.btnSetTrans.UseVisualStyleBackColor = true;
             this.btnSetTrans.Click += new System.EventHandler(this.btnSetTrans_Click);
-            // 
-            // btnFotochoh
-            // 
-            this.btnFotochoh.Location = new System.Drawing.Point(254, 160);
-            this.btnFotochoh.Name = "btnFotochoh";
-            this.btnFotochoh.Size = new System.Drawing.Size(80, 40);
-            this.btnFotochoh.TabIndex = 27;
-            this.btnFotochoh.Text = "Fotochoh";
-            this.btnFotochoh.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.btnFotochoh.UseVisualStyleBackColor = true;
-            this.btnFotochoh.Visible = false;
             // 
             // label9
             // 
             this.label9.AutoSize = true;
             this.label9.Location = new System.Drawing.Point(128, 174);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(57, 13);
+            this.label9.Size = new System.Drawing.Size(26, 13);
             this.label9.TabIndex = 26;
-            this.label9.Text = "Nº palette:";
+            this.label9.Text = "S09";
             // 
             // numPal
             // 
@@ -276,9 +275,9 @@ namespace Ekona.Images
             this.checkHex.AutoSize = true;
             this.checkHex.Location = new System.Drawing.Point(32, 46);
             this.checkHex.Name = "checkHex";
-            this.checkHex.Size = new System.Drawing.Size(87, 17);
+            this.checkHex.Size = new System.Drawing.Size(45, 17);
             this.checkHex.TabIndex = 24;
-            this.checkHex.Text = "Hexadecimal";
+            this.checkHex.Text = "S04";
             this.checkHex.UseVisualStyleBackColor = true;
             this.checkHex.CheckedChanged += new System.EventHandler(this.checkHex_CheckedChanged);
             // 
@@ -288,21 +287,21 @@ namespace Ekona.Images
             this.btnImport.Name = "btnImport";
             this.btnImport.Size = new System.Drawing.Size(80, 40);
             this.btnImport.TabIndex = 23;
-            this.btnImport.Text = "S21";
+            this.btnImport.Text = "S11";
             this.btnImport.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnImport.UseVisualStyleBackColor = true;
             this.btnImport.Click += new System.EventHandler(this.btnImport_Click);
             // 
-            // btnBgdTrans
+            // btnBgdRem
             // 
-            this.btnBgdTrans.Enabled = false;
-            this.btnBgdTrans.Location = new System.Drawing.Point(426, 19);
-            this.btnBgdTrans.Name = "btnBgdTrans";
-            this.btnBgdTrans.Size = new System.Drawing.Size(80, 40);
-            this.btnBgdTrans.TabIndex = 22;
-            this.btnBgdTrans.Text = "S20";
-            this.btnBgdTrans.UseVisualStyleBackColor = true;
-            this.btnBgdTrans.Click += new System.EventHandler(this.btnBgdTrans_Click);
+            this.btnBgdRem.Enabled = false;
+            this.btnBgdRem.Location = new System.Drawing.Point(426, 19);
+            this.btnBgdRem.Name = "btnBgdRem";
+            this.btnBgdRem.Size = new System.Drawing.Size(80, 40);
+            this.btnBgdRem.TabIndex = 22;
+            this.btnBgdRem.Text = "S0D";
+            this.btnBgdRem.UseVisualStyleBackColor = true;
+            this.btnBgdRem.Click += new System.EventHandler(this.btnBgdTrans_Click);
             // 
             // btnBgd
             // 
@@ -310,7 +309,7 @@ namespace Ekona.Images
             this.btnBgd.Name = "btnBgd";
             this.btnBgd.Size = new System.Drawing.Size(80, 40);
             this.btnBgd.TabIndex = 20;
-            this.btnBgd.Text = "S1F";
+            this.btnBgd.Text = "S0C";
             this.btnBgd.UseVisualStyleBackColor = true;
             this.btnBgd.Click += new System.EventHandler(this.btnBgd_Click);
             // 
@@ -321,7 +320,7 @@ namespace Ekona.Images
             this.checkTransparency.Name = "checkTransparency";
             this.checkTransparency.Size = new System.Drawing.Size(46, 17);
             this.checkTransparency.TabIndex = 19;
-            this.checkTransparency.Text = "S1C";
+            this.checkTransparency.Text = "S0A";
             this.checkTransparency.UseVisualStyleBackColor = true;
             this.checkTransparency.CheckedChanged += new System.EventHandler(this.checkTransparency_CheckedChanged);
             // 
@@ -332,7 +331,7 @@ namespace Ekona.Images
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(26, 13);
             this.label6.TabIndex = 11;
-            this.label6.Text = "S14";
+            this.label6.Text = "S07";
             // 
             // comboBox1
             // 
@@ -356,16 +355,16 @@ namespace Ekona.Images
             this.label4.TabIndex = 9;
             this.label4.Text = "BPP:";
             // 
-            // btnSave
+            // btnExport
             // 
-            this.btnSave.Location = new System.Drawing.Point(340, 160);
-            this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(80, 40);
-            this.btnSave.TabIndex = 6;
-            this.btnSave.Text = "S15";
-            this.btnSave.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.btnSave.UseVisualStyleBackColor = true;
-            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
+            this.btnExport.Location = new System.Drawing.Point(340, 160);
+            this.btnExport.Name = "btnExport";
+            this.btnExport.Size = new System.Drawing.Size(80, 40);
+            this.btnExport.TabIndex = 6;
+            this.btnExport.Text = "S10";
+            this.btnExport.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnExport.UseVisualStyleBackColor = true;
+            this.btnExport.Click += new System.EventHandler(this.btnExport_Click);
             // 
             // comboDepth
             // 
@@ -392,7 +391,7 @@ namespace Ekona.Images
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(26, 13);
             this.label3.TabIndex = 7;
-            this.label3.Text = "S11";
+            this.label3.Text = "S03";
             // 
             // numericStart
             // 
@@ -471,7 +470,7 @@ namespace Ekona.Images
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.NumericUpDown numericHeight;
         private System.Windows.Forms.GroupBox groupProp;
-        private System.Windows.Forms.Button btnSave;
+        private System.Windows.Forms.Button btnExport;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.NumericUpDown numericStart;
         private System.Windows.Forms.Label label4;
@@ -481,16 +480,16 @@ namespace Ekona.Images
         private System.Windows.Forms.ComboBox comboBox1;
         private System.Windows.Forms.CheckBox checkTransparency;
         private System.Windows.Forms.Button btnBgd;
-        private System.Windows.Forms.Button btnBgdTrans;
+        private System.Windows.Forms.Button btnBgdRem;
         internal System.Windows.Forms.Button btnImport;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.CheckBox checkHex;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.NumericUpDown numPal;
-        private System.Windows.Forms.Button btnFotochoh;
         private System.Windows.Forms.Button btnSetTrans;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.NumericUpDown numTileSize;
         private System.Windows.Forms.CheckBox checkOriginalPal;
+        private System.Windows.Forms.CheckBox checkMapCmp;
     }
 }

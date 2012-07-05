@@ -85,7 +85,7 @@ namespace Ekona.Images.Dialogs
             this.btnSave = new System.Windows.Forms.Button();
             this.label14 = new System.Windows.Forms.Label();
             this.comboSize = new System.Windows.Forms.ComboBox();
-            this.checkGrill = new System.Windows.Forms.CheckBox();
+            this.checkGrid = new System.Windows.Forms.CheckBox();
             this.checkNumbers = new System.Windows.Forms.CheckBox();
             this.checkImage = new System.Windows.Forms.CheckBox();
             this.checkOAM = new System.Windows.Forms.CheckBox();
@@ -553,18 +553,18 @@ namespace Ekona.Images.Dialogs
             this.comboSize.TabIndex = 9;
             this.comboSize.SelectedIndexChanged += new System.EventHandler(this.comboSize_SelectedIndexChanged);
             // 
-            // checkGrill
+            // checkGrid
             // 
-            this.checkGrill.AutoSize = true;
-            this.checkGrill.Checked = true;
-            this.checkGrill.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkGrill.Location = new System.Drawing.Point(3, 108);
-            this.checkGrill.Name = "checkGrill";
-            this.checkGrill.Size = new System.Drawing.Size(67, 17);
-            this.checkGrill.TabIndex = 10;
-            this.checkGrill.Text = "View grill";
-            this.checkGrill.UseVisualStyleBackColor = true;
-            this.checkGrill.CheckedChanged += new System.EventHandler(this.Change_Preview);
+            this.checkGrid.AutoSize = true;
+            this.checkGrid.Checked = true;
+            this.checkGrid.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkGrid.Location = new System.Drawing.Point(3, 108);
+            this.checkGrid.Name = "checkGrid";
+            this.checkGrid.Size = new System.Drawing.Size(69, 17);
+            this.checkGrid.TabIndex = 10;
+            this.checkGrid.Text = "View grid";
+            this.checkGrid.UseVisualStyleBackColor = true;
+            this.checkGrid.CheckedChanged += new System.EventHandler(this.Change_Preview);
             // 
             // checkNumbers
             // 
@@ -618,7 +618,7 @@ namespace Ekona.Images.Dialogs
             // 
             this.groupPreview.Controls.Add(this.checkCurrOAM);
             this.groupPreview.Controls.Add(this.checkTrans);
-            this.groupPreview.Controls.Add(this.checkGrill);
+            this.groupPreview.Controls.Add(this.checkGrid);
             this.groupPreview.Controls.Add(this.checkOAM);
             this.groupPreview.Controls.Add(this.checkNumbers);
             this.groupPreview.Controls.Add(this.checkImage);
@@ -774,7 +774,7 @@ namespace Ekona.Images.Dialogs
         private System.Windows.Forms.Button btnSave;
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.ComboBox comboSize;
-        private System.Windows.Forms.CheckBox checkGrill;
+        private System.Windows.Forms.CheckBox checkGrid;
         private System.Windows.Forms.CheckBox checkNumbers;
         private System.Windows.Forms.CheckBox checkImage;
         private System.Windows.Forms.CheckBox checkOAM;

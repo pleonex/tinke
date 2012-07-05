@@ -25,6 +25,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using System.Xml.Linq;
 
 namespace Ekona.Images.Dialogs
 {
@@ -41,7 +42,7 @@ namespace Ekona.Images.Dialogs
         {
             InitializeComponent();
         }
-        public OAMEditor(Bank bank)
+        public OAMEditor(string langxml, Bank bank)
         {
             InitializeComponent();
             this.bank = bank;
@@ -51,8 +52,10 @@ namespace Ekona.Images.Dialogs
             preview = false;
             picBox.Enabled = false;
             groupPreview.Enabled = false;
+
+            Read_Language(langxml);
         }
-        public OAMEditor(Bank bank, SpriteBase sprite, ImageBase image, PaletteBase palette)
+        public OAMEditor(string langxml, Bank bank, SpriteBase sprite, ImageBase image, PaletteBase palette)
         {
             InitializeComponent();
             this.bank = bank;
@@ -63,11 +66,69 @@ namespace Ekona.Images.Dialogs
             this.sprite = sprite;
             this.image = image;
             this.palette = palette;
+
+            Read_Language(langxml);
         }
         private void OAMEditor_Load(object sender, EventArgs e)
         {
             Read_Info(0);
             Update_Image();
+        }
+
+        private void Read_Language(string langxml)
+        {
+            try
+            {
+                XElement xml = XElement.Load(langxml);
+                xml = xml.Element("Ekona").Element("OAMEditor");
+
+                this.Text = xml.Element("S01").Value;
+                label11.Text = xml.Element("S02").Value;
+                label12.Text = xml.Element("S03").Value;
+                groupObj0.Text = xml.Element("S04").Value;
+                label1.Text = xml.Element("S05").Value;
+                checkRSflag.Text = xml.Element("S06").Value;
+                checkObjdisable.Text = xml.Element("S07").Value;
+                checkDoubleSize.Text = xml.Element("S08").Value;
+                label3.Text = xml.Element("S09").Value;
+                comboObjMode.Items[0] = xml.Element("S0A").Value;
+                comboObjMode.Items[1] = xml.Element("S0B").Value;
+                comboObjMode.Items[2] = xml.Element("S0C").Value;
+                comboObjMode.Items[3] = xml.Element("S0D").Value;
+                checkMosaic.Text = xml.Element("S0E").Value;
+                label5.Text = xml.Element("S0F").Value;
+                comboDepth.Items[0] = xml.Element("S10").Value;
+                comboDepth.Items[1] = xml.Element("S11").Value;
+                label4.Text = xml.Element("S12").Value;
+                comboShape.Items[0] = xml.Element("S13").Value;
+                comboShape.Items[1] = xml.Element("S14").Value;
+                comboShape.Items[2] = xml.Element("S15").Value;
+                comboShape.Items[3] = xml.Element("S0D").Value;
+                label15.Text = xml.Element("S16").Value;
+                label13.Text = xml.Element("S17").Value;
+                btnAddOAM.Text = xml.Element("S18").Value;
+                btnRemOAM.Text = xml.Element("S19").Value;
+                groupObj1.Text = xml.Element("S1A").Value;
+                label2.Text = xml.Element("S1B").Value;
+                label6.Text = xml.Element("S1C").Value;
+                checkFlipX.Text = xml.Element("S1D").Value;
+                checkFlipY.Text = xml.Element("S1E").Value;
+                label7.Text = xml.Element("S1F").Value;
+                groupObj2.Text = xml.Element("S20").Value;
+                label8.Text = xml.Element("S21").Value;
+                label9.Text = xml.Element("S22").Value;
+                label10.Text = xml.Element("S23").Value;
+                btnSave.Text = xml.Element("S24").Value;
+                label14.Text = xml.Element("S25").Value;
+                groupPreview.Text = xml.Element("S26").Value;
+                checkTrans.Text = xml.Element("S27").Value;
+                checkOAM.Text = xml.Element("S28").Value;
+                checkImage.Text = xml.Element("S29").Value;
+                checkNumbers.Text = xml.Element("S2A").Value;
+                checkGrid.Text = xml.Element("S2B").Value;
+                checkCurrOAM.Text = xml.Element("S2C").Value;
+            }
+            catch { throw new Exception("There was an error reading the XML file of language."); }
         }
 
         private void Read_Info(int i)
@@ -152,7 +213,7 @@ namespace Ekona.Images.Dialogs
             if (!preview)
                 return;
 
-            picBox.Image = sprite.Get_Image(image, palette, bank, 512, 256, checkGrill.Checked, checkOAM.Checked,
+            picBox.Image = sprite.Get_Image(image, palette, bank, 512, 256, checkGrid.Checked, checkOAM.Checked,
                 checkNumbers.Checked, checkTrans.Checked, checkImage.Checked, (checkCurrOAM.Checked ? (int)numOAM.Value : -1));
         }
 

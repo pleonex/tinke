@@ -35,7 +35,7 @@ namespace Ekona.Images.Formats
     {
         PaletteBase palette;
 
-        public BMP(IPluginHost pluginHost, string file) : base(file, -1) { }
+        public BMP(string file) : base(file, -1) { }
 
         public override void Read(string fileIn)
         {

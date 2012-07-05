@@ -2,17 +2,23 @@
 ECHO off
 CLS
 
-CHOICE /C RD /M "Choose the configuration: press R for Release or D for Debug."
-IF errorlevel 1 set conf=Release
-IF errorlevel 2 set conf=Debug
+SET /P conf=Choose the configuration. Press R for Release or D for Debug: 
+IF /I "%conf%"=="R" SET conf=Release
+IF /I "%conf%"=="D" ( SET conf=Debug
+) ELSE (IF NOT "%conf%"=="Release" GOTO start)
 
-CHOICE /C 123 /M "Choose the platform: press 1 for x86, 2 for x64 or 3 for Any CPU."
-IF errorlevel 1 set plat=x86
-IF errorlevel 2 set plat=x64
-IF errorlevel 3 set plat=Any CPU
+:secif
 
-CHOICE /C YN /M "You have choosen the configuration %conf% and the platform %plat%, Is this correct?"
-IF errorlevel 2 goto start
+SET /P plat=Choose the platform. Press 1 for x86 or 2 for x64: 
+IF "%plat%"=="1" SET plat=x86
+IF "%plat%"=="2" ( SET plat=x64
+) ELSE (IF NOT "%plat%"=="x86" GOTO secif)
+
+:check
+
+SET /P ans=You have choosen the configuration %conf% and the platform %plat%, Is this correct? (y/n) 
+IF /I "%ans%"=="N" (GOTO start
+) ELSE (IF /I NOT "%ans%"=="Y" GOTO check)
 
 RMDIR /S /Q "%cd%\build"
 
@@ -40,8 +46,8 @@ REM Compiling game plugins
 %windir%\microsoft.net\framework\v4.0.30319\msbuild "Plugins\SF FEATHER\SF FEATHER.sln" /v:minimal /p:Configuration=%conf%;TarjetFrameworkVersion=v3.5 "/p:Platform=Any CPU" "/p:OutputPath=%CD%\build\Plugins\"
 %windir%\microsoft.net\framework\v4.0.30319\msbuild "Plugins\DEATHNOTEDS\DEATHNOTEDS.sln" /v:minimal /p:Configuration=%conf%;TarjetFrameworkVersion=v3.5 "/p:Platform=Any CPU" "/p:OutputPath=%CD%\build\Plugins\"
 %windir%\microsoft.net\framework\v4.0.30319\msbuild "Plugins\INAZUMA11\INAZUMA11.sln" /v:minimal /p:Configuration=%conf%;TarjetFrameworkVersion=v3.5 "/p:Platform=Any CPU" "/p:OutputPath=%CD%\build\Plugins\"
-%windir%\microsoft.net\framework\v4.0.30319\msbuild "Plugins\PSL\PSL.sln" /v:minimal /p:Configuration=%conf%;TarjetFrameworkVersion=v3.5 "/p:Platform=Any CPU" "/p:OutputPath=%CD%\build\Plugins\"
 %windir%\microsoft.net\framework\v4.0.30319\msbuild "Plugins\TC UTK\TC UTK.sln" /v:minimal /p:Configuration=%conf%;TarjetFrameworkVersion=v3.5 "/p:Platform=Any CPU" "/p:OutputPath=%CD%\build\Plugins\"
+%windir%\microsoft.net\framework\v4.0.30319\msbuild "Plugins\PSL\PSL.sln" /v:minimal /p:Configuration=%conf%;TarjetFrameworkVersion=v3.5 "/p:Platform=Any CPU" "/p:OutputPath=%CD%\build\Plugins\"
 %windir%\microsoft.net\framework\v4.0.30319\msbuild "Plugins\HETALIA\HETALIA.sln" /v:minimal /p:Configuration=%conf%;TarjetFrameworkVersion=v3.5 "/p:Platform=Any CPU" "/p:OutputPath=%CD%\build\Plugins\"
 
 REM Compiling format plugins
@@ -61,4 +67,5 @@ COPY "%cd%\Plugins\3DModels\OpenTK.GLControl.dll" "%cd%\build\"
 
 DEL /S /Q "%cd%\build\*.pdb"
 
+:end
 PAUSE

@@ -82,9 +82,16 @@ namespace Images.Games
     {
         IPluginHost pluginHost;
 
-        public STD(IPluginHost pluginHost, string file, int id, string fileName = "") : base(file, id, fileName)
+        public STD(IPluginHost pluginHost, string file, int id, string fileName = "")
         {
+            this.id = id;
+            if (fileName == "")
+                this.fileName = Path.GetFileName(file);
+            else
+                this.fileName = fileName;
             this.pluginHost = pluginHost;
+
+            Read(file);
         }
 
         public override void Read(string fileIn)
