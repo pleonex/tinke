@@ -1364,7 +1364,8 @@ namespace Tinke
             cfile.name = name;
             cfile.id = (ushort)id;
             cfile.size = size;
-            cfile.path = null;
+            cfile.offset = (uint)stream.Position;
+            cfile.path = file;                      // When it's called it pass the stream of the rom file.
 
             Format tipo = Format.Unknown;
             // Extension

@@ -76,9 +76,15 @@ namespace Ekona.Images
             this.radioSwapPal = new System.Windows.Forms.RadioButton();
             this.numThreshold = new System.Windows.Forms.NumericUpDown();
             this.label2 = new System.Windows.Forms.Label();
+            this.radioImgAdd = new System.Windows.Forms.RadioButton();
+            this.radioImgReplace = new System.Windows.Forms.RadioButton();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
             ((System.ComponentModel.ISupportInitialize)(this.imgBox)).BeginInit();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numThreshold)).BeginInit();
+            this.groupBox2.SuspendLayout();
+            this.groupBox3.SuspendLayout();
             this.SuspendLayout();
             // 
             // imgBox
@@ -122,7 +128,7 @@ namespace Ekona.Images
             // btnExport
             // 
             this.btnExport.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnExport.Location = new System.Drawing.Point(320, 463);
+            this.btnExport.Location = new System.Drawing.Point(262, 469);
             this.btnExport.Name = "btnExport";
             this.btnExport.Size = new System.Drawing.Size(90, 40);
             this.btnExport.TabIndex = 5;
@@ -192,6 +198,7 @@ namespace Ekona.Images
             // 
             // btnBgdTrans
             // 
+            this.btnBgdTrans.Enabled = false;
             this.btnBgdTrans.Location = new System.Drawing.Point(0, 319);
             this.btnBgdTrans.Name = "btnBgdTrans";
             this.btnBgdTrans.Size = new System.Drawing.Size(80, 40);
@@ -212,7 +219,7 @@ namespace Ekona.Images
             // 
             // btnImport
             // 
-            this.btnImport.Location = new System.Drawing.Point(416, 463);
+            this.btnImport.Location = new System.Drawing.Point(358, 469);
             this.btnImport.Name = "btnImport";
             this.btnImport.Size = new System.Drawing.Size(90, 40);
             this.btnImport.TabIndex = 30;
@@ -246,7 +253,7 @@ namespace Ekona.Images
             // 
             // btnOAMeditor
             // 
-            this.btnOAMeditor.Location = new System.Drawing.Point(320, 417);
+            this.btnOAMeditor.Location = new System.Drawing.Point(262, 423);
             this.btnOAMeditor.Name = "btnOAMeditor";
             this.btnOAMeditor.Size = new System.Drawing.Size(90, 40);
             this.btnOAMeditor.TabIndex = 35;
@@ -285,7 +292,7 @@ namespace Ekona.Images
             // radioOriginalPal
             // 
             this.radioOriginalPal.AutoSize = true;
-            this.radioOriginalPal.Location = new System.Drawing.Point(172, 365);
+            this.radioOriginalPal.Location = new System.Drawing.Point(6, 42);
             this.radioOriginalPal.Name = "radioOriginalPal";
             this.radioOriginalPal.Size = new System.Drawing.Size(149, 17);
             this.radioOriginalPal.TabIndex = 39;
@@ -295,7 +302,7 @@ namespace Ekona.Images
             // radioReplacePal
             // 
             this.radioReplacePal.AutoSize = true;
-            this.radioReplacePal.Location = new System.Drawing.Point(172, 388);
+            this.radioReplacePal.Location = new System.Drawing.Point(6, 65);
             this.radioReplacePal.Name = "radioReplacePal";
             this.radioReplacePal.Size = new System.Drawing.Size(100, 17);
             this.radioReplacePal.TabIndex = 40;
@@ -306,7 +313,7 @@ namespace Ekona.Images
             // 
             this.radioSwapPal.AutoSize = true;
             this.radioSwapPal.Checked = true;
-            this.radioSwapPal.Location = new System.Drawing.Point(172, 342);
+            this.radioSwapPal.Location = new System.Drawing.Point(6, 19);
             this.radioSwapPal.Name = "radioSwapPal";
             this.radioSwapPal.Size = new System.Drawing.Size(135, 17);
             this.radioSwapPal.TabIndex = 41;
@@ -316,9 +323,15 @@ namespace Ekona.Images
             // 
             // numThreshold
             // 
-            this.numThreshold.Location = new System.Drawing.Point(389, 339);
+            this.numThreshold.DecimalPlaces = 4;
+            this.numThreshold.Increment = new decimal(new int[] {
+            5,
+            0,
+            0,
+            65536});
+            this.numThreshold.Location = new System.Drawing.Point(223, 16);
             this.numThreshold.Maximum = new decimal(new int[] {
-            65535,
+            442,
             0,
             0,
             0});
@@ -329,22 +342,66 @@ namespace Ekona.Images
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(326, 344);
+            this.label2.Location = new System.Drawing.Point(160, 21);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(57, 13);
             this.label2.TabIndex = 43;
             this.label2.Text = "Threshold:";
+            // 
+            // radioImgAdd
+            // 
+            this.radioImgAdd.AutoSize = true;
+            this.radioImgAdd.Checked = true;
+            this.radioImgAdd.Location = new System.Drawing.Point(6, 14);
+            this.radioImgAdd.Name = "radioImgAdd";
+            this.radioImgAdd.Size = new System.Drawing.Size(75, 17);
+            this.radioImgAdd.TabIndex = 44;
+            this.radioImgAdd.TabStop = true;
+            this.radioImgAdd.Text = "Add image";
+            this.radioImgAdd.UseVisualStyleBackColor = true;
+            // 
+            // radioImgReplace
+            // 
+            this.radioImgReplace.AutoSize = true;
+            this.radioImgReplace.Location = new System.Drawing.Point(6, 35);
+            this.radioImgReplace.Name = "radioImgReplace";
+            this.radioImgReplace.Size = new System.Drawing.Size(96, 17);
+            this.radioImgReplace.TabIndex = 45;
+            this.radioImgReplace.Text = "Replace image";
+            this.radioImgReplace.UseVisualStyleBackColor = true;
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.radioSwapPal);
+            this.groupBox2.Controls.Add(this.radioOriginalPal);
+            this.groupBox2.Controls.Add(this.radioReplacePal);
+            this.groupBox2.Controls.Add(this.label2);
+            this.groupBox2.Controls.Add(this.numThreshold);
+            this.groupBox2.Location = new System.Drawing.Point(172, 319);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(334, 86);
+            this.groupBox2.TabIndex = 46;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Palette import options";
+            // 
+            // groupBox3
+            // 
+            this.groupBox3.Controls.Add(this.radioImgAdd);
+            this.groupBox3.Controls.Add(this.radioImgReplace);
+            this.groupBox3.Location = new System.Drawing.Point(358, 406);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(148, 58);
+            this.groupBox3.TabIndex = 47;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "Tile import options";
             // 
             // SpriteControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Transparent;
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.numThreshold);
-            this.Controls.Add(this.radioSwapPal);
-            this.Controls.Add(this.radioReplacePal);
-            this.Controls.Add(this.radioOriginalPal);
+            this.Controls.Add(this.groupBox3);
+            this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.txtBatch);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.checkBatch);
@@ -365,6 +422,10 @@ namespace Ekona.Images
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numThreshold)).EndInit();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
+            this.groupBox3.ResumeLayout(false);
+            this.groupBox3.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -396,5 +457,9 @@ namespace Ekona.Images
         private System.Windows.Forms.RadioButton radioSwapPal;
         private System.Windows.Forms.NumericUpDown numThreshold;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.RadioButton radioImgAdd;
+        private System.Windows.Forms.RadioButton radioImgReplace;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.GroupBox groupBox3;
     }
 }

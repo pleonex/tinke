@@ -22,6 +22,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using System.IO;
 using Ekona;
 
 namespace Pack
@@ -38,8 +39,22 @@ namespace Pack
         {
             string type = new String(Encoding.ASCII.GetChars(magic));
 
-            if (type == "NARC" || type == "CRAN" || (file.name.ToUpper().EndsWith("UTILITY.BIN") && magic[0] == 0x10))
+            if (type == "NARC" || type == "CRAN")
                 return Format.Pack;
+            else if (file.name.ToUpper().EndsWith("UTILITY.BIN") && magic[0] == 0x10)
+                return Format.Pack;
+            else if (type == "ALAR")
+            {
+                // Check type
+                BinaryReader br = new BinaryReader(File.OpenRead(file.path));
+                Console.WriteLine("Offset: " + (file.offset + 4).ToString("x"));
+                br.BaseStream.Position = file.offset + 4;
+                byte alar_type = br.ReadByte();
+                br.Close();
+
+                if (alar_type == 0x02)
+                    return Format.Pack;
+            }
 
             return Format.Unknown;
         }
@@ -75,6 +90,8 @@ namespace Pack
                 return new Utility(pluginHost).Unpack(file.path);
             else if (type == "NARC" || type == "CRAN")
                 return new NARC(pluginHost).Unpack(file);
+            else if (type == "ALAR")
+                return ALAR.Unpack(file);
 
             return new sFolder();
         }

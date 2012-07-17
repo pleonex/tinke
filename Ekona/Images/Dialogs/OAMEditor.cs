@@ -47,7 +47,6 @@ namespace Ekona.Images.Dialogs
             InitializeComponent();
             this.bank = bank;
             numOAM.Maximum = bank.oams.Length - 1;
-            label12.Text = "of " + numOAM.Maximum.ToString();
 
             preview = false;
             picBox.Enabled = false;
@@ -60,7 +59,6 @@ namespace Ekona.Images.Dialogs
             InitializeComponent();
             this.bank = bank;
             numOAM.Maximum = bank.oams.Length - 1;
-            label12.Text = "of " + numOAM.Maximum.ToString();
 
             preview = true;
             this.sprite = sprite;
@@ -84,7 +82,7 @@ namespace Ekona.Images.Dialogs
 
                 this.Text = xml.Element("S01").Value;
                 label11.Text = xml.Element("S02").Value;
-                label12.Text = xml.Element("S03").Value;
+                label12.Text = xml.Element("S03").Value + ' ' + numOAM.Maximum.ToString();
                 groupObj0.Text = xml.Element("S04").Value;
                 label1.Text = xml.Element("S05").Value;
                 checkRSflag.Text = xml.Element("S06").Value;
@@ -208,7 +206,11 @@ namespace Ekona.Images.Dialogs
             oam.width = (ushort)size.Width;
             oam.height = (ushort)size.Height;
             bank.oams[(int)numOAM.Value] = oam;
-            
+
+            ushort[] objs = Actions.OAMInfo(oam);
+            numObj0.Value = objs[0];
+            numObj1.Value = objs[1];
+            numObj2.Value = objs[2];
 
             if (!preview)
                 return;
@@ -398,6 +400,17 @@ namespace Ekona.Images.Dialogs
 
             numOAM.Maximum = bank.oams.Length - 1;
             label12.Text = "of " + numOAM.Maximum.ToString();
+            Read_Info((int)numOAM.Value);
+            Update_Image();
+        }
+
+        private void numObj_ValueChanged(object sender, EventArgs e)
+        {
+            bank.oams[(int)numOAM.Value] = Actions.OAMInfo(
+                (ushort)numObj0.Value,
+                (ushort)numObj1.Value,
+                (ushort)numObj2.Value);
+
             Read_Info((int)numOAM.Value);
             Update_Image();
         }

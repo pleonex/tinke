@@ -1294,9 +1294,16 @@ namespace Tinke
             if (currFolder.files is List<sFile>)
                 foreach (sFile archivo in currFolder.files)
                 {
+                    string filePath = path + Path.DirectorySeparatorChar + archivo.name;
+                    for (int i = 0; File.Exists(filePath); i++)
+                    {
+                        filePath = path + Path.DirectorySeparatorChar + Path.GetFileNameWithoutExtension(archivo.name) + " (" +
+                            i.ToString() + ')' + Path.GetExtension(archivo.name);
+                    }
+
                     BinaryReader br = new BinaryReader(File.OpenRead(archivo.path));
                     br.BaseStream.Position = archivo.offset;
-                    File.WriteAllBytes(path + Path.DirectorySeparatorChar + archivo.name, br.ReadBytes((int)archivo.size));
+                    File.WriteAllBytes(filePath, br.ReadBytes((int)archivo.size));
                     br.Close();
                 }
 

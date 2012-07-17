@@ -305,4 +305,29 @@ namespace Ekona.Images
         }
     }
 
+    public class RawSprite : SpriteBase
+    {
+
+        public RawSprite(Bank[] banks, uint blocksize)
+        {
+            Set_Banks(banks, blocksize, false);
+        }
+        public RawSprite(OAM[] oams, uint blocksize)
+        {
+            Bank bank = new Bank();
+            bank.name = "Bank 1";
+            bank.oams = oams;
+            Set_Banks(new Bank[] { bank }, blocksize, false);
+        }
+
+        public override void Read(string fileIn)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void Write(string fileOut, ImageBase image, PaletteBase palette)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }

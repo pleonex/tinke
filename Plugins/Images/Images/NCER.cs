@@ -81,44 +81,15 @@ namespace Images
                 #region Read cells
                 for (int j = 0; j < ncer.cebk.banks[i].nCells; j++)
                 {
-                    ncer.cebk.banks[i].oams[j].num_cell = (ushort)j;
-
                     ushort obj0 = br.ReadUInt16();
                     ushort obj1 = br.ReadUInt16();
                     ushort obj2 = br.ReadUInt16();
 
-                    // Obj 0
-                    ncer.cebk.banks[i].oams[j].obj0.yOffset = (sbyte)(obj0 & 0xFF);
-                    ncer.cebk.banks[i].oams[j].obj0.rs_flag = (byte)((obj0 >> 8) & 1);
-                    if (ncer.cebk.banks[i].oams[j].obj0.rs_flag == 0)
-                        ncer.cebk.banks[i].oams[j].obj0.objDisable = (byte)((obj0 >> 9) & 1);
-                    else
-                        ncer.cebk.banks[i].oams[j].obj0.doubleSize = (byte)((obj0 >> 9) & 1);
-                    ncer.cebk.banks[i].oams[j].obj0.objMode = (byte)((obj0 >> 10) & 3);
-                    ncer.cebk.banks[i].oams[j].obj0.mosaic_flag = (byte)((obj0 >> 12) & 1);
-                    ncer.cebk.banks[i].oams[j].obj0.depth = (byte)((obj0 >> 13) & 1);
-                    ncer.cebk.banks[i].oams[j].obj0.shape = (byte)((obj0 >> 14) & 3);
+                    ncer.cebk.banks[i].oams[j] = Actions.OAMInfo(new ushort[] { obj0, obj1, obj2 });
+                    ncer.cebk.banks[i].oams[j].num_cell = (ushort)j;
 
-                    // Obj 1
-                    ncer.cebk.banks[i].oams[j].obj1.xOffset = obj1 & 0x01FF;
-                    if (ncer.cebk.banks[i].oams[j].obj1.xOffset >= 0x100)
-                        ncer.cebk.banks[i].oams[j].obj1.xOffset -= 0x200;
-                    if (ncer.cebk.banks[i].oams[j].obj0.rs_flag == 0)
-                    {
-                        ncer.cebk.banks[i].oams[j].obj1.unused = (byte)((obj1 >> 9) & 7);
-                        ncer.cebk.banks[i].oams[j].obj1.flipX = (byte)((obj1 >> 12) & 1);
-                        ncer.cebk.banks[i].oams[j].obj1.flipY = (byte)((obj1 >> 13) & 1);
-                    }
-                    else
-                        ncer.cebk.banks[i].oams[j].obj1.select_param = (byte)((obj1 >> 9) & 0x1F);
-                    ncer.cebk.banks[i].oams[j].obj1.size = (byte)((obj1 >> 14) & 3);
-
-                    // Obj 2
-                    ncer.cebk.banks[i].oams[j].obj2.tileOffset = (uint)(obj2 & 0x03FF);
                     if (ncer.cebk.unknown1 != 0x00)
                         ncer.cebk.banks[i].oams[j].obj2.tileOffset += tilePos;
-                    ncer.cebk.banks[i].oams[j].obj2.priority = (byte)((obj2 >> 10) & 3);
-                    ncer.cebk.banks[i].oams[j].obj2.index_palette = (byte)((obj2 >> 12) & 0xF);
 
                     // Calculate the size
                     Size cellSize = Actions.Get_OAMSize(ncer.cebk.banks[i].oams[j].obj0.shape, ncer.cebk.banks[i].oams[j].obj1.size);
@@ -325,43 +296,11 @@ namespace Images
                 for (int j = 0; j < ncer.cebk.banks[i].nCells; j++)
                 {
                     OAM oam = ncer.cebk.banks[i].oams[j];
+                    ushort[] obj = Actions.OAMInfo(oam);
 
-                    // OBJ0
-                    ushort obj0 = 0;
-                    obj0 += (ushort)((sbyte)(oam.obj0.yOffset) & 0xFF);
-                    obj0 += (ushort)((oam.obj0.rs_flag & 1) << 8);
-                    if (oam.obj0.rs_flag == 0x00)
-                        obj0 += (ushort)((oam.obj0.objDisable & 1) << 9);
-                    else
-                        obj0 += (ushort)((oam.obj0.doubleSize & 1) << 9);
-                    obj0 += (ushort)((oam.obj0.objMode & 3) << 10);
-                    obj0 += (ushort)((oam.obj0.mosaic_flag & 1) << 12);
-                    obj0 += (ushort)((oam.obj0.depth & 1) << 13);
-                    obj0 += (ushort)((oam.obj0.shape & 3) << 14);
-                    bw.Write(obj0);
-
-                    // OBJ1
-                    ushort obj1 = 0;
-                    if (oam.obj1.xOffset < 0)
-                        oam.obj1.xOffset += 0x200;
-                    obj1 += (ushort)(oam.obj1.xOffset & 0x1FF);
-                    if (oam.obj0.rs_flag == 0)
-                    {
-                        obj1 += (ushort)((oam.obj1.unused & 0x7) << 9);
-                        obj1 += (ushort)((oam.obj1.flipX & 1) << 12);
-                        obj1 += (ushort)((oam.obj1.flipY & 1) << 13);
-                    }
-                    else
-                        obj1 += (ushort)((oam.obj1.select_param & 0x1F) << 9);
-                    obj1 += (ushort)((oam.obj1.size & 3) << 14);
-                    bw.Write(obj1);
-
-                    // OBJ2
-                    ushort obj2 = 0;
-                    obj2 += (ushort)(oam.obj2.tileOffset & 0x3FF);
-                    obj2 += (ushort)((oam.obj2.priority & 3) << 10);
-                    obj2 += (ushort)((oam.obj2.index_palette & 0xF) << 12);
-                    bw.Write(obj2);
+                    bw.Write(BitConverter.GetBytes(obj[0]));
+                    bw.Write(BitConverter.GetBytes(obj[1]));
+                    bw.Write(BitConverter.GetBytes(obj[2]));
                 }
             }
 
