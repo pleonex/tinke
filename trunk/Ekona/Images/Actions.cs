@@ -583,39 +583,67 @@ namespace Ekona.Images
                     tiles[i] = (byte)newIndex;
             }
         }
-        public static void Swap_Palette(ref byte[] tiles, Color[] newp, Color[] oldp, ColorFormat format, int threshold = 0)
+        public static void Swap_Palette(ref byte[] tiles, Color[] newp, Color[] oldp, ColorFormat format, decimal threshold = 0)
         {
             if (format == ColorFormat.colors16) // Yeah, I should improve it
                 tiles = Helper.BitsConverter.BytesToBit4(tiles);
             else if (format != ColorFormat.colors256)
                 throw new NotSupportedException("Only supported 4bpp and 8bpp images.");
-
-            List<Color> listnew = new List<Color>();
-            listnew.AddRange(newp);
+            
+            List<Color> notfound = new List<Color>();
+            List<Color> newplist = new List<Color>(newp);
 
             for (int i = 0; i < tiles.Length; i++)
             {
                 Color px = oldp[tiles[i]];
-                int id = -1;
-
-                for (int c = 0; c < newp.Length; c++)
-                {
-                    if (px.R + threshold >= newp[c].R && px.R - threshold <= newp[c].R &&
-                        px.G + threshold >= newp[c].G && px.G - threshold <= newp[c].G &&
-                        px.B + threshold >= newp[c].B && px.B - threshold <= newp[c].B)
-                    {
-                        id = c;
-                        break;
-                    }
-                }
+                int id = newplist.IndexOf(px);
 
                 if (px == Color.Transparent && id == -1)
                     id = 0;
 
+                // Try to find the nearest color
+                decimal min_distance = (decimal)Math.Sqrt(3) * 255;       // Set the max distance
+                double module = Math.Sqrt(px.R * px.R + px.G * px.G + px.B * px.B);
+                int curr_id = -1;
+                for (int c = 1; c < newp.Length && id == -1; c++)
+                {
+                    double modulec = Math.Sqrt(newp[c].R * newp[c].R + newp[c].G * newp[c].G + newp[c].B * newp[c].B);
+                    decimal distance = (decimal)Math.Abs(module - modulec);
+
+                    if (distance < min_distance)
+                    {
+                        min_distance = distance;
+                        curr_id = c;
+                    }
+                }
+
+                if (id == -1 && min_distance <= threshold)
+                    id = curr_id;
+
+                // If still it doesn't found the color try with the first one, usually is transparent so for this reason we leave it to the end
                 if (id == -1)
-                    throw new NotSupportedException("Color not found in the original palette!");
+                {
+                    double modulec = Math.Sqrt(newp[0].R * newp[0].R + newp[0].G * newp[0].G + newp[0].B * newp[0].B);
+                    decimal distance = (decimal)Math.Abs(module - modulec);
+
+                    if (distance <= threshold)
+                        id = 0;
+                }
+
+                if (id == -1)
+                {
+                    if (notfound.Count == 0)
+                        Console.WriteLine("The following colors couldn't been found!");
+                    Console.WriteLine(px.ToString() + " at " + i.ToString() + " (distance: " + min_distance.ToString() + ')');
+                    notfound.Add(px);
+                    continue;
+                }
+
                 tiles[i] = (byte)id;
             }
+
+            if (notfound.Count > 0)
+                throw new NotSupportedException("Color not found in the original palette!");
 
             if (format == ColorFormat.colors16)
                 tiles = Helper.BitsConverter.Bits4ToByte(tiles);
@@ -1111,6 +1139,91 @@ namespace Ekona.Images
             }
         }
 
+        public static ushort[] OAMInfo(OAM oam)
+        {
+            ushort[] obj = new ushort[3];
+
+            // OBJ0
+            obj[0] = 0;
+            obj[0] += (ushort)((sbyte)(oam.obj0.yOffset) & 0xFF);
+            obj[0] += (ushort)((oam.obj0.rs_flag & 1) << 8);
+            if (oam.obj0.rs_flag == 0x00)
+                obj[0] += (ushort)((oam.obj0.objDisable & 1) << 9);
+            else
+                obj[0] += (ushort)((oam.obj0.doubleSize & 1) << 9);
+            obj[0] += (ushort)((oam.obj0.objMode & 3) << 10);
+            obj[0] += (ushort)((oam.obj0.mosaic_flag & 1) << 12);
+            obj[0] += (ushort)((oam.obj0.depth & 1) << 13);
+            obj[0] += (ushort)((oam.obj0.shape & 3) << 14);
+
+            // OBJ1
+            obj[1] = 0;
+            if (oam.obj1.xOffset < 0)
+                oam.obj1.xOffset += 0x200;
+            obj[1] += (ushort)(oam.obj1.xOffset & 0x1FF);
+            if (oam.obj0.rs_flag == 0)
+            {
+                obj[1] += (ushort)((oam.obj1.unused & 0x7) << 9);
+                obj[1] += (ushort)((oam.obj1.flipX & 1) << 12);
+                obj[1] += (ushort)((oam.obj1.flipY & 1) << 13);
+            }
+            else
+                obj[1] += (ushort)((oam.obj1.select_param & 0x1F) << 9);
+            obj[1] += (ushort)((oam.obj1.size & 3) << 14);
+
+            // OBJ2
+            obj[2] = 0;
+            obj[2] += (ushort)(oam.obj2.tileOffset & 0x3FF);
+            obj[2] += (ushort)((oam.obj2.priority & 3) << 10);
+            obj[2] += (ushort)((oam.obj2.index_palette & 0xF) << 12);
+
+            return obj;
+        }
+        public static OAM OAMInfo(ushort[] obj)
+        {
+            OAM oam = new OAM();
+
+            // Obj 0
+            oam.obj0.yOffset = (sbyte)(obj[0] & 0xFF);
+            oam.obj0.rs_flag = (byte)((obj[0] >> 8) & 1);
+            if (oam.obj0.rs_flag == 0)
+                oam.obj0.objDisable = (byte)((obj[0] >> 9) & 1);
+            else
+                oam.obj0.doubleSize = (byte)((obj[0] >> 9) & 1);
+            oam.obj0.objMode = (byte)((obj[0] >> 10) & 3);
+            oam.obj0.mosaic_flag = (byte)((obj[0] >> 12) & 1);
+            oam.obj0.depth = (byte)((obj[0] >> 13) & 1);
+            oam.obj0.shape = (byte)((obj[0] >> 14) & 3);
+
+            // Obj 1
+            oam.obj1.xOffset = obj[1] & 0x01FF;
+            if (oam.obj1.xOffset >= 0x100)
+                oam.obj1.xOffset -= 0x200;
+            if (oam.obj0.rs_flag == 0)
+            {
+                oam.obj1.unused = (byte)((obj[1] >> 9) & 7);
+                oam.obj1.flipX = (byte)((obj[1] >> 12) & 1);
+                oam.obj1.flipY = (byte)((obj[1] >> 13) & 1);
+            }
+            else
+                oam.obj1.select_param = (byte)((obj[1] >> 9) & 0x1F);
+            oam.obj1.size = (byte)((obj[1] >> 14) & 3);
+
+            // Obj 2
+            oam.obj2.tileOffset = (uint)(obj[2] & 0x03FF);
+            oam.obj2.priority = (byte)((obj[2] >> 10) & 3);
+            oam.obj2.index_palette = (byte)((obj[2] >> 12) & 0xF);
+
+            Size size = Get_OAMSize(oam.obj0.shape, oam.obj1.size);
+            oam.width = (ushort)size.Width;
+            oam.height = (ushort)size.Height;
+
+            return oam;
+        }
+        public static OAM OAMInfo(ushort v1, ushort v2, ushort v3)
+        {
+            return OAMInfo(new ushort[] { v1, v2, v3 });
+        }
         #endregion
     }
 }

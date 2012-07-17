@@ -63,6 +63,7 @@ namespace Ekona.Images
         public Bank[] Banks
         {
             get { return banks; }
+            set { banks = value; }
         }
         public int NumBanks
         {

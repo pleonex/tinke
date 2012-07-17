@@ -96,6 +96,12 @@ namespace Ekona.Images.Dialogs
             this.btnRemOAM = new System.Windows.Forms.Button();
             this.numNumOAM = new System.Windows.Forms.NumericUpDown();
             this.label15 = new System.Windows.Forms.Label();
+            this.numObj0 = new System.Windows.Forms.NumericUpDown();
+            this.label16 = new System.Windows.Forms.Label();
+            this.label17 = new System.Windows.Forms.Label();
+            this.numObj1 = new System.Windows.Forms.NumericUpDown();
+            this.label18 = new System.Windows.Forms.Label();
+            this.numObj2 = new System.Windows.Forms.NumericUpDown();
             this.groupObj0.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numYoffset)).BeginInit();
             this.groupObj1.SuspendLayout();
@@ -110,6 +116,9 @@ namespace Ekona.Images.Dialogs
             ((System.ComponentModel.ISupportInitialize)(this.picBox)).BeginInit();
             this.groupPreview.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numNumOAM)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numObj0)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numObj1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numObj2)).BeginInit();
             this.SuspendLayout();
             // 
             // groupObj0
@@ -495,7 +504,7 @@ namespace Ekona.Images.Dialogs
             // picBox
             // 
             this.picBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.picBox.Location = new System.Drawing.Point(14, 280);
+            this.picBox.Location = new System.Drawing.Point(14, 289);
             this.picBox.Name = "picBox";
             this.picBox.Size = new System.Drawing.Size(512, 256);
             this.picBox.TabIndex = 5;
@@ -504,7 +513,7 @@ namespace Ekona.Images.Dialogs
             // label13
             // 
             this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(15, 256);
+            this.label13.Location = new System.Drawing.Point(13, 270);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(48, 13);
             this.label13.TabIndex = 6;
@@ -684,12 +693,102 @@ namespace Ekona.Images.Dialogs
             this.label15.TabIndex = 19;
             this.label15.Text = "OAM id:";
             // 
+            // numObj0
+            // 
+            this.numObj0.Hexadecimal = true;
+            this.numObj0.Location = new System.Drawing.Point(176, 263);
+            this.numObj0.Maximum = new decimal(new int[] {
+            65535,
+            0,
+            0,
+            0});
+            this.numObj0.Name = "numObj0";
+            this.numObj0.Size = new System.Drawing.Size(60, 20);
+            this.numObj0.TabIndex = 20;
+            this.numObj0.Value = new decimal(new int[] {
+            65535,
+            0,
+            0,
+            0});
+            this.numObj0.ValueChanged += new System.EventHandler(this.numObj_ValueChanged);
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(126, 265);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(32, 13);
+            this.label16.TabIndex = 21;
+            this.label16.Text = "Obj0:";
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(257, 265);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(32, 13);
+            this.label17.TabIndex = 23;
+            this.label17.Text = "Obj1:";
+            // 
+            // numObj1
+            // 
+            this.numObj1.Hexadecimal = true;
+            this.numObj1.Location = new System.Drawing.Point(307, 263);
+            this.numObj1.Maximum = new decimal(new int[] {
+            65535,
+            0,
+            0,
+            0});
+            this.numObj1.Name = "numObj1";
+            this.numObj1.Size = new System.Drawing.Size(60, 20);
+            this.numObj1.TabIndex = 22;
+            this.numObj1.Value = new decimal(new int[] {
+            65535,
+            0,
+            0,
+            0});
+            this.numObj1.ValueChanged += new System.EventHandler(this.numObj_ValueChanged);
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Location = new System.Drawing.Point(383, 265);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(32, 13);
+            this.label18.TabIndex = 25;
+            this.label18.Text = "Obj2:";
+            // 
+            // numObj2
+            // 
+            this.numObj2.Hexadecimal = true;
+            this.numObj2.Location = new System.Drawing.Point(433, 263);
+            this.numObj2.Maximum = new decimal(new int[] {
+            65535,
+            0,
+            0,
+            0});
+            this.numObj2.Name = "numObj2";
+            this.numObj2.Size = new System.Drawing.Size(60, 20);
+            this.numObj2.TabIndex = 24;
+            this.numObj2.Value = new decimal(new int[] {
+            65535,
+            0,
+            0,
+            0});
+            this.numObj2.ValueChanged += new System.EventHandler(this.numObj_ValueChanged);
+            // 
             // OAMEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
-            this.ClientSize = new System.Drawing.Size(533, 538);
+            this.ClientSize = new System.Drawing.Size(533, 550);
+            this.Controls.Add(this.label18);
+            this.Controls.Add(this.numObj2);
+            this.Controls.Add(this.label17);
+            this.Controls.Add(this.numObj1);
+            this.Controls.Add(this.label16);
+            this.Controls.Add(this.numObj0);
             this.Controls.Add(this.label15);
             this.Controls.Add(this.numNumOAM);
             this.Controls.Add(this.btnRemOAM);
@@ -730,6 +829,9 @@ namespace Ekona.Images.Dialogs
             this.groupPreview.ResumeLayout(false);
             this.groupPreview.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numNumOAM)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numObj0)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numObj1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numObj2)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -785,5 +887,11 @@ namespace Ekona.Images.Dialogs
         private System.Windows.Forms.Button btnRemOAM;
         private System.Windows.Forms.NumericUpDown numNumOAM;
         private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.NumericUpDown numObj0;
+        private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.NumericUpDown numObj1;
+        private System.Windows.Forms.Label label18;
+        private System.Windows.Forms.NumericUpDown numObj2;
     }
 }

@@ -249,14 +249,144 @@ namespace Ekona.Images
             stop = false;
             Update_Image();
         }
-        
+        public ImageControl(XElement lang, ImageBase image, PaletteBase palette, MapBase map)
+        {
+            InitializeComponent();
+            stop = true;
+
+            this.isMap = true;
+            this.palette = palette;
+            this.image = image;
+            this.map = map;
+            btnImport.Enabled = false;
+            groupBox2.Enabled = false;
+
+            this.numericWidth.Value = (map.Width != 0 ? map.Width : image.Width);
+            this.numericHeight.Value = (map.Height != 0 ? map.Height : image.Height);
+
+            switch (image.FormatColor)
+            {
+                case ColorFormat.A3I5:
+                    comboDepth.SelectedIndex = 4;
+                    break;
+                case ColorFormat.A5I3:
+                    comboDepth.SelectedIndex = 5;
+                    break;
+                case ColorFormat.colors4:
+                    comboDepth.SelectedIndex = 6;
+                    break;
+                case ColorFormat.colors16:
+                    comboDepth.SelectedIndex = 0;
+                    break;
+                case ColorFormat.colors256:
+                    comboDepth.SelectedIndex = 1;
+                    break;
+                case ColorFormat.direct:
+                    comboDepth.SelectedIndex = 3;
+                    break;
+                case ColorFormat.colors2:
+                    comboDepth.SelectedIndex = 2;
+                    break;
+            }
+
+            this.numTileSize.Value = image.TileSize;
+            this.comboBox1.SelectedIndex = 1;
+            this.comboBox1.Enabled = false;
+            this.numPal.Maximum = palette.NumberOfPalettes - 1;
+            this.numericStart.Maximum = image.Original.Length - 1;
+            this.checkMapCmp.Enabled = false;
+
+            this.comboDepth.SelectedIndexChanged += new EventHandler(comboDepth_SelectedIndexChanged);
+            this.numericWidth.ValueChanged += new EventHandler(numericSize_ValueChanged);
+            this.numericHeight.ValueChanged += new EventHandler(numericSize_ValueChanged);
+            this.numericStart.ValueChanged += new EventHandler(numericStart_ValueChanged);
+
+            ReadLanguage(lang);
+            stop = false;
+            Update_Image();
+        }
+        public ImageControl(XElement lang, ImageBase image, PaletteBase palette)
+        {
+            InitializeComponent();
+
+            stop = true;
+            isMap = false;
+            this.image = image;
+            this.palette = palette;
+            btnImport.Enabled = false;
+            groupBox2.Enabled = false;
+
+            switch (image.FormatColor)
+            {
+                case ColorFormat.A3I5:
+                    comboDepth.SelectedIndex = 4;
+                    break;
+                case ColorFormat.A5I3:
+                    comboDepth.SelectedIndex = 5;
+                    break;
+                case ColorFormat.colors4:
+                    comboDepth.SelectedIndex = 6;
+                    break;
+                case ColorFormat.colors16:
+                    comboDepth.SelectedIndex = 0;
+                    break;
+                case ColorFormat.colors256:
+                    comboDepth.SelectedIndex = 1;
+                    break;
+                case ColorFormat.direct:
+                    comboDepth.SelectedIndex = 3;
+                    break;
+                case ColorFormat.colors2:
+                    comboDepth.SelectedIndex = 2;
+                    break;
+            }
+
+            switch (image.FormTile)
+            {
+                case TileForm.Lineal:
+                    comboBox1.SelectedIndex = 0;
+                    numericHeight.Minimum = 1;
+                    numericWidth.Minimum = 1;
+                    numericWidth.Increment = 1;
+                    numericHeight.Increment = 1;
+                    break;
+                case TileForm.Horizontal:
+                    comboBox1.SelectedIndex = 1;
+                    numericHeight.Minimum = 8;
+                    numericWidth.Minimum = 8;
+                    numericWidth.Increment = 8;
+                    numericHeight.Increment = 8;
+                    break;
+            }
+
+            this.numTileSize.Value = image.TileSize;
+            this.numericWidth.Value = image.Width;
+            this.numericHeight.Value = image.Height;
+            this.numPal.Maximum = palette.NumberOfPalettes - 1;
+            this.numericStart.Maximum = image.Original.Length - 1;
+            this.checkMapCmp.Enabled = false;
+
+            this.comboDepth.SelectedIndexChanged += new EventHandler(comboDepth_SelectedIndexChanged);
+            this.numericWidth.ValueChanged += new EventHandler(numericSize_ValueChanged);
+            this.numericHeight.ValueChanged += new EventHandler(numericSize_ValueChanged);
+            this.numericStart.ValueChanged += new EventHandler(numericStart_ValueChanged);
+
+            ReadLanguage(lang);
+            stop = false;
+            Update_Image();
+        }
+
+
         private void ReadLanguage()
+        {
+            XElement xml = XElement.Load(pluginHost.Get_LangXML());
+            xml = xml.Element("Ekona").Element("ImageControl");
+            ReadLanguage(xml);
+        }
+        private void ReadLanguage(XElement xml)
         {
             try
             {
-                XElement xml = XElement.Load(pluginHost.Get_LangXML());
-                xml = xml.Element("Ekona").Element("ImageControl");
-
                 label5.Text = xml.Element("S01").Value;
                 groupProp.Text = xml.Element("S02").Value;
                 label3.Text = xml.Element("S03").Value;
@@ -270,7 +400,7 @@ namespace Ekona.Images
                 btnSetTrans.Text = xml.Element("S0B").Value;
                 btnBgd.Text = xml.Element("S0C").Value;
                 btnBgdRem.Text = xml.Element("S0D").Value;
-                checkOriginalPal.Text = xml.Element("S0E").Value;
+                radioOriginalPal.Text = xml.Element("S0E").Value;
                 checkMapCmp.Text = xml.Element("S0F").Value;
                 btnExport.Text = xml.Element("S10").Value;
                 btnImport.Text = xml.Element("S11").Value;
@@ -488,15 +618,24 @@ namespace Ekona.Images
             // Get tiles + palette from the current image
             byte[] tiles = new byte[0];
             Color[] pal = new Color[0];
-            try { Actions.Indexed_Image(bitmap, image.FormatColor, out tiles, out pal); }
-            catch (Exception ex) { MessageBox.Show(ex.Message); Console.WriteLine(ex.Message); return; }
 
-            // Swap palettes if "Use original palette" is checked. Try to change the colors to the old palette
-            if (checkOriginalPal.Checked)
+            if (radioOriginalPal.Checked)
+            {
+                BMP bmp = new BMP(o.FileName);
+                tiles = bmp.Tiles;
+                pal = bmp.Palette.Palette[0];
+            }
+            else
+            {
+                try { Actions.Indexed_Image(bitmap, image.FormatColor, out tiles, out pal); }
+                catch (Exception ex) { MessageBox.Show(ex.Message); Console.WriteLine(ex.Message); return; }
+            }
+
+            // Swap palettes if "Swap palette" is checked. Try to change the colors to the old palette
+            if (radioSwapPal.Checked)
             {
                 try { Actions.Swap_Palette(ref tiles, palette.Palette[(int)numPal.Value], pal, image.FormatColor); }
                 catch (Exception ex) { MessageBox.Show(ex.Message); Console.WriteLine(ex.Message); return; }
-                pal = palette.Palette[(int)numPal.Value];
             }
 
             // If the tile form is horizontal convert to it
@@ -514,7 +653,9 @@ namespace Ekona.Images
 
             // Set the data
             image.Set_Tiles(tiles, bitmap.Width, bitmap.Height, image.FormatColor, TileForm.Lineal, image.CanEdit, 8);
-            palette.Set_Palette(pal, (int)numPal.Value);
+
+            if (radioReplacePal.Checked)
+                palette.Set_Palette(pal, (int)numPal.Value);
 
             Save_Files();
 
@@ -532,7 +673,7 @@ namespace Ekona.Images
                 }
                 catch (Exception e) { MessageBox.Show("Error writing new image:\n" + e.Message); };
             }
-            if (palette.ID >= 0 && !checkOriginalPal.Checked)
+            if (palette.ID >= 0 && radioReplacePal.Checked)
             {
                 try
                 {

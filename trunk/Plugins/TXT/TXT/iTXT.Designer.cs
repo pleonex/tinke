@@ -91,7 +91,6 @@ namespace TXT
             // 
             // comboEncod
             // 
-            this.comboEncod.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboEncod.FormattingEnabled = true;
             this.comboEncod.Items.AddRange(new object[] {
             "shift_jis",
@@ -100,7 +99,8 @@ namespace TXT
             "utf-32",
             "utf-8",
             "ascii",
-            "utf-16"});
+            "utf-16",
+            "IBM00858"});
             this.comboEncod.Location = new System.Drawing.Point(82, 480);
             this.comboEncod.Name = "comboEncod";
             this.comboEncod.Size = new System.Drawing.Size(121, 21);

@@ -79,6 +79,49 @@ namespace Ekona.Images
             comboBank.SelectedIndex = 0;
             txtBatch.Text = Path.GetFileNameWithoutExtension(sprite.FileName) + "_%s";
         }
+        public SpriteControl(IPluginHost pluginHost, SpriteBase sprite, ImageBase image, PaletteBase palette)
+        {
+            InitializeComponent();
+
+            this.sprite = sprite;
+            this.image = image;
+            this.palette = palette;
+            this.pluginHost = pluginHost;
+
+            Read_Language();
+
+            for (ushort i = 0; i < sprite.NumBanks; i++)
+                if (sprite.Banks[i].name is String)
+                    comboBank.Items.Add(sprite.Banks[i].name);
+                else
+                    comboBank.Items.Add("Bank " + i.ToString());
+            comboBank.SelectedIndex = 0;
+            txtBatch.Text = Path.GetFileNameWithoutExtension(sprite.FileName) + "_%s";
+        }
+        public SpriteControl(XElement lang, SpriteBase sprite, ImageBase image, PaletteBase palette)
+        {
+            InitializeComponent();
+
+            this.sprite = sprite;
+            this.image = image;
+            this.palette = palette;
+
+            for (ushort i = 0; i < sprite.NumBanks; i++)
+                if (sprite.Banks[i].name is String)
+                    comboBank.Items.Add(sprite.Banks[i].name);
+                else
+                    comboBank.Items.Add("Bank " + i.ToString());
+            comboBank.SelectedIndex = 0;
+            txtBatch.Text = Path.GetFileNameWithoutExtension(sprite.FileName) + "_%s";
+
+            this.btnImport.Enabled = false;
+            this.btnOAMeditor.Enabled = false;
+            groupBox2.Enabled = false;
+            groupBox3.Enabled = false;
+
+            Read_Language(lang);
+        }
+
 
         private void Read_Language()
         {
@@ -86,7 +129,14 @@ namespace Ekona.Images
             {
                 XElement xml = XElement.Load(pluginHost.Get_LangXML());
                 xml = xml.Element("Ekona").Element("SpriteControl");
-
+                Read_Language(xml);
+            }
+            catch { throw new Exception("There was an error reading the XML language file."); }
+        }
+        private void Read_Language(XElement xml)
+        {
+            try
+            {
                 label1.Text = xml.Element("S01").Value;
                 btnShowAll.Text = xml.Element("S02").Value;
                 label3.Text = xml.Element("S03").Value.Remove(0, 1);
@@ -369,6 +419,11 @@ namespace Ekona.Images
         private void Import_File(string path, int banki)
         {
             Bitmap bitmap = (Bitmap)Image.FromFile(path);
+            Console.WriteLine("Importing image {0} to bank {1}", path, banki.ToString());
+
+            OAM[] oams = (OAM[])sprite.Banks[banki].oams.Clone();
+            Color[][] pals = (Color[][])palette.Palette.Clone();
+            byte[] imgData = (byte[])image.Tiles.Clone();
 
             // Get data from image
             byte[] tiles = new byte[0];
@@ -387,31 +442,45 @@ namespace Ekona.Images
             }
 
             // Get the data of a oam and add to the end of the image
-            byte[] imgData = image.Tiles;
-            for (int i = 0; i < sprite.Banks[banki].oams.Length; i++)
+            for (int i = 0; i < oams.Length; i++)
             {
-                OAM oam = sprite.Banks[banki].oams[i];
-                byte[] cellImg = Actions.Get_OAMdata(oam, tiles, image.FormatColor);
+                Console.WriteLine("Processing cell {0}", oams[i].num_cell.ToString());
+
+                byte[] cellImg = Actions.Get_OAMdata(oams[i], tiles, image.FormatColor);
 
                 // Swap palettes if "Swap palette" is checked. Try to change the colors to the old palette
                 if (radioSwapPal.Checked)
                 {
-                    try { Actions.Swap_Palette(ref cellImg, palette.Palette[oam.obj2.index_palette], pal, image.FormatColor, (int)numThreshold.Value); }
+                    try { Actions.Swap_Palette(ref cellImg, palette.Palette[oams[i].obj2.index_palette], pal, image.FormatColor, numThreshold.Value); }
                     catch (Exception ex) { MessageBox.Show(ex.Message); Console.WriteLine(ex.Message); return; }
                 }
                 else if (radioReplacePal.Checked) // Set the palette
-                    palette.Set_Palette(pal, oam.obj2.index_palette);
+                    pals[oams[i].obj2.index_palette] = pal;
 
                 if (image.FormTile == TileForm.Horizontal)
-                    cellImg = Actions.HorizontalToLineal(cellImg, oam.width, oam.height, image.BPP, 8);
+                    cellImg = Actions.HorizontalToLineal(cellImg, oams[i].width, oams[i].height, image.BPP, 8);
 
-                uint offset = Actions.Add_Image(ref imgData, cellImg, (uint)(1 << (int)sprite.BlockSize) * 0x20);
-                offset /= 0x20;
-                offset >>= (int)sprite.BlockSize;
-                sprite.Banks[banki].oams[i].obj2.tileOffset = offset;
+                // If Add image is checked add the new image to the end of the original file and change the tileOffset
+                if (radioImgAdd.Checked)
+                {
+                    uint offset = Actions.Add_Image(ref imgData, cellImg, (uint)(1 << (int)sprite.BlockSize) * 0x20);
+                    offset /= 0x20;
+                    offset >>= (int)sprite.BlockSize;
+                    oams[i].obj2.tileOffset = offset;
+                }
+                else   // Replace the old image
+                {
+                    uint tileOffset = oams[i].obj2.tileOffset;
+                    tileOffset = (uint)(tileOffset << (byte)sprite.BlockSize) * 0x20;
+                    Array.Copy(cellImg, 0, imgData, tileOffset, cellImg.Length);
+                }
             }
+
+            // If everthing goes right then set the new data
             int height = (imgData.Length * 8 / image.BPP) / image.Width;
             image.Set_Tiles(imgData, image.Width, height, image.FormatColor, image.FormTile, image.CanEdit);
+            sprite.Banks[banki].oams = oams;
+            palette.Set_Palette(pals);
         }
         void Save_Files()
         {

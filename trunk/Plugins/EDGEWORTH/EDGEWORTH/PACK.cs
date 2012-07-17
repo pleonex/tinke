@@ -64,11 +64,19 @@ namespace EDGEWORTH
             uint currOffset = 0x00; // Pointer table offset
             bw.Write(currOffset);
             currOffset += (uint)(unpackedFiles.files.Count + 1) * 4 + 4;
+
+            List<byte> buffer = new List<byte>();
             for (int i = 0; i < unpackedFiles.files.Count; i++)
             {
+                BinaryReader br = new BinaryReader(File.OpenRead(unpackedFiles.files[i].path));
+                br.BaseStream.Position = unpackedFiles.files[i].offset;
+                buffer.AddRange(BitConverter.GetBytes((uint)unpackedFiles.files[i].size));
+                buffer.AddRange(br.ReadBytes((int)unpackedFiles.files[i].size));
+                br.Close();
+
                 sFile newFile = unpackedFiles.files[i];
                 newFile.offset = currOffset;
-                newFile.path = output;
+                newFile.path = output;              
                 unpackedFiles.files[i] = newFile;
 
                 bw.Write(currOffset);
@@ -76,14 +84,7 @@ namespace EDGEWORTH
             }
 
             // Write files
-            for (int i = 0; i < unpackedFiles.files.Count; i++)
-            {
-                BinaryReader br = new BinaryReader(File.OpenRead(unpackedFiles.files[i].path));
-                br.BaseStream.Position = unpackedFiles.files[i].offset;
-
-                bw.Write((uint)unpackedFiles.files[i].size);
-                bw.Write(br.ReadBytes((int)unpackedFiles.files[i].size));
-            }
+            bw.Write(buffer.ToArray());
 
             bw.Flush();
             bw.Close();
