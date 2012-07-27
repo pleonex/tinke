@@ -20,19 +20,18 @@
 
 // <author>Daviex94</author>
 // <email>david.iuffri94@hotmail.it</email>
-// <date>05/07/2012 2:41:51</date>
+// <date>22/07/2012 2:41:51</date>
 // -----------------------------------------------------------------------
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Drawing;
 using System.IO;
+using System.Windows.Forms;
 
 using Ekona;
-using Ekona.Images;
 
-namespace TIMEACE
+namespace WITCHTALE
 {
     public class Main : IGamePlugin
     {
@@ -47,26 +46,25 @@ namespace TIMEACE
 
         public bool IsCompatible()
         {
-            if (gameCode == "AE3E")
+            if (gameCode == "CW3E")
                 return true;
 
             return false;
         }
-        
+
         public Format Get_Format(sFile file, byte[] magic)
         {
-            if ((file.id >= 0xBE && file.id <= 0x10B) ||
-                (file.id >= 0x10C && file.id <= 0x1B1))
-            {
-                return Format.FullImage;
-            }
+            if (file.name.ToUpper() == "ROMFILE.BIN")
+                return Format.Pack;
 
             return Format.Unknown;
         }
 
         public string Pack(ref sFolder unpacked, sFile file)
         {
-            throw new NotImplementedException();
+            string output = pluginHost.Get_TempFile();
+            Packs.Pack(output, ref unpacked);
+            return output;
         }
 
         public void Read(sFile file)
@@ -74,48 +72,14 @@ namespace TIMEACE
             throw new NotImplementedException();
         }
 
-        public sFolder Unpack(sFile file)
+        public Control Show_Info(sFile file)
         {
             throw new NotImplementedException();
         }
 
-
-        public System.Windows.Forms.Control Show_Info(sFile file)
+        public sFolder Unpack(sFile file)
         {
-            #region Palette
-            BinaryReader br = new BinaryReader(File.OpenRead(file.path));
-            br.ReadUInt32(); // 4 Bytes Stupid
-            uint num_colors = 256;
-            byte[] pal = br.ReadBytes((int)num_colors * 2);
-            Color[] colors = Actions.BGR555ToColor(pal);
-            PaletteBase palette = new RawPalette(colors, false, ColorFormat.colors256, file.name);
-            br.ReadUInt32(); // 4 Bytes Stupid
-            #endregion
-
-            #region Map
-            NTFS[] map_info = new NTFS[1024];
-            for (int i = 0; i < 1024; i++)
-            {
-                ushort value = br.ReadUInt16();
-                map_info[i] = Actions.MapInfo(value);
-            }
-            MapBase map = new RawMap(map_info, 256, 192, false, file.name);
-            #endregion
-
-            #region Tiles
-            uint size_section = (uint)(br.ReadUInt32() * 64);
-            Console.WriteLine("Size section: " + size_section.ToString("x"));
-            byte[] readsize = br.ReadBytes((int)size_section);
-            ImageBase image = new RawImage(readsize, TileForm.Horizontal, ColorFormat.colors256, 256, 192, false, file.name);
-            #endregion
-
-            br.Close();
-
-            pluginHost.Set_Palette(palette);
-            pluginHost.Set_Image(image);
-            pluginHost.Set_Map(map);
-            
-            return new ImageControl(pluginHost, image, palette, map);
+            return Packs.Unpack(file, pluginHost);
         }
     }
 }

@@ -33,11 +33,12 @@ namespace Fonts
     // http://romxhack.esforos.com/fuentes-nftr-de-nds-t67
     public static class NFTR
     {
-        public static sNFTR Read(string file, int id, string lang)
+        public static sNFTR Read(sFile cfile, string lang)
         {
             sNFTR font = new sNFTR();
-            font.id = id;
-            BinaryReader br = new BinaryReader(File.OpenRead(file));
+            font.id = cfile.id;
+            font.name = cfile.name;
+            BinaryReader br = new BinaryReader(File.OpenRead(cfile.path));
 
             // Read the standard header
             font.header.type = br.ReadChars(4);
@@ -581,10 +582,52 @@ namespace Fonts
 
             return bytes.ToArray();
         }
+
+        public static void ExportInfo(string fileOut, Dictionary<int, int> charTable, sNFTR font)
+        {
+            string enc_name = "utf-8";
+            if (font.fnif.encoding == 2)
+                enc_name = "shift_jis";
+            else if (font.fnif.encoding == 1)
+                enc_name = "utf-16";
+            else if (font.fnif.encoding == 0)
+                enc_name = "utf-8";
+            else if (font.fnif.encoding == 3)
+                enc_name = Encoding.GetEncoding(1252).EncodingName;
+
+            XDocument doc = new XDocument();
+            doc.Declaration = new XDeclaration("1.0", enc_name, null);
+
+            XElement root = new XElement("CharMap");
+
+            foreach (int c in charTable.Keys)
+            {
+                string ch = "";
+                byte[] codes = BitConverter.GetBytes(c).Reverse().ToArray();
+                ch = new String(Encoding.GetEncoding(enc_name).GetChars(codes)).Replace("\0", "");
+
+                int tileCode = charTable[c];
+                if (tileCode >= font.hdwc.info.Count)
+                    continue;
+                sNFTR.HDWC.Info info = font.hdwc.info[tileCode];
+
+                XElement chx = new XElement("CharInfo");
+                chx.SetAttributeValue("Char", ch);
+                chx.SetAttributeValue("Code", c.ToString("x"));
+                chx.SetAttributeValue("Index", tileCode.ToString());
+                chx.SetAttributeValue("Width", info.pixel_length.ToString());
+                root.Add(chx);
+            }
+
+            doc.Add(root);
+            doc.Save(fileOut);
+        }
+
     }
 
     public struct sNFTR // Nitro FonT Resource
     {
+        public string name;
         public int id;
         public StandardHeader header;
         public FNIF fnif;

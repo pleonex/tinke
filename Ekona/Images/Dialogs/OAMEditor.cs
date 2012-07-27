@@ -67,6 +67,19 @@ namespace Ekona.Images.Dialogs
 
             Read_Language(langxml);
         }
+        public OAMEditor(XElement langxml, Bank bank, SpriteBase sprite, ImageBase image, PaletteBase palette)
+        {
+            InitializeComponent();
+            this.bank = bank;
+            numOAM.Maximum = bank.oams.Length - 1;
+
+            preview = true;
+            this.sprite = sprite;
+            this.image = image;
+            this.palette = palette;
+
+            Read_Language(langxml);
+        }
         private void OAMEditor_Load(object sender, EventArgs e)
         {
             Read_Info(0);
@@ -79,7 +92,14 @@ namespace Ekona.Images.Dialogs
             {
                 XElement xml = XElement.Load(langxml);
                 xml = xml.Element("Ekona").Element("OAMEditor");
-
+                Read_Language(xml);
+            }
+            catch { throw new Exception("There was an error reading the XML file of language."); }
+        }
+        private void Read_Language(XElement xml)
+        {
+            try
+            {
                 this.Text = xml.Element("S01").Value;
                 label11.Text = xml.Element("S02").Value;
                 label12.Text = xml.Element("S03").Value + ' ' + numOAM.Maximum.ToString();

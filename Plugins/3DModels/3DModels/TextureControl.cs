@@ -402,11 +402,32 @@ namespace _3DModels
         {
             SaveFileDialog o = new SaveFileDialog();
             o.AddExtension = true;
-            o.DefaultExt = ".bmp";
-            o.Filter = "BitMaP (*.bmp)|*.bmp";
             o.OverwritePrompt = true;
+            o.FileName = btx0.texture.texInfo.names[listTextures.SelectedIndex] + ".png";
+            o.DefaultExt = ".png";
+            o.Filter = "Portable Network Graphic (*.png)|*.png|" +
+                        "BitMaP (*.bmp)|*.bmp|" +
+                       "JPEG (*.jpg)|*.jpg;*.jpeg|" +
+                       "Tagged Image File Format (*.tiff)|*.tiff;*.tif|" +
+                       "Graphic Interchange Format (*.gif)|*.gif|" +
+                       "Icon (*.ico)|*.ico;*.icon";
+
             if (o.ShowDialog() == DialogResult.OK)
-                picTex.Image.Save(o.FileName, System.Drawing.Imaging.ImageFormat.Bmp);
+            {
+                if (o.FilterIndex == 2)
+                    picTex.Image.Save(o.FileName, System.Drawing.Imaging.ImageFormat.Bmp);
+                else if (o.FilterIndex == 1)
+                    picTex.Image.Save(o.FileName, System.Drawing.Imaging.ImageFormat.Png);
+                else if (o.FilterIndex == 3)
+                    picTex.Image.Save(o.FileName, System.Drawing.Imaging.ImageFormat.Jpeg);
+                else if (o.FilterIndex == 4)
+                    picTex.Image.Save(o.FileName, System.Drawing.Imaging.ImageFormat.Tiff);
+                else if (o.FilterIndex == 5)
+                    picTex.Image.Save(o.FileName, System.Drawing.Imaging.ImageFormat.Gif);
+                else if (o.FilterIndex == 6)
+                    picTex.Image.Save(o.FileName, System.Drawing.Imaging.ImageFormat.Icon);
+            }
+            o.Dispose();
         }
 
     }

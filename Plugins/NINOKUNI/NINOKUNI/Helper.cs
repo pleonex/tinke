@@ -36,13 +36,27 @@ namespace NINOKUNI
     public static class Helper
     {
         public static IPluginHost pluginHost;
+
+        static string xmlconf = Application.StartupPath + Path.DirectorySeparatorChar + "Plugins" + Path.DirectorySeparatorChar + "Ninokuni.xml";
+        static string fontPath = Application.StartupPath + Path.DirectorySeparatorChar + "Plugins" + Path.DirectorySeparatorChar + "Ninokuni" + Path.DirectorySeparatorChar;
+
         static Dictionary<char, char> replaces;    // Chars to replace from Latin to SJIS
         static Dictionary<char, char> replacesBack;// Chars to replace from SJIS to Latin
 
+        // Text max size and max lines: 0º Subtitles
+        static int[,] MAX_SIZE = new int[1, 2] { { 244, 2 } };
+        static Dictionary<char, int> charSize_10;    // Width of each char for common text
+        static Dictionary<char, int> charSize_12;     // Width of each char for subtitles
+
+        public static void Initialize()
+        {
+            Read_Replace();
+            charSize_10 = Read_CharWidth(fontPath + "font10.xml");
+            charSize_12 = Read_CharWidth(fontPath + "font12.xml");
+        }
+
         public static void Read_Replace()
         {
-            string xmlconf = Application.StartupPath + Path.DirectorySeparatorChar + "Plugins" + Path.DirectorySeparatorChar + "Ninokuni.xml";
-
             try
             {
                 replaces = new Dictionary<char, char>();
@@ -68,6 +82,33 @@ namespace NINOKUNI
                 replacesBack = new Dictionary<char, char>();
             }
         }
+        public static Dictionary<char, int> Read_CharWidth(string xmlFont)
+        {
+            Dictionary<char, int> charSize = new Dictionary<char, int>();
+
+            try
+            {
+                XDocument doc = XDocument.Load(xmlFont);
+                XElement root = doc.Element("CharMap");
+
+                foreach (XElement e in root.Elements("CharInfo"))
+                {
+                    char c = e.Attribute("Char").Value[0];
+                    if (replacesBack.ContainsKey(c))
+                        c = replacesBack[c];
+                    int w = Convert.ToInt32(e.Attribute("Width").Value);
+
+                    charSize.Add(c, w);
+                }
+
+                root = null;
+                doc = null;
+            }
+            catch { charSize = new Dictionary<char, int>(); }
+
+            return charSize;
+        }
+
         public static string SJISToLatin(string text)
         {
             foreach (char c in replacesBack.Keys)
@@ -129,5 +170,68 @@ namespace NINOKUNI
             return text;
         }
 
+        public static bool Check(string text, int type)
+        {
+            if (type < 0 || type > 0)
+                return false;
+
+            Dictionary<char, int> charSize = new Dictionary<char, int>();
+            if (type == 0)
+                charSize = charSize_12;
+
+            int total_width = 0;
+            bool furigana = false;
+
+            // Check text width
+            foreach (char c in text.ToCharArray())
+            {
+                // Skip furigana chars
+                if (c == '【' || c == '{' || c == '<')
+                {
+                    furigana = true;
+                    continue;
+                }
+                if (c == '】' || c == '}' || c == '>')
+                {
+                    furigana = false;
+                    continue;
+                }
+                if (furigana)
+                    continue;
+
+                // Reset counter and check if is validate
+                if (c == '\n')
+                {
+                    if (total_width > MAX_SIZE[type, 0])
+                        return false;
+                    total_width = 0;
+                    continue;
+                }
+
+                // DEBUG: If there are jap chars, it's not a translated text so skip it (I do it for unrevised texts)
+                if (Encoding.GetEncoding("shift_jis").GetByteCount(new char[] { c }) > 1)
+                    break;
+
+                if (charSize.ContainsKey(c))
+                    total_width += charSize[c];
+                else if (type == 0)     // Max width for Font12
+                    total_width += 11;
+            }
+
+            if (total_width > MAX_SIZE[type, 0])
+                return false;
+
+            // Check number of lines
+            int lines = 1;
+            for (int n = 0; n < text.Length; n++)
+                if (text[n] == '\n' && n + 1 != text.Length)
+                    lines++;
+
+            if (lines > MAX_SIZE[type, 1])
+                return false;
+
+
+            return true;
+        }
     }
 }

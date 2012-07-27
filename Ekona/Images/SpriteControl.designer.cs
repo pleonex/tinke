@@ -117,9 +117,9 @@ namespace Ekona.Images
             // 
             // btnShowAll
             // 
-            this.btnShowAll.Location = new System.Drawing.Point(72, 290);
+            this.btnShowAll.Location = new System.Drawing.Point(3, 290);
             this.btnShowAll.Name = "btnShowAll";
-            this.btnShowAll.Size = new System.Drawing.Size(183, 23);
+            this.btnShowAll.Size = new System.Drawing.Size(80, 40);
             this.btnShowAll.TabIndex = 4;
             this.btnShowAll.Text = "S02";
             this.btnShowAll.UseVisualStyleBackColor = true;
@@ -128,7 +128,7 @@ namespace Ekona.Images
             // btnExport
             // 
             this.btnExport.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnExport.Location = new System.Drawing.Point(262, 469);
+            this.btnExport.Location = new System.Drawing.Point(262, 471);
             this.btnExport.Name = "btnExport";
             this.btnExport.Size = new System.Drawing.Size(90, 40);
             this.btnExport.TabIndex = 5;
@@ -140,7 +140,7 @@ namespace Ekona.Images
             // checkGrid
             // 
             this.checkGrid.AutoSize = true;
-            this.checkGrid.Location = new System.Drawing.Point(6, 22);
+            this.checkGrid.Location = new System.Drawing.Point(6, 19);
             this.checkGrid.Name = "checkGrid";
             this.checkGrid.Size = new System.Drawing.Size(46, 17);
             this.checkGrid.TabIndex = 6;
@@ -151,7 +151,7 @@ namespace Ekona.Images
             // checkNumber
             // 
             this.checkNumber.AutoSize = true;
-            this.checkNumber.Location = new System.Drawing.Point(146, 45);
+            this.checkNumber.Location = new System.Drawing.Point(147, 42);
             this.checkNumber.Name = "checkNumber";
             this.checkNumber.Size = new System.Drawing.Size(45, 17);
             this.checkNumber.TabIndex = 7;
@@ -162,7 +162,7 @@ namespace Ekona.Images
             // checkCellBorder
             // 
             this.checkCellBorder.AutoSize = true;
-            this.checkCellBorder.Location = new System.Drawing.Point(6, 45);
+            this.checkCellBorder.Location = new System.Drawing.Point(6, 42);
             this.checkCellBorder.Name = "checkCellBorder";
             this.checkCellBorder.Size = new System.Drawing.Size(47, 17);
             this.checkCellBorder.TabIndex = 8;
@@ -175,7 +175,7 @@ namespace Ekona.Images
             this.checkTransparency.AutoSize = true;
             this.checkTransparency.Checked = true;
             this.checkTransparency.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkTransparency.Location = new System.Drawing.Point(146, 22);
+            this.checkTransparency.Location = new System.Drawing.Point(147, 19);
             this.checkTransparency.Name = "checkTransparency";
             this.checkTransparency.Size = new System.Drawing.Size(45, 17);
             this.checkTransparency.TabIndex = 9;
@@ -188,7 +188,7 @@ namespace Ekona.Images
             this.checkImage.AutoSize = true;
             this.checkImage.Checked = true;
             this.checkImage.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkImage.Location = new System.Drawing.Point(6, 69);
+            this.checkImage.Location = new System.Drawing.Point(7, 65);
             this.checkImage.Name = "checkImage";
             this.checkImage.Size = new System.Drawing.Size(46, 17);
             this.checkImage.TabIndex = 10;
@@ -199,7 +199,7 @@ namespace Ekona.Images
             // btnBgdTrans
             // 
             this.btnBgdTrans.Enabled = false;
-            this.btnBgdTrans.Location = new System.Drawing.Point(0, 319);
+            this.btnBgdTrans.Location = new System.Drawing.Point(175, 290);
             this.btnBgdTrans.Name = "btnBgdTrans";
             this.btnBgdTrans.Size = new System.Drawing.Size(80, 40);
             this.btnBgdTrans.TabIndex = 29;
@@ -209,7 +209,7 @@ namespace Ekona.Images
             // 
             // btnBgd
             // 
-            this.btnBgd.Location = new System.Drawing.Point(86, 365);
+            this.btnBgd.Location = new System.Drawing.Point(261, 290);
             this.btnBgd.Name = "btnBgd";
             this.btnBgd.Size = new System.Drawing.Size(80, 40);
             this.btnBgd.TabIndex = 27;
@@ -219,7 +219,7 @@ namespace Ekona.Images
             // 
             // btnImport
             // 
-            this.btnImport.Location = new System.Drawing.Point(358, 469);
+            this.btnImport.Location = new System.Drawing.Point(358, 471);
             this.btnImport.Name = "btnImport";
             this.btnImport.Size = new System.Drawing.Size(90, 40);
             this.btnImport.TabIndex = 30;
@@ -229,7 +229,7 @@ namespace Ekona.Images
             // 
             // btnSetTrans
             // 
-            this.btnSetTrans.Location = new System.Drawing.Point(0, 365);
+            this.btnSetTrans.Location = new System.Drawing.Point(89, 290);
             this.btnSetTrans.Name = "btnSetTrans";
             this.btnSetTrans.Size = new System.Drawing.Size(80, 40);
             this.btnSetTrans.TabIndex = 31;
@@ -244,16 +244,16 @@ namespace Ekona.Images
             this.groupBox1.Controls.Add(this.checkNumber);
             this.groupBox1.Controls.Add(this.checkTransparency);
             this.groupBox1.Controls.Add(this.checkImage);
-            this.groupBox1.Location = new System.Drawing.Point(6, 409);
+            this.groupBox1.Location = new System.Drawing.Point(6, 426);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(250, 100);
+            this.groupBox1.Size = new System.Drawing.Size(250, 83);
             this.groupBox1.TabIndex = 33;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "S0B";
             // 
             // btnOAMeditor
             // 
-            this.btnOAMeditor.Location = new System.Drawing.Point(262, 423);
+            this.btnOAMeditor.Location = new System.Drawing.Point(262, 425);
             this.btnOAMeditor.Name = "btnOAMeditor";
             this.btnOAMeditor.Size = new System.Drawing.Size(90, 40);
             this.btnOAMeditor.TabIndex = 35;
@@ -264,7 +264,7 @@ namespace Ekona.Images
             // checkBatch
             // 
             this.checkBatch.AutoSize = true;
-            this.checkBatch.Location = new System.Drawing.Point(329, 319);
+            this.checkBatch.Location = new System.Drawing.Point(347, 315);
             this.checkBatch.Name = "checkBatch";
             this.checkBatch.Size = new System.Drawing.Size(45, 17);
             this.checkBatch.TabIndex = 36;
@@ -275,7 +275,7 @@ namespace Ekona.Images
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(326, 258);
+            this.label3.Location = new System.Drawing.Point(344, 259);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(26, 13);
             this.label3.TabIndex = 37;
@@ -284,9 +284,9 @@ namespace Ekona.Images
             // txtBatch
             // 
             this.txtBatch.Enabled = false;
-            this.txtBatch.Location = new System.Drawing.Point(329, 293);
+            this.txtBatch.Location = new System.Drawing.Point(347, 291);
             this.txtBatch.Name = "txtBatch";
-            this.txtBatch.Size = new System.Drawing.Size(177, 20);
+            this.txtBatch.Size = new System.Drawing.Size(159, 20);
             this.txtBatch.TabIndex = 38;
             // 
             // radioOriginalPal
@@ -377,7 +377,7 @@ namespace Ekona.Images
             this.groupBox2.Controls.Add(this.radioReplacePal);
             this.groupBox2.Controls.Add(this.label2);
             this.groupBox2.Controls.Add(this.numThreshold);
-            this.groupBox2.Location = new System.Drawing.Point(172, 319);
+            this.groupBox2.Location = new System.Drawing.Point(3, 334);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(334, 86);
             this.groupBox2.TabIndex = 46;
@@ -388,9 +388,9 @@ namespace Ekona.Images
             // 
             this.groupBox3.Controls.Add(this.radioImgAdd);
             this.groupBox3.Controls.Add(this.radioImgReplace);
-            this.groupBox3.Location = new System.Drawing.Point(358, 406);
+            this.groupBox3.Location = new System.Drawing.Point(343, 334);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(148, 58);
+            this.groupBox3.Size = new System.Drawing.Size(163, 59);
             this.groupBox3.TabIndex = 47;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Tile import options";

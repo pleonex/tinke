@@ -45,7 +45,7 @@ namespace NINOKUNI
             if (gameCode == "B2KJ")
             {
                 Helper.pluginHost = pluginHost;
-                Helper.Read_Replace();
+                Helper.Initialize();
                 return true;
             }
 
@@ -55,11 +55,13 @@ namespace NINOKUNI
         public Format Get_Format(sFile file, byte[] magic)
         {
             String ext = new String(Encoding.ASCII.GetChars(magic));
-            uint exti = BitConverter.ToUInt32(magic, 0);
+            uint exti = 0;
+            if (magic.Length == 4)
+                exti = BitConverter.ToUInt32(magic, 0);
 
             if (ext == "NPCK" || ext == "KPCN")
                 return Format.Pack;
-            else if (BitConverter.ToUInt32(magic, 0) == 0x001C080A)
+            else if (exti == 0x001C080A)
                 return Format.Text;
             else if (magic[0] == 0x42 && magic[1] == 0x4D && file.name.ToUpper().StartsWith("EDDN")) // BMP image
                 return Format.FullImage;

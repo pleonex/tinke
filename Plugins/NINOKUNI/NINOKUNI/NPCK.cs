@@ -35,6 +35,8 @@ namespace NINOKUNI
     {
         public static sFolder Unpack(string file, string name)
         {
+            name = Path.GetFileNameWithoutExtension(name);
+
             BinaryReader br = new BinaryReader(File.OpenRead(file));
             sFolder unpack = new sFolder();
             unpack.files = new List<sFile>();
@@ -72,17 +74,33 @@ namespace NINOKUNI
             bw.Write(offset);
             bw.Write((uint)0x09);
 
+            List<byte> buffer = new List<byte>();
+            BinaryReader br;
             for (int i = 0; i < 9; i++)
             {
-                sFile currFile = Search_File("File" + i.ToString(), unpacked);
 
-                if (currFile.name is String)
+                int num = Search_File(i, unpacked);
+
+                if (num != -1)
                 {
-                    currFile.offset = offset;
+                    sFile cfile = unpacked.files[num];
 
+                    // Get file data
+                    br = new BinaryReader(File.OpenRead(cfile.path));
+                    br.BaseStream.Position = cfile.offset;
+                    buffer.AddRange(br.ReadBytes((int)cfile.size));
+                    br.Close();
+
+                    // Update file info
+                    cfile.offset = offset;
+                    cfile.path = file;
+
+                    unpacked.files[num] = cfile;
+
+                    // Write FAT
                     bw.Write(offset);
-                    bw.Write(currFile.size);
-                    offset += currFile.size;
+                    bw.Write(cfile.size);
+                    offset += cfile.size;
                 }
                 else
                 {
@@ -90,30 +108,24 @@ namespace NINOKUNI
                     bw.Write((uint)0x00);   // Null size
                 }
             }
-            for (int i = 0; i < 9; i++)
-            {
-                sFile currFile = Search_File("File" + i.ToString(), unpacked);
 
-                if (currFile.name is String)
-                {
-                    BinaryReader br = new BinaryReader(File.OpenRead(currFile.path));
-                    br.BaseStream.Position = currFile.offset;
-                    bw.Write(br.ReadBytes((int)currFile.size));
-                    br.Close();
-                }
-            }
+            bw.Write(buffer.ToArray());
 
             bw.Flush();
             bw.Close();
         }
 
-        public static sFile Search_File(string name, sFolder folder)
+        public static int Search_File(int num, sFolder folder)
         {
             for (int i = 0; i < folder.files.Count; i++)
-                if (folder.files[i].name.Substring(0, 5) == name)
-                    return folder.files[i];
+            {
+                string name = folder.files[i].name;
+                name = name.Substring(name.LastIndexOf('.') - 1, 1);
+                if (Convert.ToInt32(name) == num)
+                    return i;
+            }
 
-            return new sFile();
+            return -1;
         }
 
         public static string Get_Extension(uint packType, int num_file)

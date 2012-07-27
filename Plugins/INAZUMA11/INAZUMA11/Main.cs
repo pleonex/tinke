@@ -49,7 +49,8 @@ namespace INAZUMA11
 
             if (gameCode == "BEBJ" || gameCode == "BOEJ" || gameCode == "BEEJ" ||
                 gameCode == "YEEP" || gameCode == "YEEJ" || gameCode == "BE8J" ||
-                gameCode == "BEZJ" || gameCode == "BEBP" || gameCode == "BEEP")
+                gameCode == "BEZJ" || gameCode == "BEBP" || gameCode == "BEEP" ||
+                gameCode == "BEBI")
                     return true;
 
             return false;

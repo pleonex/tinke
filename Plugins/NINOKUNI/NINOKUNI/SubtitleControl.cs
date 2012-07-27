@@ -289,6 +289,21 @@ namespace NINOKUNI
                     case "Text":
                         sub.type = SubType.Text;
                         sub.data = Helper.Reformat(n.InnerText, 4).Replace("\r\n", "\n");
+
+                        // Check for errors
+                        if (!Helper.Check(sub.data, 0))
+                        {
+                            string fill_text = sub.data;
+                            bool check = false;
+
+                            while (!check && fill_text.Length > 0)
+                            {
+                                fill_text = fill_text.Remove(fill_text.Length - 1);
+                                check = Helper.Check(fill_text, 0);
+                            }
+                            MessageBox.Show("Text error\n\nWrong line:\n" + sub.data + "\n\nGood line:\n" + fill_text);
+                            continue;
+                        }
                         break;
                     case "Comment":
                         sub.type = SubType.Comment;

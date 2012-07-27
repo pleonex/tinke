@@ -114,6 +114,7 @@
       <DependentUpon>AnimationControl.cs</DependentUpon>
     </Compile>
     <Compile Include="DSIG.cs" />
+    <Compile Include="Games\NARUTO_POTN.cs" />
     <Compile Include="Games\PCT.cs" />
     <Compile Include="NANR.cs" />
     <Compile Include="NCCG.cs" />
