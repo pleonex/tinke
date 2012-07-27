@@ -59,7 +59,7 @@ namespace Tinke
             pluginHost.ChangeFile_Event += new Action<int, string>(pluginHost_ChangeFile_Event);
             pluginHost.event_GetDecompressedFiles += new Func<int, sFolder>(pluginHost_event_GetDecompressedFiles);
             pluginHost.event_SearchFile += new Func<int, String>(Save_File);
-            pluginHost.event_SearchFile2 += new Func<int, sFile>(Search_File);
+            pluginHost.event_SearchFile2 += new Func<int, sFile>(SearchSave_File);
             pluginHost.event_PluginList += new Func<string[]>(Get_PluginsList);
             pluginHost.event_CallPlugin += new Func<string[],int,int,object>(Call_Plugin);
             Load_Plugins();
@@ -105,7 +105,10 @@ namespace Tinke
                                 IGamePlugin plugin = (IGamePlugin)Activator.CreateInstance(assembly.GetType(pluginType.ToString()));
                                 plugin.Initialize(pluginHost, gameCode);
                                 if (plugin.IsCompatible())
+                                {
                                     gamePlugin.Add(plugin);
+                                    Console.WriteLine("Game plugin loaded: " + assembly.FullName);
+                                }
                             } // end if
                         } //end else
                     } //end foreach
@@ -740,6 +743,13 @@ namespace Tinke
         {
             return Recursive_File(id, root);
         }
+        public sFile SearchSave_File(int id)
+        {
+            sFile cfile = Recursive_File(id, root);
+            cfile.path = Save_File(cfile);
+            cfile.offset = 0;
+            return cfile;
+        }
         public sFolder Search_File(string name)
         {
             sFolder carpeta = new sFolder();
@@ -890,7 +900,7 @@ namespace Tinke
         {
             if (currFolder.files is List<sFile>)
                 foreach (sFile archivo in currFolder.files)
-                    if (archivo.name.Contains(name))
+                    if (archivo.name.ToLower().Contains(name.ToLower()))
                         folder.files.Add(archivo);
 
 
@@ -1217,6 +1227,7 @@ namespace Tinke
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
+                Console.WriteLine(e.StackTrace);
                 return Format.Unknown;
             }
             #endregion
@@ -1271,6 +1282,7 @@ namespace Tinke
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
+                Console.WriteLine(e.StackTrace);
                 return Format.Unknown;
             }
             #endregion
@@ -1332,6 +1344,7 @@ namespace Tinke
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
+                Console.WriteLine(e.StackTrace);
                 return Format.Unknown;
             }
             #endregion
@@ -1402,6 +1415,7 @@ namespace Tinke
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
+                Console.WriteLine(e.StackTrace);
                 return Format.Unknown;
             }
             #endregion
@@ -1508,6 +1522,7 @@ namespace Tinke
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
+                Console.WriteLine(e.StackTrace);
                 return new sFolder();
             }
         Continuar:

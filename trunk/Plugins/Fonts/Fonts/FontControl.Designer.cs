@@ -61,6 +61,7 @@ namespace Fonts
             this.btnChangeMap = new System.Windows.Forms.Button();
             this.btnAddChar = new System.Windows.Forms.Button();
             this.btnRemoveChar = new System.Windows.Forms.Button();
+            this.btnExportInfo = new System.Windows.Forms.Button();
             this.panelPicImage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picFont)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picText)).BeginInit();
@@ -220,10 +221,21 @@ namespace Fonts
             this.btnRemoveChar.UseVisualStyleBackColor = true;
             this.btnRemoveChar.Click += new System.EventHandler(this.btnRemoveChar_Click);
             // 
+            // btnExportInfo
+            // 
+            this.btnExportInfo.Location = new System.Drawing.Point(379, 342);
+            this.btnExportInfo.Name = "btnExportInfo";
+            this.btnExportInfo.Size = new System.Drawing.Size(130, 23);
+            this.btnExportInfo.TabIndex = 15;
+            this.btnExportInfo.Text = "Export font info";
+            this.btnExportInfo.UseVisualStyleBackColor = true;
+            this.btnExportInfo.Click += new System.EventHandler(this.btnExportInfo_Click);
+            // 
             // FontControl
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
             this.BackColor = System.Drawing.Color.Transparent;
+            this.Controls.Add(this.btnExportInfo);
             this.Controls.Add(this.btnRemoveChar);
             this.Controls.Add(this.btnAddChar);
             this.Controls.Add(this.btnApply);
@@ -264,5 +276,6 @@ namespace Fonts
         private System.Windows.Forms.Button btnChangeMap;
         private System.Windows.Forms.Button btnAddChar;
         private System.Windows.Forms.Button btnRemoveChar;
+        private System.Windows.Forms.Button btnExportInfo;
     }
 }

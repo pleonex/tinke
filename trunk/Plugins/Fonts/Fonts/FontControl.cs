@@ -311,5 +311,15 @@ namespace Fonts
             else
                 return 0;
         }
+
+        private void btnExportInfo_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog o = new SaveFileDialog();
+            o.DefaultExt = ".xml";
+            if (o.ShowDialog() != DialogResult.OK)
+                return;
+
+            NFTR.ExportInfo(o.FileName, charTile, font);
+        }
     }
 }

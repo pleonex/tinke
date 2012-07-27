@@ -640,7 +640,10 @@ namespace Ekona.Images
 
             // If the tile form is horizontal convert to it
             if (image.FormTile == TileForm.Horizontal || isMap)
+            {
                 tiles = Actions.HorizontalToLineal(tiles, bitmap.Width, bitmap.Height, image.BPP, 8);
+                image.FormTile = TileForm.Horizontal;
+            }
 
             // Create a map file
             if (isMap && checkMapCmp.Checked)
@@ -652,7 +655,7 @@ namespace Ekona.Images
             }
 
             // Set the data
-            image.Set_Tiles(tiles, bitmap.Width, bitmap.Height, image.FormatColor, TileForm.Lineal, image.CanEdit, 8);
+            image.Set_Tiles(tiles, bitmap.Width, bitmap.Height, image.FormatColor, image.FormTile, image.CanEdit, 8);
 
             if (radioReplacePal.Checked)
                 palette.Set_Palette(pal, (int)numPal.Value);

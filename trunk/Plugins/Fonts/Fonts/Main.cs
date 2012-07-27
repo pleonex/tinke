@@ -53,7 +53,7 @@ namespace Fonts
 
             if (ext == "NFTR" || ext == "RTFN")
             {
-                return new FontControl(pluginHost, NFTR.Read(file.path, file.id, pluginHost.Get_Language()));
+                return new FontControl(pluginHost, NFTR.Read(file, pluginHost.Get_Language()));
             }
 
             return new System.Windows.Forms.Control();
