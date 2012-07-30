@@ -33,7 +33,14 @@ namespace HETALIA
     {
         IPluginHost pluginHost;
 
-        public MAP(IPluginHost pluginHost, string file, int id, string fileName = "") : base(file, id, fileName) { this.pluginHost = pluginHost; }
+        public MAP(IPluginHost pluginHost, string file, int id, string fileName = "")
+        {
+            this.id = id;
+            this.fileName = fileName;
+            this.pluginHost = pluginHost;
+
+            Read(file);
+        }
 
         public override void Read(string fileIn)
         {

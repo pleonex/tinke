@@ -297,6 +297,9 @@ namespace NINOKUNI
                 sce.blocks[0].elements[i].text = text;
             }
             numericBlock_ValueChanged(null, null);
+
+            // Write file
+            btnSave_Click(null, null);
         }
         private void btnExport_Click(object sender, EventArgs e)
         {

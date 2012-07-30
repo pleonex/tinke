@@ -52,6 +52,18 @@ namespace Ekona.Images
             this.label2 = new System.Windows.Forms.Label();
             this.numericHeight = new System.Windows.Forms.NumericUpDown();
             this.groupProp = new System.Windows.Forms.GroupBox();
+            this.label10 = new System.Windows.Forms.Label();
+            this.numTileSize = new System.Windows.Forms.NumericUpDown();
+            this.label9 = new System.Windows.Forms.Label();
+            this.numPal = new System.Windows.Forms.NumericUpDown();
+            this.checkHex = new System.Windows.Forms.CheckBox();
+            this.checkTransparency = new System.Windows.Forms.CheckBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.comboDepth = new System.Windows.Forms.ComboBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.numericStart = new System.Windows.Forms.NumericUpDown();
             this.checkMapCmp = new System.Windows.Forms.CheckBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.radioSwapPal = new System.Windows.Forms.RadioButton();
@@ -59,34 +71,22 @@ namespace Ekona.Images
             this.radioReplacePal = new System.Windows.Forms.RadioButton();
             this.label7 = new System.Windows.Forms.Label();
             this.numThreshold = new System.Windows.Forms.NumericUpDown();
-            this.label10 = new System.Windows.Forms.Label();
-            this.numTileSize = new System.Windows.Forms.NumericUpDown();
             this.btnSetTrans = new System.Windows.Forms.Button();
-            this.label9 = new System.Windows.Forms.Label();
-            this.numPal = new System.Windows.Forms.NumericUpDown();
-            this.checkHex = new System.Windows.Forms.CheckBox();
             this.btnImport = new System.Windows.Forms.Button();
             this.btnBgdRem = new System.Windows.Forms.Button();
             this.btnBgd = new System.Windows.Forms.Button();
-            this.checkTransparency = new System.Windows.Forms.CheckBox();
-            this.label6 = new System.Windows.Forms.Label();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
-            this.label4 = new System.Windows.Forms.Label();
             this.btnExport = new System.Windows.Forms.Button();
-            this.comboDepth = new System.Windows.Forms.ComboBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.numericStart = new System.Windows.Forms.NumericUpDown();
             this.label5 = new System.Windows.Forms.Label();
             this.pic = new System.Windows.Forms.PictureBox();
             this.panel1 = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.numericWidth)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericHeight)).BeginInit();
             this.groupProp.SuspendLayout();
-            this.groupBox2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numThreshold)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numTileSize)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numPal)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericStart)).BeginInit();
+            this.groupBox2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numThreshold)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pic)).BeginInit();
             this.panel1.SuspendLayout();
             this.SuspendLayout();
@@ -190,6 +190,148 @@ namespace Ekona.Images
             this.groupProp.TabStop = false;
             this.groupProp.Text = "S02";
             // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(128, 143);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(26, 13);
+            this.label10.TabIndex = 30;
+            this.label10.Text = "S08";
+            // 
+            // numTileSize
+            // 
+            this.numTileSize.Location = new System.Drawing.Point(199, 141);
+            this.numTileSize.Maximum = new decimal(new int[] {
+            1024,
+            0,
+            0,
+            0});
+            this.numTileSize.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numTileSize.Name = "numTileSize";
+            this.numTileSize.Size = new System.Drawing.Size(37, 20);
+            this.numTileSize.TabIndex = 29;
+            this.numTileSize.Value = new decimal(new int[] {
+            8,
+            0,
+            0,
+            0});
+            this.numTileSize.ValueChanged += new System.EventHandler(this.numTileSize_ValueChanged);
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(128, 174);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(26, 13);
+            this.label9.TabIndex = 26;
+            this.label9.Text = "S09";
+            // 
+            // numPal
+            // 
+            this.numPal.Location = new System.Drawing.Point(199, 172);
+            this.numPal.Name = "numPal";
+            this.numPal.Size = new System.Drawing.Size(37, 20);
+            this.numPal.TabIndex = 25;
+            this.numPal.ValueChanged += new System.EventHandler(this.numPal_ValueChanged);
+            // 
+            // checkHex
+            // 
+            this.checkHex.AutoSize = true;
+            this.checkHex.Location = new System.Drawing.Point(32, 46);
+            this.checkHex.Name = "checkHex";
+            this.checkHex.Size = new System.Drawing.Size(45, 17);
+            this.checkHex.TabIndex = 24;
+            this.checkHex.Text = "S04";
+            this.checkHex.UseVisualStyleBackColor = true;
+            this.checkHex.CheckedChanged += new System.EventHandler(this.checkHex_CheckedChanged);
+            // 
+            // checkTransparency
+            // 
+            this.checkTransparency.AutoSize = true;
+            this.checkTransparency.Location = new System.Drawing.Point(9, 175);
+            this.checkTransparency.Name = "checkTransparency";
+            this.checkTransparency.Size = new System.Drawing.Size(46, 17);
+            this.checkTransparency.TabIndex = 19;
+            this.checkTransparency.Text = "S0A";
+            this.checkTransparency.UseVisualStyleBackColor = true;
+            this.checkTransparency.CheckedChanged += new System.EventHandler(this.checkTransparency_CheckedChanged);
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(6, 117);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(26, 13);
+            this.label6.TabIndex = 11;
+            this.label6.Text = "S07";
+            // 
+            // comboBox1
+            // 
+            this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox1.FormattingEnabled = true;
+            this.comboBox1.Items.AddRange(new object[] {
+            "S16",
+            "S17"});
+            this.comboBox1.Location = new System.Drawing.Point(116, 114);
+            this.comboBox1.Name = "comboBox1";
+            this.comboBox1.Size = new System.Drawing.Size(119, 21);
+            this.comboBox1.TabIndex = 10;
+            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(128, 22);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(31, 13);
+            this.label4.TabIndex = 9;
+            this.label4.Text = "BPP:";
+            // 
+            // comboDepth
+            // 
+            this.comboDepth.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboDepth.FormattingEnabled = true;
+            this.comboDepth.Items.AddRange(new object[] {
+            "4bpp (16 colors)",
+            "8bpp (256 colors)",
+            "1bpp (2 colors)",
+            "Direct (16 bpp)",
+            "A3I5",
+            "A5I3",
+            "2bpp (4 colors)"});
+            this.comboDepth.Location = new System.Drawing.Point(165, 19);
+            this.comboDepth.Name = "comboDepth";
+            this.comboDepth.Size = new System.Drawing.Size(83, 21);
+            this.comboDepth.TabIndex = 8;
+            this.comboDepth.SelectedIndexChanged += new System.EventHandler(this.comboDepth_SelectedIndexChanged);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(6, 22);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(26, 13);
+            this.label3.TabIndex = 7;
+            this.label3.Text = "S03";
+            // 
+            // numericStart
+            // 
+            this.numericStart.Location = new System.Drawing.Point(48, 20);
+            this.numericStart.Maximum = new decimal(new int[] {
+            65535,
+            0,
+            0,
+            0});
+            this.numericStart.Name = "numericStart";
+            this.numericStart.Size = new System.Drawing.Size(71, 20);
+            this.numericStart.TabIndex = 6;
+            this.numericStart.ValueChanged += new System.EventHandler(this.numericStart_ValueChanged);
+            // 
             // checkMapCmp
             // 
             this.checkMapCmp.AutoSize = true;
@@ -273,43 +415,6 @@ namespace Ekona.Images
             this.numThreshold.Size = new System.Drawing.Size(77, 20);
             this.numThreshold.TabIndex = 42;
             // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(128, 143);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(26, 13);
-            this.label10.TabIndex = 30;
-            this.label10.Text = "S08";
-            // 
-            // numTileSize
-            // 
-            this.numTileSize.Increment = new decimal(new int[] {
-            8,
-            0,
-            0,
-            0});
-            this.numTileSize.Location = new System.Drawing.Point(199, 141);
-            this.numTileSize.Maximum = new decimal(new int[] {
-            1024,
-            0,
-            0,
-            0});
-            this.numTileSize.Minimum = new decimal(new int[] {
-            8,
-            0,
-            0,
-            0});
-            this.numTileSize.Name = "numTileSize";
-            this.numTileSize.Size = new System.Drawing.Size(37, 20);
-            this.numTileSize.TabIndex = 29;
-            this.numTileSize.Value = new decimal(new int[] {
-            8,
-            0,
-            0,
-            0});
-            this.numTileSize.ValueChanged += new System.EventHandler(this.numTileSize_ValueChanged);
-            // 
             // btnSetTrans
             // 
             this.btnSetTrans.Location = new System.Drawing.Point(258, 306);
@@ -319,34 +424,6 @@ namespace Ekona.Images
             this.btnSetTrans.Text = "S0B";
             this.btnSetTrans.UseVisualStyleBackColor = true;
             this.btnSetTrans.Click += new System.EventHandler(this.btnSetTrans_Click);
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(128, 174);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(26, 13);
-            this.label9.TabIndex = 26;
-            this.label9.Text = "S09";
-            // 
-            // numPal
-            // 
-            this.numPal.Location = new System.Drawing.Point(199, 172);
-            this.numPal.Name = "numPal";
-            this.numPal.Size = new System.Drawing.Size(37, 20);
-            this.numPal.TabIndex = 25;
-            this.numPal.ValueChanged += new System.EventHandler(this.numPal_ValueChanged);
-            // 
-            // checkHex
-            // 
-            this.checkHex.AutoSize = true;
-            this.checkHex.Location = new System.Drawing.Point(32, 46);
-            this.checkHex.Name = "checkHex";
-            this.checkHex.Size = new System.Drawing.Size(45, 17);
-            this.checkHex.TabIndex = 24;
-            this.checkHex.Text = "S04";
-            this.checkHex.UseVisualStyleBackColor = true;
-            this.checkHex.CheckedChanged += new System.EventHandler(this.checkHex_CheckedChanged);
             // 
             // btnImport
             // 
@@ -380,48 +457,6 @@ namespace Ekona.Images
             this.btnBgd.UseVisualStyleBackColor = true;
             this.btnBgd.Click += new System.EventHandler(this.btnBgd_Click);
             // 
-            // checkTransparency
-            // 
-            this.checkTransparency.AutoSize = true;
-            this.checkTransparency.Location = new System.Drawing.Point(9, 175);
-            this.checkTransparency.Name = "checkTransparency";
-            this.checkTransparency.Size = new System.Drawing.Size(46, 17);
-            this.checkTransparency.TabIndex = 19;
-            this.checkTransparency.Text = "S0A";
-            this.checkTransparency.UseVisualStyleBackColor = true;
-            this.checkTransparency.CheckedChanged += new System.EventHandler(this.checkTransparency_CheckedChanged);
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(6, 117);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(26, 13);
-            this.label6.TabIndex = 11;
-            this.label6.Text = "S07";
-            // 
-            // comboBox1
-            // 
-            this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Items.AddRange(new object[] {
-            "S16",
-            "S17"});
-            this.comboBox1.Location = new System.Drawing.Point(116, 114);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(119, 21);
-            this.comboBox1.TabIndex = 10;
-            this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(128, 22);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(31, 13);
-            this.label4.TabIndex = 9;
-            this.label4.Text = "BPP:";
-            // 
             // btnExport
             // 
             this.btnExport.Location = new System.Drawing.Point(332, 469);
@@ -432,46 +467,6 @@ namespace Ekona.Images
             this.btnExport.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnExport.UseVisualStyleBackColor = true;
             this.btnExport.Click += new System.EventHandler(this.btnExport_Click);
-            // 
-            // comboDepth
-            // 
-            this.comboDepth.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboDepth.FormattingEnabled = true;
-            this.comboDepth.Items.AddRange(new object[] {
-            "4bpp (16 colors)",
-            "8bpp (256 colors)",
-            "1bpp (2 colors)",
-            "Direct (16 bpp)",
-            "A3I5",
-            "A5I3",
-            "2bpp (4 colors)"});
-            this.comboDepth.Location = new System.Drawing.Point(165, 19);
-            this.comboDepth.Name = "comboDepth";
-            this.comboDepth.Size = new System.Drawing.Size(83, 21);
-            this.comboDepth.TabIndex = 8;
-            this.comboDepth.SelectedIndexChanged += new System.EventHandler(this.comboDepth_SelectedIndexChanged);
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(6, 22);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(26, 13);
-            this.label3.TabIndex = 7;
-            this.label3.Text = "S03";
-            // 
-            // numericStart
-            // 
-            this.numericStart.Location = new System.Drawing.Point(48, 20);
-            this.numericStart.Maximum = new decimal(new int[] {
-            65535,
-            0,
-            0,
-            0});
-            this.numericStart.Name = "numericStart";
-            this.numericStart.Size = new System.Drawing.Size(71, 20);
-            this.numericStart.TabIndex = 6;
-            this.numericStart.ValueChanged += new System.EventHandler(this.numericStart_ValueChanged);
             // 
             // label5
             // 
@@ -525,12 +520,12 @@ namespace Ekona.Images
             ((System.ComponentModel.ISupportInitialize)(this.numericHeight)).EndInit();
             this.groupProp.ResumeLayout(false);
             this.groupProp.PerformLayout();
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numThreshold)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numTileSize)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numPal)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericStart)).EndInit();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numThreshold)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pic)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();

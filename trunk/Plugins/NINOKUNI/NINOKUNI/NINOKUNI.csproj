@@ -72,6 +72,7 @@
     <Compile Include="ScenarioText.Designer.cs">
       <DependentUpon>ScenarioText.cs</DependentUpon>
     </Compile>
+    <Compile Include="SPDL.cs" />
     <Compile Include="SQcontrol.cs">
       <SubType>UserControl</SubType>
     </Compile>

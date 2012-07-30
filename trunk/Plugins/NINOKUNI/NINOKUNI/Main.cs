@@ -77,6 +77,8 @@ namespace NINOKUNI
                 return Format.Text;     // Subtitles
             else if (ext == "TMAP")
                 return Format.Pack;
+            else if (ext == "spdl")
+                return Format.Pack;
 
             return Format.Unknown;
         }
@@ -137,6 +139,8 @@ namespace NINOKUNI
                 return KPCN.Unpack(file.path, file.name);
             else if (ext == "TMAP")
                 return TMAP.Unpack(file.path, file.name);
+            else if (ext == "spdl")
+                return SPDL.Unpack(file);
 
             return new sFolder();
         }

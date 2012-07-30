@@ -153,6 +153,9 @@ namespace NINOKUNI
                 systext.elements[i].text = text;
             }
             numElement_ValueChanged(null, null);
+
+            // Write file
+            btnSave_Click(null, null);
         }
         private void btnExport_Click(object sender, EventArgs e)
         {

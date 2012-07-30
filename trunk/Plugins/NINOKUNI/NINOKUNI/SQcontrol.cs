@@ -220,6 +220,9 @@ namespace NINOKUNI
 
             Import_XML(o.FileName, ref translated);
 
+            // Write file
+            btnSave_Click(null, null);
+
             numString_ValueChanged(null, null);
         }
         private void Export_XML(string fileOut, SQ translated)

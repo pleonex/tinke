@@ -483,6 +483,7 @@ namespace Ekona.Images
                 case 4: image.FormatColor = ColorFormat.A3I5; break;
                 case 5: image.FormatColor = ColorFormat.A5I3; break;
                 case 6: image.FormatColor = ColorFormat.colors4; break;
+                case 7: image.FormatColor = ColorFormat.directBGR_32; break;
             }
 
             Update_Image();
