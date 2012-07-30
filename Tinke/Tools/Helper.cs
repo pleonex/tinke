@@ -28,10 +28,10 @@ namespace Tinke.Tools
 {
     public static class Helper
     {
-        public static byte[] Get_Bytes(int offset, int length, Ekona.sFile file)
+        public static byte[] Get_Bytes(int offset, int length, string path)
         {
-            BinaryReader br = new BinaryReader(File.OpenRead(file.path));
-            br.BaseStream.Position = file.offset + offset;
+            BinaryReader br = new BinaryReader(File.OpenRead(path));
+            br.BaseStream.Position = offset;
 
             byte[] bytes = br.ReadBytes(length);
             br.Close();

@@ -50,7 +50,7 @@ namespace Sounds
 
             if (ext == "sadl")
             {
-                byte coding = pluginHost.Get_Bytes(file.id, 0x33, 1)[0];
+                byte coding = pluginHost.Get_Bytes(file.path, (int)file.offset + 0x33, 1)[0];
                 if ((coding & 0xF0) == 0x70 || (coding & 0xF0) == 0xB0)
                     return Format.Sound;
             }
@@ -60,11 +60,11 @@ namespace Sounds
                 if (magic[0] != 0x80 || magic[1] != 00)     // Constant
                     return Format.Unknown;
 
-                byte[] checkBytes = pluginHost.Get_Bytes(file.id, 4, 0xF); // Version and encoding flags
+                byte[] checkBytes = pluginHost.Get_Bytes(file.path, (int)file.offset + 4, 0xF); // Version and encoding flags
                 if (checkBytes[0] == 0x03 && (checkBytes[0xE] == 0x03 || checkBytes[0xE] == 0x04))
                 {
                     byte[] offset = { magic[3], magic[2] };
-                    byte[] copyright = pluginHost.Get_Bytes(file.id, BitConverter.ToUInt16(offset, 0) - 2, 6);
+                    byte[] copyright = pluginHost.Get_Bytes(file.path, (int)file.offset + BitConverter.ToUInt16(offset, 0) - 2, 6);
 
                     if (new String(Encoding.ASCII.GetChars(copyright)) == "(c)CRI")
                         return Format.Sound;
@@ -141,9 +141,13 @@ namespace Sounds
             string file = ((string[])e.Argument)[0];
             int id = Convert.ToInt32(((string[])e.Argument)[1]);
 
+            BinaryReader br = new BinaryReader(File.OpenRead(file));
+            string header = new String(br.ReadChars(4));
+            br.Close();
+
             // Process
             SoundBase sb = null;
-            if (file.ToUpper().EndsWith(".SAD"))
+            if (header == "sadl")
                 sb = new SADL(pluginHost.Get_Language(), file, id);
             else if (file.ToUpper().EndsWith(".ADX"))
                 sb = new ADX(file, id);

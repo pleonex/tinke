@@ -239,6 +239,10 @@ namespace NINOKUNI
                 listContent.Items.Add(subs[i].type);
             listContent.SelectedIndex = 0;
             listContent_SelectedIndexChanged(null, null);
+
+
+            // Write file
+            btnSave_Click(null, null);
         }
 
         private void ExportXML(string xml)
@@ -302,7 +306,7 @@ namespace NINOKUNI
                                 check = Helper.Check(fill_text, 0);
                             }
                             MessageBox.Show("Text error\n\nWrong line:\n" + sub.data + "\n\nGood line:\n" + fill_text);
-                            continue;
+                            //continue;
                         }
                         break;
                     case "Comment":

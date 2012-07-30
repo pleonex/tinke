@@ -43,7 +43,8 @@ namespace Ekona.Images
         texel4x4 = 5,       // 32bits, 2bits per Texel (only in textures)
         A5I3 = 6,           // 8 bits-> 0-2: index; 3-7: alpha
         direct = 7,         // 16bits, color with BGR555 encoding
-        colors2 = 8         // 1 bit for 2 colors
+        colors2 = 8,        // 1 bit for 2 colors
+        directBGR_32 = 9,   // 32 bits -> ABGR
     }
 
     public static class Actions
@@ -102,8 +103,8 @@ namespace Ekona.Images
             int r = color.R / 8;
             int g = (color.G / 8) << 5;
             int b = (color.B / 8) << 10;
-            int a = (color.A / 255) << 15;            
-            
+            int a = (color.A / 255) << 15;
+
             ushort bgra = (ushort)(r + g + b + a);
             Array.Copy(BitConverter.GetBytes(bgra), d, 2);
 
@@ -184,85 +185,6 @@ namespace Ekona.Images
         #endregion
 
         #region Tiles
-        /// <summary>
-        /// Not recommend to use, the main problem is with map files, where 4bpp can use palette with 256 colors(16 palettes of 16 colors).
-        /// </summary>
-        /// <param name="colors"></param>
-        /// <param name="tiles"></param>
-        /// <param name="color_format"></param>
-        /// <param name="form">Only accept No tiled</param>
-        /// <param name="width"></param>
-        /// <param name="height"></param>
-        /// <returns></returns>
-        public static Bitmap Get_Image(Color[] colors, Byte[] tiles, ColorFormat color_format, TileForm form,
-            int width, int height)
-        {
-            /*
-             *   A3I5 = 1,           // 8 bits-> 0-4: index; 5-7: alpha
-             *   colors4 = 2,        // 2 bits for 4 colors
-             *   colors16 = 3,       // 4 bits for 16 colors
-             *   colors256  = 4,     // 8 bits for 256 colors
-             *   A5I3 = 6,           // 8 bits-> 0-2: index; 3-7: alpha
-             *   direct = 7,         // 16bits, color with BGR555 encoding
-             *   colors2= 8          // 1 bit for 2 colors
-             */
-
-            PixelFormat format = PixelFormat.Canonical;
-            if (color_format == ColorFormat.colors16 || color_format == ColorFormat.colors4)
-                format = PixelFormat.Format4bppIndexed;
-            else if (color_format == ColorFormat.colors2)
-                format = PixelFormat.Format1bppIndexed;
-            else if (color_format == ColorFormat.direct)
-                format = PixelFormat.Format16bppRgb555;
-            else if (color_format == ColorFormat.colors256)
-                format = PixelFormat.Format8bppIndexed;
-            else if (color_format == ColorFormat.A3I5 || color_format == ColorFormat.A5I3)
-                format = PixelFormat.Format32bppArgb;
-
-
-            Bitmap image = new Bitmap(width, height, format);
-
-            // Write the palette
-            int length = 0;
-            if (color_format == ColorFormat.colors16 || color_format == ColorFormat.colors4)
-                length = 16;
-            else if (color_format == ColorFormat.colors2)
-                length = 2;
-            else if (color_format == ColorFormat.colors256)
-                length = 256;
-
-            if (length != 0)
-            {
-                ColorPalette palette = image.Palette;
-                for (int i = 0; i < length; i++)
-                {
-                    if (i < colors.Length)
-                        palette.Entries[i] = colors[i];
-                    else
-                        palette.Entries[i] = Color.Black;
-                }
-                image.Palette = palette;
-            }
-
-            // Write tiles
-            BitmapData data = image.LockBits(new Rectangle(new Point(0, 0), image.Size), ImageLockMode.WriteOnly, format);
-            Byte[] tiles_img = new Byte[data.Height * data.Stride];
-            Marshal.Copy(data.Scan0, tiles_img, 0, tiles_img.Length);
-
-            if (color_format == ColorFormat.colors16 || color_format == ColorFormat.colors2 ||
-                color_format == ColorFormat.colors256 || color_format == ColorFormat.direct)
-                tiles_img = tiles;
-            else if (color_format == ColorFormat.A3I5 || color_format == ColorFormat.A5I3)
-                tiles_img = AlphaIndexTo32ARGB(colors, tiles, color_format);
-            else if (color_format == ColorFormat.colors4)
-                tiles_img = Bpp2ToBpp4(tiles);
-
-            Marshal.Copy(tiles, 0, data.Scan0, tiles_img.Length);
-            image.UnlockBits(data);
-
-            return image;
-        }
-
         public static Byte[] AlphaIndexTo32ARGB(Color[] palette, byte[] data, ColorFormat format)
         {
             Byte[] direct = new byte[data.Length * 4];
@@ -325,9 +247,9 @@ namespace Ekona.Images
             Bitmap image = new Bitmap(width, height);
 
             int pos = start;
-            for (int h = 0; h < height; h++)
+            for (int h = height - 1; h >= 0; h--)
             {
-                for (int w = 0; w < width; w++)
+                for (int w = width - 1; w >= 0; w--)
                 {
                     int num_pal = 0;
                     if (tile_pal.Length <= w + h * width)
@@ -421,6 +343,15 @@ namespace Ekona.Images
                         ((byteColor >> 5) & 0x1F) * 8,
                         ((byteColor >> 10) & 0x1F) * 8);
                     pos += 2;
+                    break;
+
+                case ColorFormat.directBGR_32:
+                    if (pos + 4 >= data.Length)
+                        break;
+
+                    byte a, b, g, r;
+                    r = data[pos++]; g = data[pos++]; b = data[pos++]; a = (byte)(255 - data[pos++]);
+                    color = Color.FromArgb(a, r, g, b);
                     break;
 
                 case ColorFormat.texel4x4:
@@ -589,7 +520,7 @@ namespace Ekona.Images
                 tiles = Helper.BitsConverter.BytesToBit4(tiles);
             else if (format != ColorFormat.colors256)
                 throw new NotSupportedException("Only supported 4bpp and 8bpp images.");
-            
+
             List<Color> notfound = new List<Color>();
             List<Color> newplist = new List<Color>(newp);
 

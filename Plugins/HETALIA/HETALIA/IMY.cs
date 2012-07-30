@@ -34,7 +34,15 @@ namespace HETALIA
     {
         IPluginHost pluginHost;
 
-        public IMY(IPluginHost pluginHost, string file, int id, string fileName = "") : base(file, id, fileName) { this.pluginHost = pluginHost; }
+        public IMY(IPluginHost pluginHost, string file, int id, string fileName = "")
+        {
+            this.pluginHost = pluginHost;
+            this.id = id;
+            this.fileName = fileName;
+
+            Read(file);
+        }
+
 
         public override void Read(string fileIn)
         {

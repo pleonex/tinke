@@ -51,7 +51,7 @@ namespace Ekona
 
         String Search_File(int id); // Search file by id
         sFile Search_File(short id);
-        Byte[] Get_Bytes(int id, int offset, int length);
+        Byte[] Get_Bytes(string path, int offset, int length);
 
         string Get_Language();
         string Get_LangXML();

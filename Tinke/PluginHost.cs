@@ -99,10 +99,11 @@ namespace Tinke
         public String Search_File(int id) { return event_SearchFile(id); }
         public event Func<int, sFile> event_SearchFile2;
         public sFile Search_File(short id) { return event_SearchFile2(id); }
-        public Byte[] Get_Bytes(int id, int offset, int length)
+        public Byte[] Get_Bytes(string path, int offset, int length)
         {
-            return Tools.Helper.Get_Bytes(offset, length, Search_File((short)id));
+            return Tools.Helper.Get_Bytes(offset, length, path);
         }
+
 
         public string Get_LanguageFolder()
         {

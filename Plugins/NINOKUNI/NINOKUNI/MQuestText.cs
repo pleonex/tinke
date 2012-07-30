@@ -235,6 +235,9 @@ namespace NINOKUNI
                 }
             }
             numBlock_ValueChanged(null, null);
+
+            // Write file
+            btnSave_Click(null, null);
         }
         private void btnSave_Click(object sender, EventArgs e)
         {

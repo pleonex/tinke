@@ -90,6 +90,11 @@ namespace INAZUMA11
                     if (file.id == 0x387) return Format.Text;
                     if (file.id == 0x388) return Format.Text;
                     break;
+
+                    // Inazuma 3
+                case "BOEJ":
+                    if (file.id >= 0x203 && file.id <= 0x235) return Format.Text;
+                    break;
             }
 
             return Format.Unknown;
@@ -101,7 +106,7 @@ namespace INAZUMA11
                 return PAC.Unpack(file);
 
             if (file.name.ToUpper().EndsWith(".SPF_"))
-                return SFP.Unpack(file.path);
+                return SFP.Unpack(file.path, file.path);
 
             if (file.name.ToUpper().EndsWith(".PKB"))
             {
@@ -139,6 +144,27 @@ namespace INAZUMA11
                 PAC.Pack(ref unpacked, fileout);
                 return fileout;
             }
+            else if (file.name.ToUpper().EndsWith(".PKB"))
+            {
+                sFile pkh = pluginHost.Search_File((short)(file.id + 1));
+
+                Console.WriteLine("Packing to " + fileout);
+                PKB.Pack(ref unpacked, pkh, fileout, pluginHost);
+                return fileout;
+            }
+            else if (file.name.ToUpper().EndsWith(".SPF_"))
+            {
+                SFP.Pack(ref unpacked, fileout, null, false);
+                return fileout;
+            }
+            else if (file.name.ToUpper().EndsWith(".SPD"))
+            {
+                string spl_out = pluginHost.Get_TempFile();
+                SFP.Pack(ref unpacked, spl_out, fileout, true);
+
+                pluginHost.ChangeFile(file.id + 1, spl_out);    // Change SPL file
+                return fileout;                                 // Return new SPD file
+            }
 
             return null;
         }
@@ -163,6 +189,10 @@ namespace INAZUMA11
                     if (file.id == 0xD8) return new USearchControl(file.path, file.id, pluginHost);
                     if (file.id == 0x387) return new BlogpostControl(file.path, file.id, pluginHost);
                     if (file.id == 0x388) return new BlogresControl(file.path, file.id, pluginHost);
+                    break;
+
+                case  "BOEJ":
+                    if (file.id >= 0x203 && file.id <= 0x235) return new SubtitlesControl(file.path, pluginHost, file.id);
                     break;
             }
             return new Control();

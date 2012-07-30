@@ -43,7 +43,7 @@ namespace TXT
             if ((file.name.EndsWith("LZ.TXT") || file.name.EndsWith("LZ.XML")) && magic[0] == 0x10)
                 return Format.Unknown;
 
-            if (file.name.EndsWith(".TXT") || file.name.EndsWith(".SADL") || file.name.EndsWith(".XML")
+            if (file.name.EndsWith(".TXT") || file.name.EndsWith(".XML")
                 || file.name.EndsWith(".INI") || file.name.EndsWith(".H") || file.name.EndsWith(".XSADL")
                 || file.name.EndsWith(".BAT") || file.name.EndsWith(".SARC") || file.name.EndsWith(".SBDL")
                 || file.name.EndsWith(".C") || file.name.EndsWith("MAKEFILE") || file.name.EndsWith(".BSF")
@@ -51,7 +51,11 @@ namespace TXT
                 || file.name.EndsWith("BUILDTIME") || file.name.EndsWith(".LUA~") || file.name.EndsWith(".INI.TEMPLATE")
                 || file.name.EndsWith("LUA.BAK") || file.name.EndsWith(".NAIX") || file.name.EndsWith(".NBSD"))
                 return Format.Text;
-            else if (ext == "MESG")
+
+            if (file.name.EndsWith(".SADL") && ext.ToUpper() != "SADL")
+                return Format.Text;
+
+            if (ext == "MESG")
                 return Format.Text;
 
             return Format.Unknown;
