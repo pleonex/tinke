@@ -80,6 +80,7 @@ namespace Ekona.Images
             this.radioImgReplace = new System.Windows.Forms.RadioButton();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.label4 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.imgBox)).BeginInit();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numThreshold)).BeginInit();
@@ -294,9 +295,9 @@ namespace Ekona.Images
             this.radioOriginalPal.AutoSize = true;
             this.radioOriginalPal.Location = new System.Drawing.Point(6, 42);
             this.radioOriginalPal.Name = "radioOriginalPal";
-            this.radioOriginalPal.Size = new System.Drawing.Size(149, 17);
+            this.radioOriginalPal.Size = new System.Drawing.Size(44, 17);
             this.radioOriginalPal.TabIndex = 39;
-            this.radioOriginalPal.Text = "Imported tiles (bitmap only)";
+            this.radioOriginalPal.Text = "S13";
             this.radioOriginalPal.UseVisualStyleBackColor = true;
             // 
             // radioReplacePal
@@ -304,9 +305,9 @@ namespace Ekona.Images
             this.radioReplacePal.AutoSize = true;
             this.radioReplacePal.Location = new System.Drawing.Point(6, 65);
             this.radioReplacePal.Name = "radioReplacePal";
-            this.radioReplacePal.Size = new System.Drawing.Size(100, 17);
+            this.radioReplacePal.Size = new System.Drawing.Size(44, 17);
             this.radioReplacePal.TabIndex = 40;
-            this.radioReplacePal.Text = "Replace palette";
+            this.radioReplacePal.Text = "S14";
             this.radioReplacePal.UseVisualStyleBackColor = true;
             // 
             // radioSwapPal
@@ -315,10 +316,10 @@ namespace Ekona.Images
             this.radioSwapPal.Checked = true;
             this.radioSwapPal.Location = new System.Drawing.Point(6, 19);
             this.radioSwapPal.Name = "radioSwapPal";
-            this.radioSwapPal.Size = new System.Drawing.Size(135, 17);
+            this.radioSwapPal.Size = new System.Drawing.Size(44, 17);
             this.radioSwapPal.TabIndex = 41;
             this.radioSwapPal.TabStop = true;
-            this.radioSwapPal.Text = "Swap to original palette";
+            this.radioSwapPal.Text = "S11";
             this.radioSwapPal.UseVisualStyleBackColor = true;
             // 
             // numThreshold
@@ -344,9 +345,9 @@ namespace Ekona.Images
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(160, 21);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(57, 13);
+            this.label2.Size = new System.Drawing.Size(26, 13);
             this.label2.TabIndex = 43;
-            this.label2.Text = "Threshold:";
+            this.label2.Text = "S16";
             // 
             // radioImgAdd
             // 
@@ -354,10 +355,10 @@ namespace Ekona.Images
             this.radioImgAdd.Checked = true;
             this.radioImgAdd.Location = new System.Drawing.Point(6, 14);
             this.radioImgAdd.Name = "radioImgAdd";
-            this.radioImgAdd.Size = new System.Drawing.Size(75, 17);
+            this.radioImgAdd.Size = new System.Drawing.Size(44, 17);
             this.radioImgAdd.TabIndex = 44;
             this.radioImgAdd.TabStop = true;
-            this.radioImgAdd.Text = "Add image";
+            this.radioImgAdd.Text = "S18";
             this.radioImgAdd.UseVisualStyleBackColor = true;
             // 
             // radioImgReplace
@@ -365,9 +366,9 @@ namespace Ekona.Images
             this.radioImgReplace.AutoSize = true;
             this.radioImgReplace.Location = new System.Drawing.Point(6, 35);
             this.radioImgReplace.Name = "radioImgReplace";
-            this.radioImgReplace.Size = new System.Drawing.Size(96, 17);
+            this.radioImgReplace.Size = new System.Drawing.Size(44, 17);
             this.radioImgReplace.TabIndex = 45;
-            this.radioImgReplace.Text = "Replace image";
+            this.radioImgReplace.Text = "S19";
             this.radioImgReplace.UseVisualStyleBackColor = true;
             // 
             // groupBox2
@@ -382,7 +383,7 @@ namespace Ekona.Images
             this.groupBox2.Size = new System.Drawing.Size(334, 86);
             this.groupBox2.TabIndex = 46;
             this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Palette import options";
+            this.groupBox2.Text = "S15";
             // 
             // groupBox3
             // 
@@ -393,13 +394,23 @@ namespace Ekona.Images
             this.groupBox3.Size = new System.Drawing.Size(163, 59);
             this.groupBox3.TabIndex = 47;
             this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Tile import options";
+            this.groupBox3.Text = "S17";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(261, 266);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(19, 13);
+            this.label4.TabIndex = 48;
+            this.label4.Text = "of ";
             // 
             // SpriteControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Transparent;
+            this.Controls.Add(this.label4);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.txtBatch);
@@ -461,5 +472,6 @@ namespace Ekona.Images
         private System.Windows.Forms.RadioButton radioImgReplace;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.Label label4;
     }
 }

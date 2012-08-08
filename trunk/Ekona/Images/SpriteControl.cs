@@ -50,21 +50,8 @@ namespace Ekona.Images
             this.image = pluginHost.Get_Image();
             this.palette = pluginHost.Get_Palette();
 
-            this.btnImport.Enabled = sprite.CanEdit;
-            this.btnOAMeditor.Enabled = sprite.CanEdit;
-            groupBox2.Enabled = sprite.CanEdit;
-            groupBox3.Enabled = sprite.CanEdit;
-
             Read_Language();
-
-            for (ushort i = 0; i < sprite.NumBanks; i++)
-                if (sprite.Banks[i].name is String)
-                    comboBank.Items.Add(sprite.Banks[i].name);
-                else
-                    comboBank.Items.Add("Bank " + i.ToString());
-
-            comboBank.SelectedIndex = 0;
-            txtBatch.Text = Path.GetFileNameWithoutExtension(sprite.FileName) + "_%s";
+            Update_Info();
         }
         public SpriteControl(IPluginHost pluginHost, SpriteBase sprite)
         {
@@ -75,20 +62,8 @@ namespace Ekona.Images
             this.palette = pluginHost.Get_Palette();
             this.pluginHost = pluginHost;
 
-            this.btnImport.Enabled = sprite.CanEdit;
-            this.btnOAMeditor.Enabled = sprite.CanEdit;
-            groupBox2.Enabled = sprite.CanEdit;
-            groupBox3.Enabled = sprite.CanEdit;
-
             Read_Language();
-
-            for (ushort i = 0; i < sprite.NumBanks; i++)
-                if (sprite.Banks[i].name is String)
-                    comboBank.Items.Add(sprite.Banks[i].name);
-                else
-                    comboBank.Items.Add("Bank " + i.ToString());
-            comboBank.SelectedIndex = 0;
-            txtBatch.Text = Path.GetFileNameWithoutExtension(sprite.FileName) + "_%s";
+            Update_Info();
         }
         public SpriteControl(IPluginHost pluginHost, SpriteBase sprite, ImageBase image, PaletteBase palette)
         {
@@ -99,20 +74,8 @@ namespace Ekona.Images
             this.palette = palette;
             this.pluginHost = pluginHost;
 
-            this.btnImport.Enabled = sprite.CanEdit;
-            this.btnOAMeditor.Enabled = sprite.CanEdit;
-            groupBox2.Enabled = sprite.CanEdit;
-            groupBox3.Enabled = sprite.CanEdit;
-
             Read_Language();
-
-            for (ushort i = 0; i < sprite.NumBanks; i++)
-                if (sprite.Banks[i].name is String)
-                    comboBank.Items.Add(sprite.Banks[i].name);
-                else
-                    comboBank.Items.Add("Bank " + i.ToString());
-            comboBank.SelectedIndex = 0;
-            txtBatch.Text = Path.GetFileNameWithoutExtension(sprite.FileName) + "_%s";
+            Update_Info();
         }
         public SpriteControl(XElement lang, SpriteBase sprite, ImageBase image, PaletteBase palette)
         {
@@ -123,20 +86,8 @@ namespace Ekona.Images
             this.palette = palette;
             this.lang = lang;
 
-            for (ushort i = 0; i < sprite.NumBanks; i++)
-                if (sprite.Banks[i].name is String)
-                    comboBank.Items.Add(sprite.Banks[i].name);
-                else
-                    comboBank.Items.Add("Bank " + i.ToString());
-            comboBank.SelectedIndex = 0;
-            txtBatch.Text = Path.GetFileNameWithoutExtension(sprite.FileName) + "_%s";
-
-            this.btnImport.Enabled = sprite.CanEdit;
-            this.btnOAMeditor.Enabled = sprite.CanEdit;
-            groupBox2.Enabled = sprite.CanEdit;
-            groupBox3.Enabled = sprite.CanEdit;
-
             Read_Language(lang);
+            Update_Info();
         }
 
 
@@ -174,6 +125,14 @@ namespace Ekona.Images
                 checkNumber.Text = xml.Element("S10").Value;
                 radioSwapPal.Text = xml.Element("S11").Value;
                 trans = xml.Element("S12").Value;
+                label4.Text = "of " + sprite.NumBanks.ToString();
+                radioReplacePal.Text = xml.Element("S14").Value;
+                radioOriginalPal.Text = xml.Element("S13").Value;
+                groupBox2.Text = xml.Element("S15").Value;
+                label2.Text = xml.Element("S16").Value;
+                groupBox3.Text = xml.Element("S17").Value;
+                radioImgAdd.Text = xml.Element("S18").Value;
+                radioImgReplace.Text = xml.Element("S19").Value;
             }
             catch { throw new Exception("There was an error reading the XML language file."); }
         }
@@ -187,6 +146,21 @@ namespace Ekona.Images
             Clipboard.SetImage(imgBox.Image);
 
             return imgBox.Image;
+        }
+        private void Update_Info()
+        {
+            this.btnImport.Enabled = (sprite.CanEdit && image.CanEdit && palette.CanEdit ? true : false);
+            this.btnOAMeditor.Enabled = sprite.CanEdit;
+            groupBox2.Enabled = sprite.CanEdit;
+            groupBox3.Enabled = sprite.CanEdit;
+
+            for (ushort i = 0; i < sprite.NumBanks; i++)
+                if (sprite.Banks[i].name is String)
+                    comboBank.Items.Add(sprite.Banks[i].name);
+                else
+                    comboBank.Items.Add("Bank " + i.ToString());
+            comboBank.SelectedIndex = 0;
+            txtBatch.Text = Path.GetFileNameWithoutExtension(sprite.FileName) + "_%s";
         }
 
         private void comboBank_SelectedIndexChanged(object sender, EventArgs e)
@@ -360,6 +334,7 @@ namespace Ekona.Images
             FolderBrowserDialog o = new FolderBrowserDialog();
             o.Description = "Select the folder to extract the sprites.";
             o.ShowNewFolderButton = true;
+            o.SelectedPath = Directory.GetParent(Helper.IOutil.LastSelectedFile()).FullName;
             if (o.ShowDialog() != DialogResult.OK)
                 return;
 
@@ -373,6 +348,9 @@ namespace Ekona.Images
                 path += txtBatch.Text.Replace("%s", i.ToString()) + ".png";
                 img.Save(path, System.Drawing.Imaging.ImageFormat.Png);
             }
+
+            o.Dispose();
+            o = null;
         }
 
         private void checkBatch_CheckedChanged(object sender, EventArgs e)
@@ -408,12 +386,17 @@ namespace Ekona.Images
         }
         private void Import_All()
         {
-            FolderBrowserDialog o = new FolderBrowserDialog();
-            o.Description = "Select the folder where the images are.";
+            //FolderBrowserDialog o = new FolderBrowserDialog();
+            //o.Description = "Select the folder where the images are.";
+            OpenFileDialog o = new OpenFileDialog();
+            o.CheckFileExists = true;
+            o.Multiselect = true;
             if (o.ShowDialog() != DialogResult.OK)
                 return;
 
-            string[] imgs = Directory.GetFiles(o.SelectedPath);
+            //string[] imgs = Directory.GetFiles(o.SelectedPath);
+            string[] imgs = o.FileNames;
+
             for (int i = 0; i < sprite.NumBanks; i++)
             {
                 string img = "";
@@ -434,6 +417,9 @@ namespace Ekona.Images
 
             Save_Files();
             Update_Image();
+
+            o.Dispose();
+            o = null;
         }
         private void Import_File(string path, int banki)
         {

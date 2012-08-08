@@ -27,6 +27,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using Microsoft.Win32;
 
 namespace Ekona.Helper
 {
@@ -55,6 +56,52 @@ namespace Ekona.Helper
             bw.Write(br.ReadBytes(rest));
             bw.Flush();
         }
+
+        public static string LastSelectedFile()
+        {
+            string recent = Environment.GetFolderPath(Environment.SpecialFolder.Recent);
+            DirectoryInfo info = new DirectoryInfo(recent);
+            FileInfo[] files = info.GetFiles().OrderBy(p => p.LastAccessTime).ToArray();
+
+            if (files.Length > 0)
+            {
+                for (int i = 1; i <= files.Length ; i++)
+                {
+                    LNK link = new LNK(files[files.Length - i].FullName);
+                    if (!link.FileAttribute.archive)
+                        continue;
+
+                    return link.Path;
+                }
+            }
+
+            return null;
+        }
+        public static string GetLastOpenSaveFile(string extention)
+        {
+		    // IT DOESN'T WORK YET
+            RegistryKey regKey = Registry.CurrentUser;
+            string lastUsedFolder = string.Empty;
+            regKey = regKey.OpenSubKey("Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\ComDlg32\\OpenSavePidlMRU");
+
+            if (string.IsNullOrEmpty(extention))
+                return lastUsedFolder;
+
+            RegistryKey myKey = regKey.OpenSubKey(extention);
+
+            if (myKey == null && regKey.GetSubKeyNames().Length > 0)
+                return lastUsedFolder;
+
+            string[] names = myKey.GetValueNames();
+            if (names != null && names.Length > 0)
+            {
+                File.WriteAllBytes("G:\\reg.bin", (byte[])myKey.GetValue(names[names.Length - 1]));
+                //lastUsedFolder = new String(Encoding.ASCII.GetChars((byte[])myKey.GetValue(names[names.Length - 2])));
+            }
+
+            return lastUsedFolder;
+        }
+
 
     }
 }

@@ -43,76 +43,13 @@ namespace Ekona.Images
         public ImageControl(IPluginHost pluginHost, bool isMap)
         {
             InitializeComponent();
-            stop = true;
 
             this.pluginHost = pluginHost;
             this.isMap = isMap;
             this.palette = pluginHost.Get_Palette();
             this.image = pluginHost.Get_Image();
-            if (isMap)
-            {
-                this.map = pluginHost.Get_Map();
-                btnImport.Enabled = map.CanEdit;
-                this.comboBox1.Enabled = false;
 
-                this.numericWidth.Value = (map.Width != 0 ? map.Width : image.Width);
-                this.numericHeight.Value = (map.Height != 0 ? map.Height : image.Height);
-            }
-            else
-            {
-                btnImport.Enabled = image.CanEdit;
-
-                this.numericWidth.Value = image.Width;
-                this.numericHeight.Value = image.Height;
-
-                switch (image.FormTile)
-                {
-                    case TileForm.Lineal:
-                        comboBox1.SelectedIndex = 0;
-                        numericHeight.Minimum = 1;
-                        numericWidth.Minimum = 1;
-                        numericWidth.Increment = 1;
-                        numericHeight.Increment = 1;
-                        break;
-                    case TileForm.Horizontal:
-                        comboBox1.SelectedIndex = 1;
-                        numericHeight.Minimum = 8;
-                        numericWidth.Minimum = 8;
-                        numericWidth.Increment = 8;
-                        numericHeight.Increment = 8;
-                        break;
-                }
-            }
-            this.checkMapCmp.Enabled = isMap;
-
-            switch (image.FormatColor)
-            {
-                case ColorFormat.A3I5:
-                    comboDepth.SelectedIndex = 4;
-                    break;
-                case ColorFormat.A5I3:
-                    comboDepth.SelectedIndex = 5;
-                    break;
-                case ColorFormat.colors4:
-                    comboDepth.SelectedIndex = 6;
-                    break;
-                case ColorFormat.colors16:
-                    comboDepth.SelectedIndex = 0;
-                    break;
-                case ColorFormat.colors256:
-                    comboDepth.SelectedIndex = 1;
-                    break;
-                case ColorFormat.direct:
-                    comboDepth.SelectedIndex = 3;
-                    break;
-                case ColorFormat.colors2:
-                    comboDepth.SelectedIndex = 2;
-                    break;
-            }
-
-            this.numTileSize.Value = image.TileSize;
-            this.numPal.Maximum = palette.NumberOfPalettes - 1;
-            this.numericStart.Maximum = image.Original.Length - 1;
+            Update_Info();
 
             this.comboDepth.SelectedIndexChanged += new EventHandler(comboDepth_SelectedIndexChanged);
             this.numericWidth.ValueChanged += new EventHandler(numericSize_ValueChanged);
@@ -120,69 +57,18 @@ namespace Ekona.Images
             this.numericStart.ValueChanged += new EventHandler(numericStart_ValueChanged);
 
             ReadLanguage();
-            stop = false;
             Update_Image();
         }
         public ImageControl(IPluginHost pluginHost, ImageBase image, PaletteBase palette)
         {
             InitializeComponent();
 
-            stop = true;
             isMap = false;
             this.image = image;
             this.palette = palette;
             this.pluginHost = pluginHost;
-            btnImport.Enabled = image.CanEdit;
 
-            switch (image.FormatColor)
-            {
-                case ColorFormat.A3I5:
-                    comboDepth.SelectedIndex = 4;
-                    break;
-                case ColorFormat.A5I3:
-                    comboDepth.SelectedIndex = 5;
-                    break;
-                case ColorFormat.colors4:
-                    comboDepth.SelectedIndex = 6;
-                    break;
-                case ColorFormat.colors16:
-                    comboDepth.SelectedIndex = 0;
-                    break;
-                case ColorFormat.colors256:
-                    comboDepth.SelectedIndex = 1;
-                    break;
-                case ColorFormat.direct:
-                    comboDepth.SelectedIndex = 3;
-                    break;
-                case ColorFormat.colors2:
-                    comboDepth.SelectedIndex = 2;
-                    break;
-            }
-
-            switch (image.FormTile)
-            {
-                case TileForm.Lineal:
-                    comboBox1.SelectedIndex = 0;
-                    numericHeight.Minimum = 1;
-                    numericWidth.Minimum = 1;
-                    numericWidth.Increment = 1;
-                    numericHeight.Increment = 1;
-                    break;
-                case TileForm.Horizontal:
-                    comboBox1.SelectedIndex = 1;
-                    numericHeight.Minimum = 8;
-                    numericWidth.Minimum = 8;
-                    numericWidth.Increment = 8;
-                    numericHeight.Increment = 8;
-                    break;
-            }
-
-            this.numTileSize.Value = image.TileSize;
-            this.numericWidth.Value = image.Width;
-            this.numericHeight.Value = image.Height;
-            this.numPal.Maximum = palette.NumberOfPalettes - 1;
-            this.numericStart.Maximum = image.Original.Length - 1;
-            this.checkMapCmp.Enabled = false;
+            Update_Info();
 
             this.comboDepth.SelectedIndexChanged += new EventHandler(comboDepth_SelectedIndexChanged);
             this.numericWidth.ValueChanged += new EventHandler(numericSize_ValueChanged);
@@ -190,55 +76,19 @@ namespace Ekona.Images
             this.numericStart.ValueChanged += new EventHandler(numericStart_ValueChanged);
 
             ReadLanguage();
-            stop = false;
             Update_Image();
         }
         public ImageControl(IPluginHost pluginHost, ImageBase image, PaletteBase palette, MapBase map)
         {
             InitializeComponent();
-            stop = true;
 
             this.pluginHost = pluginHost;
             this.isMap = true;
             this.palette = palette;
             this.image = image;
             this.map = map;
-            btnImport.Enabled = map.CanEdit;
 
-            this.numericWidth.Value = (map.Width != 0 ? map.Width : image.Width);
-            this.numericHeight.Value = (map.Height != 0 ? map.Height : image.Height);
-
-            switch (image.FormatColor)
-            {
-                case ColorFormat.A3I5:
-                    comboDepth.SelectedIndex = 4;
-                    break;
-                case ColorFormat.A5I3:
-                    comboDepth.SelectedIndex = 5;
-                    break;
-                case ColorFormat.colors4:
-                    comboDepth.SelectedIndex = 6;
-                    break;
-                case ColorFormat.colors16:
-                    comboDepth.SelectedIndex = 0;
-                    break;
-                case ColorFormat.colors256:
-                    comboDepth.SelectedIndex = 1;
-                    break;
-                case ColorFormat.direct:
-                    comboDepth.SelectedIndex = 3;
-                    break;
-                case ColorFormat.colors2:
-                    comboDepth.SelectedIndex = 2;
-                    break;
-            }
-
-            this.numTileSize.Value = image.TileSize;
-            this.comboBox1.SelectedIndex = 1;
-            this.comboBox1.Enabled = false;
-            this.numPal.Maximum = palette.NumberOfPalettes - 1;
-            this.numericStart.Maximum = image.Original.Length - 1;
-            this.checkMapCmp.Enabled = true;
+            Update_Info();
 
             this.comboDepth.SelectedIndexChanged += new EventHandler(comboDepth_SelectedIndexChanged);
             this.numericWidth.ValueChanged += new EventHandler(numericSize_ValueChanged);
@@ -246,136 +96,49 @@ namespace Ekona.Images
             this.numericStart.ValueChanged += new EventHandler(numericStart_ValueChanged);
 
             ReadLanguage();
-            stop = false;
             Update_Image();
         }
         public ImageControl(XElement lang, ImageBase image, PaletteBase palette, MapBase map)
         {
             InitializeComponent();
-            stop = true;
 
             this.isMap = true;
             this.palette = palette;
             this.image = image;
             this.map = map;
+
+            Update_Info();
+
             btnImport.Enabled = false;
             groupBox2.Enabled = false;
-
-            this.numericWidth.Value = (map.Width != 0 ? map.Width : image.Width);
-            this.numericHeight.Value = (map.Height != 0 ? map.Height : image.Height);
-
-            switch (image.FormatColor)
-            {
-                case ColorFormat.A3I5:
-                    comboDepth.SelectedIndex = 4;
-                    break;
-                case ColorFormat.A5I3:
-                    comboDepth.SelectedIndex = 5;
-                    break;
-                case ColorFormat.colors4:
-                    comboDepth.SelectedIndex = 6;
-                    break;
-                case ColorFormat.colors16:
-                    comboDepth.SelectedIndex = 0;
-                    break;
-                case ColorFormat.colors256:
-                    comboDepth.SelectedIndex = 1;
-                    break;
-                case ColorFormat.direct:
-                    comboDepth.SelectedIndex = 3;
-                    break;
-                case ColorFormat.colors2:
-                    comboDepth.SelectedIndex = 2;
-                    break;
-            }
-
-            this.numTileSize.Value = image.TileSize;
-            this.comboBox1.SelectedIndex = 1;
-            this.comboBox1.Enabled = false;
-            this.numPal.Maximum = palette.NumberOfPalettes - 1;
-            this.numericStart.Maximum = image.Original.Length - 1;
-            this.checkMapCmp.Enabled = false;
-
             this.comboDepth.SelectedIndexChanged += new EventHandler(comboDepth_SelectedIndexChanged);
             this.numericWidth.ValueChanged += new EventHandler(numericSize_ValueChanged);
             this.numericHeight.ValueChanged += new EventHandler(numericSize_ValueChanged);
             this.numericStart.ValueChanged += new EventHandler(numericStart_ValueChanged);
 
             ReadLanguage(lang);
-            stop = false;
             Update_Image();
         }
         public ImageControl(XElement lang, ImageBase image, PaletteBase palette)
         {
             InitializeComponent();
 
-            stop = true;
             isMap = false;
             this.image = image;
             this.palette = palette;
+
+            Update_Info();
+
             btnImport.Enabled = false;
             groupBox2.Enabled = false;
-
-            switch (image.FormatColor)
-            {
-                case ColorFormat.A3I5:
-                    comboDepth.SelectedIndex = 4;
-                    break;
-                case ColorFormat.A5I3:
-                    comboDepth.SelectedIndex = 5;
-                    break;
-                case ColorFormat.colors4:
-                    comboDepth.SelectedIndex = 6;
-                    break;
-                case ColorFormat.colors16:
-                    comboDepth.SelectedIndex = 0;
-                    break;
-                case ColorFormat.colors256:
-                    comboDepth.SelectedIndex = 1;
-                    break;
-                case ColorFormat.direct:
-                    comboDepth.SelectedIndex = 3;
-                    break;
-                case ColorFormat.colors2:
-                    comboDepth.SelectedIndex = 2;
-                    break;
-            }
-
-            switch (image.FormTile)
-            {
-                case TileForm.Lineal:
-                    comboBox1.SelectedIndex = 0;
-                    numericHeight.Minimum = 1;
-                    numericWidth.Minimum = 1;
-                    numericWidth.Increment = 1;
-                    numericHeight.Increment = 1;
-                    break;
-                case TileForm.Horizontal:
-                    comboBox1.SelectedIndex = 1;
-                    numericHeight.Minimum = 8;
-                    numericWidth.Minimum = 8;
-                    numericWidth.Increment = 8;
-                    numericHeight.Increment = 8;
-                    break;
-            }
-
-            this.numTileSize.Value = image.TileSize;
-            this.numericWidth.Value = image.Width;
-            this.numericHeight.Value = image.Height;
-            this.numPal.Maximum = palette.NumberOfPalettes - 1;
-            this.numericStart.Maximum = image.Original.Length - 1;
-            this.checkMapCmp.Enabled = false;
-
             this.comboDepth.SelectedIndexChanged += new EventHandler(comboDepth_SelectedIndexChanged);
             this.numericWidth.ValueChanged += new EventHandler(numericSize_ValueChanged);
             this.numericHeight.ValueChanged += new EventHandler(numericSize_ValueChanged);
             this.numericStart.ValueChanged += new EventHandler(numericStart_ValueChanged);
 
             ReadLanguage(lang);
-            stop = false;
             Update_Image();
         }
-
 
         private void ReadLanguage()
         {
@@ -406,10 +169,71 @@ namespace Ekona.Images
                 btnImport.Text = xml.Element("S11").Value;
                 comboBox1.Items[0] = xml.Element("S12").Value;
                 comboBox1.Items[1] = xml.Element("S13").Value;
+                groupBox2.Text = xml.Element("S16").Value;
+                radioSwapPal.Text = xml.Element("S17").Value;
+                radioReplacePal.Text = xml.Element("S18").Value;
+                label7.Text = xml.Element("S19").Value;
             }
             catch { throw new Exception("There was an error reading the XML file of language."); }
         }
 
+        private void Update_Info()
+        {
+            stop = true;
+
+            switch (image.FormatColor)
+            {
+                case ColorFormat.A3I5: comboDepth.SelectedIndex = 4; break;
+                case ColorFormat.A5I3: comboDepth.SelectedIndex = 5; break;
+                case ColorFormat.colors4: comboDepth.SelectedIndex = 6; break;
+                case ColorFormat.colors16: comboDepth.SelectedIndex = 0; break;
+                case ColorFormat.colors256: comboDepth.SelectedIndex = 1; break;
+                case ColorFormat.direct: comboDepth.SelectedIndex = 3; break;
+                case ColorFormat.colors2: comboDepth.SelectedIndex = 2; break;
+            }
+
+            if (isMap)
+            {
+                this.map = pluginHost.Get_Map();
+                btnImport.Enabled = (map.CanEdit && image.CanEdit && palette.CanEdit ? true : false);
+                this.comboBox1.Enabled = false;
+
+                this.numericWidth.Value = (map.Width != 0 ? map.Width : image.Width);
+                this.numericHeight.Value = (map.Height != 0 ? map.Height : image.Height);
+            }
+            else
+            {
+                btnImport.Enabled = (image.CanEdit && palette.CanEdit ? true : false);
+
+                this.numericWidth.Value = image.Width;
+                this.numericHeight.Value = image.Height;
+
+                switch (image.FormTile)
+                {
+                    case TileForm.Lineal:
+                        comboBox1.SelectedIndex = 0;
+                        numericHeight.Minimum = 1;
+                        numericWidth.Minimum = 1;
+                        numericWidth.Increment = 1;
+                        numericHeight.Increment = 1;
+                        break;
+                    case TileForm.Horizontal:
+                        comboBox1.SelectedIndex = 1;
+                        numericHeight.Minimum = image.TileSize;
+                        numericWidth.Minimum = image.TileSize;
+                        numericWidth.Increment = image.TileSize;
+                        numericHeight.Increment = image.TileSize;
+                        break;
+                }
+            }
+
+            this.numTileSize.Value = image.TileSize;
+            this.numPal.Maximum = palette.NumberOfPalettes - 1;
+            this.numericStart.Maximum = image.Original.Length - 1;
+            this.checkMapCmp.Enabled = isMap;
+
+            stop = false;
+        }
         private void Update_Image()
         {
             Bitmap bitmap;
@@ -504,10 +328,10 @@ namespace Ekona.Images
                     break;
                 case 1:
                     image.FormTile = TileForm.Horizontal;
-                    numericHeight.Minimum = 8;
-                    numericWidth.Minimum = 8;
-                    numericWidth.Increment = 8;
-                    numericHeight.Increment = 8;
+                    numericHeight.Minimum = image.TileSize;
+                    numericWidth.Minimum = image.TileSize;
+                    numericWidth.Increment = image.TileSize;
+                    numericHeight.Increment = image.TileSize;
                     break;
             }
 
@@ -662,8 +486,8 @@ namespace Ekona.Images
                 palette.Set_Palette(pal, (int)numPal.Value);
 
             Save_Files();
-
             Update_Image();
+            Update_Info();
         }
         private void Save_Files()
         {
