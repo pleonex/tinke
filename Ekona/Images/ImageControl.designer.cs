@@ -337,9 +337,9 @@ namespace Ekona.Images
             this.checkMapCmp.AutoSize = true;
             this.checkMapCmp.Location = new System.Drawing.Point(258, 444);
             this.checkMapCmp.Name = "checkMapCmp";
-            this.checkMapCmp.Size = new System.Drawing.Size(95, 17);
+            this.checkMapCmp.Size = new System.Drawing.Size(45, 17);
             this.checkMapCmp.TabIndex = 48;
-            this.checkMapCmp.Text = "Compress map";
+            this.checkMapCmp.Text = "S0F";
             this.checkMapCmp.UseVisualStyleBackColor = true;
             // 
             // groupBox2
@@ -354,7 +354,7 @@ namespace Ekona.Images
             this.groupBox2.Size = new System.Drawing.Size(254, 86);
             this.groupBox2.TabIndex = 47;
             this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Palette import options";
+            this.groupBox2.Text = "S16";
             // 
             // radioSwapPal
             // 
@@ -362,10 +362,10 @@ namespace Ekona.Images
             this.radioSwapPal.Checked = true;
             this.radioSwapPal.Location = new System.Drawing.Point(6, 19);
             this.radioSwapPal.Name = "radioSwapPal";
-            this.radioSwapPal.Size = new System.Drawing.Size(135, 17);
+            this.radioSwapPal.Size = new System.Drawing.Size(44, 17);
             this.radioSwapPal.TabIndex = 41;
             this.radioSwapPal.TabStop = true;
-            this.radioSwapPal.Text = "Swap to original palette";
+            this.radioSwapPal.Text = "S17";
             this.radioSwapPal.UseVisualStyleBackColor = true;
             // 
             // radioOriginalPal
@@ -373,9 +373,9 @@ namespace Ekona.Images
             this.radioOriginalPal.AutoSize = true;
             this.radioOriginalPal.Location = new System.Drawing.Point(6, 42);
             this.radioOriginalPal.Name = "radioOriginalPal";
-            this.radioOriginalPal.Size = new System.Drawing.Size(149, 17);
+            this.radioOriginalPal.Size = new System.Drawing.Size(45, 17);
             this.radioOriginalPal.TabIndex = 39;
-            this.radioOriginalPal.Text = "Imported tiles (bitmap only)";
+            this.radioOriginalPal.Text = "S0E";
             this.radioOriginalPal.UseVisualStyleBackColor = true;
             // 
             // radioReplacePal
@@ -383,9 +383,9 @@ namespace Ekona.Images
             this.radioReplacePal.AutoSize = true;
             this.radioReplacePal.Location = new System.Drawing.Point(6, 65);
             this.radioReplacePal.Name = "radioReplacePal";
-            this.radioReplacePal.Size = new System.Drawing.Size(100, 17);
+            this.radioReplacePal.Size = new System.Drawing.Size(44, 17);
             this.radioReplacePal.TabIndex = 40;
-            this.radioReplacePal.Text = "Replace palette";
+            this.radioReplacePal.Text = "S18";
             this.radioReplacePal.UseVisualStyleBackColor = true;
             // 
             // label7
@@ -393,9 +393,9 @@ namespace Ekona.Images
             this.label7.AutoSize = true;
             this.label7.Location = new System.Drawing.Point(174, 13);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(57, 13);
+            this.label7.Size = new System.Drawing.Size(26, 13);
             this.label7.TabIndex = 43;
-            this.label7.Text = "Threshold:";
+            this.label7.Text = "S19";
             // 
             // numThreshold
             // 

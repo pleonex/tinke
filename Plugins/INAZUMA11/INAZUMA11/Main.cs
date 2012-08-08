@@ -154,7 +154,7 @@ namespace INAZUMA11
             }
             else if (file.name.ToUpper().EndsWith(".SPF_"))
             {
-                SFP.Pack(ref unpacked, fileout, null, false);
+                SFP.Pack(ref unpacked, fileout, fileout, false);
                 return fileout;
             }
             else if (file.name.ToUpper().EndsWith(".SPD"))

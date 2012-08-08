@@ -96,7 +96,7 @@ namespace Ekona.Images
 
             return data;
         }
-        public static Byte[] ColorToBGR555(Color color)
+        public static Byte[] ColorToBGRA555(Color color)
         {
             byte[] d = new byte[2];
 
@@ -107,6 +107,19 @@ namespace Ekona.Images
 
             ushort bgra = (ushort)(r + g + b + a);
             Array.Copy(BitConverter.GetBytes(bgra), d, 2);
+
+            return d;
+        }
+        public static Byte[] ColorToBGR555(Color color)
+        {
+            byte[] d = new byte[2];
+
+            int r = color.R / 8;
+            int g = (color.G / 8) << 5;
+            int b = (color.B / 8) << 10;
+
+            ushort bgr = (ushort)(r + g + b);
+            Array.Copy(BitConverter.GetBytes(bgr), d, 2);
 
             return d;
         }
@@ -247,9 +260,9 @@ namespace Ekona.Images
             Bitmap image = new Bitmap(width, height);
 
             int pos = start;
-            for (int h = height - 1; h >= 0; h--)
+            for (int h = 0; h < height; h++)
             {
-                for (int w = width - 1; w >= 0; w--)
+                for (int w = 0; w < width; w++)
                 {
                     int num_pal = 0;
                     if (tile_pal.Length <= w + h * width)
@@ -680,7 +693,7 @@ namespace Ekona.Images
                         break;
 
                     case ColorFormat.direct:
-                        byte[] v = ColorToBGR555(Color.FromArgb(data[j, 1], coldif[data[j++, 0]]));
+                        byte[] v = ColorToBGRA555(Color.FromArgb(data[j, 1], coldif[data[j++, 0]]));
                         tiles[i++] = v[0];
                         tiles[i++] = v[1];
                         break;

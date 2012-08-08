@@ -484,7 +484,7 @@
       <S0B>Set transparency</S0B>
       <S0C>Set box background</S0C>
       <S0D>Remove box background</S0D>
-      <S0E>Use original palette</S0E>
+      <S0E>Imported tiles (bitmap only)</S0E>
       <S0F>Map compression</S0F>
       <S10>Export</S10>
       <S11>Import</S11>
@@ -492,6 +492,10 @@
       <S13>Horizontal</S13>
       <S14>Vertical</S14>
       <S15>Full size image</S15>
+      <S16>Palette import options</S16>
+      <S17>Swap to original palette</S17>
+      <S18>Replace palette</S18>
+      <S19>Threshold</S19>
     </ImageControl>
     <SpriteControl>
       <S01>Bank:</S01>
@@ -513,10 +517,15 @@
       <S0E>Show image</S0E>
       <S0F>Transparency</S0F>
       <S10>Show numbers</S10>
-      <S11>Use original palette</S11>
+      <S11>Swap to original palette</S11>
       <S12>Banks</S12>
       <S13>Imported tiles (bitmap only)</S13>
       <S14>Replace palette</S14>
+      <S15>Palette import options</S15>
+      <S16>Threshold</S16>
+      <S17>Tile import options</S17>
+      <S18>Add image</S18>
+      <S19>Replace image</S19>
     </SpriteControl>
     <OAMEditor>
       <S01>OAM Editor</S01>

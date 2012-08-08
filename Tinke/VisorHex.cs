@@ -197,9 +197,12 @@ namespace Tinke
             this.Cursor = Cursors.WaitCursor;
             last_search = 0;
 
+            string text = toolStripSearchBox.Text;
+            text = text.Replace(" ", "");
+
             List<byte> search = new List<byte>();
-            for (int i = 0; i < toolStripSearchBox.Text.Length; i += 2)
-                search.Add(Convert.ToByte(toolStripSearchBox.Text.Substring(i, 2), 16));
+            for (int i = 0; i < text.Length; i += 2)
+                search.Add(Convert.ToByte(text.Substring(i, 2), 16));
 
             hexBox1.Find(search.ToArray(), hexBox1.SelectionStart + hexBox1.SelectionLength);
             this.Cursor = Cursors.Default;

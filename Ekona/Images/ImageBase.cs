@@ -116,6 +116,12 @@ namespace Ekona.Images
             this.canEdit = editable;
             this.tile_size = tile_size;
 
+            if (tileForm == TileForm.Horizontal || tileForm == TileForm.Vertical)
+            {
+                if (this.width < this.tile_size) this.width = this.tile_size;
+                if (this.height < this.tile_size) this.height = this.tile_size;
+            }
+
             zoom = 1;
             startByte = 0;
             loaded = true;
@@ -145,6 +151,12 @@ namespace Ekona.Images
             Width = new_img.Width;
             Height = new_img.Height;
             this.tile_size = new_img.tile_size;
+
+            if (tileForm == TileForm.Horizontal || tileForm == TileForm.Vertical)
+            {
+                if (this.width < this.tile_size) this.width = this.tile_size;
+                if (this.height < this.tile_size) this.height = this.tile_size;
+            }
 
             zoom = 1;
             startByte = 0;
@@ -217,6 +229,8 @@ namespace Ekona.Images
             set
             {
                 height = value;
+                if (tileForm == TileForm.Horizontal || tileForm == TileForm.Vertical)
+                    if (this.height < this.tile_size) this.height = this.tile_size;
             }
         }
         public int Width
@@ -225,6 +239,8 @@ namespace Ekona.Images
             set
             {
                 width = value;
+                if (tileForm == TileForm.Horizontal || tileForm == TileForm.Vertical)
+                    if (this.width < this.tile_size) this.width = this.tile_size;
             }
         }
         public ColorFormat FormatColor

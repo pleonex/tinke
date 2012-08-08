@@ -114,6 +114,8 @@ namespace INAZUMA11
                 br = new BinaryReader(File.OpenRead(currfile.path));
                 br.BaseStream.Position = currfile.offset;
                 buffer.AddRange(br.ReadBytes((int)currfile.size));
+                while (buffer.Count % 0x10 != 0)
+                    buffer.Add(0x00);
                 br.Close();
 
                 // Write the fat data
@@ -126,6 +128,8 @@ namespace INAZUMA11
                 unpacked.files[i] = currfile;
 
                 offset += currfile.size;
+                if (offset % 0x10 != 0)
+                    offset += 0x10 - (offset % 0x10);
             }
 
             bw.Write(offset - header_length);
@@ -542,15 +546,14 @@ namespace INAZUMA11
                 br.Close();
                 br = null;
 
-                file_offset += cfile.size;
-                if (file_offset % 0x20 != 0)
-                    file_offset += 0x20 - (file_offset % 0x20);
-
                 // Update file info
                 cfile.offset = file_offset;
                 cfile.path = fileout2;
-
                 unpacked.files[i] = cfile;
+
+                file_offset += cfile.size;
+                if (file_offset % 0x20 != 0)
+                    file_offset += 0x20 - (file_offset % 0x20);
             }
             if (!separated)
                 while ((0x20 + fat.Count + names.Count) % 0x20 != 0)
@@ -562,6 +565,14 @@ namespace INAZUMA11
             bw.Write(new byte[0x0C]);
             bw.Write(fat.ToArray());
             bw.Write(names.ToArray());
+
+            // Update file info
+            for (int i = 0; fileout2 == fileout && i < unpacked.files.Count; i++)
+            {
+                sFile cfile = unpacked.files[i];
+                cfile.offset += (uint)bw.BaseStream.Position;
+                unpacked.files[i] = cfile;
+            }
 
             // DATA section
             if (separated)

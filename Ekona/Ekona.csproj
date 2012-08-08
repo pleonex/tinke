@@ -57,6 +57,7 @@
     <Compile Include="Helper\BitsConverter.cs" />
     <Compile Include="Helper\CRC.cs" />
     <Compile Include="Helper\IOutil.cs" />
+    <Compile Include="Helper\LNK.cs" />
     <Compile Include="Images\Actions.cs" />
     <Compile Include="Images\Formats\ACO.cs" />
     <Compile Include="Images\Formats\APNG.cs" />
