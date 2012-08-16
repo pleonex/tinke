@@ -48,6 +48,8 @@ namespace Ekona.Images
             this.isMap = isMap;
             this.palette = pluginHost.Get_Palette();
             this.image = pluginHost.Get_Image();
+            if (isMap)
+                this.map = pluginHost.Get_Map();
 
             Update_Info();
 
@@ -194,12 +196,17 @@ namespace Ekona.Images
 
             if (isMap)
             {
-                this.map = pluginHost.Get_Map();
                 btnImport.Enabled = (map.CanEdit && image.CanEdit && palette.CanEdit ? true : false);
                 this.comboBox1.Enabled = false;
 
                 this.numericWidth.Value = (map.Width != 0 ? map.Width : image.Width);
                 this.numericHeight.Value = (map.Height != 0 ? map.Height : image.Height);
+
+                comboBox1.SelectedIndex = 1;
+                numericHeight.Minimum = image.TileSize;
+                numericWidth.Minimum = image.TileSize;
+                numericWidth.Increment = image.TileSize;
+                numericHeight.Increment = image.TileSize;
             }
             else
             {
@@ -472,7 +479,7 @@ namespace Ekona.Images
 
             // Create a map file
             if (isMap && checkMapCmp.Checked)
-                map.Set_Map(Actions.Create_Map(ref tiles, image.BPP), map.CanEdit, bitmap.Width, bitmap.Height);
+                map.Set_Map(Actions.Create_Map(ref tiles, image.BPP, image.TileSize), map.CanEdit, bitmap.Width, bitmap.Height);
             else if (isMap)
             {
                 int num_tiles = (tiles.Length * 8 / image.BPP) / (image.TileSize * image.TileSize);

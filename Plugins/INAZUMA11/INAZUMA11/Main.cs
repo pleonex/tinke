@@ -129,7 +129,7 @@ namespace INAZUMA11
                     return new sFolder();
                 }
 
-                return SFP.Unpack(file.path, spl.path);
+                return SFP.Unpack(spl.path, file.path);
             }
 
             return new sFolder();

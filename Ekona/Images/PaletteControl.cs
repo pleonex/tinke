@@ -49,19 +49,7 @@ namespace Ekona.Images
             btnImport.Enabled = palette.CanEdit;
 
             ReadLanguage();
-
-            picPalette.Image = palette.Get_Image(0);
-
-            numericPalette.Maximum = palette.NumberOfPalettes - 1;
-            label3.Text = translation[0] + (palette.NumberOfPalettes - 1).ToString();
-            numericStartByte.Maximum = palette.Original.Length - 1;
-            comboDepth.SelectedIndex = (palette.Depth == ColorFormat.colors16 ? 0 : 1);
-
-
-            if (palette.Depth == ColorFormat.colors16)
-                numFillColors.Value = 16;
-            else
-                numFillColors.Value = 256;
+            Update_Info();
         }
         public PaletteControl(IPluginHost pluginHost, PaletteBase palette)
         {
@@ -72,7 +60,11 @@ namespace Ekona.Images
             btnImport.Enabled = palette.CanEdit;
 
             ReadLanguage();
+            Update_Info();
+        }
 
+        private void Update_Info()
+        {
             picPalette.Image = palette.Get_Image(0);
 
             numericPalette.Maximum = palette.NumberOfPalettes - 1;
@@ -86,7 +78,6 @@ namespace Ekona.Images
             else
                 numFillColors.Value = 256;
         }
-
         private void ReadLanguage()
         {
             try
@@ -199,7 +190,7 @@ namespace Ekona.Images
                        "Portable Network Graphics (*.png)|*.png|" +
                        "Adobe COlor (*.aco)|*.aco";
             o.OverwritePrompt = true;
-            o.FileName = palette.FileName.Substring(12);
+            o.FileName = palette.FileName;
 
             if (o.ShowDialog() != DialogResult.OK)
                 return;
@@ -216,10 +207,13 @@ namespace Ekona.Images
                 Formats.ACO palaco = new Formats.ACO(palette.Palette[(int)numericPalette.Value]);
                 palaco.Write(o.FileName);
             }
+
+            o.Dispose();
+            o = null;
         }
         private void btnImport_Click(object sender, EventArgs e)
         {
-            OpenFileDialog o = new OpenFileDialog();
+            SaveFileDialog o = new SaveFileDialog();
             o.CheckFileExists = true;
             o.Filter = "All supported formats|*.pal;*.aco;*.png;*.bmp;*.jpg;*.jpeg;*.tif;*.tiff;*.gif;*.ico;*.icon|" +
                 "Windows Palette (*.pal)|*.pal|" +
@@ -248,6 +242,9 @@ namespace Ekona.Images
 
             // Write the file
             Write_File();
+
+            o.Dispose();
+            o = null;
         }
         private void Write_File()
         {

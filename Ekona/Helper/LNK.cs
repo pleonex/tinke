@@ -476,7 +476,7 @@ namespace Ekona.Helper
 
         public string Path
         {
-            get { return lnk.info.localBasePath; }
+            get { return lnk.info.commonPathSuffix + lnk.info.localBasePath; }
         }
         public FILE_ATTRIBUTE_FLAGS FileAttribute
         {

@@ -576,18 +576,25 @@ namespace Ekona.Images
 
                 if (id == -1)
                 {
+                    // If the color is not found, maybe is that the pixel own to another cell (overlapping cells).
+                    // For this reason, there are two ways to do that:
+                    // 1º Get the original hidden color from the original file                               <- In mind
+                    // 2º Set this pixel as transparent to show the pixel from the other cell (tiles[i] = 0) <- Done!
+
                     if (notfound.Count == 0)
                         Console.WriteLine("The following colors couldn't been found!");
                     Console.WriteLine(px.ToString() + " at " + i.ToString() + " (distance: " + min_distance.ToString() + ')');
                     notfound.Add(px);
+
+                    tiles[i] = 0;
                     continue;
                 }
 
                 tiles[i] = (byte)id;
             }
 
-            if (notfound.Count > 0)
-                throw new NotSupportedException("Color not found in the original palette!");
+            //if (notfound.Count > 0)
+            //    throw new NotSupportedException("Color not found in the original palette!");
 
             if (format == ColorFormat.colors16)
                 tiles = Helper.BitsConverter.Bits4ToByte(tiles);
@@ -805,7 +812,7 @@ namespace Ekona.Images
 
             return map;
         }
-        public static NTFS[] Create_Map(ref byte[] data, int tile_width, byte palette = 0)
+        public static NTFS[] Create_Map(ref byte[] data, int tile_width, int tile_size, byte palette = 0)
         {
             // Divide the data in tiles
             byte[][] tiles = new byte[data.Length / (tile_width * 8)][];
@@ -824,11 +831,33 @@ namespace Ekona.Images
                 map[i].yFlip = 0;
 
                 int index = -1;
+                byte flipX = 0;
+                byte flipY = 0;
+
                 for (ushort t = 0; t < newtiles.Count; t++)
                 {
                     if (Compare_Array(newtiles[t], tiles[i]))
                     {
                         index = t;
+                        break;
+                    }
+                    if (Compare_Array(newtiles[t], XFlip(tiles[i], tile_size, tile_width)))
+                    {
+                        index = t;
+                        flipX = 1;
+                        break;
+                    }
+                    if (Compare_Array(newtiles[t], YFlip(tiles[i], tile_size, tile_width)))
+                    {
+                        index = t;
+                        flipY = 1;
+                        break;
+                    }
+                    if (Compare_Array(newtiles[t], YFlip(XFlip(tiles[i], tile_size, tile_width), tile_size, tile_width)))
+                    {
+                        index = t;
+                        flipX = 1;
+                        flipY = 1;
                         break;
                     }
                 }
@@ -840,6 +869,8 @@ namespace Ekona.Images
                     map[i].nTile = (ushort)newtiles.Count;
                     newtiles.Add(tiles[i]);
                 }
+                map[i].xFlip = flipX;
+                map[i].yFlip = flipY;
             }
 
             // Save the new tiles

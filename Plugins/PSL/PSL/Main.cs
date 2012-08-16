@@ -71,7 +71,7 @@ namespace PSL
 		
 		public bool IsCompatible()
 		{
-			if (gameCode == "VPYJ" || gameCode == "VPYT")
+			if (gameCode == "VPYJ" || gameCode == "VPYT" || gameCode == "VPYP")
 				return true;
 			
 			return false;

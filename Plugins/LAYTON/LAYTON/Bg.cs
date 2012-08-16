@@ -35,7 +35,14 @@ namespace LAYTON
         PaletteBase palette;
         IPluginHost pluginHost;
 
-        public Bg(IPluginHost pluginHost, string file, int id, string fileName = "") : base(file, id, fileName) { this.pluginHost = pluginHost;  }
+        public Bg(IPluginHost pluginHost, string file, int id, string fileName = "")
+        {
+            this.pluginHost = pluginHost;
+            this.fileName = fileName;
+            this.id = id;
+
+            Read(file);
+        }
 
         public Format Get_Formato(string nombre)
         {

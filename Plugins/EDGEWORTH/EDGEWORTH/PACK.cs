@@ -43,7 +43,7 @@ namespace EDGEWORTH
                 br.BaseStream.Position = startOffset;
 
                 sFile newFile = new sFile();
-                newFile.name = "File " + i.ToString() + ".bin";
+                newFile.name = "File " + (i + 1).ToString("X") + ".bin";
                 newFile.offset = startOffset + 4;
                 newFile.path = file;
                 newFile.size = br.ReadUInt32();
