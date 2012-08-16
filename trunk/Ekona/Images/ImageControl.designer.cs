@@ -93,11 +93,6 @@ namespace Ekona.Images
             // 
             // numericWidth
             // 
-            this.numericWidth.Increment = new decimal(new int[] {
-            8,
-            0,
-            0,
-            0});
             this.numericWidth.Location = new System.Drawing.Point(48, 76);
             this.numericWidth.Maximum = new decimal(new int[] {
             65536,
@@ -105,7 +100,7 @@ namespace Ekona.Images
             0,
             0});
             this.numericWidth.Minimum = new decimal(new int[] {
-            8,
+            1,
             0,
             0,
             0});
@@ -113,7 +108,7 @@ namespace Ekona.Images
             this.numericWidth.Size = new System.Drawing.Size(71, 20);
             this.numericWidth.TabIndex = 1;
             this.numericWidth.Value = new decimal(new int[] {
-            8,
+            1,
             0,
             0,
             0});
@@ -139,11 +134,6 @@ namespace Ekona.Images
             // 
             // numericHeight
             // 
-            this.numericHeight.Increment = new decimal(new int[] {
-            8,
-            0,
-            0,
-            0});
             this.numericHeight.Location = new System.Drawing.Point(165, 76);
             this.numericHeight.Maximum = new decimal(new int[] {
             65536,
@@ -151,7 +141,7 @@ namespace Ekona.Images
             0,
             0});
             this.numericHeight.Minimum = new decimal(new int[] {
-            8,
+            1,
             0,
             0,
             0});
@@ -159,7 +149,7 @@ namespace Ekona.Images
             this.numericHeight.Size = new System.Drawing.Size(71, 20);
             this.numericHeight.TabIndex = 4;
             this.numericHeight.Value = new decimal(new int[] {
-            8,
+            1,
             0,
             0,
             0});

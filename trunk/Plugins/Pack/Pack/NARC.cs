@@ -171,6 +171,7 @@ namespace Pack
             #endregion
 
             // GMIF (File IMaGe)
+            br.BaseStream.Position = gmif_offset - 8;
             arc.gmif.id = br.ReadChars(4);
             arc.gmif.section_size = br.ReadUInt32();
             // Files data
@@ -306,6 +307,9 @@ namespace Pack
                 br.Close();
                 bw.Flush();
             }
+
+            while (bw.BaseStream.Position % 4 != 0)
+                bw.Write((byte)0xFF);
 
             bw.Flush();
             bw.Close();

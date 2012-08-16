@@ -48,9 +48,12 @@
   <ItemGroup>
     <Compile Include="ALAR.cs" />
     <Compile Include="Games\4HEROSLIGHT.cs" />
+    <Compile Include="Games\AWITCHSTALE.cs" />
     <Compile Include="Games\BSIGILBE.cs" />
+    <Compile Include="Games\ENDLESS_F.cs" />
     <Compile Include="Games\GENSUIKODS.cs" />
     <Compile Include="Games\GTACTW.cs" />
+    <Compile Include="Games\HONZ_Books.cs" />
     <Compile Include="Games\ROCKMAN_EXE.cs" />
     <Compile Include="Games\RR3BACE.cs" />
     <Compile Include="Games\RUNEFACTORY3.cs" />

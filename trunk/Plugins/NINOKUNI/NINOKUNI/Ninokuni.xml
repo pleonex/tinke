@@ -16,7 +16,7 @@
       <Char Original="¡" New="！" />
       <Char Original="ñ" New="ｎ" />
       <Char Original="Ñ" New="Ｎ" />
-      <Char Original="ü" New="∂ " />
+      <Char Original="ü" New="∂" />
       <Char Original="Ü" New="∇" />
     </ReplaceChars>
     <BMPControl>
