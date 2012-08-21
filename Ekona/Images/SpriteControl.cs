@@ -381,6 +381,10 @@ namespace Ekona.Images
 
             Import_File(o.FileName, comboBank.SelectedIndex);
 
+            o.FileName = null;
+            o.Dispose();
+            o = null;
+
             Save_Files();
             Update_Image();
         }
@@ -445,6 +449,9 @@ namespace Ekona.Images
                 try { Actions.Indexed_Image(bitmap, image.FormatColor, out tiles, out pal); }
                 catch (Exception ex) { MessageBox.Show(ex.Message); Console.WriteLine(ex.Message); return; }
             }
+
+            bitmap.Dispose();
+            bitmap = null;
 
             // Get the data of a oam and add to the end of the image
             for (int i = 0; i < oams.Length; i++)

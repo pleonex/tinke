@@ -51,7 +51,7 @@ namespace LAYTON
 
             switch (gameCode)
             {
-                case "A5FE":
+                case "A5FE":    // Layton 1 - USA
                     if (file.id >= 0x0001 && file.id <= 0x02CA)
                         return new Ani(pluginHost, gameCode, "").Get_Formato(file.name);
                     else if (file.id >= 0x02CD && file.id <= 0x0765)
@@ -59,13 +59,16 @@ namespace LAYTON
                     else if (file.id == 0x0766)
                         return Format.System;   // The same as id 0xB73 in A5FP
                     break;
-                case "A5FP":
+                
+                case "A5FP":    // Layton 1 - EUR
                     if (file.id >= 0x0001 && file.id <= 0x04E7)
                         return new Ani(pluginHost, gameCode, "").Get_Formato(file.name);
                     else if (file.id >= 0x04E8 && file.id <= 0x0B72)
                         return Format.FullImage;
                     else if (file.id == 0x0B73)
                         return Format.System;   // Dummy, it was text to test the puzzle system, nothing interesing and not used
+                    else if (file.name.EndsWith(".txt"))
+                        return Format.Text;
                     break;
 
                 // Professor Layton and the Diabolical Box
@@ -106,8 +109,6 @@ namespace LAYTON
                     break;
             }
 
-            if (gameCode != "C2AJ" && file.name.ToUpper().EndsWith(".TXT"))
-                return Format.Text;
             if (file.name.ToUpper().EndsWith(".PLZ"))
                 return Format.Pack;
             if (file.name.EndsWith(".PCM") && BitConverter.ToInt32(magic, 0) == 0x00000010)
@@ -201,7 +202,7 @@ namespace LAYTON
             if (file.name.ToUpper().EndsWith(".PLZ"))
                 return PCK2.Read(file.path, file.id, pluginHost);
             else if (file.name.ToUpper().EndsWith(".PCM"))
-                return PCM.Unpack(file.path, pluginHost);
+                return PCM.Unpack(file.path);
             else if (file.name.ToUpper().EndsWith(".DARC"))
                 return DARC.Unpack(file.path, file.name);
             else if (file.name.ToUpper().EndsWith(".DENC"))
@@ -213,19 +214,24 @@ namespace LAYTON
         }
         public String Pack(ref sFolder unpacked, sFile file)
         {
-            if (gameCode == "BLFE")
+            if (file.name.EndsWith(".pcm"))
             {
                 string fileOut = pluginHost.Get_TempFile();
+                PCM.Pack(fileOut, unpacked);
+                return fileOut;
+            }
 
+            if (gameCode == "BLFE")
+            {
                 if (file.name.ToUpper().EndsWith(".DENC"))
                 {
-                    fileOut += ".denc";
+                    string fileOut = pluginHost.Get_TempFile() + ".denc";
                     DENC.Pack(fileOut, unpacked);
                     return fileOut;
                 }
                 else if (file.name.ToUpper().EndsWith(".DARC"))
                 {
-                    fileOut += ".darc";
+                    string fileOut = pluginHost.Get_TempFile() + ".darc";
                     DARC.Pack(fileOut, ref unpacked);
                     return fileOut;
                 }

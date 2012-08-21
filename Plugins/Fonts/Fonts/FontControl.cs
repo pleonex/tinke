@@ -99,16 +99,25 @@ namespace Fonts
                     sNFTR.PAMC.Type1 type1 = (sNFTR.PAMC.Type1)font.pamc[p].info;
 
                     for (int j = 0; j < type1.char_code.Length; j++)
+                    {
+                        if (type1.char_code[j] == 0xFFFF)
+                            continue;
+
                         try { charTile.Add(font.pamc[p].first_char + j, type1.char_code[j]); }
                         catch { }
+                    }
                 }
                 else if (font.pamc[p].info is sNFTR.PAMC.Type2)
                 {
                     sNFTR.PAMC.Type2 type2 = (sNFTR.PAMC.Type2)font.pamc[p].info;
 
                     for (int j = 0; j < type2.num_chars; j++)
+                    {
+                        if (type2.charInfo[j].chars == 0xFFFF)
+                            continue;
                         try { charTile.Add(type2.charInfo[j].chars_code, type2.charInfo[j].chars); }
                         catch { }
+                    }
                 }
             }
         }

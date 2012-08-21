@@ -55,6 +55,7 @@
     <Compile Include="BlogresControl.Designer.cs">
       <DependentUpon>BlogresControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="Encryption.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="Packs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
