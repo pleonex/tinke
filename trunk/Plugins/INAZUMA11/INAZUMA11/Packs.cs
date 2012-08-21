@@ -61,8 +61,6 @@ namespace INAZUMA11
                         images = false;
                     if (newFile.size == 0 && i != 1)
                         images = false;
-                    if (i == 0 && num_files == 3 && newFile.size > 0x200)
-                        images = false;
                 }
 
                 unpacked.files.Add(newFile);
@@ -73,6 +71,8 @@ namespace INAZUMA11
             br.Close();
 
             // Set extension
+            // Improved by Ouioui
+            bool tileFirst = false;
             for (int i = 0; i < num_files; i++)
             {
                 sFile newFile = unpacked.files[i];
@@ -83,9 +83,33 @@ namespace INAZUMA11
                 }
                 else if ((num_files == 3 || num_files == 4) && images)
                 {
-                    if (i == 0) newFile.name += ".nbfp";
-                    if (i == 1) newFile.name += ".nbfs";
-                    if (i == 2) newFile.name += ".nbfc";
+                    if (i == 0)
+                    {
+                        if (newFile.size > 0x200)
+                        {
+                            tileFirst = true;
+                            newFile.name += ".ntft";
+                        }
+                        else
+                            newFile.name += ".nbfp";
+                    }
+                    if (i == 1)
+                    {
+                        if (tileFirst)
+                            newFile.name += ".ntfp";
+                        else
+                            newFile.name += ".nbfs";
+                    }
+                    if (i == 2)
+                    {
+                        if (tileFirst)
+                        {
+                            tileFirst = false;
+                            newFile.name += ".ntfp";
+                        }
+                        else
+                            newFile.name += ".nbfc";
+                    }
                     if (i == 3) newFile.name += ".bin";
                 }
                 else

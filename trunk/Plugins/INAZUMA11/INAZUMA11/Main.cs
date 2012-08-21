@@ -50,7 +50,7 @@ namespace INAZUMA11
             if (gameCode == "BEBJ" || gameCode == "BOEJ" || gameCode == "BEEJ" ||
                 gameCode == "YEEP" || gameCode == "YEEJ" || gameCode == "BE8J" ||
                 gameCode == "BEZJ" || gameCode == "BEBP" || gameCode == "BEEP" ||
-                gameCode == "BEBI")
+                gameCode == "BEBI" || gameCode == "BEBF" || gameCode == "BEEF")
                     return true;
 
             return false;
@@ -94,6 +94,7 @@ namespace INAZUMA11
                     // Inazuma 3
                 case "BOEJ":
                     if (file.id >= 0x203 && file.id <= 0x235) return Format.Text;
+                    if (file.id == 0x110) return Format.Compressed;
                     break;
             }
 
@@ -132,6 +133,9 @@ namespace INAZUMA11
                 return SFP.Unpack(spl.path, file.path);
             }
 
+            if (gameCode == "BOEJ" && file.id == 0x110)
+                return Encryption.Decrypt_Item(file, pluginHost);
+
             return new sFolder();
         }
         public string Pack(ref sFolder unpacked, sFile file)
@@ -164,6 +168,12 @@ namespace INAZUMA11
 
                 pluginHost.ChangeFile(file.id + 1, spl_out);    // Change SPL file
                 return fileout;                                 // Return new SPD file
+            }
+
+            if (gameCode == "BOEJ" && file.id == 0x110)
+            {
+                Encryption.Encrypt_Item(file.path, fileout);
+                return fileout;
             }
 
             return null;

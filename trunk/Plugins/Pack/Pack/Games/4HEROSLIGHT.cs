@@ -36,7 +36,7 @@ namespace Pack.Games
         }
         public bool IsCompatible()
         {
-            if (gameCode == "BFXE")
+            if (gameCode == "BFXE" || gameCode == "CJKE")
                 return true;
 
             return false;

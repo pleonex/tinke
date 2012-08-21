@@ -58,12 +58,14 @@ namespace Fonts
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
+            this.panelPic = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.picFont)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericWidth)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericLength)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericStart)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackPalette)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picPaletteColour)).BeginInit();
+            this.panelPic.SuspendLayout();
             this.SuspendLayout();
             // 
             // picFont
@@ -181,12 +183,22 @@ namespace Fonts
             this.label4.TabIndex = 11;
             this.label4.Text = "S03";
             // 
+            // panelPic
+            // 
+            this.panelPic.AutoSize = true;
+            this.panelPic.Controls.Add(this.picFont);
+            this.panelPic.Location = new System.Drawing.Point(0, 0);
+            this.panelPic.Name = "panelPic";
+            this.panelPic.Size = new System.Drawing.Size(246, 203);
+            this.panelPic.TabIndex = 12;
+            // 
             // CharControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Transparent;
             this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.Controls.Add(this.panelPic);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
@@ -197,7 +209,6 @@ namespace Fonts
             this.Controls.Add(this.numericStart);
             this.Controls.Add(this.numericLength);
             this.Controls.Add(this.numericWidth);
-            this.Controls.Add(this.picFont);
             this.MinimumSize = new System.Drawing.Size(243, 308);
             this.Name = "CharControl";
             this.Size = new System.Drawing.Size(243, 308);
@@ -207,6 +218,8 @@ namespace Fonts
             ((System.ComponentModel.ISupportInitialize)(this.numericStart)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackPalette)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.picPaletteColour)).EndInit();
+            this.panelPic.ResumeLayout(false);
+            this.panelPic.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -225,5 +238,6 @@ namespace Fonts
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Panel panelPic;
     }
 }

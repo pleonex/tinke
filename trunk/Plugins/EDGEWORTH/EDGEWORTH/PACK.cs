@@ -75,7 +75,7 @@ namespace EDGEWORTH
                 br.Close();
 
                 sFile newFile = unpackedFiles.files[i];
-                newFile.offset = currOffset;
+                newFile.offset = currOffset + 4;
                 newFile.path = output;              
                 unpackedFiles.files[i] = newFile;
 
