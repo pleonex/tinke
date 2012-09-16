@@ -67,7 +67,7 @@ namespace LAYTON
                         return Format.FullImage;
                     else if (file.id == 0x0B73)
                         return Format.System;   // Dummy, it was text to test the puzzle system, nothing interesing and not used
-                    else if (file.name.EndsWith(".txt"))
+                    else if (file.name.EndsWith(".TXT"))
                         return Format.Text;
                     break;
 

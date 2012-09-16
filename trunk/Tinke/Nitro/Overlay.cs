@@ -98,6 +98,19 @@ namespace Tinke.Nitro
             return overlays;
         }
 
+        public static void Write_Y9(BinaryWriter bw, BinaryReader br, sFile[] overlays)
+        {
+            for (int i = 0; i < overlays.Length; i++)
+            {
+                bw.Write(br.ReadBytes(0x1C));
+                byte[] d = BitConverter.GetBytes(overlays[i].size);
+                bw.Write(d[0]);
+                bw.Write(d[1]);
+                bw.Write(d[2]);
+                br.BaseStream.Position += 3;
+                bw.Write(br.ReadByte());
+            }
+        }
 
         public static void EscribirOverlays(string salida, List<sFile> overlays, string romFile)
         {

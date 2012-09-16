@@ -82,7 +82,7 @@ namespace NINOKUNI
             br.Close();
             return s;
         }
-        private void Write(string fileOut)
+        public void Write(string fileOut)
         {
             BinaryWriter bw = new BinaryWriter(File.OpenWrite(fileOut));
 
@@ -131,27 +131,7 @@ namespace NINOKUNI
             if (o.ShowDialog() != DialogResult.OK)
                 return;
 
-            XmlDocument doc = new XmlDocument();
-            doc.Load(o.FileName);
-
-            XmlNode root = doc.ChildNodes[1];
-            for (int i = 0; i < root.ChildNodes.Count; i++)
-            {
-                XmlNode el = root.ChildNodes[i];
-                systext.elements[i].id = Convert.ToUInt32(el.Attributes["ID"].Value, 16);
-
-                string text = el.InnerText;
-                if (text.Contains("\n"))
-                {
-                    text = text.Remove(0, 5);
-                    text = text.Remove(text.Length - 3);
-                    text = text.Replace("\n    ", "\n");
-                }
-                text = text.Replace('【', '<');
-                text = text.Replace('】', '>');
-
-                systext.elements[i].text = text;
-            }
+            Import(o.FileName);
             numElement_ValueChanged(null, null);
 
             // Write file
@@ -198,6 +178,30 @@ namespace NINOKUNI
             string fileOut = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + Path.GetRandomFileName();
             Write(fileOut);
             pluginHost.ChangeFile(id, fileOut);
+        }
+        public void Import(string file)
+        {
+            XmlDocument doc = new XmlDocument();
+            doc.Load(file);
+
+            XmlNode root = doc.ChildNodes[1];
+            for (int i = 0; i < root.ChildNodes.Count; i++)
+            {
+                XmlNode el = root.ChildNodes[i];
+                systext.elements[i].id = Convert.ToUInt32(el.Attributes["ID"].Value, 16);
+
+                string text = el.InnerText;
+                if (text.Contains("\n"))
+                {
+                    text = text.Remove(0, 5);
+                    text = text.Remove(text.Length - 3);
+                    text = text.Replace("\n    ", "\n");
+                }
+                text = text.Replace('【', '<');
+                text = text.Replace('】', '>');
+
+                systext.elements[i].text = text;
+            }
         }
 
     }

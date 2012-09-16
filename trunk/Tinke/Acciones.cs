@@ -62,6 +62,8 @@ namespace Tinke
             pluginHost.event_SearchFile2 += new Func<int, sFile>(SearchSave_File);
             pluginHost.event_PluginList += new Func<string[]>(Get_PluginsList);
             pluginHost.event_CallPlugin += new Func<string[],int,int,object>(Call_Plugin);
+            pluginHost.event_SearchFolder += new Func<int, sFolder>(Search_Folder);
+            pluginHost.event_SearchFileN += new Func<string, sFolder>(Search_FileName);
             Load_Plugins();
         }
         public void Dispose()

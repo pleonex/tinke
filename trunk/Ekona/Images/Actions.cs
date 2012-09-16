@@ -545,56 +545,14 @@ namespace Ekona.Images
                 if (px == Color.Transparent && id == -1)
                     id = 0;
 
-                // Try to find the nearest color
-                decimal min_distance = (decimal)Math.Sqrt(3) * 255;       // Set the max distance
-                double module = Math.Sqrt(px.R * px.R + px.G * px.G + px.B * px.B);
-                int curr_id = -1;
-                for (int c = 1; c < newp.Length && id == -1; c++)
-                {
-                    double modulec = Math.Sqrt(newp[c].R * newp[c].R + newp[c].G * newp[c].G + newp[c].B * newp[c].B);
-                    decimal distance = (decimal)Math.Abs(module - modulec);
-
-                    if (distance < min_distance)
-                    {
-                        min_distance = distance;
-                        curr_id = c;
-                    }
-                }
-
-                if (id == -1 && min_distance <= threshold)
-                    id = curr_id;
-
-                // If still it doesn't found the color try with the first one, usually is transparent so for this reason we leave it to the end
                 if (id == -1)
-                {
-                    double modulec = Math.Sqrt(newp[0].R * newp[0].R + newp[0].G * newp[0].G + newp[0].B * newp[0].B);
-                    decimal distance = (decimal)Math.Abs(module - modulec);
-
-                    if (distance <= threshold)
-                        id = 0;
-                }
-
-                if (id == -1)
-                {
-                    // If the color is not found, maybe is that the pixel own to another cell (overlapping cells).
-                    // For this reason, there are two ways to do that:
-                    // 1º Get the original hidden color from the original file                               <- In mind
-                    // 2º Set this pixel as transparent to show the pixel from the other cell (tiles[i] = 0) <- Done!
-
-                    if (notfound.Count == 0)
-                        Console.WriteLine("The following colors couldn't been found!");
-                    Console.WriteLine(px.ToString() + " at " + i.ToString() + " (distance: " + min_distance.ToString() + ')');
-                    notfound.Add(px);
-
-                    tiles[i] = 0;
-                    continue;
-                }
+                    id = FindNextColor(px, newp);
 
                 tiles[i] = (byte)id;
             }
 
-            //if (notfound.Count > 0)
-            //    throw new NotSupportedException("Color not found in the original palette!");
+            if (notfound.Count > 0)
+                throw new NotSupportedException("Color not found in the original palette!");
 
             if (format == ColorFormat.colors16)
                 tiles = Helper.BitsConverter.Bits4ToByte(tiles);
@@ -620,6 +578,53 @@ namespace Ekona.Images
             return offset;
         }
 
+        public static int FindNextColor(Color c, Color[] palette, decimal threshold = 0)
+        {
+            int id = -1;
+
+            decimal min_distance = (decimal)Math.Sqrt(3) * 255;       // Set the max distance
+            double module = Math.Sqrt(c.R * c.R + c.G * c.G + c.B * c.B);
+            for (int i = 1; i < palette.Length; i++)
+            {
+                double modulec = Math.Sqrt(palette[i].R * palette[i].R + palette[i].G * palette[i].G + palette[i].B * palette[i].B);
+                decimal distance = (decimal)Math.Abs(module - modulec);
+
+                if (distance < min_distance)
+                {
+                    min_distance = distance;
+                    id = i;
+                }
+            }
+
+            if (min_distance > threshold)   // If the distance it's bigger than wanted
+                id = -1;
+
+            // If still it doesn't found the color try with the first one, usually is transparent so for this reason we leave it to the end
+            if (id == -1)
+            {
+                double modulec = Math.Sqrt(palette[0].R * palette[0].R + palette[0].G * palette[0].G + palette[0].B * palette[0].B);
+                decimal distance = (decimal)Math.Abs(module - modulec);
+
+                if (distance <= threshold)
+                    id = 0;
+            }
+
+            if (id == -1)
+            {
+                // If the color is not found, maybe is that the pixel own to another cell (overlapping cells).
+                // For this reason, there are two ways to do that:
+                // 1º Get the original hidden color from the original file                               <- In mind
+                // 2º Set this pixel as transparent to show the pixel from the other cell (tiles[i] = 0) <- Done!
+                // If there isn't overlapping cells, throw exception                                     <- In mind
+
+                Console.Write("Color not found: ");
+                Console.WriteLine(c.ToString() + " (distance: " + min_distance.ToString() + ')');
+
+                id = 0;
+            }
+
+            return id;
+        }
         public static void Indexed_Image(Bitmap img, ColorFormat cf, out byte[] tiles, out Color[] palette)
         {
             // It's a slow method but it should work always

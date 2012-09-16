@@ -29,6 +29,7 @@ namespace Ekona.Images
     public abstract class SpriteBase
     {
         #region Variables
+        protected IPluginHost pluginHost;
         protected string fileName;
         protected int id;
         bool loaded;
@@ -88,6 +89,18 @@ namespace Ekona.Images
 
             Read(file);
         }
+        public SpriteBase(string file, int id,  IPluginHost pluginHost, string fileName = "")
+        {
+            this.pluginHost = pluginHost;
+            if (fileName == "")
+                this.fileName = Path.GetFileName(file);
+            else
+                this.fileName = fileName;
+            this.id = id;
+
+            Read(file);
+        }
+
 
         public abstract void Read(string fileIn);
         public abstract void Write(string fileOut, ImageBase image, PaletteBase palette);

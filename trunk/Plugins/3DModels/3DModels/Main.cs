@@ -20,6 +20,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Drawing;
 using System.IO;
 using Ekona;
 
@@ -57,7 +58,7 @@ namespace _3DModels
             {
                 sBTX0 btx = BTX0.Read(file.path, file.id, pluginHost);
 
-                // Extract texture to temp folder
+                Bitmap[] tex = new Bitmap[btx.texture.texInfo.num_objs];
                 for (int i = 0; i < btx.texture.texInfo.num_objs; i++)
                 {
                     string fileOut = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar +
@@ -66,8 +67,10 @@ namespace _3DModels
                         fileOut = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + Path.GetRandomFileName() +
                             '_' + btx.texture.texInfo.names[i] + ".png";
 
-                    BTX0.GetTexture(pluginHost, btx, i).Save(fileOut);
+                    tex[i] = BTX0.GetTexture(pluginHost, btx, i);
+                    tex[i].Save(fileOut);
                 }
+                pluginHost.Set_Object(tex);
             }
         }
         public System.Windows.Forms.Control Show_Info(sFile file)

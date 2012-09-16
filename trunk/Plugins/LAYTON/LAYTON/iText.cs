@@ -181,7 +181,7 @@ namespace LAYTON
             string text = ""; // Makes the compiler happy (siempre deseé poner eso :) )
             text = Convertir_Especiales(txtBox.Text,false);
 
-            string tempFile = Path.GetTempFileName();
+            string tempFile = pluginHost.Get_TempFile();
             File.WriteAllText(tempFile, text);
             pluginHost.ChangeFile(id, tempFile);
         }

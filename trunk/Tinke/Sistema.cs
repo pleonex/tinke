@@ -1432,7 +1432,7 @@ namespace Tinke
                 // ARM9 Overlays Tables
                 br = new BinaryReader(File.OpenRead(y9.path));
                 br.BaseStream.Position = y9.offset;
-                bw.Write(br.ReadBytes((int)y9.size));
+                Nitro.Overlay.Write_Y9(bw, br, ov9.ToArray());
                 bw.Flush();
                 br.Close();
                 header.ARM9overlayOffset = currPos;

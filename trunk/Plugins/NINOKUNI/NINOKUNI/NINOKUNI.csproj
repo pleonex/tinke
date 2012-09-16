@@ -51,70 +51,104 @@
       <DependentUpon>BMPControl.cs</DependentUpon>
     </Compile>
     <Compile Include="Helper.cs" />
-    <Compile Include="KPCN.cs" />
+    <Compile Include="Pack\KPCN.cs" />
     <Compile Include="Main.cs" />
-    <Compile Include="MQuestText.cs">
+    <Compile Include="MainWin.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="MQuestText.Designer.cs">
+    <Compile Include="MainWin.Designer.cs">
+      <DependentUpon>MainWin.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Pack\WMAP.cs" />
+    <Compile Include="Text\BattleHelp.cs" />
+    <Compile Include="Text\BlockText.cs" />
+    <Compile Include="Text\DownloadParam.cs" />
+    <Compile Include="Text\DungeonList.cs" />
+    <Compile Include="Text\MQuestText.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Text\MQuestText.Designer.cs">
       <DependentUpon>MQuestText.cs</DependentUpon>
     </Compile>
-    <Compile Include="NPCK.cs" />
+    <Compile Include="Pack\NPCK.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="ScenarioText.cs">
+    <Compile Include="Text\ScenarioText.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="ScenarioText.Designer.cs">
+    <Compile Include="Text\ScenarioText.Designer.cs">
       <DependentUpon>ScenarioText.cs</DependentUpon>
     </Compile>
-    <Compile Include="SPDL.cs" />
-    <Compile Include="SQcontrol.cs">
+    <Compile Include="Text\IText.cs" />
+    <Compile Include="Pack\SPDL.cs" />
+    <Compile Include="Text\SQcontrol.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="SQcontrol.Designer.cs">
+    <Compile Include="Text\SQcontrol.Designer.cs">
       <DependentUpon>SQcontrol.cs</DependentUpon>
     </Compile>
-    <Compile Include="SubtitleControl.cs">
+    <Compile Include="Text\StageInfoData.cs" />
+    <Compile Include="Text\SubtitleControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="SubtitleControl.Designer.cs">
+    <Compile Include="Text\SubtitleControl.Designer.cs">
       <DependentUpon>SubtitleControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="SystemText.cs">
+    <Compile Include="Text\SystemText.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="SystemText.Designer.cs">
+    <Compile Include="Text\SystemText.Designer.cs">
       <DependentUpon>SystemText.cs</DependentUpon>
     </Compile>
     <Compile Include="TMAP.cs" />
+    <Compile Include="Text\TextControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Text\TextControl.Designer.cs">
+      <DependentUpon>TextControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TMAPcontrol.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="TMAPcontrol.Designer.cs">
+      <DependentUpon>TMAPcontrol.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="BMPControl.resx">
       <DependentUpon>BMPControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="MQuestText.resx">
+    <EmbeddedResource Include="MainWin.resx">
+      <DependentUpon>MainWin.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Text\MQuestText.resx">
       <DependentUpon>MQuestText.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="ScenarioText.resx">
+    <EmbeddedResource Include="Text\ScenarioText.resx">
       <DependentUpon>ScenarioText.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="SQcontrol.resx">
+    <EmbeddedResource Include="Text\SQcontrol.resx">
       <DependentUpon>SQcontrol.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="SubtitleControl.resx">
+    <EmbeddedResource Include="Text\SubtitleControl.resx">
       <DependentUpon>SubtitleControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="SystemText.resx">
+    <EmbeddedResource Include="Text\SystemText.resx">
       <DependentUpon>SystemText.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Text\TextControl.resx">
+      <DependentUpon>TextControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TMAPcontrol.resx">
+      <DependentUpon>TMAPcontrol.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
@@ -130,7 +164,17 @@
     <Content Include="Ninokuni.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Ninokuni\font10.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Ninokuni\font12.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Ninokuni\ImportFiles.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

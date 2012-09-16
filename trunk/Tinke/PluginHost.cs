@@ -99,11 +99,14 @@ namespace Tinke
         public String Search_File(int id) { return event_SearchFile(id); }
         public event Func<int, sFile> event_SearchFile2;
         public sFile Search_File(short id) { return event_SearchFile2(id); }
+        public event Func<string, sFolder> event_SearchFileN;
+        public sFolder Search_File(string name) { return event_SearchFileN(name); }
         public Byte[] Get_Bytes(string path, int offset, int length)
         {
             return Tools.Helper.Get_Bytes(offset, length, path);
         }
-
+        public event Func<int, sFolder> event_SearchFolder;
+        public sFolder Search_Folder(int id) { return event_SearchFolder(id); }
 
         public string Get_LanguageFolder()
         {
@@ -138,10 +141,11 @@ namespace Tinke
         }
         public void Decompress(byte[] data)
         {
-        	string temp = System.IO.Path.GetTempFileName();
+            string temp = Get_TempFile();
         	System.IO.File.WriteAllBytes(temp, data);
         	DescompressEvent(temp);
-        	System.IO.File.Delete(temp);
+            try { System.IO.File.Delete(temp); }
+            catch { }
         }
         public void Compress(string filein, string fileout, FormatCompress format) { DSDecmp.Main.Compress(filein, fileout, format); }
 

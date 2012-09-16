@@ -151,8 +151,7 @@ namespace NINOKUNI
 
             return text;
         }
-
-        public static string Reformat(string text, int nIndent)
+        public static string Reformat(string text, int nIndent, bool nr)
         {
             if (nIndent < 2)
                 return "";
@@ -160,8 +159,16 @@ namespace NINOKUNI
 
             if (text.Contains("\n"))
             {
-                text = text.Remove(0, nIndent + 2);
-                text = text.Remove(text.Length - nIndent);
+                if (nr)
+                {
+                    text = text.Remove(0, nIndent + 2);
+                    text = text.Remove(text.Length - nIndent);
+                }
+                else
+                {
+                    text = text.Remove(0, nIndent + 1);
+                    text = text.Remove(text.Length - nIndent + 1);
+                }
                 text = text.Replace("\n" + s, "\n");
             }
             text = text.Replace('【', '<');
@@ -232,6 +239,27 @@ namespace NINOKUNI
 
 
             return true;
+        }
+
+        public static string Read_String(byte[] data)
+        {
+            string text = new String(Encoding.GetEncoding("shift_jis").GetChars(data));
+            text = Helper.SJISToLatin(text.Replace("\0", ""));
+            return text;
+        }
+        public static byte[] Write_String(string text, uint size)
+        {
+            byte[] d, t;
+
+            d = Encoding.GetEncoding("shift_jis").GetBytes(Helper.LatinToSJIS(text));
+            t = new byte[size];
+            if (d.Length > size)
+                System.Windows.Forms.MessageBox.Show("Invalid text. It's so big\n" + text);
+            else
+                Array.Copy(d, t, d.Length);
+
+            d = null;
+            return t;
         }
     }
 }

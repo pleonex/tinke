@@ -31,11 +31,10 @@ namespace _999HRPERDOOR
     public class SIR0_Sprite : SpriteBase
     {
         SIR0_Info info;
-        IPluginHost pluginHost;
 
-        public SIR0_Sprite(IPluginHost pluginHost, string file, int id, string fileName = "") : base(file, id, fileName) 
+        public SIR0_Sprite(IPluginHost pluginHost, string file, int id, string fileName = "")
+            : base(file, id, pluginHost, fileName)
         {
-            this.pluginHost = pluginHost;
         }
 
         public override void Read(string file)
@@ -134,11 +133,9 @@ namespace _999HRPERDOOR
 
     public class SIR0_Image : ImageBase
     {
-        IPluginHost pluginHost;
-
-        public SIR0_Image(IPluginHost pluginHost, string file, int id, string fileName = "") : base(file, id, fileName)
+        public SIR0_Image(IPluginHost pluginHost, string file, int id, string fileName = "")
+            : base(file, id, pluginHost, fileName)
         {
-            this.pluginHost = pluginHost;
         }
 
         public override void Read(string fileIn)

@@ -104,7 +104,7 @@ namespace NINOKUNI
 
             return subs.ToArray();
         }
-        private void Write(string file)
+        public void Write(string file)
         {
             string text = "";
 
@@ -274,7 +274,7 @@ namespace NINOKUNI
             doc.AppendChild(root);
             doc.Save(xml);
         }
-        private void ImportXML(string xml)
+        public void ImportXML(string xml)
         {
             List<Subtitle> subs = new List<Subtitle>();
 
@@ -292,7 +292,7 @@ namespace NINOKUNI
                 {
                     case "Text":
                         sub.type = SubType.Text;
-                        sub.data = Helper.Reformat(n.InnerText, 4).Replace("\r\n", "\n");
+                        sub.data = Helper.Reformat(n.InnerText, 4, true).Replace("\r\n", "\n");
 
                         // Check for errors
                         if (!Helper.Check(sub.data, 0))
@@ -311,7 +311,7 @@ namespace NINOKUNI
                         break;
                     case "Comment":
                         sub.type = SubType.Comment;
-                        sub.data = Helper.Reformat(n.InnerText, 4).Replace("\r\n", "\n");
+                        sub.data = Helper.Reformat(n.InnerText, 4, true).Replace("\r\n", "\n");
                         break;
                     case "Voice":
                         sub.type = SubType.Voice;

@@ -172,7 +172,7 @@ namespace INAZUMA11
 
             if (gameCode == "BOEJ" && file.id == 0x110)
             {
-                Encryption.Encrypt_Item(file.path, fileout);
+                Encryption.Encrypt_Item(unpacked.files[0].path, fileout);
                 return fileout;
             }
 
