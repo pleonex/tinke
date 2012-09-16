@@ -40,7 +40,6 @@ namespace NINOKUNI
         string fileName;
         MainQuest mq_old;
         MainQuest mq;
-        Encoding enc;
 
         public MQuestText()
         {
@@ -52,7 +51,6 @@ namespace NINOKUNI
             this.id = id;
             this.pluginHost = pluginHost;
             fileName = Path.GetFileNameWithoutExtension(file).Substring(12);
-            enc = Encoding.GetEncoding("shift_jis");
 
             mq = ReadFile(file);
             mq_old = ReadFile(file);
@@ -97,7 +95,7 @@ namespace NINOKUNI
             br.Close();
             return mq;
         }
-        private void Write(string fileOut)
+        public void Write(string fileOut)
         {
             BinaryWriter bw = new BinaryWriter(File.OpenWrite(fileOut));
 
@@ -112,7 +110,7 @@ namespace NINOKUNI
                 for (int e = 0; e < mq.blocks[i].elements.Length; e++)
                 {
                     bw.Write(mq.blocks[i].elements[e].size);
-                    bw.Write(enc.GetBytes(Helper.LatinToSJIS(mq.blocks[i].elements[e].text)));
+                    bw.Write(Encoding.GetEncoding("shift_jis").GetBytes(Helper.LatinToSJIS(mq.blocks[i].elements[e].text)));
                 }
                 bw.Write((byte)0x00);
             }
@@ -120,13 +118,13 @@ namespace NINOKUNI
             bw.Flush();
             bw.Close();
         }
-        private void Update_Block(ref MainQuest.Block block)
+        public void Update_Block(ref MainQuest.Block block)
         {
             ushort size = 0;
             for (int i = 0; i < block.elements.Length; i++)
             {
                 MainQuest.Block.Element e = block.elements[i];
-                e.size = (ushort)enc.GetByteCount(Helper.LatinToSJIS(e.text));
+                e.size = (ushort)Encoding.GetEncoding("shift_jis").GetByteCount(Helper.LatinToSJIS(e.text));
                 block.elements[i] = e;
 
                 size += (ushort)(e.size + 2);
@@ -154,6 +152,34 @@ namespace NINOKUNI
             lblSizeOri.Text = "Size: " + txtOri.Text.Length;
             txtTrans.Text = mq.blocks[i].elements[j].text.Replace("\n", "\r\n"); ;
             lblSizeTrans.Text = "";
+        }
+
+        public void Import(string file)
+        {
+            XmlDocument doc = new XmlDocument();
+            doc.Load(file);
+
+            XmlNode root = doc.ChildNodes[1];
+            for (int i = 0; i < root.ChildNodes.Count; i++)
+            {
+                XmlNode block = root.ChildNodes[i];
+                mq.blocks[i].id = Convert.ToUInt32(block.Attributes["ID"].Value, 16);
+
+                for (int j = 0; j < block.ChildNodes.Count; j++)
+                {
+                    string text = block.ChildNodes[j].InnerText;
+                    if (text.Contains("\n"))
+                    {
+                        text = text.Remove(0, 7);
+                        text = text.Remove(text.Length - 5);
+                        text = text.Replace("\n      ", "\n");
+                    }
+                    text = text.Replace('【', '<');
+                    text = text.Replace('】', '>');
+
+                    mq.blocks[i].elements[j].text = text;
+                }
+            }
         }
 
         private void btnExport_Click(object sender, EventArgs e)
@@ -210,30 +236,7 @@ namespace NINOKUNI
             if (o.ShowDialog() != DialogResult.OK)
                 return;
 
-            XmlDocument doc = new XmlDocument();
-            doc.Load(o.FileName);
-
-            XmlNode root = doc.ChildNodes[1];
-            for (int i = 0; i < root.ChildNodes.Count; i++)
-            {
-                XmlNode block = root.ChildNodes[i];
-                mq.blocks[i].id = Convert.ToUInt32(block.Attributes["ID"].Value, 16);
-
-                for (int j = 0; j < block.ChildNodes.Count; j++)
-                {
-                    string text = block.ChildNodes[j].InnerText;
-                    if (text.Contains("\n"))
-                    {
-                        text = text.Remove(0, 7);
-                        text = text.Remove(text.Length - 5);
-                        text = text.Replace("\n      ", "\n");
-                    }
-                    text = text.Replace('【', '<');
-                    text = text.Replace('】', '>');
-
-                    mq.blocks[i].elements[j].text = text;
-                }
-            }
+            Import(o.FileName);
             numBlock_ValueChanged(null, null);
 
             // Write file

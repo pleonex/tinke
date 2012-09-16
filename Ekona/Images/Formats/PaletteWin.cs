@@ -30,6 +30,7 @@ namespace Ekona.Images.Formats
 {
     public class PaletteWin : PaletteBase
     {
+        bool gimp_error;        // Error of Gimp, it reads the first colors at 0x1C instead of 0x18
         public PaletteWin(string file) : base()
         {
             Read(file);
@@ -78,6 +79,7 @@ namespace Ekona.Images.Formats
             bw.Write((uint)palette[0].Length * 4 + 4);              // data_size = file_length - 0x14
             bw.Write((ushort)0x0300);                               // version = 00 03
             bw.Write((ushort)(palette[0].Length));                  // num_colors
+            if (gimp_error) bw.Write((uint)0x00);                   // Error in Gimp 2.8
             for (int i = 0; i < palette[0].Length; i++)
             {
                 bw.Write(palette[0][i].R);
@@ -90,5 +92,11 @@ namespace Ekona.Images.Formats
             bw.Close();
         }
 
+
+        public bool Gimp_Error
+        {
+            get { return gimp_error; }
+            set { gimp_error = value; }
+        }
     }
 }

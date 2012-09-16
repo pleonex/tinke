@@ -30,6 +30,7 @@ namespace Ekona.Images
     public abstract class PaletteBase
     {
         #region Variables
+        protected IPluginHost pluginHost;
         protected String fileName;
         protected int id;
         bool loaded;
@@ -53,6 +54,17 @@ namespace Ekona.Images
             this.fileName = fileName;
             Set_Palette(pal, editable);
         }
+        public PaletteBase(string fileIn, int id,  IPluginHost pluginHost, string fileName = "")
+        {
+            this.pluginHost = pluginHost;
+            if (fileName == "")
+                this.fileName = System.IO.Path.GetFileName(fileIn);
+            else
+                this.fileName = fileName;
+            this.id = id;
+
+            Read(fileIn);
+        }
         public PaletteBase(string fileIn, int id, string fileName = "")
         {
             if (fileName == "")
@@ -63,6 +75,7 @@ namespace Ekona.Images
 
             Read(fileIn);
         }
+
 
         public abstract void Read(string fileIn);
         public abstract void Write(string fileOut);
@@ -249,6 +262,15 @@ namespace Ekona.Images
             startByte = 0;
         }
 
+        public bool Has_DuplicatedColors(int index)
+        {
+            for (int i = 0; i < palette[index].Length; i++)
+                for (int j = 0; j < palette[index].Length; j++)
+                    if (j != i && palette[index][i] == palette[index][j])
+                        return true;
+
+            return false;
+        }
 
         #region Properties
         public int StartByte

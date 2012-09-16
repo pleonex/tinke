@@ -54,4 +54,7 @@
       <S03>Écrire l'archive</S03>
     </SQcontrol>
   </Français>
+  <Config>
+    <CompilePath></CompilePath>
+  </Config>
 </GameConfig>

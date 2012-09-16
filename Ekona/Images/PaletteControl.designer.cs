@@ -64,6 +64,7 @@ namespace Ekona.Images
             this.label5 = new System.Windows.Forms.Label();
             this.numFillColors = new System.Windows.Forms.NumericUpDown();
             this.btnFillColors = new System.Windows.Forms.Button();
+            this.checkDuplicated = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.picPalette)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericPalette)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericStartByte)).BeginInit();
@@ -243,12 +244,24 @@ namespace Ekona.Images
             this.btnFillColors.UseVisualStyleBackColor = true;
             this.btnFillColors.Click += new System.EventHandler(this.btnFillColors_Click);
             // 
+            // checkDuplicated
+            // 
+            this.checkDuplicated.AutoSize = true;
+            this.checkDuplicated.Enabled = false;
+            this.checkDuplicated.Location = new System.Drawing.Point(166, 72);
+            this.checkDuplicated.Name = "checkDuplicated";
+            this.checkDuplicated.Size = new System.Drawing.Size(128, 17);
+            this.checkDuplicated.TabIndex = 17;
+            this.checkDuplicated.Text = "Has duplicated colors";
+            this.checkDuplicated.UseVisualStyleBackColor = true;
+            // 
             // PaletteControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Transparent;
             this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.Controls.Add(this.checkDuplicated);
             this.Controls.Add(this.btnFillColors);
             this.Controls.Add(this.numFillColors);
             this.Controls.Add(this.label5);
@@ -296,5 +309,6 @@ namespace Ekona.Images
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.NumericUpDown numFillColors;
         private System.Windows.Forms.Button btnFillColors;
+        private System.Windows.Forms.CheckBox checkDuplicated;
     }
 }

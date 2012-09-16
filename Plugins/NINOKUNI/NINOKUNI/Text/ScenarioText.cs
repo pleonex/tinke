@@ -111,7 +111,7 @@ namespace NINOKUNI
             br.Close();
             return sce;
         }
-        private void Write(string fileOut)
+        public void Write(string fileOut)
         {
             Update_Block();
             if (File.Exists(fileOut))
@@ -279,23 +279,7 @@ namespace NINOKUNI
             if (o.ShowDialog() != DialogResult.OK)
                 return;
 
-            XmlDocument doc = new XmlDocument();
-            doc.Load(o.FileName);
-
-            XmlNode root = doc.ChildNodes[1];
-            for (int i = 0; i < root.ChildNodes.Count; i++)
-            {
-                string text = root.ChildNodes[i].InnerText;
-                if (text.Contains("\n"))
-                {
-                    text = text.Remove(0, 5);
-                    text = text.Remove(text.Length - 3);
-                    text = text.Replace("\n    ", "\n");
-                }
-
-                sce.blocks[0].elements[i].id = Convert.ToUInt32(root.ChildNodes[i].Attributes["ID"].Value, 16);
-                sce.blocks[0].elements[i].text = text;
-            }
+            Import(o.FileName);
             numericBlock_ValueChanged(null, null);
 
             // Write file
@@ -336,6 +320,26 @@ namespace NINOKUNI
 
             doc.AppendChild(root);
             doc.Save(o.FileName);
+        }
+        public void Import(string file)
+        {
+            XmlDocument doc = new XmlDocument();
+            doc.Load(file);
+
+            XmlNode root = doc.ChildNodes[1];
+            for (int i = 0; i < root.ChildNodes.Count; i++)
+            {
+                string text = root.ChildNodes[i].InnerText;
+                if (text.Contains("\n"))
+                {
+                    text = text.Remove(0, 5);
+                    text = text.Remove(text.Length - 3);
+                    text = text.Replace("\n    ", "\n");
+                }
+
+                sce.blocks[0].elements[i].id = Convert.ToUInt32(root.ChildNodes[i].Attributes["ID"].Value, 16);
+                sce.blocks[0].elements[i].text = text;
+            }
         }
 
         private void txtNew_TextChanged(object sender, EventArgs e)

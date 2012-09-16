@@ -76,8 +76,14 @@ namespace NINOKUNI
             else if (file.name.EndsWith(".txt"))
                 return Format.Text;     // Subtitles
             else if (ext == "TMAP")
-                return Format.Pack;
+                return Format.FullImage;
             else if (ext == "spdl")
+                return Format.Pack;
+            else if (file.name == "arm9.bin")
+                return Format.System;
+            else if (Text.TextControl.IsSupported(file.id))
+                return Format.Text;
+            else if (ext == "WMAP")
                 return Format.Pack;
 
             return Format.Unknown;
@@ -85,6 +91,12 @@ namespace NINOKUNI
 
         public void Read(sFile file)
         {
+            //// BMP images
+            //string fileOut = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + file.name + ".png";
+            //System.Drawing.Image img = System.Drawing.Image.FromFile(file.path);
+            //img.Save(fileOut, System.Drawing.Imaging.ImageFormat.Png);
+            //img.Dispose();
+            //img = null;
         }
         public System.Windows.Forms.Control Show_Info(sFile file)
         {
@@ -100,6 +112,13 @@ namespace NINOKUNI
                 return new MQuestText(pluginHost, file.path, file.id);
             else if (file.name.EndsWith(".txt"))
                 return new SubtitleControl(pluginHost, file.path, file.id);
+            else if (file.name == "arm9.bin")
+                return new MainWin(pluginHost);
+            else if (file.name.EndsWith(".tmap"))
+                return new TMAPcontrol(file, pluginHost);
+
+            if (Text.TextControl.IsSupported(file.id))
+                return new Text.TextControl(pluginHost, file);
 
             return new System.Windows.Forms.Control();
         }
@@ -137,10 +156,10 @@ namespace NINOKUNI
                 return NPCK.Unpack(file.path, file.name);
             else if (ext == "KPCN")
                 return KPCN.Unpack(file.path, file.name);
-            else if (ext == "TMAP")
-                return TMAP.Unpack(file.path, file.name);
             else if (ext == "spdl")
                 return SPDL.Unpack(file);
+            else if (ext == "WMAP")
+                return WMAP.Unpack(file.path, file.name);
 
             return new sFolder();
         }

@@ -77,6 +77,8 @@ namespace Ekona.Images
                 numFillColors.Value = 16;
             else
                 numFillColors.Value = 256;
+
+            checkDuplicated.Checked = palette.Has_DuplicatedColors(0);
         }
         private void ReadLanguage()
         {
@@ -108,6 +110,7 @@ namespace Ekona.Images
         private void numericPalette_ValueChanged(object sender, EventArgs e)
         {
             picPalette.Image = palette.Get_Image((int)numericPalette.Value);
+            checkDuplicated.Checked = palette.Has_DuplicatedColors((int)numericPalette.Value);
         }
         private void numericStartByte_ValueChanged(object sender, EventArgs e)
         {
@@ -116,6 +119,7 @@ namespace Ekona.Images
             
             numericPalette.Maximum = palette.NumberOfPalettes - 1;
             label3.Text = translation[0] + (palette.NumberOfPalettes - 1).ToString();
+            checkDuplicated.Checked = palette.Has_DuplicatedColors((int)numericPalette.Value);
         }
         private void comboDepth_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -131,6 +135,7 @@ namespace Ekona.Images
                 numFillColors.Value = 16;
             else
                 numFillColors.Value = 256;
+            checkDuplicated.Checked = palette.Has_DuplicatedColors((int)numericPalette.Value);
         }
 
         private void picPalette_MouseClick(object sender, MouseEventArgs e)
@@ -186,23 +191,25 @@ namespace Ekona.Images
             o.AddExtension = true;
             o.CheckPathExists = true;
             o.DefaultExt = ".pal";
-            o.Filter = "Windows Palette (*.pal)|*.pal|" +
-                       "Portable Network Graphics (*.png)|*.png|" +
-                       "Adobe COlor (*.aco)|*.aco";
+            o.Filter = "Windows Palette for Gimp 2.8 (*.pal)|*.pal|" +
+                        "Windows Palette (*.pal)|*.pal|" +
+                        "Portable Network Graphics (*.png)|*.png|" +
+                        "Adobe COlor (*.aco)|*.aco";
             o.OverwritePrompt = true;
             o.FileName = palette.FileName;
 
             if (o.ShowDialog() != DialogResult.OK)
                 return;
 
-            if (o.FilterIndex == 2)
+            if (o.FilterIndex == 3)
                 picPalette.Image.Save(o.FileName, System.Drawing.Imaging.ImageFormat.Png);
-            else if (o.FilterIndex == 1)
+            else if (o.FilterIndex == 1 || o.FilterIndex == 2)
             {
                 Formats.PaletteWin palwin = new Formats.PaletteWin(palette.Palette[(int)numericPalette.Value]);
+                if (o.FilterIndex == 1) palwin.Gimp_Error = true;
                 palwin.Write(o.FileName);
             }
-            else if (o.FilterIndex == 3)
+            else if (o.FilterIndex == 4)
             {
                 Formats.ACO palaco = new Formats.ACO(palette.Palette[(int)numericPalette.Value]);
                 palaco.Write(o.FileName);
@@ -275,6 +282,7 @@ namespace Ekona.Images
             palette.FillColors((int)numFillColors.Value, (int)numericPalette.Value);
             Write_File();
             picPalette.Image = palette.Get_Image((int)numericPalette.Value);
+            checkDuplicated.Checked = palette.Has_DuplicatedColors((int)numericPalette.Value);
         }
     }
 }

@@ -594,7 +594,7 @@ namespace _3DModels
 
                             #region Get color from Texel and mode values
                             Color color = Color.Black;
-                            if (palette.Length < 4)
+                            if (palette.Length < 4 && pal_mode != 1 && pal_mode != 3)
                                 goto Draw;
 
                             switch (pal_mode)

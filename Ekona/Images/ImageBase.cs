@@ -32,6 +32,7 @@ namespace Ekona.Images
     {
 
         #region Variable definition
+        protected IPluginHost pluginHost; // Optional
         protected string fileName;
         protected int id;
         bool loaded;
@@ -71,6 +72,18 @@ namespace Ekona.Images
 
             Read(file);
         }
+        public ImageBase(string file, int id, IPluginHost pluginHost, string fileName = "")
+        {
+            this.id = id;
+            this.pluginHost = pluginHost;
+            if (fileName == "")
+                this.fileName = Path.GetFileName(file);
+            else
+                this.fileName = fileName;
+
+            Read(file);
+        }
+
 
         public Image Get_Image(PaletteBase palette)
         {
@@ -123,7 +136,7 @@ namespace Ekona.Images
             }
 
             zoom = 1;
-            startByte = 0;
+            //startByte = 0;
             loaded = true;
 
             bpp = 8;

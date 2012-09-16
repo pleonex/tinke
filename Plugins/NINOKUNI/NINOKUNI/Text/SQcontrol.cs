@@ -66,8 +66,8 @@ namespace NINOKUNI
         {
             // Test method to know if it's working with all the files
             // it could be useful later to import all of them in one time (batch mode)
-            string folder = @"G:\projects\ninokuni\Quest\";
-            string[] files = Directory.GetFiles(folder);
+            string folder = @"G:\nds\projects\ninokuni\Quest\";
+            string[] files = Directory.GetFiles(folder, "*.sq");
 
             for (int i = 0; i < files.Length; i++)
             {
@@ -79,7 +79,7 @@ namespace NINOKUNI
                 Write(temp_sq, temp);
 
                 if (!Compare(files[i], temp_sq))
-                    MessageBox.Show("Test");
+                    MessageBox.Show("Test " + files[i]);
                 File.Delete(temp_sq);
             }
             MessageBox.Show("Final");
@@ -115,7 +115,7 @@ namespace NINOKUNI
             catch { throw new NotSupportedException("There was an error reading the language file"); }
         }
 
-        private SQ Read(string file)
+        public SQ Read(string file)
         {
             BinaryReader br = new BinaryReader(File.OpenRead(file));
             SQ original = new SQ();
@@ -153,9 +153,9 @@ namespace NINOKUNI
             br.Close();
             return original;
         }
-        private void Write(string fileOut, SQ translated)
+        public void Write(string fileOut, SQ translated)
         {
-            Update_Blocks();
+            Update_Blocks(ref translated);
             BinaryWriter bw = new BinaryWriter(File.OpenWrite(fileOut));
 
             bw.Write(translated.id);
@@ -187,7 +187,7 @@ namespace NINOKUNI
             bw.Flush();
             bw.Close();
         }
-        private void Update_Blocks()
+        private void Update_Blocks(ref SQ translated)
         {
             for (int i = 0; i < translated.sblocks.Length; i++)
                 translated.sblocks[i].size = (ushort)enc.GetByteCount(Helper.LatinToSJIS(translated.sblocks[i].text));
@@ -271,17 +271,16 @@ namespace NINOKUNI
             doc.AppendChild(root);
             doc.Save(fileOut);
         }
-        private void Import_XML(string fileIn, ref SQ translated)
+        public void Import_XML(string fileIn, ref SQ translated)
         {
-            XmlDocument doc = new XmlDocument();
-            doc.Load(fileIn);
+            XDocument doc = XDocument.Load(fileIn);
+            XElement root = doc.Element("SubQuest");
 
-            XmlNode root = doc.ChildNodes[1];
-
-            XmlNode sBlocks = root.ChildNodes[0];
-            for (int i = 0; i < sBlocks.ChildNodes.Count; i++)
+            XElement sBlocks = root.Element("StartBlocks");
+            int i = 0;
+            foreach (XElement e in sBlocks.Elements("String"))
             {
-                string text = sBlocks.ChildNodes[i].InnerText;
+                string text = e.Value;
                 if (text.Contains("\n"))
                 {
                     text = text.Remove(0, 7);
@@ -291,13 +290,14 @@ namespace NINOKUNI
                 text = text.Replace('【', '<');
                 text = text.Replace('】', '>');
 
-                translated.sblocks[i].text = text;
+                translated.sblocks[i++].text = text;
             }
 
-            XmlNode fBlocks = root.ChildNodes[1];
-            for (int i = 0; i < fBlocks.ChildNodes.Count; i++)
+            XElement fBlocks = root.Element("FinalBlocks");
+            i = 0;
+            foreach (XElement e in fBlocks.Elements("String"))
             {
-                string text = fBlocks.ChildNodes[i].InnerText;
+                string text = e.Value;
                 if (text.Contains("\n"))
                 {
                     text = text.Remove(0, 7);
@@ -307,8 +307,13 @@ namespace NINOKUNI
                 text = text.Replace('【', '<');
                 text = text.Replace('】', '>');
 
-                translated.fblocks[i].text = text;
+                translated.fblocks[i++].text = text;
             }
+
+            sBlocks = null;
+            fBlocks = null;
+            root = null;
+            doc = null;
         }
         private void btnSave_Click(object sender, EventArgs e)
         {

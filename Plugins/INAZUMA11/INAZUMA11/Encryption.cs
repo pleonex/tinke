@@ -62,7 +62,6 @@ namespace INAZUMA11
         }
         public static void Encrypt_Item(string fileIn, string fileout)
         {
-            BinaryWriter bw = new BinaryWriter(File.OpenWrite(fileout));
             byte[] data = File.ReadAllBytes(fileIn);
 
             for (int i = 0; i < 0x400; i++)

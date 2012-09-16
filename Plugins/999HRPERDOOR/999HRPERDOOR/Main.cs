@@ -51,8 +51,8 @@ namespace _999HRPERDOOR
                 return Format.FullImage;
             if (ext == "AT6P")
                 return Format.Compressed;
-            if (file.name.EndsWith(".at6p"))
-                return Format.FullImage;
+            //if (file.name.EndsWith(".at6p"))
+            //    return Format.FullImage;
 
             return Format.Unknown;
         }
@@ -61,8 +61,8 @@ namespace _999HRPERDOOR
         {
             if (file.id >= 0x13EF && file.id <= 0x1500)
                 new SIR0_Sprite(pluginHost, file.path, file.id, file.name);
-            if (file.name.EndsWith(".at6p"))
-                new SIR0_Image(pluginHost, file.path, file.id, file.name);
+            //if (file.name.EndsWith(".at6p"))
+            //    new SIR0_Image(pluginHost, file.path, file.id, file.name);
         }
         public System.Windows.Forms.Control Show_Info(sFile file)
         {

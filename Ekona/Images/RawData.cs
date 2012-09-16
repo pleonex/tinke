@@ -144,8 +144,8 @@ namespace Ekona.Images
     public class RawImage : ImageBase
     {
         // Unknown data - Needed to write the file
-        byte[] prev_data;
-        byte[] next_data;
+        byte[] prev_data, post_data;
+        byte[] ori_data;
 
         public RawImage(String file, int id, TileForm form, ColorFormat format,
             bool editable, int offset, int size, string fileName = "") : base()
@@ -188,15 +188,22 @@ namespace Ekona.Images
             int offset, int fileSize)
         {
             BinaryReader br = new BinaryReader(File.OpenRead(fileIn));
-            prev_data = br.ReadBytes(offset);   // Save the previous data to write them then.
+            prev_data = br.ReadBytes(offset);
 
-            if (fileSize <= 0)
+            if (fileSize <= offset)
                 fileSize = (int)br.BaseStream.Length;
+            if (fileSize + offset >= br.BaseStream.Length)
+                offset = (int)br.BaseStream.Length - fileSize;
+            if (fileSize <= offset)
+                fileSize = (int)br.BaseStream.Length;
+
+            ori_data = br.ReadBytes(fileSize);
+            post_data = br.ReadBytes((int)(br.BaseStream.Length - br.BaseStream.Position));
+
+            br.BaseStream.Position = offset;
 
             // Read the tiles
             Byte[] tiles = br.ReadBytes(fileSize);
-
-            next_data = br.ReadBytes((int)(br.BaseStream.Length - fileSize));   // Save the next data to write them then
             br.Close();
 
             Set_Tiles(tiles, 0x0100, 0x00C0, format, form, editable);
@@ -230,12 +237,16 @@ namespace Ekona.Images
 
         public override void Write(string fileOut, PaletteBase palette)
         {
+            int image_size = Width * Height * BPP / 8;
+
             BinaryWriter bw = new BinaryWriter(File.OpenWrite(fileOut));
-
             bw.Write(prev_data);
+            for (int i = 0; i < StartByte; i++)
+                bw.Write(ori_data[i]);
             bw.Write(Tiles);
-            bw.Write(next_data);
-
+            for (int i = image_size + StartByte; i < ori_data.Length; i++)
+                bw.Write(ori_data[i]);
+            bw.Write(post_data);
             bw.Flush();
             bw.Close();
         }

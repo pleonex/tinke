@@ -30,6 +30,7 @@ namespace Ekona.Images
     {
 
         #region Variables
+        protected IPluginHost pluginHost;
         protected int id;
         protected string fileName;
         bool loaded;
@@ -49,6 +50,17 @@ namespace Ekona.Images
         }
         public MapBase(string fileIn, int id, string fileName = "")
         {
+            this.id = id;
+            if (fileName == "")
+                this.fileName = System.IO.Path.GetFileName(fileIn);
+            else
+                this.fileName = fileName;
+
+            Read(fileIn);
+        }
+        public MapBase(string fileIn, int id,  IPluginHost pluginHost, string fileName = "")
+        {
+            this.pluginHost = pluginHost;
             this.id = id;
             if (fileName == "")
                 this.fileName = System.IO.Path.GetFileName(fileIn);
