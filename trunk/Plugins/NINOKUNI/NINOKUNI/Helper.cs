@@ -121,6 +121,10 @@ namespace NINOKUNI
             foreach (char c in replaces.Keys)
                 text = text.Replace(c, replaces[c]);
 
+            char[] chars = text.ToCharArray();
+            Replace_Quotes(ref chars);
+            text = new string(chars);
+
             return text;
         }
         public static string Format(string text, int nIndent)
@@ -176,6 +180,26 @@ namespace NINOKUNI
 
             return text;
         }
+        public static void Replace_Quotes(ref char[] chars)
+        {
+            // Change quotes
+            char[] quotes = { '“', '”' };
+            bool start_quote = false;
+            for (int i = 0; i < chars.Length; i++)
+            {
+                if (chars[i] == '\"' && !start_quote)
+                {
+                    start_quote = true;
+                    chars[i] = quotes[0];
+                }
+                else if (chars[i] == '\"' && start_quote)
+                {
+                    start_quote = false;
+                    chars[i] = quotes[1];
+                }
+            }
+        }
+
 
         public static bool Check(string text, int type)
         {

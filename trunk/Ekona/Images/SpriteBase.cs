@@ -140,6 +140,18 @@ namespace Ekona.Images
             return Actions.Get_Image(bank, block_size, image, pal, width, height,
                                      grid, cell, number, trans, img, currOAM);
         }
+        public Image Get_Image(ImageBase image, PaletteBase pal, int index, int width, int height,
+               bool grid, bool cell, bool number, bool trans, bool img, int currOAM)
+        {
+            return Actions.Get_Image(banks[index], block_size, image, pal, width, height,
+                                     grid, cell, number, trans, img, currOAM);
+        }
+        public Image Get_Image(ImageBase image, PaletteBase pal, int index, int width, int height,
+               bool grid, bool cell, bool number, bool trans, bool img, int currOAM, int[] draw_index)
+        {
+            return Actions.Get_Image(banks[index], block_size, image, pal, width, height,
+                                     grid, cell, number, trans, img, currOAM, 1, draw_index);
+        }
 
     }
 

@@ -308,7 +308,7 @@ namespace Images
                 bw.Write((byte)0x00);
 
             // LBAL section
-            if (new String(ncer.labl.id) == "LBAL")
+            if (new string(ncer.labl.id) == "LBAL" || new string(ncer.labl.id) == "LABL")
             {
                 bw.Write(ncer.labl.id);
                 bw.Write(ncer.labl.section_size);
@@ -319,7 +319,7 @@ namespace Images
             }
 
             // UEXT section
-            if (new string(ncer.uext.id) == "UEXT")
+            if (new string(ncer.uext.id) == "UEXT" || new string(ncer.uext.id) == "TXEU")
             {
                 bw.Write(ncer.uext.id);
                 bw.Write(ncer.uext.section_size);
@@ -360,9 +360,9 @@ namespace Images
 
             // Update the header
             ncer.header.file_size = 0x10 + ncer.cebk.section_size;
-            if (new String(ncer.labl.id) == "LBAL")
+            if (new string(ncer.labl.id) == "LBAL" || new string(ncer.labl.id) == "LABL")
                 ncer.header.file_size += ncer.labl.section_size;
-            if (new String(ncer.uext.id) == "UEXT")
+            if (new string(ncer.uext.id) == "UEXT" || new string(ncer.uext.id) == "TXEU")
                 ncer.header.file_size += ncer.uext.section_size;
         }
 

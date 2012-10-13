@@ -546,16 +546,49 @@ namespace Ekona.Images
                     id = 0;
 
                 if (id == -1)
-                    id = FindNextColor(px, newp);
+                    id = FindNextColor(px, newp, threshold);
+
+                if (id == -1)
+                {
+                    // If the color is not found, maybe is that the pixel own to another cell (overlapping cells).
+                    // For this reason, there are two ways to do that:
+                    // 1º Get the original hidden color from the original file                               <- In mind
+                    // 2º Set this pixel as transparent to show the pixel from the other cell (tiles[i] = 0) <- Done!
+                    // If there isn't overlapping cells, throw exception                                     <- In mind
+                    notfound.Add(px);
+                    id = 0;
+                }
 
                 tiles[i] = (byte)id;
             }
 
-            if (notfound.Count > 0)
-                throw new NotSupportedException("Color not found in the original palette!");
+            //if (notfound.Count > 0)
+            //    throw new NotSupportedException("Color not found in the original palette!");
 
             if (format == ColorFormat.colors16)
                 tiles = Helper.BitsConverter.Bits4ToByte(tiles);
+        }
+
+        public static Size Get_Size(int fileSize, int bpp)
+        {
+            int width, height;
+            int num_pix = fileSize * 8 / bpp;
+
+            // If the image it's a square
+            if (Math.Pow((int)(Math.Sqrt(num_pix)), 2) == num_pix)
+                width = height = (int)Math.Sqrt(num_pix);
+            else
+            {
+                width = (num_pix < 0x100 ? num_pix : 0x0100);
+                height = num_pix / width;
+            }
+
+            if (height == 0)
+                height = 1;
+            if (width == 0)
+                width = 1;
+
+            return new Size(width, height);
         }
 
         public static uint Add_Image(ref byte[] data, byte[] newData, uint blockSize)
@@ -611,16 +644,8 @@ namespace Ekona.Images
 
             if (id == -1)
             {
-                // If the color is not found, maybe is that the pixel own to another cell (overlapping cells).
-                // For this reason, there are two ways to do that:
-                // 1º Get the original hidden color from the original file                               <- In mind
-                // 2º Set this pixel as transparent to show the pixel from the other cell (tiles[i] = 0) <- Done!
-                // If there isn't overlapping cells, throw exception                                     <- In mind
-
                 Console.Write("Color not found: ");
                 Console.WriteLine(c.ToString() + " (distance: " + min_distance.ToString() + ')');
-
-                id = 0;
             }
 
             return id;
@@ -672,11 +697,11 @@ namespace Ekona.Images
             // Not dithering method for now, I hope you input a image with less than the maximum colors
             if (coldif.Count > max_colors && cf != ColorFormat.direct)
                 throw new NotSupportedException("The image has more colors than permitted.\n" +
-                    (coldif.Count + 1).ToString() + " unique colors!");
+                     (coldif.Count + 1).ToString() + " unique colors!");
 
             // Finally get the set the tile array with the correct format
             tiles = new byte[width * height * bpc / 8];
-            for (int i = 0, j = 0; i < tiles.Length;)
+            for (int i = 0, j = 0; i < tiles.Length; )
             {
                 switch (cf)
                 {
@@ -984,7 +1009,7 @@ namespace Ekona.Images
 
         public static Bitmap Get_Image(Bank bank, uint blockSize, ImageBase img, PaletteBase pal, int max_width, int max_height,
                                        bool draw_grid, bool draw_cells, bool draw_numbers, bool trans, bool image, int currOAM = -1,
-                                       int zoom = 1)
+                                       int zoom = 1, int[] index = null)
         {
             Size size = new Size(max_width * zoom, max_height * zoom);
             Bitmap bank_img = new Bitmap(size.Width, size.Height);
@@ -1011,6 +1036,16 @@ namespace Ekona.Images
             Image cell;
             for (int i = 0; i < bank.oams.Length; i++)
             {
+                bool draw = false;
+                if (index == null)
+                    draw = true;
+                else
+                    for (int k = 0; k < index.Length; k++)
+                        if (index[k] == i)
+                            draw = true;
+                if (!draw)
+                    continue;
+    
                 if (bank.oams[i].width == 0x00 || bank.oams[i].height == 0x00)
                     continue;
 

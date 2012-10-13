@@ -139,9 +139,14 @@ namespace Ekona.Images
 
         private Image Update_Image()
         {
+            int[] index = new int[checkListOAM.CheckedIndices.Count];
+            for (int i = 0; i < index.Length; i++)
+                index[i] = checkListOAM.CheckedIndices[i];
+
             imgBox.Image = sprite.Get_Image(image, palette, comboBank.SelectedIndex, 512, 256,
                 checkGrid.Checked, checkCellBorder.Checked, checkNumber.Checked, checkTransparency.Checked,
-                checkImage.Checked);
+                checkImage.Checked, (checkSelectOAM.Checked ? checkListOAM.SelectedIndex : -1), 
+                index);
 
             Clipboard.SetImage(imgBox.Image);
 
@@ -161,10 +166,19 @@ namespace Ekona.Images
                     comboBank.Items.Add("Bank " + i.ToString());
             comboBank.SelectedIndex = 0;
             txtBatch.Text = Path.GetFileNameWithoutExtension(sprite.FileName) + "_%s";
+
+            Update_BankInfo(0);
+        }
+        private void Update_BankInfo(int i)
+        {
+            checkListOAM.Items.Clear();
+            for (int k = 0; k < sprite.Banks[i].oams.Length; k++)
+                checkListOAM.Items.Add("OAM " + k.ToString(), true);
         }
 
         private void comboBank_SelectedIndexChanged(object sender, EventArgs e)
         {
+            Update_BankInfo(comboBank.SelectedIndex);
             Update_Image();
         }
         private void check_CheckedChanged(object sender, EventArgs e)
@@ -442,23 +456,32 @@ namespace Ekona.Images
             {
                 BMP bmp = new BMP(path);
                 tiles = bmp.Tiles;
+                if (image.FormatColor != bmp.FormatColor)
+                    if (image.FormatColor == ColorFormat.colors16)
+                        tiles = Helper.BitsConverter.Bits4ToByte(tiles);
+                    else if (image.FormatColor == ColorFormat.colors256)
+                        tiles = Helper.BitsConverter.BytesToBit4(tiles);
                 pal = bmp.Palette.Palette[0];
             }
-            else
-            {
-                try { Actions.Indexed_Image(bitmap, image.FormatColor, out tiles, out pal); }
-                catch (Exception ex) { MessageBox.Show(ex.Message); Console.WriteLine(ex.Message); return; }
-            }
-
-            bitmap.Dispose();
-            bitmap = null;
 
             // Get the data of a oam and add to the end of the image
             for (int i = 0; i < oams.Length; i++)
             {
-                Console.WriteLine("Processing cell {0}", oams[i].num_cell.ToString());
+                if (!checkListOAM.GetItemChecked(i))
+                    continue;
 
-                byte[] cellImg = Actions.Get_OAMdata(oams[i], tiles, image.FormatColor);
+                Console.WriteLine("Processing cell {0}", oams[i].num_cell.ToString());
+                byte[] cellImg;
+                if (!radioOriginalPal.Checked)
+                {
+                    Bitmap subImg = (Bitmap)bitmap.Clone(new Rectangle(
+                        oams[i].obj1.xOffset + 256, oams[i].obj0.yOffset + 128,
+                        oams[i].width, oams[i].height),
+                        System.Drawing.Imaging.PixelFormat.DontCare);
+                    Actions.Indexed_Image(subImg, image.FormatColor, out cellImg, out pal);
+                }
+                else
+                    cellImg = Actions.Get_OAMdata(oams[i], tiles, image.FormatColor);
 
                 // Swap palettes if "Swap palette" is checked. Try to change the colors to the old palette
                 if (radioSwapPal.Checked)
@@ -495,6 +518,9 @@ namespace Ekona.Images
             image.Set_Tiles(imgData, image.Width, height, image.FormatColor, image.FormTile, image.CanEdit);
             sprite.Banks[banki].oams = oams;
             palette.Set_Palette(pals);
+
+            bitmap.Dispose();
+            bitmap = null;
         }
         void Save_Files()
         {
@@ -583,6 +609,7 @@ namespace Ekona.Images
             if (editor.ShowDialog() != DialogResult.OK)
                 return;
 
+            Update_BankInfo(comboBank.SelectedIndex);
             sprite.Banks[comboBank.SelectedIndex] = editor.Bank;
             Update_Image();
             Save_Files();

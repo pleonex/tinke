@@ -32,6 +32,7 @@ namespace Ekona.Images.Dialogs
     public partial class OAMEditor : Form
     {
         Bank bank;
+        bool stop;
 
         bool preview;
         SpriteBase sprite;
@@ -152,6 +153,7 @@ namespace Ekona.Images.Dialogs
         private void Read_Info(int i)
         {
             OAM oam = bank.oams[i];
+            stop = true;
 
             // Obj0
             numYoffset.Value = oam.obj0.yOffset;
@@ -218,9 +220,12 @@ namespace Ekona.Images.Dialogs
             }
 
             numNumOAM.Value = oam.num_cell;
+            stop = false;
         }
         private void Update_Image()
         {
+            stop = true;
+
             OAM oam = bank.oams[(int)numOAM.Value];
             Size size = Actions.Get_OAMSize(oam.obj0.shape, oam.obj1.size);
             oam.width = (ushort)size.Width;
@@ -237,6 +242,7 @@ namespace Ekona.Images.Dialogs
 
             picBox.Image = sprite.Get_Image(image, palette, bank, 512, 256, checkGrid.Checked, checkOAM.Checked,
                 checkNumbers.Checked, checkTrans.Checked, checkImage.Checked, (checkCurrOAM.Checked ? (int)numOAM.Value : -1));
+            stop = false;
         }
 
         private void btnSave_Click(object sender, EventArgs e)
@@ -257,6 +263,9 @@ namespace Ekona.Images.Dialogs
 
         private void Change_OBJ0(object sender, EventArgs e)
         {
+            if (stop)
+                return;
+
             bank.oams[(int)numOAM.Value].obj0.yOffset = (int)numYoffset.Value;
             bank.oams[(int)numOAM.Value].obj0.rs_flag = (byte)(checkRSflag.Checked ? 1 : 0);
             if (checkRSflag.Checked)
@@ -288,6 +297,9 @@ namespace Ekona.Images.Dialogs
         }
         private void Change_OBJ1(object sender, EventArgs e)
         {
+            if (stop)
+                return;
+
             bank.oams[(int)numOAM.Value].obj1.xOffset = (int)numXpos.Value;
             bank.oams[(int)numOAM.Value].obj1.select_param = (byte)numSelectPar.Value;
             bank.oams[(int)numOAM.Value].obj1.flipX = (byte)(checkFlipX.Checked ? 1 : 0);
@@ -297,6 +309,9 @@ namespace Ekona.Images.Dialogs
         }
         private void Change_OBJ2(object sender, EventArgs e)
         {
+            if (stop)
+                return;
+
             bank.oams[(int)numOAM.Value].obj2.tileOffset = (uint)numOffset.Value;
             bank.oams[(int)numOAM.Value].obj2.priority = (byte)numPrio.Value;
             bank.oams[(int)numOAM.Value].obj2.index_palette = (byte)numPal.Value;
@@ -309,6 +324,9 @@ namespace Ekona.Images.Dialogs
         }
         private void numNumOAM_ValueChanged(object sender, EventArgs e)
         {
+            if (stop)
+                return;
+
             bank.oams[(int)numOAM.Value].num_cell = (ushort)numNumOAM.Value;
 
             OAM currOAM = bank.oams[(int)numOAM.Value];
@@ -326,6 +344,9 @@ namespace Ekona.Images.Dialogs
 
         private void comboSize_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (stop)
+                return;
+
             switch (comboSize.SelectedIndex)
             {
                 case 0:
@@ -426,6 +447,9 @@ namespace Ekona.Images.Dialogs
 
         private void numObj_ValueChanged(object sender, EventArgs e)
         {
+            if (stop)
+                return;
+
             bank.oams[(int)numOAM.Value] = Actions.OAMInfo(
                 (ushort)numObj0.Value,
                 (ushort)numObj1.Value,

@@ -52,12 +52,6 @@ namespace Images
                 ncgr.rahc.nTilesX *= 8;
                 ncgr.rahc.nTilesY *= 8;
             }
-            else
-            {
-                ncgr.rahc.nTilesX = 0x40;
-                ncgr.rahc.nTilesY = (ushort)(ncgr.rahc.size_tiledata / 0x40);
-            }
-
 
             if (ncgr.header.nSection == 2 && br.BaseStream.Position < br.BaseStream.Length)   // If there isn't SOPC section
             {
@@ -71,6 +65,15 @@ namespace Images
 
             br.Close();
             Set_Tiles(ncgr.rahc.data, ncgr.rahc.nTilesX, ncgr.rahc.nTilesY, ncgr.rahc.depth, ncgr.order, true);
+
+            if (ncgr.rahc.nTilesX == 0xFFFF)
+            {
+                System.Drawing.Size size = Actions.Get_Size((int)ncgr.rahc.size_tiledata, BPP); 
+                ncgr.rahc.nTilesX = (ushort)size.Width;
+                ncgr.rahc.nTilesY = (ushort)size.Height;
+                Height = size.Height;
+                Width = size.Width;
+            }
         }
         public override void Write(string fileOut, PaletteBase palette)
         {

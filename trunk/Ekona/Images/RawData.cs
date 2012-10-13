@@ -208,31 +208,9 @@ namespace Ekona.Images
 
             Set_Tiles(tiles, 0x0100, 0x00C0, format, form, editable);
 
-            #region Calculate the image size
-            int width, height;
-            int num_pix = fileSize * 8 / BPP;
-
-            // If the image it's a square
-            if (Math.Pow((int)(Math.Sqrt(num_pix)), 2) == num_pix)
-                width = height = (int)Math.Sqrt(num_pix);
-            else
-            {
-                width = (fileSize < 0x100 ? fileSize : 0x0100);
-                height = fileSize / width;
-            }
-
-            if (height == 0)
-                height = 1;
-            if (width == 0)
-                width = 1;
-            if (form == TileForm.Horizontal && height < 8)
-                height = 8;
-            if (form == TileForm.Horizontal && width < 8)
-                width = 8;
-            #endregion
-
-            Width = width;
-            Height = height;
+            Size size = Actions.Get_Size(fileSize, BPP);
+            Width = size.Width;
+            Height = size.Height;
         }
 
         public override void Write(string fileOut, PaletteBase palette)

@@ -124,16 +124,11 @@ namespace Ekona.Images
             this.tiles = tiles;
             this.format = format;
             this.tileForm = form;
-            Width = width;
-            Height = height;
             this.canEdit = editable;
             this.tile_size = tile_size;
 
-            if (tileForm == TileForm.Horizontal || tileForm == TileForm.Vertical)
-            {
-                if (this.width < this.tile_size) this.width = this.tile_size;
-                if (this.height < this.tile_size) this.height = this.tile_size;
-            }
+            Width = width;
+            Height = height;
 
             zoom = 1;
             //startByte = 0;
@@ -161,15 +156,10 @@ namespace Ekona.Images
             this.tiles = new_img.Tiles;
             this.format = new_img.FormatColor;
             this.tileForm = new_img.FormTile;         
-            Width = new_img.Width;
-            Height = new_img.Height;
             this.tile_size = new_img.tile_size;
 
-            if (tileForm == TileForm.Horizontal || tileForm == TileForm.Vertical)
-            {
-                if (this.width < this.tile_size) this.width = this.tile_size;
-                if (this.height < this.tile_size) this.height = this.tile_size;
-            }
+            Width = new_img.Width;
+            Height = new_img.Height;
 
             zoom = 1;
             startByte = 0;
@@ -243,7 +233,11 @@ namespace Ekona.Images
             {
                 height = value;
                 if (tileForm == TileForm.Horizontal || tileForm == TileForm.Vertical)
+                {
                     if (this.height < this.tile_size) this.height = this.tile_size;
+                    if (this.height % this.tile_size != 0)
+                        this.height += this.tile_size - (this.height % this.tile_size);
+                }
             }
         }
         public int Width
@@ -253,7 +247,11 @@ namespace Ekona.Images
             {
                 width = value;
                 if (tileForm == TileForm.Horizontal || tileForm == TileForm.Vertical)
+                {
                     if (this.width < this.tile_size) this.width = this.tile_size;
+                    if (this.width % this.tile_size != 0)
+                        this.width += this.tile_size - (this.width % this.tile_size);
+                }
             }
         }
         public ColorFormat FormatColor
