@@ -52,13 +52,13 @@ namespace Tinke
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Sistema));
-            System.Windows.Forms.ListViewItem listViewItem8 = new System.Windows.Forms.ListViewItem("S09");
-            System.Windows.Forms.ListViewItem listViewItem9 = new System.Windows.Forms.ListViewItem("S0A");
-            System.Windows.Forms.ListViewItem listViewItem10 = new System.Windows.Forms.ListViewItem("S0B");
-            System.Windows.Forms.ListViewItem listViewItem11 = new System.Windows.Forms.ListViewItem("S0C");
-            System.Windows.Forms.ListViewItem listViewItem12 = new System.Windows.Forms.ListViewItem("S0D");
-            System.Windows.Forms.ListViewItem listViewItem13 = new System.Windows.Forms.ListViewItem("S0E");
-            System.Windows.Forms.ListViewItem listViewItem14 = new System.Windows.Forms.ListViewItem("S40");
+            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("S09");
+            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("S0A");
+            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem("S0B");
+            System.Windows.Forms.ListViewItem listViewItem4 = new System.Windows.Forms.ListViewItem("S0C");
+            System.Windows.Forms.ListViewItem listViewItem5 = new System.Windows.Forms.ListViewItem("S0D");
+            System.Windows.Forms.ListViewItem listViewItem6 = new System.Windows.Forms.ListViewItem("S0E");
+            System.Windows.Forms.ListViewItem listViewItem7 = new System.Windows.Forms.ListViewItem("S40");
             this.iconos = new System.Windows.Forms.ImageList(this.components);
             this.btnExtract = new System.Windows.Forms.Button();
             this.btnSee = new System.Windows.Forms.Button();
@@ -95,6 +95,7 @@ namespace Tinke
             this.btnImport = new System.Windows.Forms.Button();
             this.btnSaveROM = new System.Windows.Forms.Button();
             this.btnPack = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
             this.toolStrip1.SuspendLayout();
             this.toolStrip2.SuspendLayout();
             this.SuspendLayout();
@@ -175,13 +176,13 @@ namespace Tinke
             this.columnHeader1,
             this.columnHeader2});
             this.listFile.Items.AddRange(new System.Windows.Forms.ListViewItem[] {
-            listViewItem8,
-            listViewItem9,
-            listViewItem10,
-            listViewItem11,
-            listViewItem12,
-            listViewItem13,
-            listViewItem14});
+            listViewItem1,
+            listViewItem2,
+            listViewItem3,
+            listViewItem4,
+            listViewItem5,
+            listViewItem6,
+            listViewItem7});
             this.listFile.Location = new System.Drawing.Point(409, 28);
             this.listFile.Name = "listFile";
             this.listFile.Size = new System.Drawing.Size(197, 169);
@@ -327,7 +328,7 @@ namespace Tinke
             this.toolStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripOpenAs});
             this.toolStrip2.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Table;
-            this.toolStrip2.Location = new System.Drawing.Point(409, 309);
+            this.toolStrip2.Location = new System.Drawing.Point(409, 319);
             this.toolStrip2.Name = "toolStrip2";
             this.toolStrip2.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
             this.toolStrip2.RightToLeft = System.Windows.Forms.RightToLeft.No;
@@ -357,7 +358,7 @@ namespace Tinke
             // 
             this.toolStripMenuItem1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripMenuItem1.Image")));
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-            this.toolStripMenuItem1.Size = new System.Drawing.Size(131, 22);
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
             this.toolStripMenuItem1.Text = "S17";
             this.toolStripMenuItem1.Click += new System.EventHandler(this.toolAbrirComoItemPaleta_Click);
             // 
@@ -365,7 +366,7 @@ namespace Tinke
             // 
             this.toolStripMenuItem2.Image = ((System.Drawing.Image)(resources.GetObject("toolStripMenuItem2.Image")));
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-            this.toolStripMenuItem2.Size = new System.Drawing.Size(131, 22);
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(152, 22);
             this.toolStripMenuItem2.Text = "S18";
             this.toolStripMenuItem2.Click += new System.EventHandler(this.toolAbrirComoItemTile_Click);
             // 
@@ -373,7 +374,7 @@ namespace Tinke
             // 
             this.toolStripMenuItem3.Image = ((System.Drawing.Image)(resources.GetObject("toolStripMenuItem3.Image")));
             this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-            this.toolStripMenuItem3.Size = new System.Drawing.Size(131, 22);
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(152, 22);
             this.toolStripMenuItem3.Text = "S19";
             this.toolStripMenuItem3.Click += new System.EventHandler(this.toolAbrirComoItemScreen_Click);
             // 
@@ -381,7 +382,7 @@ namespace Tinke
             // 
             this.toolStripMenuComprimido.Image = global::Tinke.Properties.Resources.compress;
             this.toolStripMenuComprimido.Name = "toolStripMenuComprimido";
-            this.toolStripMenuComprimido.Size = new System.Drawing.Size(131, 22);
+            this.toolStripMenuComprimido.Size = new System.Drawing.Size(152, 22);
             this.toolStripMenuComprimido.Text = "S2A";
             this.toolStripMenuComprimido.Click += new System.EventHandler(this.s2AToolStripMenuItem_Click);
             // 
@@ -389,7 +390,7 @@ namespace Tinke
             // 
             this.toolStripAbrirFat.Image = global::Tinke.Properties.Resources.package;
             this.toolStripAbrirFat.Name = "toolStripAbrirFat";
-            this.toolStripAbrirFat.Size = new System.Drawing.Size(131, 22);
+            this.toolStripAbrirFat.Size = new System.Drawing.Size(152, 22);
             this.toolStripAbrirFat.Text = "S3D";
             this.toolStripAbrirFat.Click += new System.EventHandler(this.toolStripAbrirFat_Click);
             // 
@@ -397,7 +398,7 @@ namespace Tinke
             // 
             this.toolStripAbrirTexto.Image = global::Tinke.Properties.Resources.page_white_text;
             this.toolStripAbrirTexto.Name = "toolStripAbrirTexto";
-            this.toolStripAbrirTexto.Size = new System.Drawing.Size(131, 22);
+            this.toolStripAbrirTexto.Size = new System.Drawing.Size(152, 22);
             this.toolStripAbrirTexto.Text = "S26";
             this.toolStripAbrirTexto.Click += new System.EventHandler(this.toolStripAbrirTexto_Click);
             // 
@@ -405,7 +406,7 @@ namespace Tinke
             // 
             this.callPluginToolStripMenuItem.Image = global::Tinke.Properties.Resources.plugin_go;
             this.callPluginToolStripMenuItem.Name = "callPluginToolStripMenuItem";
-            this.callPluginToolStripMenuItem.Size = new System.Drawing.Size(131, 22);
+            this.callPluginToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.callPluginToolStripMenuItem.Text = "Call plugin";
             this.callPluginToolStripMenuItem.Click += new System.EventHandler(this.callPluginToolStripMenuItem_Click);
             // 
@@ -425,7 +426,7 @@ namespace Tinke
             // txtSearch
             // 
             this.txtSearch.ForeColor = System.Drawing.Color.Black;
-            this.txtSearch.Location = new System.Drawing.Point(409, 229);
+            this.txtSearch.Location = new System.Drawing.Point(409, 239);
             this.txtSearch.Name = "txtSearch";
             this.txtSearch.Size = new System.Drawing.Size(183, 20);
             this.txtSearch.TabIndex = 14;
@@ -435,7 +436,7 @@ namespace Tinke
             // btnSearch
             // 
             this.btnSearch.Image = global::Tinke.Properties.Resources.zoom;
-            this.btnSearch.Location = new System.Drawing.Point(598, 226);
+            this.btnSearch.Location = new System.Drawing.Point(598, 236);
             this.btnSearch.Name = "btnSearch";
             this.btnSearch.Size = new System.Drawing.Size(43, 23);
             this.btnSearch.TabIndex = 15;
@@ -446,7 +447,7 @@ namespace Tinke
             // checkSearch
             // 
             this.checkSearch.AutoSize = true;
-            this.checkSearch.Location = new System.Drawing.Point(409, 255);
+            this.checkSearch.Location = new System.Drawing.Point(409, 265);
             this.checkSearch.Name = "checkSearch";
             this.checkSearch.Size = new System.Drawing.Size(46, 17);
             this.checkSearch.TabIndex = 16;
@@ -465,7 +466,7 @@ namespace Tinke
             // 
             this.lblSupport.AutoSize = true;
             this.lblSupport.Font = new System.Drawing.Font("Consolas", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblSupport.Location = new System.Drawing.Point(409, 279);
+            this.lblSupport.Location = new System.Drawing.Point(409, 289);
             this.lblSupport.Name = "lblSupport";
             this.lblSupport.Size = new System.Drawing.Size(32, 17);
             this.lblSupport.TabIndex = 17;
@@ -510,11 +511,21 @@ namespace Tinke
             this.btnPack.UseVisualStyleBackColor = true;
             this.btnPack.Click += new System.EventHandler(this.btnPack_Click);
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(409, 223);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(43, 13);
+            this.label1.TabIndex = 21;
+            this.label1.Text = "Buscar:";
+            // 
             // Sistema
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
             this.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
             this.ClientSize = new System.Drawing.Size(644, 547);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.btnPack);
             this.Controls.Add(this.btnSaveROM);
             this.Controls.Add(this.btnImport);
@@ -589,6 +600,7 @@ namespace Tinke
         private System.Windows.Forms.Button btnPack;
         private System.Windows.Forms.ToolStripButton stripRefreshMsg;
         private System.Windows.Forms.ToolStripMenuItem callPluginToolStripMenuItem;
+        private System.Windows.Forms.Label label1;
 
     }
 }

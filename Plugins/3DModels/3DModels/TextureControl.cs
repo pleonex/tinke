@@ -176,6 +176,7 @@ namespace _3DModels
 
             PaletteBase p = new RawPalette(new Color[][] { palette }, false, ColorFormat.colors256);
             picPalette.Image = p.Get_Image(0);
+            pluginHost.Set_Palette(p);
 
             Info(num_tex, num_pal);
         }
