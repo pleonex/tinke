@@ -62,6 +62,9 @@ namespace Fonts
             this.btnAddChar = new System.Windows.Forms.Button();
             this.btnRemoveChar = new System.Windows.Forms.Button();
             this.btnExportInfo = new System.Windows.Forms.Button();
+            this.btnToImage = new System.Windows.Forms.Button();
+            this.btnFromImage = new System.Windows.Forms.Button();
+            this.btnInversePalette = new System.Windows.Forms.Button();
             this.panelPicImage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picFont)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picText)).BeginInit();
@@ -89,7 +92,7 @@ namespace Fonts
             // panelPicImage
             // 
             this.panelPicImage.AutoScroll = true;
-            this.panelPicImage.BackColor = System.Drawing.SystemColors.Control;
+            this.panelPicImage.BackColor = System.Drawing.Color.Moccasin;
             this.panelPicImage.Controls.Add(this.picFont);
             this.panelPicImage.Location = new System.Drawing.Point(2, 29);
             this.panelPicImage.MaximumSize = new System.Drawing.Size(263, 310);
@@ -99,8 +102,7 @@ namespace Fonts
             // 
             // picFont
             // 
-            this.picFont.BackColor = System.Drawing.Color.Moccasin;
-            this.picFont.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.picFont.BackColor = System.Drawing.Color.Transparent;
             this.picFont.Location = new System.Drawing.Point(0, 0);
             this.picFont.Name = "picFont";
             this.picFont.Size = new System.Drawing.Size(260, 310);
@@ -156,7 +158,7 @@ namespace Fonts
             this.btnPalette.Image = global::Fonts.Properties.Resources.palette;
             this.btnPalette.Location = new System.Drawing.Point(4, 483);
             this.btnPalette.Name = "btnPalette";
-            this.btnPalette.Size = new System.Drawing.Size(172, 26);
+            this.btnPalette.Size = new System.Drawing.Size(149, 26);
             this.btnPalette.TabIndex = 11;
             this.btnPalette.Text = "S05";
             this.btnPalette.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
@@ -188,9 +190,9 @@ namespace Fonts
             // btnChangeMap
             // 
             this.btnChangeMap.Image = global::Fonts.Properties.Resources.font_go;
-            this.btnChangeMap.Location = new System.Drawing.Point(182, 483);
+            this.btnChangeMap.Location = new System.Drawing.Point(159, 483);
             this.btnChangeMap.Name = "btnChangeMap";
-            this.btnChangeMap.Size = new System.Drawing.Size(150, 26);
+            this.btnChangeMap.Size = new System.Drawing.Size(142, 26);
             this.btnChangeMap.TabIndex = 12;
             this.btnChangeMap.Text = "S06";
             this.btnChangeMap.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
@@ -231,10 +233,43 @@ namespace Fonts
             this.btnExportInfo.UseVisualStyleBackColor = true;
             this.btnExportInfo.Click += new System.EventHandler(this.btnExportInfo_Click);
             // 
+            // btnToImage
+            // 
+            this.btnToImage.Location = new System.Drawing.Point(415, 483);
+            this.btnToImage.Name = "btnToImage";
+            this.btnToImage.Size = new System.Drawing.Size(92, 26);
+            this.btnToImage.TabIndex = 16;
+            this.btnToImage.Text = "Export to image";
+            this.btnToImage.UseVisualStyleBackColor = true;
+            this.btnToImage.Click += new System.EventHandler(this.btnToImage_Click);
+            // 
+            // btnFromImage
+            // 
+            this.btnFromImage.Location = new System.Drawing.Point(307, 483);
+            this.btnFromImage.Name = "btnFromImage";
+            this.btnFromImage.Size = new System.Drawing.Size(102, 26);
+            this.btnFromImage.TabIndex = 17;
+            this.btnFromImage.Text = "Import from image";
+            this.btnFromImage.UseVisualStyleBackColor = true;
+            this.btnFromImage.Click += new System.EventHandler(this.btnFromImage_Click);
+            // 
+            // btnInversePalette
+            // 
+            this.btnInversePalette.Location = new System.Drawing.Point(266, 342);
+            this.btnInversePalette.Name = "btnInversePalette";
+            this.btnInversePalette.Size = new System.Drawing.Size(107, 23);
+            this.btnInversePalette.TabIndex = 18;
+            this.btnInversePalette.Text = "Inverse palette";
+            this.btnInversePalette.UseVisualStyleBackColor = true;
+            this.btnInversePalette.Click += new System.EventHandler(this.btnInversePalette_Click);
+            // 
             // FontControl
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
             this.BackColor = System.Drawing.Color.Transparent;
+            this.Controls.Add(this.btnInversePalette);
+            this.Controls.Add(this.btnFromImage);
+            this.Controls.Add(this.btnToImage);
             this.Controls.Add(this.btnExportInfo);
             this.Controls.Add(this.btnRemoveChar);
             this.Controls.Add(this.btnAddChar);
@@ -277,5 +312,8 @@ namespace Fonts
         private System.Windows.Forms.Button btnAddChar;
         private System.Windows.Forms.Button btnRemoveChar;
         private System.Windows.Forms.Button btnExportInfo;
+        private System.Windows.Forms.Button btnToImage;
+        private System.Windows.Forms.Button btnFromImage;
+        private System.Windows.Forms.Button btnInversePalette;
     }
 }

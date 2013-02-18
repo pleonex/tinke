@@ -95,6 +95,7 @@ namespace INAZUMA11
                 case "BOEJ":
                     if (file.id >= 0x203 && file.id <= 0x235) return Format.Text;
                     if (file.id == 0x110) return Format.Compressed;
+                    if (file.id == 0x18A) return Format.Compressed;
                     break;
             }
 
@@ -133,7 +134,7 @@ namespace INAZUMA11
                 return SFP.Unpack(spl.path, file.path);
             }
 
-            if (gameCode == "BOEJ" && file.id == 0x110)
+            if (gameCode == "BOEJ" && (file.id == 0x110 || file.id == 0x18A))
                 return Encryption.Decrypt_Item(file, pluginHost);
 
             return new sFolder();

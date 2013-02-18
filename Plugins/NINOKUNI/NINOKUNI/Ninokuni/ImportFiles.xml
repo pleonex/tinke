@@ -9,6 +9,10 @@
   <File ID="2ABF">\UI\Common\cancell.n2d</File>
   <File ID="2AD6">\UI\Common\MapGauge00.n2d</File>
   <File ID="2AE6">\UI\Common\titlebutton.n2d</File>
+  <File ID="2AC0">\UI\Common\CESA01.n2d</File>
+  <File ID="2AC1">\UI\Common\CESA02.n2d</File>
+  <File ID="2AE7">\UI\Common\Warning01.n2d</File>
+  <File ID="2AE8">\UI\Common\Warning02.n2d</File>
   <File ID="2E2C">\UI\Menu-Skin-2\CheckSheet\bg_b.n2d</File>
   <File ID="2E2D">\UI\Menu-Skin-2\CheckSheet\bg_c.n2d</File>
   <File ID="2E31">\UI\Menu-Skin-2\CheckSheet\button.n2d</File>
@@ -64,6 +68,24 @@
   <File ID="2E8A">\UI\Menu-Skin-2\EquipImagen\bg_a.n2d</File>
   <File ID="2E8B">\UI\Menu-Skin-2\EquipImagen\bg_b.n2d</File>
   <File ID="2E8D">\UI\Menu-Skin-2\EquipImagen\button.n2d</File>
+  <File ID="2EFA">\UI\Menu-Skin-2\MainMenu\bg_a.n2d</File>
+  <File ID="2EFC">\UI\Menu-Skin-2\MainMenu\bookmark.n2d</File>
+  <File ID="2EFE">\UI\Menu-Skin-2\MainMenu\cage.n2d</File>
+  <File ID="2EFF">\UI\Menu-Skin-2\MainMenu\equip.n2d</File>
+  <File ID="2F03">\UI\Menu-Skin-2\MainMenu\imagen.n2d</File>
+  <File ID="2F05">\UI\Menu-Skin-2\MainMenu\lv.n2d</File>
+  <File ID="2F09">\UI\Menu-Skin-2\MainMenu\option.n2d</File>
+  <File ID="2F0A">\UI\Menu-Skin-2\MainMenu\porch.n2d</File>
+  <File ID="2F0B">\UI\Menu-Skin-2\MainMenu\pot.n2d</File>
+  <File ID="2F0C">\UI\Menu-Skin-2\MainMenu\quest.n2d</File>
+  <File ID="2F0D">\UI\Menu-Skin-2\MainMenu\rupe.n2d</File>
+  <File ID="2F0E">\UI\Menu-Skin-2\MainMenu\staffbutton.n2d</File>
+  <File ID="2F11">\UI\Menu-Skin-2\MainMenu\trebin.n2d</File>
+  <File ID="2F55">\UI\Menu-Skin-2\Naming\bg_b.n2d</File>
+  <File ID="2F58">\UI\Menu-Skin-2\Naming\blackout.n2d</File>
+  <File ID="2F5B">\UI\Menu-Skin-2\Naming\cursor.n2d</File>
+  <File ID="2F5C">\UI\Menu-Skin-2\Naming\LRbutton.n2d</File>
+  <File ID="2F5E">\UI\Menu-Skin-2\Naming\window.n2d</File>
   <File ID="313E">\UI\Talk\Skin\2\popbutton.n2d</File>
   <File ID="313F">\UI\Talk\Skin\2\popbutton2.n2d</File>
 </NinoImport>

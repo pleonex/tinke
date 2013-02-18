@@ -1231,7 +1231,7 @@ namespace Tinke
 
         private void btnExtraer_Click(object sender, EventArgs e)
         {
-            if (Convert.ToUInt16(treeSystem.SelectedNode.Tag) < 0xF000)
+            if (Convert.ToUInt16(accion.IDSelect) < 0xF000)
             {
                 if ((String)accion.Selected_File().tag == "Descomprimido")
                 {

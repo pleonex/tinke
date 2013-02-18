@@ -181,16 +181,15 @@ namespace NINOKUNI
         }
         public void Import(string file)
         {
-            XmlDocument doc = new XmlDocument();
-            doc.Load(file);
+            XDocument doc = XDocument.Load(file);
+            XElement root = doc.Element("System");
 
-            XmlNode root = doc.ChildNodes[1];
-            for (int i = 0; i < root.ChildNodes.Count; i++)
+            int i = 0;
+            foreach (XElement el in root.Elements("String"))
             {
-                XmlNode el = root.ChildNodes[i];
-                systext.elements[i].id = Convert.ToUInt32(el.Attributes["ID"].Value, 16);
+                systext.elements[i].id = Convert.ToUInt32(el.Attribute("ID").Value, 16);
 
-                string text = el.InnerText;
+                string text = el.Value;
                 if (text.Contains("\n"))
                 {
                     text = text.Remove(0, 5);
@@ -201,6 +200,7 @@ namespace NINOKUNI
                 text = text.Replace('】', '>');
 
                 systext.elements[i].text = text;
+                i++;
             }
         }
 

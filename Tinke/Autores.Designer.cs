@@ -180,7 +180,7 @@ namespace Tinke
             this.lblDSDecmp2.Size = new System.Drawing.Size(255, 39);
             this.lblDSDecmp2.TabIndex = 10;
             this.lblDSDecmp2.Text = "S08 LZ77 (0x10), LZSS (0x11),\r\nLZSS (0x40), Huffman (0x20), RLE (0x30), \'overlays" +
-                "\'.\r\nBy: barubary";
+    "\'.\r\nBy: barubary";
             // 
             // linkGBATEK
             // 
@@ -257,11 +257,11 @@ namespace Tinke
             // 
             this.label8.AutoSize = true;
             this.label8.Font = new System.Drawing.Font("Consolas", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label8.Location = new System.Drawing.Point(82, 348);
+            this.label8.Location = new System.Drawing.Point(46, 348);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(248, 17);
+            this.label8.Size = new System.Drawing.Size(296, 17);
             this.label8.TabIndex = 19;
-            this.label8.Text = "ana1is1a   rafael1193   go11um";
+            this.label8.Text = "ana1is1a   rafael1193   go11um   CUE";
             // 
             // lblTrad
             // 

@@ -37,6 +37,9 @@ namespace Fonts
         Dictionary<int, int> charTile;
         Color[] palette;
         const int ZOOM = 2;
+        const int MAX_WIDTH = 260;
+        bool inversePalette = false;
+
 
         public FontControl()
         {
@@ -49,12 +52,12 @@ namespace Fonts
             this.pluginHost = pluginHost;
             this.font = font;
             ReadLanguage();
-            this.palette = CalculatePalette();
+            this.palette = NFTR.CalculatePalette(font.plgc.depth, inversePalette);
 
             for (int i = 0; i < font.plgc.tiles.Length; i++)
                 comboChar.Items.Add("Char " + i.ToString());
 
-            picFont.Image = NFTR.Get_Chars(font, 250, palette, ZOOM);
+            picFont.Image = NFTR.Get_Chars(font, MAX_WIDTH, palette, ZOOM);
 
             Fill_CharTile();
 
@@ -197,7 +200,7 @@ namespace Fonts
             CharControl charControl = (CharControl)panelCharEdit.Controls[0];
             font.hdwc.info[comboChar.SelectedIndex] = charControl.TileInfo;
             font.plgc.tiles[comboChar.SelectedIndex] = charControl.Tiles;
-            picFont.Image = NFTR.Get_Chars(font, 250, palette, ZOOM);
+            picFont.Image = NFTR.Get_Chars(font, MAX_WIDTH, palette, ZOOM);
             txtBox_TextChanged(txtBox, null);
         }
         private void btnSave_Click(object sender, EventArgs e)
@@ -209,9 +212,9 @@ namespace Fonts
 
         private void picFont_MouseClick(object sender, MouseEventArgs e)
         {
-            int charX = e.X / (font.plgc.tile_width * ZOOM);
-            int charY = e.Y / (font.plgc.tile_height * ZOOM);
-            int totalX = 250 / (font.plgc.tile_width * ZOOM);
+            int charX = e.X / (font.plgc.tile_width * ZOOM + NFTR.BORDER_WIDTH);
+            int charY = e.Y / (font.plgc.tile_height * ZOOM + NFTR.BORDER_WIDTH);
+            int totalX = MAX_WIDTH / (font.plgc.tile_width * ZOOM + 2 * NFTR.BORDER_WIDTH);
 
             int index = charX + charY * totalX;
             if (index < comboChar.Items.Count)
@@ -229,20 +232,8 @@ namespace Fonts
             palette2 = palette2.Reverse().ToArray();
             palette = palette2;
 
-            picFont.Image = NFTR.Get_Chars(font, 250, palette);
+            picFont.Image = NFTR.Get_Chars(font, MAX_WIDTH, palette);
             txtBox_TextChanged(txtBox, null);
-        }
-        private Color[] CalculatePalette()
-        {
-            Color[] palette = new Color[(int)Math.Pow(2, font.plgc.depth)];
-            for (int i = 0; i < palette.Length; i++)
-            {
-                int colorIndex = 255 - (i * (255 / (palette.Length - 1)));
-                palette[i] = Color.FromArgb(colorIndex, 0, 0, 0);
-                //palette[i] = Color.FromArgb(255, colorIndex, colorIndex, colorIndex);
-            }
-            palette = palette.Reverse().ToArray();
-            return palette;
         }
 
         private void btnChangeMap_Click(object sender, EventArgs e)
@@ -289,7 +280,7 @@ namespace Fonts
             tiles.Add(newChar);
             font.plgc.tiles = tiles.ToArray();
 
-            picFont.Image = NFTR.Get_Chars(font, 250, palette, ZOOM);
+            picFont.Image = NFTR.Get_Chars(font, MAX_WIDTH, palette, ZOOM);
             comboChar.Items.Add("Char" + comboChar.Items.Count.ToString());
             comboChar.SelectedIndex = comboChar.Items.Count - 1;
 
@@ -306,7 +297,7 @@ namespace Fonts
             tiles.RemoveAt(index);
             font.plgc.tiles = tiles.ToArray();
 
-            picFont.Image = NFTR.Get_Chars(font, 250, palette, ZOOM);
+            picFont.Image = NFTR.Get_Chars(font, MAX_WIDTH, palette, ZOOM);
             comboChar.Items.RemoveAt(index);
             comboChar.SelectedIndex = index - 1;
         }
@@ -329,6 +320,41 @@ namespace Fonts
                 return;
 
             NFTR.ExportInfo(o.FileName, charTile, font);
+        }
+
+        private void btnToImage_Click(object sender, EventArgs e)
+        {
+            using (SaveFileDialog o = new SaveFileDialog())
+            {
+                o.Filter = "Portable Network Graphic (*.png)|*.png";
+
+                if (o.ShowDialog() == DialogResult.OK)
+                    NFTR.ToImage(this.font, palette).Save(o.FileName);
+            }
+        }
+        private void btnFromImage_Click(object sender, EventArgs e)
+        {
+            using (OpenFileDialog o = new OpenFileDialog())
+            {
+                o.Filter = "Portable Network Graphic (*.png)|*.png";
+
+                if (o.ShowDialog() == DialogResult.OK)
+                    NFTR.FromImage((Bitmap)Image.FromFile(o.FileName), this.font, this.palette);
+            }
+
+            // Update
+            picFont.Image = NFTR.Get_Chars(font, MAX_WIDTH, palette, ZOOM);
+            txtBox_TextChanged(txtBox, null);
+        }
+
+        private void btnInversePalette_Click(object sender, EventArgs e)
+        {
+            inversePalette = !inversePalette;
+            this.palette = NFTR.CalculatePalette(this.font.plgc.depth, inversePalette);
+
+            // Update
+            picFont.Image = NFTR.Get_Chars(font, MAX_WIDTH, palette, ZOOM);
+            txtBox_TextChanged(txtBox, null);
         }
     }
 }

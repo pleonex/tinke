@@ -410,9 +410,16 @@ namespace Ekona.Images.Dialogs
             Array.Copy(bank.oams, newOAM, length);
             // New oam
             newOAM[length] = new OAM();
-            newOAM[length].num_cell = (ushort)length;
             newOAM[length].obj0.yOffset = -128;
             newOAM[length].obj1.xOffset = -256;
+            if (checkAddFirst.Checked)
+            {
+                newOAM[length].num_cell = 0;            // Set this OAM as the first, with more priority in this layer so visible
+                for (int i = 0; i < length; i++)        // And increment the number of each OAM to fix that
+                    newOAM[i].num_cell++;
+            }
+            else
+                newOAM[length].num_cell = (ushort)length;   // Set to the background of the layer
             bank.oams = newOAM;
             OAM oam = newOAM[length];
 
