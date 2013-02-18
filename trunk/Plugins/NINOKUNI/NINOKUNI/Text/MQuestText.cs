@@ -26,7 +26,6 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
-using System.Xml;
 using System.Xml.Linq;
 using System.Windows.Forms;
 using Ekona;
@@ -156,18 +155,18 @@ namespace NINOKUNI
 
         public void Import(string file)
         {
-            XmlDocument doc = new XmlDocument();
-            doc.Load(file);
+            XDocument doc = XDocument.Load(file);
+            XElement root = doc.Element("MainQuest");
 
-            XmlNode root = doc.ChildNodes[1];
-            for (int i = 0; i < root.ChildNodes.Count; i++)
+            int i = 0;
+            foreach (XElement block in root.Elements("Block"))
             {
-                XmlNode block = root.ChildNodes[i];
-                mq.blocks[i].id = Convert.ToUInt32(block.Attributes["ID"].Value, 16);
+                mq.blocks[i].id = Convert.ToUInt32(block.Attribute("ID").Value, 16);
 
-                for (int j = 0; j < block.ChildNodes.Count; j++)
+                int j = 0;
+                foreach (XElement xString in block.Elements("String"))
                 {
-                    string text = block.ChildNodes[j].InnerText;
+                    string text = xString.Value;
                     if (text.Contains("\n"))
                     {
                         text = text.Remove(0, 7);
@@ -178,7 +177,9 @@ namespace NINOKUNI
                     text = text.Replace('】', '>');
 
                     mq.blocks[i].elements[j].text = text;
+                    j++;
                 }
+                i++;
             }
         }
 
@@ -195,18 +196,17 @@ namespace NINOKUNI
             if (File.Exists(o.FileName))
                 File.Delete(o.FileName);
 
-            XmlDocument doc = new XmlDocument();
-            doc.AppendChild(doc.CreateXmlDeclaration("1.0", "utf-8", null));
-            XmlElement root = doc.CreateElement("MainQuest");
+            XDocument doc = new XDocument();
+            XElement root = new XElement("MainQuest");
 
             for (int i = 0; i < mq.blocks.Length; i++)
             {
-                XmlElement block = doc.CreateElement("Block");
-                block.SetAttribute("ID", mq.blocks[i].id.ToString("x"));
+                XElement block = new XElement("Block");
+                block.SetAttributeValue("ID", mq.blocks[i].id.ToString("x"));
 
                 for (int j = 0; j < mq.blocks[i].elements.Length; j++)
                 {
-                    XmlElement el = doc.CreateElement("String");
+                    XElement el = new XElement("String");
 
                     // Format the text
                     string text = mq.blocks[i].elements[j].text;
@@ -216,14 +216,14 @@ namespace NINOKUNI
                     if (text.Contains("\n"))
                         text = "\n      " + text + "\n    ";
 
-                    el.InnerText = text;
-                    block.AppendChild(el);
+                    el.Value = text;
+                    block.Add(el);
                 }
 
-                root.AppendChild(block);
+                root.Add(block);
             }
 
-            doc.AppendChild(root);
+            doc.Add(root);
             doc.Save(o.FileName);
         }
         private void btnImport_Click(object sender, EventArgs e)

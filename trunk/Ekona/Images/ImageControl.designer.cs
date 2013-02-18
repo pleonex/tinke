@@ -293,7 +293,8 @@ namespace Ekona.Images
             "Direct (16 bpp)",
             "A3I5",
             "A5I3",
-            "2bpp (4 colors)"});
+            "2bpp (4 colors)",
+            "A4I4"});
             this.comboDepth.Location = new System.Drawing.Point(165, 19);
             this.comboDepth.Name = "comboDepth";
             this.comboDepth.Size = new System.Drawing.Size(83, 21);

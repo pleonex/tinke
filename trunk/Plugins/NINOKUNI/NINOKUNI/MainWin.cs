@@ -170,26 +170,41 @@ namespace NINOKUNI
             }
 
             // Mini-script
-            if (!Directory.Exists(path + "Mini"))
-                return;
-
-            sFolder btuto = pluginHost.Search_Folder(0xF02E);
-            string[] dirs = Directory.GetDirectories(path + "Mini");
-            for (int i = 0; i < btuto.folders.Count; i++)
+            if (Directory.Exists(path + "Mini" + Path.DirectorySeparatorChar + "BattleTutorial"))
             {
-                string cdir = Array.Find(dirs, a => new DirectoryInfo(a).Name == btuto.folders[i].name);
-                if (cdir == null)
-                    continue;
-
-                sFolder cfol = btuto.folders[i];
-                string[] cfiles = Directory.GetFiles(cdir, "*.bin", SearchOption.TopDirectoryOnly);
-                for (int j = 0; j < cfol.files.Count; j++)
+                sFolder btuto = pluginHost.Search_Folder(0xF02E);
+                string[] dirs = Directory.GetDirectories(path + "Mini" + Path.DirectorySeparatorChar + "BattleTutorial");
+                for (int i = 0; i < btuto.folders.Count; i++)
                 {
-                    string cf = Array.Find(cfiles, a => Path.GetFileName(a) == cfol.files[j].name);
-                    if (cf == null)
+                    string cdir = Array.Find(dirs, a => new DirectoryInfo(a).Name == btuto.folders[i].name);
+                    if (cdir == null)
                         continue;
 
-                    pluginHost.ChangeFile(cfol.files[j].id, cf);
+                    sFolder cfol = btuto.folders[i];
+                    string[] cfiles = Directory.GetFiles(cdir, "*.bin", SearchOption.TopDirectoryOnly);
+                    for (int j = 0; j < cfol.files.Count; j++)
+                    {
+                        string cf = Array.Find(cfiles, a => Path.GetFileName(a) == cfol.files[j].name);
+                        if (cf == null)
+                            continue;
+
+                        pluginHost.ChangeFile(cfol.files[j].id, cf);
+                    }
+                }
+            }
+
+            if (Directory.Exists(path + "Mini" + Path.DirectorySeparatorChar + "_QuestReport"))
+            {
+                sFolder map = pluginHost.Search_Folder(0xF02A);
+                string[] map_xmls = Directory.GetFiles(path + "Mini" + Path.DirectorySeparatorChar + "_QuestReport"
+                    , "*.bin", SearchOption.TopDirectoryOnly);
+                for (int i = 0; i < map.files.Count; i++)
+                {
+                    string smap = Array.Find(map_xmls, a => Path.GetFileName(a) == map.files[i].name);
+                    if (smap == null)
+                        continue;
+
+                    pluginHost.ChangeFile(map.files[i].id, smap);
                 }
             }
         }

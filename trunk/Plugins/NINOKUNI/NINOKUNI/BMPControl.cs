@@ -30,7 +30,7 @@ namespace NINOKUNI
             File.Copy(image, imagePath, true);
             picBox.ImageLocation = imagePath;
 
-            ReadLanguage();
+            //ReadLanguage();
         }
 
         private void ReadLanguage()

@@ -185,11 +185,11 @@ namespace Fonts
             // 
             // panelPic
             // 
-            this.panelPic.AutoSize = true;
+            this.panelPic.AutoScroll = true;
             this.panelPic.Controls.Add(this.picFont);
             this.panelPic.Location = new System.Drawing.Point(0, 0);
             this.panelPic.Name = "panelPic";
-            this.panelPic.Size = new System.Drawing.Size(246, 203);
+            this.panelPic.Size = new System.Drawing.Size(243, 203);
             this.panelPic.TabIndex = 12;
             // 
             // CharControl

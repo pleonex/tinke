@@ -327,8 +327,12 @@ namespace NINOKUNI
             doc.Load(file);
 
             XmlNode root = doc.ChildNodes[1];
+            int j = 0;
             for (int i = 0; i < root.ChildNodes.Count; i++)
             {
+                if (root.ChildNodes[i].NodeType != XmlNodeType.Element)
+                    continue;
+
                 string text = root.ChildNodes[i].InnerText;
                 if (text.Contains("\n"))
                 {
@@ -337,8 +341,9 @@ namespace NINOKUNI
                     text = text.Replace("\n    ", "\n");
                 }
 
-                sce.blocks[0].elements[i].id = Convert.ToUInt32(root.ChildNodes[i].Attributes["ID"].Value, 16);
-                sce.blocks[0].elements[i].text = text;
+                sce.blocks[0].elements[j].text = text;
+                sce.blocks[0].elements[j].id = Convert.ToUInt32(root.ChildNodes[i].Attributes["ID"].Value, 16);
+                j++;
             }
         }
 

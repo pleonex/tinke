@@ -33,6 +33,10 @@ namespace Fonts
     // http://romxhack.esforos.com/fuentes-nftr-de-nds-t67
     public static class NFTR
     {
+        const int CHARS_PER_LINE = 16;
+        public const int BORDER_WIDTH = 2;
+        static readonly Pen BORDER = new Pen(Color.DarkRed, BORDER_WIDTH);
+
         public static sNFTR Read(sFile cfile, string lang)
         {
             sNFTR font = new sNFTR();
@@ -406,12 +410,24 @@ namespace Fonts
             catch { throw new NotSupportedException("There was an error reading the language file"); }
         }
 
+        public static Color[] CalculatePalette(int depth, bool inverse)
+        {
+            Color[] palette = new Color[1 << depth];
+            
+            for (int i = 0; i < palette.Length; i++)
+            {
+                int colorIndex = i * (255 / (palette.Length - 1));
+                if (inverse) colorIndex = 255 - colorIndex;
+                palette[i] = Color.FromArgb(255, colorIndex, colorIndex, colorIndex);
+            }
+
+            return palette;
+        }
         public static Bitmap Get_Char(sNFTR font, int id, Color[] palette, int zoom = 1)
         {
             Bitmap image = new Bitmap(font.plgc.tile_width * zoom, font.plgc.tile_height * zoom);
             List<Byte> tileData = new List<byte>();
 
-            int bits = Convert.ToByte(new String('1', font.plgc.depth), 2);
             for (int i = 0; i < font.plgc.tiles[id].Length; i += font.plgc.depth)
             {
                 Byte byteFromBits = 0;
@@ -477,26 +493,16 @@ namespace Fonts
         }
         public static Bitmap Get_Chars(sNFTR font, int maxWidth, Color[] palette, int zoom = 1)
         {
-            int char_x = maxWidth / (font.plgc.tile_width * zoom);
-            int char_y = (font.plgc.tiles.Length / char_x) + 1;
-            Bitmap image = new Bitmap(char_x * (font.plgc.tile_width * zoom) + 1, char_y * (font.plgc.tile_height * zoom) + 1);
-            Graphics graphic = Graphics.FromImage(image);
+            int numChars = font.plgc.tiles.Length;
 
-            int w, h;
-            w = h = 0;
-            for (int i = 0; i < font.plgc.tiles.Length; i++)
-            {
-                graphic.DrawRectangle(Pens.Red, w, h, font.plgc.tile_width * zoom, font.plgc.tile_height * zoom);
-                graphic.DrawImageUnscaled(Get_Char(font, i, palette, zoom), w, h);
-                w += font.plgc.tile_width * zoom;
-                if (w + (font.plgc.tile_width * zoom) > maxWidth)
-                {
-                    w = 0;
-                    h += font.plgc.tile_height * zoom;
-                }
-            }
+            // Get the image size
+            int charWidth = font.plgc.tile_width * zoom + BORDER_WIDTH;
+            int charHeight = font.plgc.tile_height * zoom + BORDER_WIDTH;
 
-            return image;
+            int numColumns = maxWidth / (charWidth + BORDER_WIDTH);
+            int numRows = (int)Math.Ceiling((double)numChars / numColumns);
+
+            return ToImage(font, palette, charWidth, charHeight, numRows, numColumns, zoom);
         }
 
         public static Byte[] Rotate270(Byte[] bytes,int width, int height, int depth)
@@ -623,6 +629,119 @@ namespace Fonts
             doc.Save(fileOut);
         }
 
+        public static void FromImage(Bitmap image, sNFTR font, Color[] palette)
+        {
+            int numChars = font.plgc.tiles.Length;
+
+            // Get the image size
+            int numColumns = (numChars < CHARS_PER_LINE) ? numChars : CHARS_PER_LINE;
+            int numRows = (int)Math.Ceiling((double)numChars / numColumns);
+
+            int charWidth = font.plgc.tile_width + BORDER_WIDTH;
+            int charHeight = font.plgc.tile_height + BORDER_WIDTH;
+
+            int width = numColumns * charWidth + BORDER_WIDTH;
+            int height = numRows * charHeight + BORDER_WIDTH;
+
+            if (width != image.Width || height != image.Height)
+            {
+                System.Windows.Forms.MessageBox.Show("Incorrect size.");
+                return;
+            }
+
+            // Draw chars
+            for (int i = 0; i < numRows; i++)
+            {
+                for (int j = 0; j < numColumns; j++)
+                {
+                    int index = i * numColumns + j;
+                    if (index >= numChars)
+                        break;
+
+                    int x = j * charWidth + BORDER_WIDTH;
+                    int y = i * charHeight + BORDER_WIDTH;
+
+                    Bitmap charImg = image.Clone(new Rectangle(x, y, charWidth - BORDER_WIDTH, charHeight - BORDER_WIDTH),
+                        System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+
+                    font.plgc.tiles[index] = SetChar(charImg, font.plgc.depth, palette);
+                }
+            }
+        }
+        private static byte[] SetChar(Bitmap img, int encoding, Color[] palette)
+        {
+            int numPixels = img.Width * img.Height;
+            int numBits = numPixels * encoding;
+            if (numBits % 8 != 0)
+                numBits += 8 - (numBits % 8);
+            byte[] data = new byte[numBits];
+
+            int bitsWritten = 0;
+            for (int y = 0; y < img.Height; y++)
+            {
+                for (int x = 0; x < img.Width; x++)
+                {
+                    Color color = img.GetPixel(x, y);
+                    int index = Array.FindIndex(palette, c => c.Equals(color));
+                    if (index == -1)
+                    {
+                        Console.WriteLine("Color not found: {0}", color.ToString());
+                        return data;
+                    }
+
+                    for (int b = 0; b < encoding; b++)
+                        data[bitsWritten++] = (byte)((index >> b) & 0x01);
+                }
+            }
+
+            return data;
+        }
+        
+        private static Bitmap ToImage(sNFTR font, Color[] palette, int charWidth, int charHeight,
+                                      int numRows, int numColumns, int zoom)
+        {
+            int numChars = font.plgc.tiles.Length;
+            int width = numColumns * charWidth + BORDER_WIDTH;
+            int height = numRows * charHeight + BORDER_WIDTH;
+
+            Bitmap image = new Bitmap(width, height);
+            Graphics graphic = Graphics.FromImage(image);
+
+            // Draw chars
+            for (int i = 0; i < numRows; i++)
+            {
+                for (int j = 0; j < numColumns; j++)
+                {
+                    int index = i * numColumns + j;
+                    if (index >= numChars)
+                        break;
+
+                    int x = j * charWidth + BORDER_WIDTH;
+                    int y = i * charHeight + BORDER_WIDTH;
+
+                    int align = BORDER_WIDTH - (BORDER_WIDTH / 2);
+                    graphic.DrawRectangle(BORDER, x - align, y - align, charWidth, charHeight);
+                    graphic.DrawImage(Get_Char(font, index, palette, zoom), x, y);
+                }
+            }
+
+            graphic.Dispose();
+            graphic = null;
+            return image;
+        }
+        public static Bitmap ToImage(sNFTR font, Color[] palette)
+        {
+            int numChars = font.plgc.tiles.Length;
+
+            // Get the image size
+            int numColumns = (numChars < CHARS_PER_LINE) ? numChars : CHARS_PER_LINE;
+            int numRows = (int)Math.Ceiling((double)numChars / numColumns);
+
+            int charWidth = font.plgc.tile_width + BORDER_WIDTH;
+            int charHeight = font.plgc.tile_height + BORDER_WIDTH;
+
+            return ToImage(font, palette, charWidth, charHeight, numRows, numColumns, 1);
+        }
     }
 
     public struct sNFTR // Nitro FonT Resource

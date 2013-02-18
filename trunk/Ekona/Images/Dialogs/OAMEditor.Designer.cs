@@ -102,6 +102,7 @@ namespace Ekona.Images.Dialogs
             this.numObj1 = new System.Windows.Forms.NumericUpDown();
             this.label18 = new System.Windows.Forms.Label();
             this.numObj2 = new System.Windows.Forms.NumericUpDown();
+            this.checkAddFirst = new System.Windows.Forms.CheckBox();
             this.groupObj0.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numYoffset)).BeginInit();
             this.groupObj1.SuspendLayout();
@@ -777,12 +778,25 @@ namespace Ekona.Images.Dialogs
             0});
             this.numObj2.ValueChanged += new System.EventHandler(this.numObj_ValueChanged);
             // 
+            // checkAddFirst
+            // 
+            this.checkAddFirst.AutoSize = true;
+            this.checkAddFirst.Checked = true;
+            this.checkAddFirst.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkAddFirst.Location = new System.Drawing.Point(14, 234);
+            this.checkAddFirst.Name = "checkAddFirst";
+            this.checkAddFirst.Size = new System.Drawing.Size(78, 17);
+            this.checkAddFirst.TabIndex = 26;
+            this.checkAddFirst.Text = "Add first ID";
+            this.checkAddFirst.UseVisualStyleBackColor = true;
+            // 
             // OAMEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
             this.ClientSize = new System.Drawing.Size(533, 550);
+            this.Controls.Add(this.checkAddFirst);
             this.Controls.Add(this.label18);
             this.Controls.Add(this.numObj2);
             this.Controls.Add(this.label17);
@@ -893,5 +907,6 @@ namespace Ekona.Images.Dialogs
         private System.Windows.Forms.NumericUpDown numObj1;
         private System.Windows.Forms.Label label18;
         private System.Windows.Forms.NumericUpDown numObj2;
+        private System.Windows.Forms.CheckBox checkAddFirst;
     }
 }

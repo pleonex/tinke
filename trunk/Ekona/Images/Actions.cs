@@ -45,6 +45,13 @@ namespace Ekona.Images
         direct = 7,         // 16bits, color with BGR555 encoding
         colors2 = 8,        // 1 bit for 2 colors
         directBGR_32 = 9,   // 32 bits -> ABGR
+        A4I4 = 10,
+    }
+    public enum ColorEncoding : byte
+    {
+        BGR555 = 1,
+        BGR = 2,
+        RGB = 3
     }
 
     public static class Actions
@@ -301,6 +308,19 @@ namespace Ekona.Images
 
                     pos++;
                     break;
+                case ColorFormat.A4I4:
+                    if (data.Length <= pos) break;
+                    index = data[pos] & 0xF;
+                    alpha = (data[pos] >> 4);
+                    alpha *= 16;
+                    if (palette.Length > index)
+                        color = Color.FromArgb(alpha,
+                            palette[index].R,
+                            palette[index].G,
+                            palette[index].B);
+
+                    pos++;
+                    break;
                 case ColorFormat.A5I3:
                     if (data.Length <= pos) break;
                     index = data[pos] & 0x7;
@@ -351,7 +371,7 @@ namespace Ekona.Images
 
                     ushort byteColor = BitConverter.ToUInt16(data, pos);
                     color = Color.FromArgb(
-                        ((byteColor >> 15) == 0 ? 255 : 0),
+                        ((byteColor >> 15) == 1 ? 255 : 0),
                         (byteColor & 0x1F) * 8,
                         ((byteColor >> 5) & 0x1F) * 8,
                         ((byteColor >> 10) & 0x1F) * 8);
@@ -692,6 +712,7 @@ namespace Ekona.Images
                 case ColorFormat.A5I3: max_colors = 8; bpc = 8; break;
                 case ColorFormat.direct: max_colors = 0; bpc = 16; break;
                 case ColorFormat.colors2: max_colors = 2; bpc = 1; break;
+                case ColorFormat.A4I4: max_colors = 16; bpc = 8; break;
             }
 
             // Not dithering method for now, I hope you input a image with less than the maximum colors
@@ -721,6 +742,12 @@ namespace Ekona.Images
                         byte va1 = (byte)data[j++, 0];
                         va1 |= (byte)(alpha1 << 5);
                         tiles[i++] = va1;
+                        break;
+                    case ColorFormat.A4I4:
+                        byte alpha3 = (byte)(data[j, 1] * 16 / 256);
+                        byte va3 = (byte)data[j++, 0];
+                        va3 |= (byte)(alpha3 << 4);
+                        tiles[i++] = va3;
                         break;
                     case ColorFormat.A5I3:
                         byte alpha2 = (byte)(data[j, 1] * 32 / 256);
