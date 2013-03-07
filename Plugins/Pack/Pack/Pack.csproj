@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ALAR.cs" />
+    <Compile Include="Arch.cs" />
     <Compile Include="Games\4HEROSLIGHT.cs" />
     <Compile Include="Games\AWITCHSTALE.cs" />
     <Compile Include="Games\BSIGILBE.cs" />

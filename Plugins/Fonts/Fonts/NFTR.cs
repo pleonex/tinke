@@ -35,7 +35,7 @@ namespace Fonts
     {
         const int CHARS_PER_LINE = 16;
         public const int BORDER_WIDTH = 2;
-        static readonly Pen BORDER = new Pen(Color.DarkRed, BORDER_WIDTH);
+        static readonly Pen BORDER = new Pen(Color.Olive, BORDER_WIDTH);
 
         public static sNFTR Read(sFile cfile, string lang)
         {
@@ -413,50 +413,20 @@ namespace Fonts
         public static Color[] CalculatePalette(int depth, bool inverse)
         {
             Color[] palette = new Color[1 << depth];
-            
+
             for (int i = 0; i < palette.Length; i++)
             {
-                int colorIndex = i * (255 / (palette.Length - 1));
+                int colorIndex = i *  (255 / (palette.Length - 1));
                 if (inverse) colorIndex = 255 - colorIndex;
                 palette[i] = Color.FromArgb(255, colorIndex, colorIndex, colorIndex);
             }
 
             return palette;
         }
+        
         public static Bitmap Get_Char(sNFTR font, int id, Color[] palette, int zoom = 1)
         {
-            Bitmap image = new Bitmap(font.plgc.tile_width * zoom, font.plgc.tile_height * zoom);
-            List<Byte> tileData = new List<byte>();
-
-            for (int i = 0; i < font.plgc.tiles[id].Length; i += font.plgc.depth)
-            {
-                Byte byteFromBits = 0;
-                for (int b = 0; b < font.plgc.depth; b++)
-                {
-                    byteFromBits += (byte)(font.plgc.tiles[id][i + b] << b);
-                }
-                tileData.Add(byteFromBits);
-            }
-
-            for (int h = 0; h < image.Height / zoom; h++)
-            {
-                for (int w = 0; w < image.Width / zoom; w++)
-                {
-                    for (int hzoom = 0; hzoom < zoom; hzoom++)
-                        for (int wzoom = 0; wzoom < zoom; wzoom++)
-                            try
-                            {
-                                image.SetPixel(
-                                    w * zoom + wzoom,
-                                    h * zoom + hzoom,
-                                    (palette[tileData[w + h * image.Width / zoom]]));
-                            }
-                            catch { break; }
-                }
-            }
-
-            //image.MakeTransparent();
-            return image;
+            return Get_Char(font.plgc.tiles[id], font.plgc.depth, font.plgc.tile_width, font.plgc.tile_height, font.plgc.rotateMode, palette, zoom);
         }
         public static Bitmap Get_Char(byte[] tiles, int depth, int width, int height, int rotateMode,
             Color[] palette, int zoom = 1)
@@ -464,13 +434,12 @@ namespace Fonts
             Bitmap image = new Bitmap(width * zoom + 1, height * zoom + 1);
             List<Byte> tileData = new List<byte>();
 
-            int bits = Convert.ToByte(new String('1', depth), 2);
             for (int i = 0; i < tiles.Length; i += depth)
             {
                 Byte byteFromBits = 0;
-                for (int b = 0; b < depth; b++)
+                for (int b = depth - 1, j = 0; b >= 0; b--, j++)
                 {
-                    byteFromBits += (byte)(tiles[i + b] << b);
+                    byteFromBits += (byte)(tiles[i + j] << b);
                 }
                 tileData.Add(byteFromBits);
             }
