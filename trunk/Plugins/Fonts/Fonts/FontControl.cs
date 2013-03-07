@@ -38,7 +38,7 @@ namespace Fonts
         Color[] palette;
         const int ZOOM = 2;
         const int MAX_WIDTH = 260;
-        bool inversePalette = false;
+        bool inversePalette = true;
 
 
         public FontControl()
