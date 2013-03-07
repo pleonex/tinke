@@ -235,38 +235,6 @@
     <S25>Nothing to do.</S25>
     <S26>Clear log</S26>
   </Messages>
-  <NANR>
-    <S01>Interval:</S01>
-    <S02>miliseconds</S02>
-    <S03>Guides options</S03>
-    <S04>Show guides</S04>
-    <S05>Show cells</S05>
-    <S06>Show image</S06>
-    <S07>Transparency</S07>
-    <S08>Show numbers</S08>
-    <S09>Properties</S09>
-    <S0A>Property</S0A>
-    <S0B>Content</S0B>
-    <S0C>Section:</S0C>
-    <S0D>Number of animations</S0D>
-    <S0E>Number of frames</S0E>
-    <S0F>Constant</S0F>
-    <S10>Padding</S10>
-    <S11>Animation</S11>
-    <S12>Number of animation</S12>
-    <S13>Number of frames</S13>
-    <S14>Data type</S14>
-    <S15>Unknown 1</S15>
-    <S16>Unknown 2</S16>
-    <S17>Unknown 3</S17>
-    <S18>Frame</S18>
-    <S19>Number</S19>
-    <S1A>Frame data</S1A>
-    <S1B>Number of cell</S1B>
-    <S1C>Save</S1C>
-    <S1D>Animations</S1D>
-    <S1E>Double-click to the animation to see it in full size</S1E>
-  </NANR>
   <DSDecmp>
     <!-- LZ10 -->
     <S00>

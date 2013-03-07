@@ -248,38 +248,6 @@
     <S25>No se encontraron operaciones para realizar.</S25>
     <S26>Limpiar log</S26>
   </Messages>
-  <NANR>
-    <S01>Intervalo:</S01>
-    <S02>milisegundos</S02>
-    <S03>Opciones de entorno</S03>
-    <S04>Mostrar entorno</S04>
-    <S05>Mostrar celdas</S05>
-    <S06>Mostrar imagen</S06>
-    <S07>Transparencia</S07>
-    <S08>Mostrar números</S08>
-    <S09>Propiedades</S09>
-    <S0A>Campo</S0A>
-    <S0B>Valor</S0B>
-    <S0C>Sección:</S0C>
-    <S0D>Número de animaciones</S0D>
-    <S0E>Número total de frames</S0E>
-    <S0F>Constante</S0F>
-    <S10>Padding</S10>
-    <S11>Animación</S11>
-    <S12>Número de animación</S12>
-    <S13>Número de frames</S13>
-    <S14>Tipo de datos</S14>
-    <S15>Desconocido 1</S15>
-    <S16>Desconocido 2</S16>
-    <S17>Desconocido 3</S17>
-    <S18>Frame</S18>
-    <S19>Número</S19>
-    <S1A>Datos frame</S1A>
-    <S1B>Número de celda</S1B>
-    <S1C>Guardar</S1C>
-    <S1D>Animaciones</S1D>
-    <S1E>Haz doble click en la animación para verla a tamaño real.</S1E>
-  </NANR>
   <DSDecmp>
     <!-- LZ10 -->
     <S00>

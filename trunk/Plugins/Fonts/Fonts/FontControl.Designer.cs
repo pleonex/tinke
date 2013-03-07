@@ -77,7 +77,7 @@ namespace Fonts
             this.comboChar.Location = new System.Drawing.Point(388, 3);
             this.comboChar.Name = "comboChar";
             this.comboChar.Size = new System.Drawing.Size(121, 21);
-            this.comboChar.TabIndex = 1;
+            this.comboChar.TabIndex = 3;
             this.comboChar.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
             // 
             // txtBox
@@ -86,7 +86,7 @@ namespace Fonts
             this.txtBox.Multiline = true;
             this.txtBox.Name = "txtBox";
             this.txtBox.Size = new System.Drawing.Size(509, 50);
-            this.txtBox.TabIndex = 3;
+            this.txtBox.TabIndex = 0;
             this.txtBox.TextChanged += new System.EventHandler(this.txtBox_TextChanged);
             // 
             // panelPicImage
@@ -98,7 +98,7 @@ namespace Fonts
             this.panelPicImage.MaximumSize = new System.Drawing.Size(263, 310);
             this.panelPicImage.Name = "panelPicImage";
             this.panelPicImage.Size = new System.Drawing.Size(263, 310);
-            this.panelPicImage.TabIndex = 5;
+            this.panelPicImage.TabIndex = 14;
             // 
             // picFont
             // 
@@ -116,7 +116,7 @@ namespace Fonts
             this.btnApply.Location = new System.Drawing.Point(432, 290);
             this.btnApply.Name = "btnApply";
             this.btnApply.Size = new System.Drawing.Size(75, 46);
-            this.btnApply.TabIndex = 1;
+            this.btnApply.TabIndex = 4;
             this.btnApply.Text = "S01";
             this.btnApply.UseVisualStyleBackColor = true;
             this.btnApply.Click += new System.EventHandler(this.btnApply_Click);
@@ -127,7 +127,7 @@ namespace Fonts
             this.panelCharEdit.Location = new System.Drawing.Point(266, 29);
             this.panelCharEdit.Name = "panelCharEdit";
             this.panelCharEdit.Size = new System.Drawing.Size(243, 310);
-            this.panelCharEdit.TabIndex = 7;
+            this.panelCharEdit.TabIndex = 15;
             // 
             // label1
             // 
@@ -135,7 +135,7 @@ namespace Fonts
             this.label1.Location = new System.Drawing.Point(165, 6);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(26, 13);
-            this.label1.TabIndex = 9;
+            this.label1.TabIndex = 13;
             this.label1.Text = "S02";
             // 
             // comboEncoding
@@ -150,7 +150,7 @@ namespace Fonts
             this.comboEncoding.Location = new System.Drawing.Point(230, 4);
             this.comboEncoding.Name = "comboEncoding";
             this.comboEncoding.Size = new System.Drawing.Size(121, 21);
-            this.comboEncoding.TabIndex = 10;
+            this.comboEncoding.TabIndex = 11;
             this.comboEncoding.SelectedIndexChanged += new System.EventHandler(this.comboEncoding_SelectedIndexChanged);
             // 
             // btnPalette
@@ -159,7 +159,7 @@ namespace Fonts
             this.btnPalette.Location = new System.Drawing.Point(4, 483);
             this.btnPalette.Name = "btnPalette";
             this.btnPalette.Size = new System.Drawing.Size(149, 26);
-            this.btnPalette.TabIndex = 11;
+            this.btnPalette.TabIndex = 10;
             this.btnPalette.Text = "S05";
             this.btnPalette.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnPalette.UseVisualStyleBackColor = true;
@@ -171,7 +171,7 @@ namespace Fonts
             this.btnSave.Location = new System.Drawing.Point(0, 0);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(163, 26);
-            this.btnSave.TabIndex = 8;
+            this.btnSave.TabIndex = 12;
             this.btnSave.Text = "S00";
             this.btnSave.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnSave.UseVisualStyleBackColor = true;
@@ -193,7 +193,7 @@ namespace Fonts
             this.btnChangeMap.Location = new System.Drawing.Point(159, 483);
             this.btnChangeMap.Name = "btnChangeMap";
             this.btnChangeMap.Size = new System.Drawing.Size(142, 26);
-            this.btnChangeMap.TabIndex = 12;
+            this.btnChangeMap.TabIndex = 9;
             this.btnChangeMap.Text = "S06";
             this.btnChangeMap.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnChangeMap.UseVisualStyleBackColor = true;
@@ -205,7 +205,7 @@ namespace Fonts
             this.btnAddChar.Location = new System.Drawing.Point(2, 342);
             this.btnAddChar.Name = "btnAddChar";
             this.btnAddChar.Size = new System.Drawing.Size(130, 23);
-            this.btnAddChar.TabIndex = 13;
+            this.btnAddChar.TabIndex = 5;
             this.btnAddChar.Text = "S03";
             this.btnAddChar.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnAddChar.UseVisualStyleBackColor = true;
@@ -217,7 +217,7 @@ namespace Fonts
             this.btnRemoveChar.Location = new System.Drawing.Point(135, 342);
             this.btnRemoveChar.Name = "btnRemoveChar";
             this.btnRemoveChar.Size = new System.Drawing.Size(130, 23);
-            this.btnRemoveChar.TabIndex = 14;
+            this.btnRemoveChar.TabIndex = 6;
             this.btnRemoveChar.Text = "S04";
             this.btnRemoveChar.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnRemoveChar.UseVisualStyleBackColor = true;
@@ -228,7 +228,7 @@ namespace Fonts
             this.btnExportInfo.Location = new System.Drawing.Point(379, 342);
             this.btnExportInfo.Name = "btnExportInfo";
             this.btnExportInfo.Size = new System.Drawing.Size(130, 23);
-            this.btnExportInfo.TabIndex = 15;
+            this.btnExportInfo.TabIndex = 8;
             this.btnExportInfo.Text = "Export font info";
             this.btnExportInfo.UseVisualStyleBackColor = true;
             this.btnExportInfo.Click += new System.EventHandler(this.btnExportInfo_Click);
@@ -238,7 +238,7 @@ namespace Fonts
             this.btnToImage.Location = new System.Drawing.Point(415, 483);
             this.btnToImage.Name = "btnToImage";
             this.btnToImage.Size = new System.Drawing.Size(92, 26);
-            this.btnToImage.TabIndex = 16;
+            this.btnToImage.TabIndex = 2;
             this.btnToImage.Text = "Export to image";
             this.btnToImage.UseVisualStyleBackColor = true;
             this.btnToImage.Click += new System.EventHandler(this.btnToImage_Click);
@@ -248,7 +248,7 @@ namespace Fonts
             this.btnFromImage.Location = new System.Drawing.Point(307, 483);
             this.btnFromImage.Name = "btnFromImage";
             this.btnFromImage.Size = new System.Drawing.Size(102, 26);
-            this.btnFromImage.TabIndex = 17;
+            this.btnFromImage.TabIndex = 1;
             this.btnFromImage.Text = "Import from image";
             this.btnFromImage.UseVisualStyleBackColor = true;
             this.btnFromImage.Click += new System.EventHandler(this.btnFromImage_Click);
@@ -258,7 +258,7 @@ namespace Fonts
             this.btnInversePalette.Location = new System.Drawing.Point(266, 342);
             this.btnInversePalette.Name = "btnInversePalette";
             this.btnInversePalette.Size = new System.Drawing.Size(107, 23);
-            this.btnInversePalette.TabIndex = 18;
+            this.btnInversePalette.TabIndex = 7;
             this.btnInversePalette.Text = "Inverse palette";
             this.btnInversePalette.UseVisualStyleBackColor = true;
             this.btnInversePalette.Click += new System.EventHandler(this.btnInversePalette_Click);

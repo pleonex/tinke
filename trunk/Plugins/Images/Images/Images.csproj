@@ -147,6 +147,9 @@
     <None Include="Resources\picture_save.png" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Images.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="ImagesLang.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
