@@ -182,7 +182,9 @@ namespace Fonts
                 }
 
                 width += font.hdwc.info[tileCode].pixel_start;
-                graphic.DrawImageUnscaled(NFTR.Get_Char(font, tileCode, palette), width, height);
+                Bitmap charImage = NFTR.Get_Char(font, tileCode, palette);
+                charImage.MakeTransparent(this.palette[0]);
+                graphic.DrawImageUnscaled(charImage, width, height);
                 width += font.hdwc.info[tileCode].pixel_length - font.hdwc.info[tileCode].pixel_start;
 
                 if (width + font.plgc.tile_width > image.Width)

@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Images>
+  <English>
+	  <AnimationControl>
+		<label2>Interval:</label2>
+		<label1>miliseconds</label1>
+		<groupBox2>Guides options</groupBox2>
+		<checkEntorno>Show guides</checkEntorno>
+		<checkCeldas>Show cells</checkCeldas>
+		<checkImage>Show image</checkImage>
+		<checkTransparencia>Transparency</checkTransparencia>
+		<checkNumeros>Show numbers</checkNumeros>
+		<label3>Animation:</label3>
+		<btnSave>Save</btnSave>
+		<lblFullImage>Double-click to the animation to see it in full size</lblFullImage>
+    </AnimationControl>
+  </English>
+  <Español>
+	<AnimationControl>
+		<label2>Intervalo:</label2>
+		<label1>milisegundos</label1>
+		<groupBox2>Opciones de entorno</groupBox2>
+		<checkEntorno>Mostrar entorno</checkEntorno>
+		<checkCeldas>Mostrar celdas</checkCeldas>
+		<checkImage>Mostrar imagen</checkImage>
+		<checkTransparencia>Transparencia</checkTransparencia>
+		<checkNumeros>Mostrar números</checkNumeros>
+		<label3>Animación</label3>
+		<btnSave>Guardar</btnSave>
+		<lblFullImage>Haz doble click en la animación para verla a tamaño real.</lblFullImage>
+	</AnimationControl>
+  </Español>
+  <Français>
+    <AnimationControl>
+	    <label2>Intervalle :</label2>
+		<label1>millisecondes</label1>
+		<groupBox2>Options de l'environnement</groupBox2>
+		<checkEntorno>Montrer environnement</checkEntorno>
+		<checkCeldas>Montrer cellules</checkCeldas>
+		<checkImage>Montrer image</checkImage>
+		<checkTransparencia>Transparence</checkTransparencia>
+		<checkNumeros>Montrer numéros</checkNumeros>
+		<label3>Animation</label3>
+		<btnSave>Enregistrer</btnSave>
+		<lblFullImage>
+		  Double-cliquez sur l'image pour la voir en
+		  taille réelle.
+		</lblFullImage>
+	</AnimationControl>
+  </Français>
+</Images>

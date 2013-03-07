@@ -359,41 +359,6 @@
       qui est, la même que l'image exportée.
     </S26>
   </NCER>
-  <NANR>
-    <S01>Intervalle :</S01>
-    <S02>millisecondes</S02>
-    <S03>Options de l'environnement</S03>
-    <S04>Montrer environnement</S04>
-    <S05>Montrer cellules</S05>
-    <S06>Montrer image</S06>
-    <S07>Transparence</S07>
-    <S08>Montrer numéros</S08>
-    <S09>Propriétés</S09>
-    <S0A>Champ</S0A>
-    <S0B>Valeur</S0B>
-    <S0C>Section :</S0C>
-    <S0D>Nombre d'animations</S0D>
-    <S0E>Nombre total de cadres</S0E>
-    <S0F>Constante</S0F>
-    <S10>Padding</S10>
-    <S11>Animation</S11>
-    <S12>Nombre d'animations</S12>
-    <S13>Nombre total de frames</S13>
-    <S14>Type de données</S14>
-    <S15>Inconnu 1</S15>
-    <S16>Inconnu 2</S16>
-    <S17>Inconnu 3</S17>
-    <S18>Cadre (Frame)</S18>
-    <S19>Numéro</S19>
-    <S1A>Données cadre</S1A>
-    <S1B>Numéro de cellule</S1B>
-    <S1C>Enregistrer</S1C>
-    <S1D>Animations</S1D>
-    <S1E>
-      Double-cliquez sur l'image pour la voir en
-      taille réelle.
-    </S1E>
-  </NANR>
   <DSDecmp>
     <!-- LZ10 -->
     <S00>

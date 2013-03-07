@@ -86,6 +86,8 @@ namespace Tinke
                     iFlag = iconos.Images[1];
 
                 XElement xLang = XElement.Load(langFile);
+                if (xLang.Name != "Language")
+                    continue;
 
                 toolStripLanguage.DropDownItems.Add(
                     xLang.Attribute("name").Value,
