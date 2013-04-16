@@ -658,7 +658,7 @@ namespace Fonts
                         return data;
                     }
 
-                    for (int b = 0; b < encoding; b++)
+                    for (int b = encoding - 1; b >= 0; b--)
                         data[bitsWritten++] = (byte)((index >> b) & 0x01);
                 }
             }

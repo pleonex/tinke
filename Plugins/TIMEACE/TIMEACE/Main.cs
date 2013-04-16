@@ -55,13 +55,48 @@ namespace TIMEACE
         
         public Format Get_Format(sFile file, byte[] magic)
         {
-            if ((file.id >= 0xBE && file.id <= 0x10B) ||
-                (file.id >= 0x10C && file.id <= 0x1B1))
+            if (this.IsImage(file.id))
             {
                 return Format.FullImage;
             }
 
+            if (file.name.EndsWith(".cfg"))
+            {
+                return Format.Text;
+            }
+
+            if (file.name.EndsWith(".area") || file.name.EndsWith(".unit") ||
+                file.name.EndsWith(".spawn"))
+            {
+                return Format.Text;
+            }
+
+            if (file.name.EndsWith(".fsf") || file.name.EndsWith(".fss"))
+            {
+                return Format.Text;
+            }
+
+            if (file.name.EndsWith(".tmpl") || file.name.EndsWith(".cam") ||
+                file.name.EndsWith(".ncam"))
+            {
+                return Format.Text;
+            }
+
+            if (file.name.EndsWith(".fca") || file.name.EndsWith(".col"))
+            {
+                return Format.Text;
+            }
+
             return Format.Unknown;
+        }
+
+        private bool IsImage(int id)
+        {
+            if ((id >= 0x0BE && id <= 0x10B) ||
+                (id >= 0x10C && id <= 0x1B1))
+                return true;
+
+            return false;
         }
 
         public string Pack(ref sFolder unpacked, sFile file)
@@ -79,8 +114,17 @@ namespace TIMEACE
             throw new NotImplementedException();
         }
 
-
         public System.Windows.Forms.Control Show_Info(sFile file)
+        {
+            if (this.IsImage(file.id))
+            {
+                return this.ShowImage(file);
+            }
+
+            return new TextEditor(this.pluginHost, file);
+        }
+
+        private System.Windows.Forms.Control ShowImage(sFile file)
         {
             #region Palette
             BinaryReader br = new BinaryReader(File.OpenRead(file.path));

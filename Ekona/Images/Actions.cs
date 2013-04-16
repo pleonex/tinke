@@ -44,8 +44,9 @@ namespace Ekona.Images
         A5I3 = 6,           // 8 bits-> 0-2: index; 3-7: alpha
         direct = 7,         // 16bits, color with BGR555 encoding
         colors2 = 8,        // 1 bit for 2 colors
-        directBGR_32 = 9,   // 32 bits -> ABGR
+        BGRA32 = 9,   // 32 bits -> ABGR
         A4I4 = 10,
+        ABGR32 = 11
     }
     public enum ColorEncoding : byte
     {
@@ -378,13 +379,20 @@ namespace Ekona.Images
                     pos += 2;
                     break;
 
-                case ColorFormat.directBGR_32:
+                case ColorFormat.BGRA32:
                     if (pos + 4 >= data.Length)
                         break;
 
-                    byte a, b, g, r;
-                    r = data[pos++]; g = data[pos++]; b = data[pos++]; a = (byte)(255 - data[pos++]);
-                    color = Color.FromArgb(a, r, g, b);
+                    color = Color.FromArgb(data[pos+3], data[pos+0], data[pos+1], data[pos+2]);
+                    pos += 4;
+                    break;
+
+                case ColorFormat.ABGR32:
+                    if (pos + 4 >= data.Length)
+                        break;
+
+                    color = Color.FromArgb(data[pos+0], data[pos+1], data[pos+2], data[pos+3]);
+                    pos += 4;
                     break;
 
                 case ColorFormat.texel4x4:
