@@ -143,7 +143,7 @@ namespace Ekona.Images
                 bpp = 2;
             else if (format == Images.ColorFormat.direct)
                 bpp = 16;
-            else if (format == Images.ColorFormat.directBGR_32)
+            else if (format == Images.ColorFormat.BGRA32 || format == Images.ColorFormat.ABGR32)
                 bpp = 32;
 
             tilePal = new byte[tiles.Length * (tile_size / bpp)];
@@ -174,7 +174,7 @@ namespace Ekona.Images
                 bpp = 2;
             else if (format == Images.ColorFormat.direct)
                 bpp = 16;
-            else if (format == Images.ColorFormat.directBGR_32)
+            else if (format == Images.ColorFormat.BGRA32 || format == Images.ColorFormat.ABGR32)
                 bpp = 32;
 
             tilePal = new byte[tiles.Length * (tile_size / bpp)];
@@ -268,7 +268,7 @@ namespace Ekona.Images
                     bpp = 2;
                 else if (format == Images.ColorFormat.direct)
                     bpp = 16;
-                else if (format == Images.ColorFormat.directBGR_32)
+                else if (format == Images.ColorFormat.BGRA32 || format ==Images.ColorFormat.ABGR32)
                     bpp = 32;
                 else
                     bpp = 8;

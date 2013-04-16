@@ -50,6 +50,7 @@ namespace Tinke
                 Nitro.Estructuras.ROMHeader cabecera = Nitro.NDS.LeerCabecera(archivo);
                 Nitro.Estructuras.Banner banner = Nitro.NDS.LeerBanner(archivo, cabecera.bannerOffset);
                 Mostrar_Informacion(cabecera, banner);
+                this.checkTrans.Checked = true;
             }
             catch
             {
@@ -268,7 +269,7 @@ namespace Tinke
             if (checkTrans.Checked)
             {
                 Bitmap imagen = (Bitmap)picBanner.Clone();
-                imagen.MakeTransparent();
+                imagen.MakeTransparent(Ekona.Images.Actions.BGR555ToColor(banner.palette)[0]);
                 picIcon.Image = imagen;
             }
             else

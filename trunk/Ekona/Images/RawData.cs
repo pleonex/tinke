@@ -297,16 +297,16 @@ namespace Ekona.Images
     public class RawSprite : SpriteBase
     {
 
-        public RawSprite(Bank[] banks, uint blocksize)
+        public RawSprite(Bank[] banks, uint blocksize, bool editable = false)
         {
-            Set_Banks(banks, blocksize, false);
+            Set_Banks(banks, blocksize, editable);
         }
-        public RawSprite(OAM[] oams, uint blocksize)
+        public RawSprite(OAM[] oams, uint blocksize, bool editable = false)
         {
             Bank bank = new Bank();
             bank.name = "Bank 1";
             bank.oams = oams;
-            Set_Banks(new Bank[] { bank }, blocksize, false);
+            Set_Banks(new Bank[] { bank }, blocksize, editable);
         }
 
         public override void Read(string fileIn)

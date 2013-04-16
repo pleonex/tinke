@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{5CBD7ECF-00AC-4A69-9F44-B8F92D296EBD}</ProjectGuid>
+    <ProjectGuid>{E5F54CCF-AEDD-4BD7-9980-E99F4303E9BC}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>TIMEACE</RootNamespace>
-    <AssemblyName>TIMEACE</AssemblyName>
+    <RootNamespace>Teniprimgaku</RootNamespace>
+    <AssemblyName>Teniprimgaku</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -18,7 +18,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\..\..\Tinke\bin\Debug\Plugins\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -26,15 +26,14 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\..\Tinke\bin\Debug\Plugins\</OutputPath>
+    <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Ekona">
-      <HintPath>..\..\..\..\..\Desktop\Ekona.dll</HintPath>
+      <HintPath>..\..\..\Ekona\bin\Debug\Ekona.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -46,18 +45,36 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Main.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TextEditor.cs">
+    <Compile Include="Cell.cs" />
+    <Compile Include="Filedata.cs" />
+    <Compile Include="GameImage.cs" />
+    <Compile Include="GameSprite.cs" />
+    <Compile Include="ScrnControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="TextEditor.Designer.cs">
-      <DependentUpon>TextEditor.cs</DependentUpon>
+    <Compile Include="ScrnControl.Designer.cs">
+      <DependentUpon>ScrnControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Main.cs" />
+    <Compile Include="Project.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Scrn.cs" />
+    <Compile Include="TextViewer.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="TextViewer.Designer.cs">
+      <DependentUpon>TextViewer.cs</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="TextEditor.resx">
-      <DependentUpon>TextEditor.cs</DependentUpon>
+    <Content Include="Licence.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="ScrnControl.resx">
+      <DependentUpon>ScrnControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TextViewer.resx">
+      <DependentUpon>TextViewer.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

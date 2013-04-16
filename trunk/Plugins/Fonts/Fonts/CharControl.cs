@@ -167,8 +167,8 @@ namespace Fonts
 
             Bitmap image = (Bitmap)picFont.Image;
             Point location_pixel = new Point(e.X / 10, e.Y / 10);
-            for (int d = 0; d < depth; d++)
-                tiles[(location_pixel.X + location_pixel.Y * width) * depth + d] = (byte)((trackPalette.Value >> d) & 1);
+            for (int d = depth - 1, i = 0; d >= 0; d--, i++)
+                tiles[(location_pixel.X + location_pixel.Y * width) * depth + i] = (byte)((trackPalette.Value >> d) & 1);
 
             Draw_Char();
 
