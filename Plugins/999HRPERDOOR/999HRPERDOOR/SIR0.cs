@@ -32,7 +32,7 @@ namespace _999HRPERDOOR
     {
         SIR0_Info info;
 
-        public SIR0_Sprite(IPluginHost pluginHost, string file, int id, string fileName = "")
+        public SIR0_Sprite(IPluginHost pluginHost, string file, int id, string fileName)
             : base(file, id, pluginHost, fileName)
         {
         }
@@ -90,14 +90,14 @@ namespace _999HRPERDOOR
             br.BaseStream.Position = info.info3.palette_offset;
             Color[][] colors = new Color[1][];
             colors[0] = Actions.BGR555ToColor(br.ReadBytes(0x200));
-            palette = new RawPalette(colors, false, ColorFormat.colors256);
+            palette = new RawPalette(colors, false, ColorFormat.colors256, "");
 
             // Read tiles
             br.BaseStream.Position = info.info3.tile_offset;
             byte[] tiles = new byte[info.info3.tile_size];
             tiles = br.ReadBytes((int)info.info3.tile_size);
             image = new RawImage(tiles, TileForm.Lineal, ColorFormat.colors256, 0x40,
-                (int)(info.info3.tile_size / 0x40), false);
+                (int)(info.info3.tile_size / 0x40), false, "");
 
             // Read cell info
             uint bank_size;
@@ -133,7 +133,7 @@ namespace _999HRPERDOOR
 
     public class SIR0_Image : ImageBase
     {
-        public SIR0_Image(IPluginHost pluginHost, string file, int id, string fileName = "")
+        public SIR0_Image(IPluginHost pluginHost, string file, int id, string fileName)
             : base(file, id, pluginHost, fileName)
         {
         }
@@ -155,12 +155,12 @@ namespace _999HRPERDOOR
 
             br.BaseStream.Position = paletteOffset;
             Color[] colors = Actions.BGR555ToColor(br.ReadBytes(0x200));
-            RawPalette palette = new RawPalette(new Color[][] { colors }, false, ColorFormat.colors256);
+            RawPalette palette = new RawPalette(new Color[][] { colors }, false, ColorFormat.colors256, "");
             pluginHost.Set_Palette(palette);
 
             br.Close();
 
-            Set_Tiles(tiles, 0x100, tiles.Length / 0x100, ColorFormat.colors256, TileForm.Lineal, false);
+            Set_Tiles(tiles, 0x100, tiles.Length / 0x100, ColorFormat.colors256, TileForm.Lineal, false, 8);
             pluginHost.Set_Image(this);
         }
 

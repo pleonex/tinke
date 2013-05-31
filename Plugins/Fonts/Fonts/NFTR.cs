@@ -58,8 +58,7 @@ namespace Fonts
 
             font.fnif.unknown1 = br.ReadByte();
             font.fnif.height = br.ReadByte();
-            font.fnif.unknown2 = br.ReadByte();
-            font.fnif.unknown3 = br.ReadByte();
+            font.fnif.nullCharIndex = br.ReadUInt16();
             font.fnif.unknown4 = br.ReadByte();
             font.fnif.width = br.ReadByte();
             font.fnif.width_bis = br.ReadByte();
@@ -74,7 +73,7 @@ namespace Fonts
                 font.fnif.height_font = br.ReadByte();
                 font.fnif.widht_font = br.ReadByte();
                 font.fnif.bearing_y = br.ReadByte();
-                font.fnif.unknown5 = br.ReadByte();
+                font.fnif.bearing_x = br.ReadByte();
             }
 
             // Character Graphics LP
@@ -168,7 +167,7 @@ namespace Fonts
                 br.BaseStream.Position = nextOffset - 0x08;
             } while (nextOffset != 0x00 && (nextOffset - 0x08) < br.BaseStream.Length);
 
-            WriteInfo(font, lang);
+            //WriteInfo(font, lang);
             font.plgc.rotateMode = 0;
 
             br.Close();
@@ -211,8 +210,7 @@ namespace Fonts
             bw.Write(font.fnif.block_size);
             bw.Write(font.fnif.unknown1);
             bw.Write(font.fnif.height);
-            bw.Write(font.fnif.unknown2);
-            bw.Write(font.fnif.unknown3);
+            bw.Write(font.fnif.nullCharIndex);
             bw.Write(font.fnif.unknown4);
             bw.Write(font.fnif.width);
             bw.Write(font.fnif.width_bis);
@@ -225,7 +223,7 @@ namespace Fonts
                 bw.Write(font.fnif.height_font);
                 bw.Write(font.fnif.widht_font);
                 bw.Write(font.fnif.bearing_y);
-                bw.Write(font.fnif.unknown5);
+                bw.Write(font.fnif.bearing_x);
             }
 
             // Padding
@@ -330,8 +328,7 @@ namespace Fonts
                 Console.WriteLine(xml.Element("S03").Value, font.fnif.block_size.ToString("x"));
                 Console.WriteLine(xml.Element("S04").Value, font.fnif.unknown1.ToString("x"));
                 Console.WriteLine(xml.Element("S1E").Value, font.fnif.height.ToString("x"));
-                Console.WriteLine(xml.Element("S05").Value, font.fnif.unknown2.ToString("x"));
-                Console.WriteLine(xml.Element("S1F").Value, font.fnif.unknown3.ToString("x"));
+                Console.WriteLine("Null char index: " + font.fnif.nullCharIndex.ToString());
                 Console.WriteLine(xml.Element("S20").Value, font.fnif.unknown4.ToString("x"));
                 Console.WriteLine(xml.Element("S21").Value, font.fnif.width.ToString("x"));
                 Console.WriteLine(xml.Element("S22").Value, font.fnif.width_bis.ToString("x"));
@@ -344,7 +341,7 @@ namespace Fonts
                     Console.WriteLine(xml.Element("S24").Value, font.fnif.height_font.ToString("x"));
                     Console.WriteLine(xml.Element("S25").Value, font.fnif.widht_font.ToString("x"));
                     Console.WriteLine(xml.Element("S26").Value, font.fnif.bearing_y.ToString("x"));
-                    Console.WriteLine(xml.Element("S09").Value, font.fnif.unknown5.ToString("x"));
+                    Console.WriteLine(xml.Element("S09").Value, font.fnif.bearing_x.ToString("x"));
                 }
 
 
@@ -598,6 +595,46 @@ namespace Fonts
             doc.Save(fileOut);
         }
 
+        public static void ExportFullInfo(string fileOut, sNFTR font)
+        {
+            string encName = null;
+            switch (font.fnif.encoding)
+	        {
+                case 0: encName = "utf-8"; break;
+                case 1: encName = "utf-16"; break;
+                case 2: encName = "shift_jis"; break;
+                case 3: encName = Encoding.GetEncoding(1252).EncodingName; break;
+	        }
+
+            XDocument doc = new XDocument();
+            doc.Declaration = new XDeclaration("1.0", encName, "yes");
+            XElement root = new XElement("NFTR");
+
+            // Export general info
+            // FNIF data
+            XElement xmlFnif = new XElement("FNIF");
+            xmlFnif.Add(new XElement("Unknown1", font.fnif.unknown1));
+            xmlFnif.Add(new XElement("Height", font.fnif.height));
+            xmlFnif.Add(new XElement("NullCharIndex", font.fnif.nullCharIndex));
+            xmlFnif.Add(new XElement("Unknown2", font.fnif.unknown4));
+            xmlFnif.Add(new XElement("Width", font.fnif.width));
+            xmlFnif.Add(new XElement("WidthBis", font.fnif.width_bis));
+            xmlFnif.Add(new XElement("Encoding", encName));
+            if (font.fnif.block_size == 0x20)
+            {
+                xmlFnif.Add(new XElement("GlyphHeight", font.fnif.height_font));
+                xmlFnif.Add(new XElement("GlyphWidth", font.fnif.widht_font));
+                xmlFnif.Add(new XElement("BearingY", font.fnif.bearing_y));
+                xmlFnif.Add(new XElement("BearingX", font.fnif.bearing_x));
+            }
+            root.Add(xmlFnif);
+
+            doc.Add(root);
+            doc.Save(fileOut);
+            root = null;
+            doc = null;
+        }
+
         public static void FromImage(Bitmap image, sNFTR font, Color[] palette)
         {
             int numChars = font.plgc.tiles.Length;
@@ -739,8 +776,7 @@ namespace Fonts
 
             public byte unknown1;       // Usually 0x00
             public byte height;
-            public byte unknown2;       
-            public byte unknown3;       // Usually 0x00
+            public ushort nullCharIndex;
             public byte unknown4;       // Usually 0x00
             public byte width;
             public byte width_bis;
@@ -753,7 +789,7 @@ namespace Fonts
             public byte height_font;
             public byte widht_font;
             public byte bearing_y;
-            public byte unknown5;       // Usually 0x00
+            public byte bearing_x;       // Usually 0x00
         }
         public struct PLGC // Character Graphics LP
         {
