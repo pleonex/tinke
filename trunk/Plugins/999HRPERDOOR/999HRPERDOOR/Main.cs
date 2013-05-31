@@ -81,9 +81,12 @@ namespace _999HRPERDOOR
         {
             string tempFile = pluginHost.Get_TempFile();
 
-            byte[] data = File.ReadAllBytes(file.path);
-            byte[] decrypted = AT6P.Decrypt(data);
-            File.WriteAllBytes(tempFile, decrypted);
+			Stream strin = File.OpenRead(file.path);
+            MemoryStream strout = AT6P.Decode(strin);
+
+            FileStream strfile = File.OpenWrite(tempFile);
+			strout.WriteTo(strfile);
+			strfile.Flush();
 
             sFolder unpack = new sFolder();
             unpack.files = new List<sFile>();
@@ -92,8 +95,12 @@ namespace _999HRPERDOOR
             newFile.name = file.name;
             newFile.offset = 0;
             newFile.path = tempFile;
-            newFile.size = (uint)decrypted.Length;
+            newFile.size = (uint)strfile.Length;
             unpack.files.Add(newFile);
+
+			strin.Dispose();
+			strout.Dispose();
+			strfile.Dispose();
 
             return unpack;
         }
