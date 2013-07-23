@@ -134,8 +134,12 @@ namespace INAZUMA11
                 return SFP.Unpack(spl.path, file.path);
             }
 
-            if (gameCode == "BOEJ" && (file.id == 0x110 || file.id == 0x18A))
-                return Encryption.Decrypt_Item(file, pluginHost);
+            if (gameCode == "BOEJ") { 
+				if (file.id == 0x110)
+                	return Encryption.Decrypt(file, 0x2C, pluginHost);
+				else if (file.id == 0x18A)
+					return Encryption.Decrypt(file, 0x48, pluginHost);
+			}
 
             return new sFolder();
         }
@@ -171,11 +175,13 @@ namespace INAZUMA11
                 return fileout;                                 // Return new SPD file
             }
 
-            if (gameCode == "BOEJ" && file.id == 0x110)
-            {
-                Encryption.Encrypt_Item(unpacked.files[0].path, fileout);
-                return fileout;
-            }
+            if (gameCode == "BOEJ") {
+				if (file.id == 0x110)
+					Encryption.Encrypt(unpacked.files[0].path, 0x2C, fileout);
+				else if (file.id == 0x18A)
+					Encryption.Encrypt(unpacked.files[0].path, 0x48, fileout);
+				return fileout;
+			}
 
             return null;
         }
