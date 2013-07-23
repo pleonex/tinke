@@ -374,17 +374,33 @@ namespace Ekona.Images
 
             Color[] pal = palette.Palette[pal_index];
             byte[] tiles = image.Tiles;
-            int index = Actions.Remove_DuplicatedColors(ref pal, ref tiles);
-            if (index == -1)
+            int index = -1;
+
+            if ((palette.Depth == ColorFormat.colors256 && palette.NumberOfColors == 256) ||
+                (palette.Depth == ColorFormat.colors16 && palette.NumberOfColors == 16))
             {
-                index = Actions.Remove_NotUsedColors(ref pal, ref tiles);
+                index = Actions.Remove_DuplicatedColors(ref pal, ref tiles);
                 if (index == -1)
                 {
-                    MessageBox.Show("No space in the palette found");
-                    return;
+                    index = Actions.Remove_NotUsedColors(ref pal, ref tiles);
+
                 }
             }
+            else
+            {
+                index = palette.NumberOfColors; // First empty place
+                Color[] newPal = new Color[pal.Length + 1];
+                Array.Copy(pal, newPal, pal.Length);
+                pal = newPal;
+            }
 
+            if (index == -1)
+            {
+                MessageBox.Show("No space in the palette found");
+                return;
+            }
+
+            pal[index] = Color.FromArgb(248, 0, 248);   // Usually used as transparent color
             Actions.Swap_Color(ref tiles, ref pal, index, 0, image.FormatColor);
 
             Color[][] new_pal = palette.Palette;

@@ -32,15 +32,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Ekona, Version=7.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Ekona\bin\Debug\Ekona.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="Ekona">
+      <HintPath>..\..\..\Ekona\bin\Debug\Ekona.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BlogpostControl.cs">
@@ -59,11 +58,6 @@
     <Compile Include="Main.cs" />
     <Compile Include="Packs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
     <Compile Include="SubtitlesControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -76,27 +70,11 @@
     <Compile Include="USearchControl.Designer.cs">
       <DependentUpon>USearchControl.cs</DependentUpon>
     </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="BlogpostControl.resx">
-      <DependentUpon>BlogpostControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="BlogresControl.resx">
-      <DependentUpon>BlogresControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="SubtitlesControl.resx">
-      <DependentUpon>SubtitlesControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="USearchControl.resx">
-      <DependentUpon>USearchControl.cs</DependentUpon>
-    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\page_white_edit.png" />
+    <None Include="Properties\Resources.resx" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Licence.txt" />

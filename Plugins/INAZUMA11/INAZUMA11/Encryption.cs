@@ -33,19 +33,20 @@ namespace INAZUMA11
 {
     public static class Encryption
     {
-        public static sFolder Decrypt_Item(sFile item, IPluginHost pluginHost)
+        public static sFolder Decrypt(sFile item, int blockSize, IPluginHost pluginHost)
         {
             sFolder unpacked = new sFolder();
             unpacked.files = new List<sFile>();
 
             byte[] data = File.ReadAllBytes(item.path);
+			int numBlocks = data.Length / blockSize;
 
-            for (int i = 0; i < 0x400; i++)
+            for (int i = 0; i < numBlocks; i++)
             {
-                byte[] block = new byte[0x2C];
-                Array.Copy(data, i * 0x2C, block, 0, 0x2C);
+                byte[] block = new byte[blockSize];
+                Array.Copy(data, i * blockSize, block, 0, blockSize);
                 Decrypt(ref block);
-                Array.Copy(block, 0, data, i * 0x2C, 0x2C);
+                Array.Copy(block, 0, data, i * blockSize, blockSize);
             }
 
             string fileout = pluginHost.Get_TempFile();
@@ -60,16 +61,17 @@ namespace INAZUMA11
 
             return unpacked;
         }
-        public static void Encrypt_Item(string fileIn, string fileout)
+        public static void Encrypt(string fileIn, int blockSize, string fileout)
         {
             byte[] data = File.ReadAllBytes(fileIn);
+			int numBlocks = data.Length / blockSize;
 
-            for (int i = 0; i < 0x400; i++)
+            for (int i = 0; i < numBlocks; i++)
             {
-                byte[] block = new byte[0x2C];
-                Array.Copy(data, i * 0x2C, block, 0, 0x2C);
+                byte[] block = new byte[blockSize];
+                Array.Copy(data, i * blockSize, block, 0, blockSize);
                 Encrypt(ref block);
-                Array.Copy(block, 0, data, i * 0x2C, 0x2C);
+                Array.Copy(block, 0, data, i * blockSize, blockSize);
             }
 
             File.WriteAllBytes(fileout, data);

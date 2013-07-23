@@ -431,5 +431,56 @@ namespace _3DModels
             o.Dispose();
         }
 
+        private void button1_Click(object sender, EventArgs e)
+        {
+            int num_tex = listTextures.SelectedIndex;
+            int num_pal = listPalettes.SelectedIndex;
+
+            sBTX0.Texture.TextInfo texInfo = (sBTX0.Texture.TextInfo)btx0.texture.texInfo.infoBlock.infoData[num_tex];
+            sBTX0.Texture.PalInfo palInfo = (sBTX0.Texture.PalInfo)btx0.texture.palInfo.infoBlock.infoData[num_pal];
+
+            // Get palette data
+            BinaryReader br = new BinaryReader(File.OpenRead(btx0.file));
+            br.BaseStream.Position = btx0.header.offset[0] + btx0.texture.header.paletteData_offset;
+            br.BaseStream.Position += palInfo.palette_offset * 8;
+            Byte[] palette_data = br.ReadBytes((int)PaletteSize[texInfo.format]);
+            Color[] palette = Actions.BGR555ToColor(palette_data);
+            br.Close();
+
+
+            SaveFileDialog o = new SaveFileDialog();
+            o.AddExtension = true;
+            o.CheckPathExists = true;
+            o.DefaultExt = ".pal";
+            o.Filter = "Windows Palette for Gimp 2.8 (*.pal)|*.pal|" +
+                        "Windows Palette (*.pal)|*.pal|" +
+                        "Portable Network Graphics (*.png)|*.png|" +
+                        "Adobe COlor (*.aco)|*.aco";
+            o.OverwritePrompt = true;
+
+            if (o.ShowDialog() != DialogResult.OK)
+                return;
+
+            if (o.FilterIndex == 3)
+            {
+                RawPalette p = new RawPalette(palette, false, ColorFormat.colors256);
+                p.Get_Image(0).Save(o.FileName, System.Drawing.Imaging.ImageFormat.Png);
+            }
+            else if (o.FilterIndex == 1 || o.FilterIndex == 2)
+            {
+                Ekona.Images.Formats.PaletteWin palwin = new Ekona.Images.Formats.PaletteWin(palette);
+                if (o.FilterIndex == 1)
+                    palwin.Gimp_Error = true;
+                palwin.Write(o.FileName);
+            }
+            else if (o.FilterIndex == 4)
+            {
+                Ekona.Images.Formats.ACO palaco = new Ekona.Images.Formats.ACO(palette);
+                palaco.Write(o.FileName);
+            }
+
+            o.Dispose();
+        }
+
     }
 }
