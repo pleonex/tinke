@@ -113,7 +113,7 @@ namespace Ekona.Images
                 return;
 
             depth = newDepth;
-            if (depth == ColorFormat.colors256)
+            if (depth == ColorFormat.colors256 || depth == ColorFormat.A3I5)
                 palette = Actions.Palette_16To256(palette);
             else
                 palette = Actions.Palette_256To16(palette);
