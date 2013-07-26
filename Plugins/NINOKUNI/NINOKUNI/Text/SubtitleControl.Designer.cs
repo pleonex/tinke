@@ -193,7 +193,7 @@ namespace NINOKUNI
             this.numSyncTime.Enabled = false;
             this.numSyncTime.Location = new System.Drawing.Point(86, 19);
             this.numSyncTime.Maximum = new decimal(new int[] {
-            65535,
+            -1,
             0,
             0,
             0});
