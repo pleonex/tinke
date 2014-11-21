@@ -14,7 +14,7 @@ namespace Sounds
         string lang;
 
         public SADL(string lang, string file, int id)
-            : base(file, id, "SADL", "vgmstream", false) { this.lang = lang; }
+            : base(file, id, "SADL", "vgmstream", true) { this.lang = lang; }
 
         public override byte[] Read_File()
         {
@@ -120,7 +120,7 @@ namespace Sounds
                 }
                 else   // Mono
                 {
-                    Byte[] buffer = new byte[sadl.interleave_block_size * 2];
+					Byte[] buffer = new byte[sadl.interleave_block_size * 2];
                     Array.Copy(encoded, pos, buffer, 0, buffer.Length);
                     pos += buffer.Length;
                     data.AddRange(buffer);
@@ -218,11 +218,63 @@ namespace Sounds
 
         public override void Write_File(string fileOut, byte[] data)
         {
-            throw new NotImplementedException();
-        }
-        public override byte[] Encode()
+			BinaryWriter bw = new BinaryWriter(File.OpenWrite(fileOut));
+			BinaryReader br = new BinaryReader(File.OpenRead(this.soundFile));
+
+			// Copy header from original file
+			bw.Write(br.ReadBytes(0x100));
+
+			// Write encoded data
+			bw.Write(data);
+
+			// Update header values
+			// .. update file size
+			bw.BaseStream.Position = 0x40;
+			bw.Write((uint)bw.BaseStream.Length);
+
+			// .. update channels
+			bw.BaseStream.Position = 0x32;
+			bw.Write((byte)this.Channels);
+
+			// .. update encoding and sample rate values
+			bw.BaseStream.Position = 0x33;
+			br.BaseStream.Position = 0x33;
+			byte cod = br.ReadByte();
+			cod &= 0x09;
+			cod |= (byte)sadl.coding;
+			cod |= (byte)(this.SampleRate == 16364 ? 2 : 4);
+			bw.Write(cod);
+
+			br.Close();
+			bw.Close();
+		}
+		protected override byte[] Encode(byte[] data)
         {
-            throw new NotImplementedException();
+			// TODO: Implement stereo
+			if (this.Channels != 1)
+				throw new NotImplementedException("Only implemented 1 channel (mono)");
+
+			// TODO: Implement sample rate converter
+			if (this.SampleRate != 16364 && this.SampleRate != 32728)
+				throw new NotImplementedException("Only implemented sample rate 16364 and 32728.\n"+
+					"This audio has " + this.SampleRate.ToString() + ". Please convert it.");
+
+			// TODO: Implement sample bit converter.
+			if (this.SampleBitDepth != 16)
+				throw new NotImplementedException("Only sample of 16 bits is allowed.\n" +
+					"This audio has " + this.SampleBitDepth.ToString() + ". Please convert it.");
+
+			// Force to use IMA ADPCM encoding since Procyon encoding has not been implemented yet.
+			sadl.coding = Coding.INT_IMA;
+			byte[] encoded = Compression.IMA_ADPCM.Compress(data);
+
+			// Pad to block size, and force to use SADL constant value.
+			this.block_size = sadl.interleave_block_size;
+			int rest = (int)(encoded.Length % (sadl.interleave_block_size * 2));
+			if (rest != 0)
+				Array.Resize(ref encoded, encoded.Length + (int)((sadl.interleave_block_size * 2) - rest));
+
+			return encoded;
         }
     }
 

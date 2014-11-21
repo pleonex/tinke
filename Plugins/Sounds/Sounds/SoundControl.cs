@@ -174,13 +174,18 @@ namespace Sounds
             if (o.ShowDialog() != DialogResult.OK)
                 return;
 
-            string imported = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + Path.GetRandomFileName();
-            soundBase.Import(wav_file);
+			try {
+	            string imported = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + Path.GetRandomFileName();
+				soundBase.Import(o.FileName);
 
-            byte[] enc_data = soundBase.Encode();
-            soundBase.Write_File(wav_file, enc_data);
+	            byte[] enc_data = soundBase.Encode();
+	            soundBase.Write_File(imported, enc_data);
 
-            wav_file = imported;
+				wav_file = o.FileName;
+				pluginHost.ChangeFile(soundBase.ID, imported);
+			} catch (NotImplementedException ex) {
+				MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+			}
         }
     }
 }

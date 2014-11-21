@@ -236,7 +236,7 @@ namespace Sounds
         {
             throw new NotImplementedException();
         }
-        public override byte[] Encode()
+		protected override byte[] Encode(byte[] data)
         {
             throw new NotImplementedException();
         }

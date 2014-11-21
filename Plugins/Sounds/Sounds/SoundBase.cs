@@ -136,7 +136,11 @@ namespace Sounds
             loop_end_sample = total_samples;
         }
         public abstract void Write_File(string fileOut, byte[] data);
-        public abstract byte[] Encode();
+        public byte[] Encode()
+		{
+			return this.Encode(this.pcm16);
+		}
+		protected abstract byte[] Encode(byte[] data);
 
         /// <summary>
         ///  It doesn't work... :(
