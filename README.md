@@ -4,7 +4,7 @@
 
 **Note:** Current version 0.8.2 has a lot of bugs. New version 0.9.0 will be ready as soon as possible, meanwhile I recommend to use alpha version [Tinke rev153.zip](http://www.mediafire.com/download/zu8uu2iw7piipt9/Tinke_rev153.zip) (05/31/2013)
 
-To run the program you must have installed **.NET Framework 3.5**
+To run the program you must have installed **[.NET Framework 4.0](http://www.microsoft.com/en-us/download/details.aspx?id=17718)**
 
 Discussion group / _Foro de discusión_ : https://groups.google.com/forum/#!forum/tinke
 
@@ -86,7 +86,7 @@ Thread at GBAtemp.net: http://gbatemp.net/topic/303529-tinke-072/
  * Tokimeki Memorial Girl's Side 3rd Story (B3SJ)
 
  * Cake Mania 2 (CAKX)
- 
+
 ----
 
 Link to web pages with NDS info:
@@ -94,7 +94,7 @@ Link to web pages with NDS info:
  * http://llref.emutalk.net/docs
  * http://nocash.emubase.de/gbatek.htm
  * http://sites.google.com/site/kiwids/sdat.html
- 
+
 ----
 
 ## Screenshots
