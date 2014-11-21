@@ -76,5 +76,57 @@ namespace NINOKUNI
             br = null;
             return unpacked;
         }
+
+		public static void Pack(string file, string original, ref sFolder unpacked, IPluginHost pluginHost)
+		{
+			BinaryWriter bw = new BinaryWriter(File.OpenWrite(file));
+			BinaryReader br = new BinaryReader(File.OpenRead(original));
+
+			// Copy header
+			bw.Write(br.ReadBytes(0x50));
+
+			// Write file info
+			uint offset = 0x800;
+			for (int i = 0; i < unpacked.files.Count; i++) {
+				bw.Write(br.ReadBytes(0x08));
+				bw.Write(unpacked.files[i].size);	br.BaseStream.Position += 4;
+				bw.Write(offset);					br.BaseStream.Position += 4;
+
+				offset += unpacked.files[i].size;
+				if (offset % 0x800 != 0)
+					offset += 0x800 - (offset % 0x800);
+			}
+
+			br.Close();
+
+			// Write files
+			bw.Write(new byte[0x800 - bw.BaseStream.Position]);
+			for (int i = 0; i < unpacked.files.Count; i++) {
+				sFile cfile = unpacked.files[i];
+
+				uint startOffset = (uint)bw.BaseStream.Position;
+
+				// Write info
+				BinaryReader brfile = new BinaryReader(File.OpenRead(cfile.path));
+				brfile.BaseStream.Position = cfile.offset;
+				bw.Write(brfile.ReadBytes((int)cfile.size));
+				brfile.Close();
+
+				// Write padding
+				while (bw.BaseStream.Position % 0x800 != 0)
+					bw.Write((byte)0);
+
+				// Update file info
+				cfile.offset = startOffset;
+				cfile.path = file;
+				unpacked.files[i] = cfile;
+			}
+
+			// Update file size
+			bw.BaseStream.Position = 0x08;
+			bw.Write((uint)bw.BaseStream.Length);
+
+			bw.Close();
+		}
     }
 }

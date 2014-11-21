@@ -129,20 +129,22 @@ namespace NINOKUNI
             string ext = new String(br.ReadChars(4));
             br.Close();
 
-            if (ext == "NPCK")
-            {
-                string fileOut = pluginHost.Get_TempFile();
+			if (ext == "NPCK") {
+				string fileOut = pluginHost.Get_TempFile();
                 
-                NPCK.Pack(fileOut, ref unpacked, pluginHost);
-                return fileOut;
-            }
-            else if (ext == "KPCN")
-            {
-                string fileOut = pluginHost.Get_TempFile();
+				NPCK.Pack(fileOut, ref unpacked, pluginHost);
+				return fileOut;
+			} else if (ext == "KPCN") {
+				string fileOut = pluginHost.Get_TempFile();
 
-                KPCN.Pack(fileOut, file.path, ref unpacked, pluginHost);
-                return fileOut;
-            }
+				KPCN.Pack(fileOut, file.path, ref unpacked, pluginHost);
+				return fileOut;
+			} else if (ext == "spdl") {
+				string fileOut = pluginHost.Get_TempFile();
+
+				SPDL.Pack(fileOut, file.path, ref unpacked, pluginHost);
+				return fileOut;
+			}
 
             return null;
         }
