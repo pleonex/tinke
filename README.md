@@ -1,7 +1,5 @@
 > Tinke is a program to see, convert, and edit the **files of NDS games**. You can see a lot of format files like images, text, sounds, fonts and textures. Furthermore it works with **plugins** made in NET Framework languages (C# and VB.NET) so it's so easy to support new formats.
 
-**Note:** This is a port from original SVN Google Code: https://code.google.com/p/tinke/
-
 **Note:** Current version 0.8.2 has a lot of bugs. New version 0.9.0 will be ready as soon as possible, meanwhile I recommend to use alpha version [Tinke rev153.zip](http://www.mediafire.com/download/zu8uu2iw7piipt9/Tinke_rev153.zip) (05/31/2013)
 
 To run the program you must have installed **[.NET Framework 4.0](http://www.microsoft.com/en-us/download/details.aspx?id=17718)**
@@ -96,6 +94,9 @@ Link to web pages with NDS info:
  * http://sites.google.com/site/kiwids/sdat.html
 
 ----
+
+## Compile instructions
+* Windows: run Compile.bat
 
 ## Screenshots
 ![Tinke 0.8.1](https://lh5.googleusercontent.com/-GRKvfv-TAaI/ToBy1_eFrfI/AAAAAAAAASA/9WDkc_OQPC4/s800/Tinke%2525200.8.1.PNG)
