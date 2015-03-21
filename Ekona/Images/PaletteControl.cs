@@ -220,7 +220,7 @@ namespace Ekona.Images
         }
         private void btnImport_Click(object sender, EventArgs e)
         {
-            SaveFileDialog o = new SaveFileDialog();
+			OpenFileDialog o = new OpenFileDialog();
             o.CheckFileExists = true;
             o.Filter = "All supported formats|*.pal;*.aco;*.png;*.bmp;*.jpg;*.jpeg;*.tif;*.tiff;*.gif;*.ico;*.icon|" +
                 "Windows Palette (*.pal)|*.pal|" +
@@ -230,6 +230,14 @@ namespace Ekona.Images
                 return;
 
             string ext = Path.GetExtension(o.FileName).ToLower();
+			if (string.IsNullOrEmpty(ext) || ext.Length == 0) {
+				MessageBox.Show("File without extension... Aborting");
+				return;
+			}
+
+			if (ext.Contains("."))
+				ext = ext.Substring(ext.LastIndexOf(".") + 1);
+			Console.WriteLine("File extension:" + ext);
             PaletteBase newpal;
 
             if (ext == "pal")
