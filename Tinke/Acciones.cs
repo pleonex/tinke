@@ -146,9 +146,11 @@ namespace Tinke
 
             sFile pfile = new sFile();
             pfile.path = tempFile;
+            pfile.size = file.size;
             pfile.offset = 0;
             pfile.name = Path.GetFileNameWithoutExtension(file.name) + '.' + ext;
             pfile.id = (ushort)id;
+            pfile.format = Format.Unknown;
 
             return Call_Plugin(pfile, Encoding.ASCII.GetBytes(header), pname, action);
         }
