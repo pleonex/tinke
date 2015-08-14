@@ -369,8 +369,11 @@ namespace Tinke.Nitro
                     bw.Flush();
                 }
 
+                // Padd for next file.
+                // There is no need to padd last file since no more data will be
+                // after it. A full padding of the ROM will be applied later.
                 int rem = (int)bw.BaseStream.Position % 0x200;
-                if (rem != 0)
+                if (rem != 0 && i != sortedIDs.Length - 1)
                 {
                     while (rem < 0x200)
                     {

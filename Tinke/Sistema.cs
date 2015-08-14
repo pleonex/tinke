@@ -1582,6 +1582,7 @@ namespace Tinke
             brHeader.Close();
             File.Delete(tempHeader);
 
+            header.ROMsize = currPos;
             header.tamaño = (uint)Math.Ceiling(Math.Log(currPos, 2));
             header.tamaño = (uint)Math.Pow(2, header.tamaño);
             // Write header
