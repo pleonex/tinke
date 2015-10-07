@@ -464,6 +464,8 @@ namespace Ekona.Images
                 pal = bmp.Palette.Palette[0];
             }
 
+            uint addedSize = 0;
+
             // Get the data of a oam and add to the end of the image
             for (int i = 0; i < oams.Length; i++)
             {
@@ -498,9 +500,19 @@ namespace Ekona.Images
                 // If Add image is checked add the new image to the end of the original file and change the tileOffset
                 if (radioImgAdd.Checked)
                 {
-                    uint offset = Actions.Add_Image(ref imgData, cellImg, (uint)(1 << (int)sprite.BlockSize) * 0x20);
-                    offset /= 0x20;
-                    offset >>= (int)sprite.BlockSize;
+                    uint added = 0;
+                    uint size = (sprite.Banks[banki].data_size > 0) ? sprite.Banks[banki].data_size + addedSize : (uint)imgData.Length;
+                    uint offset = Actions.Add_Image(ref imgData, cellImg, sprite.Banks[banki].data_offset, size, (uint)(0x20 << (int)sprite.BlockSize), out added) - sprite.Banks[banki].data_offset;
+                    addedSize += added;
+
+                    offset = (offset / 20) >> (int)this.sprite.BlockSize;
+                    if (offset >= 0x400)
+                    {
+                        MessageBox.Show(
+                            "The characters data size has exceeded the boundaries of what is permitted!\r\nSome characters will not be displayed.");
+                        break;
+                    }
+
                     oams[i].obj2.tileOffset = offset;
                     oams[i].obj1.flipX = 0;
                     oams[i].obj1.flipY = 0;
@@ -508,10 +520,13 @@ namespace Ekona.Images
                 else   // Replace the old image
                 {
                     uint tileOffset = oams[i].obj2.tileOffset;
-                    tileOffset = (uint)(tileOffset << (byte)sprite.BlockSize) * 0x20;
+                    tileOffset = (uint)(tileOffset << (byte)sprite.BlockSize) * 0x20 + sprite.Banks[banki].data_offset;
                     Array.Copy(cellImg, 0, imgData, tileOffset, cellImg.Length);
                 }
             }
+
+            if (sprite.Banks[banki].data_size > 0)
+                for (int i = banki + 1; i < sprite.Banks.Length; i++) sprite.Banks[i].data_offset += addedSize;
 
             // If everthing goes right then set the new data
             int height = (imgData.Length * 8 / image.BPP) / image.Width;

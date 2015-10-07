@@ -639,6 +639,26 @@ namespace Ekona.Images
             return offset;
         }
 
+        public static uint Add_Image(ref byte[] data, byte[] newData, uint partOffset, uint partSize, uint blockSize, out uint addedLength)
+        {
+            // Add the image to the end of the partition data
+            // Return the offset where the data has been inserted
+            List<byte> result = new List<byte>();
+            result.AddRange(data);
+
+            uint offset = partOffset + partSize;
+            addedLength = (partSize % blockSize != 0) ? blockSize - partSize % blockSize : 0;
+            offset += addedLength;
+            result.AddRange(new byte[addedLength]);
+
+            if (offset == data.Length) result.AddRange(newData);
+            else result.InsertRange((int)offset, newData);
+            addedLength += (uint)newData.Length;
+
+            data = result.ToArray();
+            return offset;
+        }
+
         public static int FindNextColor(Color c, Color[] palette, decimal threshold = 0)
         {
             int id = -1;
@@ -1092,7 +1112,7 @@ namespace Ekona.Images
                     ImageBase cell_img = new TestImage();
                     cell_img.Set_Tiles((byte[])img.Tiles.Clone(), bank.oams[i].width, bank.oams[i].height, img.FormatColor,
                                        img.FormTile, false);
-                    cell_img.StartByte = (int)tileOffset * 0x20;
+                    cell_img.StartByte = (int)(tileOffset * 0x20 + bank.data_offset);
 
                     byte num_pal = bank.oams[i].obj2.index_palette;
                     if (num_pal >= pal.NumberOfPalettes)
