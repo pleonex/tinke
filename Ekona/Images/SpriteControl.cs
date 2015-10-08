@@ -526,7 +526,10 @@ namespace Ekona.Images
             }
 
             if (sprite.Banks[banki].data_size > 0)
+            {
+                sprite.Banks[banki].data_size += addedSize;
                 for (int i = banki + 1; i < sprite.Banks.Length; i++) sprite.Banks[i].data_offset += addedSize;
+            }
 
             // If everthing goes right then set the new data
             int height = (imgData.Length * 8 / image.BPP) / image.Width;

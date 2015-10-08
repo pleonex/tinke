@@ -27,7 +27,7 @@ namespace Images
             ncer.header.endianess = br.ReadUInt16();
             if (ncer.header.endianess == 0xFFFE)
                 ncer.header.id.Reverse<char>();
-            ncer.header.constant = br.ReadUInt16();
+            ncer.header.constant = br.ReadUInt16(); // This is version of a nitro binary format
             ncer.header.file_size = br.ReadUInt32();
             ncer.header.header_size = br.ReadUInt16();
             ncer.header.nSection = br.ReadUInt16();
@@ -37,24 +37,40 @@ namespace Images
             ncer.cebk.section_size = br.ReadUInt32();
             ncer.cebk.nBanks = br.ReadUInt16();
             ncer.cebk.tBank = br.ReadUInt16();
-            ncer.cebk.constant = br.ReadUInt32();
+            ncer.cebk.bank_data_offset = br.ReadUInt32();
             ncer.cebk.block_size = br.ReadUInt32() & 0xFF;
-            ncer.cebk.unknown1 = br.ReadUInt32();
-            ncer.cebk.unknown2 = br.ReadUInt64();
+            ncer.cebk.partition_data_offset = br.ReadUInt32();
+            ncer.cebk.unused = br.ReadUInt64();
             ncer.cebk.banks = new sNCER.Bank[ncer.cebk.nBanks];
+
+            #region Read partitions data
+
+            if (ncer.cebk.partition_data_offset != 0)
+            {
+                br.BaseStream.Position = ncer.header.header_size + ncer.cebk.partition_data_offset + 8; // 8 is a CEBK general header size (magic and size)
+                ncer.cebk.max_partition_size = br.ReadUInt32();
+                ncer.cebk.first_partition_data_offset = br.ReadUInt32();
+                for (int i = 0; i < ncer.cebk.nBanks; i++)
+                {
+                    ncer.cebk.banks[i].partition_offset = br.ReadUInt32();
+                    ncer.cebk.banks[i].partition_size = br.ReadUInt32();
+                }
+            }
+
+            #endregion
 
             //Console.WriteLine(xml.Element("S0B").Value + ": 0x{0:X}", ncer.cebk.block_size);
             //Console.WriteLine(xml.Element("S0C").Value + ": 0x{0:X}", ncer.cebk.unknown1);
             //Console.WriteLine(xml.Element("S09").Value + ": {0}", ncer.cebk.tBank.ToString());
             //Console.WriteLine(xml.Element("S08").Value + ": {0}", ncer.cebk.nBanks.ToString());
 
-            uint tilePos = 0x00; // If unknown1 != 0x00
+            br.BaseStream.Position = ncer.header.header_size + ncer.cebk.bank_data_offset + 8;
 
             #region Read banks
             for (int i = 0; i < ncer.cebk.nBanks; i++)
             {
                 ncer.cebk.banks[i].nCells = br.ReadUInt16();
-                ncer.cebk.banks[i].unknown1 = br.ReadUInt16();
+                ncer.cebk.banks[i].readOnlyCellInfo = br.ReadUInt16();
                 ncer.cebk.banks[i].cell_offset = br.ReadUInt32();
 
                 if (ncer.cebk.tBank == 0x01)
@@ -66,6 +82,7 @@ namespace Images
                 }
 
                 long posicion = br.BaseStream.Position;
+
                 if (ncer.cebk.tBank == 0x00)
                     br.BaseStream.Position += (ncer.cebk.nBanks - (i + 1)) * 8 + ncer.cebk.banks[i].cell_offset;
                 else
@@ -78,6 +95,7 @@ namespace Images
                 //Console.WriteLine("|_" + xml.Element("S1B").Value + ": {0}", ncer.cebk.banks[i].cell_offset.ToString());
 
                 ncer.cebk.banks[i].oams = new OAM[ncer.cebk.banks[i].nCells];
+
                 #region Read cells
                 for (int j = 0; j < ncer.cebk.banks[i].nCells; j++)
                 {
@@ -87,9 +105,6 @@ namespace Images
 
                     ncer.cebk.banks[i].oams[j] = Actions.OAMInfo(new ushort[] { obj0, obj1, obj2 });
                     ncer.cebk.banks[i].oams[j].num_cell = (ushort)j;
-
-                    if (ncer.cebk.unknown1 != 0x00)
-                        ncer.cebk.banks[i].oams[j].obj2.tileOffset += tilePos;
 
                     // Calculate the size
                     Size cellSize = Actions.Get_OAMSize(ncer.cebk.banks[i].oams[j].obj0.shape, ncer.cebk.banks[i].oams[j].obj1.size);
@@ -119,28 +134,10 @@ namespace Images
                 oams.Sort(Comparision_Cell);
                 ncer.cebk.banks[i].oams = oams.ToArray();
 
-                // Calculate the next tileOffset if unknonw1 != 0
-                if (ncer.cebk.unknown1 != 0x00 && ncer.cebk.banks[i].nCells != 0x00)
-                {
-                    OAM last_oam = Get_LastOAM(ncer.cebk.banks[i]);
-
-                    int ultimaCeldaSize = (int)(last_oam.height * last_oam.width);
-                    ultimaCeldaSize /= (int)(64 << (byte)ncer.cebk.block_size);
-                    if (last_oam.obj0.depth == 1)
-                        ultimaCeldaSize *= 2;
-                    if (ultimaCeldaSize == 0)
-                        ultimaCeldaSize = 1;
-
-                    tilePos += (uint)((last_oam.obj2.tileOffset - tilePos) + ultimaCeldaSize);
-
-                    //if (ncer.cebk.unknown1 == 0x160 && i == 5) // I don't know why it works
-                    //    tilePos -= 3;
-                    //if (ncer.cebk.unknown1 == 0x110 && i == 4) // (ncer.cebk.unknown1 & FC0) >> 6 (maybe ?)
-                    //    tilePos -= 7;
-                }
                 br.BaseStream.Position = posicion;
                 //Console.WriteLine("--------------");
             }
+
             #endregion
 
             #region LABL
@@ -202,6 +199,7 @@ namespace Images
 
             Set_Banks(Convert_Banks(), ncer.cebk.block_size, true);
         }
+
         OAM Get_LastOAM(sNCER.Bank bank)
         {
             for (int i = 0; i < bank.oams.Length; i++)
@@ -210,6 +208,7 @@ namespace Images
 
             return new OAM();
         }
+
         int Comparision_Cell(OAM c1, OAM c2)
         {
             if (c1.obj2.priority < c2.obj2.priority)
@@ -226,6 +225,7 @@ namespace Images
                     return 0;
             }
         }
+
         int Comparision_Cell2(OAM c1, OAM c2)
         {
             if (c1.num_cell > c2.num_cell)
@@ -234,7 +234,6 @@ namespace Images
                 return -1;
             else return 0;
         }
-
 
         Bank[] Convert_Banks()
         {
@@ -246,6 +245,9 @@ namespace Images
                 banks[i].oams = ncer.cebk.banks[i].oams;
                 if (ncer.labl.names.Length > i)
                     banks[i].name = ncer.labl.names[i];
+
+                banks[i].data_offset = ncer.cebk.banks[i].partition_offset;
+                banks[i].data_size = ncer.cebk.banks[i].partition_size;
             }
             return banks;
         }
@@ -269,16 +271,16 @@ namespace Images
             bw.Write(ncer.cebk.section_size);
             bw.Write(ncer.cebk.nBanks);
             bw.Write(ncer.cebk.tBank);
-            bw.Write(ncer.cebk.constant);
+            bw.Write(ncer.cebk.bank_data_offset);
             bw.Write(ncer.cebk.block_size);
-            bw.Write(0x00); // I don't like when it's different to 0 ;)
-            bw.Write(ncer.cebk.unknown2);
+            bw.Write(ncer.cebk.partition_data_offset);
+            bw.Write(ncer.cebk.unused);
 
             // Banks
             for (int i = 0; i < ncer.cebk.banks.Length; i++)
             {
                 bw.Write(ncer.cebk.banks[i].nCells);
-                bw.Write(ncer.cebk.banks[i].unknown1);
+                bw.Write(ncer.cebk.banks[i].readOnlyCellInfo);
                 bw.Write(ncer.cebk.banks[i].cell_offset);
 
                 if (ncer.cebk.tBank == 1)
@@ -307,6 +309,18 @@ namespace Images
             while (bw.BaseStream.Position % 4 != 0)
                 bw.Write((byte)0x00);
 
+            // Partition data
+            if (ncer.cebk.partition_data_offset != 0)
+            {
+                bw.Write(ncer.cebk.max_partition_size);
+                bw.Write(ncer.cebk.first_partition_data_offset);
+                for (int i = 0; i < ncer.cebk.banks.Length; i++)
+                {
+                    bw.Write(ncer.cebk.banks[i].partition_offset);
+                    bw.Write(ncer.cebk.banks[i].partition_size);
+                }
+            }
+
             // LBAL section
             if (new string(ncer.labl.id) == "LBAL" || new string(ncer.labl.id) == "LABL")
             {
@@ -329,12 +343,13 @@ namespace Images
             bw.Flush();
             bw.Close();
         }
+
         void Update_Struct()
         {
             // Update OAMs and LABL section
             uint offset_cells = 0;
             uint size = 0;
-
+            uint max_partition_size = 0;
             for (int i = 0; i < Banks.Length; i++)
             {
                 ncer.cebk.banks[i].nCells = (ushort)Banks[i].oams.Length;
@@ -349,6 +364,18 @@ namespace Images
                 oams.AddRange(ncer.cebk.banks[i].oams);
                 oams.Sort(Comparision_Cell2);
                 ncer.cebk.banks[i].oams = oams.ToArray();
+
+                if (ncer.cebk.partition_data_offset != 0)
+                {
+                    ncer.cebk.banks[i].partition_offset = Banks[i].data_offset;
+                    ncer.cebk.banks[i].partition_size = Banks[i].data_size;
+                    if (ncer.cebk.banks[i].partition_size > max_partition_size) max_partition_size = ncer.cebk.banks[i].partition_size;
+                }
+                else
+                {
+                    ncer.cebk.banks[i].partition_offset = 0;
+                    ncer.cebk.banks[i].partition_size = 0;
+                }
             }
 
             // Update the rest
@@ -357,6 +384,13 @@ namespace Images
             ncer.cebk.section_size = 0x20 + size;
             if (ncer.cebk.section_size % 4 != 0)
                 ncer.cebk.section_size += (4 - (ncer.cebk.section_size % 4));
+            
+            // Update partition data info
+            ncer.cebk.partition_data_offset = ncer.cebk.section_size - 8;
+            ncer.cebk.max_partition_size = max_partition_size;
+            ncer.cebk.first_partition_data_offset = (ncer.cebk.first_partition_data_offset > 0) ? ncer.cebk.first_partition_data_offset : 8;
+            if (ncer.cebk.partition_data_offset != 0)
+                ncer.cebk.section_size += (uint)(8 * (Banks.Length + 1));
 
             // Update the header
             ncer.header.file_size = 0x10 + ncer.cebk.section_size;
@@ -379,17 +413,22 @@ namespace Images
                 public UInt32 section_size;
                 public UInt16 nBanks;
                 public UInt16 tBank;            // type of banks, 0 ó 1
-                public UInt32 constant;
+                public UInt32 bank_data_offset;
                 public UInt32 block_size;
-                public UInt32 unknown1;
-                public UInt64 unknown2;         // padding?
+                public UInt32 partition_data_offset;
+                public UInt64 unused;         // Unused pointers to LABL and UEXT sections
                 public Bank[] banks;
+
+                public UInt32 max_partition_size;
+                public UInt32 first_partition_data_offset;
             }
             public struct Bank
             {
                 public UInt16 nCells;
-                public UInt16 unknown1;
+                public UInt16 readOnlyCellInfo;
                 public UInt32 cell_offset;
+                public UInt32 partition_offset;
+                public UInt32 partition_size;
                 public OAM[] oams;
 
                 // Extended mode
