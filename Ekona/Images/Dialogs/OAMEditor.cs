@@ -60,6 +60,9 @@ namespace Ekona.Images.Dialogs
             InitializeComponent();
             this.bank = bank;
             numOAM.Maximum = bank.oams.Length - 1;
+            numOffset.Maximum = (bank.data_size == 0)
+                ? image.Tiles.Length / (0x20 << (int)sprite.BlockSize) - 1
+                : bank.data_size / (0x20 << (int)sprite.BlockSize) - 1;
 
             preview = true;
             this.sprite = sprite;
@@ -73,6 +76,9 @@ namespace Ekona.Images.Dialogs
             InitializeComponent();
             this.bank = bank;
             numOAM.Maximum = bank.oams.Length - 1;
+            numOffset.Maximum = (bank.data_size == 0)
+                ? image.Tiles.Length / (0x20 << (int)sprite.BlockSize) - 1
+                : bank.data_size / (0x20 << (int)sprite.BlockSize) - 1;
 
             preview = true;
             this.sprite = sprite;

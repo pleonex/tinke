@@ -643,15 +643,15 @@ namespace Ekona.Images
         {
             // Add the image to the end of the partition data
             // Return the offset where the data has been inserted
-            List<byte> result = new List<byte>();
-            result.AddRange(data);
-
+            List<byte> result = new List<byte>(data);
             uint offset = partOffset + partSize;
-            addedLength = (partSize % blockSize != 0) ? blockSize - partSize % blockSize : 0;
-            offset += addedLength;
-            result.AddRange(new byte[addedLength]);
 
-            if (offset == data.Length) result.AddRange(newData);
+            addedLength = (partSize % blockSize != 0) ? blockSize - partSize % blockSize : 0;
+            if (offset == result.Count) result.AddRange(new byte[addedLength]);
+            else result.InsertRange((int)offset, new byte[addedLength]);
+            offset += addedLength;
+
+            if (offset == result.Count) result.AddRange(newData);
             else result.InsertRange((int)offset, newData);
             addedLength += (uint)newData.Length;
 

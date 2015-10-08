@@ -505,7 +505,7 @@ namespace Ekona.Images
                     uint offset = Actions.Add_Image(ref imgData, cellImg, sprite.Banks[banki].data_offset, size, (uint)(0x20 << (int)sprite.BlockSize), out added) - sprite.Banks[banki].data_offset;
                     addedSize += added;
 
-                    offset = (offset / 20) >> (int)this.sprite.BlockSize;
+                    offset = (offset / 0x20) >> (int)this.sprite.BlockSize;
                     if (offset >= 0x400)
                     {
                         MessageBox.Show(
