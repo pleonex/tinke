@@ -495,13 +495,13 @@ namespace Ekona.Images
                 image.FormTile = TileForm.Horizontal;
             }
 
-            // Create a map file
+            // Create a map file // MetLob edition 19/05/2015
             if (isMap && checkMapCmp.Checked)
-                map.Set_Map(Actions.Create_Map(ref tiles, image.BPP, image.TileSize), map.CanEdit, bitmap.Width, bitmap.Height);
+                map.Set_Map(Actions.Create_Map(ref tiles, image.BPP, image.TileSize, (byte)numPal.Value), map.CanEdit, bitmap.Width, bitmap.Height);
             else if (isMap)
             {
                 int num_tiles = (tiles.Length * 8 / image.BPP) / (image.TileSize * image.TileSize);
-                map.Set_Map(Actions.Create_BasicMap(num_tiles), map.CanEdit);
+                map.Set_Map(Actions.Create_BasicMap(num_tiles, 0, (byte)numPal.Value), map.CanEdit);
             }
 
             // Set the data

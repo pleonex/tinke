@@ -897,14 +897,17 @@ namespace Ekona.Images
 
             return map;
         }
-        public static NTFS[] Create_Map(ref byte[] data, int tile_width, int tile_size, byte palette = 0)
+        public static NTFS[] Create_Map(ref byte[] data, int bpp, int tile_size, byte palette = 0)
         {
+            int ppt = tile_size * tile_size; // pixels per tile
+            int tile_length = ppt * bpp / 8;
+
             // Divide the data in tiles
-            byte[][] tiles = new byte[data.Length / (tile_width * 8)][];
+            byte[][] tiles = new byte[data.Length / tile_length][];
             for (int i = 0; i < tiles.Length; i++)
             {
-                tiles[i] = new byte[tile_width * 8];
-                Array.Copy(data, i * (tile_width * 8), tiles[i], 0, tile_width * 8);
+                tiles[i] = new byte[tile_length];
+                Array.Copy(data, i * tiles[i].Length, tiles[i], 0, tiles[i].Length);
             }
 
             NTFS[] map = new NTFS[tiles.Length];
@@ -926,19 +929,19 @@ namespace Ekona.Images
                         index = t;
                         break;
                     }
-                    if (Compare_Array(newtiles[t], XFlip(tiles[i], tile_size, tile_width)))
+                    if (Compare_Array(newtiles[t], XFlip(tiles[i], tile_size, bpp)))
                     {
                         index = t;
                         flipX = 1;
                         break;
                     }
-                    if (Compare_Array(newtiles[t], YFlip(tiles[i], tile_size, tile_width)))
+                    if (Compare_Array(newtiles[t], YFlip(tiles[i], tile_size, bpp)))
                     {
                         index = t;
                         flipY = 1;
                         break;
                     }
-                    if (Compare_Array(newtiles[t], YFlip(XFlip(tiles[i], tile_size, tile_width), tile_size, tile_width)))
+                    if (Compare_Array(newtiles[t], YFlip(XFlip(tiles[i], tile_size, bpp), tile_size, bpp)))
                     {
                         index = t;
                         flipX = 1;
@@ -959,10 +962,10 @@ namespace Ekona.Images
             }
 
             // Save the new tiles
-            data = new byte[newtiles.Count * tile_width * 8];
+            data = new byte[newtiles.Count * tile_length];
             for (int i = 0; i < newtiles.Count; i++)
                 for (int j = 0; j < newtiles[i].Length; j++)
-                    data[j + i * (tile_width * 8)] = newtiles[i][j];
+                    data[j + i * tile_length] = newtiles[i][j];
             return map;
         }
         public static bool Compare_Array(byte[] d1, byte[] d2)
