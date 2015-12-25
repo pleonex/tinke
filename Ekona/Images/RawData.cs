@@ -215,14 +215,19 @@ namespace Ekona.Images
 
         public override void Write(string fileOut, PaletteBase palette)
         {
-            int image_size = Width * Height * BPP / 8;
+            // MetLob edition 25/12/2015
+            int dataSize = (post_data.Length == 0) ? Tiles.Length : Math.Min(Tiles.Length, ori_data.Length - StartByte);
+            if (dataSize < Tiles.Length)
+                MessageBox.Show(
+                    "Tiles data size exceeds the allowable length and will be trimmed.",
+                    "Image import processing");
 
             BinaryWriter bw = new BinaryWriter(File.OpenWrite(fileOut));
             bw.Write(prev_data);
             for (int i = 0; i < StartByte; i++)
                 bw.Write(ori_data[i]);
-            bw.Write(Tiles);
-            for (int i = image_size + StartByte; i < ori_data.Length; i++)
+            bw.Write(Tiles, 0, dataSize);
+            for (int i = Tiles.Length + StartByte; i < ori_data.Length; i++)
                 bw.Write(ori_data[i]);
             bw.Write(post_data);
             bw.Flush();
