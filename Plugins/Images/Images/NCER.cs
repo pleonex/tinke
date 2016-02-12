@@ -50,6 +50,7 @@ namespace Images
                 br.BaseStream.Position = ncer.header.header_size + ncer.cebk.partition_data_offset + 8; // 8 is a CEBK general header size (magic and size)
                 ncer.cebk.max_partition_size = br.ReadUInt32();
                 ncer.cebk.first_partition_data_offset = br.ReadUInt32();
+                br.BaseStream.Position += ncer.cebk.first_partition_data_offset - 8;
                 for (int i = 0; i < ncer.cebk.nBanks; i++)
                 {
                     ncer.cebk.banks[i].partition_offset = br.ReadUInt32();
@@ -386,11 +387,13 @@ namespace Images
                 ncer.cebk.section_size += (4 - (ncer.cebk.section_size % 4));
             
             // Update partition data info
-            ncer.cebk.partition_data_offset = ncer.cebk.section_size - 8;
-            ncer.cebk.max_partition_size = max_partition_size;
-            ncer.cebk.first_partition_data_offset = (ncer.cebk.first_partition_data_offset > 0) ? ncer.cebk.first_partition_data_offset : 8;
             if (ncer.cebk.partition_data_offset != 0)
+            {
+                ncer.cebk.partition_data_offset = ncer.cebk.section_size - 8;
+                ncer.cebk.max_partition_size = max_partition_size;
+                ncer.cebk.first_partition_data_offset = 8;
                 ncer.cebk.section_size += (uint)(8 * (Banks.Length + 1));
+            }
 
             // Update the header
             ncer.header.file_size = 0x10 + ncer.cebk.section_size;
