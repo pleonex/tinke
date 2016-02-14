@@ -88,7 +88,7 @@ Thread at GBAtemp.net: http://gbatemp.net/topic/303529-tinke-072/
 Link to web pages with NDS info:
 
  * http://llref.emutalk.net/docs
- * http://nocash.emubase.de/gbatek.htm
+ * http://problemkaputt.de/gbatek.htm
  * http://sites.google.com/site/kiwids/sdat.html
 
 ----
