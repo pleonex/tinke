@@ -39,11 +39,10 @@ namespace LAYTON
 
         public bool IsCompatible()
         {
-            if (gameCode == "A5FP" || gameCode == "A5FE" || gameCode == "YLTS" || gameCode == "BLFE" ||
-                gameCode == "YLTE" || gameCode == "YLTP" || gameCode == "C2AJ")
-                return true;
-            else
-                return false;
+            var testedGames = new[] { "A5FP", "A5FE",
+                "YLTS", "YLTE", "YLTP", "YLTH",
+                "BLFE", "C2AJ"};
+            return testedGames.Contains(gameCode);
         }
         public Format Get_Format(sFile file, byte[] magic)
         {
@@ -73,6 +72,8 @@ namespace LAYTON
 
                 // Professor Layton and the Diabolical Box
                 case "YLTS":
+                case "YLTP":
+                case "YLTH":
                     if (file.id >= 0x37 && file.id <= 0x408)
                         return new Ani(pluginHost, gameCode, "").Get_Formato(file.name);
                     else if (file.id >= 0x409 & file.id <= 0x808)
@@ -82,12 +83,6 @@ namespace LAYTON
                     if (file.id >= 0x37 && file.id <= 0x412)
                         return new Ani(pluginHost, gameCode, "").Get_Formato(file.name);
                     else if (file.id >= 0x413 && file.id <= 0x818)
-                        return Format.FullImage;
-                    break;
-                case "YLTP":
-                    if (file.id >= 0x37 && file.id <= 0x408)
-                        return new Ani(pluginHost, gameCode, "").Get_Formato(file.name);
-                    else if (file.id >= 0x409 && file.id <= 0x808)
                         return Format.FullImage;
                     break;
                 
@@ -149,6 +144,8 @@ namespace LAYTON
 
                 // Professor Layton and the Diabolical Box
                 case "YLTS":
+                case "YLTP":
+                case "YLTH":
                     if (file.id >= 0x37 && file.id <= 0x408)
                         return new Ani(pluginHost, gameCode, file.path).Show_Info();
                     else if (file.id >= 0x409 && file.id <= 0x808)
@@ -161,15 +158,6 @@ namespace LAYTON
                     if (file.id >= 0x37 && file.id <= 0x412)
                         return new Ani(pluginHost, gameCode, file.path).Show_Info();
                     else if (file.id >= 0x413 && file.id <= 0x818)
-                    {
-                        Bg bg = new Bg(pluginHost, file.path, file.id, file.name);
-                        return bg.Get_Control();
-                    }
-                    break;
-                case "YLTP":
-                    if (file.id >= 0x37 && file.id <= 0x408)
-                        return new Ani(pluginHost, gameCode, file.path).Show_Info();
-                    else if (file.id >= 0x409 && file.id <= 0x808)
                     {
                         Bg bg = new Bg(pluginHost, file.path, file.id, file.name);
                         return bg.Get_Control();
