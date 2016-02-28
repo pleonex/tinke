@@ -1,0 +1,38 @@
+<WorkspaceItem ctype="Workspace">
+  <Items>
+    <Item>Tinke.sln</Item>
+    <Item>Plugins/3DModels/3DModels.sln</Item>
+    <Item>Plugins/999HRPERDOOR/999HRPERDOOR.sln</Item>
+    <Item>Plugins/AI IGO DS/AI IGO DS.sln</Item>
+    <Item>Plugins/BLOODBAHAMUT/BLOODBAHAMUT.sln</Item>
+    <Item>Plugins/Common/Common.sln</Item>
+    <Item>Plugins/DBK ULTIMATE/DBK ULTIMATE.sln</Item>
+    <Item>Plugins/DEATHNOTEDS/DEATHNOTEDS.sln</Item>
+    <Item>Plugins/EDGEWORTH/EDGEWORTH.sln</Item>
+    <Item>Plugins/Fonts/Fonts.sln</Item>
+    <Item>Plugins/GYAKUKEN/GYAKUKEN.sln</Item>
+    <Item>Plugins/HETALIA/HETALIA.sln</Item>
+    <Item>Plugins/Images/Images.sln</Item>
+    <Item>Plugins/INAZUMA11/INAZUMA11.sln</Item>
+    <Item>Plugins/KIRBY DRO/KIRBY DRO.sln</Item>
+    <Item>Plugins/LASTWINDOW/LASTWINDOW.sln</Item>
+    <Item>Plugins/LAYTON/LAYTON.sln</Item>
+    <Item>Plugins/MAPLESTORYDS/MAPLESTORYDS.sln</Item>
+    <Item>Plugins/NINOKUNI/NINOKUNI.sln</Item>
+    <Item>Plugins/NotManagedNetPlugins/NotManagedNetPlugins.sln</Item>
+    <Item>Plugins/Pack/Pack.sln</Item>
+    <Item>Plugins/PSL/PSL.sln</Item>
+    <Item>Plugins/SDAT/SDAT.sln</Item>
+    <Item>Plugins/SF FEATHER/SF FEATHER.sln</Item>
+    <Item>Plugins/Sounds/Sounds.sln</Item>
+    <Item>Plugins/TC UTK/TC UTK.sln</Item>
+    <Item>Plugins/Teniprimgaku/Teniprimgaku.sln</Item>
+    <Item>Plugins/TETRIS DS/TETRIS DS.sln</Item>
+    <Item>Plugins/TIMEACE/TIMEACE.sln</Item>
+    <Item>Plugins/TOKIMEKIGS3S/TOKIMEKIGS3S.sln</Item>
+    <Item>Plugins/Tokimemo1/Tokimemo1.sln</Item>
+    <Item>Plugins/TOTTEMPEST/TOTTEMPEST.sln</Item>
+    <Item>Plugins/TXT/TXT.sln</Item>
+    <Item>Plugins/WITCHTALE/WITCHTALE.sln</Item>
+  </Items>
+</WorkspaceItem>
