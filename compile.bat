@@ -27,8 +27,8 @@ REM Remove previoues build
 RMDIR /S /Q "%cd%\build"
 
 REM Get compiler
-SET netver=v4.0
-SET msbuild=%windir%\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe
+SET netver=v3.5
+SET msbuild=%windir%\Microsoft.NET\Framework\v3.5\MSBuild.exe
 
 REM Compile program in standard directory, to allow plugins find Ekona
 %msbuild% Tinke.sln /v:minimal "/p:Configuration=%conf%;TarjetFrameworkVersion=%netver%;Platform=%plat%"

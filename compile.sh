@@ -31,12 +31,12 @@ if [ -d $BUILD_DIR ]; then
 fi
 
 # Get compiler and params
-XBUILD="xbuild /v:minimal /p:Configuration=$CONF;TarjetFrameworkVersion=v4.0"
+XBUILD="xbuild /v:minimal /p:Configuration=$CONF;TarjetFrameworkVersion=v3.5"
 XBUILD_PLUGINS="$XBUILD;OutputPath=$BUILD_DIR/Plugins/"
 
 # Compile program in standard (debug) directory, to allow plugins find Ekona
 echo "Compiling base library..."
-xbuild /v:minimal /p:TarjetFrameworkVersion=v4.0 Tinke.sln  > /dev/null
+xbuild /v:minimal /p:TarjetFrameworkVersion=v3.5 Tinke.sln  > /dev/null
 
 # Compile Tinke
 echo "Compiling Tinke..."
