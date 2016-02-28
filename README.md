@@ -1,8 +1,6 @@
 > Tinke is a program to see, convert, and edit the **files of NDS games**. You can see a lot of format files like images, text, sounds, fonts and textures. Furthermore it works with **plugins** made in NET Framework languages (C# and VB.NET) so it's so easy to support new formats.
 
-To run the program you must have installed **[.NET Framework 4.0](http://www.microsoft.com/en-us/download/details.aspx?id=17718)** or **[mono](http://www.mono-project.com/download)**. In the case of *mono* on *Linux*, make sure you have installed the package **mono-locale-extras** too.
-
-Discussion group / _Foro de discusión_ : https://groups.google.com/forum/#!forum/tinke
+To run the program you must have installed **[.NET Framework 4.5](https://www.microsoft.com/es-es/download/details.aspx?id=30653)** or **[mono](http://www.mono-project.com/download)**. In the case of *mono* on *Linux*, make sure you have installed the package **mono-locale-extras** too.
 
 Thread at GBAtemp.net: http://gbatemp.net/topic/303529-tinke-072/
 
@@ -94,7 +92,8 @@ Link to web pages with NDS info:
 ----
 
 ## Compile instructions
-* Windows: run Compile.bat
+* Windows: run compile.bat
+* Unix: ./compile.sh
 
 ## Screenshots
 ![Tinke 0.8.1](https://lh5.googleusercontent.com/-GRKvfv-TAaI/ToBy1_eFrfI/AAAAAAAAASA/9WDkc_OQPC4/s800/Tinke%2525200.8.1.PNG)
