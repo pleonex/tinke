@@ -162,6 +162,9 @@ namespace Ekona.Images
 
         public ushort height;
         public ushort width;
+
+        public uint data_offset;
+        public uint data_size;
     }
     public struct OAM
     {
