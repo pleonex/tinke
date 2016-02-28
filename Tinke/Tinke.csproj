@@ -310,6 +310,15 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="VisorHexBasic.cs">
+        <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="VisorHexBasic.Designer.cs">
+        <DependentUpon>VisorHexBasic.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="VisorHexBasic.resx">
+        <DependentUpon>VisorHexBasic.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Be.Windows.Forms.HexBox\Be.Windows.Forms.HexBox.csproj">
@@ -391,7 +400,7 @@
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>

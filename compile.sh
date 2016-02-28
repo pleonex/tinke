@@ -6,20 +6,20 @@ BUILD_DIR="$TINKE_DIR/build"
 
 # Ask for release or debug configuration
 echo "Choose the configuration. Press '1' for Release and '2' for Debug: "
-select rd in "R" "D"; do
+select rd in "Release" "Debug"; do
     case $rd in
-        R) CONF="Release"; break;;
-        D) CONF="Debug"; break;;
+        Release) CONF="Release"; break;;
+        Debug) CONF="Debug"; break;;
     esac
 done
 
 # Ask for 64 or 32 bits.
 echo
 echo "Choose the platform. Press '1' for x86 or '2' for x64: "
-select pl in "1" "2"; do
+select pl in "x86" "x64"; do
     case $pl in
-        1) PLAT="x86"; break;;
-        2) PLAT="x64"; break;;
+        x86) PLAT="x86"; break;;
+        x64) PLAT="x64"; break;;
     esac
 done
 echo
