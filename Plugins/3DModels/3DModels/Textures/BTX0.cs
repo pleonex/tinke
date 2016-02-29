@@ -1,40 +1,42 @@
-﻿/*
- * Copyright (C) 2011  pleoNeX
- *
- *   This program is free software: you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation, either version 3 of the License, or
- *   (at your option) any later version.
- *
- *   This program is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU General Public License for more details.
- *
- *   You should have received a copy of the GNU General Public License
- *   along with this program.  If not, see <http://www.gnu.org/licenses/>. 
- *
- * Programador: pleoNeX
- * 
- */
+﻿//
+//  BTX0.cs
+//
+//  Author:
+//       Benito Palacios Sánchez (aka pleonex) <benito356@gmail.com>
+//
+//  Copyright (c) 2016 Benito Palacios Sánchez
+//
+//  This program is free software: you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published by
+//  the Free Software Foundation, either version 3 of the License, or
+//  (at your option) any later version.
+//
+//  This program is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU General Public License for more details.
+//
+//  You should have received a copy of the GNU General Public License
+//  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO;
 using System.Windows.Forms;
 using System.Drawing;
 using Ekona;
 using Ekona.Images;
+using Models3D.Models;
 
-// Copied from:
-// http://llref.emutalk.net/docs/?file=xml/btx0.xml#xml-doc
-// http://nocash.emubase.de/gbatek.htm#ds3dtextureattributes
-// Credits to lowlines and Martin Korth, thanks :)
-
-
-namespace _3DModels
+namespace Models3D.Textures
 {
+    /// <summary>
+    /// BTX0 texture file format.
+    /// 
+    /// Specification from:
+    /// lowlines http://llref.emutalk.net/docs/?file=xml/btx0.xml#xml-doc
+    /// Martin Korth http://nocash.emubase.de/gbatek.htm#ds3dtextureattributes
+    /// </summary>
     public static class BTX0
     {
         public static sBTX0 Read(string file, int id, IPluginHost pluginHost)

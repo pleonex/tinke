@@ -1,40 +1,41 @@
-﻿/*
- * Copyright (C) 2011  pleoNeX
- *
- *   This program is free software: you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation, either version 3 of the License, or
- *   (at your option) any later version.
- *
- *   This program is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU General Public License for more details.
- *
- *   You should have received a copy of the GNU General Public License
- *   along with this program.  If not, see <http://www.gnu.org/licenses/>. 
- *
- * By: pleoNeX
- * 
- */
+﻿//
+//  BMD0.cs
+//
+//  Author:
+//       Benito Palacios Sánchez (aka pleonex) <benito356@gmail.com>
+//
+//  Copyright (c) 2016 Benito Palacios Sánchez
+//
+//  This program is free software: you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published by
+//  the Free Software Foundation, either version 3 of the License, or
+//  (at your option) any later version.
+//
+//  This program is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU General Public License for more details.
+//
+//  You should have received a copy of the GNU General Public License
+//  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Drawing;
 using System.IO;
 using Ekona;
-using OpenTK;
 using OpenTK.Graphics.OpenGL;
+using Models3D.Textures;
 
-// Copied from:
-// http://llref.emutalk.net/docs/?file=xml/bmd0.xml#xml-doc
-// http://kiwi.ds.googlepages.com/nsbmd.html
-// http://nocash.emubase.de/gbatek.htm#ds3dvideo
-// Credits to lowlines, Kiwi.ds and Martin Korth, thanks :)
-
-namespace _3DModels
+namespace Models3D.Models
 {
+    /// <summary>
+    /// BMD0 file format for 3D models.
+    /// 
+    /// Specifications from:
+    /// Lowlines http://llref.emutalk.net/docs/?file=xml/bmd0.xml#xml-doc
+    /// Kiwi.ds http://kiwi.ds.googlepages.com/nsbmd.html
+    /// Martin Kroth http://nocash.emubase.de/gbatek.htm#ds3dvideo
+    /// </summary>
     public static class BMD0
     {
         public static sBMD0 Read(string file, int id, IPluginHost pluginHost)
