@@ -374,7 +374,7 @@ namespace Models3D.Models
             big.Controls[0].Dock = DockStyle.Fill;
             big.WindowState = FormWindowState.Maximized;
             big.Text = "Tinke - pleoNeX";
-            big.Icon = Properties.Resources.nintendo_ds;
+            big.Icon = ResourcesManager.GetIcon("nintendo-ds.ico");
             big.Show();
             GL.Viewport(new Size(big.Width, big.Height));
         }

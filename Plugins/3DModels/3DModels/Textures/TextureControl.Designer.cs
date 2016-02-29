@@ -197,7 +197,7 @@ namespace Models3D.Textures
             // 
             // btnSave
             // 
-            this.btnSave.Image = global::_3DModels.Properties.Resources.disk;
+            this.btnSave.Image = Ekona.ResourcesManager.GetImage("disk.png");
             this.btnSave.Location = new System.Drawing.Point(349, 470);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(77, 37);
@@ -218,7 +218,7 @@ namespace Models3D.Textures
             // 
             // button1
             // 
-            this.button1.Image = global::_3DModels.Properties.Resources.disk;
+            this.button1.Image = Ekona.ResourcesManager.GetImage("disk.png");
             this.button1.Location = new System.Drawing.Point(430, 470);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(77, 37);
