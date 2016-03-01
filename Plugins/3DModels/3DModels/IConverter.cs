@@ -1,5 +1,5 @@
 ﻿//
-//  NitroHeader.cs
+//  IConverter.cs
 //
 //  Author:
 //       Benito Palacios Sánchez (aka pleonex) <benito356@gmail.com>
@@ -18,22 +18,15 @@
 //
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-namespace Models3D.Structures
-{
-    public class NitroHeader
-    {
-        public string MagicStamp { get; set; }
-        public ushort ByteOrderMask { get { return 0xFEFF; } }
-        public ushort Version { get; set; }
-        public uint   FileSize { get; set; }
-        public ushort DataOffset { get; set; }
-        public ushort Blocks { get; set; }
-        public uint[] BlocksOffset { get; set; }
 
-        public string GetShortVersion()
-        {
-            return (Version >> 8) + "." + (Version & 0xFF);
-        }
+namespace Models3D
+{
+    // This solves some problems with generic like having a list of converters.
+    public interface IConverter { }
+
+    public interface IConverter<TSrc, TDst> : IConverter
+    {
+        void Convert(TSrc source, TDst destination);
     }
 }
 

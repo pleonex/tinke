@@ -27,18 +27,20 @@ using System.Drawing;
 using Ekona;
 using Ekona.Images;
 using Models3D.Models;
+using Models3D.Structures;
 
 namespace Models3D.Textures
 {
     /// <summary>
     /// BTX0 texture file format.
-    /// 
-    /// Specification from:
-    /// lowlines http://llref.emutalk.net/docs/?file=xml/btx0.xml#xml-doc
-    /// Martin Korth http://nocash.emubase.de/gbatek.htm#ds3dtextureattributes
     /// </summary>
-    public static class BTX0
+    public class Btx0 : NitroFile
     {
+        public Btx0()
+            : base(true)
+        {
+        }
+
         public static sBTX0 Read(string file, int id, IPluginHost pluginHost)
         {
             BinaryReader br = new BinaryReader(File.OpenRead(file));

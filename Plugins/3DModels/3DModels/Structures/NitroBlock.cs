@@ -1,5 +1,5 @@
 ﻿//
-//  NitroHeader.cs
+//  NitroSection.cs
 //
 //  Author:
 //       Benito Palacios Sánchez (aka pleonex) <benito356@gmail.com>
@@ -18,22 +18,20 @@
 //
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+using System;
+
 namespace Models3D.Structures
 {
-    public class NitroHeader
+    public abstract class NitroBlock : FileFormat
     {
-        public string MagicStamp { get; set; }
-        public ushort ByteOrderMask { get { return 0xFEFF; } }
-        public ushort Version { get; set; }
-        public uint   FileSize { get; set; }
-        public ushort DataOffset { get; set; }
-        public ushort Blocks { get; set; }
-        public uint[] BlocksOffset { get; set; }
-
-        public string GetShortVersion()
+        protected NitroBlock(NitroFile nitroFile)
         {
-            return (Version >> 8) + "." + (Version & 0xFF);
+            NitroFile = nitroFile;
         }
+
+        public abstract string Name { get; }
+        public int Size { get; set; }
+        public NitroFile NitroFile { get; private set; }
     }
 }
 

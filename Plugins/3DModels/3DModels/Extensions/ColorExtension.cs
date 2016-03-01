@@ -1,5 +1,5 @@
 ﻿//
-//  NitroHeader.cs
+//  ColorExtension.cs
 //
 //  Author:
 //       Benito Palacios Sánchez (aka pleonex) <benito356@gmail.com>
@@ -18,21 +18,19 @@
 //
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-namespace Models3D.Structures
-{
-    public class NitroHeader
-    {
-        public string MagicStamp { get; set; }
-        public ushort ByteOrderMask { get { return 0xFEFF; } }
-        public ushort Version { get; set; }
-        public uint   FileSize { get; set; }
-        public ushort DataOffset { get; set; }
-        public ushort Blocks { get; set; }
-        public uint[] BlocksOffset { get; set; }
 
-        public string GetShortVersion()
+using System.Drawing;
+
+namespace Models3D.Extensions
+{
+    public static class ColorExtension
+    {
+        public static Color SumColors(this Color a, Color b, int wa, int wb)
         {
-            return (Version >> 8) + "." + (Version & 0xFF);
+            return Color.FromArgb(
+                (a.R * wa + b.R * wb) / (wa + wb),
+                (a.G * wa + b.G * wb) / (wa + wb),
+                (a.B * wa + b.B * wb) / (wa + wb));
         }
     }
 }

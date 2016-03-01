@@ -1,5 +1,5 @@
 ﻿//
-//  NitroHeader.cs
+//  BinaryNitroBlockConverter.cs
 //
 //  Author:
 //       Benito Palacios Sánchez (aka pleonex) <benito356@gmail.com>
@@ -18,21 +18,20 @@
 //
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+using System;
+using System.IO;
+
 namespace Models3D.Structures
 {
-    public class NitroHeader
+    public abstract class BinaryNitroBlockConverter
     {
-        public string MagicStamp { get; set; }
-        public ushort ByteOrderMask { get { return 0xFEFF; } }
-        public ushort Version { get; set; }
-        public uint   FileSize { get; set; }
-        public ushort DataOffset { get; set; }
-        public ushort Blocks { get; set; }
-        public uint[] BlocksOffset { get; set; }
-
-        public string GetShortVersion()
+        public void ReadHeader(BinaryReader reader, NitroBlock block)
         {
-            return (Version >> 8) + "." + (Version & 0xFF);
+            var blockName = new String(reader.ReadChars(4));
+            if (blockName != block.Name)
+                throw new FormatException("Block name does not match");
+
+            block.Size = reader.ReadInt32();
         }
     }
 }

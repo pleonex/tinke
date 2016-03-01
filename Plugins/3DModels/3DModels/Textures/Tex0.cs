@@ -1,5 +1,5 @@
 ﻿//
-//  NitroHeader.cs
+//  Tex0.cs
 //
 //  Author:
 //       Benito Palacios Sánchez (aka pleonex) <benito356@gmail.com>
@@ -18,22 +18,20 @@
 //
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-namespace Models3D.Structures
-{
-    public class NitroHeader
-    {
-        public string MagicStamp { get; set; }
-        public ushort ByteOrderMask { get { return 0xFEFF; } }
-        public ushort Version { get; set; }
-        public uint   FileSize { get; set; }
-        public ushort DataOffset { get; set; }
-        public ushort Blocks { get; set; }
-        public uint[] BlocksOffset { get; set; }
+using System;
+using Models3D.Structures;
 
-        public string GetShortVersion()
+namespace Models3D.Textures
+{
+    public class Tex0 : NitroBlock
+    {
+        public Tex0(NitroFile nitroFile)
+            : base(nitroFile)
         {
-            return (Version >> 8) + "." + (Version & 0xFF);
         }
+
+        public static string BlockName { get { return "TEX0"; }}
+        public override string Name { get { return BlockName; } }
     }
 }
 

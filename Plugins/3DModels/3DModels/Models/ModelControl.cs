@@ -81,7 +81,7 @@ namespace Models3D.Models
             {
                 sBMD0.Model.ModelData.Material.MatDef mat = model.model.mdlData[0].material.material[i];
                 int num_tex, num_pal;
-                BTX0.Find_IDs(out num_tex, out num_pal, mat.texName, mat.palName, tex.texture);
+                Btx0.Find_IDs(out num_tex, out num_pal, mat.texName, mat.palName, tex.texture);
                 mat.palID = (byte)num_pal;
                 mat.texID = (byte)num_tex;
                 model.model.mdlData[0].material.material[i] = mat;
@@ -94,21 +94,18 @@ namespace Models3D.Models
 
             for (int i = 0; i < model.model.mdlData[0].material.material.Length; i++)
             {
-                sBMD0.Model.ModelData.Material.MatDef mat = (sBMD0.Model.ModelData.Material.MatDef)model.model.mdlData[0].material.material[i];
+                sBMD0.Model.ModelData.Material.MatDef mat = model.model.mdlData[0].material.material[i];
                 texturesGL.Add(i, LoadTextures(mat.texID, mat.palID));
             }
         }
         private void ProcessBones()
         {
-            for (int c = 0; c < model.model.mdlData[0].bones.commands.Count; c++)
-            {
-                sBMD0.Model.ModelData.Bones.Command cmd = model.model.mdlData[0].bones.commands[c];
-                switch (cmd.command)
-                {
+            foreach (var cmd in model.model.mdlData[0].bones.commands) {
+                switch (cmd.command) {
                     case 0x44:
                     case 0x24:
                     case 0x04:
-                        int currTex = 0;
+                        int currTex;
                         if (texturesGL.ContainsKey(cmd.parameters[0]))
                             currTex = cmd.parameters[0];
                         else
@@ -116,8 +113,6 @@ namespace Models3D.Models
 
                         model.model.mdlData[0].polygon.display[cmd.parameters[2]].materialAssoc = texturesGL[currTex];
                         model.model.mdlData[0].polygon.display[cmd.parameters[2]].materialID = cmd.parameters[0];
-                        break;
-                    default:
                         break;
                 }
             }
@@ -137,11 +132,10 @@ namespace Models3D.Models
             GL.Rotate(angleY, 0f, 0f, 1f);
             GL.Scale(distance, distance, distance);
             GL.Translate(x, y, z);
-            label1.Text = "X: " + x.ToString() + " Y: " + y.ToString() + " Z: " + z.ToString() + "\r\n" +
-                "AngleX: " + angleX.ToString() + " AngleY: " + angleY.ToString() + " Distance: " + distance.ToString();
+            label1.Text = "X: " + x + " Y: " + y + " Z: " + z + "\r\n" +
+                "AngleX: " + angleX + " AngleY: " + angleY + " Distance: " + distance;
 
             GL.Disable(EnableCap.Texture2D);
-            // TODO: Draw box
 
             // Edges
             DrawEdges();
@@ -170,7 +164,7 @@ namespace Models3D.Models
                     sBMD0.Model.ModelData.Polygon.Display poly = model.model.mdlData[0].polygon.display[i];
                     if (poly.materialID >= model.model.mdlData[0].material.material.Length)
                         poly.materialID = 0;
-                    sBMD0.Model.ModelData.Material.MatDef mat = (sBMD0.Model.ModelData.Material.MatDef)model.model.mdlData[0].material.material[poly.materialID];
+                    sBMD0.Model.ModelData.Material.MatDef mat = model.model.mdlData[0].material.material[poly.materialID];
 
                     sBTX0.Texture.TextInfo texInfo = (sBTX0.Texture.TextInfo)tex.texture.texInfo.infoBlock.infoData[mat.texID];
 
@@ -190,7 +184,7 @@ namespace Models3D.Models
                 sBMD0.Model.ModelData.Polygon.Display poly = model.model.mdlData[0].polygon.display[i];
                 if (poly.materialID >= model.model.mdlData[0].material.material.Length)
                     poly.materialID = 0;
-                sBMD0.Model.ModelData.Material.MatDef mat = (sBMD0.Model.ModelData.Material.MatDef)model.model.mdlData[0].material.material[poly.materialID];
+                sBMD0.Model.ModelData.Material.MatDef mat = model.model.mdlData[0].material.material[poly.materialID];
                 sBTX0.Texture.TextInfo texInfo = (sBTX0.Texture.TextInfo)tex.texture.texInfo.infoBlock.infoData[mat.texID];
 
                 GL.BindTexture(TextureTarget.Texture2D, poly.materialAssoc);
@@ -235,8 +229,8 @@ namespace Models3D.Models
             int id = GL.GenTexture();
             GL.BindTexture(TextureTarget.Texture2D, id);
 
-            Bitmap bmp = BTX0.GetTexture(pluginHost, tex, num_tex, num_pal);
-            System.Drawing.Imaging.BitmapData bmp_data = bmp.LockBits(new Rectangle(0, 0, bmp.Width, bmp.Height), ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppRgb);
+            Bitmap bmp = Btx0.GetTexture(pluginHost, tex, num_tex, num_pal);
+            BitmapData bmp_data = bmp.LockBits(new Rectangle(0, 0, bmp.Width, bmp.Height), ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppRgb);
 
             GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, bmp_data.Width, bmp_data.Height, 0,
                 OpenTK.Graphics.OpenGL.PixelFormat.Bgra, PixelType.UnsignedByte, bmp_data.Scan0);
@@ -258,12 +252,12 @@ namespace Models3D.Models
         }
 
         #region Rotation methods
-        private int _mouseStartX = 0;
-        private int _mouseStartY = 0;
-        private float angleX = 0;
-        private float angleY = 0;
-        private float angleXS = 0;
-        private float angleYS = 0;
+        private int _mouseStartX;
+        private int _mouseStartY;
+        private float angleX;
+        private float angleY;
+        private float angleXS;
+        private float angleYS;
         private float distance = 0.08f;
         private float distanceS = 0.08f;
         private const float ROT_SPEED = 1f;
@@ -271,18 +265,17 @@ namespace Models3D.Models
 
         float x = -1.5f;
         float y = -7.5f;
-        float z = 0;
+        float z;
         const float STEP = 0.5f;
 
         private void glControl1_MouseDown(object sender, MouseEventArgs e)
         {
-            MouseEventArgs ev = (e as MouseEventArgs);
-            _mouseStartX = ev.X;
-            _mouseStartY = ev.Y;
+            _mouseStartX = e.X;
+            _mouseStartY = e.Y;
         }
         private void glControl1_MouseUp(object sender, MouseEventArgs e)
         {
-            MouseEventArgs ev = (e as MouseEventArgs);
+            //MouseEventArgs ev = (e as MouseEventArgs);
 
             angleXS = angleX;
             angleYS = angleY;
@@ -290,15 +283,14 @@ namespace Models3D.Models
         }
         private void glControl1_MouseMove(object sender, MouseEventArgs e)
         {
-            MouseEventArgs ev = (e as MouseEventArgs);
-            if (ev.Button == MouseButtons.Left)
+            if (e.Button == MouseButtons.Left)
             {
-                angleX = angleXS + (ev.X - _mouseStartX) * ROT_SPEED;
-                angleY = angleYS + (ev.Y - _mouseStartY) * ROT_SPEED;
+                angleX = angleXS + (e.X - _mouseStartX) * ROT_SPEED;
+                angleY = angleYS + (e.Y - _mouseStartY) * ROT_SPEED;
             }
-            if (ev.Button == MouseButtons.Right)
+            if (e.Button == MouseButtons.Right)
             {
-                distance = (distanceS + (ev.Y - _mouseStartY)) / ZOOM_FACTOR;
+                distance = (distanceS + (e.Y - _mouseStartY)) / ZOOM_FACTOR;
                 if (distance > 3)
                     distance = 3;
                 else if (distance <= 0)

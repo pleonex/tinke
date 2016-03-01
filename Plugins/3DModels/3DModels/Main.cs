@@ -20,9 +20,9 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using System.Text;
-using System.Drawing;
 using System.IO;
+using System.Text;
+using System.Windows.Forms;
 using Ekona;
 using Models3D.Textures;
 using Models3D.Models;
@@ -32,7 +32,7 @@ namespace Models3D
     public class Main : IPlugin
     {
         IPluginHost pluginHost;
-        sBTX0 btx;
+        sBTX0 preloadedTexture;
 
         public void Initialize(IPluginHost pluginHost)
         {
@@ -41,7 +41,7 @@ namespace Models3D
 
         public Format Get_Format(sFile file, byte[] magic)
         {
-            string ext = new String(Encoding.ASCII.GetChars(magic));
+            string ext = Encoding.ASCII.GetString(magic);
 
             if (ext == "BTX0")
                 return Format.Texture;
@@ -53,56 +53,45 @@ namespace Models3D
 
         public void Read(sFile file)
         {
-            BinaryReader br = new BinaryReader(File.OpenRead(file.path));
-            string ext = new String(br.ReadChars(4));
-            br.Close();
-
-            if (ext == "BTX0")
-            {
-                sBTX0 btx = BTX0.Read(file.path, file.id, pluginHost);
-
-                Bitmap[] tex = new Bitmap[btx.texture.texInfo.num_objs];
-                for (int i = 0; i < btx.texture.texInfo.num_objs; i++)
-                {
-                    string fileOut = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar +
-                        file.name + '_' + btx.texture.texInfo.names[i] + ".png";
-                    if (File.Exists(fileOut))
-                        fileOut = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + Path.GetRandomFileName() +
-                            '_' + btx.texture.texInfo.names[i] + ".png";
-
-                    tex[i] = BTX0.GetTexture(pluginHost, btx, i);
-                    tex[i].Save(fileOut);
-                }
-                pluginHost.Set_Object(tex);
-            }
+            // If it's a texture file, preload for a 3D model without textures inside.
+            if (GetExtension(file) == "BTX0")
+                preloadedTexture = Btx0.Read(file.path, file.id, pluginHost);
         }
-        public System.Windows.Forms.Control Show_Info(sFile file)
-        {
-            BinaryReader br = new BinaryReader(File.OpenRead(file.path));
-            string ext = new String(br.ReadChars(4));
-            br.Close();
 
-            if (ext == "BTX0")
-            {
-                btx = BTX0.Read(file.path, file.id, pluginHost);
-                return new TextureControl(pluginHost, btx);
-            }
-            else if (ext == "BMD0")
-            {
+        public Control Show_Info(sFile file)
+        {
+            string extension = GetExtension(file);
+
+            if (extension == "BTX0") {
+                // Texture format
+                preloadedTexture = Btx0.Read(file.path, file.id, pluginHost);
+                return new TextureControl(pluginHost, preloadedTexture);
+            } else if (extension == "BMD0") {
+                // 3D model format
                 sBMD0 bmd = BMD0.Read(file.path, file.id, pluginHost);
 
+                // Check if the model has textures and otherwise use the preloaded one.
                 if (bmd.header.numSect == 2)
                     return new ModelControl(pluginHost, bmd);
-                else if (btx.texture.texInfo.num_objs != 0)
-                    return new ModelControl(pluginHost, bmd, btx);
+                else if (preloadedTexture.texture.texInfo.num_objs != 0)
+                    return new ModelControl(pluginHost, bmd, preloadedTexture);
                 else
-                    System.Windows.Forms.MessageBox.Show("There aren't textures.");
+                    MessageBox.Show("There are not textures.");
             }
             
-            return new System.Windows.Forms.Control();
+            return new Control();
         }
 
+        // No pack formats in this plugin.
         public String Pack(ref sFolder unpacked, sFile file) { return null; }
         public sFolder Unpack(sFile file) { return new sFolder(); }
+
+        private static string GetExtension(sFile file)
+        {
+            string extension;
+            using (var reader = new BinaryReader(File.OpenRead(file.path)))
+                extension = new String(reader.ReadChars(4));
+            return extension;
+        }
     }
 }

@@ -49,9 +49,10 @@
       <HintPath>..\OpenTK.GLControl.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Textures\BTX0.cs" />
+    <Compile Include="Textures\Btx0.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Models\BMD0.cs" />
@@ -67,6 +68,17 @@
     <Compile Include="Textures\TextureControl.Designer.cs">
       <DependentUpon>TextureControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="Textures\Binary2Btx0.cs" />
+    <Compile Include="Extensions\ColorExtension.cs" />
+    <Compile Include="IConverter.cs" />
+    <Compile Include="Structures\NitroHeader.cs" />
+    <Compile Include="Structures\Binary2NitroHeader.cs" />
+    <Compile Include="Structures\NitroFile.cs" />
+    <Compile Include="Structures\Binary2NitroFile.cs" />
+    <Compile Include="Structures\NitroBlock.cs" />
+    <Compile Include="Format.cs" />
+    <Compile Include="Structures\Binary2NitroBlock.cs" />
+    <Compile Include="Textures\Tex0.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="3DModelsLang.xml">
@@ -84,6 +96,8 @@
   <ItemGroup>
     <Folder Include="Models\" />
     <Folder Include="Textures\" />
+    <Folder Include="Extensions\" />
+    <Folder Include="Structures\" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\disk.png" />

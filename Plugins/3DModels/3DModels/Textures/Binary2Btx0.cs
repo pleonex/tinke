@@ -1,5 +1,5 @@
 ﻿//
-//  NitroHeader.cs
+//  Binary2Btx0.cs
 //
 //  Author:
 //       Benito Palacios Sánchez (aka pleonex) <benito356@gmail.com>
@@ -18,21 +18,25 @@
 //
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-namespace Models3D.Structures
-{
-    public class NitroHeader
-    {
-        public string MagicStamp { get; set; }
-        public ushort ByteOrderMask { get { return 0xFEFF; } }
-        public ushort Version { get; set; }
-        public uint   FileSize { get; set; }
-        public ushort DataOffset { get; set; }
-        public ushort Blocks { get; set; }
-        public uint[] BlocksOffset { get; set; }
+using System;
+using System.IO;
+using Models3D.Structures;
+using System.Collections.Generic;
 
-        public string GetShortVersion()
+namespace Models3D.Textures
+{
+    public class Binary2Btx0 : IConverter<Stream, Btx0>, IConverter<Btx0, Stream>
+    {
+        public void Convert(Stream binary, Btx0 btx0)
         {
-            return (Version >> 8) + "." + (Version & 0xFF);
+            var nitroConverter = new Binary2NitroFile(
+                new Dictionary<string, Type> { { Tex0.BlockName, typeof(Tex0) } });
+            nitroConverter.Convert(binary, btx0);
+        }
+
+        public void Convert(Btx0 btx0, Stream binary)
+        {
+            
         }
     }
 }

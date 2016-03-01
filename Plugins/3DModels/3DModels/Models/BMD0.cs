@@ -545,7 +545,7 @@ namespace Models3D.Models
                     }
                     data.material.material[i] = mat;
                 }
-                BTX0.Match_Textures(ref data.material.material, data.material.palette.names, data.material.texture.names);
+                Btx0.Match_Textures(ref data.material.material, data.material.palette.names, data.material.texture.names);
                 #endregion
 
                 // Polygon section
@@ -641,7 +641,7 @@ namespace Models3D.Models
             if (bmd.header.numSect == 2)    // There is a Tex0 section
             {
                 br.BaseStream.Position = bmd.header.offset[1];
-                bmd.texture = BTX0.Read_Section(ref br, bmd.header.offset[1], pluginHost.Get_Language());
+                bmd.texture = Btx0.Read_Section(ref br, bmd.header.offset[1], pluginHost.Get_Language());
             }
 
             br.Close();
@@ -906,7 +906,9 @@ namespace Models3D.Models
                     case GeometryCmd.MTX_STORE:
                         break;
                     case GeometryCmd.MTX_RESTORE:
+                    
                         break;
+
                     case GeometryCmd.MTX_IDENTITY:
                         break;
                     case GeometryCmd.MTX_LOAD_4x4:
@@ -930,7 +932,7 @@ namespace Models3D.Models
                         vector.X = Get_Double((int)(geoCmd[i].param[0] & 0xFFFF), true, 3, 12);
                         vector.Y = Get_Double((int)(geoCmd[i].param[0] >> 16), true, 3, 12);
                         vector.Z = Get_Double((int)(geoCmd[i].param[1] & 0xFFFF), true, 3, 12);
-
+                        
                         GL.Vertex3(vector);
                         break;
 
