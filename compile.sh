@@ -41,12 +41,12 @@ if [ -d $BUILD_DIR ]; then
 fi
 
 # Get compiler and params
-XBUILD="xbuild /v:minimal /p:Configuration=$CONF;TarjetFrameworkVersion=v4.5"
+XBUILD="xbuild /v:minimal /p:Configuration=$CONF;TargetFrameworkVersion=v4.5"
 XBUILD_PLUGINS="$XBUILD;OutputPath=$BUILD_DIR/Plugins/"
 
 # Compile program in standard directory, to allow plugins find Ekona
 echo "Compiling base library..."
-$XBUILD Tinke.sln > build.log
+xbuild /v:minimal /p:TargetFrameworkVersion=v4.5 Tinke.sln > build.log
 if [ $? -ne 0 ] ; then
     echo "Error compiling Tinke into the default directory. Aborting."
     cat build.log
