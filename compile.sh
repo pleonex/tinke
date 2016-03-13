@@ -46,7 +46,7 @@ XBUILD_PLUGINS="$XBUILD;OutputPath=$BUILD_DIR/Plugins/"
 
 # Compile program in standard directory, to allow plugins find Ekona
 echo "Compiling base library..."
-$XBUILD "/p:Platform=$PLAT" Tinke.sln > build.log
+$XBUILD Tinke.sln > build.log
 if [ $? -ne 0 ] ; then
     echo "Error compiling Tinke into the default directory. Aborting."
     cat build.log
