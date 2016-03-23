@@ -21,30 +21,30 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 using Ekona;
 
 namespace Pack.Games
 {
-    public class AWAE : IGamePlugin
+    public class WARIO7 : IGamePlugin
     {
-        private IPluginHost pluginHost;
         private string gameCode;
+        private string[] arcNames = { "wtp_os.arc", "wtp_eu.arc" };
 
         public void Initialize(IPluginHost pluginHost, string gameCode)
         {
-            this.pluginHost = pluginHost;
             this.gameCode = gameCode;
         }
 
         public bool IsCompatible()
         {
-            return gameCode == "AWAE";
+            return gameCode == "AWAE" || gameCode == "AWAP";
         }
 
         public Format Get_Format(sFile file, byte[] magic)
         {
-            return (file.name == "wtp_os.arc") ? Format.Pack : Format.Unknown;
+            return arcNames.Contains(file.name) ? Format.Pack : Format.Unknown;
         }
 
         public Control Show_Info(sFile file)
@@ -64,7 +64,7 @@ namespace Pack.Games
 
         public sFolder Unpack(sFile file)
         {
-            return (file.name == "wtp_os.arc") ? UnpackArc(file.path) : new sFolder();
+            return arcNames.Contains(file.name) ? UnpackArc(file.path) : new sFolder();
         }
 
         private static sFolder UnpackArc(string fileIn)
