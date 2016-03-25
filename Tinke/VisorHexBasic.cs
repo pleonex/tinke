@@ -34,13 +34,13 @@ namespace Tinke
 
         private int mouseWheelDelta;
 
-        private string file;
+        private Stream file;
         private uint offset;
         private uint size;
 
         public VisorHexBasic(string file, UInt32 offset, UInt32 size)
         {
-            this.file = file;
+            this.file = File.OpenRead(file);
             this.size = size;
             this.offset = offset;
 
@@ -49,7 +49,7 @@ namespace Tinke
 
         public VisorHexBasic(sFile gameFile)
         {
-            this.file = gameFile.path;
+            this.file = File.OpenRead(gameFile.path);
             this.size = gameFile.size;
             this.offset = gameFile.offset;
 
@@ -60,6 +60,7 @@ namespace Tinke
         {
             InitializeComponent();
             Text = Tools.Helper.GetTranslation("Sistema", "S41");
+            FormClosed += (sender, e) => file.Close();
             
             txtHex.Font = new Font(FontFamily.GenericMonospace, 11F);
             txtHex.ReadOnly = true;
@@ -145,8 +146,8 @@ namespace Tinke
 
         private void ShowHex(int pos)
         {
-            BinaryReader br = new BinaryReader(File.OpenRead(file));
-            br.BaseStream.Position = offset + pos * BytesPerRow;
+            BinaryReader br = new BinaryReader(file);
+            file.Position = offset + pos * BytesPerRow;
 
             // Create the header
             StringBuilder hexBuilder = new StringBuilder();
@@ -163,7 +164,7 @@ namespace Tinke
 
                 var asciiBuilder = new StringBuilder("   ");
                 for (int c = 0; c < BytesPerRow && !eof; c++) {
-                    if (br.BaseStream.Position >= offset + size) {
+                    if (file.Position >= offset + size) {
                         eof = true;
                         break;
                     }
@@ -180,8 +181,6 @@ namespace Tinke
                 if (r != numRows - 1)
                     hexBuilder.AppendLine();
             }
-
-            br.Close();
 
             txtHex.Text = hexBuilder.ToString();
             txtHex.Select(0, 0);
