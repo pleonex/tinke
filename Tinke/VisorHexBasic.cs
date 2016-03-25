@@ -31,6 +31,9 @@ namespace Tinke
     public partial class VisorHexBasic : Form
     {
         private const int BytesPerRow = 0x10;   // Not tested with different values.
+
+        private int mouseWheelDelta;
+
         private string file;
         private uint offset;
         private uint size;
@@ -61,8 +64,7 @@ namespace Tinke
             txtHex.Font = new Font(FontFamily.GenericMonospace, 11F);
             txtHex.ReadOnly = true;
             txtHex.HideSelection = false;
-            //txtHex.MouseWheel += (sender, e) => 
-            //    vScrollBar1.Value += vScrollBar1.SmallChange * e.Delta;
+            txtHex.MouseWheel += TxtHex_MouseWheel;
             Resize += VisorHex_Resize;
 
             vScrollBar1.Maximum = (int)size / BytesPerRow;
@@ -72,6 +74,33 @@ namespace Tinke
         public void Clear()
         {
             txtHex.Text = string.Empty;
+        }
+        
+        private void TxtHex_MouseWheel(object sender, MouseEventArgs e)
+        {
+            // Because a mouse wheel notch could be less than 120, sum until it reachs
+            // that value and then divide to get the number of notchs.
+            // 120 has been the classic mouse wheel notch value but new mouse could have
+            // more definition.
+            const int WheelDelta = 120;
+            mouseWheelDelta = e.Delta * -1; // Normally we go down when scrolling up
+            if (Math.Abs(mouseWheelDelta) >= WheelDelta) {
+                int notchs = mouseWheelDelta / WheelDelta;
+                int scrollValue = vScrollBar1.Value + vScrollBar1.SmallChange * notchs;
+                mouseWheelDelta %= WheelDelta;
+
+                // Safety check because we'll get an exception otherwise
+                if (scrollValue < vScrollBar1.Minimum)
+                    scrollValue = vScrollBar1.Minimum;
+                else if (scrollValue > vScrollBar1.Maximum)
+                    scrollValue = vScrollBar1.Maximum;
+
+                // We can get some speed improvement to avoid reading file again.
+                if (scrollValue != vScrollBar1.Value) {
+                    vScrollBar1.Value = scrollValue;
+                    ShowHex(vScrollBar1.Value);
+                }
+            }
         }
 
         private void vScrollBar1_Scroll(object sender, ScrollEventArgs e)
@@ -93,13 +122,16 @@ namespace Tinke
             hexBuilder.AppendLine();
 
             int numRows = txtHex.Height / txtHex.Font.Height - 2;
-            for (int r = 0; r < numRows; r++) {
+            bool eof = false;
+            for (int r = 0; r < numRows && !eof; r++) {
                 hexBuilder.AppendFormat("0x{0:X8}   ", (pos + r) * BytesPerRow);
 
                 var asciiBuilder = new StringBuilder("   ");
-                for (int c = 0; c < BytesPerRow; c++) {
-                    if (br.BaseStream.Position >= offset + size)
+                for (int c = 0; c < BytesPerRow && !eof; c++) {
+                    if (br.BaseStream.Position >= offset + size) {
+                        eof = true;
                         break;
+                    }
 
                     byte value = br.ReadByte();
                     hexBuilder.AppendFormat(" {0:X2}", value);
