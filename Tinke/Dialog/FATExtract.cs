@@ -365,7 +365,7 @@ namespace Tinke.Dialog
         private void btnHex_Click(object sender, EventArgs e)
         {
             var selectedFile = fat.files[listBoxFiles.SelectedIndex];
-            if (Type.GetType("Mono.Runtime") != null)
+            if (Type.GetType("Mono.Runtime") == null)
                 new VisorHex(selectedFile).Show();
             else
                 new VisorHexBasic(selectedFile).Show();
