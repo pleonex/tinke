@@ -1,3 +1,7 @@
+0.9.2
+** Improve Hexadecimal Viewer for Mono (Linux and Mac OS)
+* Fix crash opening HexViewer from FAT dialog on Mono.
+
 0.9.1
 ** Support partition cell sections (#18, #19).
 * Add basic hexadecimal viewer for mono.
