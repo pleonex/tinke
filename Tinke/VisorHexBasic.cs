@@ -65,6 +65,7 @@ namespace Tinke
             txtHex.ReadOnly = true;
             txtHex.HideSelection = false;
             txtHex.MouseWheel += TxtHex_MouseWheel;
+            txtHex.KeyDown += TxtHex_KeyDown;
             Resize += VisorHex_Resize;
 
             vScrollBar1.Maximum = (int)size / BytesPerRow;
@@ -75,7 +76,38 @@ namespace Tinke
         {
             txtHex.Text = string.Empty;
         }
-        
+
+
+        private void TxtHex_KeyDown(object sender, KeyEventArgs e)
+        {
+            // Large scrolling with page down and page up.
+            if (e.KeyCode == Keys.PageDown)
+                UpdateScrollBar(vScrollBar1.Value + vScrollBar1.LargeChange);
+            else if (e.KeyCode == Keys.PageUp)
+                UpdateScrollBar(vScrollBar1.Value - vScrollBar1.LargeChange);
+
+            // Small scrolling with up and down.
+            if (e.KeyCode == Keys.Down) {
+                int lastLineIdx = txtHex.GetCharIndexFromPosition(
+                    new Point(0, txtHex.Height));
+                
+                if (txtHex.SelectionStart >= lastLineIdx) {
+                    int currentPos = txtHex.SelectionStart; // Keep because it will change
+                    UpdateScrollBar(vScrollBar1.Value + vScrollBar1.SmallChange);
+                    txtHex.SelectionStart = currentPos;
+                }
+            } else if (e.KeyCode == Keys.Up) {
+                int firstLineIdx = txtHex.GetCharIndexFromPosition(
+                    new Point(txtHex.Width, 0));
+                
+                if (txtHex.SelectionStart <= firstLineIdx) {
+                    int currentPos = txtHex.SelectionStart; // Keep because it will change
+                    UpdateScrollBar(vScrollBar1.Value - vScrollBar1.SmallChange);
+                    txtHex.SelectionStart = currentPos;
+                }
+            }
+        }
+
         private void TxtHex_MouseWheel(object sender, MouseEventArgs e)
         {
             // Because a mouse wheel notch could be less than 120, sum until it reachs
@@ -86,20 +118,23 @@ namespace Tinke
             mouseWheelDelta = e.Delta * -1; // Normally we go down when scrolling up
             if (Math.Abs(mouseWheelDelta) >= WheelDelta) {
                 int notchs = mouseWheelDelta / WheelDelta;
-                int scrollValue = vScrollBar1.Value + vScrollBar1.SmallChange * notchs;
+                UpdateScrollBar(vScrollBar1.Value + vScrollBar1.SmallChange * notchs);
                 mouseWheelDelta %= WheelDelta;
+            }
+        }
 
-                // Safety check because we'll get an exception otherwise
-                if (scrollValue < vScrollBar1.Minimum)
-                    scrollValue = vScrollBar1.Minimum;
-                else if (scrollValue > vScrollBar1.Maximum)
-                    scrollValue = vScrollBar1.Maximum;
+        private void UpdateScrollBar(int scrollValue)
+        {
+            // Safety check because we'll get an exception otherwise
+            if (scrollValue < vScrollBar1.Minimum)
+                scrollValue = vScrollBar1.Minimum;
+            else if (scrollValue > vScrollBar1.Maximum)
+                scrollValue = vScrollBar1.Maximum;
 
-                // We can get some speed improvement to avoid reading file again.
-                if (scrollValue != vScrollBar1.Value) {
-                    vScrollBar1.Value = scrollValue;
-                    ShowHex(vScrollBar1.Value);
-                }
+            // We can get some speed improvement to avoid reading file again.
+            if (scrollValue != vScrollBar1.Value) {
+                vScrollBar1.Value = scrollValue;
+                ShowHex(vScrollBar1.Value);
             }
         }
 
