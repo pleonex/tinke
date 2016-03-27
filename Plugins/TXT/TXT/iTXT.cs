@@ -1,5 +1,5 @@
 ﻿/*
- * Copyright (C) 2011  pleoNeX
+ * Copyright (C) 2011-2016  pleoNeX
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -18,50 +18,45 @@
  * 
  */
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.IO;
 using Ekona;
+using System.Xml.Linq;
+using System.Drawing;
 
 namespace TXT
 {
     public partial class iTXT : UserControl
     {
-        IPluginHost pluginHost;
-        int id;
-        byte[] text;
+        private IPluginHost pluginHost;
+        private int id;
+        private byte[] text;
 
         public iTXT(byte[] text, IPluginHost pluginHost, int id)
         {
             InitializeComponent();
 
+            // TextBox parameter
+            this.txtBox.Dock = DockStyle.Top;
+            this.txtBox.Font = new Font(FontFamily.GenericMonospace, 11);
+            this.txtBox.HideSelection = false;
+            this.txtBox.Multiline = true;
+            this.txtBox.WordWrap = this.checkWordWrap.Checked;
+            this.txtBox.ScrollBars = ScrollBars.Both;
+            this.txtBox.Size = new Size(510, 466);
+
             this.pluginHost = pluginHost;
             this.id = id;
             this.text = text;
 
+            // TODO: Compare preamble with supported encodings.
             if ((text[0] == 0xFE && text[1] == 0xFF) || (text[0] == 0xFF && text[1] == 0xFE))
-            {
-                txtBox.Text = Descodificar(Encoding.Unicode);
-                comboEncod.SelectedIndex = 1;
-            }
+                comboEncod.SelectedIndex = 2;
             else if (BitConverter.ToUInt16(text, 0) == 0xBBEF)
-            {
-                txtBox.Text = Descodificar(Encoding.UTF8);
                 comboEncod.SelectedIndex = 4;
-            }
             else
-            {
-                txtBox.Text = Descodificar(Encoding.UTF7);
-                comboEncod.SelectedIndex = 0;
-            }
-
-            txtBox.Text = txtBox.Text.Replace("\n", "\r\n");
-            txtBox.Text = txtBox.Text.Replace("\0", "\\0");
+                comboEncod.SelectedIndex = 1;
 
             ReadLanguage();
         }
@@ -71,39 +66,47 @@ namespace TXT
             string tempFile = Path.GetTempFileName();
 
             string textSave = txtBox.Text;
-            textSave = textSave.Replace("\\0", "\0");
+            textSave = textSave.Replace("\\0", "\0");   // FIXME: This could cause issues.
             text = Encoding.GetEncoding(comboEncod.Text).GetBytes(textSave);
+
             File.WriteAllBytes(tempFile, text);
             pluginHost.ChangeFile(id, tempFile);
         }
 
         private void ReadLanguage()
         {
-            try
-            {
-                System.Xml.Linq.XElement xml = System.Xml.Linq.XElement.Load(Application.StartupPath + System.IO.Path.DirectorySeparatorChar +
-                    "Plugins" + System.IO.Path.DirectorySeparatorChar + "TXTLang.xml");
+            try {
+                var pluginPath = Path.Combine(Application.StartupPath, "Plugins");
+                var xml = XElement.Load(Path.Combine(pluginPath, "TXTLang.xml"));
                 xml = xml.Element(pluginHost.Get_Language());
                 xml = xml.Element("TXT");
 
                 btnSave.Text = xml.Element("S00").Value;
-                label1.Text = xml.Element("S01").Value;
+                label1.Text  = xml.Element("S01").Value;
                 checkWordWrap.Text = xml.Element("S02").Value;
-            }
-            catch { throw new Exception("There was an error reading the XML file of language."); } 
+            } catch (Exception ex) { 
+                throw new Exception("Exception reading the XML language file.", ex);
+            } 
         }
 
-        private String Descodificar(Encoding encoding)
+        private string Decode(Encoding encoding)
         {
-            String texto = new String(encoding.GetChars(text));
-            texto = texto.Replace("\n", "\r\n");
-            texto = texto.Replace("\0", "\\0");
+            string decodedText = encoding.GetString(text);
 
-            return texto;
+            // The textbox component excepts Windows EOL.
+            if (!decodedText.Contains("\r\n"))
+                decodedText = decodedText.Replace("\n", "\r\n");
+
+            // Replace this to view binary text. This could cause issues.
+            decodedText = decodedText.Replace("\0", "\\0");
+
+            return decodedText;
         }
+
         private void comboEncod_SelectedIndexChanged(object sender, EventArgs e)
         {
-            txtBox.Text = Descodificar(Encoding.GetEncoding(comboEncod.Text));
+            txtBox.Text = Decode(Encoding.GetEncoding(comboEncod.Text));
+            this.txtBox.Select(0, 0);
         }
 
         private void checkWordWrap_CheckedChanged(object sender, EventArgs e)
