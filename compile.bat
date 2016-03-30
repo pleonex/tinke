@@ -28,7 +28,7 @@ RMDIR /S /Q "%cd%\build"
 
 REM Get compiler
 SET netver=v4.5
-SET msbuild=%windir%\Microsoft.NET\Framework\v4.5\MSBuild.exe
+SET msbuild=%windir%\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe
 
 REM Compile program in standard directory, to allow plugins find Ekona
 %msbuild% Tinke.sln /v:minimal "/p:Configuration=%conf%;TarjetFrameworkVersion=%netver%;Platform=%plat%"
