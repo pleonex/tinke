@@ -3,7 +3,7 @@ ECHO off
 CLS
 
 REM Ask for release or debug configuration
-SET /P conf=Choose the configuration. Press R for Release or D for Debug:
+SET /P conf=Choose the configuration. Press R for Release or D for Debug: 
 IF /I "%conf%"=="R" SET conf=Release
 IF /I "%conf%"=="D" ( SET conf=Debug
 ) ELSE (IF NOT "%conf%"=="Release" GOTO start)
@@ -11,7 +11,7 @@ IF /I "%conf%"=="D" ( SET conf=Debug
 :secif
 
 REM Ask for platform
-SET /P plat=Choose the platform. Press 1 for x86 or 2 for x64:
+SET /P plat=Choose the platform. Press 1 for x86 or 2 for x64: 
 IF "%plat%"=="1" SET plat=x86
 IF "%plat%"=="2" ( SET plat=x64
 ) ELSE (IF NOT "%plat%"=="x86" GOTO secif)
@@ -19,68 +19,73 @@ IF "%plat%"=="2" ( SET plat=x64
 :check
 
 REM Make sure you have choosen everything ok
-SET /P ans=You have choosen the configuration %conf% and the platform %plat%, Is this correct? (y/n)
+SET /P ans=You have choosen the configuration %conf% and the platform %plat%, Is this correct? (y/n) 
 IF /I "%ans%"=="N" (GOTO start
 ) ELSE (IF /I NOT "%ans%"=="Y" GOTO check)
 
 REM Remove previoues build
-RMDIR /S /Q "%cd%\build"
+SET build_dir=%CD%\build
+IF EXIST "%build_dir%" RMDIR /S /Q "%build_dir%"
 
 REM Get compiler
 SET netver=v4.5
-SET msbuild=%windir%\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe
+SET msbuild_path=%windir%\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe
+SET msbuild=%msbuild_path% /v:minimal /p:Configuration=%conf% /p:TargetFrameworkVersion=%netver%
+SET msbuild_plugins=%msbuild% /p:OutputPath=%build_dir%\Plugins\
 
 REM Compile program in standard directory, to allow plugins find Ekona
-%msbuild% Tinke.sln /v:minimal "/p:Configuration=%conf%;TarjetFrameworkVersion=%netver%;Platform=%plat%"
+ECHO Compiling base library...
+%msbuild_path% /v:minimal /p:TargetFrameworkVersion=%netver% Tinke.sln
 
 REM Compiling program
-%msbuild% Tinke.sln /v:minimal "/p:Configuration=%conf%;TarjetFrameworkVersion=%netver%;Platform=%plat%;OutputPath=%CD%\build\"
-
-REM Compiling game plugins
-%msbuild% "Plugins\LAYTON\LAYTON.sln"             /v:minimal "/p:Configuration=%conf%;TarjetFrameworkVersion=%netver%;Platform=Any CPU;OutputPath=%CD%\build\Plugins\"
-%msbuild% "Plugins\KIRBY DRO\KIRBY DRO.sln"       /v:minimal "/p:Configuration=%conf%;TarjetFrameworkVersion=%netver%;Platform=Any CPU;OutputPath=%CD%\build\Plugins\"
-%msbuild% "Plugins\AI IGO DS\AI IGO DS.sln"       /v:minimal "/p:Configuration=%conf%;TarjetFrameworkVersion=%netver%;Platform=Any CPU;OutputPath=%CD%\build\Plugins\"
-%msbuild% "Plugins\LASTWINDOW\LASTWINDOW.sln"     /v:minimal "/p:Configuration=%conf%;TarjetFrameworkVersion=%netver%;Platform=Any CPU;OutputPath=%CD%\build\Plugins\"
-%msbuild% "Plugins\TETRIS DS\TETRIS DS.sln"       /v:minimal "/p:Configuration=%conf%;TarjetFrameworkVersion=%netver%;Platform=Any CPU;OutputPath=%CD%\build\Plugins\"
-%msbuild% "Plugins\999HRPERDOOR\999HRPERDOOR.sln" /v:minimal "/p:Configuration=%conf%;TarjetFrameworkVersion=%netver%;Platform=Any CPU;OutputPath=%CD%\build\Plugins\"
-%msbuild% "Plugins\EDGEWORTH\EDGEWORTH.sln"       /v:minimal "/p:Configuration=%conf%;TarjetFrameworkVersion=%netver%;Platform=Any CPU;OutputPath=%CD%\build\Plugins\"
-%msbuild% "Plugins\GYAKUKEN\GYAKUKEN.sln"         /v:minimal "/p:Configuration=%conf%;TarjetFrameworkVersion=%netver%;Platform=Any CPU;OutputPath=%CD%\build\Plugins\"
-%msbuild% "Plugins\DBK ULTIMATE\DBK ULTIMATE.sln" /v:minimal "/p:Configuration=%conf%;TarjetFrameworkVersion=%netver%;Platform=Any CPU;OutputPath=%CD%\build\Plugins\"
-%msbuild% "Plugins\MAPLESTORYDS\MAPLESTORYDS.sln" /v:minimal "/p:Configuration=%conf%;TarjetFrameworkVersion=%netver%;Platform=Any CPU;OutputPath=%CD%\build\Plugins\"
-%msbuild% "Plugins\NINOKUNI\NINOKUNI.sln"         /v:minimal "/p:Configuration=%conf%;TarjetFrameworkVersion=%netver%;Platform=Any CPU;OutputPath=%CD%\build\Plugins\"
-%msbuild% "Plugins\TOKIMEKIGS3S\TOKIMEKIGS3S.sln" /v:minimal "/p:Configuration=%conf%;TarjetFrameworkVersion=%netver%;Platform=Any CPU;OutputPath=%CD%\build\Plugins\"
-%msbuild% "Plugins\BLOODBAHAMUT\BLOODBAHAMUT.sln" /v:minimal "/p:Configuration=%conf%;TarjetFrameworkVersion=%netver%;Platform=Any CPU;OutputPath=%CD%\build\Plugins\"
-%msbuild% "Plugins\SF FEATHER\SF FEATHER.sln"     /v:minimal "/p:Configuration=%conf%;TarjetFrameworkVersion=%netver%;Platform=Any CPU;OutputPath=%CD%\build\Plugins\"
-%msbuild% "Plugins\DEATHNOTEDS\DEATHNOTEDS.sln"   /v:minimal "/p:Configuration=%conf%;TarjetFrameworkVersion=%netver%;Platform=Any CPU;OutputPath=%CD%\build\Plugins\"
-%msbuild% "Plugins\INAZUMA11\INAZUMA11.sln"       /v:minimal "/p:Configuration=%conf%;TarjetFrameworkVersion=%netver%;Platform=Any CPU;OutputPath=%CD%\build\Plugins\"
-%msbuild% "Plugins\TC UTK\TC UTK.sln"             /v:minimal "/p:Configuration=%conf%;TarjetFrameworkVersion=%netver%;Platform=Any CPU;OutputPath=%CD%\build\Plugins\"
-%msbuild% "Plugins\PSL\PSL.sln"                   /v:minimal "/p:Configuration=%conf%;TarjetFrameworkVersion=%netver%;Platform=Any CPU;OutputPath=%CD%\build\Plugins\"
-%msbuild% "Plugins\HETALIA\HETALIA.sln"           /v:minimal "/p:Configuration=%conf%;TarjetFrameworkVersion=%netver%;Platform=Any CPU;OutputPath=%CD%\build\Plugins\"
-%msbuild% "Plugins\TIMEACE\TIMEACE.sln"           /v:minimal "/p:Configuration=%conf%;TarjetFrameworkVersion=%netver%;Platform=Any CPU;OutputPath=%CD%\build\Plugins\"
-%msbuild% "Plugins\WITCHTALE\WITCHTALE.sln"       /v:minimal "/p:Configuration=%conf%;TarjetFrameworkVersion=%netver%;Platform=Any CPU;OutputPath=%CD%\build\Plugins\"
-%msbuild% "Plugins\Tokimemo1\Tokimemo1.sln"       /v:minimal "/p:Configuration=%conf%;TarjetFrameworkVersion=%netver%;Platform=Any CPU;OutputPath=%CD%\build\Plugins\"
-%msbuild% "Plugins\Teniprimgaku\Teniprimgaku.sln" /v:minimal "/p:Configuration=%conf%;TarjetFrameworkVersion=%netver%;Platform=Any CPU;OutputPath=%CD%\build\Plugins\"
+echo Compiling Tinke...
+%msbuild% /p:Platform=%plat% /p:OutputPath=%build_dir%\ Tinke.sln
 
 REM Compiling format plugins
-%msbuild% "Plugins\Pack\Pack.sln"         /v:minimal "/p:Configuration=%conf%;TarjetFrameworkVersion=%netver%;Platform=Any CPU;OutputPath=%CD%\build\Plugins\"
-%msbuild% "Plugins\TXT\TXT.sln"           /v:minimal "/p:Configuration=%conf%;TarjetFrameworkVersion=%netver%;Platform=Any CPU;OutputPath=%CD%\build\Plugins\"
-%msbuild% "Plugins\Common\Common.sln"     /v:minimal "/p:Configuration=%conf%;TarjetFrameworkVersion=%netver%;Platform=Any CPU;OutputPath=%CD%\build\Plugins\"
-%msbuild% "Plugins\Images\Images.sln"     /v:minimal "/p:Configuration=%conf%;TarjetFrameworkVersion=%netver%;Platform=Any CPU;OutputPath=%CD%\build\Plugins\"
-%msbuild% "Plugins\SDAT\SDAT.sln"         /v:minimal "/p:Configuration=%conf%;TarjetFrameworkVersion=%netver%;Platform=Any CPU;OutputPath=%CD%\build\Plugins\"
-%msbuild% "Plugins\Sounds\Sounds.sln"     /v:minimal "/p:Configuration=%conf%;TarjetFrameworkVersion=%netver%;Platform=Any CPU;OutputPath=%CD%\build\Plugins\"
-%msbuild% "Plugins\Fonts\Fonts.sln"       /v:minimal "/p:Configuration=%conf%;TarjetFrameworkVersion=%netver%;Platform=Any CPU;OutputPath=%CD%\build\Plugins\"
-%msbuild% "Plugins\3DModels\3DModels.sln" /v:minimal "/p:Configuration=%conf%;TarjetFrameworkVersion=%netver%;Platform=Any CPU;OutputPath=%CD%\build\Plugins\"
+%msbuild_plugins% "Plugins\Pack\Pack.sln"
+%msbuild_plugins% "Plugins\TXT\TXT.sln"
+%msbuild_plugins% "Plugins\Common\Common.sln"
+%msbuild_plugins% "Plugins\Images\Images.sln"
+%msbuild_plugins% "Plugins\SDAT\SDAT.sln"
+%msbuild_plugins% "Plugins\Sounds\Sounds.sln"
+%msbuild_plugins% "Plugins\Fonts\Fonts.sln"
+%msbuild_plugins% "Plugins\3DModels\3DModels.sln"
+
+REM Compiling game plugins
+%msbuild_plugins% "Plugins\LAYTON\LAYTON.sln"
+%msbuild_plugins% "Plugins\KIRBY DRO\KIRBY DRO.sln"
+%msbuild_plugins% "Plugins\AI IGO DS\AI IGO DS.sln"
+%msbuild_plugins% "Plugins\LASTWINDOW\LASTWINDOW.sln"
+%msbuild_plugins% "Plugins\TETRIS DS\TETRIS DS.sln"
+%msbuild_plugins% "Plugins\999HRPERDOOR\999HRPERDOOR.sln"
+%msbuild_plugins% "Plugins\EDGEWORTH\EDGEWORTH.sln"
+%msbuild_plugins% "Plugins\GYAKUKEN\GYAKUKEN.sln"
+%msbuild_plugins% "Plugins\DBK ULTIMATE\DBK ULTIMATE.sln"
+%msbuild_plugins% "Plugins\MAPLESTORYDS\MAPLESTORYDS.sln"
+%msbuild_plugins% "Plugins\NINOKUNI\NINOKUNI.sln"
+%msbuild_plugins% "Plugins\TOKIMEKIGS3S\TOKIMEKIGS3S.sln"
+%msbuild_plugins% "Plugins\BLOODBAHAMUT\BLOODBAHAMUT.sln"
+%msbuild_plugins% "Plugins\SF FEATHER\SF FEATHER.sln"
+%msbuild_plugins% "Plugins\DEATHNOTEDS\DEATHNOTEDS.sln"
+%msbuild_plugins% "Plugins\INAZUMA11\INAZUMA11.sln"
+%msbuild_plugins% "Plugins\TC UTK\TC UTK.sln"
+%msbuild_plugins% "Plugins\PSL\PSL.sln"
+%msbuild_plugins% "Plugins\HETALIA\HETALIA.sln"
+%msbuild_plugins% "Plugins\TIMEACE\TIMEACE.sln"
+%msbuild_plugins% "Plugins\WITCHTALE\WITCHTALE.sln"
+%msbuild_plugins% "Plugins\Tokimemo1\Tokimemo1.sln"
+%msbuild_plugins% "Plugins\Teniprimgaku\Teniprimgaku.sln"
 
 REM Copy dependencies
-COPY "%cd%\Plugins\3DModels\OpenTK.dll" "%cd%\build\"
-COPY "%cd%\Plugins\3DModels\OpenTK.GLControl.dll" "%cd%\build\"
+COPY "%cd%\Plugins\3DModels\OpenTK.dll" "%build_dir%\"
+COPY "%cd%\Plugins\3DModels\OpenTK.GLControl.dll" "%build_dir%\"
 
 REM Copy license and changelog
-COPY "%cd%\changelog.txt" "%cd%\build\"
-COPY "%cd%\Licence.txt" "%cd%\build\"
+COPY "%cd%\changelog.txt" "%build_dir%\"
+COPY "%cd%\Licence.txt" "%build_dir%\"
 
 REM Delete debug files
-DEL /S /Q "%cd%\build\*.pdb"
+DEL /S /Q "%build_dir%\*.pdb"
 
 :end
 PAUSE
