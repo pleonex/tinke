@@ -1,6 +1,7 @@
 # Tinke
 <p align="center">
 <a href="https://travis-ci.org/pleonex/tinke"><img alt="Build Status" src="https://travis-ci.org/pleonex/tinke.svg?branch=master" align="left" /></a>
+<a href="https://ci.appveyor.com/project/pleonex/tinke"><img alt="Build Status" src="https://ci.appveyor.com/api/projects/status/0vyjiqofvtiogueh?svg=true" align="left" /></a>
 <a href="http://www.gnu.org/copyleft/gpl.html"><img alt="license" src="https://img.shields.io/badge/license-GPL%20V3-blue.svg?style=flat" /></a>
 </p>
 
