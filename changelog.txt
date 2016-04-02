@@ -1,6 +1,7 @@
 0.9.2
 ** Improve Hexadecimal Viewer for Mono (Linux and Mac OS)
 * Fix crash opening HexViewer from FAT dialog on Mono.
+* Fix project files and compile script for Windows.
 
 0.9.1
 ** Support partition cell sections (#18, #19).
@@ -94,7 +95,7 @@
 *** Improved Hexadecimal editor -> Now using Be.HexEditor (by Bernhard Elbl)
 *** Read BMD0 files and show the textures (if any)
 ** Game GYAKUKEN (Gyajuten kenji 2) - Unpacker
-** Game DBK ULTIMATE (Dragon Ball Kai Ultimate Butouden) - Unpacker for "archiveDBK.dsa" 
+** Game DBK ULTIMATE (Dragon Ball Kai Ultimate Butouden) - Unpacker for "archiveDBK.dsa"
 ** Game MAPLESTORYDS (Maple Story DS) - Unpacker for "RESOURCE.NXARC"
 ** Game NINOKUNI (Ninokuni Shikkoku no Madoushi) supported
   - Unpacker for NPCK and KPCN files
@@ -171,7 +172,7 @@
    - Fixed some bugs
 ** Improved decompress methods, now it's so much faster.
 * Improved plugin TETRIS DS
-* New option in menu "Open as..." -> Compress (you can select the start offset) 
+* New option in menu "Open as..." -> Compress (you can select the start offset)
 * Command to set a new transparent color in NCGR and NCER files
 * Improved Images plugin and TGA support
 * Improved "offset" value in files NCGR.
@@ -257,5 +258,3 @@
 * Add button to change the bgd color with transparency checked
 * UNICODE encoding support for text files
 * Minor problems fixed
-
-
