@@ -364,8 +364,11 @@ namespace Tinke.Dialog
         }
         private void btnHex_Click(object sender, EventArgs e)
         {
-            VisorHex hex = new VisorHex(fat.files[listBoxFiles.SelectedIndex]);
-            hex.Show();
+            var selectedFile = fat.files[listBoxFiles.SelectedIndex];
+            if (Type.GetType("Mono.Runtime") == null)
+                new VisorHex(selectedFile).Show();
+            else
+                new VisorHexBasic(selectedFile).Show();
         }
 
         public sFolder Files

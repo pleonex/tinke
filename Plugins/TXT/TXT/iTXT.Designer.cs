@@ -59,16 +59,9 @@ namespace TXT
             // 
             // txtBox
             // 
-            this.txtBox.Dock = System.Windows.Forms.DockStyle.Top;
-            this.txtBox.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtBox.HideSelection = false;
             this.txtBox.Location = new System.Drawing.Point(0, 0);
-            this.txtBox.Multiline = true;
             this.txtBox.Name = "txtBox";
-            this.txtBox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.txtBox.Size = new System.Drawing.Size(510, 466);
             this.txtBox.TabIndex = 0;
-            this.txtBox.WordWrap = false;
             // 
             // btnSave
             // 
@@ -130,7 +123,6 @@ namespace TXT
             // iTXT
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Transparent;
             this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.Controls.Add(this.checkWordWrap);

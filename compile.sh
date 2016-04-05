@@ -5,24 +5,34 @@ TINKE_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 BUILD_DIR="$TINKE_DIR/build"
 
 # Ask for release or debug configuration
-echo "Choose the configuration. Press '1' for Release and '2' for Debug: "
-select rd in "R" "D"; do
-    case $rd in
-        R) CONF="Release"; break;;
-        D) CONF="Debug"; break;;
-    esac
-done
+if [[ "$1" != "Release" && "$1" != "Debug" ]] ; then
+    echo "Choose the configuration. Press '1' for Release and '2' for Debug: "
+    select rd in "Release" "Debug"; do
+        case $rd in
+            Release) CONF="Release"; break;;
+            Debug) CONF="Debug"; break;;
+        esac
+    done
+    echo
+else
+    echo "Using $1 configuration."
+    CONF=$1
+fi
 
 # Ask for 64 or 32 bits.
-echo
-echo "Choose the platform. Press '1' for x86 or '2' for x64: "
-select pl in "1" "2"; do
-    case $pl in
-        1) PLAT="x86"; break;;
-        2) PLAT="x64"; break;;
-    esac
-done
-echo
+if [[ "$2" != "x86" && "$2" != "x64" ]] ; then
+    echo "Choose the platform. Press '1' for x86 or '2' for x64: "
+    select pl in "x86" "x64"; do
+        case $pl in
+            x86) PLAT="x86"; break;;
+            x64) PLAT="x64"; break;;
+        esac
+    done
+    echo
+else
+    echo "Compiling for platform $2."
+    PLAT=$2
+fi
 
 # Remove previous builds
 if [ -d $BUILD_DIR ]; then
@@ -31,20 +41,35 @@ if [ -d $BUILD_DIR ]; then
 fi
 
 # Get compiler and params
-XBUILD="xbuild /v:minimal /p:Configuration=$CONF;TarjetFrameworkVersion=v4.0"
+XBUILD="xbuild /v:minimal /p:Configuration=$CONF;TargetFrameworkVersion=v4.5"
 XBUILD_PLUGINS="$XBUILD;OutputPath=$BUILD_DIR/Plugins/"
 
-# Compile program in standard (debug) directory, to allow plugins find Ekona
+# Compile program in standard directory, to allow plugins find Ekona
 echo "Compiling base library..."
-xbuild /v:minimal /p:TarjetFrameworkVersion=v4.0 Tinke.sln  > /dev/null
+xbuild /v:minimal /p:TargetFrameworkVersion=v4.5 Tinke.sln > build.log
+if [ $? -ne 0 ] ; then
+    echo "Error compiling Tinke into the default directory. Aborting."
+    cat build.log
+    exit -1
+fi
 
 # Compile Tinke
 echo "Compiling Tinke..."
-$XBUILD "/p:Platform=$PLAT;OutputPath=$BUILD_DIR/" Tinke.sln > /dev/null
+$XBUILD "/p:Platform=$PLAT;OutputPath=$BUILD_DIR/" Tinke.sln > build.log
+if [ $? -ne 0 ] ; then
+    echo "Error compiling Tinke into the build dir. Aborting."
+    cat build.log
+    exit -1
+fi
 
 function compile_plugin {
     echo "Compiling plugin $1..."
-    $XBUILD_PLUGINS "$1" > /dev/null
+    $XBUILD_PLUGINS "$1" > build.log
+    if [ $? -ne 0 ] ; then
+        echo "Error compiling $1. Aborting."
+        cat build.log
+        exit -1
+    fi
 }
 
 # Compile game plugins
@@ -93,5 +118,6 @@ cp "$TINKE_DIR/Licence.txt" "$BUILD_DIR/"
 # Delete debug files
 rm "$BUILD_DIR"/*.mdb
 rm "$BUILD_DIR"/Plugins/*.mdb
+rm build.log
 
 echo "Done!"

@@ -1,0 +1,9 @@
+## AppVeyor CI Integration
+version: 0.9.2.{build}-{branch}
+
+image:
+- Visual Studio 2015
+- Visual Studio 2013
+
+build_script:
+- cmd: compile.bat Release x86

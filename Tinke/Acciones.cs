@@ -92,7 +92,11 @@ namespace Tinke
                         if (!pluginType.IsPublic || pluginType.IsAbstract || pluginType.IsInterface)
                             continue;
 
-                        Type concreteType = pluginType.GetInterface(typeof(IPlugin).FullName, true);
+                        Type concreteType = null;
+                        // WORKAROUND: for bug in mono.
+                        foreach (Type inter in pluginType.GetInterfaces())
+                            if (inter.FullName == typeof(IPlugin).FullName)
+                                concreteType = inter;
                         if (concreteType != null)
                         {
                             IPlugin plugin = (IPlugin)Activator.CreateInstance(assembly.GetType(pluginType.ToString()));
@@ -101,7 +105,10 @@ namespace Tinke
                         } // end if
                         else
                         {
-                            concreteType = pluginType.GetInterface(typeof(IGamePlugin).FullName, true);
+                            // WORKAROUND: for bug in mono.
+                            foreach (Type inter in pluginType.GetInterfaces())
+                                if (inter.FullName == typeof(IGamePlugin).FullName)
+                                    concreteType = inter;
                             if (concreteType != null)
                             {
                                 IGamePlugin plugin = (IGamePlugin)Activator.CreateInstance(assembly.GetType(pluginType.ToString()));

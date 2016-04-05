@@ -874,10 +874,7 @@ namespace Tinke
                 listFile.Items[6].SubItems.Add(accion.Get_RelativePath(selectFile.id, "", accion.Root));
                 toolStripOpenAs.Enabled = true;
 
-                if (isMono)
-                    btnHex.Enabled = false;
-                else
-                    btnHex.Enabled = true;
+                btnHex.Enabled = true;
 
                 if (selectFile.format != Format.Unknown)
                     btnSee.Enabled = true;
@@ -1045,17 +1042,23 @@ namespace Tinke
         private void btnHex_Click(object sender, EventArgs e)
         {
             sFile file = accion.Selected_File();
-            VisorHex hex = new VisorHex(accion.Save_File(file), file.id,
-                                        file.name == "rom.nds" ? false : true);
+            string filePath = accion.Save_File(file);
+            Form hex;
+
+            if (!isMono) {
+                hex = new VisorHex(filePath, file.id, file.name != "rom.nds");
+                hex.FormClosed += hex_FormClosed;
+            } else {
+                hex = new VisorHexBasic(filePath, 0, file.size);
+            }
 
             hex.Text += " - " + file.name;
             hex.Show();
-            hex.FormClosed += new FormClosedEventHandler(hex_FormClosed);
         }
         void hex_FormClosed(object sender, FormClosedEventArgs e)
         {
-            VisorHex hex = (VisorHex)sender;
-            if (hex.Edited)
+            VisorHex hex = sender as VisorHex;
+            if (sender != null && hex.Edited)
                 accion.Change_File(hex.FileID, hex.NewFile);
         }
 

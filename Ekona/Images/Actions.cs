@@ -19,21 +19,17 @@
  */
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Drawing;
-using System.Runtime.InteropServices;
-using System.Drawing.Imaging;
 
 namespace Ekona.Images
 {
-
     public enum TileForm
     {
         Lineal,
         Horizontal,
         Vertical
     }
+
     public enum ColorFormat : byte
     {
         A3I5 = 1,           // 8 bits-> 0-4: index; 5-7: alpha
@@ -48,6 +44,7 @@ namespace Ekona.Images
         A4I4 = 10,
         ABGR32 = 11
     }
+
     public enum ColorEncoding : byte
     {
         BGR555 = 1,
@@ -662,42 +659,46 @@ namespace Ekona.Images
         public static int FindNextColor(Color c, Color[] palette, decimal threshold = 0)
         {
             int id = -1;
+            decimal minDistance = decimal.MaxValue;
 
-            decimal min_distance = (decimal)Math.Sqrt(3) * 255;       // Set the max distance
-            double module = Math.Sqrt(c.R * c.R + c.G * c.G + c.B * c.B);
+            // Skip the first color since it used to be the transparent color and we
+            // don't want that as the best match if possible.
             for (int i = 1; i < palette.Length; i++)
             {
-                double modulec = Math.Sqrt(palette[i].R * palette[i].R + palette[i].G * palette[i].G + palette[i].B * palette[i].B);
-                decimal distance = (decimal)Math.Abs(module - modulec);
+                double x = palette[i].R - c.R;
+                double y = palette[i].G - c.G;
+                double z = palette[i].B - c.B;
+                decimal distance = (decimal)Math.Sqrt(x * x + y * y + z * z);
 
-                if (distance < min_distance)
+                if (distance < minDistance)
                 {
-                    min_distance = distance;
+                    minDistance = distance;
                     id = i;
                 }
             }
 
-            if (min_distance > threshold)   // If the distance it's bigger than wanted
+            // If the distance it's bigger than wanted, remove the best match
+            if (minDistance > threshold)
                 id = -1;
 
-            // If still it doesn't found the color try with the first one, usually is transparent so for this reason we leave it to the end
+            // If still it doesn't found the color try with the first one.
             if (id == -1)
             {
-                double modulec = Math.Sqrt(palette[0].R * palette[0].R + palette[0].G * palette[0].G + palette[0].B * palette[0].B);
-                decimal distance = (decimal)Math.Abs(module - modulec);
+                double x = palette[0].R - c.R;
+                double y = palette[0].G - c.G;
+                double z = palette[0].B - c.B;
+                decimal distance = (decimal)Math.Sqrt(x * x + y * y + z * z);
 
                 if (distance <= threshold)
                     id = 0;
             }
 
             if (id == -1)
-            {
-                Console.Write("Color not found: ");
-                Console.WriteLine(c.ToString() + " (distance: " + min_distance.ToString() + ')');
-            }
+                Console.WriteLine("Color not found: {0} (distance: {1})", c, minDistance);
 
             return id;
         }
+
         public static void Indexed_Image(Bitmap img, ColorFormat cf, out byte[] tiles, out Color[] palette)
         {
             // It's a slow method but it should work always

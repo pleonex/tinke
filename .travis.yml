@@ -1,0 +1,6 @@
+## Travis CI Integration
+language: csharp
+solution: Tinke.sln
+
+script:
+  - ./compile.sh Release x64

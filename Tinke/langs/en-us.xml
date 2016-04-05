@@ -126,7 +126,7 @@
     <S22>File Allocation Table (FAT) offset</S22>
     <S23>File Allocation Table (FAT) length</S23>
     <S24>ARM9 overlay offset</S24>
-    <S25>ARM9 overlay legnth</S25>
+    <S25>ARM9 overlay length</S25>
     <S26>ARM7 overlay offset</S26>
     <S27>ARM7 overlay length</S27>
     <S28>Normal card control register settings</S28>

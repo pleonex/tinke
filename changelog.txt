@@ -1,3 +1,68 @@
+0.9.2
+** Improve Hexadecimal Viewer for Mono (Linux and Mac OS)
+* Fix crash opening HexViewer from FAT dialog on Mono.
+* Fix project files and compile script for Windows.
+
+0.9.1
+** Support partition cell sections (#18, #19).
+* Add basic hexadecimal viewer for mono.
+* Add support for WARIO7 ARC pack file.
+* Add support for Layton2 Dutch version.
+* Fix #14: size and format were default values when using CallPlugin.
+* Fix #16: ROM size header value was not updated on ROM generation.
+* Fix #7: Import images was using always the first palette.
+* Fix #8: Not writing last segment of raw images.
+* Fix #20: Wrong math formula for color distance.
+* Fix mono issues.
+* Upgrade to .NET Framework 4.5.
+
+0.9.0 (first GitHub release)
+*** Improve performance.
+*** Alpha 3D model viewer.
+*** OAM Editor and importer.
+** Add support for ADX sound files.
+** Add support for Procyon codec for sound files.
+** Add support for Layton London Life game.
+** Add support for Pokemon Conquest.
+** New options to import images.
+* New window in "Open as->" to force to use a plugin to open the file.
+* Show more info about SDAT files.
+* Add shortcut F3 in hex viewer to search next value.
+* New shortcut search for the first 4 bytes: Header XXXXXXXX.
+* More support for Inazuma Eleven games.
+* Add support for NARUTO_POTN.
+* Add support for TIME HOLLOW.
+* Add support for TIMEACE.
+* Add support for ALAR pack files.
+* Add support for WITCHTALE.
+* Add support for Hetalia game.
+* Add support for Trauma Center game.
+* Add support for GTA CTW.
+* Add support for ROCKMAN.EXE.
+* Add unpackers for 4HEROSLIGHT.
+* Add unpackers for RR3BACE.
+* Add support for files in Layton1 and Layton2.
+* Add support for pack file in Death Note DS.
+* Add support for images in SF Feather.
+* Add support for Summon Night X Tears Crown files.
+* Add support for Tennis no Ouji-sama.
+* Add support for A Witch's Tale.
+* Add support for Super Robot Taisen OG Saga - Endless Frontier.
+* Add support for 100 Classic Book Collection.
+* Add support for NTFT image files.
+* Add support for NAIX text files.
+* Add support for custom tables in hex viewer (only Windows).
+* Fix problems with NARC files.
+* Fix problems with Last Windows game plugin.
+* Fix problems with fonts and add encoding support.
+* Fix problems with NCER files.
+* Fix palette imported.
+* Add support for SPDL file format in Ninokuni.
+* Fix compile script and add support for Linux.
+* Clean a lot of code.
+* Fixed many, many bugs.
+
+
 0.8.3
 *** 3D Model viewer for BMD0 (nsbmd)
 ** Improved the perfomance reading roms
@@ -30,7 +95,7 @@
 *** Improved Hexadecimal editor -> Now using Be.HexEditor (by Bernhard Elbl)
 *** Read BMD0 files and show the textures (if any)
 ** Game GYAKUKEN (Gyajuten kenji 2) - Unpacker
-** Game DBK ULTIMATE (Dragon Ball Kai Ultimate Butouden) - Unpacker for "archiveDBK.dsa" 
+** Game DBK ULTIMATE (Dragon Ball Kai Ultimate Butouden) - Unpacker for "archiveDBK.dsa"
 ** Game MAPLESTORYDS (Maple Story DS) - Unpacker for "RESOURCE.NXARC"
 ** Game NINOKUNI (Ninokuni Shikkoku no Madoushi) supported
   - Unpacker for NPCK and KPCN files
@@ -107,7 +172,7 @@
    - Fixed some bugs
 ** Improved decompress methods, now it's so much faster.
 * Improved plugin TETRIS DS
-* New option in menu "Open as..." -> Compress (you can select the start offset) 
+* New option in menu "Open as..." -> Compress (you can select the start offset)
 * Command to set a new transparent color in NCGR and NCER files
 * Improved Images plugin and TGA support
 * Improved "offset" value in files NCGR.
@@ -193,5 +258,3 @@
 * Add button to change the bgd color with transparency checked
 * UNICODE encoding support for text files
 * Minor problems fixed
-
-

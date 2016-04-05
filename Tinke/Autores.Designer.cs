@@ -261,7 +261,7 @@ namespace Tinke
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(296, 17);
             this.label8.TabIndex = 19;
-            this.label8.Text = "ana1is1a   rafael1193   go11um   CUE";
+            this.label8.Text = "ana1is1a   rafael1193   go11um   CUE   MetLob";
             // 
             // lblTrad
             // 
