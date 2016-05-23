@@ -98,6 +98,7 @@ REM Copy license and changelog
 ECHO Copying license and changelog
 COPY "%cd%\changelog.txt" "%build_dir%\" > nul || (EXIT /B 1)
 COPY "%cd%\Licence.txt" "%build_dir%\" > nul || (EXIT /B 1)
+COPY "%cd%\Tinke\app.config" "%build_dir%\Tinke.exe.config" > nul || (EXIT /B 1)
 
 REM Delete debug files
 ECHO Removing debug files

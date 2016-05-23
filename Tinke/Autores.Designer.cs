@@ -132,7 +132,7 @@ namespace Tinke
             this.linkLabel1.Size = new System.Drawing.Size(164, 13);
             this.linkLabel1.TabIndex = 5;
             this.linkLabel1.TabStop = true;
-            this.linkLabel1.Text = "http://code.google.com/p/tinke/";
+            this.linkLabel1.Text = "http://www.github.com/pleonex/tinke/";
             // 
             // label5
             // 
