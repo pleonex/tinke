@@ -114,6 +114,7 @@ cp "$TINKE_DIR/Plugins/3DModels/OpenTK.GLControl.dll" "$BUILD_DIR/"
 # Copy license and changelog
 cp "$TINKE_DIR/changelog.txt" "$BUILD_DIR/"
 cp "$TINKE_DIR/Licence.txt" "$BUILD_DIR/"
+cp "$TINKE_DIR/Tinke/app.config" "$BUILD_DIR/"
 
 # Delete debug files
 rm "$BUILD_DIR"/*.mdb
