@@ -31,7 +31,7 @@ namespace Ekona.Images
 
         #region Variables
         protected IPluginHost pluginHost;
-        protected int id;
+        protected int id = -1;
         protected string fileName;
         bool loaded;
 
