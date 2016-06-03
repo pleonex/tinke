@@ -81,6 +81,7 @@
       <DependentUpon>BasicControl.cs</DependentUpon>
     </Compile>
     <Compile Include="Imagen\BMP.cs" />
+    <Compile Include="Imagen\GIF.cs" />
     <Compile Include="Imagen\JPG.cs" />
     <Compile Include="Imagen\PNG.cs" />
     <Compile Include="Imagen\TGA.cs" />

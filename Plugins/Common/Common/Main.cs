@@ -34,7 +34,7 @@ namespace Common
         {
             string ext = new String(Encoding.ASCII.GetChars(magic));
 
-            if (file.name.ToUpper().EndsWith(".TGA") || file.name.ToUpper().EndsWith(".JPG") || file.name.ToUpper().EndsWith(".PNG"))
+            if (file.name.ToUpper().EndsWith(".TGA") || file.name.ToUpper().EndsWith(".GIF") || file.name.ToUpper().EndsWith(".JPG") || file.name.ToUpper().EndsWith(".PNG"))
                 return Format.FullImage;
             else if (file.name.ToUpper().EndsWith(".BMP") && magic[0] == 'B' && magic[1] == 'M')
                 return Format.FullImage;
@@ -60,6 +60,8 @@ namespace Common
 
             if (file.name.ToUpper().EndsWith(".TGA"))
                 return new TGA(pluginHost, file.path).Show_Info();
+            else if (file.name.ToUpper().EndsWith(".GIF"))
+                return new GIF(pluginHost, file.path).Show_Info();
             else if (file.name.ToUpper().EndsWith(".JPG"))
                 return new JPG(pluginHost, file.path).Show_Info();
             else if (file.name.ToUpper().EndsWith(".PNG"))
