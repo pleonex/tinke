@@ -7,3 +7,5 @@ image:
 
 build_script:
 - cmd: compile.bat Release x86
+
+test: off
