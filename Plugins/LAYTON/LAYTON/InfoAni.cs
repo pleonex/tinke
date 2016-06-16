@@ -31,33 +31,39 @@ namespace LAYTON
 {
     public partial class InfoAni : UserControl
     {
-        Bitmap[] imagenes;
-        int imgShow = 0;
         IPluginHost pluginHost;
         Ani.Todo info;
+        int id;
+
+        Bitmap[] imagenes;
+        int frameIndex = 0;
 
         public InfoAni()
         {
             InitializeComponent();
         }
-        public InfoAni(Ani.Todo info, IPluginHost pluginHost)
+
+        public InfoAni(Ani.Todo info, IPluginHost pluginHost, int id)
         {
             InitializeComponent();
+
             this.pluginHost = pluginHost;
+            this.id = id;
             LeerIdioma();
 
             this.info = info;
             infoPicture1.Idioma = pluginHost.Get_Language();
             infoPicture1.Informacion = info;
-            imagenes = new Bitmap[info.imgs];
-            for (int i = 0; i < info.imgs; i++)
-            {
-                comboBox1.Items.Add(info.imagenes[i].name);
-                imagenes[i] = (Bitmap)info.imagenes[i].bitmap.Clone();
-            }
+            for (uint i = 0; i < info.anims.LongLength; i++)
+                comboBox1.Items.Add(info.anims[i].name);
 
-            comboBox1.SelectedIndex = 0;
-            pictureBox1.Image = imagenes[0];
+            imagenes = new Bitmap[info.imgs];
+            for (uint i = 0; i < info.imgs; i++)
+                imagenes[i] = (Bitmap)info.imagenes[i].bitmap.Clone();
+
+            infoPicture1.Imagenes = imagenes;
+            if (info.anims.LongLength > 1) comboBox1.SelectedIndex = 1;
+            this.infoPicture1.Imagen_Seleccionada = GetIndexByFrame(frameIndex);
         }
         
         private void LeerIdioma()
@@ -72,14 +78,32 @@ namespace LAYTON
                 checkBox1.Text = xml.Element("S02").Value;
                 btnSave.Text = xml.Element("S03").Value;
                 btnSaveAni.Text = xml.Element("S04").Value;
+                btnImport.Text = xml.Element("S05").Value;
             }
             catch { throw new Exception("There was an error reading the XML file of language."); } 
         }
 
         private void comboBox1_SelectedIndexChanged_1(object sender, EventArgs e)
         {
-            pictureBox1.Image = imagenes[comboBox1.SelectedIndex];
-            infoPicture1.Imagen_Seleccionada = comboBox1.SelectedIndex;
+            frameIndex = 0;
+            this.infoPicture1.Imagen_Seleccionada = GetIndexByFrame(frameIndex);
+        }
+
+        private Bitmap GetSelectedImage()
+        {
+            return info.imagenes[this.infoPicture1.Imagen_Seleccionada].bitmap;
+        }
+
+        private int GetSelectedIndex()
+        {
+            return this.infoPicture1.Imagen_Seleccionada;
+        }
+
+        private int GetIndexByFrame(int frameIndex)
+        {
+            if (info.anims[comboBox1.SelectedIndex].framesCount > frameIndex)
+                return (int)info.anims[comboBox1.SelectedIndex].imagesIndexes[this.frameIndex];
+            else return 0;
         }
 
         private void btnSave_Click(object sender, EventArgs e)
@@ -88,12 +112,23 @@ namespace LAYTON
             o.AddExtension = true;
             o.CheckPathExists = true;
             o.DefaultExt = ".bmp";
-            o.Filter = "BitMaP (*.bmp)|*.bmp";
+            o.Filter = "BitMaP (*.bmp)|*.bmp|Portable Network Graphics (*.png)|*.png";
             o.OverwritePrompt = true;
-
+            o.FileName = this.pluginHost.Search_File((short)id).name + "_" + this.GetSelectedIndex();
             if (o.ShowDialog() == DialogResult.OK)
-                pictureBox1.Image.Save(o.FileName, System.Drawing.Imaging.ImageFormat.Bmp);
+            {
+                switch (o.FilterIndex)
+                {
+                    case 0:
+                        GetSelectedImage().Save(o.FileName, System.Drawing.Imaging.ImageFormat.Bmp);
+                        break;
+                    default:
+                        GetSelectedImage().Save(o.FileName, System.Drawing.Imaging.ImageFormat.Png);
+                        break;
+                }
+            }
         }
+
         private void btnSaveAni_Click(object sender, EventArgs e)
         {
             SaveFileDialog o = new SaveFileDialog();
@@ -102,47 +137,64 @@ namespace LAYTON
             o.DefaultExt = ".png";
             o.Filter = "Animation PNG (*.png)|*.png";
             o.OverwritePrompt = true;
-
-            if (o.ShowDialog() == DialogResult.OK)
-                Ekona.Images.Formats.APNG.Create(imagenes, o.FileName, Convert.ToInt32(maskedTextBox1.Text), 0);
-                
+            o.FileName = info.anims[comboBox1.SelectedIndex].name;
+            Bitmap[] frames = new Bitmap[info.anims[comboBox1.SelectedIndex].framesCount];
+            for (int i = 0; i < frames.Length; i++) frames[i] = imagenes[GetIndexByFrame(i)];
+            if (frames.Length > 0 && o.ShowDialog() == DialogResult.OK)
+                Ekona.Images.Formats.APNG.Create(frames, o.FileName, Convert.ToInt32(maskedTextBox1.Text), 0);
         }
 
         private void btnPlay_Click(object sender, EventArgs e)
         {
-            timer1.Enabled = true;
-            timer1.Start();
+            if (imagenes.Length == 0) MessageBox.Show("This Animation is Blank.");
+            else
+            {
+                comboBox1.Enabled = false;
+                btnPrevious.Enabled = false;
+                btnNext.Enabled = false;
+                btnPlay.Enabled = false;
+                btnImport.Enabled = false;
+                btnSave.Enabled = false;
+
+                timer1.Enabled = true;
+                timer1.Start();
+            }
         }
         private void btnStop_Click(object sender, EventArgs e)
         {
             timer1.Stop();
+            comboBox1.Enabled = true;
+            btnPrevious.Enabled = true;
+            btnNext.Enabled = true;
+            btnPlay.Enabled = true;
+            btnImport.Enabled = true;
+            btnSave.Enabled = true;
+
+            this.infoPicture1.Imagen_Seleccionada = GetIndexByFrame(frameIndex);
         }
         private void btnPrevious_Click(object sender, EventArgs e)
         {
-            imgShow--;
-            if (imgShow < 0)
-                imgShow = imagenes.Length - 1;
+            frameIndex--;
+            if (frameIndex < 0)
+                frameIndex = (int)info.anims[comboBox1.SelectedIndex].framesCount - 1;
 
-            pictureBox1.Image = imagenes[imgShow];
-            comboBox1.SelectedIndex = imgShow;
+            this.infoPicture1.Imagen_Seleccionada = GetIndexByFrame(frameIndex);
         }
         private void btnNext_Click(object sender, EventArgs e)
         {
-            imgShow++;
-            if (imgShow >= imagenes.Length)
-                imgShow = 0;
+            frameIndex++;
+            if (frameIndex >= (int)info.anims[comboBox1.SelectedIndex].framesCount)
+                frameIndex = 0;
 
-            pictureBox1.Image = imagenes[imgShow];
-            comboBox1.SelectedIndex = imgShow;
+            this.infoPicture1.Imagen_Seleccionada = GetIndexByFrame(frameIndex);
         }
         private void timer1_Tick(object sender, EventArgs e)
         {
-            imgShow++;
-            if (imgShow >= imagenes.Length)
-                imgShow = 0;
+            frameIndex++;
+            if (frameIndex >= (int)info.anims[comboBox1.SelectedIndex].framesCount)
+                frameIndex = 0;
 
-            pictureBox1.Image = imagenes[imgShow];
-            comboBox1.SelectedIndex = imgShow;
+            this.infoPicture1.Imagen_Seleccionada = GetIndexByFrame(frameIndex);
         }
 
         private void maskedTextBox1_TextChanged(object sender, EventArgs e)
@@ -158,9 +210,52 @@ namespace LAYTON
                     imagenes[i].MakeTransparent();
             else
                 for (int i = 0; i < imagenes.Length; i++)
-                    imagenes[i] = info.imagenes[i].bitmap;
+                    imagenes[i] = (Bitmap)info.imagenes[i].bitmap.Clone();
 
-            pictureBox1.Image = imagenes[imgShow];
+            if (!timer1.Enabled)
+                infoPicture1.Imagen_Seleccionada = infoPicture1.Imagen_Seleccionada;
+        }
+
+        private void btnImport_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog o = new OpenFileDialog();
+            o.Multiselect = false;
+            o.DefaultExt = ".png";
+            o.Filter = "All formats (*.png, *.bmp)|*.png;*.bmp|BitMaP (*.bmp)|*.bmp|Portable Network Graphics (*.png)|*.png";
+            if (o.ShowDialog() == DialogResult.OK)
+            {
+                Bitmap bmp = new Bitmap(o.FileName);
+                
+                Color[] palette = (this.info.imgs > 1) ? this.info.paleta.colores : null;
+                palette = this.info.paleta.colores;
+                int selIndex = GetSelectedIndex();
+                if (info.imagenes[selIndex].Import(bmp, info.type == 1, ref palette))
+                {
+                    // Update structures
+                    if (palette != this.info.paleta.colores && palette != null) this.info.paleta.Update(palette);
+                    imagenes[selIndex] = (Bitmap)info.imagenes[selIndex].bitmap.Clone();
+                    if (checkBox1.Checked) imagenes[selIndex].MakeTransparent();
+                    infoPicture1.UpdateSelected(info.imagenes[selIndex]);
+                    infoPicture1.Imagen_Seleccionada = selIndex;
+
+                    // Write file
+                    string tempFile = this.pluginHost.Get_TempFile();
+                    Ani.SaveToFile(this.info, tempFile);
+
+                    // Compress file
+                    string compressedFile = this.pluginHost.Get_TempFile();
+                    this.pluginHost.Compress(tempFile, compressedFile, FormatCompress.LZ10);
+
+                    System.IO.BinaryWriter bw = new System.IO.BinaryWriter(System.IO.File.OpenWrite(tempFile));
+                    bw.BaseStream.SetLength(0);
+                    bw.Write((uint)2);
+                    bw.Write(System.IO.File.ReadAllBytes(compressedFile));
+                    bw.Close();
+                    System.IO.File.Delete(compressedFile);
+
+                    this.pluginHost.ChangeFile(id, tempFile);
+                }
+            }
         }
     }
 }

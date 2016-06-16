@@ -34,6 +34,7 @@ namespace LAYTON
         #region Variables
         InfoImage[] infoImag;
         TabPage[] tabImag;
+        Bitmap[] imagenes;
         string idioma;
         string pestaña;        
         #endregion
@@ -108,8 +109,35 @@ namespace LAYTON
         {
             set
             {
-                tabImags.SelectedIndex = value;
+                if (tabImags.SelectedIndex == value)
+                    pictureBox1.Image = imagenes[value];
+                else tabImags.SelectedIndex = value;
             }
+            get
+            {
+                return tabImags.SelectedIndex;
+            }
+        }
+
+        public Bitmap[] Imagenes
+        {
+            set
+            {
+                this.imagenes = value;
+            }
+        }
+
+        public void UpdateSelected(Ani.Image image)
+        {
+            int i = tabImags.SelectedIndex;
+            infoImag[i] = new InfoImage(idioma);
+            tabImag[i].Text = pestaña + ' ' + i.ToString();
+            tabImag[i].Controls.Add(infoImag[i]);
+        }
+
+        private void tabImags_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (tabImags.SelectedIndex >= 0) pictureBox1.Image = imagenes[tabImags.SelectedIndex];
         }
     }
 }

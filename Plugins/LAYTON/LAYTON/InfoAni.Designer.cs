@@ -48,9 +48,7 @@ namespace LAYTON
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
-            this.btnSave = new System.Windows.Forms.Button();
             this.btnSaveAni = new System.Windows.Forms.Button();
             this.maskedTextBox1 = new System.Windows.Forms.MaskedTextBox();
             this.label1 = new System.Windows.Forms.Label();
@@ -61,45 +59,25 @@ namespace LAYTON
             this.btnStop = new System.Windows.Forms.Button();
             this.btnPlay = new System.Windows.Forms.Button();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.btnImport = new System.Windows.Forms.Button();
+            this.btnSave = new System.Windows.Forms.Button();
             this.infoPicture1 = new LAYTON.InfoPicture();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
-            // 
-            // pictureBox1
-            // 
-            this.pictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pictureBox1.Location = new System.Drawing.Point(5, 295);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(256, 215);
-            this.pictureBox1.TabIndex = 3;
-            this.pictureBox1.TabStop = false;
             // 
             // comboBox1
             // 
             this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(268, 299);
+            this.comboBox1.Location = new System.Drawing.Point(390, 12);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(117, 21);
             this.comboBox1.TabIndex = 4;
             this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged_1);
             // 
-            // btnSave
-            // 
-            this.btnSave.Image = global::LAYTON.Properties.Resources.picture_save;
-            this.btnSave.Location = new System.Drawing.Point(268, 434);
-            this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(117, 34);
-            this.btnSave.TabIndex = 5;
-            this.btnSave.Text = "S03";
-            this.btnSave.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
-            this.btnSave.UseVisualStyleBackColor = true;
-            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
-            // 
             // btnSaveAni
             // 
             this.btnSaveAni.Image = global::LAYTON.Properties.Resources.picture_go;
-            this.btnSaveAni.Location = new System.Drawing.Point(268, 474);
+            this.btnSaveAni.Location = new System.Drawing.Point(390, 129);
             this.btnSaveAni.Name = "btnSaveAni";
             this.btnSaveAni.Size = new System.Drawing.Size(117, 34);
             this.btnSaveAni.TabIndex = 6;
@@ -110,7 +88,7 @@ namespace LAYTON
             // 
             // maskedTextBox1
             // 
-            this.maskedTextBox1.Location = new System.Drawing.Point(324, 326);
+            this.maskedTextBox1.Location = new System.Drawing.Point(447, 39);
             this.maskedTextBox1.Mask = "99999";
             this.maskedTextBox1.Name = "maskedTextBox1";
             this.maskedTextBox1.Size = new System.Drawing.Size(35, 20);
@@ -122,7 +100,7 @@ namespace LAYTON
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(265, 329);
+            this.label1.Location = new System.Drawing.Point(388, 42);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(26, 13);
             this.label1.TabIndex = 8;
@@ -131,7 +109,7 @@ namespace LAYTON
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(365, 329);
+            this.label2.Location = new System.Drawing.Point(488, 42);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(20, 13);
             this.label2.TabIndex = 9;
@@ -140,7 +118,7 @@ namespace LAYTON
             // btnNext
             // 
             this.btnNext.Image = global::LAYTON.Properties.Resources.resultset_last;
-            this.btnNext.Location = new System.Drawing.Point(360, 364);
+            this.btnNext.Location = new System.Drawing.Point(483, 77);
             this.btnNext.Name = "btnNext";
             this.btnNext.Size = new System.Drawing.Size(25, 23);
             this.btnNext.TabIndex = 10;
@@ -155,7 +133,7 @@ namespace LAYTON
             // btnPrevious
             // 
             this.btnPrevious.Image = global::LAYTON.Properties.Resources.resultset_first;
-            this.btnPrevious.Location = new System.Drawing.Point(267, 364);
+            this.btnPrevious.Location = new System.Drawing.Point(390, 77);
             this.btnPrevious.Name = "btnPrevious";
             this.btnPrevious.Size = new System.Drawing.Size(25, 23);
             this.btnPrevious.TabIndex = 11;
@@ -165,7 +143,7 @@ namespace LAYTON
             // btnStop
             // 
             this.btnStop.Image = global::LAYTON.Properties.Resources.stop1;
-            this.btnStop.Location = new System.Drawing.Point(298, 364);
+            this.btnStop.Location = new System.Drawing.Point(421, 77);
             this.btnStop.Name = "btnStop";
             this.btnStop.Size = new System.Drawing.Size(25, 23);
             this.btnStop.TabIndex = 12;
@@ -175,7 +153,7 @@ namespace LAYTON
             // btnPlay
             // 
             this.btnPlay.Image = global::LAYTON.Properties.Resources.resultset_next;
-            this.btnPlay.Location = new System.Drawing.Point(329, 364);
+            this.btnPlay.Location = new System.Drawing.Point(452, 77);
             this.btnPlay.Name = "btnPlay";
             this.btnPlay.Size = new System.Drawing.Size(25, 23);
             this.btnPlay.TabIndex = 13;
@@ -185,7 +163,7 @@ namespace LAYTON
             // checkBox1
             // 
             this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(268, 393);
+            this.checkBox1.Location = new System.Drawing.Point(391, 106);
             this.checkBox1.Name = "checkBox1";
             this.checkBox1.Size = new System.Drawing.Size(45, 17);
             this.checkBox1.TabIndex = 14;
@@ -193,12 +171,36 @@ namespace LAYTON
             this.checkBox1.UseVisualStyleBackColor = true;
             this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
             // 
+            // btnImport
+            // 
+            this.btnImport.Image = global::LAYTON.Properties.Resources.picture_edit;
+            this.btnImport.Location = new System.Drawing.Point(390, 437);
+            this.btnImport.Name = "btnImport";
+            this.btnImport.Size = new System.Drawing.Size(117, 34);
+            this.btnImport.TabIndex = 58;
+            this.btnImport.Text = "S05";
+            this.btnImport.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnImport.UseVisualStyleBackColor = true;
+            this.btnImport.Click += new System.EventHandler(this.btnImport_Click);
+            // 
+            // btnSave
+            // 
+            this.btnSave.Image = global::LAYTON.Properties.Resources.picture_save;
+            this.btnSave.Location = new System.Drawing.Point(390, 477);
+            this.btnSave.Name = "btnSave";
+            this.btnSave.Size = new System.Drawing.Size(117, 34);
+            this.btnSave.TabIndex = 57;
+            this.btnSave.Text = "S03";
+            this.btnSave.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.btnSave.UseVisualStyleBackColor = true;
+            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
+            // 
             // infoPicture1
             // 
-            this.infoPicture1.BackColor = System.Drawing.SystemColors.Control;
+            this.infoPicture1.BackColor = System.Drawing.Color.Transparent;
             this.infoPicture1.Location = new System.Drawing.Point(0, 0);
             this.infoPicture1.Name = "infoPicture1";
-            this.infoPicture1.Size = new System.Drawing.Size(385, 292);
+            this.infoPicture1.Size = new System.Drawing.Size(384, 518);
             this.infoPicture1.TabIndex = 2;
             this.infoPicture1.Tipo = "";
             // 
@@ -206,6 +208,8 @@ namespace LAYTON
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.btnImport);
+            this.Controls.Add(this.btnSave);
             this.Controls.Add(this.checkBox1);
             this.Controls.Add(this.btnPlay);
             this.Controls.Add(this.btnStop);
@@ -215,13 +219,10 @@ namespace LAYTON
             this.Controls.Add(this.label1);
             this.Controls.Add(this.maskedTextBox1);
             this.Controls.Add(this.btnSaveAni);
-            this.Controls.Add(this.btnSave);
             this.Controls.Add(this.comboBox1);
-            this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.infoPicture1);
             this.Name = "InfoAni";
-            this.Size = new System.Drawing.Size(390, 512);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            this.Size = new System.Drawing.Size(511, 514);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -230,9 +231,7 @@ namespace LAYTON
         #endregion
 
         private InfoPicture infoPicture1;
-        private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.ComboBox comboBox1;
-        private System.Windows.Forms.Button btnSave;
         private System.Windows.Forms.Button btnSaveAni;
         private System.Windows.Forms.MaskedTextBox maskedTextBox1;
         private System.Windows.Forms.Label label1;
@@ -243,6 +242,7 @@ namespace LAYTON
         private System.Windows.Forms.Button btnStop;
         private System.Windows.Forms.Button btnPlay;
         private System.Windows.Forms.CheckBox checkBox1;
-
+        private System.Windows.Forms.Button btnImport;
+        private System.Windows.Forms.Button btnSave;
     }
 }
