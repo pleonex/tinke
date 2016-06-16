@@ -54,8 +54,10 @@ namespace LAYTON
             this.tabImags = new System.Windows.Forms.TabControl();
             this.groupImage = new System.Windows.Forms.GroupBox();
             this.txtTipo = new System.Windows.Forms.TextBox();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.groupBox1.SuspendLayout();
             this.groupImage.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // lblTipo
@@ -102,6 +104,7 @@ namespace LAYTON
             this.tabImags.SelectedIndex = 0;
             this.tabImags.Size = new System.Drawing.Size(367, 226);
             this.tabImags.TabIndex = 0;
+            this.tabImags.SelectedIndexChanged += new System.EventHandler(this.tabImags_SelectedIndexChanged);
             // 
             // groupImage
             // 
@@ -125,17 +128,28 @@ namespace LAYTON
             this.txtTipo.Size = new System.Drawing.Size(80, 20);
             this.txtTipo.TabIndex = 44;
             // 
+            // pictureBox1
+            // 
+            this.pictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pictureBox1.Location = new System.Drawing.Point(9, 298);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(367, 215);
+            this.pictureBox1.TabIndex = 54;
+            this.pictureBox1.TabStop = false;
+            // 
             // InfoPicture
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
+            this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.groupImage);
             this.Name = "InfoPicture";
-            this.Size = new System.Drawing.Size(385, 292);
+            this.Size = new System.Drawing.Size(387, 521);
             this.groupBox1.ResumeLayout(false);
             this.groupImage.ResumeLayout(false);
             this.groupImage.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -149,6 +163,6 @@ namespace LAYTON
         private System.Windows.Forms.TabControl tabImags;
         private System.Windows.Forms.GroupBox groupImage;
         private System.Windows.Forms.TextBox txtTipo;
-
+        private System.Windows.Forms.PictureBox pictureBox1;
     }
 }

@@ -59,17 +59,44 @@ namespace LAYTON
             Byte[] compressFile = new Byte[(new FileInfo(fileIn).Length) - 4];
             Array.Copy(File.ReadAllBytes(fileIn), 4, compressFile, 0, compressFile.Length); ;
             File.WriteAllBytes(temp, compressFile);
-            pluginHost.Decompress(temp);
+            //pluginHost.Decompress(temp);
 
-            // Get the decompressed file
-            fileIn = pluginHost.Get_Files().files[0].path;
+            ////// Get the decompressed file
+            //fileIn = pluginHost.Get_Files().files[0].path;
+            fileIn = Path.GetDirectoryName(temp) + Path.DirectorySeparatorChar + "de" + Path.DirectorySeparatorChar + Path.GetFileName(temp);
+            Directory.CreateDirectory(Path.GetDirectoryName(fileIn));
+            DSDecmp.Main.Decompress(temp, fileIn, DSDecmp.Main.Get_Format(temp));
             File.Delete(temp);
 
             Get_Image(fileIn);
         }
         public override void Write(string fileOut, ImageBase image, PaletteBase palette)
         {
-            throw new NotImplementedException();
+            if (image.FormatColor != ColorFormat.colors256)
+                throw new Exception("Only 256 colors (16Bpp) images support!");
+
+            // Write data
+            BinaryWriter bw = new BinaryWriter(File.OpenWrite(fileOut));
+            bw.BaseStream.SetLength(0);
+            bw.Write((uint)palette.NumberOfColors);
+            bw.Write(Actions.ColorToBGR555(palette.Palette[0]));
+            bw.Write((uint)(image.Tiles.Length / 0x40));
+            bw.Write(image.Tiles);
+            bw.Write((ushort)(this.Width / 8));
+            bw.Write((ushort)(this.Height / 8));
+            for (int i = 0; i < this.Map.Length; i++) bw.Write(Actions.MapInfo(this.Map[i]));
+            bw.Close();
+
+            // Compress data
+            string compressedFile = this.pluginHost.Get_TempFile();
+            this.pluginHost.Compress(fileOut, compressedFile, FormatCompress.LZ10);
+
+            bw = new BinaryWriter(File.OpenWrite(fileOut));
+            bw.BaseStream.SetLength(0);
+            bw.Write(2);
+            bw.Write(File.ReadAllBytes(compressedFile));
+            bw.Close();
+            File.Delete(compressedFile);
         }
 
         public void Get_Image(string fileIn)
@@ -82,7 +109,7 @@ namespace LAYTON
             colors[0] = Actions.BGR555ToColor(br.ReadBytes((int)num_colors * 2));
 
             // Image data
-            uint num_tiles = (ushort)br.ReadUInt32();
+            uint num_tiles = /*(ushort)*/br.ReadUInt32();
             byte[] tiles = br.ReadBytes((int)num_tiles * 0x40);
 
             // Map Info
@@ -95,9 +122,10 @@ namespace LAYTON
 
             br.Close();
 
-            palette = new RawPalette(colors, false, ColorFormat.colors256);
-            image = new RawImage(tiles, TileForm.Horizontal, ColorFormat.colors256, width, height, false);
-            Set_Map(map, false, width, height);
+            palette = new RawPalette(colors, true, ColorFormat.colors256);
+            image = new RawImage(tiles, TileForm.Horizontal, ColorFormat.colors256, width, height, true);
+            Set_Map(map, true, width, height);
+
         }
         public Control Get_Control()
         {

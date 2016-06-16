@@ -6,6 +6,7 @@
       <S02>Transparencia</S02>
       <S03>Guardar imagen</S03>
       <S04>Guardar animación</S04>
+      <S05>Importación de imágenes</S05>
     </InfoAni>
     <InfoImage>
       <S01>Imágenes:</S01>
@@ -42,6 +43,7 @@
       <S02>Transparency</S02>
       <S03>Save image</S03>
       <S04>Save animation</S04>
+      <S05>Import Image</S05>
     </InfoAni>
     <InfoImage>
       <S01>Images:</S01>
@@ -78,6 +80,7 @@
       <S02>Transparence</S02>
       <S03>Sauver image</S03>
       <S04>Sauver animation</S04>
+      <S05>Importer une image</S05>
     </InfoAni>
     <InfoImage>
       <S01>Images :</S01>

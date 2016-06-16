@@ -65,6 +65,7 @@ namespace LAYTON
             // 
             this.txtAnchoP.Location = new System.Drawing.Point(82, 27);
             this.txtAnchoP.Name = "txtAnchoP";
+            this.txtAnchoP.ReadOnly = true;
             this.txtAnchoP.Size = new System.Drawing.Size(75, 20);
             this.txtAnchoP.TabIndex = 40;
             // 
@@ -72,6 +73,7 @@ namespace LAYTON
             // 
             this.txtPos.Location = new System.Drawing.Point(82, 1);
             this.txtPos.Name = "txtPos";
+            this.txtPos.ReadOnly = true;
             this.txtPos.Size = new System.Drawing.Size(75, 20);
             this.txtPos.TabIndex = 36;
             // 
@@ -79,6 +81,7 @@ namespace LAYTON
             // 
             this.txtAltoP.Location = new System.Drawing.Point(249, 27);
             this.txtAltoP.Name = "txtAltoP";
+            this.txtAltoP.ReadOnly = true;
             this.txtAltoP.Size = new System.Drawing.Size(75, 20);
             this.txtAltoP.TabIndex = 42;
             // 
@@ -113,6 +116,7 @@ namespace LAYTON
             // 
             this.txtTamanoP.Location = new System.Drawing.Point(249, 1);
             this.txtTamanoP.Name = "txtTamanoP";
+            this.txtTamanoP.ReadOnly = true;
             this.txtTamanoP.Size = new System.Drawing.Size(75, 20);
             this.txtTamanoP.TabIndex = 38;
             // 
@@ -129,6 +133,7 @@ namespace LAYTON
             // 
             this.txtPosY.Location = new System.Drawing.Point(249, 53);
             this.txtPosY.Name = "txtPosY";
+            this.txtPosY.ReadOnly = true;
             this.txtPosY.Size = new System.Drawing.Size(75, 20);
             this.txtPosY.TabIndex = 44;
             // 
@@ -136,6 +141,7 @@ namespace LAYTON
             // 
             this.txtPosX.Location = new System.Drawing.Point(82, 55);
             this.txtPosX.Name = "txtPosX";
+            this.txtPosX.ReadOnly = true;
             this.txtPosX.Size = new System.Drawing.Size(75, 20);
             this.txtPosX.TabIndex = 45;
             // 

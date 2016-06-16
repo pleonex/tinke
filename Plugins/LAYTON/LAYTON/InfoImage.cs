@@ -67,7 +67,6 @@ namespace LAYTON
         {
             set
             {
-                Nombre = value.name;
                 Imagenes = value.imgs;
                 Tamano_Imagen = value.length;
                 Ancho = value.width;
@@ -78,8 +77,6 @@ namespace LAYTON
             get
             {
                 Ani.Image temp = new Ani.Image();
-
-                temp.name = Nombre;
                 temp.imgs = (ushort)Imagenes;
                 temp.length = Tamano_Imagen;
                 temp.width = (ushort)Ancho;
