@@ -58,19 +58,19 @@
       from this folder?. It can take a long time...
     </S35>
     <S36>
-      The uncompression is unsuccessfully.
-      Are you sure is a compressed file?
+      The uncompression was unsuccessful.
+      Are you sure it is a compressed file?
     </S36>
     <S37>There was an error saving the user preferences.</S37>
     <S38>There was an error loading the user preferences.</S38>
     <S39>
       You have changed some files but the new ROM is not saved
-      Are you sure you want exit? All the changes will be lost.
+      Are you sure you want to exit? All the changes will be lost.
     </S39>
     <S3A>Warning</S3A>
     <S3B>
       Do you want to export the uncompressed folder instead of
-      the compress file?
+      the compressed file?
     </S3B>
     <S3C>Full file information</S3C>
     <S3D>Pack</S3D>
@@ -84,7 +84,7 @@
       Check the debug messages.
     </S43>
     <S44>
-      Sorry, you can't overwrite the current 
+      Sorry, you can't overwrite the currently 
       opened file.
     </S44>
     <S45>Refresh messages</S45>
@@ -221,7 +221,7 @@
       {0}
 
       Please, download the program from the web page:
-      http://code.google.com/p/tinke
+      http://www.github.com/pleonex/tinke
     </S1F>
     <S20>
       Error loading the file: {0}.
