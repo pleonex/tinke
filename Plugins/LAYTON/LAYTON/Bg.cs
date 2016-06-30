@@ -29,6 +29,8 @@ using Ekona.Images;
 
 namespace LAYTON
 {
+    using System.Drawing.Imaging;
+
     public class Bg : MapBase
     {
         ImageBase image;
@@ -75,16 +77,49 @@ namespace LAYTON
             if (image.FormatColor != ColorFormat.colors256)
                 throw new Exception("Only 256 colors (16Bpp) images support!");
 
+            NTFS[] map = base.Map;
+            byte[] tiles = image.Tiles;
+            byte[] colorsData = Actions.ColorToBGR555(palette.Palette[0]);
+            int srcColorsCount = palette.Original.Length / 2;
+            if (srcColorsCount > palette.NumberOfColors)
+            {
+                // Replaced palette
+                tiles = image.Tiles;
+            }
+            else if (srcColorsCount < palette.NumberOfColors || !Actions.Compare_Array(palette.Original, colorsData))
+            {
+                // Replaced palette with force swaping to the original palette
+                Color[] colors = Actions.BGR555ToColor(palette.Original);
+                Actions.Swap_Palette(ref tiles, colors, palette.Palette[0], ColorFormat.colors256, decimal.MaxValue);
+                colorsData = palette.Original;
+            }
+            else
+            {
+                // Swapped palette
+                tiles = image.Tiles;
+                colorsData = palette.Original;
+            }
+
+            if (colorsData != palette.Original)
+            {
+                // Add transparent color to the Replaced palette
+                byte[] newColors = new byte[palette.Original.Length];
+                Array.Copy(palette.Original, 0, newColors, 0, 2);
+                Array.Copy(colorsData, 0, newColors, 2, colorsData.Length);
+                for (long i = 0; i < tiles.LongLength; i++) tiles[i]++;
+                colorsData = newColors;
+            }
+
             // Write data
             BinaryWriter bw = new BinaryWriter(File.OpenWrite(fileOut));
             bw.BaseStream.SetLength(0);
-            bw.Write((uint)palette.NumberOfColors);
-            bw.Write(Actions.ColorToBGR555(palette.Palette[0]));
-            bw.Write((uint)(image.Tiles.Length / 0x40));
-            bw.Write(image.Tiles);
+            bw.Write((uint)(colorsData.LongLength / 2));
+            bw.Write(colorsData);
+            bw.Write((uint)(tiles.LongLength / 0x40));
+            bw.Write(tiles);
             bw.Write((ushort)(this.Width / 8));
             bw.Write((ushort)(this.Height / 8));
-            for (int i = 0; i < this.Map.Length; i++) bw.Write(Actions.MapInfo(this.Map[i]));
+            for (int i = 0; i < map.Length; i++) bw.Write(Actions.MapInfo(map[i]));
             bw.Close();
 
             // Compress data
