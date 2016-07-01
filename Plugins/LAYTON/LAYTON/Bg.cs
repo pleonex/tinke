@@ -81,33 +81,38 @@ namespace LAYTON
             byte[] tiles = image.Tiles;
             byte[] colorsData = Actions.ColorToBGR555(palette.Palette[0]);
             int srcColorsCount = palette.Original.Length / 2;
-            if (srcColorsCount > palette.NumberOfColors)
+            if (srcColorsCount != palette.NumberOfColors || !Actions.Compare_Array(palette.Original, colorsData))
             {
                 // Replaced palette
-                tiles = image.Tiles;
-            }
-            else if (srcColorsCount < palette.NumberOfColors || !Actions.Compare_Array(palette.Original, colorsData))
-            {
-                // Replaced palette with force swaping to the original palette
-                Color[] colors = Actions.BGR555ToColor(palette.Original);
-                Actions.Swap_Palette(ref tiles, colors, palette.Palette[0], ColorFormat.colors256, decimal.MaxValue);
-                colorsData = palette.Original;
-            }
-            else
-            {
-                // Swapped palette
-                tiles = image.Tiles;
-                colorsData = palette.Original;
-            }
+                if (srcColorsCount <= palette.NumberOfColors
+                    && MessageBox.Show(
+                        "The changed palette has more colors than the original.\r\n"
+                        + "In some cases this can lead to an incorrect display of the game.\r\n\r\n"
+                        + "Try to force swap at the original palette?",
+                        "Layton Image Import",
+                        MessageBoxButtons.YesNo) == DialogResult.Yes)
+                {
+                    // Force swaping to the Original palette
+                    Color[] colors = Actions.BGR555ToColor(palette.Original);
+                    Actions.Swap_Palette(ref tiles, colors, palette.Palette[0], ColorFormat.colors256, decimal.MaxValue);
+                    colorsData = palette.Original;
+                    palette.Palette[0] = colors;
+                }
+                else
+                {
+                    // Add transparent color to the Replaced palette
+                    byte[] newColorsData = new byte[colorsData.Length + 2];
+                    Array.Copy(palette.Original, 0, newColorsData, 0, 2);
+                    Array.Copy(colorsData, 0, newColorsData, 2, colorsData.Length);
+                    colorsData = newColorsData;
 
-            if (colorsData != palette.Original)
-            {
-                // Add transparent color to the Replaced palette
-                byte[] newColors = new byte[palette.Original.Length];
-                Array.Copy(palette.Original, 0, newColors, 0, 2);
-                Array.Copy(colorsData, 0, newColors, 2, colorsData.Length);
-                for (long i = 0; i < tiles.LongLength; i++) tiles[i]++;
-                colorsData = newColors;
+                    Color[] newColors = new Color[palette.Palette[0].Length + 1];
+                    newColors[0] = Actions.BGR555ToColor(palette.Original[0], palette.Original[1]);
+                    Array.Copy(palette.Palette[0], 0, newColors, 1, palette.Palette[0].Length);
+                    palette.Palette[0] = newColors;
+
+                    for (long i = 0; i < tiles.LongLength; i++) tiles[i]++;
+                }
             }
 
             // Write data
