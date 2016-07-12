@@ -96,6 +96,7 @@ compile_plugin "Plugins/TIMEACE/TIMEACE.sln"
 compile_plugin "Plugins/WITCHTALE/WITCHTALE.sln"
 compile_plugin "Plugins/Tokimemo1/Tokimemo1.sln"
 compile_plugin "Plugins/Teniprimgaku/Teniprimgaku.sln"
+compile_plugin "Plugins/SONICRUSHADV/SONICRUSHADV.sln"
 
 # Compiling format plugins
 compile_plugin "Plugins/Pack/Pack.sln"
