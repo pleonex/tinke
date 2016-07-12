@@ -94,7 +94,7 @@ namespace SONICRUSHADV
             if (isPalette)
                 return new ImageControl(pluginHost, image, palette);
             else
-                Console.WriteLine("Image lacks a palette.")
+                Console.WriteLine("Image lacks a palette.");
                 return null;
         }
     }
