@@ -85,6 +85,7 @@ call :compile_plugin "Plugins\TIMEACE\TIMEACE.sln"
 call :compile_plugin "Plugins\WITCHTALE\WITCHTALE.sln"
 call :compile_plugin "Plugins\Tokimemo1\Tokimemo1.sln"
 call :compile_plugin "Plugins\Teniprimgaku\Teniprimgaku.sln"
+call :compile_plugin "Plugins\SONICRUSHADV\SONICRUSHADV.sln"
 
 REM Remove the error log
 DEL error.log
