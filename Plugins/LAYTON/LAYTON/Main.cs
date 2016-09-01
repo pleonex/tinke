@@ -226,6 +226,16 @@ namespace LAYTON
                 return fileOut;
             }
 
+            if (file.name.EndsWith(".plz"))
+            {
+                string fileOut = this.pluginHost.Get_TempFile();
+                PCK2.Pack(fileOut, unpacked.files);
+                string compressed = this.pluginHost.Get_TempFile();
+                this.pluginHost.Compress(fileOut, compressed, FormatCompress.LZ10);
+                File.Delete(fileOut);
+                return compressed;
+            }
+
             if (gameCode == "BLFE")
             {
                 if (file.name.ToUpper().EndsWith(".DENC"))
