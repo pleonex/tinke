@@ -41,7 +41,7 @@ REM Get compiler
 SET netver=v4.5
 SET msbuild_path=%windir%\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe
 SET msbuild=%msbuild_path% /p:Configuration=%conf% /p:TargetFrameworkVersion=%netver%
-SET msbuild_plugin=%msbuild% /p:OutputPath=%build_dir%\Plugins\
+SET msbuild_plugin=%msbuild% /p:OutputPath="%build_dir%\Plugins\\"
 
 REM Compile program in standard directory, to allow plugins find Ekona
 ECHO Compiling base library
@@ -49,7 +49,7 @@ ECHO Compiling base library
 
 REM Compiling program
 echo Compiling Tinke
-%msbuild% /p:Platform=%plat% /p:OutputPath=%build_dir%\ Tinke.sln > error.log || (TYPE error.log & EXIT /B 1)
+%msbuild% /p:Platform=%plat% /p:OutputPath="%build_dir%\\" Tinke.sln > error.log || (TYPE error.log & EXIT /B 1)
 
 REM Compiling format plugins
 call :compile_plugin "Plugins\Pack\Pack.sln"
@@ -85,6 +85,8 @@ call :compile_plugin "Plugins\TIMEACE\TIMEACE.sln"
 call :compile_plugin "Plugins\WITCHTALE\WITCHTALE.sln"
 call :compile_plugin "Plugins\Tokimemo1\Tokimemo1.sln"
 call :compile_plugin "Plugins\Teniprimgaku\Teniprimgaku.sln"
+call :compile_plugin "Plugins\SONICRUSHADV\SONICRUSHADV.sln"
+call :compile_plugin "Plugins\1stPlayable\1stPlayable.sln"
 
 REM Remove the error log
 DEL error.log
