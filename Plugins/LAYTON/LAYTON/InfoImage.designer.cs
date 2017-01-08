@@ -96,6 +96,7 @@ namespace LAYTON
             // 
             this.txtNPartes.Location = new System.Drawing.Point(100, 55);
             this.txtNPartes.Name = "txtNPartes";
+            this.txtNPartes.ReadOnly = true;
             this.txtNPartes.Size = new System.Drawing.Size(60, 20);
             this.txtNPartes.TabIndex = 38;
             // 
@@ -112,6 +113,7 @@ namespace LAYTON
             // 
             this.txtTamanoImg.Location = new System.Drawing.Point(280, 3);
             this.txtTamanoImg.Name = "txtTamanoImg";
+            this.txtTamanoImg.ReadOnly = true;
             this.txtTamanoImg.Size = new System.Drawing.Size(60, 20);
             this.txtTamanoImg.TabIndex = 46;
             // 
@@ -119,6 +121,7 @@ namespace LAYTON
             // 
             this.txtImgs.Location = new System.Drawing.Point(100, 3);
             this.txtImgs.Name = "txtImgs";
+            this.txtImgs.ReadOnly = true;
             this.txtImgs.Size = new System.Drawing.Size(60, 20);
             this.txtImgs.TabIndex = 40;
             // 
@@ -144,6 +147,7 @@ namespace LAYTON
             // 
             this.txtAlto.Location = new System.Drawing.Point(280, 29);
             this.txtAlto.Name = "txtAlto";
+            this.txtAlto.ReadOnly = true;
             this.txtAlto.Size = new System.Drawing.Size(60, 20);
             this.txtAlto.TabIndex = 43;
             // 
@@ -160,6 +164,7 @@ namespace LAYTON
             // 
             this.txtAncho.Location = new System.Drawing.Point(100, 29);
             this.txtAncho.Name = "txtAncho";
+            this.txtAncho.ReadOnly = true;
             this.txtAncho.Size = new System.Drawing.Size(60, 20);
             this.txtAncho.TabIndex = 42;
             // 
@@ -171,19 +176,22 @@ namespace LAYTON
             this.lblName.Size = new System.Drawing.Size(26, 13);
             this.lblName.TabIndex = 48;
             this.lblName.Text = "S06";
+            this.lblName.Visible = false;
             // 
             // txtName
             // 
             this.txtName.Location = new System.Drawing.Point(280, 55);
             this.txtName.Name = "txtName";
+            this.txtName.ReadOnly = true;
             this.txtName.Size = new System.Drawing.Size(60, 20);
             this.txtName.TabIndex = 49;
+            this.txtName.Visible = false;
             // 
             // InfoImage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.SystemColors.Control;
+            this.BackColor = System.Drawing.Color.Transparent;
             this.Controls.Add(this.txtName);
             this.Controls.Add(this.lblName);
             this.Controls.Add(this.groupBox1);
@@ -198,7 +206,7 @@ namespace LAYTON
             this.Controls.Add(this.lblAlto);
             this.Controls.Add(this.txtAncho);
             this.Name = "InfoImage";
-            this.Size = new System.Drawing.Size(360, 202);
+            this.Size = new System.Drawing.Size(365, 205);
             this.groupBox1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();

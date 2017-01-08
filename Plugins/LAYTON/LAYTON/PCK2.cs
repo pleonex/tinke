@@ -82,6 +82,64 @@ namespace LAYTON
 
             return decompressed;
         }
+
+        public static void Pack(string outPath, List<sFile> files)
+        {
+            // Update structure
+            sPCK2 pack = new sPCK2();
+            pack.header = new sPCK2.Header();
+            pack.header.id = new[] { 'P', 'C', 'K', '2' };
+            pack.header.header_size = 0x10;
+            pack.header.unknown = 0;
+            pack.header.file_size = pack.header.header_size;
+            pack.files = new List<sPCK2.File>(files.Count);
+            for (int i = 0; i < files.Count; i++)
+            {
+                sPCK2.File file = new sPCK2.File();
+                file.unknown = 0;
+                file.name = files[i].name;
+                file.data_size = files[i].size;
+                file.header_size = (uint)(0x10 + files[i].name.Length);
+                file.header_size += 4 - file.header_size % 4;
+                file.size = file.data_size + file.header_size;
+                file.size += 4 - file.size % 4;
+                pack.header.file_size += file.size;
+
+                BinaryReader br = new BinaryReader(File.OpenRead(files[i].path));
+                br.BaseStream.Position = files[i].offset;
+                file.data = br.ReadBytes((int)files[i].size);
+                br.Close();
+
+                pack.files.Add(file);
+            }
+
+            // Write data
+            BinaryWriter bw = new BinaryWriter(File.OpenWrite(outPath), Encoding.ASCII);
+            bw.BaseStream.SetLength(0);
+            bw.Write(pack.header.header_size);
+            bw.Write(pack.header.file_size);
+            bw.Write(pack.header.id);
+            bw.Write(pack.header.unknown);
+
+            bw.BaseStream.Position = pack.header.header_size;
+            for (int i = 0; i < files.Count; i++)
+            {
+                long pos = bw.BaseStream.Position;
+                bw.Write(pack.files[i].header_size);
+                bw.Write(pack.files[i].size);
+                bw.Write(pack.files[i].unknown);
+                bw.Write(pack.files[i].data_size);
+                bw.Write(Encoding.ASCII.GetBytes(pack.files[i].name));
+                bw.BaseStream.Position = pos + pack.files[i].header_size;
+                bw.Write(pack.files[i].data);
+                bw.BaseStream.Position = pos + pack.files[i].size;
+            }
+
+            bw.BaseStream.Position = bw.BaseStream.Length;
+            bw.Write(new byte[pack.header.file_size - bw.BaseStream.Length]);
+            bw.Flush();
+            bw.Close();
+        }
     }
 
     public struct sPCK2

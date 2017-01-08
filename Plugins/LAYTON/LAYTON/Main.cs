@@ -26,6 +26,9 @@ using Ekona;
 
 namespace LAYTON
 {
+    using System.Globalization;
+    using System.IO;
+
     public class Main : IGamePlugin
     {
         IPluginHost pluginHost;
@@ -47,7 +50,7 @@ namespace LAYTON
         public Format Get_Format(sFile file, byte[] magic)
         {
             file.name = file.name.ToUpper();
-
+            ushort nazeId = 0;
             switch (gameCode)
             {
                 case "A5FE":    // Layton 1 - USA
@@ -78,12 +81,24 @@ namespace LAYTON
                         return new Ani(pluginHost, gameCode, "").Get_Formato(file.name);
                     else if (file.id >= 0x409 & file.id <= 0x808)
                         return Format.FullImage;
+                    else if (Path.GetExtension(file.name) == ".DAT" && file.name[0] == 'N'
+                             && ushort.TryParse(
+                                 Path.GetFileNameWithoutExtension(file.name).Remove(0, 1),
+                                 NumberStyles.Integer,
+                                 CultureInfo.CurrentUICulture,
+                                 out nazeId)) return Format.Text;
                     break;
                 case "YLTE":
                     if (file.id >= 0x37 && file.id <= 0x412)
                         return new Ani(pluginHost, gameCode, "").Get_Formato(file.name);
                     else if (file.id >= 0x413 && file.id <= 0x818)
                         return Format.FullImage;
+                    else if (Path.GetExtension(file.name) == ".DAT" && file.name[0] == 'N'
+                             && ushort.TryParse(
+                                 Path.GetFileNameWithoutExtension(file.name).Remove(0, 1),
+                                 NumberStyles.Integer,
+                                 CultureInfo.CurrentUICulture,
+                                 out nazeId)) return Format.Text;
                     break;
                 
                 // Layton 4 US (London life files)
@@ -125,7 +140,7 @@ namespace LAYTON
             {
                 case "A5FE":
                     if (file.id >= 0x0001 && file.id <= 0x02CA)
-                        return new Ani(pluginHost, gameCode, file.path).Show_Info();
+                        return new Ani(pluginHost, gameCode, file.path).Show_Info(file.id);
                     else if (file.id >= 0x02CD && file.id <= 0x0765)
                     {
                         Bg bg = new Bg(pluginHost, file.path, file.id, file.name);
@@ -134,7 +149,7 @@ namespace LAYTON
                     break;
                 case "A5FP":
                     if (file.id >= 0x0001 && file.id <= 0x04E7)
-                        return new Ani(pluginHost, gameCode, file.path).Show_Info();
+                        return new Ani(pluginHost, gameCode, file.path).Show_Info(file.id);
                     else if (file.id >= 0x04E8 && file.id <= 0x0B72)
                     {
                         Bg bg = new Bg(pluginHost, file.path, file.id, file.name);
@@ -147,7 +162,7 @@ namespace LAYTON
                 case "YLTP":
                 case "YLTH":
                     if (file.id >= 0x37 && file.id <= 0x408)
-                        return new Ani(pluginHost, gameCode, file.path).Show_Info();
+                        return new Ani(pluginHost, gameCode, file.path).Show_Info(file.id);
                     else if (file.id >= 0x409 && file.id <= 0x808)
                     {
                         Bg bg = new Bg(pluginHost, file.path, file.id, file.name);
@@ -156,7 +171,7 @@ namespace LAYTON
                     break;
                 case "YLTE":
                     if (file.id >= 0x37 && file.id <= 0x412)
-                        return new Ani(pluginHost, gameCode, file.path).Show_Info();
+                        return new Ani(pluginHost, gameCode, file.path).Show_Info(file.id);
                     else if (file.id >= 0x413 && file.id <= 0x818)
                     {
                         Bg bg = new Bg(pluginHost, file.path, file.id, file.name);
@@ -166,7 +181,7 @@ namespace LAYTON
 
                 case "C2AJ":
                     if (file.id >= 0x35 && file.id <= 0xEF)
-                        return new Ani(pluginHost, gameCode, file.path).Show_Info();
+                        return new Ani(pluginHost, gameCode, file.path).Show_Info(file.id);
                     else if (file.id >= 0xF0 && file.id <= 0x193)
                     {
                         Bg bg = new Bg(pluginHost, file.path, file.id, file.name);
@@ -180,7 +195,9 @@ namespace LAYTON
             else if (file.name.ToUpper().EndsWith(".PLZ"))
                 return new Control();
             else if (file.name.ToUpper().EndsWith(".GDS"))
-                return new ScriptControl(GDS.Read(file.path));         
+                return new ScriptControl(GDS.Read(file.path));
+            else if (file.format == Format.Text && file.name.ToUpper().EndsWith(".DAT"))
+                return new NazoTextControl(this.pluginHost, file.path, file.id);
 
             return new Control();
         }
@@ -207,6 +224,16 @@ namespace LAYTON
                 string fileOut = pluginHost.Get_TempFile();
                 PCM.Pack(fileOut, unpacked);
                 return fileOut;
+            }
+
+            if (file.name.EndsWith(".plz"))
+            {
+                string fileOut = this.pluginHost.Get_TempFile();
+                PCK2.Pack(fileOut, unpacked.files);
+                string compressed = this.pluginHost.Get_TempFile();
+                this.pluginHost.Compress(fileOut, compressed, FormatCompress.LZ10);
+                File.Delete(fileOut);
+                return compressed;
             }
 
             if (gameCode == "BLFE")

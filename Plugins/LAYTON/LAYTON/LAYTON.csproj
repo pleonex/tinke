@@ -22,6 +22,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -30,11 +31,16 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Ekona, Version=7.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="DSDecmp, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Ekona\bin\Debug\Ekona.dll</HintPath>
+      <HintPath>..\..\..\build\DSDecmp.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Ekona">
+      <HintPath>..\..\..\build\Ekona.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -88,6 +94,12 @@
     </Compile>
     <Compile Include="LAYTON4.cs" />
     <Compile Include="Main.cs" />
+    <Compile Include="NazoTextControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="NazoTextControl.Designer.cs">
+      <DependentUpon>NazoTextControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="PCK2.cs" />
     <Compile Include="PCM.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -123,6 +135,9 @@
     <EmbeddedResource Include="iText.resx">
       <DependentUpon>iText.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="NazoTextControl.resx">
+      <DependentUpon>NazoTextControl.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -153,6 +168,7 @@
     <Content Include="LaytonLang.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="Resources\picture_edit.png" />
     <None Include="Resources\disk.png" />
     <None Include="Resources\stop1.png" />
   </ItemGroup>

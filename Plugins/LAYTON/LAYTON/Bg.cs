@@ -29,6 +29,8 @@ using Ekona.Images;
 
 namespace LAYTON
 {
+    using System.Drawing.Imaging;
+
     public class Bg : MapBase
     {
         ImageBase image;
@@ -59,17 +61,82 @@ namespace LAYTON
             Byte[] compressFile = new Byte[(new FileInfo(fileIn).Length) - 4];
             Array.Copy(File.ReadAllBytes(fileIn), 4, compressFile, 0, compressFile.Length); ;
             File.WriteAllBytes(temp, compressFile);
-            pluginHost.Decompress(temp);
+            //pluginHost.Decompress(temp);
 
-            // Get the decompressed file
-            fileIn = pluginHost.Get_Files().files[0].path;
+            ////// Get the decompressed file
+            //fileIn = pluginHost.Get_Files().files[0].path;
+            fileIn = Path.GetDirectoryName(temp) + Path.DirectorySeparatorChar + "de" + Path.DirectorySeparatorChar + Path.GetFileName(temp);
+            Directory.CreateDirectory(Path.GetDirectoryName(fileIn));
+            DSDecmp.Main.Decompress(temp, fileIn, DSDecmp.Main.Get_Format(temp));
             File.Delete(temp);
 
             Get_Image(fileIn);
         }
         public override void Write(string fileOut, ImageBase image, PaletteBase palette)
         {
-            throw new NotImplementedException();
+            if (image.FormatColor != ColorFormat.colors256)
+                throw new Exception("Only 256 colors (16Bpp) images support!");
+
+            NTFS[] map = base.Map;
+            byte[] tiles = image.Tiles;
+            byte[] colorsData = Actions.ColorToBGR555(palette.Palette[0]);
+            int srcColorsCount = palette.Original.Length / 2;
+            if (srcColorsCount != palette.NumberOfColors || !Actions.Compare_Array(palette.Original, colorsData))
+            {
+                // Replaced palette
+                if (srcColorsCount <= palette.NumberOfColors
+                    && MessageBox.Show(
+                        "The changed palette has more colors than the original.\r\n"
+                        + "In some cases this can lead to an incorrect display of the game.\r\n\r\n"
+                        + "Try to force swap at the original palette?",
+                        "Layton Image Import",
+                        MessageBoxButtons.YesNo) == DialogResult.Yes)
+                {
+                    // Force swaping to the Original palette
+                    Color[] colors = Actions.BGR555ToColor(palette.Original);
+                    Actions.Swap_Palette(ref tiles, colors, palette.Palette[0], ColorFormat.colors256, decimal.MaxValue);
+                    colorsData = palette.Original;
+                    palette.Palette[0] = colors;
+                }
+                else
+                {
+                    // Add transparent color to the Replaced palette
+                    byte[] newColorsData = new byte[colorsData.Length + 2];
+                    Array.Copy(palette.Original, 0, newColorsData, 0, 2);
+                    Array.Copy(colorsData, 0, newColorsData, 2, colorsData.Length);
+                    colorsData = newColorsData;
+
+                    Color[] newColors = new Color[palette.Palette[0].Length + 1];
+                    newColors[0] = Actions.BGR555ToColor(palette.Original[0], palette.Original[1]);
+                    Array.Copy(palette.Palette[0], 0, newColors, 1, palette.Palette[0].Length);
+                    palette.Palette[0] = newColors;
+
+                    for (long i = 0; i < tiles.LongLength; i++) tiles[i]++;
+                }
+            }
+
+            // Write data
+            BinaryWriter bw = new BinaryWriter(File.OpenWrite(fileOut));
+            bw.BaseStream.SetLength(0);
+            bw.Write((uint)(colorsData.LongLength / 2));
+            bw.Write(colorsData);
+            bw.Write((uint)(tiles.LongLength / 0x40));
+            bw.Write(tiles);
+            bw.Write((ushort)(this.Width / 8));
+            bw.Write((ushort)(this.Height / 8));
+            for (int i = 0; i < map.Length; i++) bw.Write(Actions.MapInfo(map[i]));
+            bw.Close();
+
+            // Compress data
+            string compressedFile = this.pluginHost.Get_TempFile();
+            this.pluginHost.Compress(fileOut, compressedFile, FormatCompress.LZ10);
+
+            bw = new BinaryWriter(File.OpenWrite(fileOut));
+            bw.BaseStream.SetLength(0);
+            bw.Write(2);
+            bw.Write(File.ReadAllBytes(compressedFile));
+            bw.Close();
+            File.Delete(compressedFile);
         }
 
         public void Get_Image(string fileIn)
@@ -82,7 +149,7 @@ namespace LAYTON
             colors[0] = Actions.BGR555ToColor(br.ReadBytes((int)num_colors * 2));
 
             // Image data
-            uint num_tiles = (ushort)br.ReadUInt32();
+            uint num_tiles = /*(ushort)*/br.ReadUInt32();
             byte[] tiles = br.ReadBytes((int)num_tiles * 0x40);
 
             // Map Info
@@ -95,9 +162,10 @@ namespace LAYTON
 
             br.Close();
 
-            palette = new RawPalette(colors, false, ColorFormat.colors256);
-            image = new RawImage(tiles, TileForm.Horizontal, ColorFormat.colors256, width, height, false);
-            Set_Map(map, false, width, height);
+            palette = new RawPalette(colors, true, ColorFormat.colors256);
+            image = new RawImage(tiles, TileForm.Horizontal, ColorFormat.colors256, width, height, true);
+            Set_Map(map, true, width, height);
+
         }
         public Control Get_Control()
         {
