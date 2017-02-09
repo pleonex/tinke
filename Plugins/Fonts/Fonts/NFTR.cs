@@ -113,7 +113,7 @@ namespace Fonts
             for (int i = 0; i < font.plgc.tiles.Length; i++)
             {
                 sNFTR.HDWC.Info info = new sNFTR.HDWC.Info();
-                info.pixel_start = br.ReadByte();
+                info.pixel_start = br.ReadSByte();
                 info.pixel_width = br.ReadByte();
                 info.pixel_length = br.ReadByte();
                 font.hdwc.info.Add(info);
@@ -143,7 +143,7 @@ namespace Fonts
                         break;
                     case 1:
                         sNFTR.PAMC.Type1 type1 = new sNFTR.PAMC.Type1();
-                        type1.char_code = new ushort[(pamc.block_size - 0x14 - 0x02) / 2];
+                        type1.char_code = new ushort[pamc.last_char - pamc.first_char + 1];
                         for (int i = 0; i < type1.char_code.Length; i++)
                             type1.char_code[i] = br.ReadUInt16();
 
@@ -431,7 +431,7 @@ namespace Fonts
             Bitmap image = new Bitmap(width * zoom + 1, height * zoom + 1);
             List<Byte> tileData = new List<byte>();
 
-            for (int i = 0; i < tiles.Length; i += depth)
+            for (int i = 0; i <= tiles.Length - depth; i += depth)
             {
                 Byte byteFromBits = 0;
                 for (int b = depth - 1, j = 0; b >= 0; b--, j++)
@@ -814,7 +814,7 @@ namespace Fonts
 
             public struct Info
             {
-                public byte pixel_start;
+                public sbyte pixel_start;
                 public byte pixel_width;
                 public byte pixel_length;
             }
