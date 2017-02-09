@@ -112,10 +112,15 @@ namespace Fonts
             // 
             this.numericStart.Location = new System.Drawing.Point(190, 206);
             this.numericStart.Maximum = new decimal(new int[] {
-            65535,
+            127,
             0,
             0,
             0});
+            this.numericStart.Minimum = new decimal(new int[] {
+            128,
+            0,
+            0,
+            -2147483648});
             this.numericStart.Name = "numericStart";
             this.numericStart.Size = new System.Drawing.Size(50, 20);
             this.numericStart.TabIndex = 3;

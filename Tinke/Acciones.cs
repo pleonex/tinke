@@ -1650,7 +1650,7 @@ namespace Tinke
 
                 FormatCompress compressFormat = DSDecmp.Main.Get_Format(arg);
                 if (compressFormat != FormatCompress.Invalid)
-                    DSDecmp.Main.Decompress(arg, dec_file);
+                    DSDecmp.Main.Decompress(arg, dec_file, compressFormat);
 
                 if (File.Exists(dec_file))
                 {
