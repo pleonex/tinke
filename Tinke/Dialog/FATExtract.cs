@@ -195,7 +195,7 @@ namespace Tinke.Dialog
                         if (i + 1 == fat.num_files)
                             nextOffset = (uint)br.BaseStream.Length;
                         else
-                            nextOffset = Get_OffsetValue(ref br);
+                            nextOffset = Get_OffsetValue(ref br) + (uint)numericRelativeOffset.Value;
 
                         currFile.size = nextOffset - currFile.offset;
                         br.BaseStream.Position -= (long)numericOffsetLen.Value;
