@@ -35,14 +35,13 @@ else
 fi
 
 # Remove previous builds
-if [ -d $BUILD_DIR ]; then
+if [ -d "$BUILD_DIR" ]; then
     echo "Deleting old build directory"
-    rm -rf $BUILD_DIR
+    rm -rf "$BUILD_DIR"
 fi
 
 # Get compiler and params
 XBUILD="xbuild /v:minimal /p:Configuration=$CONF;TargetFrameworkVersion=v4.5"
-XBUILD_PLUGINS="$XBUILD;OutputPath=$BUILD_DIR/Plugins/"
 
 # Compile program in standard directory, to allow plugins find Ekona
 echo "Compiling base library..."
@@ -64,7 +63,7 @@ fi
 
 function compile_plugin {
     echo "Compiling plugin $1..."
-    $XBUILD_PLUGINS "$1" > build.log
+    $XBUILD "/p:OutputPath=$BUILD_DIR/Plugins/" "$1" > build.log
     if [ $? -ne 0 ] ; then
         echo "Error compiling $1. Aborting."
         cat build.log
@@ -96,6 +95,8 @@ compile_plugin "Plugins/TIMEACE/TIMEACE.sln"
 compile_plugin "Plugins/WITCHTALE/WITCHTALE.sln"
 compile_plugin "Plugins/Tokimemo1/Tokimemo1.sln"
 compile_plugin "Plugins/Teniprimgaku/Teniprimgaku.sln"
+compile_plugin "Plugins/SONICRUSHADV/SONICRUSHADV.sln"
+compile_plugin "Plugins/1stPlayable/1stPlayable.sln"
 
 # Compiling format plugins
 compile_plugin "Plugins/Pack/Pack.sln"
@@ -114,6 +115,7 @@ cp "$TINKE_DIR/Plugins/3DModels/OpenTK.GLControl.dll" "$BUILD_DIR/"
 # Copy license and changelog
 cp "$TINKE_DIR/changelog.txt" "$BUILD_DIR/"
 cp "$TINKE_DIR/Licence.txt" "$BUILD_DIR/"
+cp "$TINKE_DIR/Tinke/app.config" "$BUILD_DIR/"
 
 # Delete debug files
 rm "$BUILD_DIR"/*.mdb

@@ -235,9 +235,9 @@ namespace Tinke
             o.CheckPathExists = true;
             o.DefaultExt = ".bmp";
             o.OverwritePrompt = true;
-            o.Filter = "Imagen Bitmap (*.bmp)|*.bmp";
+            o.Filter = "Imagen Bitmap (*.bmp)|*.bmp|PNG image|*.png|GIF image|*.gif|JPEG image|*.jpg;*.jpeg;*.jpe;*.jif;*.jfif;*.jfi|TIFF image|*.tif;*.tiff";
             if (o.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-                picIcon.Image.Save(o.FileName, System.Drawing.Imaging.ImageFormat.Bmp);
+                picIcon.Image.Save(o.FileName);
         }
         private void comboBannerLang_SelectedIndexChanged(object sender, EventArgs e)
         {

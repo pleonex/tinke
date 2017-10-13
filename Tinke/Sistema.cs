@@ -1576,7 +1576,11 @@ namespace Tinke
             Nitro.NDS.Write_Files(files, accion.ROMFile, accion.Root, accion.SortedIDs);
             currPos += (uint)new FileInfo(files).Length;
 
-            // Escribimos cabecera
+            // Update the ROM size values of the header
+            header.ROMsize = currPos;
+            header.tamaño = (uint)Math.Ceiling(Math.Log(currPos, 2));
+            header.tamaño = (uint)Math.Pow(2, header.tamaño);
+
             // Get Header CRC
             string tempHeader = Path.GetTempFileName();
             Nitro.NDS.EscribirCabecera(tempHeader, header, accion.ROMFile);
@@ -1585,9 +1589,6 @@ namespace Tinke
             brHeader.Close();
             File.Delete(tempHeader);
 
-            header.ROMsize = currPos;
-            header.tamaño = (uint)Math.Ceiling(Math.Log(currPos, 2));
-            header.tamaño = (uint)Math.Pow(2, header.tamaño);
             // Write header
             string header_file = Path.GetTempFileName();
             Nitro.NDS.EscribirCabecera(header_file, header, accion.ROMFile);
