@@ -145,7 +145,7 @@ namespace Fonts
         }
         private void numericStart_ValueChanged(object sender, EventArgs e)
         {
-            tileInfo.pixel_start = (byte)numericStart.Value;
+            tileInfo.pixel_start = (sbyte)numericStart.Value;
         }
 
         private void picFont_MouseDown(object sender, MouseEventArgs e)
