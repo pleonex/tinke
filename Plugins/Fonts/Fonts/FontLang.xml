@@ -216,4 +216,75 @@
       <S0B>Code du caractère</S0B>
     </MapChar>
   </Français>
+  <Italiano>
+    <NFTR>
+      <S01>Numero di blocco: {0}</S01>
+      <S02>Sezione: {0}</S02>
+      <S03>Dimensione di blocco: 0x{0}</S03>
+      <S04>Sconosciuto 1: 0x{0}</S04>
+      <S05>Sconosciuto 2: 0x{0}</S05>
+      <S06>Offset PLGC: 0x{0}</S06>
+      <S07>Offset HDWC: 0x{0}</S07>
+      <S08>Offset PAMC: 0x{0}</S08>
+      <S09>Sconosciuto 3: 0x{0}</S09>
+      <S0A>Larghezza di tile: {0}</S0A>
+      <S0B>Altezza di tile: {0}</S0B>
+      <S0C>Longhezza di tile: {0}</S0C>
+      <S0D>Sconosciuto: 0x{0}</S0D>
+      <S0E>Profondità: {0}</S0E>
+      <S0F>Modalità di rotazione: {0}</S0F>
+      <S10>Sconosciuto 2: 0x{0}</S10>
+      <S11>Prima codice: 0x{0}</S11>
+      <S12>Ultima codice: 0x{0}</S12>
+      <S13>Sconosciuto 1: 0x{0}</S13>
+      <S14>Prima caratter: 0x{0}</S14>
+      <S15>Ultima caratter: 0x{0}</S15>
+      <S16>Tipo: {0}</S16>
+      <S17>Tipo di informazioni {0}</S17>
+      <S18>Prima codice di caratter: 0x{0}</S18>
+      <S19>Numero di elementi: {0}</S19>
+      <S1A>Codice di caratter {0}: 0x{1}</S1A>
+      <S1B>Numero di caratteri: {0}</S1B>
+      <S1C>Codice di caratter {0}</S1C>
+      <S1D>Caratter {0}: {1}</S1D>
+      <S1E>Larghezza: 0x{0}</S1E>
+      <S1F>Sconosciuto 3: 0x{0}</S1F>
+      <S20>Sconosciuto 4: 0x{0}</S20>
+      <S21>Altezza: 0x{0}</S21>
+      <S22>Altezza (bis): 0x{0}</S22>
+      <S23>Codice: 0x{0}</S23>
+      <S24>Larghezza: 0x{0}</S24>
+      <S25>Altezza: 0x{0}</S25>
+      <S26>Bearing Y: 0x{0}</S26>
+    </NFTR>
+    <FontControl>
+      <S00>Salva il nova caratteri</S00>
+      <S01>Applica cambiari</S02>
+      <S02>Codice:</S02>
+      <S03>Addiziona caratteri</S03>
+      <S04>Elimina caratteri</S04>
+      <S05>Utilizza palette personalizati</S05>
+      <S06>Cambiare mapa</S06>
+    </FontControl>
+    <CharControl>
+      <S00>Larghezza:</S00>
+      <S01>Inizio:</S01>
+      <S02>Altezza:</S02>
+      <S03>Codice:</S03>
+    </CharControl>
+    <MapChar>
+      <S00>Map di caratteri</S00>
+      <S01>Sezioni</S01>
+      <S02>di {0}</S02>
+      <S03>Accetta</S03>
+      <S04>Informazioni di mapa</S04>
+      <S05>Tipo:</S05>
+      <S06>Prima caratter:</S06>
+      <S07>Ultima caratter:</S07>
+      <S08>Addiziona sezioni</S08>
+      <S09>Elimina sezioni</S09>
+      <S0A>Numero di imaggini</S0A>
+      <S0B>Codice di caratteri</S0B>
+    </MapChar>
+  </Italiano>
 </Language>
