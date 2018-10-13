@@ -54,8 +54,8 @@
     <S33>Save ROM</S33>
     <S34>Script</S34>
     <S35>
-      Are you sure about uncompressing ALL the files
-      from this folder?. It can take a long time...
+      Are you sure you want to uncompress ALL the files
+      from this folder? It can take a long time...
     </S35>
     <S36>
       The uncompression was unsuccessful.
@@ -64,7 +64,7 @@
     <S37>There was an error saving the user preferences.</S37>
     <S38>There was an error loading the user preferences.</S38>
     <S39>
-      You have changed some files but the new ROM is not saved
+      You have changed some files but the new ROM is not saved.
       Are you sure you want to exit? All the changes will be lost.
     </S39>
     <S3A>Warning</S3A>
@@ -160,7 +160,7 @@
       This program is free software under the terms of the GNU
       General Public License version 3.
     </S06>
-    <S07>This program is made with the help from following webs pages.</S07>
+    <S07>This program is made with help from following web pages.</S07>
     <S08>Library for decompressing files</S08>
     <S09>Information about rom header.</S09>
     <S0A>Information about Nintendo files format.</S0A>
@@ -181,7 +181,7 @@
   <Messages>
     <S01>Error</S01>
     <S02>Error opening game. Are you sure it's a NDS game?</S02>
-    <S03>Analysing game:</S03>
+    <S03>Analyzing game:</S03>
     <S04>Game information:</S04>
     <S05>Loading program...</S05>
     <S06>
@@ -217,11 +217,11 @@
     <S1D>By the moment common compression don't show information.</S1D>
     <S1E>To see this file you must double click on a palette, tile and cell file</S1E>
     <S1F>
-      The program need the following files:
+      The program needs the following files:
       {0}
 
-      Please, download the program from the web page:
-      http://www.github.com/pleonex/tinke
+      Please download the program from the web page:
+      https://github.com/pleonex/tinke
     </S1F>
     <S20>
       Error loading the file: {0}.
@@ -264,7 +264,7 @@
     <S07>The Huffman tree is too large for the given input stream.</S07>
     <S08>Unknown block size {0}</S08>
     <S09>Unhandled blocksize {0}</S09>
-    <S0A>Reference to an undefined node in the huffman tree.</S0A>
+    <S0A>Reference to an undefined node in the Huffman tree.</S0A>
     <!-- RLE -->
     <S0B>
       The provided stream is not a valid RLE compressed stream.
@@ -293,7 +293,7 @@
       The end of the stream was reached before the
       given amount of data was read.
     </S10>
-    <S11>Not enough data avalible; 0x{0} of {1} bytes written.</S11>
+    <S11>Not enough data available; 0x{0} of {1} bytes written.</S11>
     <!-- CompressionControl -->
     <S12>Original compressed file: </S12>
     <S13>New compression:</S13>
@@ -359,14 +359,14 @@
   </EditRomInfo>
   <Dialog>
     <!-- Select Mode Color-->
-    <S00>Choose the selection mode</S00>
+    <S00>Choose selection mode</S00>
     <S01>Accept</S01>
-    <S02>Click on a color of the image</S02>
+    <S02>Click color on image</S02>
     <S03>Choose color from RGB values</S03>
-    <S1D>Add and remove not used colors</S1D>
+    <S1D>Add and remove unused colors</S1D>
     <!-- Select offset -->
-    <S04>Choose the offset</S04>
-    <S05>Write the offset where the reading will start</S05>
+    <S04>Select offset</S04>
+    <S05>Enter offset where reading starts</S05>
     <!-- FAT Extract -->
     <S06>Extract files</S06>
     <S07>Options</S07>
@@ -407,7 +407,6 @@
     <S0B>Encoding</S0B>
     <S0C>Selected at 0x{0} with length 0x{1}</S0C>
   </VisorHex>
-  
   <!-- Ekona controls -->
   <Ekona>
     <PaletteControl>
