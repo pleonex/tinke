@@ -7,18 +7,20 @@
 
 > Tinke is a program to see, convert, and edit the **files of NDS games**. You can see a lot of format files like images, text, sounds, fonts and textures. Furthermore it works with **plugins** made in NET Framework languages (C# and VB.NET) so it's so easy to support new formats.
 
-To run the program you must have installed **[.NET Framework 4.5](https://www.microsoft.com/es-es/download/details.aspx?id=30653)** or **[mono](http://www.mono-project.com/download)**. In the case of *mono* on *Linux*, make sure you have installed the package **mono-locale-extras** too.
+To run the program you must have installed **[.NET Framework 4.5](https://www.microsoft.com/es-es/download/details.aspx?id=30653)** or **[mono](http://www.mono-project.com/download)**. In the case of *mono* on *Linux*, make sure you have installed the package **mono-locale-extras** too. For Mac, you need *mono* and *pkg-config* installed and configured, you'll use *mono32* to exec Tinke.
 
 Thread at GBAtemp.net: http://gbatemp.net/topic/303529-tinke-072/
+
+**Tinke is discontinued and not longer supported. Will provide a new solution in the long term.**
 
 # Features
 
  * Show the ROM header with the banner and edit it.
- * Show and convert to common format a lot of files
- * Edit a lot of image files from BMP files (NCLR, NCGR, NSCR, NCER), audio files from WAV (SWAV, SWAR, STRM) and fonts (NFTR)
- * Hexadecimal visor
- * Change the content of the files and save the new ROM
- * Multilenguage support
+ * Show and convert to common format a lot of files.
+ * Edit a lot of image files from BMP files (NCLR, NCGR, NSCR, NCER), audio files from WAV (SWAV, SWAR, STRM) and fonts (NFTR).
+ * Hexadecimal visor.
+ * Change the content of the files and save the new ROM.
+ * Multilanguage support.
 
 # Supported formats
 
@@ -66,6 +68,7 @@ Thread at GBAtemp.net: http://gbatemp.net/topic/303529-tinke-072/
 
 ## Pack
  * NARC o ARC => Nintendo ARChives
+ * ALAR o DSCP => Jump Stars Saga Packaging
  * Utility.bin => Wifi data files
 
 # Specific plugin for games
@@ -85,7 +88,6 @@ Thread at GBAtemp.net: http://gbatemp.net/topic/303529-tinke-072/
  * The world end with you (AWLJ)
  * Tetris DS (YLUP)
  * Tokimeki Memorial Girl's Side 3rd Story (B3SJ)
-
  * Cake Mania 2 (CAKX)
 
 ----
