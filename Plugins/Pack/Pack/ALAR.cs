@@ -18,7 +18,7 @@
 //
 // </copyright>
 
-// <author>pleoNeX, Daviex94</author>
+// <author>pleoNeX, Daviex94,</author>
 // <email>benito356@gmail.com</email>
 // <date>06/07/2012 1:03:49</date>
 // -----------------------------------------------------------------------
@@ -29,27 +29,48 @@ using System.Text;
 using System.IO;
 using Ekona;
 
+
 namespace Pack
 {
     /// <summary>
-    /// Specification from: http://jumpstars.wikispaces.com/File+Formats
+    /// Specification from: https://web.archive.org/web/20100111220659/http://jumpstars.wikispaces.com/File+Formats
     /// </summary>
-    public static class ALAR
+    public class ALAR
     {
-        public static sFolder Unpack(sFile file)
+        private const byte TYPE2ID = 0x02;
+        private const byte TYPE3ID = 0x03;
+        IPluginHost pluginHost;
+
+        public ALAR(IPluginHost pluginHost)
         {
+            this.pluginHost = pluginHost;
+        }
+
+        public sFolder Unpack(sFile file)
+        {
+
             BinaryReader br = new BinaryReader(File.OpenRead(file.path));
             br.BaseStream.Position = 4;
             byte type = br.ReadByte();
+
+            if (type == TYPE2ID)
+                return Unpack_Type2(file);
+            if (type == TYPE3ID)
+                return Unpack_Type3(file);
+
+            br.BaseStream.Position = 0;
+            byte[] magic = br.ReadBytes(4);
+
             br.Close();
 
-            if (type == 0x02)
-                return Unpack_Type2(file);
+            string magicString = new String(Encoding.ASCII.GetChars(magic));
+            if (magicString == "DSCP")
+                return Decompress_LZSS(file);
 
             return new sFolder();
         }
 
-        public static sFolder Unpack_Type2(sFile file)
+        public sFolder Unpack_Type2(sFile file)
         {
             BinaryReader br = new BinaryReader(File.OpenRead(file.path));
             sFolder unpacked = new sFolder();
@@ -71,10 +92,12 @@ namespace Pack
             {
                 uint unk1 = br.ReadUInt32();
 
-                sFile cfile = new sFile();
-                cfile.path = file.path;
-                cfile.offset = br.ReadUInt32();
-                cfile.size = br.ReadUInt32();
+                sFile cfile = new sFile
+                {
+                    path = file.path,
+                    offset = br.ReadUInt32(),
+                    size = br.ReadUInt32()
+                };
 
                 uint unk2 = br.ReadUInt32();
 
@@ -89,6 +112,126 @@ namespace Pack
 
             br.Close();
             return unpacked;
+        }
+
+        public sFolder Unpack_Type3(sFile file)
+        {
+            BinaryReader br = new BinaryReader(File.OpenRead(file.path));
+            sFolder unpacked = new sFolder();
+            unpacked.files = new List<sFile>();
+            unpacked.folders = new List<sFolder>();
+
+            // Read the header file
+            char[] header = br.ReadChars(4);
+            byte type = br.ReadByte();
+            byte unk = br.ReadByte();
+            uint num_files = br.ReadUInt32();
+            ushort unk2 = br.ReadUInt16();
+            uint array_count = br.ReadUInt32();
+            ushort endFileIndex = br.ReadUInt16();
+            ushort[] fileTableIndex = new ushort[array_count + 1];
+
+            for (int i = 0; i < array_count + 1;i++)
+            {
+                fileTableIndex[i] = br.ReadUInt16();
+            }
+
+            // Index table
+            foreach(ushort filePosition in fileTableIndex)
+            {
+                br.BaseStream.Position = filePosition;
+
+                ushort fileID = br.ReadUInt16();
+                ushort unk3 = br.ReadUInt16();
+
+                sFile cfile = new sFile
+                {
+                    path = file.path,
+                    offset = br.ReadUInt32(), // StartOfFile
+                    size = br.ReadUInt32() // SizeOfFile
+                };
+
+                ushort unk4 = br.ReadUInt16();
+                ushort unk5 = br.ReadUInt16();
+                ushort unk6 = br.ReadUInt16();
+
+                string filename = this.ReadNullTerminatedString(br);
+
+                AddFile(unpacked, cfile, filename);
+            }
+
+            br.Close();
+            return unpacked;
+        }
+
+        public sFolder Decompress_LZSS(sFile file)
+        {
+            sFolder unpacked = new sFolder();
+            unpacked.files = new List<sFile>();
+
+            string temp = pluginHost.Get_TempFolder() + Path.DirectorySeparatorChar + Path.GetRandomFileName();
+            Byte[] compressFile = new Byte[(new FileInfo(file.path).Length) - 4];
+            Array.Copy(File.ReadAllBytes(file.path), 4, compressFile, 0, compressFile.Length);
+            File.WriteAllBytes(temp, compressFile);
+
+            // Get the decompressed file
+            string fileIn = Path.GetDirectoryName(temp) + Path.DirectorySeparatorChar + "de" + Path.DirectorySeparatorChar + Path.GetFileName(temp);
+            Directory.CreateDirectory(Path.GetDirectoryName(fileIn));
+            DSDecmp.Main.Decompress(temp, fileIn, DSDecmp.Main.Get_Format(temp));
+            File.Delete(temp);
+
+            sFile fileOut = new sFile
+            {
+                path = fileIn,
+                name = file.name,
+                size = (uint)new FileInfo(fileIn).Length
+            };
+
+            unpacked.files.Add(fileOut);
+
+            return unpacked;
+        }
+
+        private static void AddFile(sFolder folder, sFile file, string filePath)
+        {
+            const char SEPARATOR = '/';
+
+            if (filePath.Contains(SEPARATOR))
+            {
+                string folderName = filePath.Substring(0, filePath.IndexOf(SEPARATOR));
+                sFolder subfolder = new sFolder();
+                foreach (sFolder f in folder.folders)
+                {
+                    if (f.name == folderName)
+                    {
+                        subfolder = f;
+                    }
+                }
+
+                if (string.IsNullOrEmpty(subfolder.name))
+                {
+                    subfolder.name = folderName;
+                    subfolder.folders = new List<sFolder>();
+                    subfolder.files = new List<sFile>();
+                    folder.folders.Add(subfolder);
+                }
+
+                AddFile(subfolder, file, filePath.Substring(filePath.IndexOf(SEPARATOR) + 1));
+            }
+            else
+            {
+                file.name = filePath;
+                folder.files.Add(file);
+            }
+        }
+
+        private string ReadNullTerminatedString(System.IO.BinaryReader stream)
+        {
+            string str = "";
+            char ch;
+            while ((int)(ch = stream.ReadChar()) != 0)
+                str = str + ch;
+            return str;
         }
     }
 }
