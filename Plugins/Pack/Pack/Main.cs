@@ -12,10 +12,10 @@
  *   GNU General Public License for more details.
  *
  *   You should have received a copy of the GNU General Public License
- *   along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+ *   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * By: pleoNeX
- * 
+ *
  */
 using System;
 using System.Collections.Generic;
@@ -44,17 +44,9 @@ namespace Pack
             else if (file.name.ToUpper().EndsWith("UTILITY.BIN") && magic[0] == 0x10)
                 return Format.Pack;
             else if (type == "ALAR")
-            {
-                // Check type
-                BinaryReader br = new BinaryReader(File.OpenRead(file.path));
-                Console.WriteLine("Offset: " + (file.offset + 4).ToString("x"));
-                br.BaseStream.Position = file.offset + 4;
-                byte alar_type = br.ReadByte();
-                br.Close();
-
-                if (alar_type == 0x02)
-                    return Format.Pack;
-            }
+                return Format.Pack;
+            else if (type == "DSCP")
+                return Format.Compressed;
 
             return Format.Unknown;
         }
@@ -67,7 +59,7 @@ namespace Pack
             return new Control();
         }
 
-        public String Pack(ref sFolder unpacked, sFile file) 
+        public String Pack(ref sFolder unpacked, sFile file)
         {
             System.IO.BinaryReader br = new System.IO.BinaryReader(System.IO.File.OpenRead(file.path));
             string type = new String(Encoding.ASCII.GetChars(br.ReadBytes(4)));
@@ -91,7 +83,9 @@ namespace Pack
             else if (type == "NARC" || type == "CRAN")
                 return new NARC(pluginHost).Unpack(file);
             else if (type == "ALAR")
-                return ALAR.Unpack(file);
+                return new ALAR(pluginHost).Unpack(file);
+            else if (type == "DSCP")
+                return new ALAR(pluginHost).Unpack(file);
 
             return new sFolder();
         }
