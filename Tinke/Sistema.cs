@@ -529,6 +529,7 @@ namespace Tinke
                 btnExtract.Text = xml.Element("S1B").Value;
                 btnSee.Text = xml.Element("S1C").Value;
                 btnHex.Text = xml.Element("S1D").Value;
+                label1.Text = xml.Element("S2D").Value;
                 checkSearch.Text = xml.Element("S2E").Value;
                 toolTipSearch.ToolTipTitle = xml.Element("S2F").Value;
 

@@ -518,7 +518,7 @@ namespace Tinke
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(43, 13);
             this.label1.TabIndex = 21;
-            this.label1.Text = "Buscar:";
+            this.label1.Text = "S2D";
             // 
             // Sistema
             // 
