@@ -30,7 +30,7 @@ using System.IO;
 using Ekona;
 
 
-namespace Pack
+namespace JUS
 {
     /// <summary>
     /// Specification from: https://web.archive.org/web/20100111220659/http://jumpstars.wikispaces.com/File+Formats

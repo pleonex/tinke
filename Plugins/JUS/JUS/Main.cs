@@ -41,9 +41,12 @@ namespace JUS
         {
             string ext = new String(Encoding.ASCII.GetChars(magic));
 
-            if (ext == "DSIG"){
+            if (ext == "DSIG")
               return Format.FullImage;
-            }
+            else if (ext == "ALAR")
+                return Format.Pack;
+            else if (ext == "DSCP")
+                return Format.Compressed;
 
             return Format.Unknown;
         }
@@ -55,7 +58,16 @@ namespace JUS
 
         public sFolder Unpack(sFile file)
         {
-            return new sFolder();
+          System.IO.BinaryReader br = new System.IO.BinaryReader(System.IO.File.OpenRead(file.path));
+          string type = new String(Encoding.ASCII.GetChars(br.ReadBytes(4)));
+          br.Close();
+
+          if (type == "ALAR")
+              return new ALAR(pluginHost).Unpack(file);
+          else if (type == "DSCP")
+              return new ALAR(pluginHost).Unpack(file);
+
+          return new sFolder();
         }
 
         public void Read(sFile file)
