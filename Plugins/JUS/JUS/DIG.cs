@@ -40,9 +40,8 @@ namespace JUS
             this.id = id;
             this.fileName = fileName;
 
-            Console.WriteLine("==========NEW DIG=============");
             Read(file);
-            Console.WriteLine("==========END DIG=============");
+
         }
 
 
@@ -51,16 +50,12 @@ namespace JUS
             byte[] data = File.ReadAllBytes(fileIn);
 
             byte paletteType = data[5];
-            Console.WriteLine("paletteType:" + paletteType);
             byte paletteSize = data[6];
-            Console.WriteLine("paletteSize:" + paletteSize);
+
             short width = BitConverter.ToInt16(data, 8);
-            Console.WriteLine("width:"+width);
             short height = BitConverter.ToInt16(data, 10);
-            Console.WriteLine("height:" + height);
 
             int paletteEnd = paletteSize * 32 + 12;
-            Console.WriteLine("paletteEnd:"+paletteEnd);
 
             int startPalette = 12;
             int position = startPalette;
@@ -71,9 +66,8 @@ namespace JUS
                 while (BitConverter.ToInt32(data, position) == 0) { position += 4; }
                 startPalette = position;
             }
-            Console.WriteLine("startPalette after while:"+startPalette);
+
             int paletteActualSize = paletteEnd - startPalette;
-            Console.WriteLine("PaletteActualSize:" + paletteActualSize);
 
             position = startPalette;
             ColorFormat format;
@@ -81,13 +75,11 @@ namespace JUS
 
             if (paletteType == 16)
             {
-                Console.WriteLine("== Palete Type 16 ==");
                 int paletteColors = 16;
                 int paletteColorSize = paletteColors * 2;
                 format = ColorFormat.colors16;
                 Color[][] palettes;
                 decimal paletteNumber = Math.Ceiling((decimal)paletteActualSize / paletteColorSize);
-                Console.WriteLine("Number of Palettes:" +paletteNumber);
 
                 palettes = new Color[(int)paletteNumber][];
 
@@ -103,7 +95,6 @@ namespace JUS
             }
             else
             {
-                Console.WriteLine("== Palete Type 256 ==");
                 format = ColorFormat.colors256;
                 byte[] aux = new byte[paletteActualSize];
                 Array.Copy(data, position, aux, 0, paletteActualSize);
@@ -113,11 +104,7 @@ namespace JUS
             }
             position = paletteEnd;
 
-            Console.WriteLine("NumberOfPalettes:" + palette.NumberOfPalettes);
-
             pluginHost.Set_Palette(palette);
-
-            Console.WriteLine("position before image:" + position);
 
             // Get image
             byte[] tiles = new byte[data.Length - position];
