@@ -1,7 +1,7 @@
 ﻿// ----------------------------------------------------------------------
 // <copyright file="Main.cs" company="none">
 
-// Copyright (C) 2012
+// Copyright (C) 2019
 //
 //   This program is free software: you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License as published by
@@ -18,9 +18,9 @@
 //
 // </copyright>
 
-// <author>pleoNeX</author>
-// <email>benito356@gmail.com</email>
-// <date>21/04/2012 1:55:14</date>
+// <author>Priverop</author>
+// <contact>https://github.com/priverop/</contact>
+// <date>25/02/2019</date>
 // -----------------------------------------------------------------------
 using System;
 using System.Text;
