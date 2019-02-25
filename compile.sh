@@ -97,6 +97,7 @@ compile_plugin "Plugins/Tokimemo1/Tokimemo1.sln"
 compile_plugin "Plugins/Teniprimgaku/Teniprimgaku.sln"
 compile_plugin "Plugins/SONICRUSHADV/SONICRUSHADV.sln"
 compile_plugin "Plugins/1stPlayable/1stPlayable.sln"
+compile_plugin "Plugins/JUS/JUS.sln"
 
 # Compiling format plugins
 compile_plugin "Plugins/Pack/Pack.sln"

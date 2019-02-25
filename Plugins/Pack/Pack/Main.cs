@@ -43,10 +43,6 @@ namespace Pack
                 return Format.Pack;
             else if (file.name.ToUpper().EndsWith("UTILITY.BIN") && magic[0] == 0x10)
                 return Format.Pack;
-            else if (type == "ALAR")
-                return Format.Pack;
-            else if (type == "DSCP")
-                return Format.Compressed;
 
             return Format.Unknown;
         }
@@ -82,10 +78,6 @@ namespace Pack
                 return new Utility(pluginHost).Unpack(file.path);
             else if (type == "NARC" || type == "CRAN")
                 return new NARC(pluginHost).Unpack(file);
-            else if (type == "ALAR")
-                return new ALAR(pluginHost).Unpack(file);
-            else if (type == "DSCP")
-                return new ALAR(pluginHost).Unpack(file);
 
             return new sFolder();
         }

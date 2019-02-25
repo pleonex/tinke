@@ -68,7 +68,6 @@ Thread at GBAtemp.net: http://gbatemp.net/topic/303529-tinke-072/
 
 ## Pack
  * NARC o ARC => Nintendo ARChives
- * ALAR o DSCP => Jump Stars Saga Packaging
  * Utility.bin => Wifi data files
 
 # Specific plugin for games
@@ -89,6 +88,7 @@ Thread at GBAtemp.net: http://gbatemp.net/topic/303529-tinke-072/
  * Tetris DS (YLUP)
  * Tokimeki Memorial Girl's Side 3rd Story (B3SJ)
  * Cake Mania 2 (CAKX)
+ * Jump! Ultimate Stars (ALAR, DSIG, DSCP)
 
 ----
 

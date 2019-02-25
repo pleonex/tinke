@@ -1,7 +1,7 @@
 ﻿// ----------------------------------------------------------------------
 // <copyright file="ALAR.cs" company="none">
 
-// Copyright (C) 2012
+// Copyright (C) 2019
 //
 //   This program is free software: you can redistribute it and/or modify
 //   it under the terms of the GNU General Public License as published by
@@ -19,8 +19,8 @@
 // </copyright>
 
 // <author>pleoNeX, Daviex94, Priverop</author>
-// <email>benito356@gmail.com</email>
-// <date>06/07/2012 1:03:49</date>
+// <contact>https://github.com/priverop/</contact>
+// <date>24/02/2019</date>
 // -----------------------------------------------------------------------
 using System;
 using System.Collections.Generic;
@@ -29,8 +29,7 @@ using System.Text;
 using System.IO;
 using Ekona;
 
-
-namespace Pack
+namespace JUS
 {
     /// <summary>
     /// Specification from: https://web.archive.org/web/20100111220659/http://jumpstars.wikispaces.com/File+Formats
