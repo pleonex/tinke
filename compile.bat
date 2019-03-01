@@ -87,6 +87,7 @@ call :compile_plugin "Plugins\Tokimemo1\Tokimemo1.sln"
 call :compile_plugin "Plugins\Teniprimgaku\Teniprimgaku.sln"
 call :compile_plugin "Plugins\SONICRUSHADV\SONICRUSHADV.sln"
 call :compile_plugin "Plugins\1stPlayable\1stPlayable.sln"
+call :compile_plugin "Plugins\JUS\JUS.sln"
 
 REM Remove the error log
 DEL error.log
