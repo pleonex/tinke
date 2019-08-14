@@ -28,6 +28,8 @@ using Ekona;
 
 namespace Fonts
 {
+    using System.Drawing.Imaging;
+    using System.Runtime.InteropServices;
 
     // Credits to CUE and Lyan53 in romxhack, thanks:
     // http://romxhack.esforos.com/fuentes-nftr-de-nds-t67
@@ -460,19 +462,32 @@ namespace Fonts
                 tileData.Add(byteFromBits);
             }
 
-
+            byte[] argbData = new byte[4 * image.Width * image.Height];
             for (int h = 0; h < height; h++)
             {
                 for (int w = 0; w < width; w++)
                 {
                     for (int hzoom = 0; hzoom < zoom; hzoom++)
                         for (int wzoom = 0; wzoom < zoom; wzoom++)
-                            image.SetPixel(
-                                w * zoom + wzoom,
-                                h * zoom + hzoom,
-                                (palette[tileData[w + h * width]]));
+                        {
+                            //image.SetPixel(w * zoom + wzoom, h * zoom + hzoom, (palette[tileData[w + h * width]]));
+                            int x = w * zoom + wzoom;
+                            int y = h * zoom + hzoom;
+                            int p = y * image.Width + x;
+                            argbData[4 * p + 0] = palette[tileData[w + h * width]].B;
+                            argbData[4 * p + 1] = palette[tileData[w + h * width]].G;
+                            argbData[4 * p + 2] = palette[tileData[w + h * width]].R;
+                            argbData[4 * p + 3] = palette[tileData[w + h * width]].A;
+                        }
                 }
             }
+
+            BitmapData bmpData = image.LockBits(
+                new Rectangle(Point.Empty, image.Size),
+                ImageLockMode.WriteOnly,
+                PixelFormat.Format32bppArgb);
+            Marshal.Copy(argbData, 0, bmpData.Scan0, argbData.Length);
+            image.UnlockBits(bmpData);
 
             return image;
         }
