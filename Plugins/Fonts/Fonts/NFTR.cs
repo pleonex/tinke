@@ -269,6 +269,18 @@ namespace Fonts
                 for (; rem < 4; rem++)
                     bw.Write((byte)0x00);
 
+            // Sorts of CMAPs by type
+            sNFTR.PAMC[] cmaps = new sNFTR.PAMC[font.pamc.Count];
+            uint[] types = new uint[font.pamc.Count];
+            for (int i = 0; i < cmaps.Length; i++)
+            {
+                cmaps[i] = font.pamc[i];
+                types[i] = font.pamc[i].type_section;
+            }
+
+            Array.Sort(types, cmaps);
+            font.pamc = new List<sNFTR.PAMC>(cmaps);
+
             // Write the PAMC section
             for (int i = 0; i < font.pamc.Count; i++)
             {
@@ -288,11 +300,13 @@ namespace Fonts
                     case 0:
                         sNFTR.PAMC.Type0 type0 = (sNFTR.PAMC.Type0)font.pamc[i].info;
                         bw.Write(type0.fist_char_code);
+                        bw.Write((ushort)0x00);
                         break;
                     case 1:
                         sNFTR.PAMC.Type1 type1 = (sNFTR.PAMC.Type1)font.pamc[i].info;
                         for (int j = 0; j < type1.char_code.Length; j++)
                             bw.Write(type1.char_code[j]);
+                        if (type1.char_code.Length % 2 > 0) bw.Write((ushort)0x00);
                         break;
                     case 2:
                         sNFTR.PAMC.Type2 type2 = (sNFTR.PAMC.Type2)font.pamc[i].info;
@@ -302,9 +316,9 @@ namespace Fonts
                             bw.Write(type2.charInfo[j].chars_code);
                             bw.Write(type2.charInfo[j].chars);
                         }
+                        bw.Write((ushort)0x00);
                         break;
                 }
-                bw.Write((ushort)0x00);
             }
 
             bw.Flush();
