@@ -91,15 +91,20 @@ namespace Fonts
             for (int i = 0; i < font.plgc.tiles.Length; i++)
             {
                 font.plgc.tiles[i] = BytesToBits(br.ReadBytes(font.plgc.tile_length));
-                if (font.plgc.rotateMode == 2)
+                if (font.plgc.rotateMode >> 1 == 3)
                     font.plgc.tiles[i] = Rotate270(font.plgc.tiles[i], font.plgc.tile_width, font.plgc.tile_height, font.plgc.depth);
-                else if (font.plgc.rotateMode == 1)
+                else if (font.plgc.rotateMode >> 1 == 1)
                     font.plgc.tiles[i] = Rotate90(font.plgc.tiles[i], font.plgc.tile_width, font.plgc.tile_height, font.plgc.depth);
-                else if (font.plgc.rotateMode == 3)
+                else if (font.plgc.rotateMode >> 1 == 2)
                     font.plgc.tiles[i] = Rotate180(font.plgc.tiles[i], font.plgc.tile_width, font.plgc.tile_height, font.plgc.depth);
-
             }
 
+            if (font.plgc.rotateMode >> 1 % 2 != 0)
+            {
+                byte w = font.plgc.tile_width;
+                font.plgc.tile_width = font.plgc.tile_height;
+                font.plgc.tile_height = w;
+            }
 
             // Character Width DH
             br.BaseStream.Position = font.fnif.offset_hdwc - 0x08;
@@ -168,7 +173,7 @@ namespace Fonts
             } while (nextOffset != 0x00 && (nextOffset - 0x08) < br.BaseStream.Length);
 
             //WriteInfo(font, lang);
-            font.plgc.rotateMode = 0;
+            font.plgc.rotateMode &= 1;
 
             br.Close();
             return font;
@@ -488,7 +493,6 @@ namespace Fonts
         public static Byte[] Rotate270(Byte[] bytes,int width, int height, int depth)
         {
             Byte[] rotated = new Byte[bytes.Length];
-
             for (int h = 0; h < height; h++)
             {
                 for (int w = 0; w < width; w++)
@@ -497,7 +501,7 @@ namespace Fonts
                     Array.Copy(bytes, (w + h * width) * depth, original, 0, depth);
 
                     for (int i = 0; i < depth; i++)
-                        rotated[(h + width * (height - 1) - w * width) * depth + i] = original[i];
+                        rotated[(w * height + (height - h - 1)) * depth + i] = original[i];
                 }
             }
 
@@ -515,7 +519,7 @@ namespace Fonts
                     Array.Copy(bytes, (w + h * width) * depth, original, 0, depth);
 
                     for (int i = 0; i < depth; i++)
-                        rotated[((width - 1 - h) + w * width) * depth + i] = original[i];
+                        rotated[(h + height * (width - 1 - w)) * depth + i] = original[i];
                 }
             }
 
