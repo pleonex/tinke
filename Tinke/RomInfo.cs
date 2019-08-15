@@ -48,7 +48,10 @@ namespace Tinke
             try
             {
                 Nitro.Estructuras.ROMHeader cabecera = Nitro.NDS.LeerCabecera(archivo);
-                Nitro.Estructuras.Banner banner = Nitro.NDS.LeerBanner(archivo, cabecera.bannerOffset);
+                Nitro.Estructuras.Banner banner = Nitro.NDS.LeerBanner(
+                    archivo,
+                    cabecera.bannerOffset,
+                    cabecera.banner_size);
                 Mostrar_Informacion(cabecera, banner);
                 this.checkTrans.Checked = true;
             }
