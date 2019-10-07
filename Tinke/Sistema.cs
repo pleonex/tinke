@@ -35,11 +35,11 @@ namespace Tinke
     using System.Security.Cryptography;
 
     using Tinke.Nitro;
-    using Tinke.Tools.Cryptography;
 
     public partial class Sistema : Form
     {
         RomInfo romInfo;
+        SecureArea secureArea;
         TWL twl;
         Debug debug;
 
@@ -219,6 +219,7 @@ namespace Tinke
             DateTime startTime = DateTime.Now;
 
             romInfo = new RomInfo(file);  // Read the header and banner
+            secureArea = new SecureArea(file); // Read and Decrypt ARM9 Secure Area
             DateTime t1 = DateTime.Now;
             accion = new Acciones(file, new String(romInfo.Cabecera.gameCode));
             DateTime t2 = DateTime.Now;
@@ -1473,8 +1474,24 @@ namespace Tinke
 
             br = new BinaryReader(File.OpenRead(arm9.path));
             br.BaseStream.Position = arm9.offset;
+            byte[] arm9Data = br.ReadBytes((int)arm9.size);
+
+            // Re-encrypt SA if Gamecode has been changed
+            if (gameCode != this.secureArea.CurrentKey)
+            {
+                this.secureArea.Encrypt(gameCode);
+                if (this.secureArea.OriginalEncrypted) Array.Copy(this.secureArea.EncryptedData, arm9Data, 0x800);
+            }
+
+            // Calc Secure Area CRC
+            if (header.ARM9romOffset == 0x4000 && header.ARM9size >= 0x4000)
+            {
+                Array.Copy(arm9Data, 0x800, this.secureArea.EncryptedData, 0x800, 0x3800);
+                header.secureCRC16 = SecureArea.CalcCRC(this.secureArea.EncryptedData, gameCode);
+            }
+
             BinaryWriter bw = new BinaryWriter(File.OpenWrite(arm9Binary));
-            bw.Write(br.ReadBytes((int)arm9.size));
+            bw.Write(arm9Data);
             bw.Flush();
             br.Close();
 
@@ -1737,8 +1754,7 @@ namespace Tinke
                 currPos = header.total_rom_size;
 
                 // Encrypt ARM9 Secure Area (for HMAC-SHA1 hash)
-                byte[] arm9Data = File.ReadAllBytes(arm9Binary);
-                SAEncryptor.EncryptSecureArea(gameCode, arm9Data);
+                if (!this.secureArea.OriginalEncrypted) Array.Copy(this.secureArea.EncryptedData, arm9Data, 0x800);
 
                 // Compute Hash
                 HMACSHA1 hmac = new HMACSHA1(TWL.hmac_sha1_key);
@@ -1756,15 +1772,6 @@ namespace Tinke
             // Ref. to TWL SDK' "Card Manual" for DSi Cartrige ROMs
             if ((header.unitCode & 2) > 0 && (header.tid_high & 0xF) == 0 && header.tamaño < 25) header.tamaño = 25; 
             header.tamaño = (uint)Math.Pow(2, header.tamaño);
-
-            // Calc Secure Area CRC
-            if (header.headerSize == 0x4000 && header.ARM9romOffset == 0x4000)
-            {
-                br = new BinaryReader(File.OpenRead(arm9.path));
-                br.BaseStream.Position = arm9.offset;
-                header.secureCRC16 = NDS.CalcSecureAreaCRC(br.ReadBytes(0x4000), gameCode);
-                br.Close();
-            }
 
             // Get Header CRC
             string tempHeader = Path.GetTempFileName();

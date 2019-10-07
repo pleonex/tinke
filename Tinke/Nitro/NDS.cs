@@ -36,10 +36,6 @@ using Ekona.Helper;
 
 namespace Tinke.Nitro
 {
-    using System.Security.Cryptography;
-
-    using Tinke.Tools.Cryptography;
-
     public static class NDS
     {
         public static Estructuras.ROMHeader LeerCabecera(string file)
@@ -181,7 +177,7 @@ namespace Tinke.Nitro
             // Calc CRCs
             uint gameCode = BitConverter.ToUInt32(Encoding.ASCII.GetBytes(nds.gameCode), 0);
             br.BaseStream.Position = 0x4000;
-            nds.secureCRC = (CalcSecureAreaCRC(br.ReadBytes(0x4000), gameCode) == nds.secureCRC16) ? true : false;
+            nds.secureCRC = (SecureArea.CalcCRC(br.ReadBytes(0x4000), gameCode) == nds.secureCRC16) ? true : false;
             br.BaseStream.Position = 0xC0;
             nds.logoCRC = (CRC16.Calculate(br.ReadBytes(156)) == nds.logoCRC16) ? true : false;
             br.BaseStream.Position = 0x0;
@@ -455,12 +451,6 @@ namespace Tinke.Nitro
             bw.Close();
 
             Console.WriteLine(Tools.Helper.GetTranslation("Messages", "S09"), new FileInfo(salida).Length);
-        }
-
-        public static ushort CalcSecureAreaCRC(byte[] data, uint gameCode)
-        {
-            if (BitConverter.ToUInt64(data, 0) == 0xE7FFDEFFE7FFDEFF) SAEncryptor.EncryptSecureArea(gameCode, data);
-            return (ushort)CRC16.Calculate(data);
         }
 
         public static Estructuras.Banner LeerBanner(string file, UInt32 offset, UInt32 size)
