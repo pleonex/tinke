@@ -155,6 +155,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Acciones.cs" />
+    <Compile Include="Nitro\SecureArea.cs" />
+    <Compile Include="Tools\ARM9BLZ.cs" />
+    <Compile Include="Tools\Cryptography\AES128CounterMode.cs" />
     <Compile Include="Autores.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -215,6 +218,7 @@
     <Compile Include="Dialog\MapOptions.Designer.cs">
       <DependentUpon>MapOptions.cs</DependentUpon>
     </Compile>
+    <Compile Include="Nitro\TWL.cs" />
     <Compile Include="RomInfo.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -236,6 +240,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tools\Helper.cs" />
+    <Compile Include="Tools\Cryptography\SAEncryptor.cs" />
     <Compile Include="Visor.cs">
       <SubType>Form</SubType>
     </Compile>

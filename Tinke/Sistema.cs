@@ -32,9 +32,15 @@ using Ekona;
 
 namespace Tinke
 {
+    using System.Security.Cryptography;
+
+    using Tinke.Nitro;
+
     public partial class Sistema : Form
     {
         RomInfo romInfo;
+        SecureArea secureArea;
+        TWL twl;
         Debug debug;
 
         Acciones accion;
@@ -102,6 +108,8 @@ namespace Tinke
             treeSystem.GotFocus += new EventHandler(treeSystem_LostFocus);
             keyDown = Keys.Escape;
         }
+
+        #region Form Events
         void Sistema_Load(object sender, EventArgs e)
         {
             string[] filesToRead = new string[1];
@@ -203,12 +211,15 @@ namespace Tinke
                 accion.Dispose();
             }
         }
+        #endregion
 
+        #region Initialization
         private void ReadGame(string file)
         {
             DateTime startTime = DateTime.Now;
 
             romInfo = new RomInfo(file);  // Read the header and banner
+            secureArea = new SecureArea(file); // Read and Decrypt ARM9 Secure Area
             DateTime t1 = DateTime.Now;
             accion = new Acciones(file, new String(romInfo.Cabecera.gameCode));
             DateTime t2 = DateTime.Now;
@@ -224,6 +235,21 @@ namespace Tinke
             accion.LastFileID = fat.Length;
             accion.LastFolderID = root.id + 0xF000;
             root.id = 0xF000;
+
+            // Read DSi stuff
+            if ((romInfo.Cabecera.unitCode & 2) > 0 && (romInfo.Cabecera.twlInternalFlags & 1) > 0)
+            {
+                // Read TWL rom data if the DSi ROM is valid 
+                if (romInfo.Cabecera.tid_high != 0 && romInfo.Cabecera.tid_high != 0xFFFFFFFF)
+                {
+                    // NOTE: Some DSi Enhanced ROMs is invalid!
+                    try
+                    {
+                        this.twl = new TWL(file, this.romInfo.Cabecera, fat);
+                    }
+                    catch { }
+                }
+            }
 
             // Add system files (fnt.bin, banner.bin, overlays, arm9 and arm7)
             if (!(root.folders is List<sFolder>))
@@ -266,6 +292,7 @@ namespace Tinke
             this.Text += "          " + new String(romInfo.Cabecera.gameTitle).Replace("\0", "") +
                 " (" + new String(romInfo.Cabecera.gameCode) + ')';
         }
+
         private sFolder Add_SystemFiles(Nitro.Estructuras.sFAT[] fatTable)
         {
             sFolder ftc = new sFolder();
@@ -308,7 +335,7 @@ namespace Tinke
             sFile banner = new sFile();
             banner.name = "banner.bin";
             banner.offset = romInfo.Cabecera.bannerOffset;
-            banner.size = 0x840;
+            banner.size = romInfo.Banner.GetDefSize(romInfo.Cabecera.banner_size);
             banner.path = accion.ROMFile;
             banner.id = (ushort)accion.LastFileID;
             accion.LastFileID++;
@@ -356,9 +383,40 @@ namespace Tinke
                 ftc.files.Add(y7);
             }
 
+            // Add DSi ARM9/7 files
+            if ((romInfo.Cabecera.unitCode & 2) > 0 && this.twl != null)
+            {
+                if (romInfo.Cabecera.dsi9_size > 0 && (int)romInfo.Cabecera.dsi9_size != -1)
+                {
+                    sFile arm9i = new sFile();
+                    arm9i.name = "arm9i.bin";
+                    arm9i.offset = 0;// romInfo.Cabecera.dsi9_rom_offset;
+                    arm9i.size = romInfo.Cabecera.dsi9_size;
+                    arm9i.path = accion.Get_TempFolder() + Path.DirectorySeparatorChar + arm9i.name;
+                    arm9i.id = (ushort)accion.LastFileID;
+                    accion.LastFileID++;
+                    ftc.files.Add(arm9i);
+                    File.WriteAllBytes(arm9i.path, this.twl.DSi9Data);
+                }
+
+                if (romInfo.Cabecera.dsi7_size > 0 && (int)romInfo.Cabecera.dsi7_size != -1)
+                {
+                    sFile arm7i = new sFile();
+                    arm7i.name = "arm7i.bin";
+                    arm7i.offset = 0;// romInfo.Cabecera.dsi7_rom_offset;
+                    arm7i.size = romInfo.Cabecera.dsi7_size;
+                    arm7i.path = accion.Get_TempFolder() + Path.DirectorySeparatorChar + arm7i.name;
+                    arm7i.id = (ushort)accion.LastFileID;
+                    accion.LastFileID++;
+                    ftc.files.Add(arm7i);
+                    File.WriteAllBytes(arm7i.path, this.twl.DSi7Data);
+                }
+            }
+
             Set_Format(ftc);
             return ftc;
         }
+
         private void ReadFiles(string[] files)
         {
             toolStripInfoRom.Enabled = false;
@@ -416,6 +474,7 @@ namespace Tinke
             Console.WriteLine("<li>" + xml.Element("S19").Value + (t6 - t5).ToString() + "</li>");
             Console.Write("</font></ul><br>");
         }
+
         private void ReadFolder(string folder)
         {
             toolStripInfoRom.Enabled = false;
@@ -491,6 +550,7 @@ namespace Tinke
             }
             catch { MessageBox.Show(Tools.Helper.GetTranslation("Sistema", "S38"), Tools.Helper.GetTranslation("Sistema", "S3A")); }
         }
+
         private void ReadLanguage()
         {
             try
@@ -562,7 +622,73 @@ namespace Tinke
             catch { throw new NotSupportedException("There was an error reading the language file"); }
         }
 
+        private void Set_Format(sFolder folder)
+        {
+            if (folder.files is List<sFile>)
+            {
+                for (int i = 0; i < folder.files.Count; i++)
+                {
+                    sFile newFile = folder.files[i];
+                    newFile.format = accion.Get_Format(newFile);
+                    folder.files[i] = newFile;
+                }
+            }
 
+            if (folder.folders is List<sFolder>)
+                foreach (sFolder subFolder in folder.folders)
+                    Set_Format(subFolder);
+        }
+
+        private void Get_SupportedFiles()
+        {
+            filesSupported = nFiles = 0; // Reiniciamos el contador
+
+            Recursive_SupportedFiles(accion.Root);
+            if (nFiles == 0)
+                nFiles = 1;
+
+            lblSupport.Text = Tools.Helper.GetTranslation("Sistema", "S30") + ' ' + (filesSupported * 100 / nFiles) + '%';
+            if ((filesSupported * 100 / nFiles) >= 75)
+                lblSupport.Font = new Font("Consolas", 10, FontStyle.Bold | FontStyle.Underline);
+            else
+                lblSupport.Font = new Font("Consolas", 10, FontStyle.Regular);
+        }
+
+        private void Recursive_SupportedFiles(sFolder folder)
+        {
+            if (folder.files is List<sFile>)
+            {
+                foreach (sFile archivo in folder.files)
+                {
+                    if (archivo.format == Format.System || archivo.size == 0x00)
+                        continue;
+
+                    if (archivo.format != Format.Unknown)
+                        filesSupported++;
+                    nFiles++;
+                }
+            }
+
+            if (folder.folders is List<sFolder>)
+                foreach (sFolder subFolder in folder.folders)
+                    Recursive_SupportedFiles(subFolder);
+        }
+
+        private void ThreadEspera(Object name)
+        {
+            Espera espera = new Espera((string)name, false);
+
+            try
+            {
+                espera.ShowDialog();
+            }
+            catch
+            {
+            }
+        }
+        #endregion
+
+        #region Create Nodes
         private TreeNode Create_Nodes(sFolder currFolder)
         {
             TreeNode currNode = new TreeNode();
@@ -605,6 +731,7 @@ namespace Tinke
 
             return currNode;
         }
+
         private TreeNode Create_Nodes(sFolder currFolder, Stream stream)
         {
             TreeNode currNode = new TreeNode();
@@ -648,6 +775,7 @@ namespace Tinke
 
             return currNode;
         }
+
         private void FolderToNode(sFolder folder, ref TreeNode node)
         {
             if (folder.id < 0xF000)
@@ -692,9 +820,8 @@ namespace Tinke
                     node.Nodes.Add(fileNode);
                 }
             }
-
-
         }
+
         private TreeNode[] FilesToNodes(sFile[] files)
         {
             TreeNode[] nodos = new TreeNode[files.Length];
@@ -715,70 +842,6 @@ namespace Tinke
             }
 
             return nodos;
-        }
-
-        private void Set_Format(sFolder folder)
-        {
-            if (folder.files is List<sFile>)
-            {
-                for (int i = 0; i < folder.files.Count; i++)
-                {
-                    sFile newFile = folder.files[i];
-                    newFile.format = accion.Get_Format(newFile);
-                    folder.files[i] = newFile;
-                }
-            }
-
-
-            if (folder.folders is List<sFolder>)
-                foreach (sFolder subFolder in folder.folders)
-                    Set_Format(subFolder);
-        }
-        private void Get_SupportedFiles()
-        {
-            filesSupported = nFiles = 0; // Reiniciamos el contador
-
-            Recursive_SupportedFiles(accion.Root);
-            if (nFiles == 0)
-                nFiles = 1;
-
-            lblSupport.Text = Tools.Helper.GetTranslation("Sistema", "S30") + ' ' + (filesSupported * 100 / nFiles) + '%';
-            if ((filesSupported * 100 / nFiles) >= 75)
-                lblSupport.Font = new Font("Consolas", 10, FontStyle.Bold | FontStyle.Underline);
-            else
-                lblSupport.Font = new Font("Consolas", 10, FontStyle.Regular);
-        }
-        private void Recursive_SupportedFiles(sFolder folder)
-        {
-            if (folder.files is List<sFile>)
-            {
-                foreach (sFile archivo in folder.files)
-                {
-                    if (archivo.format == Format.System || archivo.size == 0x00)
-                        continue;
-
-                    if (archivo.format != Format.Unknown)
-                        filesSupported++;
-                    nFiles++;
-                }
-            }
-
-            if (folder.folders is List<sFolder>)
-                foreach (sFolder subFolder in folder.folders)
-                    Recursive_SupportedFiles(subFolder);
-        }
-
-        private void ThreadEspera(Object name)
-        {
-            Espera espera = new Espera((string)name, false);
-
-            try
-            {
-                espera.ShowDialog();
-            }
-            catch
-            {
-            }
         }
 
         private void treeSystem_AfterSelect(object sender, TreeViewEventArgs e)
@@ -920,6 +983,8 @@ namespace Tinke
             listFile.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
         }
 
+        #endregion
+
         #region Key events
         private void Sistema_KeyDown(object sender, KeyEventArgs e)
         {
@@ -1044,8 +1109,8 @@ namespace Tinke
         {
             sFile file = accion.Selected_File();
             string filePath = accion.Save_File(file);
-            Form hex;
 
+            Form hex;
             if (!isMono) {
                 hex = new VisorHex(filePath, file.id, file.name != "rom.nds");
                 hex.FormClosed += hex_FormClosed;
@@ -1382,12 +1447,26 @@ namespace Tinke
                 ov7 = ftc.files.FindAll(sFile => sFile.name.StartsWith("overlay7_"));
             }
 
+            // Get special DSi (TWL) files
+            sFile arm9i = new sFile();
+            sFile arm7i = new sFile();
+            if (this.twl != null)
+            {
+                index = ftc.files.FindIndex(sFile => sFile.name == "arm9i.bin");
+                if (index != -1) arm9i = ftc.files[index];
+                index = ftc.files.FindIndex(sFile => sFile.name == "arm7i.bin");
+                if (index != -1) arm7i = ftc.files[index];
+
+                // Recalcs overlays9 hashes in arm9.bin
+                this.twl.UpdateOverlays9Sha1Hmac(ref arm9, romInfo.Cabecera, ov9);
+            }
+
             #region Get ROM sections
             BinaryReader br;
             Console.WriteLine(Tools.Helper.GetTranslation("Messages", "S08"));
             Nitro.Estructuras.ROMHeader header = romInfo.Cabecera;
             uint currPos = header.headerSize;
-
+            uint gameCode = BitConverter.ToUInt32(Encoding.ASCII.GetBytes(header.gameCode), 0);
 
             // Write ARM9
             string arm9Binary = Path.GetTempFileName();
@@ -1396,8 +1475,24 @@ namespace Tinke
 
             br = new BinaryReader(File.OpenRead(arm9.path));
             br.BaseStream.Position = arm9.offset;
+            byte[] arm9Data = br.ReadBytes((int)arm9.size);
+
+            // Re-encrypt SA if Gamecode has been changed
+            if (gameCode != this.secureArea.CurrentKey)
+            {
+                this.secureArea.Encrypt(gameCode);
+                if (this.secureArea.OriginalEncrypted) Array.Copy(this.secureArea.EncryptedData, arm9Data, 0x800);
+            }
+
+            // Calc Secure Area CRC
+            if (header.ARM9romOffset == 0x4000 && header.ARM9size >= 0x4000)
+            {
+                Array.Copy(arm9Data, 0x800, this.secureArea.EncryptedData, 0x800, 0x3800);
+                header.secureCRC16 = SecureArea.CalcCRC(this.secureArea.EncryptedData, gameCode);
+            }
+
             BinaryWriter bw = new BinaryWriter(File.OpenWrite(arm9Binary));
-            bw.Write(br.ReadBytes((int)arm9.size));
+            bw.Write(arm9Data);
             bw.Flush();
             br.Close();
 
@@ -1423,7 +1518,7 @@ namespace Tinke
             br.Close();
 
             uint rem = currPos % 0x200;
-            if (rem != 0)
+            //if (rem != 0)
             {
                 while (rem < 0x200)
                 {
@@ -1446,7 +1541,7 @@ namespace Tinke
 
                 currPos += y9.size;
                 rem = currPos % 0x200;
-                if (rem != 0)
+                //if (rem != 0)
                 {
                     while (rem < 0x200)
                     {
@@ -1486,7 +1581,7 @@ namespace Tinke
 
             currPos += arm7.size;
             rem = currPos % 0x200;
-            if (rem != 0)
+            //if (rem != 0)
             {
                 while (rem < 0x200)
                 {
@@ -1509,7 +1604,7 @@ namespace Tinke
 
                 currPos += y7.size;
                 rem = currPos % 0x200;
-                if (rem != 0)
+                //if (rem != 0)
                 {
                     while (rem < 0x200)
                     {
@@ -1559,16 +1654,16 @@ namespace Tinke
 
             Console.WriteLine(Tools.Helper.GetTranslation("Messages", "S09"), new FileInfo(fileFNT).Length);
 
-
+            // Escribimos el banner
+            string banner = Path.GetTempFileName();
+            header.banner_size = Nitro.NDS.EscribirBanner(banner, romInfo.Banner);
+            
             // Escribimos el FAT (File Allocation Table)
             string fileFAT = Path.GetTempFileName();
             header.FAToffset = currPos;
-            Nitro.FAT.Write(fileFAT, accion.Root, header.FAToffset, accion.SortedIDs, arm9overlayOffset, arm7overlayOffset);
+            Nitro.FAT.Write(fileFAT, accion.Root, header.FAToffset, accion.SortedIDs, arm9overlayOffset, arm7overlayOffset, header.banner_size);
             currPos += (uint)new FileInfo(fileFAT).Length;
 
-            // Escribimos el banner
-            string banner = Path.GetTempFileName();
-            Nitro.NDS.EscribirBanner(banner, romInfo.Banner);
             header.bannerOffset = currPos;
             currPos += (uint)new FileInfo(banner).Length;
 
@@ -1579,7 +1674,104 @@ namespace Tinke
 
             // Update the ROM size values of the header
             header.ROMsize = currPos;
+
+            // Update DSi staff header info
+            if (this.twl != null && (header.unitCode & 2) > 0)
+            {
+                // ARM9i and ARM7i files
+                this.twl.ImportArm9iData(arm9i.path, arm9i.offset, arm9i.size);
+                this.twl.ImportArm7iData(arm7i.path, arm7i.offset, arm7i.size);
+                header.dsi9_size = arm9i.size;
+                header.dsi7_size = arm7i.size;
+
+                // Digest constants
+                header.digest_sector_size = 0x400;
+                header.digest_block_sectorcount = 0x20;
+                header.digest_ntr_start = 0x4000;
+
+                // Digest NTR
+                header.ROMsize += header.digest_sector_size - (header.ROMsize - header.digest_ntr_start) % header.digest_sector_size;
+                header.digest_ntr_size = header.ROMsize - header.digest_ntr_start;
+
+                // Digest TWL
+                header.dsi9_rom_offset = 0;
+                header.dsi7_rom_offset = (header.dsi9_size >= 0x4000)
+                                             ? header.dsi9_size + header.digest_sector_size
+                                               - header.dsi9_size % header.digest_sector_size
+                                             : 0x4000;
+                header.digest_twl_size = header.dsi7_rom_offset + header.dsi7_size + header.digest_sector_size - header.dsi7_size % header.digest_sector_size;
+
+                // Hashtable of digest sectors
+                header.sector_hashtable_start = header.ROMsize;
+                header.sector_hashtable_size = (header.digest_ntr_size + header.digest_twl_size) / header.digest_sector_size * 0x14;
+                uint padSize = 0x14 * header.digest_block_sectorcount;
+                if (header.sector_hashtable_size % padSize != 0) header.sector_hashtable_size += padSize - header.sector_hashtable_size % padSize;
+
+                // Hashtable of sectors hashs blocks 
+                header.block_hashtable_start = header.sector_hashtable_start + header.sector_hashtable_size;
+                if (header.block_hashtable_start % 0x200 != 0) header.block_hashtable_start += 0x200 - header.block_hashtable_start % 0x200;
+                header.block_hashtable_size = header.sector_hashtable_size / header.digest_block_sectorcount;
+
+                // TWL sections offsets
+                header.digest_twl_start = header.block_hashtable_start + header.block_hashtable_size;
+                header.digest_twl_start += 0x200 - header.digest_twl_start % 0x200;
+                header.digest_twl_start += header.digest_sector_size - header.digest_twl_start % header.digest_sector_size;
+                if (!header.trimmedRom && header.digest_twl_start % 0x80000 != 0) header.digest_twl_start += 0x80000 - (header.digest_twl_start % 0x80000) + 0x3000;
+                header.dsi9_rom_offset += header.digest_twl_start;
+                header.dsi7_rom_offset += header.digest_twl_start;
+
+                // Modcrypt info
+                if ((header.twlInternalFlags & 2) > 0)
+                {
+                    if ((header.tid_high & 0xF) == 0)
+                    {
+                        // Standard for FULL TWL ROMs (DSi Exclusive / DSi Enhanced)
+                        header.modcrypt1_size = (uint)Math.Min(0x4000, this.twl.DSi9Data.Length);
+                        header.modcrypt2_size = 0;
+                        header.modcrypt1_start = header.dsi9_rom_offset;
+                        header.modcrypt2_start = 0;
+                    }
+                    else
+                    {
+                        // Standard for DSiWare
+                        header.modcrypt1_size = (uint)this.twl.DSi9Data.Length;
+                        header.modcrypt2_size = (uint)this.twl.DSi7Data.Length;
+                        header.modcrypt1_start = header.dsi9_rom_offset;
+                        header.modcrypt2_start = header.dsi7_rom_offset;
+                    }
+                }
+                else
+                {
+                    header.modcrypt1_start = 0;
+                    header.modcrypt2_start = 0;
+                    header.modcrypt1_size = 0;
+                    header.modcrypt2_size = 0;
+                }
+
+                // ROM size
+                header.ROMsize = header.block_hashtable_start + header.block_hashtable_size;
+                header.ROMsize += 0x200 - header.ROMsize % 0x200;
+                header.total_rom_size = header.digest_twl_start + header.digest_twl_size;
+                currPos = header.total_rom_size;
+
+                // Encrypt ARM9 Secure Area (for HMAC-SHA1 hash)
+                if (!this.secureArea.OriginalEncrypted) Array.Copy(this.secureArea.EncryptedData, arm9Data, 0x800);
+
+                // Compute Hash
+                HMACSHA1 hmac = new HMACSHA1(TWL.hmac_sha1_key);
+                header.hmac_arm9 = hmac.ComputeHash(arm9Data, 0, (int)header.ARM9size);
+                header.hmac_arm7 = hmac.ComputeHash(File.ReadAllBytes(arm7Binary), 0, (int)header.ARM7size);
+                header.hmac_icon_title = hmac.ComputeHash(File.ReadAllBytes(banner), 0, (int)header.banner_size);
+                header.hmac_arm9i = hmac.ComputeHash(this.twl.DSi9Data, 0, (int)header.dsi9_size);
+                header.hmac_arm7i = hmac.ComputeHash(this.twl.DSi7Data, 0, (int)header.dsi7_size);
+                header.hmac_arm9_no_secure = hmac.ComputeHash(arm9Data, 0x4000, (int)header.ARM9size - 0x4000);
+                hmac.Clear();
+                hmac.Dispose();
+            }
+
             header.tamaño = (uint)Math.Ceiling(Math.Log(currPos, 2));
+            // Ref. to TWL SDK' "Card Manual" for DSi Cartrige ROMs
+            if ((header.unitCode & 2) > 0 && (header.tid_high & 0xF) == 0 && header.tamaño < 25) header.tamaño = 25; 
             header.tamaño = (uint)Math.Pow(2, header.tamaño);
 
             // Get Header CRC
@@ -1593,7 +1785,6 @@ namespace Tinke
             // Write header
             string header_file = Path.GetTempFileName();
             Nitro.NDS.EscribirCabecera(header_file, header, accion.ROMFile);
-
 
             Console.Write("<br>");
             #endregion
@@ -1623,7 +1814,6 @@ namespace Tinke
 
                 Console.WriteLine(Tools.Helper.GetTranslation("Messages", "S0D"), o.FileName);
                 bw = new BinaryWriter(new FileStream(o.FileName, FileMode.Create));
-
                 Ekona.Helper.IOutil.Append(ref bw, header_file);
                 Ekona.Helper.IOutil.Append(ref bw, arm9Binary);
                 Ekona.Helper.IOutil.Append(ref bw, arm7Binary);
@@ -1632,12 +1822,23 @@ namespace Tinke
                 Ekona.Helper.IOutil.Append(ref bw, banner);
                 Ekona.Helper.IOutil.Append(ref bw, files);
 
-                rem = header.tamaño - (uint)bw.BaseStream.Position;
-                while (rem > 0)
+                // Write DSi data
+                if (this.twl != null && (header.unitCode & 2) > 0)
                 {
-                    bw.Write((byte)0xFF);
-                    rem--;
+                    this.twl.Write(ref bw, header, out header.hmac_digest_master);
+                    TWL.UpdateHeaderSignatures(ref bw, ref header, header_file);
                 }
+                
+                if (!header.trimmedRom)
+                {
+                    rem = header.tamaño - (uint)bw.BaseStream.Position;
+                    while (rem > 0)
+                    {
+                        bw.Write((byte)0xFF);
+                        rem--;
+                    }
+                }
+
                 bw.Flush();
                 bw.Close();
 

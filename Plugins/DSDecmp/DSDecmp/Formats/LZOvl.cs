@@ -182,13 +182,13 @@ namespace DSDecmp.Formats
                 int compressedSize = buffer[0] | (buffer[1] << 8) | (buffer[2] << 16);
 
                 // the compressed size sometimes is the file size.
-                if (compressedSize + headerSize >= inLength)
-                    compressedSize = (int)(inLength - headerSize);
+                //if (compressedSize + headerSize >= inLength)
+                //    compressedSize = (int)(inLength - headerSize);
 
                 #region copy the non-compressed data
 
                 // copy the non-compressed data first.
-                buffer = new byte[inLength - headerSize - compressedSize];
+                buffer = new byte[inLength - compressedSize];
                 instream.Position -= (inLength - 5);
                 instream.Read(buffer, 0, buffer.Length);
                 outstream.Write(buffer, 0, buffer.Length);
@@ -197,6 +197,7 @@ namespace DSDecmp.Formats
 
                 // buffer the compressed data, such that we don't need to keep
                 // moving the input stream position back and forth
+                compressedSize -= headerSize;
                 buffer = new byte[compressedSize];
                 instream.Read(buffer, 0, compressedSize);
 
@@ -330,11 +331,11 @@ namespace DSDecmp.Formats
                     writtenBytes++;
                 }
 
+                int headerLength = totalCompFileLength - compData.Length;
+                compressedLength += headerLength;
                 outstream.WriteByte((byte)((compressedLength) & 0xFF));
                 outstream.WriteByte((byte)((compressedLength >> 8) & 0xFF));
                 outstream.WriteByte((byte)((compressedLength >> 16) & 0xFF));
-
-                int headerLength = totalCompFileLength - compData.Length;
                 outstream.WriteByte((byte)headerLength);
 
                 int extraSize = (int)inLength - totalCompFileLength;
@@ -392,6 +393,7 @@ namespace DSDecmp.Formats
                 byte[] outbuffer = new byte[8 * 2 + 1];
                 outbuffer[0] = 0;
                 int bufferlength = 1, bufferedBlocks = 0;
+                int buffEndRawSize = 0;
                 int readBytes = 0;
                 while (readBytes < inLength)
                 {
@@ -399,8 +401,18 @@ namespace DSDecmp.Formats
                     // we can only buffer 8 blocks at a time.
                     if (bufferedBlocks == 8)
                     {
+                        if (readBytes >= inLength - 8)
+                        {
+                            compressedLength += buffEndRawSize;
+                            buffEndRawSize = 0;
+                            for (int i = 0; i < 8; i++)
+                                if (((outbuffer[0] >> i) & 1) == 0) buffEndRawSize++;
+                                else break;
+                        }
+
                         outstream.Write(outbuffer, 0, bufferlength);
-                        compressedLength += bufferlength;
+                        compressedLength += bufferlength - buffEndRawSize;
+
                         // reset the buffer
                         outbuffer[0] = 0;
                         bufferlength = 1;
@@ -457,8 +469,17 @@ namespace DSDecmp.Formats
                 // copy the remaining blocks to the output
                 if (bufferedBlocks > 0)
                 {
-                    outstream.Write(outbuffer, 0, bufferlength);
-                    compressedLength += bufferlength;
+                    if (outbuffer[0] > 0)
+                    {
+                        compressedLength += buffEndRawSize;
+                        buffEndRawSize = 0;
+                        for (int i = 0; i < 8; i++)
+                            if (((outbuffer[0] >> i) & 1) == 0) buffEndRawSize++;
+                            else break;
+                        outstream.Write(outbuffer, 0, bufferlength);
+                        compressedLength += bufferlength - buffEndRawSize;
+                    }
+                    else outstream.Write(outbuffer, 1, bufferlength - 1);
                     /*/ make the compressed file 4-byte aligned.
                     while ((compressedLength % 4) != 0)
                     {

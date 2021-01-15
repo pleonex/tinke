@@ -116,21 +116,19 @@ namespace Fonts
                 switch (map.type_section)
                 {
                     case 0:
-                        size += 2;
+                        size += 4;
                         break;
-
                     case 1:
                         sNFTR.PAMC.Type1 type1 = (sNFTR.PAMC.Type1)map.info;
                         size += (uint)type1.char_code.Length * 2;
+                        if (type1.char_code.Length % 2 > 0) size += 2;
                         break;
-
                     case 2:
                         sNFTR.PAMC.Type2 type2 = (sNFTR.PAMC.Type2)map.info;
-                        size += 2;
+                        size += 4;
                         size += (uint)type2.charInfo.Length * 4;
                         break;
                 }
-                size += 2;  // 0x00 terminator
 
                 map.block_size = size;
                 maps[i] = map;

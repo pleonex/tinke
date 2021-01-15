@@ -103,11 +103,16 @@ namespace Tinke.Nitro
             for (int i = 0; i < overlays.Length; i++)
             {
                 bw.Write(br.ReadBytes(0x1C));
-                byte[] d = BitConverter.GetBytes(overlays[i].size);
-                bw.Write(d[0]);
-                bw.Write(d[1]);
-                bw.Write(d[2]);
-                br.BaseStream.Position += 3;
+                byte[] reserved = br.ReadBytes(3);
+                if (reserved[0] + reserved[1] + reserved[2] == 0) bw.Write(reserved);
+                else
+                {
+                    byte[] d = BitConverter.GetBytes(overlays[i].size);
+                    bw.Write(d[0]);
+                    bw.Write(d[1]);
+                    bw.Write(d[2]);
+                }
+
                 bw.Write(br.ReadByte());
             }
         }

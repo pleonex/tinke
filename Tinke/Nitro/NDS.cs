@@ -21,6 +21,8 @@
 // <author>pleoNeX</author>
 // <email>benito356@gmail.com</email>
 // <date>28/04/2012 14:26:27</date>
+// 
+// Modified (DSi): Metlob, 13.10.2017
 // -----------------------------------------------------------------------
 using System;
 using System.Collections.Generic;
@@ -54,7 +56,9 @@ namespace Tinke.Nitro
             nds.unitCode = br.ReadByte();
             nds.encryptionSeed = br.ReadByte();
             nds.tamaño = (UInt32)Math.Pow(2, 17 + br.ReadByte());
-            nds.reserved = br.ReadBytes(9);
+            nds.reserved = br.ReadBytes(7);
+            nds.twlInternalFlags = br.ReadByte();
+            nds.permitsFlags = br.ReadByte();
             nds.ROMversion = br.ReadByte();
             nds.internalFlags = br.ReadByte();
             nds.ARM9romOffset = br.ReadUInt32();
@@ -91,9 +95,89 @@ namespace Tinke.Nitro
             nds.debug_size = br.ReadUInt32();
             nds.debug_ramAddress = br.ReadUInt32();
             nds.reserved3 = br.ReadUInt32();
+            nds.reserved4 = br.ReadBytes(0x10);
 
+            // DSi extended stuff below
+            if (nds.headerSize > 0x200 && (nds.unitCode & 2) > 0)
+            {
+                nds.global_mbk_setting = new byte[5][];
+                for (int i = 0; i < 5; i++) nds.global_mbk_setting[i] = br.ReadBytes(4);
+                nds.arm9_mbk_setting = new uint[3];
+                for (int i = 0; i < 3; i++) nds.arm9_mbk_setting[i] = br.ReadUInt32();
+                nds.arm7_mbk_setting = new uint[3];
+                for (int i = 0; i < 3; i++) nds.arm7_mbk_setting[i] = br.ReadUInt32();
+                nds.mbk9_wramcnt_setting = br.ReadUInt32();
+
+                nds.region_flags = br.ReadUInt32();
+                nds.access_control = br.ReadUInt32();
+                nds.scfg_ext_mask = br.ReadUInt32();
+                nds.appflags = br.ReadBytes(4);
+
+                nds.dsi9_rom_offset = br.ReadUInt32();
+                nds.offset_0x1C4 = br.ReadUInt32();
+                nds.dsi9_ram_address = br.ReadUInt32();
+                nds.dsi9_size = br.ReadUInt32();
+                nds.dsi7_rom_offset = br.ReadUInt32();
+                nds.offset_0x1D4 = br.ReadUInt32();
+                nds.dsi7_ram_address = br.ReadUInt32();
+                nds.dsi7_size = br.ReadUInt32();
+
+                nds.digest_ntr_start = br.ReadUInt32();
+                nds.digest_ntr_size = br.ReadUInt32();
+                nds.digest_twl_start = br.ReadUInt32();
+                nds.digest_twl_size = br.ReadUInt32();
+
+                nds.sector_hashtable_start = br.ReadUInt32();
+                nds.sector_hashtable_size = br.ReadUInt32();
+                nds.block_hashtable_start = br.ReadUInt32();
+                nds.block_hashtable_size = br.ReadUInt32();
+
+                nds.digest_sector_size = br.ReadUInt32();
+                nds.digest_block_sectorcount = br.ReadUInt32();
+                nds.banner_size = br.ReadUInt32();
+                nds.offset_0x20C = br.ReadUInt32();
+
+                nds.total_rom_size = br.ReadUInt32();
+                nds.offset_0x214 = br.ReadUInt32();
+                nds.offset_0x218 = br.ReadUInt32();
+                nds.offset_0x21C = br.ReadUInt32();
+
+                nds.modcrypt1_start = br.ReadUInt32();
+                nds.modcrypt1_size = br.ReadUInt32();
+                nds.modcrypt2_start = br.ReadUInt32();
+                nds.modcrypt2_size = br.ReadUInt32();
+
+                nds.tid_low = br.ReadUInt32();
+                nds.tid_high = br.ReadUInt32();
+                nds.public_sav_size = br.ReadUInt32();
+                nds.private_sav_size = br.ReadUInt32();
+
+                nds.reserved5 = br.ReadBytes(0xB0);
+                nds.age_ratings = br.ReadBytes(0x10);
+                nds.hmac_arm9 = br.ReadBytes(20);
+                nds.hmac_arm7 = br.ReadBytes(20);
+                nds.hmac_digest_master = br.ReadBytes(20);
+                nds.hmac_icon_title = br.ReadBytes(20);
+                nds.hmac_arm9i = br.ReadBytes(20);
+                nds.hmac_arm7i = br.ReadBytes(20);
+                nds.reserved6 = br.ReadBytes(40);
+                nds.hmac_arm9_no_secure = br.ReadBytes(20);
+                nds.reserved7 = br.ReadBytes(0xA4C);
+                nds.debug_args = br.ReadBytes(0x180);
+                nds.rsa_signature = br.ReadBytes(0x80);
+
+                nds.trimmedRom = br.BaseStream.Length == nds.total_rom_size;
+                nds.doublePadding = (nds.ARM9size % 0x400) < 0x200 && nds.ARM7romOffset % 0x400 == 0 && nds.ARM9overlayOffset % 0x400 == 0;
+                nds.doublePadding |= (nds.ARM7size % 0x400) < 0x200 && nds.fileNameTableOffset % 0x400 == 0 && nds.ARM7overlayOffset % 0x400 == 0;
+                nds.doublePadding |= (nds.fileNameTableSize % 0x400) < 0x200 && nds.FAToffset % 0x400 == 0;
+                nds.doublePadding |= (nds.FATsize % 0x400) < 0x200 && nds.bannerOffset % 0x400 == 0;
+            }
+            nds.trimmedRom = br.BaseStream.Length != nds.tamaño;
+
+            // Calc CRCs
+            uint gameCode = BitConverter.ToUInt32(Encoding.ASCII.GetBytes(nds.gameCode), 0);
             br.BaseStream.Position = 0x4000;
-            nds.secureCRC = (CRC16.Calculate(br.ReadBytes(0x4000)) == nds.secureCRC16) ? true : false;
+            nds.secureCRC = (SecureArea.CalcCRC(br.ReadBytes(0x4000), gameCode) == nds.secureCRC16) ? true : false;
             br.BaseStream.Position = 0xC0;
             nds.logoCRC = (CRC16.Calculate(br.ReadBytes(156)) == nds.logoCRC16) ? true : false;
             br.BaseStream.Position = 0x0;
@@ -122,6 +206,8 @@ namespace Tinke.Nitro
             bw.Write(cabecera.encryptionSeed);
             bw.Write((byte)(Math.Log(cabecera.tamaño, 2) - 17));
             bw.Write(cabecera.reserved);
+            bw.Write(cabecera.twlInternalFlags);
+            bw.Write(cabecera.permitsFlags);
             bw.Write(cabecera.ROMversion);
             bw.Write(cabecera.internalFlags);
             bw.Write(cabecera.ARM9romOffset);
@@ -158,7 +244,74 @@ namespace Tinke.Nitro
             bw.Write(cabecera.debug_size);
             bw.Write(cabecera.debug_ramAddress);
             bw.Write(cabecera.reserved3);
-            bw.Flush();
+            bw.Write(cabecera.reserved4);
+
+            // Write DSi rom info
+            if (cabecera.headerSize == 0x4000 && (cabecera.unitCode & 2) > 0)
+            {
+                for (int i = 0; i < 5; i++) bw.Write(cabecera.global_mbk_setting[i]);
+                for (int i = 0; i < 3; i++) bw.Write(cabecera.arm9_mbk_setting[i]);
+                for (int i = 0; i < 3; i++) bw.Write(cabecera.arm7_mbk_setting[i]);
+                bw.Write(cabecera.mbk9_wramcnt_setting);
+
+                bw.Write(cabecera.region_flags);
+                bw.Write(cabecera.access_control);
+                bw.Write(cabecera.scfg_ext_mask);
+                bw.Write(cabecera.appflags);
+
+                bw.Write(cabecera.dsi9_rom_offset);
+                bw.Write(cabecera.offset_0x1C4);
+                bw.Write(cabecera.dsi9_ram_address);
+                bw.Write(cabecera.dsi9_size);
+                bw.Write(cabecera.dsi7_rom_offset);
+                bw.Write(cabecera.offset_0x1D4);
+                bw.Write(cabecera.dsi7_ram_address);
+                bw.Write(cabecera.dsi7_size);
+
+                bw.Write(cabecera.digest_ntr_start);
+                bw.Write(cabecera.digest_ntr_size);
+                bw.Write(cabecera.digest_twl_start);
+                bw.Write(cabecera.digest_twl_size);
+
+                bw.Write(cabecera.sector_hashtable_start);
+                bw.Write(cabecera.sector_hashtable_size);
+                bw.Write(cabecera.block_hashtable_start);
+                bw.Write(cabecera.block_hashtable_size);
+
+                bw.Write(cabecera.digest_sector_size);
+                bw.Write(cabecera.digest_block_sectorcount);
+                bw.Write(cabecera.banner_size);
+                bw.Write(cabecera.offset_0x20C);
+
+                bw.Write(cabecera.total_rom_size);
+                bw.Write(cabecera.offset_0x214);
+                bw.Write(cabecera.offset_0x218);
+                bw.Write(cabecera.offset_0x21C);
+
+                bw.Write(cabecera.modcrypt1_start);
+                bw.Write(cabecera.modcrypt1_size);
+                bw.Write(cabecera.modcrypt2_start);
+                bw.Write(cabecera.modcrypt2_size);
+
+                bw.Write(cabecera.tid_low);
+                bw.Write(cabecera.tid_high);
+                bw.Write(cabecera.public_sav_size);
+                bw.Write(cabecera.private_sav_size);
+
+                bw.Write(cabecera.reserved5);
+                bw.Write(cabecera.age_ratings);
+                bw.Write(cabecera.hmac_arm9);
+                bw.Write(cabecera.hmac_arm7);
+                bw.Write(cabecera.hmac_digest_master);
+                bw.Write(cabecera.hmac_icon_title);
+                bw.Write(cabecera.hmac_arm9i);
+                bw.Write(cabecera.hmac_arm7i);
+                bw.Write(cabecera.reserved6);
+                bw.Write(cabecera.hmac_arm9_no_secure);
+                bw.Write(cabecera.reserved7);
+                bw.Write(cabecera.debug_args);
+                bw.Write(cabecera.rsa_signature);
+            }
 
             int relleno = (int)(cabecera.headerSize - bw.BaseStream.Length);
             br.BaseStream.Position = bw.BaseStream.Position;
@@ -183,6 +336,8 @@ namespace Tinke.Nitro
             bw.Write(cabecera.encryptionSeed);
             bw.Write((byte)(Math.Log(cabecera.tamaño, 2) - 17));
             bw.Write(cabecera.reserved);
+            bw.Write(cabecera.twlInternalFlags);
+            bw.Write(cabecera.permitsFlags);
             bw.Write(cabecera.ROMversion);
             bw.Write(cabecera.internalFlags);
             bw.Write(cabecera.ARM9romOffset);
@@ -219,7 +374,74 @@ namespace Tinke.Nitro
             bw.Write(cabecera.debug_size);
             bw.Write(cabecera.debug_ramAddress);
             bw.Write(cabecera.reserved3);
-            bw.Flush();
+            bw.Write(cabecera.reserved4);
+
+            // Write DSi rom info
+            if (cabecera.headerSize == 0x4000 && (cabecera.unitCode & 2) > 0)
+            {
+                for (int i = 0; i < 5; i++) bw.Write(cabecera.global_mbk_setting[i]);
+                for (int i = 0; i < 3; i++) bw.Write(cabecera.arm9_mbk_setting[i]);
+                for (int i = 0; i < 3; i++) bw.Write(cabecera.arm7_mbk_setting[i]);
+                bw.Write(cabecera.mbk9_wramcnt_setting);
+
+                bw.Write(cabecera.region_flags);
+                bw.Write(cabecera.access_control);
+                bw.Write(cabecera.scfg_ext_mask);
+                bw.Write(cabecera.appflags);
+
+                bw.Write(cabecera.dsi9_rom_offset);
+                bw.Write(cabecera.offset_0x1C4);
+                bw.Write(cabecera.dsi9_ram_address);
+                bw.Write(cabecera.dsi9_size);
+                bw.Write(cabecera.dsi7_rom_offset);
+                bw.Write(cabecera.offset_0x1D4);
+                bw.Write(cabecera.dsi7_ram_address);
+                bw.Write(cabecera.dsi7_size);
+
+                bw.Write(cabecera.digest_ntr_start);
+                bw.Write(cabecera.digest_ntr_size);
+                bw.Write(cabecera.digest_twl_start);
+                bw.Write(cabecera.digest_twl_size);
+
+                bw.Write(cabecera.sector_hashtable_start);
+                bw.Write(cabecera.sector_hashtable_size);
+                bw.Write(cabecera.block_hashtable_start);
+                bw.Write(cabecera.block_hashtable_size);
+
+                bw.Write(cabecera.digest_sector_size);
+                bw.Write(cabecera.digest_block_sectorcount);
+                bw.Write(cabecera.banner_size);
+                bw.Write(cabecera.offset_0x20C);
+
+                bw.Write(cabecera.total_rom_size);
+                bw.Write(cabecera.offset_0x214);
+                bw.Write(cabecera.offset_0x218);
+                bw.Write(cabecera.offset_0x21C);
+
+                bw.Write(cabecera.modcrypt1_start);
+                bw.Write(cabecera.modcrypt1_size);
+                bw.Write(cabecera.modcrypt2_start);
+                bw.Write(cabecera.modcrypt2_size);
+
+                bw.Write(cabecera.tid_low);
+                bw.Write(cabecera.tid_high);
+                bw.Write(cabecera.public_sav_size);
+                bw.Write(cabecera.private_sav_size);
+
+                bw.Write(cabecera.reserved5);
+                bw.Write(cabecera.age_ratings);
+                bw.Write(cabecera.hmac_arm9);
+                bw.Write(cabecera.hmac_arm7);
+                bw.Write(cabecera.hmac_digest_master);
+                bw.Write(cabecera.hmac_icon_title);
+                bw.Write(cabecera.hmac_arm9i);
+                bw.Write(cabecera.hmac_arm7i);
+                bw.Write(cabecera.reserved6);
+                bw.Write(cabecera.hmac_arm9_no_secure);
+                bw.Write(cabecera.reserved7);
+                bw.Write(cabecera.debug_args);
+                bw.Write(cabecera.rsa_signature);
+            }
 
             int relleno = (int)(cabecera.headerSize - bw.BaseStream.Length);
             for (int i = 0; i < relleno; i++)
@@ -231,8 +453,7 @@ namespace Tinke.Nitro
             Console.WriteLine(Tools.Helper.GetTranslation("Messages", "S09"), new FileInfo(salida).Length);
         }
 
-
-        public static Estructuras.Banner LeerBanner(string file, UInt32 offset)
+        public static Estructuras.Banner LeerBanner(string file, UInt32 offset, UInt32 size)
         {
             Estructuras.Banner bn = new Estructuras.Banner();
             BinaryReader br = new BinaryReader(File.OpenRead(file));
@@ -240,7 +461,10 @@ namespace Tinke.Nitro
 
             bn.version = br.ReadUInt16();
             bn.CRC16 = br.ReadUInt16();
-            bn.reserved = br.ReadBytes(0x1C);
+            bn.CRC162 = br.ReadUInt16();
+            bn.CRC163 = br.ReadUInt16();
+            bn.CRC16i = br.ReadUInt16();
+            bn.reserved = br.ReadBytes(0x16);
             bn.tileData = br.ReadBytes(0x200);
             bn.palette = br.ReadBytes(0x20);
             bn.japaneseTitle = TitleToString(br.ReadBytes(0x100));
@@ -250,22 +474,35 @@ namespace Tinke.Nitro
             bn.italianTitle = TitleToString(br.ReadBytes(0x100));
             bn.spanishTitle = TitleToString(br.ReadBytes(0x100));
 
+            // DSi Enhanced
+            byte v = (byte)(bn.version & 0xFF);
+            if (v >= 2) bn.cnineseTitle = TitleToString(br.ReadBytes(0x100));
+            if (v >= 3) bn.koreanTitle = TitleToString(br.ReadBytes(0x100));
+            if (bn.version >> 8 == 1)
+            {
+                bn.reservedDsi = br.ReadBytes(0x800);
+                if (size == 0 || size == 0xFFFFFFFF) size = 0x23C0;
+                bn.aniIconData = br.ReadBytes((int)(offset + size - br.BaseStream.Position));
+            }
+
             br.BaseStream.Position = offset + 0x20;
             bn.checkCRC = (CRC16.Calculate(br.ReadBytes(0x820)) == bn.CRC16) ? true : false;
-
             br.Close();
 
             Console.WriteLine(bn.englishTitle.Replace("\0", ""));
 
             return bn;
         }
-        public static void EscribirBanner(string salida, Estructuras.Banner banner)
+        public static uint EscribirBanner(string salida, Estructuras.Banner banner)
         {
             BinaryWriter bw = new BinaryWriter(new FileStream(salida, FileMode.Create));
             Console.Write("Banner...");
 
             bw.Write(banner.version);
             bw.Write(banner.CRC16);
+            bw.Write(banner.CRC162);
+            bw.Write(banner.CRC163);
+            bw.Write(banner.CRC16i);
             bw.Write(banner.reserved);
             bw.Write(banner.tileData);
             bw.Write(banner.palette);
@@ -275,10 +512,19 @@ namespace Tinke.Nitro
             bw.Write(StringToTitle(banner.germanTitle));
             bw.Write(StringToTitle(banner.italianTitle));
             bw.Write(StringToTitle(banner.spanishTitle));
-            bw.Flush();
 
+            // DSi Enchansed
+            if (banner.version >= 2) bw.Write(StringToTitle(banner.cnineseTitle));
+            if (banner.version >= 3) bw.Write(StringToTitle(banner.koreanTitle));
+            if ((banner.version >> 8) == 1)
+            {
+                bw.Write(banner.reservedDsi);
+                bw.Write(banner.aniIconData);
+            }
+
+            uint size = (uint)bw.BaseStream.Position;
             int rem = (int)bw.BaseStream.Position % 0x200;
-            if (rem != 0)
+            //if (rem != 0)
             {
                 while (rem < 0x200)
                 {
@@ -286,10 +532,11 @@ namespace Tinke.Nitro
                     rem++;
                 }
             }
-            bw.Flush();
-
+            
             Console.WriteLine(Tools.Helper.GetTranslation("Messages", "S09"), bw.BaseStream.Length);
+            bw.Flush();
             bw.Close();
+            return size;
         }
         public static string TitleToString(byte[] data)
         {
@@ -342,6 +589,12 @@ namespace Tinke.Nitro
             BinaryWriter bw = new BinaryWriter(File.OpenWrite(fileOut));
             BinaryReader br = new BinaryReader(File.OpenRead(romFile));
 
+            // Get overlays IDs (all system files)
+            int sysIndex = 0;
+            ushort[] ovIDs = new ushort[root.folders[root.folders.Count - 1].files.Count];
+            for (int i = 0; i < ovIDs.Length; i++) ovIDs[i] = root.folders[root.folders.Count - 1].files[i].id;
+            Array.Sort(ovIDs);
+
             Console.Write(Tools.Helper.GetTranslation("Messages", "S0B"));
 
             for (int i = 0; i < sortedIDs.Length; i++)
@@ -349,9 +602,15 @@ namespace Tinke.Nitro
                 if (i == 0 & sortedIDs[i] > sortedIDs.Length)
                     continue;
 
-                sFile currFile = BuscarArchivo(sortedIDs[i], root);
-                if (!(currFile.name is string) || currFile.name.StartsWith("overlay")) // Los overlays no van en esta sección
+                if (sortedIDs[i] == ovIDs[sysIndex])
+                {
+                    // Exclude overlay files by ID, because some files have name with "overlay" on begin
+                    sysIndex++;
                     continue;
+                }
+
+                sFile currFile = BuscarArchivo(sortedIDs[i], root);
+                if (!(currFile.name is string)) continue;
 
                 if (currFile.path == romFile)
                 {
@@ -513,8 +772,9 @@ namespace Tinke.Nitro
         private static void Rellenar_UnitCodes()
         {
             Estructuras.unitCode = new Dictionary<byte, string>();
-
             Estructuras.unitCode.Add(0x00, "Nintendo DS");
+            Estructuras.unitCode.Add(0x02, "Nintendo DSi Enhanced");
+            Estructuras.unitCode.Add(0x03, "Nintendo DSi");
         }
     }
 }

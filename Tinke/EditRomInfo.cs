@@ -151,6 +151,16 @@ namespace Tinke
             br.BaseStream.Position = 0x20;
             banner.CRC16 = (ushort)CRC16.Calculate(br.ReadBytes(0x820));
             banner.checkCRC = true;
+            if (this.header.banner_size > 0 && this.header.banner_size < 0xFFFFFFFF)
+            {
+                br.BaseStream.Position = 0x20;
+                if (this.banner.version >= 2) banner.CRC162 = (ushort)CRC16.Calculate(br.ReadBytes(0x920));
+                br.BaseStream.Position = 0x20;
+                if (this.banner.version >= 3) banner.CRC163 = (ushort)CRC16.Calculate(br.ReadBytes(0xA20));
+                br.BaseStream.Position = 0x1240;
+                if ((this.banner.version >> 8) >= 1) banner.CRC16i = (ushort)CRC16.Calculate(br.ReadBytes(0x1180));
+            }
+            
             br.Close();
             File.Delete(tempBanner);
 

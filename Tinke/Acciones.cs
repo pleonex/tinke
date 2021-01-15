@@ -1246,7 +1246,7 @@ namespace Tinke
             currFile.name = currFile.name.ToUpper();
             if (currFile.name == "FNT.BIN" || currFile.name == "FAT.BIN" || currFile.name.StartsWith("OVERLAY9_") || currFile.name.StartsWith("OVERLAY7_") ||
                 currFile.name == "ARM9.BIN" || currFile.name == "ARM7.BIN" || currFile.name == "Y9.BIN" || currFile.name == "Y7.BIN" || currFile.name == "BANNER.BIN" ||
-                currFile.name.EndsWith(".SRL") || currFile.name.EndsWith(".NDS"))
+                currFile.name.EndsWith(".SRL") || currFile.name.EndsWith(".NDS") || currFile.name == "ARM9I.BIN" || currFile.name == "ARM7I.BIN")
                 return Format.System;
 
 
@@ -1319,6 +1319,7 @@ namespace Tinke
                 currFile.name == "ARM9.BIN" || currFile.name == "ARM7.BIN" || currFile.name == "Y9.BIN" || currFile.name == "Y7.BIN" || currFile.name == "BANNER.BIN")
                 return Format.System;
 
+            if (currFile.name == "ARM9I.BIN" || currFile.name == "ARM7I.BIN") return Format.System;
 
             return Format.Unknown;
         }
