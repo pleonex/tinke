@@ -122,8 +122,8 @@ namespace LAYTON
             bw.Write(colorsData);
             bw.Write((uint)(tiles.LongLength / 0x40));
             bw.Write(tiles);
-            bw.Write((ushort)(this.Width / 8));
-            bw.Write((ushort)(this.Height / 8));
+            bw.Write((ushort)(image.Width / 8));
+            bw.Write((ushort)(image.Height / 8));
             for (int i = 0; i < map.Length; i++) bw.Write(Actions.MapInfo(map[i]));
             bw.Close();
 

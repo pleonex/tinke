@@ -44,7 +44,7 @@ namespace LAYTON
         {
             var testedGames = new[] { "A5FP", "A5FE",
                 "YLTS", "YLTE", "YLTP", "YLTH",
-                "BLFE", "C2AJ"};
+                "BLFE", "C2AJ", "YLTJ"};
             return testedGames.Contains(gameCode);
         }
         public Format Get_Format(sFile file, byte[] magic)
@@ -117,6 +117,12 @@ namespace LAYTON
                     else if (file.id >= 0xF0 && file.id <= 0x193)
                         return Format.FullImage;
                     break;
+                case "YLTJ":
+                    if ((file.id >= 0x3CA && file.id <= 0x47F) || (file.id >= 0x740 && file.id <= 0xB14))
+                        return new Ani(pluginHost, gameCode, "").Get_Formato(file.name);
+                    else if ((file.id >= 0x480 && file.id <= 0x523) || (file.id >= 0xB15 && file.id <= 0xF3D))
+                        return Format.FullImage;
+                    break;
             }
 
             if (file.name.ToUpper().EndsWith(".PLZ"))
@@ -183,6 +189,15 @@ namespace LAYTON
                     if (file.id >= 0x35 && file.id <= 0xEF)
                         return new Ani(pluginHost, gameCode, file.path).Show_Info(file.id);
                     else if (file.id >= 0xF0 && file.id <= 0x193)
+                    {
+                        Bg bg = new Bg(pluginHost, file.path, file.id, file.name);
+                        return bg.Get_Control();
+                    }
+                    break;
+                case "YLTJ":
+                    if ((file.id >= 0x3CA && file.id <= 0x47F) || (file.id >= 0x740 && file.id <= 0xB14))
+                        return new Ani(pluginHost, gameCode, file.path).Show_Info(file.id);
+                    else if ((file.id >= 0x480 && file.id <= 0x523) || (file.id >= 0xB15 && file.id <= 0xF3D))
                     {
                         Bg bg = new Bg(pluginHost, file.path, file.id, file.name);
                         return bg.Get_Control();
