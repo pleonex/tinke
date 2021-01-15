@@ -25,7 +25,6 @@ namespace Ekona.Mathematics
     using System.Collections.Generic;
     using System.Globalization;
     using System.Text;
-    using System.Threading.Tasks;
 
     /// <summary>
     /// Vector 3D

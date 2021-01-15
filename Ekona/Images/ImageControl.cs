@@ -475,16 +475,20 @@ namespace Ekona.Images
                 tiles = bmp.Tiles;
                 pal = bmp.Palette.Palette[0];
             }
-            else
+            else if (this.radioReplacePal.Checked)
             {
                 try { Actions.Indexed_Image(bitmap, image.FormatColor, out tiles, out pal); }
                 catch (Exception ex) { MessageBox.Show(ex.Message); Console.WriteLine(ex.Message); return; }
             }
 
             // Swap palettes if "Swap palette" is checked. Try to change the colors to the old palette
-            if (radioSwapPal.Checked)
+            else if (radioSwapPal.Checked)
             {
-                try { Actions.Swap_Palette(ref tiles, palette.Palette[(int)numPal.Value], pal, image.FormatColor); }
+                try
+                {
+                    //Actions.Swap_Palette(ref tiles, palette.Palette[(int)numPal.Value], pal, image.FormatColor);
+                    tiles = Actions.IndexAndSwap(bitmap, image.FormatColor, palette.Palette[(int)numPal.Value]);
+                }
                 catch (Exception ex) { MessageBox.Show(ex.Message); Console.WriteLine(ex.Message); return; }
             }
 
