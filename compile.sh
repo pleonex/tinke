@@ -41,11 +41,11 @@ if [ -d "$BUILD_DIR" ]; then
 fi
 
 # Get compiler and params
-XBUILD="xbuild /v:minimal /p:Configuration=$CONF;TargetFrameworkVersion=v4.5"
+XBUILD="msbuild /v:minimal /p:Configuration=$CONF"
 
 # Compile program in standard directory, to allow plugins find Ekona
 echo "Compiling base library..."
-xbuild /v:minimal /p:TargetFrameworkVersion=v4.5 Tinke.sln > build.log
+msbuild /v:minimal Tinke.sln > build.log
 if [ $? -ne 0 ] ; then
     echo "Error compiling Tinke into the default directory. Aborting."
     cat build.log
@@ -119,8 +119,6 @@ cp "$TINKE_DIR/Licence.txt" "$BUILD_DIR/"
 cp "$TINKE_DIR/Tinke/app.config" "$BUILD_DIR/"
 
 # Delete debug files
-rm "$BUILD_DIR"/*.mdb
-rm "$BUILD_DIR"/Plugins/*.mdb
 rm build.log
 
 echo "Done!"
