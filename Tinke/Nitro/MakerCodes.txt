@@ -302,4 +302,5 @@
 	{ "G9", "D3 Publisher" },
 	{ "GB", "Konami Computer Entertainment Japan" },
 	{ "GD", "Square-Enix" },
-	{ "IH", "Yojigen" }
+	{ "IH", "Yojigen" },
+	{ "N6", "McDonalds" }
