@@ -56,7 +56,7 @@ Thread at GBAtemp.net: http://gbatemp.net/topic/303529-tinke-072/
  * NTFP => NiTro File Palette (palette)
  * RAW => Raw image (tiles)
  * MAP => Raw map info (map)
- * Common formats => PNG, JPG, TGA
+ * Common formats => PNG, JPG, TGA, GIF
 
 ## Textures
  * BTX0 (NSBTX)
@@ -73,7 +73,7 @@ Thread at GBAtemp.net: http://gbatemp.net/topic/303529-tinke-072/
 ## Text
  * Sound definition => SADL, XSADL, SARC, SBDL, SMAP.
  * BMG => Pack text file
- * Common formats => TXT, XML, INI, H, BAT, C, MAKEFILE, LUA, CSV, BUILDTIME
+ * Common formats => TXT, XML, INI, H, BAT, C, MAKEFILE, LUA, CSV, BUILDTIME, HTML, CSS, JS, DTD
 
 ## Compression
   Thanks to DSDEcmp library [DSDecmp](http://code.google.com/p/dsdecmp) (credits to *barubary*)
@@ -104,7 +104,10 @@ Thread at GBAtemp.net: http://gbatemp.net/topic/303529-tinke-072/
  * Tetris DS (YLUP)
  * Tokimeki Memorial Girl's Side 3rd Story (B3SJ)
  * Cake Mania 2 (CAKX)
- * Jump! Ultimate Stars (ALAR, DSIG, DSCP)
+ * Jump! Ultimate Stars: ALAR, DSIG, DSCP
+ * Sonic Rush Adventure (ASCx, A3Yx, BXSx)
+ * Club Penguin
+ * Big Hero 6
 
 ----
 

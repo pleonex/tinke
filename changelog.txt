@@ -1,7 +1,19 @@
 0.9.2
 ** Improve Hexadecimal Viewer for Mono (Linux and Mac OS)
 * Fix crash opening HexViewer from FAT dialog on Mono.
-* Fix project files and compile script for Windows.
+* Migrate to .NET Framework 4.8
+* Support HTML, CSS, JS and DTD files in text plugin
+* Support GIF in image plugin
+* Add support for Sonic Rush Adventure
+* Add support for Jump Ultimate Star
+* Improvements in Layton plugin (support games and formats)
+* Nitro Texture Compressor for compression 4x4 blocks
+* Save banner in other image formats
+* Improve language files
+* Fixes for NFTR
+* Fixes for decompression (autoformat) and unpacking with non-zero relative offset
+* Add McDonalds Maker Code (N6)
+* Fix build scripts for Linux and Windows
 
 0.9.1
 ** Support partition cell sections (#18, #19).
