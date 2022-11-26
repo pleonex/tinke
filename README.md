@@ -1,3 +1,21 @@
+**⚠️ Tinke by @pleonex is deprecated and not maintained anymore ⚠️**
+
+I appreciate the support over the years. It's time to stop and make way for modern solutions.
+
+I started this project to learn to code when I got curiosity about ROM Hacking in NDS. I can't remember how many times I rewrote it while I was learning more programming patterns. It was fun.
+As you can imagine the program design and architecture is not that good. Right now, it's hard to extend and especially maintain, it's very time consuming. It would require another major rewrite again.
+
+Several years ago I started a new project, [SceneGate](https://github.com/scenegate), with the same goal but more focus on developers. I hope one day it can become as useful as Tinke was.
+You can follow the progress of these new projects from GitHub:
+
+- Ekona, Nintendo DS formats: https://scenegate.github.io/Ekona/
+- SceneGate UI: https://github.com/SceneGate/SceneGate
+
+I welcome anyone to fork this project and continue it.
+You can check existing forks here: https://github.com/pleonex/tinke/network
+
+---
+
 # Tinke
 <p align="center">
 <a href="https://travis-ci.org/pleonex/tinke"><img alt="Build Status" src="https://travis-ci.org/pleonex/tinke.svg?branch=master" align="left" /></a>
@@ -10,8 +28,6 @@
 To run the program you must have installed **[.NET Framework 4.5](https://www.microsoft.com/es-es/download/details.aspx?id=30653)** or **[mono](http://www.mono-project.com/download)**. In the case of *mono* on *Linux*, make sure you have installed the package **mono-locale-extras** too. For Mac, you need *mono* and *pkg-config* installed and configured, you'll use *mono32* to exec Tinke.
 
 Thread at GBAtemp.net: http://gbatemp.net/topic/303529-tinke-072/
-
-**Tinke is discontinued and not longer supported. Will provide a new solution in the long term.**
 
 # Features
 
