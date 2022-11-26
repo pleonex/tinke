@@ -38,14 +38,13 @@ SET build_dir=%CD%\build
 IF EXIST "%build_dir%" RMDIR /S /Q "%build_dir%" || EXIT /B 1
 
 REM Get compiler
-SET netver=v4.5
-SET msbuild_path=%windir%\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe
-SET msbuild=%msbuild_path% /p:Configuration=%conf% /p:TargetFrameworkVersion=%netver%
+SET msbuild_path=MSBuild.exe
+SET msbuild=%msbuild_path% /p:Configuration=%conf%
 SET msbuild_plugin=%msbuild% /p:OutputPath="%build_dir%\Plugins\\"
 
 REM Compile program in standard directory, to allow plugins find Ekona
 ECHO Compiling base library
-%msbuild_path% /p:TargetFrameworkVersion=%netver% Tinke.sln > error.log || (TYPE error.log & EXIT /B 1)
+%msbuild_path% Tinke.sln > error.log || (TYPE error.log & EXIT /B 1)
 
 REM Compiling program
 echo Compiling Tinke
